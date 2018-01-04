@@ -4,7 +4,7 @@
   "description": "Animal Science Licensing",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Testing...\" && exit 0"
+    "test": "node --version && npm --version"
   },
   "repository": {
     "type": "git",
