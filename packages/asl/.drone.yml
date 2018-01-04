@@ -1,8 +1,8 @@
 pipeline:
-  build_6:
+  build:
     image: node:8
     commands:
       - npm install
       - npm test
     when:
-      event: [push, pull_request]
+      event: push
