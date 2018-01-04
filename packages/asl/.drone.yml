@@ -5,4 +5,15 @@ pipeline:
       - npm install
       - npm test
     when:
+      branch: master
+      event: push
+
+  build:
+    image: docker:1.11
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - docker build -t asl .
+    when:
+      branch: master
       event: push
