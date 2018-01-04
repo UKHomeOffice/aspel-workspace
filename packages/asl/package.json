@@ -1,0 +1,19 @@
+{
+  "name": "asl",
+  "version": "1.0.0",
+  "description": "Animal Science Licensing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Testing...\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UKHomeOffice/asl.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UKHomeOffice/asl/issues"
+  },
+  "homepage": "https://github.com/UKHomeOffice/asl#readme"
+}
