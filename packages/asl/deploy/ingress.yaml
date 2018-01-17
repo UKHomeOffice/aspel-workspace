@@ -18,4 +18,4 @@ spec:
       - path: /
         backend:
           serviceName: asl-dev-app
-          servicePort: 443
+          servicePort: 10443
