@@ -1,0 +1,39 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: asl-dev-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: asl-dev-app
+        service: asl-dev-app
+    spec:
+      containers:
+        - name: asl-dev-app
+          image: quay.io/ukhomeofficedigital/asl:a905d467c1296a62b1796f133b53e7822abf2e7e
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "256Mi"
+          securityContext:
+            runAsNonRoot: true
+        - name: nginx-proxy
+          image: quay.io/ukhomeofficedigital/nginx-proxy-govuk:v3
+          env:
+            - name: PROXY_SERVICE_HOST
+              value: 127.0.0.1
+            - name: PROXY_SERVICE_PORT
+              value: "8080"
+            - name: ADD_NGINX_SERVER_CFG
+              value: |
+                add_header Cache-Control private;
+                add_header X-Frame-Options "SAMEORIGIN" always;
+                add_header X-Content-Type-Options "nosniff" always;
+                add_header X-XSS-Protection "1; mode=block" always;
+          ports:
+            - containerPort: 10443
+          securityContext:
+            runAsNonRoot: true

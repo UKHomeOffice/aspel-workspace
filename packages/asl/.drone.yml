@@ -31,3 +31,14 @@ pipeline:
     when:
       branch: master
       event: push
+
+  dev_deploy:
+    image: quay.io/ukhomeofficedigital/kd:v0.5.0
+    secrets:
+      - kube_server
+      - kube_token
+    commands:
+      - ./deploy/deploy.sh
+    when:
+      environment: dev
+      event: deployment
