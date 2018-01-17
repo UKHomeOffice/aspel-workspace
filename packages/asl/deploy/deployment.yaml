@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: asl-dev-app
-          image: quay.io/ukhomeofficedigital/asl:a905d467c1296a62b1796f133b53e7822abf2e7e
+          image: quay.io/ukhomeofficedigital/asl:${DRONE_COMMIT_SHA}
           imagePullPolicy: Always
           resources:
             limits:
