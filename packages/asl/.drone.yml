@@ -36,7 +36,7 @@ pipeline:
     image: quay.io/ukhomeofficedigital/drone-trigger:latest
     drone_server: https://drone.acp.homeoffice.gov.uk
     repo: UKHomeOffice/asl-deploy-bot
-    number: 9
+    branch: master
     secrets:
       - drone_token
     params: REPO=${DRONE_REPO},PLUGIN_NUMBER=${DRONE_BUILD_NUMBER},DRONE_TOKEN=${DRONE_TOKEN}
