@@ -36,6 +36,7 @@ pipeline:
     image: quay.io/ukhomeofficedigital/drone-trigger:latest
     drone_server: https://drone.acp.homeoffice.gov.uk
     repo: UKHomeOffice/asl
+    drone_token: ${DRONE_TOKEN}
     number: ${DRONE_BUILD_NUMBER}
     deploy_to: dev
     verbose: true
