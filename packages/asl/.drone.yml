@@ -38,6 +38,7 @@ pipeline:
     repo: UKHomeOffice/asl
     number: $${DRONE_BUILD_NUMBER}
     deploy_to: dev
+    verbose: true
     when:
       branch: master
       event: push
