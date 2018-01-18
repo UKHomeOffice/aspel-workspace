@@ -10,7 +10,7 @@ class Index extends React.Component {
   render() {
     return (
       <Layout {...this.props}>
-        <h1 className="heading-large">Hello {this.props.name}</h1>
+        <h1 className="heading-large">React Component Examples</h1>
         <form action="" method="post">
           <Input
             name="name"

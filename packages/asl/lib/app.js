@@ -25,7 +25,7 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res) => {
-    res.render('index', { name: 'World' });
+    res.render('index');
   });
 
   return app;
