@@ -32,6 +32,16 @@ pipeline:
       branch: master
       event: push
 
+  trigger_deploy:
+    image: quay.io/ukhomeofficedigital/drone-trigger:latest
+    drone_server: https://drone.acp.homeoffice.gov.uk
+    repo: UKHomeOffice/asl
+    number: $${DRONE_BUILD_NUMBER}
+    deploy_to: dev
+    when:
+      branch: master
+      event: push
+
   dev_deploy:
     image: quay.io/ukhomeofficedigital/kd:v0.5.0
     secrets:
