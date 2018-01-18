@@ -38,9 +38,8 @@ pipeline:
       - drone_token
     drone_server: https://drone.acp.homeoffice.gov.uk
     repo: UKHomeOffice/asl
-    number: ${DRONE_BUILD_NUMBER}
+    branch: master
     deploy_to: dev
-    verbose: true
     when:
       branch: master
       event: push
