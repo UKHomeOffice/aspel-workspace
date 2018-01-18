@@ -39,10 +39,7 @@ pipeline:
     branch: master
     secrets:
       - drone_token
-    params:
-      - REPO=UKHomeOffice/asl
-      - FILTER_NUMBER=${DRONE_BUILD_NUMBER}
-      - DRONE_TOKEN=${DRONE_TOKEN}
+    params: DEPLOY_REPO=UKHomeOffice/asl,DEPLOY_NUMBER=${DRONE_BUILD_NUMBER},DRONE_TOKEN=${DRONE_TOKEN}
     deploy_to: dev
     when:
       branch: master
