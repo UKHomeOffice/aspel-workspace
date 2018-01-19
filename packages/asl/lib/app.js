@@ -1,11 +1,10 @@
 const express = require('express');
 const morgan = require('morgan');
+const session = require('express-session');
 
 const assets = require('govuk-react-components').assets;
 
 module.exports = settings => {
-
-  console.log(settings);
 
   settings = Object.assign({
     assets: './public'
@@ -25,6 +24,11 @@ module.exports = settings => {
     next();
   });
 
+  app.use(session({
+    secret: settings.secret,
+    saveUninitialized: true,
+    resave: true
+  }));
   app.use(require('./auth')(settings.auth));
 
   app.get('/', (req, res) => {

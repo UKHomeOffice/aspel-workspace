@@ -1,4 +1,5 @@
 module.exports = {
+  secret: process.env.SESSION_SECRET,
   port: process.env.PORT || 8080,
   auth: {
     realm: process.env.KEYCLOAK_REALM,

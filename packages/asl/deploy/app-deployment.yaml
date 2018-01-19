@@ -16,6 +16,11 @@ spec:
           image: quay.io/ukhomeofficedigital/asl:{{.DRONE_COMMIT_SHA}}
           imagePullPolicy: Always
           env:
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: asl-dev-session
+                  key: secret
             - name: KEYCLOAK_REALM
               value: Asl-dev
             - name: KEYCLOAK_URL
