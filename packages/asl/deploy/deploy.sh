@@ -9,4 +9,5 @@ echo ${DRONE_COMMIT_SHA}
 kd --insecure-skip-tls-verify \
   -f deploy/deployment.yaml \
   -f deploy/service.yaml \
-  -f deploy/ingress.yaml
+  -f deploy/ingress.yaml \
+  -f deploy/network-policy.yaml
