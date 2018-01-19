@@ -7,6 +7,4 @@ kd --insecure-skip-tls-verify \
   -f deploy/app-deployment.yaml \
   -f deploy/app-service.yaml \
   -f deploy/app-ingress.yaml \
-  -f deploy/redis-deployment.yaml \
-  -f deploy/redis-service.yaml \
   -f deploy/network-policy.yaml
