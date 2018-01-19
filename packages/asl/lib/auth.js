@@ -3,6 +3,7 @@ const {Router} = require('express');
 const {MemoryStore} = require('express-session');
 
 module.exports = settings => {
+
   const router = Router();
   const store = new MemoryStore();
 
@@ -15,8 +16,6 @@ module.exports = settings => {
       secret: settings.secret
     }
   };
-
-  console.log(config);
 
   const keycloak = new Keycloak({ store }, config);
 
@@ -33,4 +32,4 @@ module.exports = settings => {
   });
 
   return router;
-}
+};
