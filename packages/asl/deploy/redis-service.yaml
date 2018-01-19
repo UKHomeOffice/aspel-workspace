@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: asl-dev-redis
+    service: asl-dev-redis
+  name: asl-dev-redis
+spec:
+  ports:
+    - port: 6379
+      targetPort: 6379
+  selector:
+    name: asl-dev-redis

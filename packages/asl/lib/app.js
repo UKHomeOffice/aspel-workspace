@@ -27,8 +27,10 @@ module.exports = settings => {
     next();
   });
 
+  app.use(require('./auth')(settings.auth));
+
   app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', { user: req.user });
   });
 
   return app;
