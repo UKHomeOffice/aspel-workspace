@@ -48,6 +48,8 @@ spec:
               value: "FALSE"
             - name: NAXSI_USE_DEFAULT_RULES
               value: "FALSE"
+            - name: PORT_IN_HOST_HEADER
+              value: "FALSE"
             - name: ADD_NGINX_SERVER_CFG
               value: |
                 add_header Cache-Control private;
