@@ -44,6 +44,8 @@ spec:
               value: 127.0.0.1
             - name: PROXY_SERVICE_PORT
               value: "8080"
+            - name: ENABLE_UUID_PARAM
+              value: "FALSE"
             - name: ADD_NGINX_SERVER_CFG
               value: |
                 add_header Cache-Control private;
