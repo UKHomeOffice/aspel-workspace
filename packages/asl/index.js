@@ -1,15 +1,5 @@
 const App = require('./lib/app');
-
-const settings = {
-  secret: process.env.SESSION_SECRET,
-  port: process.env.PORT || 8080,
-  auth: {
-    realm: process.env.KEYCLOAK_REALM,
-    url: process.env.KEYCLOAK_URL,
-    client: process.env.KEYCLOAK_CLIENT,
-    secret: process.env.KEYCLOAK_SECRET
-  }
-};
+const settings = require('./config');
 
 const server = App(settings).listen(settings.port, (err, result) => {
   if (err) {
@@ -19,7 +9,6 @@ const server = App(settings).listen(settings.port, (err, result) => {
 });
 
 process.on('SIGINT', () => {
-
   if (server.listening) {
     console.log('Attempting to exit gracefully.');
     server.close(() => {
@@ -27,5 +16,4 @@ process.on('SIGINT', () => {
       process.exit();
     });
   }
-
 });
