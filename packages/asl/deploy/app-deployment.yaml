@@ -15,6 +15,30 @@ spec:
         - name: asl-dev-app
           image: quay.io/ukhomeofficedigital/asl:{{.DRONE_COMMIT_SHA}}
           imagePullPolicy: Always
+          env:
+            - name: REDIS_HOST
+              value: asl-dev-redis
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: asl-dev-redis
+                  key: pass
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: asl-dev-session
+                  key: secret
+            - name: KEYCLOAK_REALM
+              value: Asl-dev
+            - name: KEYCLOAK_URL
+              value: https://sso-dev.notprod.homeoffice.gov.uk/auth
+            - name: KEYCLOAK_CLIENT
+              value: asl-dev-connect
+            - name: KEYCLOAK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: asl-dev-auth
+                  key: secret
           resources:
             limits:
               memory: "256Mi"

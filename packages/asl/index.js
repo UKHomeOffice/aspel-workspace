@@ -1,11 +1,14 @@
 const App = require('./lib/app');
+const settings = require('./config');
 
-const server = App().listen(process.env.PORT || 8080, (err, result) => {
+const server = App(settings).listen(settings.port, (err, result) => {
+  if (err) {
+    return console.error(err);
+  }
   console.log(`Listening on port ${server.address().port}`);
 });
 
 process.on('SIGINT', () => {
-
   if (server.listening) {
     console.log('Attempting to exit gracefully.');
     server.close(() => {
@@ -13,5 +16,4 @@ process.on('SIGINT', () => {
       process.exit();
     });
   }
-
 });
