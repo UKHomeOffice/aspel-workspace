@@ -15,6 +15,6 @@ spec:
       protocol: TCP
   podSelector:
     matchLabels:
-      name: nginx-proxy
+      name: asl-dev-app
   policyTypes:
   - Ingress
