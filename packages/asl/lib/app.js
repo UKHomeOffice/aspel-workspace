@@ -5,6 +5,8 @@ const assets = require('govuk-react-components').assets;
 
 module.exports = settings => {
 
+  console.log(settings);
+
   settings = Object.assign({
     assets: './public'
   }, settings);
