@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
+const session = require('@lennym/redis-session');
 
 const assets = require('govuk-react-components').assets;
 
@@ -18,6 +19,8 @@ module.exports = settings => {
   app.use(assets());
 
   app.use(morgan('dev'));
+
+  app.use(session({ secret: settings.secret, name: 'asl' }));
 
   app.use((req, res, next) => {
     res.locals.propositionHeader = 'Animal Science Licensing';

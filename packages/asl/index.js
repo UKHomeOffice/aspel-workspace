@@ -1,6 +1,11 @@
 const App = require('./lib/app');
 
-const server = App().listen(process.env.PORT || 8080, (err, result) => {
+const settings = {
+  secret: process.env.SESSION_SECRET,
+  port: process.env.PORT || 8080
+};
+
+const server = App(settings).listen(settings.port, (err, result) => {
   console.log(`Listening on port ${server.address().port}`);
 });
 
