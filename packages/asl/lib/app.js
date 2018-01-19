@@ -12,6 +12,7 @@ module.exports = settings => {
 
   const app = express();
 
+  app.set('trust proxy', true);
   app.set('view engine', 'jsx');
   app.engine('jsx', require('express-react-views').createEngine());
 
