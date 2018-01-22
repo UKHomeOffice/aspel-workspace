@@ -4,7 +4,8 @@ module.exports = {
   session: {
     secret: process.env.SESSION_SECRET,
     host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT
+    port: process.env.REDIS_PORT,
+    logger: console.log
   },
   auth: {
     realm: process.env.KEYCLOAK_REALM,
