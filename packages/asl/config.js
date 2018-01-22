@@ -5,6 +5,7 @@ module.exports = {
     secret: process.env.SESSION_SECRET,
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD,
     logger: console.log
   },
   auth: {
