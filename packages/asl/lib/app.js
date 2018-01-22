@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
-const session = require('express-session');
+
+const session = require('@lennym/redis-session');
 
 const assets = require('govuk-react-components').assets;
 
@@ -17,7 +18,6 @@ module.exports = settings => {
   app.engine('jsx', require('express-react-views').createEngine());
 
   app.use(assets());
-
   app.use(morgan('dev'));
 
   app.use((req, res, next) => {
@@ -25,11 +25,7 @@ module.exports = settings => {
     next();
   });
 
-  app.use(session({
-    secret: settings.secret,
-    saveUninitialized: true,
-    resave: true
-  }));
+  app.use(session(settings.session));
   app.use(require('./auth')(settings.auth));
 
   app.get('/', (req, res) => {
