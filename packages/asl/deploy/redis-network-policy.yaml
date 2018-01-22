@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: NetworkPolicy
+metadata:
+  name: permit-redis-access
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          name: asl-dev-app
+    ports:
+    - port: 6379
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      name: asl-dev-redis
