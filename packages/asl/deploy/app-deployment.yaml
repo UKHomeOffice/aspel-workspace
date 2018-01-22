@@ -16,6 +16,13 @@ spec:
           image: quay.io/ukhomeofficedigital/asl:{{.DRONE_COMMIT_SHA}}
           imagePullPolicy: Always
           env:
+            - name: REDIS_HOST
+              value: asl-dev-redis
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: asl-dev-redis
+                  key: pass
             - name: SESSION_SECRET
               valueFrom:
                 secretKeyRef:
