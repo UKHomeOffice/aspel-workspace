@@ -30,6 +30,8 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/redis
               name: data
+          securityContext:
+            runAsNonRoot: true
       volumes:
         - name: data
           emptyDir: {}
