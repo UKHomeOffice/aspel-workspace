@@ -1,12 +1,10 @@
 module.exports = {
-  secret: process.env.SESSION_SECRET,
   port: process.env.PORT || 8080,
   session: {
     secret: process.env.SESSION_SECRET,
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
-    password: process.env.REDIS_PASSWORD,
-    logger: console.log
+    password: process.env.REDIS_PASSWORD
   },
   auth: {
     realm: process.env.KEYCLOAK_REALM,
