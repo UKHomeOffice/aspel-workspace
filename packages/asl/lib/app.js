@@ -4,6 +4,9 @@ const morgan = require('morgan');
 const session = require('@lennym/redis-session');
 
 const assets = require('govuk-react-components').assets;
+const views = require('express-react-views');
+
+const errorHandler = require('./error-handler');
 
 module.exports = settings => {
 
@@ -15,7 +18,7 @@ module.exports = settings => {
 
   app.set('trust proxy', true);
   app.set('view engine', 'jsx');
-  app.engine('jsx', require('express-react-views').createEngine());
+  app.engine('jsx', views.createEngine());
 
   app.use(assets());
   app.use(morgan('dev'));
@@ -31,6 +34,8 @@ module.exports = settings => {
   app.get('/', (req, res) => {
     res.render('index', { user: req.user });
   });
+
+  app.use(errorHandler());
 
   return app;
 

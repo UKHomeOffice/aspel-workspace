@@ -19,6 +19,12 @@ module.exports = settings => {
 
   const keycloak = new Keycloak({ store }, config);
 
+  keycloak.accessDenied = (req, res, next) => {
+    const e = new Error('Access Denied');
+    e.status = 403;
+    next(e);
+  }
+
   router.use(keycloak.middleware());
   router.use(keycloak.protect());
   router.use((req, res, next) => {
