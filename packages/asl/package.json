@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl#readme",
   "dependencies": {
-    "asl-service": "^1.0.0",
+    "asl-service": "^1.0.1",
     "govuk-react-components": "^0.2.1",
     "react": "^16.2.0"
   },

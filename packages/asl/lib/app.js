@@ -13,7 +13,8 @@ module.exports = settings => {
 
   app.get('/', (req, res) => {
     res.render('index', {
-      name: `${req.user.firstName} ${req.user.lastName}`,
+      name: req.user.get('name'),
+      establishment: req.user.get('establishment'),
       isInspector: req.user.is('inspector')
     });
   });
