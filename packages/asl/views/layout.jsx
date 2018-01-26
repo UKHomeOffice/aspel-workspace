@@ -5,7 +5,7 @@ const PhaseBanner = require('govuk-react-components/components/phase-banner');
 class Layout extends React.Component {
   render() {
     return (
-      <GovUK propositionHeader={this.props.propositionHeader} title={this.props.title}>
+      <GovUK propositionHeader={this.props.propositionHeader} title={this.props.title} stylesheets={['/public/css/app.css']}>
         <main className="main" id="content">
           <PhaseBanner phase="prototype" />
           <div className="grid-row">
