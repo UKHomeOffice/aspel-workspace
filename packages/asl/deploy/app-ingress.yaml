@@ -11,10 +11,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - "dev.notprod.asl.homeoffice.gov.uk"
+    - "{{.DEPLOY_TARGET}}.notprod.asl.homeoffice.gov.uk"
     secretName: asl-{{.DEPLOY_TARGET}}-cert
   rules:
-  - host: "dev.notprod.asl.homeoffice.gov.uk"
+  - host: "{{.DEPLOY_TARGET}}.notprod.asl.homeoffice.gov.uk"
     http:
       paths:
       - path: /
