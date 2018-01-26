@@ -26,7 +26,7 @@ spec:
             - name: SESSION_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: asl-{{.DEPLOY_TARGET}}-session
+                  name: asl-dev-session
                   key: secret
             - name: KEYCLOAK_REALM
               value: Asl-dev
@@ -37,7 +37,7 @@ spec:
             - name: KEYCLOAK_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: asl-{{.DEPLOY_TARGET}}-auth
+                  name: asl-dev-auth
                   key: secret
             - name: API_URL
               value: https://{{.DEPLOY_TARGET}}api.notprod.asl.homeoffice.gov.uk
