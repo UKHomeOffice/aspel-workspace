@@ -21,7 +21,7 @@ spec:
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: asl-{{.DEPLOY_TARGET}}-redis
+                  name: asl-dev-redis
                   key: pass
             - name: SESSION_SECRET
               valueFrom:

@@ -8,8 +8,8 @@ spec:
   template:
     metadata:
       labels:
-        name: asl-dev-redis
-        service: asl-dev-redis
+        name: asl-{{.DEPLOY_TARGET}}-redis
+        service: asl-{{.DEPLOY_TARGET}}-redis
     spec:
       containers:
         - name: redis
