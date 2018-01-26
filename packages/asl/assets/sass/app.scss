@@ -1,14 +1,21 @@
 @import "govuk";
 
 h1 {
-  @extend .heading-xlarge;
-}
-h2 {
   @extend .heading-large;
 }
-h3 {
+h2 {
   @extend .heading-medium;
+}
+h3 {
+  @extend .heading-small;
 }
 h4 {
   @extend .heading-small;
+}
+
+.code {
+  background: #eee;
+  border: #ccc;
+  padding: 1em;
+  font-family: monospace;
 }
