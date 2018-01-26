@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: asl-dev-ingress
+  name: asl-{{.SERVICE_NAME}}-{{.DEPLOY_TARGET}}-ingress
   annotations:
     ingress.kubernetes.io/secure-backends: "true"
     kubernetes.io/ingress.class: "nginx-external"
@@ -12,12 +12,12 @@ spec:
   tls:
   - hosts:
     - "dev.notprod.asl.homeoffice.gov.uk"
-    secretName: asl-dev-cert
+    secretName: asl-{{.DEPLOY_TARGET}}-cert
   rules:
   - host: "dev.notprod.asl.homeoffice.gov.uk"
     http:
       paths:
       - path: /
         backend:
-          serviceName: asl-dev-app
+          serviceName: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
           servicePort: 10443

@@ -2,45 +2,45 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: asl-dev-app
+  name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        name: asl-dev-app
-        service: asl-dev-app
+        name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
+        service: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
     spec:
       containers:
-        - name: asl-dev-app
+        - name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
           image: quay.io/ukhomeofficedigital/asl:{{.DRONE_COMMIT_SHA}}
           imagePullPolicy: Always
           env:
             - name: REDIS_HOST
-              value: asl-dev-redis
+              value: asl-{{.DEPLOY_TARGET}}-redis
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: asl-dev-redis
+                  name: asl-{{.DEPLOY_TARGET}}-redis
                   key: pass
             - name: SESSION_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: asl-dev-session
+                  name: asl-{{.DEPLOY_TARGET}}-session
                   key: secret
             - name: KEYCLOAK_REALM
               value: Asl-dev
             - name: KEYCLOAK_URL
               value: https://sso-dev.notprod.homeoffice.gov.uk/auth
             - name: KEYCLOAK_CLIENT
-              value: asl-dev-connect
+              value: asl-{{.DEPLOY_TARGET}}-connect
             - name: KEYCLOAK_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: asl-dev-auth
+                  name: asl-{{.DEPLOY_TARGET}}-auth
                   key: secret
             - name: API_URL
-              value: https://devapi.notprod.asl.homeoffice.gov.uk
+              value: https://{{.DEPLOY_TARGET}}api.notprod.asl.homeoffice.gov.uk
           resources:
             limits:
               memory: "256Mi"
