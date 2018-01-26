@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: asl-{{.SERVICE_NAME}}-{{.DEPLOY_TARGET}}-ingress
+  name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}-ingress
   annotations:
     ingress.kubernetes.io/secure-backends: "true"
     kubernetes.io/ingress.class: "nginx-external"
