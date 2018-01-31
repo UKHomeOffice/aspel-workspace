@@ -58,3 +58,5 @@ typings/
 .env
 
 public
+tests/functional/screenshots
+
