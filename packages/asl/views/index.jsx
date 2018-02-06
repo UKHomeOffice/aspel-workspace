@@ -25,7 +25,12 @@ class Index extends React.Component {
             </div>
           ) : <p>No associated establishment</p>
         }
-        <p><a className="button button-large" href="/logout">Log out</a></p>
+        <p>
+          <a className="button button-large" href="/logout">Log out</a>
+        </p>
+        <p>
+          <a className="button button-large" href="https://sso-dev.notprod.homeoffice.gov.uk/auth/realms/Asl-dev/account">Manage account</a>
+        </p>
       </Layout>
     );
   }
