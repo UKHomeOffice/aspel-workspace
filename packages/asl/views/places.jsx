@@ -48,7 +48,10 @@ class Places extends React.Component {
                       <td>{ place.name }</td>
                       <td><Join>{ place.holding.map(a =><Acronym>{a}</Acronym>) }</Join></td>
                       <td><Join>{ place.suitability.map(a => <Acronym>{a}</Acronym>) }</Join></td>
-                      <td><a href={`/profile/${place.nacwo.profile.id}`}>{place.nacwo.profile.name}</a></td>
+                      <td>
+                        { place.nacwo && <a href={`/profile/${place.nacwo.profile.id}`}>{place.nacwo.profile.name}</a> }
+                        { !place.nacwo && '-' }
+                      </td>
                     </tr>
                   ))
                 }
