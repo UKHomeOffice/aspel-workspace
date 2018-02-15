@@ -2,6 +2,8 @@ const React = require('react');
 const GovUK = require('govuk-react-components/components/layout');
 const PhaseBanner = require('govuk-react-components/components/phase-banner');
 
+const Api = require('./components/api');
+
 class Layout extends React.Component {
   render() {
     return (
@@ -12,6 +14,8 @@ class Layout extends React.Component {
 
             <div className="column-full">
               { this.props.children }
+              <Api {...this.props.api} />
+              <p><a className="button button-large" href="/logout">Log out</a></p>
             </div>
 
           </div>
