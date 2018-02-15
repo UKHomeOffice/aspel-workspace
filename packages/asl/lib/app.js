@@ -1,4 +1,4 @@
-const ui = require('asl-service/ui');
+const ui = require('@asl/service/ui');
 const fetch = require('r2');
 const errorHandler = require('./error-handler');
 
