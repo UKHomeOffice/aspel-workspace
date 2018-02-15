@@ -23,7 +23,6 @@ class Roles extends React.Component {
           !!role.places.length && <table>
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Name</th>
                 <th>Site</th>
                 <th>Building</th>
@@ -35,8 +34,7 @@ class Roles extends React.Component {
             <tbody>
             {
               role.places.map(place => (
-                <tr>
-                  <td>{ place.id }</td>
+                <tr key={place.id}>
                   <td>{ place.name }</td>
                   <td>{ place.site }</td>
                   <td>{ place.building }</td>

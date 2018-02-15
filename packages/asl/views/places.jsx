@@ -29,7 +29,6 @@ class Places extends React.Component {
               <table>
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Site</th>
                     <th>Building</th>
                     <th>Floor</th>
@@ -43,7 +42,6 @@ class Places extends React.Component {
                 {
                   this.props.places && this.props.places.map(place => (
                     <tr key={place.id}>
-                      <td>{ place.id }</td>
                       <td>{ place.site }</td>
                       <td>{ place.building }</td>
                       <td>{ place.floor }</td>
