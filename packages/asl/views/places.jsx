@@ -35,7 +35,7 @@ class Places extends React.Component {
                     <th>Name</th>
                     <th>Holding Code</th>
                     <th>Suitability</th>
-                    <th>NACWO</th>
+                    <th><Acronym>NACWO</Acronym></th>
                   </tr>
                 </thead>
                 <tbody>
