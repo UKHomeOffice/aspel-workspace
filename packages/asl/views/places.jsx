@@ -2,6 +2,21 @@ const React = require('react');
 const Layout = require('./layout');
 const Api = require('./components/api');
 
+const Acronym = require('./components/acronym');
+
+class Join extends React.Component {
+
+  render() {
+    const sep = this.props.separator || ', ';
+    return React.Children.toArray(this.props.children).reduce((list, item, i) => {
+      if (i) {
+        list.push(sep);
+      }
+      return list.concat(item);
+    }, []);
+  }
+}
+
 class Places extends React.Component {
   render() {
     return (
@@ -27,14 +42,14 @@ class Places extends React.Component {
                 <tbody>
                 {
                   this.props.places && this.props.places.map(place => (
-                    <tr>
+                    <tr key={place.id}>
                       <td>{ place.id }</td>
                       <td>{ place.site }</td>
                       <td>{ place.building }</td>
                       <td>{ place.floor }</td>
                       <td>{ place.name }</td>
-                      <td>{ place.holding.join() }</td>
-                      <td>{ place.suitability.join() }</td>
+                      <td><Join>{ place.holding.map(a =><Acronym>{a}</Acronym>) }</Join></td>
+                      <td><Join>{ place.suitability.map(a => <Acronym>{a}</Acronym>) }</Join></td>
                       <td><a href={`/profile/${place.nacwo.profile.id}`}>{place.nacwo.profile.name}</a></td>
                     </tr>
                   ))

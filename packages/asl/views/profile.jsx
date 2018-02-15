@@ -1,14 +1,18 @@
 const React = require('react');
 const Layout = require('./layout');
 const Api = require('./components/api');
+const Acronym = require('./components/acronym');
+const Join = require('./components/join');
+
+const dictionary = require('@asl/dictionary');
 
 class Roles extends React.Component {
 
   roleName(type) {
-    return {
-      elh: 'Establishment Licence Holder',
-      nacwo: 'NACWO'
-    }[type];
+    const dict = Object.assign({}, dictionary, {
+      elh: 'Establishment Licence Holder'
+    });
+    return dict[type] || dict[type.toUpperCase()] || type;
   }
 
   renderRoles() {
@@ -37,8 +41,8 @@ class Roles extends React.Component {
                   <td>{ place.site }</td>
                   <td>{ place.building }</td>
                   <td>{ place.floor }</td>
-                  <td>{ place.holding.join() }</td>
-                  <td>{ place.suitability.join() }</td>
+                  <td><Join>{ place.holding.map(a => <Acronym key={a}>{a}</Acronym>) }</Join></td>
+                  <td><Join>{ place.suitability.map(a => <Acronym key={a}>{a}</Acronym>) }</Join></td>
                 </tr>
               ))
             }

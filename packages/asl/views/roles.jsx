@@ -2,13 +2,15 @@ const React = require('react');
 const Layout = require('./layout');
 const Api = require('./components/api');
 
+const dictionary = require('@asl/dictionary')
+
 class Roles extends React.Component {
 
   roleName(type) {
-    return {
-      elh: 'Establishment Licence Holder',
-      nacwo: 'NACWO'
-    }[type];
+    const dict = Object.assign({}, dictionary, {
+      elh: 'Establishment Licence Holder'
+    });
+    return dict[type] || dict[type.toUpperCase()] || type;
   }
 
   render() {

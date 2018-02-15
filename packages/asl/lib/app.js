@@ -19,6 +19,7 @@ module.exports = settings => {
     const headers = {
       Authorization: `bearer ${req.user.access_token}`
     };
+
     const url = `${settings.api}/establishment/${establishment.toLowerCase()}${req.url}`;
     fetch(url, { headers }).response
       .then(response => {
@@ -29,12 +30,18 @@ module.exports = settings => {
         return response.json();
       })
       .then(json => {
+        res.locals.api.data = JSON.stringify(json, null, '  ');
+        if (res.locals.api.status > 399) {
+          const err = new Error(json.message);
+          Object.assign(err, json);
+          throw err;
+        }
         res.locals.establishment = json.meta.establishment;
         res.locals.data = json.data;
-        res.locals.api.data = JSON.stringify(json, null, '  ');
       })
       .then(() => next())
       .catch(e => next(e));
+
   });
 
   app.get('/roles', (req, res) => {
