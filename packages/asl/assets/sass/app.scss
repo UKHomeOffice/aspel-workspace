@@ -13,6 +13,20 @@ h4 {
   @extend .heading-small;
 }
 
+.data {
+  padding: $gutter;
+  background: $govuk-blue;
+  color: white;
+  a {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+details {
+  margin-top: 2*$gutter;
+}
+
 .code {
   background: #eee;
   border: #ccc;
