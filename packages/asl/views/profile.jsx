@@ -57,8 +57,24 @@ class Roles extends React.Component {
         <div>
           <h1>{this.props.profile.name}</h1>
           <h2><a href="/">{ this.props.establishment.name }</a></h2>
-          <p>Email: { this.props.profile.email }</p>
-          <p>Phone: { this.props.profile.telephone }</p>
+
+          <dl>
+            <dt>Email</dt>
+            <dd>{this.props.profile.email}</dd>
+
+            <dt>Phone</dt>
+            <dd>{this.props.profile.telephone}</dd>
+
+            <dt>Address</dt>
+            <dd>{this.props.profile.address}</dd>
+
+            <dt>Qualifications</dt>
+            <dd>{this.props.profile.qualifications}</dd>
+
+            <dt>Notes</dt>
+            <dd>{this.props.profile.notes}</dd>
+          </dl>
+
           <h2>Roles</h2>
           { this.renderRoles() }
         </div>

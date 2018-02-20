@@ -63,7 +63,10 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', {
+      establishment: res.locals.data,
+      elh: res.locals.data.roles.find(r => r.type === 'elh')
+    });
   });
 
   app.use(errorHandler());
