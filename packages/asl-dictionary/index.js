@@ -4,7 +4,7 @@ module.exports = {
   NACWO: 'Named Animal Care and Welfare Officer',
   NIO: 'Named Information Officer',
   NVS: 'Named Veterinary Surgeon',
-  NTCO: 'Named Training And Competence Officer',
+  NTCO: 'Named Training And Competency Officer',
 
   // holding codes
   LA: 'Large Animals',
