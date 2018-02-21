@@ -11,6 +11,7 @@ module.exports = {
   SA: 'Small Animals',
   AQ: 'Aquatic',
   NHP: 'Non-Human Primates',
+  EQU: 'Horses',
 
   // suitability codes
   STH: 'Short Term Holding',
