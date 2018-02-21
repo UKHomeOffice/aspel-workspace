@@ -3,7 +3,7 @@ module.exports = {
   ELH: 'Establishment Licence Holder',
   NACWO: 'Named Animal Care and Welfare Officer',
   NIO: 'Named Information Officer',
-  NVS: 'Named Vetinary Surgeon',
+  NVS: 'Named Veterinary Surgeon',
   NTCO: 'Named Training And Competence Officer',
 
   // holding codes
