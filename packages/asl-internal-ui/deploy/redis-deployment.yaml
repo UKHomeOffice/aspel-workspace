@@ -2,14 +2,14 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}-redis
+  name: {{.SERVICE_NAME}}-redis
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}-redis
-        service: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}-redis
+        name: {{.SERVICE_NAME}}-redis
+        service: {{.SERVICE_NAME}}-redis
     spec:
       containers:
         - name: redis

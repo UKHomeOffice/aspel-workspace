@@ -1,16 +1,16 @@
 apiVersion: extensions/v1beta1
 kind: NetworkPolicy
 metadata:
-  name: {{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}-permit-redis-access
+  name: {{.SERVICE_NAME}}-permit-redis-access
 spec:
   ingress:
   - from:
     - podSelector:
         matchLabels:
-          name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
+          name: {{.SERVICE_NAME}}
     ports:
     - port: 6379
       protocol: TCP
   podSelector:
     matchLabels:
-      name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}-redis
+      name: {{.SERVICE_NAME}}-redis
