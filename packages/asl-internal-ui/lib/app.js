@@ -13,7 +13,6 @@ module.exports = settings => {
   app.protect('inspector');
 
   app.use((req, res, next) => {
-    console.log(req.user);
     req.api('/establishments')
       .then(response => {
         res.locals.api = response;
