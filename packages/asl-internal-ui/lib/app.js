@@ -17,13 +17,12 @@ module.exports = settings => {
     req.api('/establishments')
       .then(response => {
         res.locals.api = response;
-        res.locals.api.data = JSON.stringify(response.json, null, '  ')
+        res.locals.api.data = JSON.stringify(response.json, null, '  ');
       })
       .then(() => next())
       .catch(e => next(e));
 
   });
-
 
   app.get('/', (req, res) => {
     res.render('index');
