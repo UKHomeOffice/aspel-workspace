@@ -40,7 +40,7 @@ spec:
                   name: asl-dev-auth
                   key: secret
             - name: API_URL
-              value: https://inspectapi.notprod.asl.homeoffice.gov.uk
+              value: https://inspector-api.notprod.asl.homeoffice.gov.uk
           resources:
             limits:
               memory: "256Mi"
