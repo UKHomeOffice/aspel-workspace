@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}-redis
+    service: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}-redis
+  name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}-redis
+spec:
+  ports:
+    - port: 6379
+      targetPort: 6379
+  selector:
+    name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}-redis

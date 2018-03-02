@@ -1,0 +1,71 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
+        service: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
+    spec:
+      containers:
+        - name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
+          image: quay.io/ukhomeofficedigital/asl-inspector-ui:{{.DRONE_COMMIT_SHA}}
+          imagePullPolicy: Always
+          env:
+            - name: REDIS_HOST
+              value: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}-redis
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: asl-dev-redis
+                  key: pass
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: asl-dev-session
+                  key: secret
+            - name: KEYCLOAK_REALM
+              value: Asl-dev
+            - name: KEYCLOAK_URL
+              value: https://sso-dev.notprod.homeoffice.gov.uk/auth
+            - name: KEYCLOAK_CLIENT
+              value: asl-dev-connect
+            - name: KEYCLOAK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: asl-dev-auth
+                  key: secret
+            - name: API_URL
+              value: https://{{.DEPLOY_TARGET}}api.notprod.asl.homeoffice.gov.uk
+          resources:
+            limits:
+              memory: "256Mi"
+          securityContext:
+            runAsNonRoot: true
+        - name: nginx-proxy
+          image: quay.io/ukhomeofficedigital/nginx-proxy-govuk:v3
+          env:
+            - name: PROXY_SERVICE_HOST
+              value: 127.0.0.1
+            - name: PROXY_SERVICE_PORT
+              value: "8080"
+            - name: ENABLE_UUID_PARAM
+              value: "FALSE"
+            - name: NAXSI_USE_DEFAULT_RULES
+              value: "FALSE"
+            - name: PORT_IN_HOST_HEADER
+              value: "FALSE"
+            - name: ADD_NGINX_SERVER_CFG
+              value: |
+                add_header Cache-Control private;
+                add_header X-Frame-Options "SAMEORIGIN" always;
+                add_header X-Content-Type-Options "nosniff" always;
+                add_header X-XSS-Protection "1; mode=block" always;
+          ports:
+            - containerPort: 10443
+          securityContext:
+            runAsNonRoot: true
