@@ -1,0 +1,9 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{.SERVICE_NAME}}-redirect
+  annotations:
+    nginx.ingress.kubernetes.io/permanent-redirect: "{{.SERVICE_NAME}}.notprod.asl.homeoffice.gov.uk"
+spec:
+  rules:
+  - host: "dev.notprod.asl.homeoffice.gov.uk"

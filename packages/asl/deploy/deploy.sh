@@ -12,4 +12,5 @@ kd --insecure-skip-tls-verify \
   -f deploy/network-policy.yaml \
   -f deploy/redis-deployment.yaml \
   -f deploy/redis-service.yaml \
-  -f deploy/redis-network-policy.yaml
+  -f deploy/redis-network-policy.yaml \
+  -f deploy/redirect.yaml
