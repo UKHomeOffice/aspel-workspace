@@ -2,22 +2,22 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
+  name: {{.SERVICE_NAME}}
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
-        service: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
+        name: {{.SERVICE_NAME}}
+        service: {{.SERVICE_NAME}}
     spec:
       containers:
-        - name: asl-{{.DEPLOY_TARGET}}-{{.SERVICE_NAME}}
+        - name: {{.SERVICE_NAME}}
           image: quay.io/ukhomeofficedigital/asl:{{.DRONE_COMMIT_SHA}}
           imagePullPolicy: Always
           env:
             - name: REDIS_HOST
-              value: asl-{{.DEPLOY_TARGET}}-redis
+              value: {{.SERVICE_NAME}}-redis
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -40,7 +40,7 @@ spec:
                   name: asl-dev-auth
                   key: secret
             - name: API_URL
-              value: https://{{.DEPLOY_TARGET}}api.notprod.asl.homeoffice.gov.uk
+              value: https://public-api.notprod.asl.homeoffice.gov.uk
           resources:
             limits:
               memory: "256Mi"
