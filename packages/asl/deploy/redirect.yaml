@@ -8,10 +8,10 @@ metadata:
     stable.k8s.psg.io/kcm.provider: http
   labels:
     stable.k8s.psg.io/kcm.class: "default"
+spec:
   tls:
   - hosts:
     - "dev.notprod.asl.homeoffice.gov.uk"
     secretName: asl-dev-cert
-spec:
   rules:
   - host: "dev.notprod.asl.homeoffice.gov.uk"
