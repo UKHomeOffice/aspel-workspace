@@ -1,0 +1,35 @@
+{
+  "name": "asl-inspector-ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint . --config lennym",
+    "prebuild:css": "mkdir -p ./public/css",
+    "build:css": "npm-sass ./assets/sass/app.scss > ./public/css/app.css",
+    "build": "npm run build:css",
+    "postinstall": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UKHomeOffice/asl-inspector-ui.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UKHomeOffice/asl-inspector-ui/issues"
+  },
+  "homepage": "https://github.com/UKHomeOffice/asl-inspector-ui#readme",
+  "dependencies": {
+    "@asl/service": "^1.2.0",
+    "govuk-react-components": "^0.3.3",
+    "r2": "^2.0.0",
+    "react": "^16.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.18.1",
+    "eslint-config-lennym": "^1.4.0",
+    "npm-sass": "^2.2.1"
+  }
+}
