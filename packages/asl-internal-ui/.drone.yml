@@ -17,6 +17,13 @@ pipeline:
     when:
       event: [push, pull_request]
 
+  compile:
+    image: node:8
+    commands:
+      - npm run build
+    when:
+      event: [push, pull_request]
+
   build:
     image: docker:17.09.1
     environment:
