@@ -94,19 +94,3 @@ pipeline:
     when:
       environment: dev
       event: deployment
-
-  post_deploy_test:
-    image: node:8
-    secrets:
-      - asl_password_holc
-    commands:
-      - npm install
-      - npm run test:functional
-    when:
-      event: deployment
-
-services:
-  selenium:
-    image: selenium/standalone-chrome
-    when:
-      event: deployment
