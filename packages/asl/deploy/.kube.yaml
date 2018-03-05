@@ -1,0 +1,3 @@
+name: public-ui
+url: public-ui.notprod.asl.homeoffice.gov.uk
+image: quay.io/ukhomeofficedigital/asl:{{.DRONE_COMMIT_SHA}}

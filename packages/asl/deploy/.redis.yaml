@@ -1,0 +1,4 @@
+name: asl-redis
+clients: public-ui
+passwordName: asl-dev-redis
+passwordKey: pass
