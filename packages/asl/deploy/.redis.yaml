@@ -1,5 +1,0 @@
-recipe: redis
-name: public-ui-redis
-clients: public-ui
-passwordName: asl-dev-redis
-passwordKey: pass
