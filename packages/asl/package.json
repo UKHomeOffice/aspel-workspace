@@ -12,8 +12,7 @@
     "prebuild:css": "mkdir -p ./public/css",
     "build:css": "npm-sass ./assets/sass/app.scss > ./public/css/app.css",
     "build": "npm run build:css",
-    "postinstall": "npm run build",
-    "predeploy": "kube-cookbook .kube.yaml && kube-cookbook .redis.yaml --recipe redis"
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",

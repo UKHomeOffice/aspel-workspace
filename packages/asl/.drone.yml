@@ -76,7 +76,9 @@ pipeline:
   configure_deploy:
     image: node:8
     commands:
-      - npm run predeploy
+      - npm install -g kube-cookbook
+      - kube-cookbook .kube.yaml
+      - kube-cookbook .redis.yaml --recipe redis
     when:
       environment: dev
       event: deployment
