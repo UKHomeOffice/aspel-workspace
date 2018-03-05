@@ -34,22 +34,22 @@ class Index extends React.Component {
               </dl>
 
 
-              <div class="grid-row">
+              <div className="grid-row">
 
-                <div class="column-one-half">
-                  <div class="data">
+                <div className="column-one-half">
+                  <div className="data">
                     <a href="/roles">
-                      <span class="data-item bold-xxlarge">{this.props.establishment.roles.length}</span>
-                      <span class="data-item bold-small">Named people</span>
+                      <span className="data-item bold-xxlarge">{this.props.establishment.roles.length}</span>
+                      <span className="data-item bold-small">Named people</span>
                     </a>
                   </div>
                 </div>
 
-                <div class="column-one-half">
-                  <div class="data">
+                <div className="column-one-half">
+                  <div className="data">
                     <a href="/places">
-                      <span class="data-item bold-xxlarge">{this.props.establishment.places.length}</span>
-                      <span class="data-item bold-small">Locations</span>
+                      <span className="data-item bold-xxlarge">{this.props.establishment.places.length}</span>
+                      <span className="data-item bold-small">Locations</span>
                     </a>
                   </div>
                 </div>
