@@ -67,7 +67,6 @@ pipeline:
       - npm install -g kube-cookbook
       - cd ./deploy
       - kube-cookbook ./.kube.yaml
-      - kube-cookbook ./.redis.yaml
     when:
       environment: dev
       event: deployment

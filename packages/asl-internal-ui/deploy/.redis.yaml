@@ -1,5 +1,0 @@
-recipe: redis
-name: inspector-ui-redis
-clients: inspector-ui
-passwordName: asl-dev-redis
-passwordKey: pass
