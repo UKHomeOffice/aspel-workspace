@@ -76,9 +76,8 @@ pipeline:
   configure_deploy:
     image: node:8
     commands:
-      - npm install -g kube-cookbook
       - mkdir deploy
-      - kube-cookbook --out deploy
+      - npx kube-cookbook --out deploy
     when:
       environment: dev
       event: deployment
