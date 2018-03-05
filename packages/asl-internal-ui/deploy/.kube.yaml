@@ -1,0 +1,21 @@
+name: inspector-ui
+url: inspector-ui.notprod.asl.homeoffice.gov.uk
+image: quay.io/ukhomeofficedigital/asl-inspector-ui:{{.DRONE_COMMIT_SHA}}
+env:
+  REDIS_HOST: inspector-ui-redis
+  REDIS_PASSWORD:
+    secret: true
+    name: asl-dev-redis
+    key: pass
+  SESSION_SECRET:
+    secret: true
+    name: asl-dev-session
+    key: secret
+  KEYCLOAK_REALM: Asl-dev
+  KEYCLOAK_URL: https://sso-dev.notprod.homeoffice.gov.uk/auth
+  KEYCLOAK_CLIENT: asl-dev-connect
+  KEYCLOAK_SECRET:
+    secret: true
+    name: asl-dev-auth
+    key: secret
+  API_URL: https://inspector-api.notprod.asl.homeoffice.gov.uk
