@@ -61,7 +61,7 @@ module.exports = settings => {
       return res.render('places', { places: res.locals.data }, (err, html) => {
         if (err) return next(err);
         fetch
-          .post('https://pdf.notprod.asl.homeoffice.gov.uk/convert', {
+          .post('https://pdf-generator.notprod.asl.homeoffice.gov.uk/convert', {
             json: { template: html }
           })
           .text.then(data => {
