@@ -24,7 +24,6 @@
 
 - name: pdf-generator
   recipe: webapp
-  prefix: "pdf-"
   url: pdf.notprod.asl.homeoffice.gov.uk
   image: quay.io/ukhomeofficedigital/html-pdf-converter:69987f6c6ed1f91790b76c693a0b68003420ce6c
   env:
