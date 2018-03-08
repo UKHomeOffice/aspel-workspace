@@ -56,7 +56,21 @@ module.exports = settings => {
     });
   });
 
-  app.get('/places', (req, res) => {
+  app.get('/places', (req, res, next) => {
+    if (req.query.pdf) {
+      return res.render('places', { places: res.locals.data }, (err, html) => {
+        if (err) return next(err);
+        fetch
+          .post('https://pdf.notprod.asl.homeoffice.gov.uk/convert', {
+            json: { template: html }
+          })
+          .text.then(data => {
+            res.attachment('download.pdf');
+            res.send(data);
+          })
+          .catch(next);
+      });
+    }
     res.render('places', {
       places: res.locals.data
     });
