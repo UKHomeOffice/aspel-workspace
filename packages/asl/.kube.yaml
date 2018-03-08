@@ -22,6 +22,13 @@
       key: secret
     API_URL: https://public-api.notprod.asl.homeoffice.gov.uk
 
+- name: pdf-generator
+  recipe: webapp
+  url: pdf.notprod.asl.homeoffice.gov.uk
+  image: quay.io/ukhomeofficedigital/html-pdf-converter:69987f6c6ed1f91790b76c693a0b68003420ce6c
+  env:
+    APP_PORT: 8080
+
 - name: public-ui-redis
   recipe: redis
   clients: public-ui
