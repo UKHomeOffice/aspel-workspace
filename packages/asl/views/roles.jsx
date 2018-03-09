@@ -33,7 +33,7 @@ class Roles extends React.Component {
                 <tbody>
                 {
                   this.props.roles && this.props.roles.map(role => (
-                    <tr>
+                    <tr key={ role.id }>
                       <td>{ role.profile.name }</td>
                       <td>{ this.roleName(role.type) }</td>
                       <td>{ role.places.length || '-' }</td>
