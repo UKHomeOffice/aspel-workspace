@@ -25,5 +25,5 @@ module.exports = settings => {
       return render.call(res, template, locals, cb);
     };
     next();
-  }
-}
+  };
+};
