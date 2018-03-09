@@ -1,5 +1,6 @@
 const ui = require('@asl/service/ui');
 const fetch = require('r2');
+const pdf = require('./pdf');
 const errorHandler = require('./error-handler');
 
 module.exports = settings => {
@@ -10,6 +11,8 @@ module.exports = settings => {
     res.locals.propositionHeader = 'Animal Science Licensing';
     next();
   });
+
+  app.use(pdf(settings));
 
   app.use((req, res, next) => {
     const establishment = req.user.get('establishment');
@@ -57,20 +60,6 @@ module.exports = settings => {
   });
 
   app.get('/places', (req, res, next) => {
-    if (req.query.pdf) {
-      return res.render('places', { places: res.locals.data }, (err, html) => {
-        if (err) return next(err);
-        fetch
-          .post('https://pdf-generator.notprod.asl.homeoffice.gov.uk/convert', {
-            json: { template: html }
-          })
-          .text.then(data => {
-            res.attachment('download.pdf');
-            res.send(data);
-          })
-          .catch(next);
-      });
-    }
     res.render('places', {
       places: res.locals.data
     });
