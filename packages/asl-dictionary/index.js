@@ -19,4 +19,4 @@ module.exports = {
   NOH: 'Not for Overnight Holding',
   NSEP: 'Non-Sterile Experimental Procedures',
   SEP: 'Sterile Experimental Procedures'
-}
+};
