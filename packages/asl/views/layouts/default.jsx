@@ -2,12 +2,13 @@ const React = require('react');
 const GovUK = require('govuk-react-components/components/layout');
 const PhaseBanner = require('govuk-react-components/components/phase-banner');
 
-const Api = require('./components/api');
+const Pdf = require('./pdf');
+const Api = require('../components/api');
 
 class Layout extends React.Component {
   render() {
     if (this.props.pdf) {
-      return <div>{ this.props.children } </div>
+      return <Pdf {...this.props}>{ this.props.children }</Pdf>
     }
     return (
       <GovUK propositionHeader={this.props.propositionHeader} title={this.props.title} stylesheets={['/public/css/app.css']}>

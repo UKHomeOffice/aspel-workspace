@@ -1,6 +1,5 @@
 const React = require('react');
-const Layout = require('./layout');
-const Api = require('./components/api');
+const Layout = require('./layouts/default');
 
 const moment = require('moment');
 
