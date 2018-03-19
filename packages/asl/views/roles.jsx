@@ -14,12 +14,12 @@ class Roles extends React.Component {
 
   render() {
     return (
-      <Layout {...this.props}>
+      <Layout {...this.props} crumbs={['Named people']}>
         {
           this.props.establishment ? (
             <div>
-              <h1><a href="/">{this.props.establishment.name}</a></h1>
-              <h2>People</h2>
+              <h2>{this.props.establishment.name}</h2>
+              <h1>Named people</h1>
               <table>
                 <thead>
                   <tr>

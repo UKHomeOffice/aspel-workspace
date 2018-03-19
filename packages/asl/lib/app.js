@@ -8,7 +8,7 @@ module.exports = settings => {
   const app = ui(settings);
 
   app.static.use((req, res, next) => {
-    res.locals.propositionHeader = 'Animal Science Licensing';
+    res.locals.propositionHeader = 'Research and testing with animals';
     next();
   });
 

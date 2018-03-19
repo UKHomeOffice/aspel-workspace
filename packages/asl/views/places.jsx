@@ -14,22 +14,23 @@ class Join extends React.Component {
       return list.concat(item);
     }, []);
   }
+
 }
 
 class Places extends React.Component {
   render() {
     return (
-      <Layout {...this.props}>
+      <Layout {...this.props} crumbs={['Licensed premises']}>
         {
           this.props.establishment ? (
             <div>
-              <h1><a href="/">{this.props.establishment.name}</a></h1>
-              <h2>Places</h2>
+              <h2>{this.props.establishment.name}</h2>
+              <h1>Licensed premises</h1>
               <table>
                 <thead>
                   <tr>
-                    <th>Site</th>
-                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Area</th>
                     <th>Holding Code</th>
                     <th>Suitability</th>
                     <th><Acronym>NACWO</Acronym></th>

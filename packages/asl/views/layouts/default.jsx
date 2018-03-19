@@ -4,6 +4,7 @@ const PhaseBanner = require('govuk-react-components/components/phase-banner');
 
 const Pdf = require('./pdf');
 const Api = require('../components/api');
+const Breadcrumb = require('../components/breadcrumb');
 
 class Layout extends React.Component {
   render() {
@@ -14,6 +15,7 @@ class Layout extends React.Component {
       <GovUK propositionHeader={this.props.propositionHeader} title={this.props.title} stylesheets={['/public/css/app.css']}>
         <main className="main" id="content">
           <PhaseBanner phase="prototype" />
+          <Breadcrumb crumbs={this.props.crumbs} />
           <div className="grid-row">
 
             <div className="column-full">

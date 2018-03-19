@@ -52,10 +52,11 @@ class Roles extends React.Component {
 
   render() {
     return (
-      <Layout {...this.props}>
+      <Layout {...this.props} crumbs={[{ href: '/roles', label: 'Named people' }, this.props.profile.name]}>
         <div>
+
+          <h2>{ this.props.establishment.name }</h2>
           <h1>{this.props.profile.name}</h1>
-          <h2><a href="/">{ this.props.establishment.name }</a></h2>
 
           <dl>
             <dt>Email</dt>
