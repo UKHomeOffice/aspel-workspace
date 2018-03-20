@@ -26,7 +26,7 @@
 - name: pdf-generator
   recipe: webapp
   url: pdf-generator.notprod.asl.homeoffice.gov.uk
-  image: quay.io/ukhomeofficedigital/html-pdf-converter:0c0dd874d6d8dcc84ec06aa19dcd867bf07c9eaf
+  image: quay.io/ukhomeofficedigital/html-pdf-converter:216c4dd30064b3a92ce5ca6ea429f47256069dca
   env:
     APP_PORT: '"8080"'
 
