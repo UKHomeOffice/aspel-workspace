@@ -15,6 +15,7 @@ module.exports = settings => {
             json: {
               template: html,
               pdfOptions: {
+                waitUntil: 'load',
                 printBackground: true,
                 displayHeaderFooter: true,
                 headerTemplate: '<p/>',
