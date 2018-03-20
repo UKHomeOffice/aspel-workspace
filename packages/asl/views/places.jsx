@@ -33,7 +33,6 @@ class Places extends React.Component {
                     <th>Area</th>
                     <th>Holding Code</th>
                     <th>Suitability</th>
-                    <th><Acronym>NACWO</Acronym></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -44,10 +43,6 @@ class Places extends React.Component {
                       <td>{ place.name }</td>
                       <td><Join>{ place.holding.map(a =><Acronym>{a}</Acronym>) }</Join></td>
                       <td><Join>{ place.suitability.map(a => <Acronym>{a}</Acronym>) }</Join></td>
-                      <td>
-                        { place.nacwo && <a href={`/profile/${place.nacwo.profile.id}`}>{place.nacwo.profile.name}</a> }
-                        { !place.nacwo && '-' }
-                      </td>
                     </tr>
                   ))
                 }
