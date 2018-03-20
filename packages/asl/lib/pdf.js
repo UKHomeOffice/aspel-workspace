@@ -10,12 +10,12 @@ module.exports = settings => {
       };
       return render.call(res, template, Object.assign({}, locals, defaults), (err, html) => {
         if (err) return next(err);
+        console.log(html);
         return fetch
           .post(settings.pdf, {
             json: {
               template: html,
               pdfOptions: {
-                waitUntil: 'load',
                 printBackground: true,
                 displayHeaderFooter: true,
                 headerTemplate: '<p/>',
