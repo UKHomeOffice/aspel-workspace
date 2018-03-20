@@ -6,11 +6,10 @@ module.exports = settings => {
     const pdf = (template, locals) => {
       const defaults = {
         pdf: true,
-        hostname: `${req.protocol}//${req.get('host')}`
+        hostname: `${req.protocol}://${req.get('host')}`
       };
       return render.call(res, template, Object.assign({}, locals, defaults), (err, html) => {
         if (err) return next(err);
-        console.log(html);
         return fetch
           .post(settings.pdf, {
             json: {
