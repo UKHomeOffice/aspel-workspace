@@ -12,7 +12,21 @@ module.exports = settings => {
         if (err) return next(err);
         return fetch
           .post(settings.pdf, {
-            json: { template: html, pdfOptions: { printBackground: true } }
+            json: {
+              template: html,
+              pdfOptions: {
+                printBackground: true,
+                displayHeaderFooter: true,
+                headerTemplate: '<p/>',
+                footerTemplate: '<p style="font-size:10px;margin-left:40px;position:relative;top:12px;">Page <span class="pageNumber"></span> of <span class="totalPages"></p>',
+                margin: {
+                  top: 30,
+                  left: 30,
+                  right: 30,
+                  bottom: 40
+                }
+              }
+            }
           }).response
           .then(response => response.buffer())
           .then(data => {
