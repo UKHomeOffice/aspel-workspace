@@ -8,7 +8,7 @@ module.exports = settings => {
         if (err) return next(err);
         return fetch
           .post(settings.pdf, {
-            json: { template: html }
+            json: { template: html, pdfOptions: { printBackgrounds: true } }
           }).response
           .then(response => response.buffer())
           .then(data => {
