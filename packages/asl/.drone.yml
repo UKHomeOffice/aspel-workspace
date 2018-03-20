@@ -94,3 +94,8 @@ pipeline:
     when:
       environment: dev
       event: deployment
+
+matrix:
+  NPM_AUTH_USERNAME:
+    - asl
+
