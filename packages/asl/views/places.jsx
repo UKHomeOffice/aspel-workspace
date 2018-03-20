@@ -2,6 +2,7 @@ const React = require('react');
 const Layout = require('./layouts/default');
 
 const Acronym = require('./components/acronym');
+const Filters = require('./components/filters');
 
 class Join extends React.Component {
 
@@ -19,6 +20,22 @@ class Join extends React.Component {
 
 class Places extends React.Component {
   render() {
+
+    const filterConfig = [
+      {
+        key: 'site',
+        label: 'Location'
+      },
+      {
+        key: 'holding',
+        label: 'Holding code'
+      },
+      {
+        key: 'suitability',
+        label: 'Suitability code'
+      }
+    ];
+
     return (
       <Layout {...this.props} crumbs={['Licensed premises']}>
         {
@@ -26,6 +43,7 @@ class Places extends React.Component {
             <div>
               <h2>{this.props.establishment.name}</h2>
               <h1>Licensed premises</h1>
+              <Filters data={this.props.places} filters={filterConfig} />
               <table>
                 <thead>
                   <tr>
