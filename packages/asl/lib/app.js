@@ -19,7 +19,7 @@ module.exports = settings => {
       return next();
     }
 
-    const url = `/establishment/${establishment.toLowerCase()}${req.url}`;
+    const url = `/establishment/${establishment}${req.url}`;
     req.api(url)
       .then(response => {
         res.locals.api = response;
