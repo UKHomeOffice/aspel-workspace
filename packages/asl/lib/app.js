@@ -1,5 +1,4 @@
 const ui = require('@asl/service/ui');
-const fetch = require('r2');
 const pdf = require('./pdf');
 const errorHandler = require('./error-handler');
 
@@ -19,32 +18,17 @@ module.exports = settings => {
     if (!establishment) {
       return next();
     }
-    const headers = {
-      Authorization: `bearer ${req.user.access_token}`
-    };
 
-    const url = `${settings.api}/establishment/${establishment.toLowerCase()}${req.url}`;
-    fetch(url, { headers }).response
+    const url = `/establishment/${establishment.toLowerCase()}${req.url}`;
+    req.api(url)
       .then(response => {
-        res.locals.api = {
-          url: response.url,
-          status: response.status
-        };
-        return response.json();
-      })
-      .then(json => {
-        res.locals.api.data = JSON.stringify(json, null, '  ');
-        if (res.locals.api.status > 399) {
-          const err = new Error(json.message);
-          Object.assign(err, json);
-          throw err;
-        }
-        res.locals.establishment = json.meta.establishment;
-        res.locals.data = json.data;
+        res.locals.api = response;
+        res.locals.api.data = JSON.stringify(response.json, null, '  ');
+        res.locals.establishment = response.json.meta.establishment;
+        res.locals.data = response.json.data;
       })
       .then(() => next())
       .catch(e => next(e));
-
   });
 
   app.get('/roles', (req, res) => {

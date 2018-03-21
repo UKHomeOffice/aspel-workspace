@@ -8,7 +8,6 @@ class Filters extends React.Component {
     return this.props.data
       .map(r => r[key])
       .reduce((list, values) => {
-        console.log(values);
         return list.concat(values);
       }, [])
       .reduce((list, value) => list.includes(value) ? list : list.concat(value), []);
