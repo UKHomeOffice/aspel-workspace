@@ -19,7 +19,13 @@ class Filters extends React.Component {
       state[key] = values.concat([val]);
     }
     this.setState(state);
-    this.props.onChange && this.props.onChange(Object.assign({}, this.state, state));
+    if (!this.props.applyButton) {
+      this.emitChange(Object.assign({}, this.state, state));
+    }
+  }
+
+  emitChange(state) {
+    this.props.onChange && this.props.onChange(state || this.state);
   }
 
   getUniqueValues(key) {
@@ -59,6 +65,9 @@ class Filters extends React.Component {
           })
         }
       </div>
+      {
+        this.props.applyButton && <p><button className="button" onClick={() => this.emitChange()}>Apply filters</button></p>
+      }
     </div>
 
   }

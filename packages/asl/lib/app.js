@@ -46,9 +46,10 @@ module.exports = settings => {
     });
   });
 
-  app.get('/places?', api(), (req, res, next) => {
+  app.get('/places', api(), (req, res, next) => {
     res.render('places', {
-      places: res.locals.data
+      places: res.locals.data,
+      applyButton: !!req.query.apply
     });
   });
 

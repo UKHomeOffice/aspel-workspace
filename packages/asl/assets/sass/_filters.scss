@@ -4,8 +4,9 @@ $size: 24px;
 
 .filter-panel {
 
+  @extend %contain-floats;
   background: $panel-colour;
-  padding: $gutter $gutter 0;
+  padding: $gutter $gutter 1px;
 
   h3 {
     @extend .heading-medium;

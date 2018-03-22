@@ -75,7 +75,7 @@ class Places extends React.Component {
     return <React.Fragment>
       <h2 className="headline">{this.props.establishment.name}</h2>
       <h1>Licensed premises</h1>
-      <Filters data={this.props.places} filters={this.filters()} onChange={(filters) => this.onFilterChange(filters)} />
+      <Filters data={this.props.places} filters={this.filters()} onChange={(filters) => this.onFilterChange(filters)} applyButton={this.props.applyButton} />
       <table>
         <thead>
           <tr>
@@ -104,7 +104,8 @@ class Places extends React.Component {
 
 Places.propTypes = {
   establishment: PropTypes.object,
-  places: PropTypes.array
+  places: PropTypes.array,
+  applyButton: PropTypes.bool
 };
 
 module.exports = Places;
