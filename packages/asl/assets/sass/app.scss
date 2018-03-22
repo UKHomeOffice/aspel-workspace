@@ -44,3 +44,10 @@ th {
 td:first-child, td:nth-child(2) {
   width:45%;
 }
+
+.control-bar {
+  > * {
+    vertical-align: middle;
+    margin-right: 1em;
+  }
+}

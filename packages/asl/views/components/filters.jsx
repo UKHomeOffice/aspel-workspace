@@ -47,6 +47,16 @@ class Filters extends React.Component {
     this.setState({ collapsed });
   }
 
+  clear(e) {
+    e.preventDefault();
+    const state = {};
+    this.props.filters.forEach(filter => {
+      this.setState({ [filter.key]: [] });
+      state[filter.key] = [];
+    });
+    this.emitChange(state);
+  }
+
   render() {
 
     if (!this.props.filters || !this.props.filters.length) {
@@ -84,9 +94,12 @@ class Filters extends React.Component {
           })
         }
       </div>
+      <p className="control-bar">
       {
-        this.props.applyButton && <p><button className="button" onClick={() => this.emitChange()}>Apply filters</button></p>
+        this.props.applyButton && <button className="button" onClick={() => this.emitChange()}>Apply filters</button>
       }
+      <a href="#" onClick={(e) => this.clear(e)}>Clear filters</a>
+      </p>
     </div>
 
   }
