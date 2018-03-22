@@ -1,6 +1,6 @@
 module.exports = () => {
   return (error, req, res, next) => {
-    console.log(error);
+    res.status(500);
     if (error.status) {
       res.status(error.status);
     }

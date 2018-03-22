@@ -1,5 +1,7 @@
 @import "@asl/service";
 
+@import "./filters";
+
 .data {
   padding: $gutter;
   background: $govuk-blue;
@@ -30,4 +32,8 @@ dl {
     margin-bottom: $gutter/2;
     white-space: pre-line;
   }
+}
+
+.headline {
+  margin-top: 0;
 }

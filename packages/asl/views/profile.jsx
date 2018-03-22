@@ -16,7 +16,7 @@ class Roles extends React.Component {
 
   renderRoles() {
     return this.props.profile.roles.map(role => {
-      return <div>
+      return <React.Fragment>
         <h3>{this.roleName(role.type)}</h3>
         {
           !!role.places.length && <table>
@@ -46,38 +46,36 @@ class Roles extends React.Component {
             </tbody>
           </table>
         }
-      </div>
+      </React.Fragment>
     })
   }
 
   render() {
     return (
       <Layout {...this.props} crumbs={[{ href: '/roles', label: 'Named people' }, this.props.profile.name]}>
-        <div>
 
-          <h2>{ this.props.establishment.name }</h2>
-          <h1>{this.props.profile.name}</h1>
+        <h2 className="headline">{ this.props.establishment.name }</h2>
+        <h1>{this.props.profile.name}</h1>
 
-          <dl>
-            <dt>Email</dt>
-            <dd>{this.props.profile.email}</dd>
+        <dl>
+          <dt>Email</dt>
+          <dd>{this.props.profile.email}</dd>
 
-            <dt>Phone</dt>
-            <dd>{this.props.profile.telephone}</dd>
+          <dt>Phone</dt>
+          <dd>{this.props.profile.telephone}</dd>
 
-            <dt>Address</dt>
-            <dd>{this.props.profile.address}</dd>
+          <dt>Address</dt>
+          <dd>{this.props.profile.address}</dd>
 
-            <dt>Qualifications</dt>
-            <dd>{this.props.profile.qualifications}</dd>
+          <dt>Qualifications</dt>
+          <dd>{this.props.profile.qualifications}</dd>
 
-            <dt>Notes</dt>
-            <dd>{this.props.profile.notes}</dd>
-          </dl>
+          <dt>Notes</dt>
+          <dd>{this.props.profile.notes}</dd>
+        </dl>
 
-          <h2>Roles</h2>
-          { this.renderRoles() }
-        </div>
+        <h2>Roles</h2>
+        { this.renderRoles() }
       </Layout>
     );
   }
