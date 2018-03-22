@@ -1,0 +1,42 @@
+// Override the sizing of the govuk checkboxes when they appear in a filter context
+
+$size: 24px;
+
+.filter-panel {
+
+  .multiple-choice {
+
+    padding: 0 0 0 $size+4px;
+    margin-bottom: $gutter-one-third;
+
+    // Absolutely position inputs within label, to allow text to wrap
+    input {
+      width: $size+4px;
+      height: $size+4px;
+    }
+
+    label {
+      padding: ($size - 16px)/2 $gutter-one-third ($size - 16px)/2 12px;
+
+      @include media(tablet) {
+        padding-top: ($size - 18px)/2;
+        padding-bottom: ($size - 24px)/2;
+      }
+    }
+
+    [type=checkbox] + label::before {
+      width: $size;
+      height: $size;
+    }
+
+    [type=checkbox] + label::after {
+      border-width: 0 0 $size/5 $size/5;
+      width: $size/2;
+      height: $size/4;
+      top: $size/4;
+      left: $size/4;
+    }
+
+  }
+
+}

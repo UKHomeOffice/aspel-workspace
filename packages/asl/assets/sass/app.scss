@@ -1,5 +1,7 @@
 @import "@asl/service";
 
+@import "./filters";
+
 .data {
   padding: $gutter;
   background: $govuk-blue;
