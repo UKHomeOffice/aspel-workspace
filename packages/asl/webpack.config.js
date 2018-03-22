@@ -2,7 +2,8 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    places: './assets/js/pages/places.jsx'
+    places: './assets/js/pages/places.jsx',
+    search: './assets/js/pages/search.jsx'
   },
   output: {
     path: path.resolve(__dirname, './public/js/pages')

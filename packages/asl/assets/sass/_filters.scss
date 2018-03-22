@@ -2,11 +2,18 @@
 
 $size: 24px;
 
+.text-filter {
+  input {
+    width: 100%;
+  }
+}
+
 .filter-panel {
 
   @extend %contain-floats;
   background: $panel-colour;
   padding: $gutter $gutter 1px;
+  margin-bottom: $gutter;
 
   h3 {
     @extend .heading-medium;

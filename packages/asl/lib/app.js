@@ -53,6 +53,12 @@ module.exports = settings => {
     });
   });
 
+  app.get('/search', api('/places'), (req, res, next) => {
+    res.render('search', {
+      places: res.locals.data
+    });
+  });
+
   app.get('/', api(), (req, res) => {
     res.render('index', {
       establishment: res.locals.data,
