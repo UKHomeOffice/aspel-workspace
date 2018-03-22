@@ -29,8 +29,6 @@ class Layout extends React.Component {
               <div id="page-component">
                 { this.props.children }
               </div>
-              <p><a className="button button-large" href="?pdf=1">Download as PDF</a></p>
-              <p><a className="button button-large" href="/logout">Log out</a></p>
             </div>
             <script dangerouslySetInnerHTML={{__html: `window.INITIAL_STATE=${JSON.stringify(pick(this.props, this.props.exposes))}`}} />
           </div>
