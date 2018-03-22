@@ -56,8 +56,8 @@ class Filters extends React.Component {
               <CheckboxGroup
                 name={ filter.key }
                 type="checkbox"
-                label={ filter.label }
-                options={ values }
+                label={ filter.title }
+                options={ values.map(value => ({ value, label: filter.label ? filter.label(value) : value })) }
                 value={ checked }
                 onChange={ (e) => this.onChange(filter.key, e.target.value) }
                 />

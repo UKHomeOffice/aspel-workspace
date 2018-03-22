@@ -1,6 +1,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
+const dictionary = require('@asl/dictionary');
+
 const Acronym = require('../components/acronym');
 const Filters = require('../components/filters');
 class Join extends React.Component {
@@ -23,19 +25,21 @@ class Places extends React.Component {
     return [
       {
         key: 'site',
-        label: 'Location',
+        title: 'Location',
         match: (value, test) => value === test
       },
       {
         key: 'holding',
-        label: 'Holding code',
+        title: 'Holding code',
         match: (value, test) => value.includes(test),
+        label: code => `${dictionary[code]} (${code})`,
         combines: 'AND'
       },
       {
         key: 'suitability',
-        label: 'Suitability code',
+        title: 'Suitability code',
         match: (value, test) => value.includes(test),
+        label: code => `${dictionary[code]} (${code})`,
         combines: 'AND'
       }
     ];
