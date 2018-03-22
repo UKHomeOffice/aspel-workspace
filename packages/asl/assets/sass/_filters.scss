@@ -12,12 +12,16 @@ $size: 24px;
 
   @extend %contain-floats;
   background: $panel-colour;
-  padding: $gutter $gutter 1px;
+  padding: $gutter-half $gutter 1px;
   margin-bottom: $gutter;
 
   h3 {
     @extend .heading-medium;
     margin-top: 0;
+  }
+
+  .form-group {
+    margin-bottom: $gutter-half;
   }
 
   .multiple-choice {
