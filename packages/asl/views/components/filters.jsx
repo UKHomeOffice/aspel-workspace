@@ -5,9 +5,12 @@ const CheckboxGroup = require('govuk-react-components/components/forms/radio-gro
 class Filters extends React.Component {
 
   componentDidMount() {
+    const collapsed = {};
     this.props.filters.forEach(filter => {
       this.setState({ [filter.key]: [] });
+      collapsed[filter.key] = true;
     });
+    this.setState({ collapsed });
   }
 
   onChange(key, val) {
@@ -37,6 +40,13 @@ class Filters extends React.Component {
       .reduce((list, value) => list.includes(value) ? list : list.concat(value), []);
   }
 
+  toggle(e, key) {
+    e.preventDefault();
+    const collapsed = this.state.collapsed;
+    collapsed[key] = !collapsed[key];
+    this.setState({ collapsed });
+  }
+
   render() {
 
     if (!this.props.filters || !this.props.filters.length) {
@@ -52,6 +62,10 @@ class Filters extends React.Component {
           this.props.filters.map(filter => {
             const checked = this.state ? this.state[filter.key] : [];
             const values = this.getUniqueValues(filter.key);
+            const total = values.length;
+            if (total > 4 && this.state && this.state.collapsed[filter.key]) {
+              values.splice(4);
+            }
             return <div key={filter.key} className={ columnClass }>
               <CheckboxGroup
                 name={ filter.key }
@@ -61,6 +75,11 @@ class Filters extends React.Component {
                 value={ checked }
                 onChange={ (e) => this.onChange(filter.key, e.target.value) }
                 />
+              {
+                this.state && total > 4 && <p>
+                  <a href="#" onClick={(e) => this.toggle(e, filter.key)}>{ this.state.collapsed[filter.key] ? 'More' : 'Less' }</a>
+                </p>
+              }
             </div>
           })
         }
