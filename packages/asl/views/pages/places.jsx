@@ -72,7 +72,7 @@ class Places extends React.Component {
   };
 
   render() {
-    return <div>
+    return <React.Fragment>
       <h2>{this.props.establishment.name}</h2>
       <h1>Licensed premises</h1>
       <Filters data={this.props.places} filters={this.filters()} onChange={(filters) => this.onFilterChange(filters)} />
@@ -98,7 +98,7 @@ class Places extends React.Component {
         }
         </tbody>
       </table>
-    </div>
+    </React.Fragment>
   }
 }
 
