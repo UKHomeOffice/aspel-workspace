@@ -16,7 +16,7 @@ module.exports = settings => {
   app.use((req, res, next) => {
     const establishment = req.user.get('establishment');
     if (!establishment) {
-      return next();
+      return next(new Error('No associated establishment'));
     }
 
     const url = `/establishment/${establishment}${req.url}`;

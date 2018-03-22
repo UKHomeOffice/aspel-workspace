@@ -72,11 +72,6 @@ class Places extends React.Component {
   };
 
   render() {
-
-    if (!this.props.establishment) {
-      return <p>No associated establishment</p>
-    }
-
     return <div>
       <h2>{this.props.establishment.name}</h2>
       <h1>Licensed premises</h1>
