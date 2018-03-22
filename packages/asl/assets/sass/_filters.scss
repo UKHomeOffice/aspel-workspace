@@ -4,6 +4,14 @@ $size: 24px;
 
 .filter-panel {
 
+  background: $panel-colour;
+  padding: $gutter $gutter 0;
+
+  h3 {
+    @extend .heading-medium;
+    margin-top: 0;
+  }
+
   .multiple-choice {
 
     padding: 0 0 0 $size+4px;

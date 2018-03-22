@@ -73,7 +73,7 @@ class Places extends React.Component {
 
   render() {
     return <React.Fragment>
-      <h2>{this.props.establishment.name}</h2>
+      <h2 className="headline">{this.props.establishment.name}</h2>
       <h1>Licensed premises</h1>
       <Filters data={this.props.places} filters={this.filters()} onChange={(filters) => this.onFilterChange(filters)} />
       <table>

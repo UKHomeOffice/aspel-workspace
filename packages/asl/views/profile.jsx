@@ -16,7 +16,7 @@ class Roles extends React.Component {
 
   renderRoles() {
     return this.props.profile.roles.map(role => {
-      return <div>
+      return <React.Fragment>
         <h3>{this.roleName(role.type)}</h3>
         {
           !!role.places.length && <table>
@@ -46,7 +46,7 @@ class Roles extends React.Component {
             </tbody>
           </table>
         }
-      </div>
+      </React.Fragment>
     })
   }
 
@@ -54,7 +54,7 @@ class Roles extends React.Component {
     return (
       <Layout {...this.props} crumbs={[{ href: '/roles', label: 'Named people' }, this.props.profile.name]}>
 
-        <h2>{ this.props.establishment.name }</h2>
+        <h2 className="headline">{ this.props.establishment.name }</h2>
         <h1>{this.props.profile.name}</h1>
 
         <dl>
