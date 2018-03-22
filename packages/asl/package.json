@@ -43,7 +43,7 @@
     "babel-preset-react": "^6.24.1",
     "chalk": "^2.3.0",
     "eslint": "^4.15.0",
-    "eslint-config-lennym": "^1.4.0",
+    "eslint-config-lennym": "^1.4.1",
     "funkie": "0.0.6",
     "funkie-chromedriver": "0.0.1",
     "mocha": "^5.0.0",

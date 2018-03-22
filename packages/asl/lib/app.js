@@ -20,8 +20,8 @@ const api = url => {
       })
       .then(() => next())
       .catch(e => next(e));
-  }
-}
+  };
+};
 
 module.exports = settings => {
 
