@@ -37,3 +37,10 @@ dl {
 .headline {
   margin-top: 0;
 }
+
+th {
+  white-space: nowrap;
+}
+td:first-child, td:nth-child(2) {
+  width:45%;
+}
