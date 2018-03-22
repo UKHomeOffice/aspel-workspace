@@ -26,15 +26,15 @@ class Places extends React.Component {
   filters() {
     return [
       {
-        key: 'holding',
-        title: 'Holding code',
+        key: 'suitability',
+        title: 'Suitability code',
         match: (value, test) => value.includes(test),
         label: code => `${dictionary[code]} (${code})`,
         combines: 'AND'
       },
       {
-        key: 'suitability',
-        title: 'Suitability code',
+        key: 'holding',
+        title: 'Holding code',
         match: (value, test) => value.includes(test),
         label: code => `${dictionary[code]} (${code})`,
         combines: 'AND'
@@ -94,8 +94,8 @@ class Places extends React.Component {
           <tr>
             <th>Location</th>
             <th>Area</th>
-            <th>Holding Code</th>
             <th>Suitability</th>
+            <th>Holding Code</th>
           </tr>
         </thead>
         <tbody>
@@ -104,8 +104,8 @@ class Places extends React.Component {
             <tr key={place.id}>
               <td>{ place.site }</td>
               <td>{ place.name }</td>
-              <td><Join>{ place.holding.map(a =><Acronym>{a}</Acronym>) }</Join></td>
               <td><Join>{ place.suitability.map(a => <Acronym>{a}</Acronym>) }</Join></td>
+              <td><Join>{ place.holding.map(a =><Acronym>{a}</Acronym>) }</Join></td>
             </tr>
           ))
         }
