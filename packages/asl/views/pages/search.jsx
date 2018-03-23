@@ -58,7 +58,7 @@ class Places extends React.Component {
     }
     if (this.state && this.state.textFilter) {
       rows = rows.filter(row => {
-        return row.site.toLowerCase().includes(this.state.textFilter) || row.name.toLowerCase().includes(this.state.textFilter);
+        return row.site.toLowerCase().includes(this.state.textFilter) || row.area.toLowerCase().includes(this.state.textFilter) || row.name.toLowerCase().includes(this.state.textFilter);
       });
     }
     return rows || [];
