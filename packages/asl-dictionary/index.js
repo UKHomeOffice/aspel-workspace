@@ -4,19 +4,19 @@ module.exports = {
   NACWO: 'Named Animal Care and Welfare Officer',
   NIO: 'Named Information Officer',
   NVS: 'Named Veterinary Surgeon',
-  NTCO: 'Named Training And Competency Officer',
+  NTCO: 'Named Training and Competency Officer',
 
   // holding codes
-  LA: 'Large Animals',
-  SA: 'Small Animals',
+  LA: 'Large animals',
+  SA: 'Small animals',
   AQ: 'Aquatic',
-  NHP: 'Non-Human Primates',
+  NHP: 'Non-human primates',
   EQU: 'Horses',
 
   // suitability codes
-  STH: 'Short Term Holding',
-  LTH: 'Long Term Holding',
-  NOH: 'Not for Overnight Holding',
-  NSEP: 'Non-Sterile Experimental Procedures',
-  SEP: 'Sterile Experimental Procedures'
+  STH: 'Short term holding',
+  LTH: 'Long term holding',
+  NOH: 'Not for overnight holding',
+  NSEP: 'Non-sterile experimental procedures',
+  SEP: 'Sterile experimental procedures'
 };
