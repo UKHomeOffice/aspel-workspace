@@ -13,10 +13,12 @@ class PlacesTable extends React.Component {
   }
 
   render() {
+
     return <table>
       <thead>
         <tr>
-          <th>Area</th>
+          <th>Site</th>
+          { this.props.area && <th>Area</th> }
           <th>Name</th>
           <th>Suitability</th>
           <th>Holding Code</th>
@@ -29,14 +31,12 @@ class PlacesTable extends React.Component {
           <React.Fragment key={row.id}>
             <tr>
               <td>{ row.site }</td>
+              { this.props.area && <td>{ row.area }</td> }
               <td>{ row.name }</td>
               <td><Join>{ row.suitability.map(a => <Acronym key={a}>{a}</Acronym>) }</Join></td>
               <td><Join>{ row.holding.map(a =><Acronym key={a}>{a}</Acronym>) }</Join></td>
               { this.props.nacwo && this.renderNACWO(row.nacwo) }
             </tr>
-            {
-              row.notes && <tr><td colSpan={ this.props.nacwo ? 5 : 4 }>{ row.notes }</td></tr>
-            }
           </React.Fragment>
         ))
       }
@@ -46,7 +46,8 @@ class PlacesTable extends React.Component {
 }
 
 PlacesTable.defaultProps = {
-  nacwo: true
+  nacwo: true,
+  area: true
 };
 
 module.exports = PlacesTable;
