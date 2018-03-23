@@ -12,19 +12,19 @@ class Places extends React.Component {
     return [
       {
         key: 'site',
-        title: 'Location',
+        title: 'Site',
         match: (value, test) => value === test
       },
       {
         key: 'suitability',
-        title: 'Suitability code',
+        title: 'Suitability',
         match: (value, test) => value.includes(test),
         label: code => `${dictionary[code]} (${code})`,
         combines: 'AND'
       },
       {
         key: 'holding',
-        title: 'Holding code',
+        title: 'Holding',
         match: (value, test) => value.includes(test),
         label: code => `${dictionary[code]} (${code})`,
         combines: 'AND'
