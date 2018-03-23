@@ -38,11 +38,14 @@ dl {
   margin-top: 0;
 }
 
+table {
+  table-layout: fixed;
+}
 th {
   white-space: nowrap;
 }
-td:first-child, td:nth-child(2), td:nth-child(3) {
-  width:45%;
+th:first-child, th:nth-child(2), th:nth-child(3) {
+  width:20%;
 }
 
 .control-bar {

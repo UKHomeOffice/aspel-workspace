@@ -21,7 +21,7 @@ class PlacesTable extends React.Component {
           { this.props.area && <th>Area</th> }
           <th>Name</th>
           <th>Suitability</th>
-          <th>Holding Code</th>
+          <th>Holding</th>
           { this.props.nacwo && <th><Acronym>NACWO</Acronym></th> }
         </tr>
       </thead>
