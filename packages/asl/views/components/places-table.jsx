@@ -20,24 +20,33 @@ class PlacesTable extends React.Component {
           <th>Name</th>
           <th>Suitability</th>
           <th>Holding Code</th>
-          { this.props.nacwo !== false && <th><Acronym>NACWO</Acronym></th> }
+          { this.props.nacwo && <th><Acronym>NACWO</Acronym></th> }
         </tr>
       </thead>
       <tbody>
       {
         this.props.rows.map(row => (
-          <tr key={row.id}>
-            <td>{ row.site }</td>
-            <td>{ row.name }</td>
-            <td><Join>{ row.suitability.map(a => <Acronym>{a}</Acronym>) }</Join></td>
-            <td><Join>{ row.holding.map(a =><Acronym>{a}</Acronym>) }</Join></td>
-            { this.props.nacwo !== false && this.renderNACWO(row.nacwo) }
-          </tr>
+          <React.Fragment key={row.id}>
+            <tr>
+              <td>{ row.site }</td>
+              <td>{ row.name }</td>
+              <td><Join>{ row.suitability.map(a => <Acronym key={a}>{a}</Acronym>) }</Join></td>
+              <td><Join>{ row.holding.map(a =><Acronym key={a}>{a}</Acronym>) }</Join></td>
+              { this.props.nacwo && this.renderNACWO(row.nacwo) }
+            </tr>
+            {
+              row.notes && <tr><td colSpan={ this.props.nacwo ? 5 : 4 }>{ row.notes }</td></tr>
+            }
+          </React.Fragment>
         ))
       }
       </tbody>
     </table>
   }
 }
+
+PlacesTable.defaultProps = {
+  nacwo: true
+};
 
 module.exports = PlacesTable;
