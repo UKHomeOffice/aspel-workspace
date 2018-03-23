@@ -4,6 +4,14 @@ const Acronym = require('./acronym');
 const Join = require('./join');
 
 class PlacesTable extends React.Component {
+
+  renderNACWO(nacwo) {
+    if (!nacwo) {
+      return <td>-</td>
+    }
+    return <td><a href={`/profile/${nacwo.profile.id}`}>{ nacwo.profile.name }</a></td>
+  }
+
   render() {
     return <table>
       <thead>
@@ -23,7 +31,7 @@ class PlacesTable extends React.Component {
             <td>{ row.name }</td>
             <td><Join>{ row.suitability.map(a => <Acronym>{a}</Acronym>) }</Join></td>
             <td><Join>{ row.holding.map(a =><Acronym>{a}</Acronym>) }</Join></td>
-            { this.props.nacwo !== false && <td><a href={`/profile/${row.nacwo.profile.id}`}>{ row.nacwo.profile.name }</a></td> }
+            { this.props.nacwo !== false && this.renderNACWO(row.nacwo) }
           </tr>
         ))
       }
