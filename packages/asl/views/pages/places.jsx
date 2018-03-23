@@ -3,21 +3,8 @@ const PropTypes = require('prop-types');
 
 const dictionary = require('@asl/dictionary');
 
-const Acronym = require('../components/acronym');
 const Filters = require('../components/filters');
-class Join extends React.Component {
-
-  render() {
-    const sep = this.props.separator || ', ';
-    return React.Children.toArray(this.props.children).reduce((list, item, i) => {
-      if (i) {
-        list.push(sep);
-      }
-      return list.concat(item);
-    }, []);
-  }
-
-}
+const PlacesTable = require('../components/places-table');
 
 class Places extends React.Component {
 
@@ -80,28 +67,7 @@ class Places extends React.Component {
       <h2 className="headline">{this.props.establishment.name}</h2>
       <h1>Licensed premises</h1>
       <Filters data={this.props.places} filters={this.filters()} onChange={(filters) => this.onFilterChange(filters)} applyButton={this.props.applyButton} />
-      <table>
-        <thead>
-          <tr>
-            <th>Area</th>
-            <th>Name</th>
-            <th>Suitability</th>
-            <th>Holding Code</th>
-          </tr>
-        </thead>
-        <tbody>
-        {
-          this.filtered(this.props.places).map(place => (
-            <tr key={place.id}>
-              <td>{ place.site }</td>
-              <td>{ place.name }</td>
-              <td><Join>{ place.suitability.map(a => <Acronym>{a}</Acronym>) }</Join></td>
-              <td><Join>{ place.holding.map(a =><Acronym>{a}</Acronym>) }</Join></td>
-            </tr>
-          ))
-        }
-        </tbody>
-      </table>
+      <PlacesTable rows={this.filtered(this.props.places)} />
     </React.Fragment>
   }
 }

@@ -1,7 +1,7 @@
 const React = require('react');
 const Layout = require('./layouts/default');
-const Acronym = require('./components/acronym');
-const Join = require('./components/join');
+
+const PlacesTable = require('./components/places-table')
 
 const dictionary = require('@asl/dictionary');
 
@@ -19,32 +19,7 @@ class Roles extends React.Component {
       return <React.Fragment>
         <h3>{this.roleName(role.type)}</h3>
         {
-          !!role.places.length && <table>
-            <thead>
-              <tr>
-                <th>Site</th>
-                <th>Building</th>
-                <th>Floor</th>
-                <th>Name</th>
-                <th>Holding Code</th>
-                <th>Suitability</th>
-              </tr>
-            </thead>
-            <tbody>
-            {
-              role.places.map(place => (
-                <tr key={place.id}>
-                  <td>{ place.site }</td>
-                  <td>{ place.building }</td>
-                  <td>{ place.floor }</td>
-                  <td>{ place.name }</td>
-                  <td><Join>{ place.holding.map(a => <Acronym key={a}>{a}</Acronym>) }</Join></td>
-                  <td><Join>{ place.suitability.map(a => <Acronym key={a}>{a}</Acronym>) }</Join></td>
-                </tr>
-              ))
-            }
-            </tbody>
-          </table>
+          !!role.places.length && <PlacesTable rows={role.places} nacwo={false} />
         }
       </React.Fragment>
     })
