@@ -1,9 +1,13 @@
+const fs = require('fs');
 const path = require('path');
 
-module.exports = {
+const TEMPLATE_PATH = './assets/js/pages/template.jsx';
+
+const pages = fs.readdirSync(path.resolve(__dirname, './views/pages')).map(p => p.replace('.jsx', ''));
+
+module.exports = pages.map(page => ({
   entry: {
-    places: './assets/js/pages/places.jsx',
-    search: './assets/js/pages/search.jsx'
+    [page]: path.resolve(__dirname, TEMPLATE_PATH)
   },
   output: {
     path: path.resolve(__dirname, './public/js/pages')
@@ -21,7 +25,15 @@ module.exports = {
         options: {
           presets: ['es2015', 'react']
         }
+      },
+      {
+        test: path.resolve(__dirname, TEMPLATE_PATH),
+        loader: 'string-replace-loader',
+        options: {
+          search: '{{page}}',
+          replace: page
+        }
       }
     ]
   }
-};
+}));
