@@ -18,7 +18,7 @@ class Layout extends React.Component {
 
   render() {
     if (this.props.pdf) {
-      return <Pdf {...this.props}>{ this.props.children }</Pdf>;
+      return <Provider store={this.store}><Pdf {...this.props}>{ this.props.children }</Pdf></Provider>;
     }
     return (
       <Provider store={this.store}>
