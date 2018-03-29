@@ -1,7 +1,7 @@
 const React = require('react');
 const Layout = require('./layouts/default');
 
-const PlacesTable = require('./components/places-table')
+const PlacesTable = require('./components/places-table');
 
 const dictionary = require('@asl/dictionary');
 
@@ -16,13 +16,13 @@ class Roles extends React.Component {
 
   renderRoles() {
     return this.props.profile.roles.map(role => {
-      return <React.Fragment>
+      return <React.Fragment key={role.id}>
         <h3>{this.roleName(role.type)}</h3>
         {
           !!role.places.length && <PlacesTable rows={role.places} nacwo={false} />
         }
-      </React.Fragment>
-    })
+      </React.Fragment>;
+    });
   }
 
   render() {

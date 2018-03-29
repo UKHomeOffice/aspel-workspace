@@ -2,7 +2,6 @@ const React = require('react');
 const { size, map } = require('lodash');
 
 const FilterColumn = require('./filter-column');
-const MoreLink = require('./more-link');
 
 const Filters = ({
   uniqueByType,
@@ -40,7 +39,7 @@ const Filters = ({
         }}>Clear filters</a>
       </p>
     </div>
-  )
-}
+  );
+};
 
 module.exports = Filters;

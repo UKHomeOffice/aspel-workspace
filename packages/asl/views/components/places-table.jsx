@@ -7,9 +7,9 @@ class PlacesTable extends React.Component {
 
   renderNACWO(nacwo) {
     if (!nacwo) {
-      return <td>-</td>
+      return <td>-</td>;
     }
-    return <td><a href={`/profile/${nacwo.profile.id}`}>{ nacwo.profile.name }</a></td>
+    return <td><a href={`/profile/${nacwo.profile.id}`}>{ nacwo.profile.name }</a></td>;
   }
 
   render() {
@@ -26,22 +26,22 @@ class PlacesTable extends React.Component {
         </tr>
       </thead>
       <tbody>
-      {
-        this.props.rows.map(row => (
-          <React.Fragment key={row.id}>
-            <tr>
-              <td>{ row.site }</td>
-              { this.props.area && <td>{ row.area }</td> }
-              <td>{ row.name }</td>
-              <td><Join>{ row.suitability.map(a => <Acronym key={a}>{a}</Acronym>) }</Join></td>
-              <td><Join>{ row.holding.map(a =><Acronym key={a}>{a}</Acronym>) }</Join></td>
-              { this.props.nacwo && this.renderNACWO(row.nacwo) }
-            </tr>
-          </React.Fragment>
-        ))
-      }
+        {
+          this.props.rows.map(row => (
+            <React.Fragment key={row.id}>
+              <tr>
+                <td>{ row.site }</td>
+                { this.props.area && <td>{ row.area }</td> }
+                <td>{ row.name }</td>
+                <td><Join>{ row.suitability.map(a => <Acronym key={a}>{a}</Acronym>) }</Join></td>
+                <td><Join>{ row.holding.map(a => <Acronym key={a}>{a}</Acronym>) }</Join></td>
+                { this.props.nacwo && this.renderNACWO(row.nacwo) }
+              </tr>
+            </React.Fragment>
+          ))
+        }
       </tbody>
-    </table>
+    </table>;
   }
 }
 

@@ -29,7 +29,6 @@ class Index extends React.Component {
           <dd><a href={`/profile/${this.props.elh.profile.id}`}>{ this.props.elh.profile.name }</a></dd>
         </dl>
 
-
         <div className="grid-row">
 
           <div className="column-one-half">
