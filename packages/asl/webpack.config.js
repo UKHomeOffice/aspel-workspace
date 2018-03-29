@@ -6,6 +6,7 @@ const TEMPLATE_PATH = './assets/js/pages/template.jsx';
 const pages = fs.readdirSync(path.resolve(__dirname, './views/pages')).map(p => p.replace('.jsx', ''));
 
 module.exports = pages.map(page => ({
+  devtool: 'inline-source-map',
   entry: {
     [page]: path.resolve(__dirname, TEMPLATE_PATH)
   },
@@ -23,7 +24,8 @@ module.exports = pages.map(page => ({
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
-          presets: ['es2015', 'react']
+          presets: ['es2015', 'react'],
+          plugins: ['transform-object-rest-spread']
         }
       },
       {
