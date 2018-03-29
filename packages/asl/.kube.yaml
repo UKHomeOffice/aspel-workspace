@@ -21,7 +21,7 @@
       name: asl-dev-auth
       key: secret
     API_URL: https://public-api.notprod.asl.homeoffice.gov.uk
-    PDF_SERVICE: https://pdf-generator.notprod.asl.homeoffice.gov.uk/convert
+    PDF_SERVICE: https://pdf-generator:10443/convert
 
 - name: pdf-generator
   recipe: webapp

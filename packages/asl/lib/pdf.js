@@ -1,4 +1,8 @@
 const fetch = require('r2');
+const https = require('https');
+const agent = new https.Agent({
+  rejectUnauthorized: false
+});
 
 module.exports = settings => {
   return (req, res, next) => {
@@ -12,6 +16,7 @@ module.exports = settings => {
         if (err) return next(err);
         return fetch
           .post(settings.pdf, {
+            agent,
             json: {
               template: html,
               pdfOptions: {
