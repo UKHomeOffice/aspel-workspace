@@ -1,26 +1,12 @@
 pipeline:
 
-  npm_auth:
+  test:
     image: node:8
     secrets:
       - npm_auth_token
     commands:
-      - echo "_authToken=$${NPM_AUTH_TOKEN}" >> .npmrc
-    when:
-      event: [push, pull_request]
-
-  test:
-    image: node:8
-    commands:
       - npm install
       - npm test
-    when:
-      event: [push, pull_request]
-
-  compile:
-    image: node:8
-    commands:
-      - npm run build
     when:
       event: [push, pull_request]
 
@@ -29,7 +15,7 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://172.17.0.1:2375
     commands:
-      - docker build -t asl .
+      - docker build --build-arg NPM_AUTH_USERNAME=$${NPM_AUTH_USERNAME} --build-arg NPM_AUTH_TOKEN=$${NPM_AUTH_TOKEN} -t asl .
     when:
       branch: master
       event: push
@@ -63,6 +49,8 @@ pipeline:
 
   configure_deploy:
     image: node:8
+    secrets:
+      - npm_auth_token
     commands:
       - mkdir deploy
       - npx kube-cookbook --out deploy
@@ -83,3 +71,7 @@ pipeline:
     when:
       environment: dev
       event: deployment
+
+matrix:
+  NPM_AUTH_USERNAME:
+    - asl
