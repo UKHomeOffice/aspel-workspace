@@ -7,7 +7,7 @@
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config",
     "test": "npm run test:lint",
-    "test:lint": "eslint . --config lennym",
+    "test:lint": "eslint . --config lennym --ext jsx,js",
     "test:functional": "wdio ./tests/functional/config",
     "test:functional:local": "funkie --driver chromedriver npm run test:functional",
     "prebuild:css": "mkdir -p ./public/css",
