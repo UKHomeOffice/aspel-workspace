@@ -9,7 +9,7 @@ const MoreLink = ({
       href="#"
       onClick={(e) => {
         e.preventDefault();
-        handleClick()
+        handleClick();
       }}
     >
       { showing ? 'Less' : 'More' }

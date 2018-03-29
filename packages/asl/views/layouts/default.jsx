@@ -4,7 +4,6 @@ const GovUK = require('govuk-react-components/components/layout');
 const PhaseBanner = require('govuk-react-components/components/phase-banner');
 
 const Pdf = require('./pdf');
-const Api = require('../components/api');
 const Breadcrumb = require('../components/breadcrumb');
 const createStore = require('../../src/create-store');
 
@@ -19,7 +18,7 @@ class Layout extends React.Component {
 
   render() {
     if (this.props.pdf) {
-      return <Pdf {...this.props}>{ this.props.children }</Pdf>
+      return <Pdf {...this.props}>{ this.props.children }</Pdf>;
     }
     return (
       <Provider store={this.store}>

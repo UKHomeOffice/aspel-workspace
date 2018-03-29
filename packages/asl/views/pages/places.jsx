@@ -1,8 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-const dictionary = require('@asl/dictionary');
-
 const Filters = require('../containers/filters');
 const PlacesTable = require('../components/places-table');
 

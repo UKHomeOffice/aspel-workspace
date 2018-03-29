@@ -1,8 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-const dictionary = require('@asl/dictionary');
-
 const Input = require('govuk-react-components/components/forms/input-text');
 
 const Filters = require('../containers/filters');
@@ -28,7 +26,7 @@ const Places = ({
     </div>
     <PlacesTable rows={places} />
   </React.Fragment>
-)
+);
 
 Places.propTypes = {
   establishment: PropTypes.object.isRequired,

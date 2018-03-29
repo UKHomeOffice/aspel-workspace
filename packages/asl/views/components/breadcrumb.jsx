@@ -11,14 +11,14 @@ class Breadcrumb extends React.Component {
         {
           crumbs.map(crumb => {
             if (typeof crumb === 'string') {
-              return <li key={crumb}>{crumb}</li>
+              return <li key={crumb}>{crumb}</li>;
             } else if (typeof crumb.href === 'string' && typeof crumb.label === 'string') {
-              return <li key={crumb.href}><a href={crumb.href}>{crumb.label}</a></li>
+              return <li key={crumb.href}><a href={crumb.href}>{crumb.label}</a></li>;
             }
           })
         }
       </ol>
-    </div>
+    </div>;
   }
 }
 

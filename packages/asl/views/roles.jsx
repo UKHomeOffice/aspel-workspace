@@ -1,7 +1,7 @@
 const React = require('react');
 const Layout = require('./layouts/default');
 
-const dictionary = require('@asl/dictionary')
+const dictionary = require('@asl/dictionary');
 
 class Roles extends React.Component {
 
@@ -27,16 +27,16 @@ class Roles extends React.Component {
             </tr>
           </thead>
           <tbody>
-          {
-            this.props.roles && this.props.roles.map(role => (
-              <tr key={ role.id }>
-                <td>{ role.profile.name }</td>
-                <td>{ this.roleName(role.type) }</td>
-                <td>{ role.places.length || '-' }</td>
-                <td><a href={`/profile/${role.profile.id}`}>View</a></td>
-              </tr>
-            ))
-          }
+            {
+              this.props.roles && this.props.roles.map(role => (
+                <tr key={ role.id }>
+                  <td>{ role.profile.name }</td>
+                  <td>{ this.roleName(role.type) }</td>
+                  <td>{ role.places.length || '-' }</td>
+                  <td><a href={`/profile/${role.profile.id}`}>View</a></td>
+                </tr>
+              ))
+            }
           </tbody>
         </table>
       </Layout>

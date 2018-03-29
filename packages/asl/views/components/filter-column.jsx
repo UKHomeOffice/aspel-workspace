@@ -44,7 +44,7 @@ class FilterColumn extends React.Component {
           />
         }
       </div>
-    )
+    );
   }
 }
 
