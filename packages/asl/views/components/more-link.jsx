@@ -1,19 +1,20 @@
 const React = require('react');
 
-module.exports = ({
-  id,
+const MoreLink = ({
   handleClick,
-  collapsed
+  showing
 }) => (
   <p>
     <a
       href="#"
       onClick={(e) => {
         e.preventDefault();
-        handleClick(id)
+        handleClick()
       }}
     >
-      { collapsed ? 'More' : 'Less' }
+      { showing ? 'Less' : 'More' }
     </a>
   </p>
-)
+);
+
+module.exports = MoreLink;
