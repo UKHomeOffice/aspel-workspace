@@ -1,15 +1,11 @@
 const React = require('react');
 const { size, map } = require('lodash');
 
-const CheckboxGroup = require('govuk-react-components/components/forms/radio-group');
-
+const FilterColumn = require('./filter-column');
 const MoreLink = require('./more-link');
-const filters = require('../../src/helpers/filters');
 
 const Filters = ({
   uniqueByType,
-  collapsed,
-  clickMore,
   toggleFilter,
   filterBy,
   clearFilters
@@ -25,31 +21,16 @@ const Filters = ({
       <h3>Filter by</h3>
       <div className="grid-row">
         {
-          map(uniqueByType, (values, key) => {
-            const total = values.length;
-            const filter = filters[key];
-            if (total > 4 && collapsed[key]) {
-              values.splice(4);
-            }
-            return <div key={ key } className={ columnClass }>
-              <CheckboxGroup
-                name={ key }
-                type="checkbox"
-                label={ filter.title }
-                options={ values.map(value => ({ value, label: filter.label ? filter.label(value) : value })) }
-                value={ filterBy[key] }
-                onChange={ e => toggleFilter(key, e.target.value) }
-              />
-                {
-                  total > 4 &&
-                  <MoreLink
-                    id={key}
-                    handleClick={clickMore}
-                    collapsed={collapsed[key]}
-                  />
-                }
-              </div>
-          })
+          map(uniqueByType, (values, key) =>
+            <FilterColumn
+              key={ key }
+              id={ key }
+              values={ values }
+              columnClass={ columnClass }
+              currentFilters={ filterBy[key] }
+              handleOnChange={ e => toggleFilter(key, e.target.value) }
+            />
+          )
         }
       </div>
       <p className="control-bar">

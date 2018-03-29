@@ -1,24 +1,12 @@
 const { combineReducers } = require('redux');
 const { reduce } = require('lodash');
 const {
-  TOGGLE_COLLAPSED,
   TOGGLE_FILTER,
   CLEAR_FILTERS,
   SET_TEXT_FILTER
 } = require('../constants/action-types');
+
 const filterHelpers = require('../helpers/filters');
-
-const collapsedInitialState = reduce(filterHelpers, (state, value, key) => ({ ...state, [key]: true }), {});
-
-const collapsed = (state = collapsedInitialState, action) => {
-  switch (action.type) {
-    case TOGGLE_COLLAPSED:
-      return { ...state, [action.id]: !state[action.id] };
-    default:
-      return state;
-  }
-};
-
 const filterByInitialState = reduce(filterHelpers, (state, value, key) => ({ ...state, [key]: [] }), {});
 
 const filterBy = (state = filterByInitialState, action) => {
@@ -54,7 +42,6 @@ const textFilter = (state = '', action) => {
 };
 
 module.exports = combineReducers({
-  collapsed,
   filterBy,
   textFilter
 });

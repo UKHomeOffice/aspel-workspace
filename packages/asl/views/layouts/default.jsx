@@ -14,7 +14,7 @@ class Layout extends React.Component {
   constructor(options) {
     super(options);
     this.data = pick(this.props, this.props.exposes);
-    this.store = createStore(data);
+    this.store = createStore(this.data);
   }
 
   render() {
