@@ -1,5 +1,14 @@
 const React = require('react');
-const ReactDOM = require('react-dom');
-const Component = require(`../../../views/pages/{{page}}`);
+const { render } = require('react-dom');
+const { Provider } = require('react-redux');
+const Component = require('../../../views/containers/{{page}}');
+const createStore = require('../../../src/create-store');
 
-ReactDOM.render(<Component {...window.INITIAL_STATE} />, document.getElementById('page-component'));
+const store = createStore(window.INITIAL_STATE);
+
+render(
+  <Provider store={store}>
+    <Component />
+  </Provider>
+  , document.getElementById('page-component')
+);
