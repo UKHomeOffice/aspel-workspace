@@ -6,7 +6,7 @@ const Input = require('govuk-react-components/components/forms/input-text');
 const filterSettings = require('../../src/helpers/filters');
 const Filters = require('../containers/filters');
 const PlacesTable = require('../components/places-table');
-const ExportLink = require('../components/export-link');
+const ExportLink = require('../containers/export-link');
 
 const Places = ({
   establishment,
