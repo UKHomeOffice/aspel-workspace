@@ -1,33 +1,32 @@
 const React = require('react');
-const { size, map } = require('lodash');
+const { size } = require('lodash');
 
 const FilterColumn = require('./filter-column');
 
 const Filters = ({
-  uniqueByType,
   toggleFilter,
   filterBy,
+  filters,
   clearFilters
 }) => {
-  if (!uniqueByType || !size(uniqueByType)) {
-    return null;
-  }
 
-  const columnClass = [null, 'column-full', 'column-half', 'column-one-third'][size(uniqueByType)];
+  const columnClass = [null, 'column-full', 'column-half', 'column-one-third'][size(filters)];
 
   return (
     <div className="filter-panel">
       <h3>Filter by</h3>
       <div className="grid-row">
         {
-          map(uniqueByType, (values, key) =>
+          filters.map((filter) =>
             <FilterColumn
-              key={ key }
-              id={ key }
-              values={ values }
+              key={ filter.key }
+              id={ filter.key }
+              title={ filter.title }
+              label={ filter.label }
+              values={ filter.values }
               columnClass={ columnClass }
-              currentFilters={ filterBy[key] }
-              handleOnChange={ e => toggleFilter(key, e.target.value) }
+              currentFilters={ filterBy[filter.key] }
+              handleOnChange={ e => toggleFilter(filter.key, e.target.value) }
             />
           )
         }

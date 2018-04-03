@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 
 const Input = require('govuk-react-components/components/forms/input-text');
 
+const filterSettings = require('../../src/helpers/filters');
 const Filters = require('../containers/filters');
 const PlacesTable = require('../components/places-table');
 
@@ -15,7 +16,9 @@ const Places = ({
   <React.Fragment>
     <h2 className="headline">{establishment.name}</h2>
     <h1>Licensed premises</h1>
-    <Filters page="search" />
+    <Filters
+      filters={filterSettings.filter(f => f.key !== 'site')}
+    />
     <div className="text-filter">
       <Input
         name="filter"

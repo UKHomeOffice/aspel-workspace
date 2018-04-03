@@ -1,15 +1,25 @@
 const { connect } = require('react-redux');
 
+const { uniq, flatten } = require('lodash');
+
 const Filters = require('../components/filters');
-const { uniqueByType } = require('../../src/reducers/places');
 const {
   toggleFilter,
   clearFilters
 } = require('../../src/actions/filters');
 
-const mapStateToProps = (state, { page }) => ({
+const uniqueByType = (filter, rows) => {
+  return {
+    title: filter.title,
+    label: filter.label,
+    key: filter.key,
+    values: uniq(flatten(rows.map(r => r[filter.key])))
+  };
+};
+
+const mapStateToProps = (state, { filters }) => ({
   filterBy: state.filters.filterBy,
-  uniqueByType: uniqueByType(state.places.all, page)
+  filters: filters.map(filter => uniqueByType(filter, state.places.all))
 });
 
 const mapDispatchToProps = dispatch => ({

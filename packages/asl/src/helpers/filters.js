@@ -1,20 +1,23 @@
 const dictionary = require('@asl/dictionary');
 
-module.exports = {
-  site: {
+module.exports = [
+  {
     title: 'Site',
+    key: 'site',
     match: (value, test) => value === test
   },
-  suitability: {
+  {
     title: 'Suitability',
+    key: 'suitability',
     match: (value, test) => value.includes(test),
     label: code => `${dictionary[code]} (${code})`,
     combines: 'AND'
   },
-  holding: {
+  {
     title: 'Holding',
+    key: 'holding',
     match: (value, test) => value.includes(test),
     label: code => `${dictionary[code]} (${code})`,
     combines: 'AND'
   }
-};
+];

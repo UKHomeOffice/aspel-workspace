@@ -1,14 +1,13 @@
 const { combineReducers } = require('redux');
-const { reduce } = require('lodash');
 const {
   TOGGLE_FILTER,
   CLEAR_FILTERS,
   SET_TEXT_FILTER
 } = require('../constants/action-types');
 
-const filterHelpers = require('../helpers/filters');
+const filterSettings = require('../helpers/filters');
 
-const generateInitialState = () => reduce(filterHelpers, (state, value, key) => ({ ...state, [key]: [] }), {});
+const generateInitialState = () => filterSettings.reduce((state, filter) => ({ ...state, [filter.key]: [] }), {});
 
 const filterBy = (state = Object.assign({}, generateInitialState()), action) => {
   switch (action.type) {

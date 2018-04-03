@@ -1,36 +1,18 @@
 const {
   every,
-  isEmpty,
-  reduce
+  some,
+  isEmpty
 } = require('lodash');
-const filterHelpers = require('../helpers/filters');
+const filterSettings = require('../helpers/filters');
 
-// TODO: Make this better
-const uniqueByType = (places = [], page) => {
-  const arr = ['site', 'suitability', 'holding'];
-  if (page === 'search') {
-    arr.shift();
-  }
-  return arr.reduce((obj, cat) =>
-    ({ ...obj,
-      [cat]: places.map(r => r[cat])
-        .reduce((list, values) => list.concat(values), [])
-        .reduce((list, value) => list.includes(value) ? list : list.concat(value), [])
-    }), {});
-};
-
-const matchesHelper = (filter, row, key, values) => {
+const matchesHelper = (filter, row, values) => {
   if (!values.length) {
     return true;
   }
   if (filter.combines === 'AND') {
-    return values.reduce((matched, value) => {
-      return matched && filter.match(row[key], value);
-    }, true);
+    return every(values, value => filter.match(row[filter.key], value));
   }
-  return values.reduce((matched, value) => {
-    return matched || filter.match(row[key], value);
-  }, false);
+  return some(values, value => filter.match(row[filter.key], value));
 };
 
 // TODO: make this better
@@ -45,13 +27,13 @@ const searchData = (rows, filter) => {
   );
 };
 
-const filterData = (rows, filters) => {
-  if (every(filters, isEmpty)) {
+const filterData = (rows, values) => {
+  if (every(values, isEmpty)) {
     return rows;
   }
   return rows.filter(row =>
-    reduce(filterHelpers, (matches, filter, key) =>
-      matches && matchesHelper(filter, row, key, filters[key]), true)
+    filterSettings.reduce((matches, filter) =>
+      matches && matchesHelper(filter, row, values[filter.key]), true)
   );
 };
 
@@ -59,7 +41,6 @@ const all = (state = [], action) => {
   return state;
 };
 
-all.uniqueByType = uniqueByType;
 all.filterData = filterData;
 all.searchData = searchData;
 module.exports = all;

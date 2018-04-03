@@ -2,8 +2,6 @@ const React = require('react');
 const CheckboxGroup = require('govuk-react-components/components/forms/radio-group');
 const MoreLink = require('./more-link');
 
-const filterHelpers = require('../../src/helpers/filters');
-
 class FilterColumn extends React.Component {
   componentDidMount() {
     this.setState({ showMore: false });
@@ -21,9 +19,11 @@ class FilterColumn extends React.Component {
       columnClass,
       currentFilters,
       handleOnChange,
-      values
+      values,
+      title,
+      label
     } = this.props;
-    const filter = filterHelpers[id];
+
     const displayValues = this.state && !this.state.showMore && values.length > 4 ? values.slice(0, 4) : values;
 
     return (
@@ -31,8 +31,8 @@ class FilterColumn extends React.Component {
         <CheckboxGroup
           name={ id }
           type="checkbox"
-          label={ filter.title }
-          options={ displayValues.map(value => ({ value, label: filter.label ? filter.label(value) : value })) }
+          label={ title }
+          options={ displayValues.map(value => ({ value, label: label ? label(value) : value })) }
           value={ currentFilters }
           onChange={ handleOnChange }
         />
