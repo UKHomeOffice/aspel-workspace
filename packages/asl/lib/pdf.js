@@ -15,7 +15,6 @@ module.exports = settings => {
       };
       return render.call(res, template, Object.assign({}, locals, defaults), (err, html) => {
         if (err) return next(err);
-        console.log(html);
         return fetch
           .post(settings.pdf, {
             agent,
