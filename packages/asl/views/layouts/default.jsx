@@ -4,6 +4,9 @@ const PhaseBanner = require('govuk-react-components/components/phase-banner');
 
 const Breadcrumb = require('../components/breadcrumb');
 
+const ScreenOnly = require('../helpers/screen-only');
+const Pdf = require('./pdf');
+
 const Layout = ({
   children,
   propositionHeader,
@@ -33,4 +36,4 @@ const Layout = ({
   </GovUK>
 );
 
-module.exports = Layout;
+module.exports = ScreenOnly(Layout, Pdf);
