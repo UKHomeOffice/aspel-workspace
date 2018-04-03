@@ -6,8 +6,8 @@ class ExportLink extends React.Component {
 
   href() {
     let prefix = '?';
-    if (typeof location !== 'undefined' && location.search) {
-      prefix = location.search;
+    if (typeof window !== 'undefined' && window.location.search) {
+      prefix = window.location.search;
     }
     return `${prefix}&pdf=1`;
   }
@@ -18,6 +18,6 @@ class ExportLink extends React.Component {
     </p>;
   }
 
-};
+}
 
 module.exports = ScreenOnly(ExportLink);
