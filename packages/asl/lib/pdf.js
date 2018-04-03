@@ -1,10 +1,11 @@
 const fetch = require('r2');
 const https = require('https');
-const agent = new https.Agent({
-  rejectUnauthorized: false
-});
 
 module.exports = settings => {
+  const pdfIsSecure = settings.pdf.match(/^https:/);
+  const agent = pdfIsSecure && new https.Agent({
+    rejectUnauthorized: false
+  });
   return (req, res, next) => {
     const render = res.render;
     const pdf = (template, locals) => {
