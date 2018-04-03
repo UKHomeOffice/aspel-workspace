@@ -1,5 +1,7 @@
 const React = require('react');
 
+const ScreenOnly = require('../helpers/screen-only');
+
 class ExportLink extends React.Component {
 
   href() {
@@ -18,4 +20,4 @@ class ExportLink extends React.Component {
 
 };
 
-module.exports = ExportLink;
+module.exports = ScreenOnly(ExportLink);

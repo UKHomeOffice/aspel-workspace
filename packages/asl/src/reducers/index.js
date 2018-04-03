@@ -6,5 +6,6 @@ const places = require('./places');
 module.exports = combineReducers({
   filters,
   establishment,
-  places
+  places,
+  pdf: state => state || false
 });
