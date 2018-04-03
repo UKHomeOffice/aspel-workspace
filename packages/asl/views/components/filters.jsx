@@ -2,6 +2,7 @@ const React = require('react');
 const { size } = require('lodash');
 
 const FilterColumn = require('./filter-column');
+const ScreenOnly = require('../helpers/screen-only');
 
 const Filters = ({
   toggleFilter,
@@ -41,4 +42,4 @@ const Filters = ({
   );
 };
 
-module.exports = Filters;
+module.exports = ScreenOnly(Filters);
