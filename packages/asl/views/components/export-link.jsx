@@ -1,23 +1,15 @@
 const React = require('react');
 
 const ScreenOnly = require('../helpers/screen-only');
+const { format } = require('../../src/helpers/query-string');
 
-class ExportLink extends React.Component {
-
-  href() {
-    let prefix = '?';
-    if (typeof window !== 'undefined' && window.location.search) {
-      prefix = window.location.search;
-    }
-    return `${prefix}&pdf=1`;
-  }
-
-  render() {
-    return <p>
-      <a href={this.href()}>Export as PDF</a>
-    </p>;
-  }
-
-}
+const ExportLink = ({
+  filterBy,
+  filterText
+}) => (
+  <p>
+    <a href={`?${format({ filterBy, filterText, pdf: 1 })}`}>Export as PDF</a>
+  </p>
+);
 
 module.exports = ScreenOnly(ExportLink);
