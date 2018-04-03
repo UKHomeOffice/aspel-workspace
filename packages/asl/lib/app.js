@@ -14,14 +14,20 @@ const api = url => {
     req.api(u)
       .then(response => {
         res.locals.api = response;
-        res.locals.filterBy = req.query.filterBy;
-        res.locals.textFilter = req.query.textFilter;
         res.locals.api.data = JSON.stringify(response.json, null, '  ');
         res.locals.establishment = response.json.meta.establishment;
         res.locals.data = response.json.data;
       })
       .then(() => next())
       .catch(e => next(e));
+  };
+};
+
+const filters = () => {
+  return (req, res, next) => {
+    res.locals.filterBy = req.query.filterBy;
+    res.locals.textFilter = req.query.textFilter;
+    next();
   };
 };
 
@@ -48,14 +54,14 @@ module.exports = settings => {
     });
   });
 
-  app.get('/places', api(), (req, res, next) => {
+  app.get('/places', api(), filters(), (req, res, next) => {
     res.render('places', {
       places: res.locals.data,
       applyButton: !!req.query.apply
     });
   });
 
-  app.get('/search', api('/places'), (req, res, next) => {
+  app.get('/search', api('/places'), filters(), (req, res, next) => {
     res.render('search', {
       places: res.locals.data
     });
