@@ -1,16 +1,16 @@
 const React = require('react');
-const Layout = require('./layouts/default');
+const App = require('./layouts/app');
 const Page = require('./containers/search');
 const { propTypes } = require('./pages/search');
 
 const Search = props => (
-  <Layout { ...props }
+  <App { ...props }
     crumbs={['Licensed premises']}
     scripts={['/public/js/pages/search.js']}
     exposes={Object.keys(propTypes)}
   >
     <Page />
-  </Layout>
+  </App>
 );
 
 module.exports = Search;

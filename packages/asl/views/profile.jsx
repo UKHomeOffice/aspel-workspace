@@ -1,5 +1,5 @@
 const React = require('react');
-const Layout = require('./layouts/default');
+const App = require('./layouts/app');
 
 const PlacesTable = require('./components/places-table');
 
@@ -27,7 +27,7 @@ class Roles extends React.Component {
 
   render() {
     return (
-      <Layout {...this.props} crumbs={[{ href: '/roles', label: 'Named people' }, this.props.profile.name]}>
+      <App {...this.props} crumbs={[{ href: '/roles', label: 'Named people' }, this.props.profile.name]}>
 
         <h2 className="headline">{ this.props.establishment.name }</h2>
         <h1>{this.props.profile.name}</h1>
@@ -51,7 +51,7 @@ class Roles extends React.Component {
 
         <h2>Roles</h2>
         { this.renderRoles() }
-      </Layout>
+      </App>
     );
   }
 }

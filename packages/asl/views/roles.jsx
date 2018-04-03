@@ -1,5 +1,5 @@
 const React = require('react');
-const Layout = require('./layouts/default');
+const App = require('./layouts/app');
 
 const dictionary = require('@asl/dictionary');
 
@@ -14,7 +14,7 @@ class Roles extends React.Component {
 
   render() {
     return (
-      <Layout {...this.props} crumbs={['Named people']}>
+      <App {...this.props} crumbs={['Named people']}>
         <h2 className="headline">{this.props.establishment.name}</h2>
         <h1>Named people</h1>
         <table>
@@ -39,7 +39,7 @@ class Roles extends React.Component {
             }
           </tbody>
         </table>
-      </Layout>
+      </App>
     );
   }
 }

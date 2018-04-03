@@ -1,12 +1,12 @@
 const React = require('react');
-const Layout = require('./layouts/default');
+const App = require('./layouts/app');
 
 const moment = require('moment');
 
 class Index extends React.Component {
   render() {
     return (
-      <Layout {...this.props}>
+      <App {...this.props}>
         <h1 className="heading-xlarge">{this.props.establishment.name} </h1>
 
         <dl>
@@ -49,7 +49,7 @@ class Index extends React.Component {
             </div>
           </div>
         </div>
-      </Layout>
+      </App>
     );
   }
 }

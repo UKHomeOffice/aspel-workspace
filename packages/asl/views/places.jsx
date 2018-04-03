@@ -1,16 +1,16 @@
 const React = require('react');
-const Layout = require('./layouts/default');
+const App = require('./layouts/app');
 const Page = require('./containers/places');
 const { propTypes } = require('./pages/places');
 
 const Places = props => (
-  <Layout { ...props }
+  <App { ...props }
     crumbs={['Licensed premises']}
     scripts={['/public/js/pages/places.js']}
     exposes={Object.keys(propTypes)}
   >
     <Page />
-  </Layout>
+  </App>
 );
 
 module.exports = Places;
