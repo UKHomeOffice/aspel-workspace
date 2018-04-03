@@ -11,8 +11,9 @@ module.exports = settings => {
     const pdf = (template, locals) => {
       const defaults = {
         pdf: true,
-        hostname: `${req.protocol}://${req.get('host')}`
+        hostname: 'https://public-ui.notprod.asl.homeoffice.gov.uk'//`${req.protocol}://${req.get('host')}`
       };
+      console.log(defaults);
       return render.call(res, template, Object.assign({}, locals, defaults), (err, html) => {
         if (err) return next(err);
         return fetch
