@@ -14,6 +14,8 @@ const api = url => {
     req.api(u)
       .then(response => {
         res.locals.api = response;
+        res.locals.filterBy = req.query.filterBy;
+        res.locals.textFilter = req.query.textFilter;
         res.locals.api.data = JSON.stringify(response.json, null, '  ');
         res.locals.establishment = response.json.meta.establishment;
         res.locals.data = response.json.data;

@@ -7,9 +7,10 @@ const {
 } = require('../constants/action-types');
 
 const filterHelpers = require('../helpers/filters');
-const filterByInitialState = reduce(filterHelpers, (state, value, key) => ({ ...state, [key]: [] }), {});
 
-const filterBy = (state = filterByInitialState, action) => {
+const generateInitialState = () => reduce(filterHelpers, (state, value, key) => ({ ...state, [key]: [] }), {});
+
+const filterBy = (state = Object.assign({}, generateInitialState()), action) => {
   switch (action.type) {
     case TOGGLE_FILTER:
       const res = state[action.key].slice();
@@ -24,7 +25,7 @@ const filterBy = (state = filterByInitialState, action) => {
         [action.key]: res
       };
     case CLEAR_FILTERS:
-      return filterByInitialState;
+      return Object.assign({}, generateInitialState());
     default:
       return state;
   }
