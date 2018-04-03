@@ -11,11 +11,11 @@ module.exports = settings => {
     const pdf = (template, locals) => {
       const defaults = {
         pdf: true,
-        hostname: 'https://public-ui.notprod.asl.homeoffice.gov.uk'//`${req.protocol}://${req.get('host')}`
+        hostname: `${req.protocol}://${req.get('host')}`
       };
-      console.log(defaults);
       return render.call(res, template, Object.assign({}, locals, defaults), (err, html) => {
         if (err) return next(err);
+        console.log(html);
         return fetch
           .post(settings.pdf, {
             agent,
