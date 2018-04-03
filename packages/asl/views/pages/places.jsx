@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 
 const Filters = require('../containers/filters');
 const PlacesTable = require('../components/places-table');
+const ExportLink = require('../components/export-link');
 
 const Places = ({
   places,
@@ -17,6 +18,7 @@ const Places = ({
       applyButton={applyButton}
     />
     <PlacesTable rows={places} />
+    <ExportLink />
   </React.Fragment>
 );
 

@@ -5,6 +5,7 @@ const Input = require('govuk-react-components/components/forms/input-text');
 
 const Filters = require('../containers/filters');
 const PlacesTable = require('../components/places-table');
+const ExportLink = require('../components/export-link');
 
 const Places = ({
   establishment,
@@ -25,6 +26,7 @@ const Places = ({
       />
     </div>
     <PlacesTable rows={places} />
+    <ExportLink />
   </React.Fragment>
 );
 
