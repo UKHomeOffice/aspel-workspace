@@ -1,0 +1,37 @@
+---
+- name: public-ui
+  recipe: webapp
+  url: public-ui.preprod.asl.homeoffice.gov.uk
+  image: quay.io/ukhomeofficedigital/asl:{{.DRONE_COMMIT_SHA}}
+  env:
+    REDIS_HOST: public-ui-redis
+    REDIS_PASSWORD:
+      secret: true
+      name: asl-preprod-redis
+      key: pass
+    SESSION_SECRET:
+      secret: true
+      name: asl-preprod-session
+      key: secret
+    KEYCLOAK_REALM: Asl-dev
+    KEYCLOAK_URL: https://sso-dev.notprod.homeoffice.gov.uk/auth
+    KEYCLOAK_CLIENT: asl-dev-connect
+    KEYCLOAK_SECRET:
+      secret: true
+      name: asl-preprod-auth
+      key: secret
+    API_URL: https://public-api.notprod.asl.homeoffice.gov.uk
+    PDF_SERVICE: https://pdf-generator:10443/convert
+
+- name: pdf-generator
+  recipe: internal-service
+  image: quay.io/ukhomeofficedigital/html-pdf-converter:216c4dd30064b3a92ce5ca6ea429f47256069dca
+  clients: public-ui
+  env:
+    APP_PORT: '"8080"'
+
+- name: public-ui-redis
+  recipe: redis
+  clients: public-ui
+  passwordName: asl-preprod-redis
+  passwordKey: pass
