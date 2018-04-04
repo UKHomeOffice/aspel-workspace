@@ -66,6 +66,9 @@ pipeline:
       - mkdir deploy
       - npx kube-cookbook --out deploy .kube.${DRONE_DEPLOY_TO}.yaml
     when:
+      environment:
+        - dev
+        - preprod
       event: deployment
 
   dev_deploy:
@@ -79,6 +82,9 @@ pipeline:
     commands:
       - kd -f deploy
     when:
+      environment:
+        - dev
+        - preprod
       event: deployment
 
 matrix:
