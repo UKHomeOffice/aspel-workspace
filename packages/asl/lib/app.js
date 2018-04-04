@@ -1,6 +1,7 @@
 const ui = require('@asl/service/ui');
-const pdf = require('./pdf');
+const pdf = require('@asl/pdf-renderer');
 const errorHandler = require('./error-handler');
+const responder = require('./send-response');
 
 const api = url => {
   return (req, res, next) => {
@@ -40,39 +41,40 @@ module.exports = settings => {
     next();
   });
 
-  app.use(pdf(settings));
+  app.use(pdf(settings.pdf));
 
-  app.get('/roles', api(), (req, res) => {
-    res.render('roles', {
-      roles: res.locals.data
-    });
+  app.get('/roles', api(), (req, res, next) => {
+    res.template = 'roles';
+    res.locals.roles = res.locals.data;
+    next();
   });
 
-  app.get('/profile/:id', api(), (req, res) => {
-    res.render('profile', {
-      profile: res.locals.data
-    });
+  app.get('/profile/:id', api(), (req, res, next) => {
+    res.template = 'profile';
+    res.locals.profile = res.locals.data;
+    next();
   });
 
   app.get('/places', api(), filters(), (req, res, next) => {
-    res.render('places', {
-      places: res.locals.data,
-      applyButton: !!req.query.apply
-    });
+    res.template = 'places';
+    res.locals.places = res.locals.data;
+    next();
   });
 
   app.get('/search', api('/places'), filters(), (req, res, next) => {
-    res.render('search', {
-      places: res.locals.data
-    });
+    res.template = 'search';
+    res.locals.places = res.locals.data;
+    next();
   });
 
-  app.get('/', api(), (req, res) => {
-    res.render('index', {
-      establishment: res.locals.data,
-      elh: res.locals.data.roles.find(r => r.type === 'elh')
-    });
+  app.get('/', api(), (req, res, next) => {
+    res.template = 'index';
+    res.locals.establishment = res.locals.data;
+    res.locals.elh = res.locals.data.roles.find(r => r.type === 'elh');
+    next();
   });
+
+  app.use(responder());
 
   app.use(errorHandler());
 
