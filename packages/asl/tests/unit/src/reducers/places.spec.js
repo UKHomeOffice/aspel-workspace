@@ -1,4 +1,4 @@
-const all = require('reducers/places');
+const all = require('src/reducers/places');
 const rows = require('./places.fixture');
 
 const { filterData, searchData } = all;
