@@ -20,6 +20,7 @@ const searchData = (rows, filter) => {
   if (!filter) {
     return rows;
   }
+  filter = filter.toLowerCase();
   return rows.filter(row =>
     row.site.toLowerCase().includes(filter) ||
     row.area.toLowerCase().includes(filter) ||
