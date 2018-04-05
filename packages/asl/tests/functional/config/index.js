@@ -6,10 +6,12 @@ const env = () => {
 }
 
 const url = () => {
-  if (env() === 'local') {
-    return `http://localhost:8080`;
-  }
-  return `https://${env()}.notprod.asl.homeoffice.gov.uk`;
+  const urls = {
+    local: 'http://localhost:8080',
+    dev: 'https://public-ui.notprod.asl.homeoffice.gov.uk',
+    preprod: 'https://public-ui.preprod.asl.homeoffice.gov.uk'
+  };
+  return urls[env()];
 };
 
 const config = () => {
