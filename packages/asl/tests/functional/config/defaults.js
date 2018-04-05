@@ -15,6 +15,13 @@ module.exports = {
   specs: [
     'tests/functional/specs/**/*.js'
   ],
+
+  suites: {
+    smoke: [
+      'tests/functional/specs/smoke-tests.js'
+    ]
+  },
+
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'

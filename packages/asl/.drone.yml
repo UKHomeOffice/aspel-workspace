@@ -106,7 +106,7 @@ pipeline:
     secrets:
       - asl_password_holc
     commands:
-      - npm run test:functional
+      - npm run test:functional -- --suite smoke
     when:
       event: deployment
 
