@@ -1,7 +1,29 @@
-const all = require('src/reducers/places');
-const rows = require('./places.fixture');
+const places = require('src/reducers/places');
+const { filterData, searchData } = places;
 
-const { filterData, searchData } = all;
+const rows = [
+  {
+    site: 'Site A',
+    suitability: ['AB', 'CD'],
+    holding: ['AB'],
+    area: '1st Floor',
+    name: '1.24'
+  },
+  {
+    site: 'Site B',
+    suitability: ['CD'],
+    holding: ['CD', 'EF'],
+    area: '2nd Floor',
+    name: '2.78'
+  },
+  {
+    site: 'Site C',
+    suitability: ['EF', 'GH'],
+    holding: ['CD'],
+    area: '1st Floor',
+    name: '1.11'
+  }
+];
 
 const getFilters = ({ site = [], suitability = [], holding = [] } = {}) => ({
   site,
@@ -10,14 +32,14 @@ const getFilters = ({ site = [], suitability = [], holding = [] } = {}) => ({
 });
 
 describe('Places Reducer', () => {
-  describe('all', () => {
+  describe('places', () => {
     test('returns an empty array when initialised without state', () => {
-      expect(all(undefined, {})).toEqual([]);
+      expect(places(undefined, {})).toEqual([]);
     });
 
     test('returns all data when initialised with state', () => {
       const state = [{ a: 1 }, { b: 2 }, { c: 3 }];
-      expect(all(state, {})).toBe(state);
+      expect(places(state, {})).toBe(state);
     });
   });
 

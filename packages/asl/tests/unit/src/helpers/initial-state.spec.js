@@ -17,10 +17,7 @@ describe('Initial State Helper', () => {
         },
         textFilter: ''
       },
-      pdf: false,
-      places: {
-        all: undefined
-      }
+      pdf: false
     };
     expect(initialState()).toEqual(expected);
   });

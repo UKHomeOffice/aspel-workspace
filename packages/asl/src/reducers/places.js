@@ -38,10 +38,10 @@ const filterData = (rows, values) => {
   );
 };
 
-const all = (state = [], action) => {
+const places = (state = [], action) => {
   return state;
 };
 
-all.filterData = filterData;
-all.searchData = searchData;
-module.exports = all;
+places.filterData = filterData;
+places.searchData = searchData;
+module.exports = places;
