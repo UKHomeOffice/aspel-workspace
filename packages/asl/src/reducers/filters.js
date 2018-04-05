@@ -1,4 +1,3 @@
-const { combineReducers } = require('redux');
 const {
   TOGGLE_FILTER,
   CLEAR_FILTERS,
@@ -41,7 +40,7 @@ const textFilter = (state = '', action) => {
   }
 };
 
-module.exports = combineReducers({
+module.exports = {
   filterBy,
   textFilter
-});
+};

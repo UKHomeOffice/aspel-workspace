@@ -1,9 +1,6 @@
-const { merge } = require('lodash');
 const { createStore } = require('redux');
+const initialState = require('./helpers/initial-state');
 const rootReducer = require('./reducers');
-const filtersReducer = require('./reducers/filters');
 
-module.exports = (data, { filterBy, textFilter, pdf }) => {
-  const filters = merge(filtersReducer(undefined, {}), { filterBy, textFilter });
-  return createStore(rootReducer, { ...data, places: { all: data.places }, filters, pdf });
-};
+module.exports = (data, persistedState) =>
+  createStore(rootReducer, initialState(data, persistedState));

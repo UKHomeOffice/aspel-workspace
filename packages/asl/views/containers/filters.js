@@ -19,15 +19,10 @@ const uniqueByType = (filter, rows) => {
 
 const mapStateToProps = (state, { filters }) => ({
   filterBy: state.filters.filterBy,
-  filters: filters.map(filter => uniqueByType(filter, state.places.all))
-});
-
-const mapDispatchToProps = dispatch => ({
-  toggleFilter: (key, value) => dispatch(toggleFilter(key, value)),
-  clearFilters: () => dispatch(clearFilters())
+  filters: filters.map(filter => uniqueByType(filter, state.places))
 });
 
 module.exports = connect(
   mapStateToProps,
-  mapDispatchToProps
+  { toggleFilter, clearFilters }
 )(Filters);

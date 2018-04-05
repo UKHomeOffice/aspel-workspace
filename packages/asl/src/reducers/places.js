@@ -16,10 +16,11 @@ const matchesHelper = (filter, row, values) => {
 };
 
 // TODO: make this better
-const searchData = (rows, filter) => {
+const searchData = (rows, filter = '') => {
   if (!filter) {
     return rows;
   }
+  filter = filter.toLowerCase();
   return rows.filter(row =>
     row.site.toLowerCase().includes(filter) ||
     row.area.toLowerCase().includes(filter) ||
@@ -37,10 +38,10 @@ const filterData = (rows, values) => {
   );
 };
 
-const all = (state = [], action) => {
+const places = (state = [], action) => {
   return state;
 };
 
-all.filterData = filterData;
-all.searchData = searchData;
-module.exports = all;
+places.filterData = filterData;
+places.searchData = searchData;
+module.exports = places;

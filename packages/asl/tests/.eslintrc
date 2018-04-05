@@ -1,0 +1,6 @@
+extends:
+  - lennym
+env:
+  jest: true
+rules:
+  implicit-dependencies/no-implicit: 0

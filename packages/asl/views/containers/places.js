@@ -4,7 +4,7 @@ const Places = require('../pages/places');
 
 const mapStateToProps = state => ({
   establishment: state.establishment,
-  places: filterData(state.places.all, state.filters.filterBy),
+  places: filterData(state.places, state.filters.filterBy),
   applyButton: false
 });
 
