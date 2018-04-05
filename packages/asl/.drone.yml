@@ -105,6 +105,7 @@ pipeline:
     image: node:8
     secrets:
       - asl_password_holc
+      - npm_auth_token
     commands:
       - npm run test:functional -- --suite smoke
     when:
