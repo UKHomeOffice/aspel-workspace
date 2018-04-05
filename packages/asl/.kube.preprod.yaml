@@ -20,7 +20,7 @@
       secret: true
       name: asl-preprod-auth
       key: secret
-    API_URL: https://public-api.notprod.asl.homeoffice.gov.uk
+    API_URL: https://public-api.preprod.asl.homeoffice.gov.uk
     PDF_SERVICE: https://pdf-generator:10443/convert
 
 - name: pdf-generator
