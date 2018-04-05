@@ -101,7 +101,24 @@ pipeline:
       environment: preprod
       event: deployment
 
+  post_deploy_test:
+    image: node:8
+    secrets:
+      - asl_password_holc
+    commands:
+      - npm run test:functional -- --suite smoke
+    when:
+      event: deployment
+      environment:
+        - dev
+        - preprod
+
 matrix:
   NPM_AUTH_USERNAME:
     - asl
 
+services:
+  selenium:
+    image: selenium/standalone-chrome
+    when:
+      event: deployment
