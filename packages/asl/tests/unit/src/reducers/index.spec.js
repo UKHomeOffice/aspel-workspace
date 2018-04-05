@@ -14,7 +14,7 @@ describe('Rooot Reducer', () => {
       },
       pdf: false,
       places: []
-    }
+    };
     expect(rootReducer(undefined, {})).toEqual(expected);
   });
 });

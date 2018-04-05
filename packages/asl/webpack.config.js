@@ -22,11 +22,7 @@ module.exports = pages.map(page => ({
       {
         test: /\.jsx?/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['es2015', 'react'],
-          plugins: ['transform-object-rest-spread']
-        }
+        loader: 'babel-loader'
       },
       {
         test: path.resolve(__dirname, TEMPLATE_PATH),
