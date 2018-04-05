@@ -85,6 +85,10 @@ describe('Places Reducer', () => {
   });
 
   describe('searchData()', () => {
+    test('returns all rows if no filter is given', () => {
+      expect(searchData(rows)).toBe(rows);
+    });
+
     test('filters by site name', () => {
       expect(searchData(rows, 'Site A')).toMatchObject([
         { site: 'Site A' }

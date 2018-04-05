@@ -16,7 +16,7 @@ const matchesHelper = (filter, row, values) => {
 };
 
 // TODO: make this better
-const searchData = (rows, filter) => {
+const searchData = (rows, filter = '') => {
   if (!filter) {
     return rows;
   }

@@ -1,10 +1,10 @@
 const { combineReducers } = require('redux');
-const filters = require('./filters');
+const { filterBy, textFilter } = require('./filters');
 const establishment = require('./establishment');
 const places = require('./places');
 
 module.exports = combineReducers({
-  filters,
+  filters: combineReducers({ filterBy, textFilter }),
   establishment,
   places,
   pdf: state => state || false
