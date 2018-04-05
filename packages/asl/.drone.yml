@@ -104,9 +104,10 @@ pipeline:
   post_deploy_test:
     image: node:8
     secrets:
-      - asl_password_holc
       - npm_auth_token
+      - asl_password_holc
     commands:
+      - npm install
       - npm run test:functional -- --suite smoke
     when:
       event: deployment
