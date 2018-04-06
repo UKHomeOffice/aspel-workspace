@@ -2,7 +2,7 @@ const React = require('react');
 const GovUK = require('govuk-react-components/components/layout');
 const PhaseBanner = require('govuk-react-components/components/phase-banner');
 
-const Breadcrumb = require('../components/breadcrumb');
+const Breadcrumbs = require('../components/breadcrumbs');
 
 const ScreenOnly = require('../helpers/screen-only');
 const Pdf = require('./pdf');
@@ -23,7 +23,7 @@ const Layout = ({
   >
     <main className="main" id="content">
       <PhaseBanner phase="prototype" />
-      <Breadcrumb crumbs={crumbs} />
+      <Breadcrumbs crumbs={crumbs} />
       <div className="grid-row">
         <div className="column-full">
           <div id="page-component">
