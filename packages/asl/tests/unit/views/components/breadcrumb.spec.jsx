@@ -1,6 +1,6 @@
 const React = require('react');
 const { shallow } = require('enzyme');
-const Breadcrumb = require('views/components/breadcrumb');
+const { Breadcrumb } = require('views/components/breadcrumbs');
 
 describe('<Breadcrumb />', () => {
   describe('with a string', () => {

@@ -1,9 +1,16 @@
-const React = require('react');
-const Breadcrumb = require('./breadcrumb');
+import React from 'react';
+
+export const Breadcrumb = ({
+  crumb
+}) => typeof crumb === 'string'
+  ? <li>{crumb}</li>
+  : <li>
+    <a href={crumb.href}>{crumb.label}</a>
+  </li>;
 
 const renderNull = crumbs => !crumbs || !crumbs.length || !Array.isArray(crumbs);
 
-const Breadcrumbs = ({
+export default ({
   crumbs
 }) => {
   if (renderNull(crumbs)) {
@@ -20,5 +27,3 @@ const Breadcrumbs = ({
     </ol>
   </div>;
 };
-
-module.exports = Breadcrumbs;
