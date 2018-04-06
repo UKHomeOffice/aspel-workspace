@@ -1,5 +1,4 @@
 const React = require('react');
-const { size } = require('lodash');
 
 const FilterColumn = require('./filter-column');
 const ScreenOnly = require('../helpers/screen-only');
@@ -11,7 +10,7 @@ const Filters = ({
   clearFilters
 }) => {
 
-  const columnClass = [null, 'column-full', 'column-half', 'column-one-third'][size(filters)];
+  const columnClass = [null, 'column-full', 'column-half', 'column-one-third'][filters.length];
 
   return (
     <div className="filter-panel">

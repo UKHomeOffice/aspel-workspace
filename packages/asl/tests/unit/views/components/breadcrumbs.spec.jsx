@@ -1,28 +1,73 @@
 const React = require('react');
 const { shallow } = require('enzyme');
 const Breadcrumbs = require('views/components/breadcrumbs');
-
-const crumbsList = [
-  [],
-  ['Licensed premises'],
-  [{ href: '/roles', label: 'Named people' }, 'Brian Proudfoot'],
-  [{ href: '/roles', label: 'Named people' }, { href: '/roles/brian', label: 'Brian Proudfoot' }, 'Another crumb']
-];
+const Breadcrumb = require('views/components/breadcrumb');
 
 describe('<Breadcrumbs />', () => {
-  crumbsList.forEach((crumbs, index) => {
-    test(`testing ${index} elements rendered`, () => {
-      const wrapper = shallow(<Breadcrumbs crumbs={crumbs} />).find('.breadcrumb ol li');
-      // if there are more than 0 elements, a home link is prepended.
-      expect(wrapper.length).toBe(index === 0 ? 0 : index + 1);
-      wrapper.forEach((el, i) => {
-        if (i === 0) {
-          expect(el.text()).toBe('Home');
-        } else {
-          const text = crumbsList[index][i - 1];
-          expect(el.text()).toBe(typeof text === 'object' ? text.label : text);
-        }
-      });
+  test('returns null when crumbs undefined', () => {
+    const wrapper = shallow(<Breadcrumbs />);
+    expect(wrapper.html()).toBe(null);
+  });
+
+  test('returns null when crumbs is empty array', () => {
+    const wrapper = shallow(<Breadcrumbs crumbs={[]} />);
+    expect(wrapper.html()).toBe(null);
+  });
+
+  test('returns null when crumbs is not an array', () => {
+    const wrapper = shallow(<Breadcrumbs crumbs={'A crumb'} />);
+    expect(wrapper.html()).toBe(null);
+  });
+
+  describe('with one crumb', () => {
+    const crumbs = ['A crumb'];
+    const wrapper = shallow(<Breadcrumbs crumbs={crumbs} />);
+
+    test('renders 2 <Breadcrumb /> elements', () => {
+      expect(wrapper.find(Breadcrumb).length).toBe(2);
+    });
+
+    test('passes a home link crumb to the first <Breadcrumb />', () => {
+      const el = wrapper.find(Breadcrumb).first();
+      expect(el.props().crumb).toEqual({ href: '/', label: 'Home' });
+    });
+
+    test('passes a label crumb to the last <Breadcrumb />', () => {
+      const el = wrapper.find(Breadcrumb).last();
+      expect(el.props().crumb).toBe('A crumb');
+    });
+  });
+
+  describe('with many crumbs', () => {
+    const crumbs = [
+      { href: '/page-1', label: 'Page 1' },
+      { href: '/page-1/child-page', label: 'Child Page' },
+      'A crumb'
+    ];
+    const wrapper = shallow(<Breadcrumbs crumbs={crumbs} />);
+
+    test('renders 4 <Breadcrumb /> elements', () => {
+      expect(wrapper.find(Breadcrumb).length).toBe(4);
+    });
+
+    test('passes a home link crumb to the first <Breadcrumb />', () => {
+      const el = wrapper.find(Breadcrumb).first();
+      expect(el.props().crumb).toEqual({ href: '/', label: 'Home' });
+    });
+
+    test('passes a label crumb to the last <Breadcrumb />', () => {
+      const el = wrapper.find(Breadcrumb).last();
+      expect(el.props().crumb).toBe('A crumb');
+    });
+
+    test('passes an intermediate link crumb to the second <Breadcrumb />', () => {
+      const el = wrapper.find(Breadcrumb).at(1);
+      expect(el.props().crumb).toEqual(crumbs[0]);
+    });
+
+    test('passes an intermediate link crumb to the third <Breadcrumb />', () => {
+      const el = wrapper.find(Breadcrumb).at(2);
+      expect(el.props().crumb).toBe(crumbs[1]);
     });
   });
 });

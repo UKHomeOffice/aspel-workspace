@@ -1,25 +1,24 @@
 const React = require('react');
+const Breadcrumb = require('./breadcrumb');
 
-class Breadcrumb extends React.Component {
-  render() {
-    if (!this.props.crumbs || !this.props.crumbs.length || !Array.isArray(this.props.crumbs)) {
-      return null;
-    }
-    const crumbs = [].concat([{ label: 'Home', href: '/' }], this.props.crumbs);
-    return <div className="breadcrumb">
-      <ol>
-        {
-          crumbs.map(crumb => {
-            if (typeof crumb === 'string') {
-              return <li key={crumb}>{crumb}</li>;
-            } else if (typeof crumb.href === 'string' && typeof crumb.label === 'string') {
-              return <li key={crumb.href}><a href={crumb.href}>{crumb.label}</a></li>;
-            }
-          })
-        }
-      </ol>
-    </div>;
+const renderNull = crumbs => !crumbs || !crumbs.length || !Array.isArray(crumbs);
+
+const Breadcrumbs = ({
+  crumbs
+}) => {
+  if (renderNull(crumbs)) {
+    return null;
   }
-}
+  crumbs = [ { label: 'Home', href: '/' }, ...crumbs ];
+  return <div className="breadcrumb">
+    <ol>
+      {
+        crumbs.map((crumb, index) =>
+          <Breadcrumb key={index} crumb={crumb} />
+        )
+      }
+    </ol>
+  </div>;
+};
 
-module.exports = Breadcrumb;
+module.exports = Breadcrumbs;
