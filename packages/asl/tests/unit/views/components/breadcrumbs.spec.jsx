@@ -1,6 +1,7 @@
-import React from 'react';
-import { shallow } from 'enzyme';
-import Breadcrumbs, { Breadcrumb } from 'views/components/breadcrumbs';
+const React = require('react');
+const { shallow } = require('enzyme');
+const Breadcrumbs = require('views/components/breadcrumbs');
+const { Breadcrumb } = Breadcrumbs;
 
 describe('<Breadcrumbs />', () => {
   test('returns null when crumbs undefined', () => {
