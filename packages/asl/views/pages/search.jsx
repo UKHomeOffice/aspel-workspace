@@ -12,14 +12,13 @@ const Places = ({
   establishment,
   places,
   textFilter,
-  setTextFilter
+  setTextFilter,
+  screen
 }) => (
   <React.Fragment>
     <h2 className="headline">{establishment.name}</h2>
     <h1>Licensed premises</h1>
-    <Filters
-      filters={filterSettings.filter(f => f.key !== 'site')}
-    />
+    { screen && <Filters filters={filterSettings.filter(f => f.key !== 'site')} />}
     <div className="text-filter">
       <Input
         name="filter"
@@ -29,7 +28,7 @@ const Places = ({
       />
     </div>
     <PlacesTable rows={places} />
-    <ExportLink />
+    { screen && <ExportLink /> }
   </React.Fragment>
 );
 

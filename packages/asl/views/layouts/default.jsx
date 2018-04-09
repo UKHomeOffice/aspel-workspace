@@ -4,16 +4,12 @@ const PhaseBanner = require('govuk-react-components/components/phase-banner');
 
 const Breadcrumbs = require('../components/breadcrumbs');
 
-const ScreenOnly = require('../helpers/screen-only');
-const Pdf = require('./pdf');
-
 const Layout = ({
   children,
   propositionHeader,
   title,
   scripts,
-  crumbs,
-  data
+  crumbs
 }) => (
   <GovUK
     propositionHeader={propositionHeader}
@@ -27,13 +23,12 @@ const Layout = ({
       <div className="grid-row">
         <div className="column-full">
           <div id="page-component">
-            { children }
+            { React.cloneElement(children, { screen: true }) }
           </div>
         </div>
-        <script dangerouslySetInnerHTML={{__html: `window.INITIAL_STATE=${JSON.stringify(data)}`}} />
       </div>
     </main>
   </GovUK>
 );
 
-module.exports = ScreenOnly(Layout, Pdf);
+module.exports = Layout;

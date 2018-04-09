@@ -8,16 +8,15 @@ const ExportLink = require('../containers/export-link');
 const Places = ({
   places,
   establishment,
-  applyButton
+  applyButton,
+  screen
 }) => (
   <React.Fragment>
     <h2 className="headline">{establishment.name}</h2>
     <h1>Licensed premises</h1>
-    <Filters
-      filters={filterSettings}
-    />
+    { screen && <Filters filters={filterSettings} /> }
     <PlacesTable rows={places} />
-    <ExportLink />
+    { screen && <ExportLink /> }
   </React.Fragment>
 );
 

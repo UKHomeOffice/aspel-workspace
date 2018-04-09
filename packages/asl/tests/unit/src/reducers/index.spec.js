@@ -12,7 +12,6 @@ describe('Rooot Reducer', () => {
         },
         textFilter: ''
       },
-      pdf: false,
       places: []
     };
     expect(rootReducer(undefined, {})).toEqual(expected);
