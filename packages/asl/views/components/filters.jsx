@@ -1,7 +1,5 @@
 const React = require('react');
-
 const FilterColumn = require('./filter-column');
-const ScreenOnly = require('../helpers/screen-only');
 
 const Filters = ({
   toggleFilter,
@@ -41,4 +39,4 @@ const Filters = ({
   );
 };
 
-module.exports = ScreenOnly(Filters);
+module.exports = Filters;

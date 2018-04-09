@@ -1,6 +1,4 @@
 const React = require('react');
-
-const ScreenOnly = require('../helpers/screen-only');
 const { format } = require('../../src/helpers/query-string');
 
 const ExportLink = ({
@@ -12,4 +10,4 @@ const ExportLink = ({
   </p>
 );
 
-module.exports = ScreenOnly(ExportLink);
+module.exports = ExportLink;
