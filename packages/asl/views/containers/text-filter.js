@@ -1,12 +1,12 @@
 const { connect } = require('react-redux');
-const Search = require('../pages/search');
 const { setTextFilter } = require('../../src/actions/filters');
+const TextFilter = require('../components/text-filter');
 
 const mapStateToProps = state => ({
-  establishment: state.establishment
+  textFilter: state.filters.textFilter
 });
 
 module.exports = connect(
   mapStateToProps,
   { setTextFilter }
-)(Search);
+)(TextFilter);

@@ -23,7 +23,7 @@ const Layout = ({
       <div className="grid-row">
         <div className="column-full">
           <div id="page-component">
-            { React.cloneElement(children, { screen: true }) }
+            { children }
           </div>
         </div>
       </div>
