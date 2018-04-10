@@ -30,7 +30,7 @@ class FilterColumn extends React.Component {
       <div className={ columnClass }>
         <CheckboxGroup
           name={ id }
-          type="checkbox"
+          type='checkbox'
           label={ title }
           options={ displayValues.map(value => ({ value, label: label ? label(value) : value })) }
           value={ currentFilters }
@@ -39,7 +39,7 @@ class FilterColumn extends React.Component {
         {
           !this.state ? null : values.length > 4 &&
           <MoreLink
-            handleClick={ e => this.handleClickMore(e) }
+            handleClick={ () => this.handleClickMore() }
             showing={ this.state && this.state.showMore }
           />
         }
