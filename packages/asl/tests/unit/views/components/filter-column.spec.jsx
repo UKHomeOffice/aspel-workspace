@@ -55,4 +55,14 @@ describe('<FilterColumn />', () => {
     const el = wrapper.find('input[type="checkbox"]');
     expect(el.length).toBe(4);
   });
+
+  test('calls toggleFilters() on change, passing in id and value of filter', () => {
+    const values = ['1', '2', '3', '4', '5'];
+    const fn = jest.fn();
+    const wrapper = mount(<FilterColumn values={values} toggleFilter={ fn } { ...props } />);
+    const el = wrapper.find('input[type="checkbox"][value="1"]');
+    el.simulate('change');
+    expect(fn.mock.calls[0][0]).toBe(props.id);
+    expect(fn.mock.calls[0][1]).toBe('1');
+  });
 });

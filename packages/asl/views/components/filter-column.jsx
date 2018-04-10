@@ -17,8 +17,8 @@ class FilterColumn extends React.Component {
     const {
       id,
       columnClass,
-      currentFilters,
-      handleOnChange,
+      filterBy,
+      toggleFilter,
       values,
       title,
       label
@@ -33,8 +33,8 @@ class FilterColumn extends React.Component {
           type='checkbox'
           label={ title }
           options={ displayValues.map(value => ({ value, label: label ? label(value) : value })) }
-          value={ currentFilters }
-          onChange={ handleOnChange }
+          value={ filterBy }
+          onChange={ e => toggleFilter(id, e.target.value) }
         />
         {
           !this.state ? null : values.length > 4 &&

@@ -1,9 +1,7 @@
 const React = require('react');
-const FilterColumn = require('./filter-column');
+const FilterColumn = require('../containers/filter-column');
 
 const Filters = ({
-  toggleFilter,
-  filterBy,
   filters,
   clearFilters
 }) => {
@@ -23,8 +21,6 @@ const Filters = ({
               label={ filter.label }
               values={ filter.values }
               columnClass={ columnClass }
-              currentFilters={ filterBy[filter.key] }
-              handleOnChange={ e => toggleFilter(filter.key, e.target.value) }
             />
           )
         }
