@@ -15,13 +15,15 @@ class FilterColumn extends React.Component {
 
   render() {
     const {
-      id,
       columnClass,
       filterBy,
       toggleFilter,
-      values,
-      title,
-      label
+      filter: {
+        key,
+        title,
+        label,
+        values
+      }
     } = this.props;
 
     const displayValues = this.state && !this.state.showMore && values.length > 4 ? values.slice(0, 4) : values;
@@ -29,12 +31,12 @@ class FilterColumn extends React.Component {
     return (
       <div className={ columnClass }>
         <CheckboxGroup
-          name={ id }
+          name={ key }
           type='checkbox'
           label={ title }
           options={ displayValues.map(value => ({ value, label: label ? label(value) : value })) }
           value={ filterBy }
-          onChange={ e => toggleFilter(id, e.target.value) }
+          onChange={ e => toggleFilter(key, e.target.value) }
         />
         {
           !this.state ? null : values.length > 4 &&
