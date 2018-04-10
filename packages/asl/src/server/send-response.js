@@ -1,5 +1,3 @@
-const createStore = require('../create-store');
-
 module.exports = () => (req, res, next) => {
 
   res.locals.store = res.store;

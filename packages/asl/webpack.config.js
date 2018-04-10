@@ -1,5 +1,6 @@
+/* eslint implicit-dependencies/no-implicit: [2, { dev: true }] */
+
 const webpack = require('webpack');
-const fs = require('fs');
 const path = require('path');
 
 const TEMPLATE_PATH = './assets/js/pages/template.jsx';
