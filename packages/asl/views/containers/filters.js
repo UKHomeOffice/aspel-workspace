@@ -1,6 +1,5 @@
 const { connect } = require('react-redux');
 const { uniq, flatten } = require('lodash');
-const { clearFilters } = require('../../src/actions/filters');
 const Filters = require('../components/filters');
 
 const uniqueByType = (filter, rows) => ({
@@ -15,6 +14,5 @@ const mapStateToProps = (state, { filters }) => ({
 });
 
 module.exports = connect(
-  mapStateToProps,
-  { clearFilters }
+  mapStateToProps
 )(Filters);

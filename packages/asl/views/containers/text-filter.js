@@ -1,5 +1,5 @@
 const { connect } = require('react-redux');
-const { setTextFilter } = require('../../src/actions/filters');
+const { setTextFilter } = require('../../src/actions');
 const TextFilter = require('../components/text-filter');
 
 const mapStateToProps = state => ({

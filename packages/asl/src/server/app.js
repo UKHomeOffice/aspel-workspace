@@ -3,6 +3,9 @@ const pdf = require('@asl/pdf-renderer');
 const errorHandler = require('./error-handler');
 const responder = require('./send-response');
 
+const createStore = require('../create-store');
+const actions = require('../actions');
+
 const api = url => {
   return (req, res, next) => {
     url = url || req.url;
@@ -14,8 +17,8 @@ const api = url => {
     const u = `/establishment/${establishment}${url}`;
     req.api(u)
       .then(response => {
-        res.locals.establishment = response.json.meta.establishment;
-        res.locals.data = response.json.data;
+        res.store.dispatch(actions.setEstablishment(response.json.meta.establishment));
+        res.data = response.json.data;
       })
       .then(() => next())
       .catch(e => next(e));
@@ -33,36 +36,37 @@ module.exports = settings => {
 
   const app = ui(settings);
 
-  app.static.use((req, res, next) => {
-    res.locals.propositionHeader = 'Research and testing with animals';
+  app.use(pdf(settings.pdf));
+
+  app.use((req, res, next) => {
+    res.store = createStore();
     next();
   });
 
-  app.use(pdf(settings.pdf));
-
   app.get('/roles', api(), (req, res, next) => {
     res.template = 'roles';
-    res.locals.roles = res.locals.data;
+    res.locals.roles = res.data;
     next();
   });
 
   app.get('/profile/:id', api(), (req, res, next) => {
     res.template = 'profile';
-    res.locals.profile = res.locals.data;
+    res.locals.profile = res.data;
     next();
   });
 
   app.get('/places', api(), filters(), (req, res, next) => {
     res.template = 'places';
     res.pdfTemplate = 'pdf-list';
-    res.locals.list = { all: res.locals.data, filter: res.locals.filter };
+    res.store.dispatch(actions.setListItems(res.data));
+    res.store.dispatch(actions.setTextFilter(req.query.filter));
     next();
   });
 
   app.get('/', api(), (req, res, next) => {
     res.template = 'index';
-    res.locals.establishment = res.locals.data;
-    res.locals.elh = res.locals.data.roles.find(r => r.type === 'elh');
+    res.store.dispatch(actions.setEstablishment(res.data));
+    res.locals.elh = res.data.roles.find(r => r.type === 'elh');
     next();
   });
 

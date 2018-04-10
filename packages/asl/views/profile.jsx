@@ -1,5 +1,6 @@
 const React = require('react');
 const App = require('./layouts/app');
+const connect = require('../src/helpers/connector');
 
 const PlacesTable = require('./components/places-table');
 
@@ -56,4 +57,4 @@ class Roles extends React.Component {
   }
 }
 
-module.exports = Roles;
+module.exports = connect(Roles);

@@ -4,7 +4,7 @@ const { render } = require('react-dom');
 const { Provider } = require('react-redux');
 const { pick } = require('lodash');
 const { format, parse } = require('../../../src/helpers/query-string');
-const Component = require('../../../views/containers/{{page}}');
+const Component = require('../../../views/{{page}}');
 const createStore = require('../../../src/create-store');
 
 const initialFilters = parse(window.location.href);

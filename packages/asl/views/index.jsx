@@ -1,4 +1,5 @@
 const React = require('react');
+const connect = require('../src/helpers/connector');
 const App = require('./layouts/app');
 
 const moment = require('moment');
@@ -54,4 +55,4 @@ class Index extends React.Component {
   }
 }
 
-module.exports = Index;
+module.exports = connect(Index);

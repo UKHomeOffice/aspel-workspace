@@ -2,7 +2,7 @@ const createStore = require('../create-store');
 
 module.exports = () => (req, res, next) => {
 
-  res.locals.store = createStore(res.locals);
+  res.locals.store = res.store;
 
   if (res.template) {
     switch (req.query.format) {
