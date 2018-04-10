@@ -7,7 +7,7 @@ const Search = props => (
     crumbs={['Licensed premises']}
     scripts={['/public/js/pages/search.js']}
   >
-    <Page isScreen={!props.pdf} />
+    <Page />
   </App>
 );
 

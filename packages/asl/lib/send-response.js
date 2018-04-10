@@ -1,4 +1,8 @@
+const createStore = require('../src/create-store');
+
 module.exports = () => (req, res, next) => {
+
+  res.locals.store = createStore(res.locals);
 
   if (res.template) {
     if (req.query.pdf) {
