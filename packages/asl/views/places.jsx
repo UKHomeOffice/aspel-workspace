@@ -1,13 +1,13 @@
 const React = require('react');
 const App = require('./layouts/app');
-const Page = require('./containers/places');
+const Page = require('./containers/search');
 
 const Places = props => (
   <App { ...props }
     crumbs={['Licensed premises']}
-    scripts={['/public/js/pages/places.js']}
+    scripts={['/public/js/pages/search.js']}
   >
-    <Page isScreen={!props.pdf} />
+    <Page />
   </App>
 );
 

@@ -54,7 +54,7 @@ module.exports = settings => {
   });
 
   app.get('/places', api(), filters(), (req, res, next) => {
-    res.template = 'search';
+    res.template = 'places';
     res.locals.list = { all: res.locals.data, filter: res.locals.filter };
     next();
   });
