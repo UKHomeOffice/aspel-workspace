@@ -55,6 +55,7 @@ module.exports = settings => {
 
   app.get('/places', api(), filters(), (req, res, next) => {
     res.template = 'places';
+    res.pdfTemplate = 'pdf-list';
     res.locals.list = { all: res.locals.data, filter: res.locals.filter };
     next();
   });
@@ -63,13 +64,6 @@ module.exports = settings => {
     res.template = 'index';
     res.locals.establishment = res.locals.data;
     res.locals.elh = res.locals.data.roles.find(r => r.type === 'elh');
-    next();
-  });
-
-  app.use((req, res, next) => {
-    if (req.query.pdf && res.locals.list) {
-      res.template = 'pdf-list';
-    }
     next();
   });
 

@@ -5,7 +5,7 @@ const ExportLink = ({
   filter
 }) => (
   <p>
-    <a href={`?${format({ filter, pdf: 1 })}`}>Export as PDF</a>
+    Export as <a href={`?${format({ filter, format: 'pdf' })}`}>PDF</a> | <a href={`?${format({ filter, format: 'csv' })}`}>CSV</a>
   </p>
 );
 
