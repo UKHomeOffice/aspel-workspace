@@ -20,7 +20,7 @@ store.subscribe(() => {
 
 render(
   <Provider store={store}>
-    <Component screen={true} />
+    <Component isScreen={true} />
   </Provider>
   , document.getElementById('page-component')
 );
