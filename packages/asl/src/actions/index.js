@@ -1,7 +1,8 @@
 const {
   SET_TEXT_FILTER,
   SET_LIST_ITEMS,
-  SET_ESTABLISHMENT
+  SET_ESTABLISHMENT,
+  SET_PROFILE
 } = require('../constants/action-types');
 
 const setTextFilter = text => ({
@@ -19,8 +20,14 @@ const setEstablishment = establishment => ({
   establishment
 });
 
+const setProfile = profile => ({
+  type: SET_PROFILE,
+  profile
+});
+
 module.exports = {
   setTextFilter,
   setListItems,
-  setEstablishment
+  setEstablishment,
+  setProfile
 };

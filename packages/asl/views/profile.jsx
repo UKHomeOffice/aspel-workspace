@@ -57,4 +57,4 @@ class Roles extends React.Component {
   }
 }
 
-module.exports = connect(Roles);
+module.exports = connect(Roles, 'profile');

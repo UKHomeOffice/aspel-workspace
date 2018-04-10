@@ -16,11 +16,15 @@ const applyFilter = (list, text) => {
     return list.map(f => f);
   }
   return list.filter(row => some(Object.values(row), value => {
-    if (Array.isArray(value)) {
-      return some(value, v => v.toLowerCase() === text.toLowerCase());
-    }
-    if (typeof value === 'string') {
-      return value.toLowerCase().includes(text.toLowerCase());
+    try {
+      if (Array.isArray(value)) {
+        return some(value, v => v.toLowerCase() === text.toLowerCase());
+      }
+      if (typeof value === 'string') {
+        return value.toLowerCase().includes(text.toLowerCase());
+      }
+    } catch (e) {
+      return false;
     }
     return false;
   }));

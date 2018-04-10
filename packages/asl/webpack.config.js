@@ -5,7 +5,7 @@ const path = require('path');
 
 const TEMPLATE_PATH = './assets/js/pages/template.jsx';
 
-const pages = ['places'];
+const pages = ['places', 'roles'];
 
 module.exports = pages.map(page => ({
   devtool: 'inline-source-map',

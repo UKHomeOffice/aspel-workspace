@@ -25,13 +25,6 @@ const api = url => {
   };
 };
 
-const filters = () => {
-  return (req, res, next) => {
-    res.locals.filter = req.query.filter;
-    next();
-  };
-};
-
 module.exports = settings => {
 
   const app = ui(settings);
@@ -45,17 +38,18 @@ module.exports = settings => {
 
   app.get('/roles', api(), (req, res, next) => {
     res.template = 'roles';
-    res.locals.roles = res.data;
+    res.store.dispatch(actions.setListItems(res.data));
+    res.store.dispatch(actions.setTextFilter(req.query.filter));
     next();
   });
 
   app.get('/profile/:id', api(), (req, res, next) => {
     res.template = 'profile';
-    res.locals.profile = res.data;
+    res.store.dispatch(actions.setProfile(res.data));
     next();
   });
 
-  app.get('/places', api(), filters(), (req, res, next) => {
+  app.get('/places', api(), (req, res, next) => {
     res.template = 'places';
     res.pdfTemplate = 'pdf-list';
     res.store.dispatch(actions.setListItems(res.data));
@@ -66,7 +60,6 @@ module.exports = settings => {
   app.get('/', api(), (req, res, next) => {
     res.template = 'index';
     res.store.dispatch(actions.setEstablishment(res.data));
-    res.locals.elh = res.data.roles.find(r => r.type === 'elh');
     next();
   });
 

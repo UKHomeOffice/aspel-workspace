@@ -5,7 +5,11 @@ const {
 const establishment = (state = {}, action) => {
   switch (action.type) {
     case SET_ESTABLISHMENT:
-      return { ...action.establishment };
+      let licenceHolder;
+      if (Array.isArray(action.establishment.roles)) {
+        licenceHolder = action.establishment.roles.find(r => r.type === 'elh');
+      }
+      return { ...action.establishment, licenceHolder };
   }
   return state;
 };
