@@ -21,6 +21,6 @@ store.subscribe(() => {
 render(
   <Provider store={store}>
     <Component isScreen={true} />
-  </Provider>
-  , document.getElementById('page-component')
+  </Provider>,
+  document.getElementById('page-component')
 );
