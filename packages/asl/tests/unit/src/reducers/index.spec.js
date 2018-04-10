@@ -1,18 +1,14 @@
 const rootReducer = require('src/reducers');
 
-describe('Rooot Reducer', () => {
+describe('Root Reducer', () => {
   test('creates the expected initial state', () => {
     const expected = {
       establishment: {},
-      filters: {
-        filterBy: {
-          site: [],
-          suitability: [],
-          holding: []
-        },
-        textFilter: ''
-      },
-      places: []
+      list: {
+        all: [],
+        filtered: [],
+        filter: ''
+      }
     };
     expect(rootReducer(undefined, {})).toEqual(expected);
   });

@@ -1,9 +1,10 @@
+const { omit } = require('lodash');
 const qs = require('qs');
 const url = require('url');
 
 const format = filters => {
-  if (!filters.textFilter) {
-    filters = { filterBy: filters.filterBy };
+  if (!filters.filter) {
+    filters = omit(filters, 'filter');
   }
   return qs.stringify(filters);
 };

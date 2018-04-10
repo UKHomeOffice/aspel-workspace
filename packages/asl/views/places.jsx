@@ -7,7 +7,7 @@ const Places = props => (
     crumbs={['Licensed premises']}
     scripts={['/public/js/pages/places.js']}
   >
-    <Page isScreen={!props.pdf} />
+    <Page />
   </App>
 );
 

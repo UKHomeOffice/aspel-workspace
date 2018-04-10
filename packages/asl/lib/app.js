@@ -14,8 +14,6 @@ const api = url => {
     const u = `/establishment/${establishment}${url}`;
     req.api(u)
       .then(response => {
-        res.locals.api = response;
-        res.locals.api.data = JSON.stringify(response.json, null, '  ');
         res.locals.establishment = response.json.meta.establishment;
         res.locals.data = response.json.data;
       })
@@ -26,8 +24,7 @@ const api = url => {
 
 const filters = () => {
   return (req, res, next) => {
-    res.locals.filterBy = req.query.filterBy;
-    res.locals.textFilter = req.query.textFilter;
+    res.locals.filter = req.query.filter;
     next();
   };
 };
@@ -57,13 +54,8 @@ module.exports = settings => {
 
   app.get('/places', api(), filters(), (req, res, next) => {
     res.template = 'places';
-    res.locals.places = res.locals.data;
-    next();
-  });
-
-  app.get('/search', api('/places'), filters(), (req, res, next) => {
-    res.template = 'search';
-    res.locals.places = res.locals.data;
+    res.pdfTemplate = 'pdf-list';
+    res.locals.list = { all: res.locals.data, filter: res.locals.filter };
     next();
   });
 
