@@ -25,7 +25,7 @@ const applyFilter = (list, text) => {
   }));
 };
 
-const list = (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case SET_TEXT_FILTER:
       const filtered = applyFilter(state.all, action.text);
@@ -36,4 +36,4 @@ const list = (state = INITIAL_STATE, action) => {
   return { ...state, filtered };
 };
 
-module.exports = list;
+module.exports = reducer;
