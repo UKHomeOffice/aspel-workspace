@@ -1,9 +1,7 @@
 const React = require('react');
-const FilterColumn = require('./filter-column');
+const FilterColumn = require('../containers/filter-column');
 
 const Filters = ({
-  toggleFilter,
-  filterBy,
   filters,
   clearFilters
 }) => {
@@ -15,16 +13,11 @@ const Filters = ({
       <h3>Filter by</h3>
       <div className="grid-row">
         {
-          filters.map((filter) =>
+          filters.map(filter =>
             <FilterColumn
               key={ filter.key }
-              id={ filter.key }
-              title={ filter.title }
-              label={ filter.label }
-              values={ filter.values }
+              filter={ filter }
               columnClass={ columnClass }
-              currentFilters={ filterBy[filter.key] }
-              handleOnChange={ e => toggleFilter(filter.key, e.target.value) }
             />
           )
         }

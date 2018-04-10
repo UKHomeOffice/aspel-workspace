@@ -1,5 +1,5 @@
-const React = require('react');
-const { format } = require('../../src/helpers/query-string');
+import React from 'react';
+import { format } from '../../src/helpers/query-string';
 
 const ExportLink = ({
   filterBy,
