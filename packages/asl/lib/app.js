@@ -40,7 +40,6 @@ module.exports = settings => {
 
   app.use(pdf(settings.pdf));
 
-
   app.get('/roles', api(), (req, res, next) => {
     res.template = 'roles';
     res.locals.roles = res.locals.data;

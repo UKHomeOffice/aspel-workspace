@@ -8,7 +8,7 @@ const INITIAL_STATE = {
   filter: '',
   all: [],
   filtered: []
-}
+};
 
 const applyFilter = (list, text) => {
   if (!text) {
@@ -23,7 +23,7 @@ const applyFilter = (list, text) => {
     }
     return false;
   }));
-}
+};
 
 const list = (state = INITIAL_STATE, action) => {
   switch (action.type) {
