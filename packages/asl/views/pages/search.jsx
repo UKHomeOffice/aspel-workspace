@@ -14,7 +14,6 @@ const Places = ({
     <h1>Licensed premises</h1>
     { isScreen && (
       <React.Fragment>
-        <Filters filters={filterSettings.filter(f => f.key !== 'site')} />
         <TextFilter />
       </React.Fragment>
     )}

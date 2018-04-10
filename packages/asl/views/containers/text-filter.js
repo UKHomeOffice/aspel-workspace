@@ -3,7 +3,7 @@ const { setTextFilter } = require('../../src/actions/filters');
 const TextFilter = require('../components/text-filter');
 
 const mapStateToProps = state => ({
-  textFilter: state.filters.textFilter
+  textFilter: state.list.filter
 });
 
 module.exports = connect(

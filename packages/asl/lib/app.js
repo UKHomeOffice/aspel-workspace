@@ -26,8 +26,7 @@ const api = url => {
 
 const filters = () => {
   return (req, res, next) => {
-    res.locals.filterBy = req.query.filterBy;
-    res.locals.textFilter = req.query.textFilter;
+    res.locals.filter = req.query.filter;
     next();
   };
 };
@@ -64,6 +63,7 @@ module.exports = settings => {
   app.get('/search', api('/places'), filters(), (req, res, next) => {
     res.template = 'search';
     res.locals.places = res.locals.data;
+    res.locals.list = { all: res.locals.data, filter: res.locals.filter };
     next();
   });
 

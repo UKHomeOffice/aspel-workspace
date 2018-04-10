@@ -12,7 +12,7 @@ const initialFilters = parse(window.location.href);
 const store = createStore(window.INITIAL_STATE, pick(initialFilters, ['filterBy', 'textFilter']));
 
 store.subscribe(() => {
-  const filters = store.getState().filters;
+  const filters = { filter: store.getState().list.filter };
   const href = url.parse(window.location.href);
   href.search = format(filters);
   window.history.replaceState(undefined, undefined, href.format());
