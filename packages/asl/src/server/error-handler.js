@@ -1,3 +1,5 @@
+const createStore = require('../create-store');
+
 module.exports = () => {
   return (error, req, res, next) => {
     console.error(error);
@@ -5,6 +7,6 @@ module.exports = () => {
     if (error.status) {
       res.status(error.status);
     }
-    res.render('error', { error });
+    res.render('error', { error, store: createStore() });
   };
 };

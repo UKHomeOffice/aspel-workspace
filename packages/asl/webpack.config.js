@@ -1,9 +1,11 @@
-const fs = require('fs');
+/* eslint implicit-dependencies/no-implicit: [2, { dev: true }] */
+
+const webpack = require('webpack');
 const path = require('path');
 
 const TEMPLATE_PATH = './assets/js/pages/template.jsx';
 
-const pages = fs.readdirSync(path.resolve(__dirname, './views/pages')).map(p => p.replace('.jsx', ''));
+const pages = ['places', 'roles'];
 
 module.exports = pages.map(page => ({
   devtool: 'inline-source-map',
@@ -33,5 +35,8 @@ module.exports = pages.map(page => ({
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.NormalModuleReplacementPlugin(/layouts\/app/, require.resolve('./views/layouts/stub.jsx'))
+  ]
 }));

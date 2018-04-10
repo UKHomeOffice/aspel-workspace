@@ -1,5 +1,6 @@
 const React = require('react');
 const App = require('./layouts/app');
+const connect = require('../src/helpers/connector');
 
 const dictionary = require('@asl/dictionary');
 
@@ -14,7 +15,10 @@ class Roles extends React.Component {
 
   render() {
     return (
-      <App {...this.props} crumbs={['Named people']}>
+      <App {...this.props}
+        crumbs={['Named people']}
+        scripts={['/public/js/pages/roles.js']}
+      >
         <h2 className="headline">{this.props.establishment.name}</h2>
         <h1>Named people</h1>
         <table>
@@ -28,7 +32,7 @@ class Roles extends React.Component {
           </thead>
           <tbody>
             {
-              this.props.roles && this.props.roles.map(role => (
+              this.props.list.all && this.props.list.all.map(role => (
                 <tr key={ role.id }>
                   <td>{ role.profile.name }</td>
                   <td>{ this.roleName(role.type) }</td>
@@ -44,4 +48,4 @@ class Roles extends React.Component {
   }
 }
 
-module.exports = Roles;
+module.exports = connect(Roles, 'list');

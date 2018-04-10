@@ -12,7 +12,7 @@ const Layout = ({
   crumbs
 }) => (
   <GovUK
-    propositionHeader={propositionHeader}
+    propositionHeader="Research and testing with animals"
     title={title}
     stylesheets={['/public/css/app.css']}
     scripts={scripts}

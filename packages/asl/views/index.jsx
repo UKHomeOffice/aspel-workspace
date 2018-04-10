@@ -1,4 +1,5 @@
 const React = require('react');
+const connect = require('../src/helpers/connector');
 const App = require('./layouts/app');
 
 const moment = require('moment');
@@ -26,7 +27,7 @@ class Index extends React.Component {
           <dd>{ moment(this.props.establishment.issueDate).format('DD/MM/YYYY') }</dd>
 
           <dt>Licence holder</dt>
-          <dd><a href={`/profile/${this.props.elh.profile.id}`}>{ this.props.elh.profile.name }</a></dd>
+          <dd><a href={`/profile/${this.props.establishment.licenceHolder.profile.id}`}>{ this.props.establishment.licenceHolder.profile.name }</a></dd>
         </dl>
 
         <div className="grid-row">
@@ -54,4 +55,4 @@ class Index extends React.Component {
   }
 }
 
-module.exports = Index;
+module.exports = connect(Index);
