@@ -1,4 +1,7 @@
 const reducer = require('src/reducers/list');
+const schema = require('schema').places;
+
+console.log(schema)
 
 const all = [
   {
@@ -29,7 +32,7 @@ describe('List Reducer', () => {
   let initial;
 
   beforeEach(() => {
-    initial = { all };
+    initial = { all, schema };
   });
 
   describe('initial state', () => {

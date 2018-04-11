@@ -2,7 +2,8 @@ const {
   SET_TEXT_FILTER,
   SET_LIST_ITEMS,
   SET_ESTABLISHMENT,
-  SET_PROFILE
+  SET_PROFILE,
+  SET_SCHEMA
 } = require('../constants/action-types');
 
 const setTextFilter = text => ({
@@ -25,9 +26,15 @@ const setProfile = profile => ({
   profile
 });
 
+const setSchema = schema => ({
+  type: SET_SCHEMA,
+  schema
+});
+
 module.exports = {
   setTextFilter,
   setListItems,
   setEstablishment,
-  setProfile
+  setProfile,
+  setSchema
 };

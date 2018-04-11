@@ -5,6 +5,7 @@ const responder = require('./send-response');
 
 const createStore = require('../create-store');
 const actions = require('../actions');
+const schema = require('../../schema');
 
 const api = url => {
   return (req, res, next) => {
@@ -54,6 +55,7 @@ module.exports = settings => {
     res.pdfTemplate = 'pdf-list';
     res.store.dispatch(actions.setListItems(res.data));
     res.store.dispatch(actions.setTextFilter(req.query.filter));
+    res.store.dispatch(actions.setSchema(schema.places));
     next();
   });
 

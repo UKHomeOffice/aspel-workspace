@@ -8,7 +8,6 @@ const TEMPLATE_PATH = './assets/js/pages/template.jsx';
 const pages = ['places', 'roles'];
 
 module.exports = pages.map(page => ({
-  devtool: 'inline-source-map',
   entry: {
     [page]: path.resolve(__dirname, TEMPLATE_PATH)
   },

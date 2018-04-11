@@ -6,14 +6,13 @@ const Breadcrumbs = require('../components/breadcrumbs');
 
 const Layout = ({
   children,
-  propositionHeader,
-  title,
+  // title,
   scripts,
   crumbs
 }) => (
   <GovUK
     propositionHeader="Research and testing with animals"
-    title={title}
+    // title={title}
     stylesheets={['/public/css/app.css']}
     scripts={scripts}
   >
