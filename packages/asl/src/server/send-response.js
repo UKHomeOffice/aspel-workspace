@@ -1,9 +1,5 @@
 const csv = require('csv-stringify');
-const { pick, map, get } = require('lodash');
-
-const csvCols = list => list.filtered.map(row =>
-  map(pick(row, Object.keys(list.schema)), (value, key) =>
-    list.schema[key].accessor ? get(value, list.schema[key].accessor) : value));
+const { flattenNestedCols } = require('../reducers/list');
 
 module.exports = () => (req, res, next) => {
 
@@ -21,7 +17,7 @@ module.exports = () => (req, res, next) => {
         if (list) {
           res.type('application/csv');
           res.attachment(`${res.template}.csv`);
-          return csv(csvCols(list), { header: true, columns: Object.keys(list.schema) }, (err, output) => {
+          return csv(list.filtered.map(r => flattenNestedCols(r, list.schema, true)), { header: true, columns: Object.keys(list.schema) }, (err, output) => {
             err ? next(err) : res.send(output);
           });
         }

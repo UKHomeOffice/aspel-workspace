@@ -1,11 +1,11 @@
-const React = require('react');
-const url = require('url');
-const { render } = require('react-dom');
-const { Provider } = require('react-redux');
-const { pick } = require('lodash');
-const { format, parse } = require('../../../src/helpers/query-string');
-const Component = require('../../../views/{{page}}');
-const createStore = require('../../../src/create-store');
+import React from 'react';
+import url from 'url';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { pick } from 'lodash';
+import { format, parse } from '../../../src/helpers/query-string';
+import Component from '../../../views/{{page}}';
+import createStore from '../../../src/create-store';
 
 const initialFilters = parse(window.location.href);
 

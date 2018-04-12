@@ -1,26 +1,20 @@
-const React = require('react');
-const { merge, pickBy } = require('lodash');
-const App = require('./layouts/app');
-const connect = require('../src/helpers/connector');
-const TextFilter = require('./containers/text-filter');
-const ListTable = require('./components/list-table');
-const ExportLink = require('./containers/export-link');
-const {
-  joinAcronyms,
-  renderNacwo,
-  acronym
-} = require('./helpers');
+import React from 'react';
+import App from './layouts/app';
+import connect from '../src/helpers/connector';
+import FilterTable from './components/filter-table';
+import Acronym from './components/acronym';
+import Join from './components/join';
 
-const formatters = {
-  suitability: {
-    format: joinAcronyms
-  },
-  holding: {
-    format: joinAcronyms
-  },
+const joinAcronyms = arr => <Join>{ arr.map(a => <Acronym key={a}>{a}</Acronym>) }</Join>;
+
+export const formatters = {
+  suitability: { format: joinAcronyms },
+  holding: { format: joinAcronyms },
   nacwo: {
-    format: renderNacwo,
-    title: key => acronym(key.toUpperCase())
+    format: (name, nacwo) => nacwo
+      ? <a href={`/profile/${nacwo.profile.id}`}>{ name }</a>
+      : '-',
+    title: key => <Acronym>{key.toUpperCase()}</Acronym>
   }
 };
 
@@ -36,10 +30,8 @@ const Places = ({
   >
     <h2 className="headline">{name}</h2>
     <h1>Licensed premises</h1>
-    <TextFilter />
-    <ListTable schema={merge({}, pickBy(schema, v => v.show), formatters)} data={filtered} />
-    <ExportLink />
+    <FilterTable schema={schema} formatters={formatters} data={filtered} />
   </App>
 );
 
-module.exports = connect(Places, 'list');
+export default connect(Places, 'list');

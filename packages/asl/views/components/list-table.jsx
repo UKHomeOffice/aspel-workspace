@@ -1,30 +1,37 @@
 const React = require('react');
-const { map } = require('lodash');
+const { map, merge, pickBy, get } = require('lodash');
 
 const ListTable = ({
   data,
-  schema
-}) => (
-  <table>
-    <thead>
-      <tr>
+  schema,
+  formatters
+}) => {
+  const columns = merge({}, pickBy(schema, v => v.show), formatters);
+  return (
+    <table>
+      <thead>
+        <tr>
+          {
+            map(columns, ({ title }, key) => <th key={key}>{title ? title(key) : key}</th>)
+          }
+        </tr>
+      </thead>
+      <tbody>
         {
-          map(schema, ({ title }, key) => <th key={key}>{title ? title(key) : key}</th>)
+          data.map(row => (
+            <tr key={row.id}>
+              {
+                map(columns, ({ format, accessor }, key) => {
+                  const datum = accessor ? get(row, accessor) : row[key];
+                  return <td key={key}>{ format ? format(datum, row[key]) : datum }</td>;
+                })
+              }
+            </tr>
+          ))
         }
-      </tr>
-    </thead>
-    <tbody>
-      {
-        data.map(row => (
-          <tr key={row.id}>
-            {
-              map(schema, ({ format }, key) => <td key={key}>{ format ? format(row[key]) : row[key] }</td>)
-            }
-          </tr>
-        ))
-      }
-    </tbody>
-  </table>
-);
+      </tbody>
+    </table>
+  );
+};
 
 module.exports = ListTable;
