@@ -8,7 +8,8 @@ describe('Root Reducer', () => {
       list: {
         all: [],
         filtered: [],
-        filter: ''
+        filter: '',
+        schema: []
       }
     };
     expect(rootReducer(undefined, {})).toEqual(expected);

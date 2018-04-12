@@ -1,51 +1,31 @@
-const React = require('react');
-const App = require('./layouts/app');
-const connect = require('../src/helpers/connector');
+import React from 'react';
+import App from './layouts/app';
+import connect from '../src/helpers/connector';
+import FilterTable from './components/filter-table';
+import dictionary from '@asl/dictionary';
 
-const dictionary = require('@asl/dictionary');
+export const formatters = {
+  type: {
+    format: role => dictionary[role] || dictionary[role.toUpperCase()] || role,
+    title: () => 'Role'
+  },
+  places: { format: places => places.length || '-' },
+  profile: { format: id => <a href={`/profile/${id}`}>View</a> }
+};
 
-class Roles extends React.Component {
+const Roles = ({
+  store,
+  establishment: { name },
+  list: { schema, filtered }
+}) => (
+  <App store={store}
+    crumbs={['Named people']}
+    scripts={['/public/js/pages/roles.js']}
+  >
+    <h2 className="headline">{name}</h2>
+    <h1>Named people</h1>
+    <FilterTable schema={ schema } formatters={ formatters } data={ filtered } />
+  </App>
+);
 
-  roleName(type) {
-    const dict = Object.assign({}, dictionary, {
-      elh: 'Establishment Licence Holder'
-    });
-    return dict[type] || dict[type.toUpperCase()] || type;
-  }
-
-  render() {
-    return (
-      <App {...this.props}
-        crumbs={['Named people']}
-        scripts={['/public/js/pages/roles.js']}
-      >
-        <h2 className="headline">{this.props.establishment.name}</h2>
-        <h1>Named people</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Role</th>
-              <th>Places</th>
-              <th>Profile</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              this.props.list.all && this.props.list.all.map(role => (
-                <tr key={ role.id }>
-                  <td>{ role.profile.name }</td>
-                  <td>{ this.roleName(role.type) }</td>
-                  <td>{ role.places.length || '-' }</td>
-                  <td><a href={`/profile/${role.profile.id}`}>View</a></td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </App>
-    );
-  }
-}
-
-module.exports = connect(Roles, 'list');
+export default connect(Roles, 'list');

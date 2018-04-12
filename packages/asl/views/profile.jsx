@@ -1,60 +1,65 @@
-const React = require('react');
-const App = require('./layouts/app');
-const connect = require('../src/helpers/connector');
+import React from 'react';
+import { merge, omit } from 'lodash';
+import App from './layouts/app';
+import connect from '../src/helpers/connector';
+import ListTable from './components/list-table';
+import dictionary from '@asl/dictionary';
 
-const PlacesTable = require('./components/places-table');
+import { formatters } from './places';
 
-const dictionary = require('@asl/dictionary');
-
-class Roles extends React.Component {
-
-  roleName(type) {
-    const dict = Object.assign({}, dictionary, {
-      elh: 'Establishment Licence Holder'
-    });
-    return dict[type] || dict[type.toUpperCase()] || type;
+const Roles = ({
+  store,
+  establishment: {
+    name: establistmentName
+  },
+  profile: {
+    name,
+    email,
+    telephone,
+    address,
+    qualifications,
+    notes,
+    roles
+  },
+  list: {
+    schema
   }
+}) => (
+  <App store={store}
+    crumbs={[{ href: '/roles', label: 'Named people' }, name]}
+  >
+    <h2 className="headline">{ establistmentName }</h2>
+    <h1>{name}</h1>
 
-  renderRoles() {
-    return this.props.profile.roles.map(role => {
-      return <React.Fragment key={role.id}>
-        <h3>{this.roleName(role.type)}</h3>
-        {
-          !!role.places.length && <PlacesTable rows={role.places} nacwo={false} />
-        }
-      </React.Fragment>;
-    });
-  }
+    <dl>
+      <dt>Email</dt>
+      <dd>{ email }</dd>
 
-  render() {
-    return (
-      <App {...this.props} crumbs={[{ href: '/roles', label: 'Named people' }, this.props.profile.name]}>
+      <dt>Phone</dt>
+      <dd>{ telephone }</dd>
 
-        <h2 className="headline">{ this.props.establishment.name }</h2>
-        <h1>{this.props.profile.name}</h1>
+      <dt>Address</dt>
+      <dd>{ address }</dd>
 
-        <dl>
-          <dt>Email</dt>
-          <dd>{this.props.profile.email}</dd>
+      <dt>Qualifications</dt>
+      <dd>{ qualifications }</dd>
 
-          <dt>Phone</dt>
-          <dd>{this.props.profile.telephone}</dd>
+      <dt>Notes</dt>
+      <dd>{ notes }</dd>
+    </dl>
 
-          <dt>Address</dt>
-          <dd>{this.props.profile.address}</dd>
+    <h2>Roles</h2>
+    {
+      roles.map(({ id, type, places }) =>
+        <React.Fragment key={ id }>
+          <h3>{ dictionary[type] || dictionary[type.toUpperCase() || type] }</h3>
+          {
+            !!places.length && <ListTable data={ places } schema={ merge({}, schema, { nacwo: { show: false } }) } formatters={ omit(formatters, 'nacwo') } />
+          }
+        </React.Fragment>
+      )
+    }
+  </App>
+);
 
-          <dt>Qualifications</dt>
-          <dd>{this.props.profile.qualifications}</dd>
-
-          <dt>Notes</dt>
-          <dd>{this.props.profile.notes}</dd>
-        </dl>
-
-        <h2>Roles</h2>
-        { this.renderRoles() }
-      </App>
-    );
-  }
-}
-
-module.exports = connect(Roles, 'profile');
+export default connect(Roles, 'profile', 'list');

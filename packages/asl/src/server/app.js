@@ -5,10 +5,11 @@ const responder = require('./send-response');
 
 const createStore = require('../create-store');
 const actions = require('../actions');
+const { places, roles } = require('../schema');
 
-const api = url => {
+const api = () => {
   return (req, res, next) => {
-    url = url || req.url;
+    const url = req.url;
     const establishment = req.user.get('establishment');
     if (!establishment) {
       return next(new Error('No associated establishment'));
@@ -40,12 +41,14 @@ module.exports = settings => {
     res.template = 'roles';
     res.store.dispatch(actions.setListItems(res.data));
     res.store.dispatch(actions.setTextFilter(req.query.filter));
+    res.store.dispatch(actions.setSchema(roles));
     next();
   });
 
   app.get('/profile/:id', api(), (req, res, next) => {
     res.template = 'profile';
     res.store.dispatch(actions.setProfile(res.data));
+    res.store.dispatch(actions.setSchema(places));
     next();
   });
 
@@ -54,6 +57,7 @@ module.exports = settings => {
     res.pdfTemplate = 'pdf-list';
     res.store.dispatch(actions.setListItems(res.data));
     res.store.dispatch(actions.setTextFilter(req.query.filter));
+    res.store.dispatch(actions.setSchema(places));
     next();
   });
 

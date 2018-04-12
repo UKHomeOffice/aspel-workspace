@@ -1,21 +1,37 @@
-const React = require('react');
-const App = require('./layouts/app');
-const connect = require('../src/helpers/connector');
-const TextFilter = require('./containers/text-filter');
-const PlacesTable = require('./containers/places-table');
-const ExportLink = require('./containers/export-link');
+import React from 'react';
+import App from './layouts/app';
+import connect from '../src/helpers/connector';
+import FilterTable from './components/filter-table';
+import Acronym from './components/acronym';
+import Join from './components/join';
 
-const Places = props => (
-  <App { ...props }
+const joinAcronyms = arr => <Join>{ arr.map(a => <Acronym key={a}>{a}</Acronym>) }</Join>;
+
+export const formatters = {
+  suitability: { format: joinAcronyms },
+  holding: { format: joinAcronyms },
+  nacwo: {
+    format: (name, nacwo) => nacwo
+      ? <a href={`/profile/${nacwo.profile.id}`}>{ name }</a>
+      : '-',
+    title: () => <Acronym>NACWO</Acronym>
+  }
+};
+
+const Places = ({
+  store,
+  establishment: { name },
+  list: { schema, filtered }
+}) => (
+  <App
+    store={store}
     crumbs={['Licensed premises']}
     scripts={['/public/js/pages/places.js']}
   >
-    <h2 className="headline">{props.establishment.name}</h2>
+    <h2 className="headline">{name}</h2>
     <h1>Licensed premises</h1>
-    <TextFilter />
-    <PlacesTable />
-    <ExportLink />
+    <FilterTable schema={schema} formatters={formatters} data={filtered} />
   </App>
 );
 
-module.exports = connect(Places);
+export default connect(Places, 'list');
