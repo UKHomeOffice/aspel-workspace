@@ -1,12 +1,12 @@
-const React = require('react');
-const App = require('./layouts/app');
-const connect = require('../src/helpers/connector');
-const FilterTable = require('./components/filter-table');
-const Acronym = require('./components/acronym');
+import React from 'react';
+import App from './layouts/app';
+import connect from '../src/helpers/connector';
+import FilterTable from './components/filter-table';
+import dictionary from '@asl/dictionary';
 
-const formatters = {
+export const formatters = {
   type: {
-    format: role => <Acronym>{role.toUpperCase()}</Acronym>,
+    format: role => dictionary[role] || dictionary[role.toUpperCase()] || role,
     title: () => 'Role'
   },
   places: { format: places => places.length || '-' },
@@ -28,4 +28,4 @@ const Roles = ({
   </App>
 );
 
-module.exports = connect(Roles, 'list');
+export default connect(Roles, 'list');

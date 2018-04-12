@@ -17,7 +17,7 @@ module.exports = () => (req, res, next) => {
         if (list) {
           res.type('application/csv');
           res.attachment(`${res.template}.csv`);
-          return csv(list.filtered.map(r => flattenNestedCols(r, list.schema, true)), { header: true, columns: Object.keys(list.schema) }, (err, output) => {
+          return csv(list.filtered.map(r => flattenNestedCols(r, list.schema, { csv: true })), { header: true, columns: Object.keys(list.schema) }, (err, output) => {
             err ? next(err) : res.send(output);
           });
         }

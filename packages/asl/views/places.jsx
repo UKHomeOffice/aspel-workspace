@@ -14,7 +14,7 @@ export const formatters = {
     format: (name, nacwo) => nacwo
       ? <a href={`/profile/${nacwo.profile.id}`}>{ name }</a>
       : '-',
-    title: key => <Acronym>{key.toUpperCase()}</Acronym>
+    title: () => <Acronym>NACWO</Acronym>
   }
 };
 

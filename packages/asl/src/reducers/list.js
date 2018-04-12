@@ -13,7 +13,7 @@ const INITIAL_STATE = {
   schema: []
 };
 
-const flattenNestedCols = (row, schema, csv) =>
+const flattenNestedCols = (row, schema, { csv } = {}) =>
   map(csv ? schema : pickBy(schema, s => s.show), (value, key) =>
     value.accessor ? get(row, value.accessor) : row[key]
   );

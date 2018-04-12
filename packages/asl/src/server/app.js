@@ -5,7 +5,7 @@ const responder = require('./send-response');
 
 const createStore = require('../create-store');
 const actions = require('../actions');
-const schema = require('../../schema');
+const { places, roles } = require('../schema');
 
 const api = () => {
   return (req, res, next) => {
@@ -41,14 +41,14 @@ module.exports = settings => {
     res.template = 'roles';
     res.store.dispatch(actions.setListItems(res.data));
     res.store.dispatch(actions.setTextFilter(req.query.filter));
-    res.store.dispatch(actions.setSchema(schema.roles));
+    res.store.dispatch(actions.setSchema(roles));
     next();
   });
 
   app.get('/profile/:id', api(), (req, res, next) => {
     res.template = 'profile';
     res.store.dispatch(actions.setProfile(res.data));
-    res.store.dispatch(actions.setSchema(schema.places));
+    res.store.dispatch(actions.setSchema(places));
     next();
   });
 
@@ -57,7 +57,7 @@ module.exports = settings => {
     res.pdfTemplate = 'pdf-list';
     res.store.dispatch(actions.setListItems(res.data));
     res.store.dispatch(actions.setTextFilter(req.query.filter));
-    res.store.dispatch(actions.setSchema(schema.places));
+    res.store.dispatch(actions.setSchema(places));
     next();
   });
 
