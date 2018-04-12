@@ -41,7 +41,7 @@ describe('List Reducer', () => {
   describe('initial state', () => {
 
     test('filters initial list', () => {
-      expect(reducer({ ...initial, filter: 'Site B'}, {})).toMatchObject({ all, filtered: [ all[1] ] });
+      expect(reducer({ ...initial, filter: 'Site B' }, {})).toMatchObject({ all, filtered: [ all[1] ] });
     });
 
   });
