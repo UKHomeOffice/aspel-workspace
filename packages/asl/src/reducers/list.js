@@ -1,16 +1,22 @@
-const { some, pickBy, get, map } = require('lodash');
+const { some, pickBy, get, map, sortBy } = require('lodash');
 
 const {
   SET_TEXT_FILTER,
   SET_LIST_ITEMS,
-  SET_SCHEMA
+  SET_SCHEMA,
+  SET_SORT_COLUMN,
+  SET_SORT
 } = require('../constants/action-types');
 
 const INITIAL_STATE = {
   filter: '',
   all: [],
   filtered: [],
-  schema: []
+  schema: [],
+  sort: {
+    column: '',
+    ascending: true
+  }
 };
 
 const flattenNestedCols = (row, schema, { csv } = {}) =>
@@ -37,6 +43,30 @@ const applyFilter = ({ all, filter, schema }) => {
   }));
 };
 
+const applySort = ({ filtered, sort: { column, ascending }, schema }) => {
+  if (!column) {
+    return filtered;
+  }
+  let arr = sortBy(filtered, item => {
+    if (schema[column].accessor) {
+      return get(item, schema[column].accessor);
+    }
+    return item[column];
+  });
+  return ascending ? arr : arr.reverse();
+};
+
+const sort = (state, action) => {
+  switch (action.type) {
+    case SET_SORT_COLUMN:
+      return {
+        column: action.column,
+        ascending: state.column === action.column ? !state.ascending : true
+      };
+  }
+  return state;
+};
+
 const reducer = (state = INITIAL_STATE, action) => {
   const newState = { ...state };
 
@@ -49,9 +79,21 @@ const reducer = (state = INITIAL_STATE, action) => {
       break;
     case SET_SCHEMA:
       newState.schema = action.schema;
+      break;
+    case SET_SORT_COLUMN:
+      newState.sort = sort(state.sort, action);
+      break;
+    case SET_SORT:
+      newState.sort = action.sort
+        ? {
+          column: action.sort.column,
+          ascending: JSON.parse(action.sort.ascending) // server sends "true" and "false"
+        }
+        : INITIAL_STATE.sort;
   }
 
-  const filtered = applyFilter(newState);
+  let filtered = applyFilter(newState);
+  filtered = applySort({ ...newState, filtered });
   return { ...newState, filtered };
 };
 

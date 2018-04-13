@@ -1,0 +1,37 @@
+th[aria-sort] {
+  position: relative;
+
+  a {
+    display: block;
+
+    &:before, &:after {
+      position: absolute;
+      right: 1em;
+      font-size: 0.75em;
+    }
+
+    &:before {
+      content: " \25b2";
+      top: 0.5em;
+    }
+
+    &:after {
+      content: " \25bc";
+      bottom: 0.5em;
+    }
+  }
+
+  &[aria-sort="none"] a {
+    &:before, &:after {
+      color: #ccc;
+    }
+  }
+
+  &[aria-sort="descending"] a:after {
+    color: #ccc;
+  }
+
+  &[aria-sort="ascending"] a:before {
+    color: #ccc;
+  }
+}

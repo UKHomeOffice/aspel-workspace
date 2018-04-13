@@ -3,7 +3,9 @@ const {
   SET_LIST_ITEMS,
   SET_ESTABLISHMENT,
   SET_PROFILE,
-  SET_SCHEMA
+  SET_SCHEMA,
+  SET_SORT_COLUMN,
+  SET_SORT
 } = require('../constants/action-types');
 
 const setTextFilter = text => ({
@@ -31,10 +33,22 @@ const setSchema = schema => ({
   schema
 });
 
+const setSortColumn = column => ({
+  type: SET_SORT_COLUMN,
+  column
+});
+
+const setSort = sort => ({
+  type: SET_SORT,
+  sort
+});
+
 module.exports = {
   setTextFilter,
   setListItems,
   setEstablishment,
   setProfile,
-  setSchema
+  setSchema,
+  setSortColumn,
+  setSort
 };

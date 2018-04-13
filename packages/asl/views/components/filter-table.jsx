@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import ListTable from './list-table';
+import SortableTable from '../containers/sortable-table';
 import TextFilter from '../containers/text-filter';
 import ExportLink from '../containers/export-link';
 
@@ -10,7 +10,7 @@ export default ({
 }) => (
   <Fragment>
     <TextFilter />
-    <ListTable schema={ schema } formatters={ formatters } data={ data } />
+    <SortableTable schema={ schema } formatters={ formatters } data={ data } />
     <ExportLink />
   </Fragment>
 );
