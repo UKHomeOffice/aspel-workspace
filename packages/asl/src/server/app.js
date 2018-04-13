@@ -2,14 +2,11 @@ const ui = require('@asl/service/ui');
 const pdf = require('@asl/pdf-renderer');
 
 const api = require('./middleware/api');
+const list = require('./middleware/list');
 const errorHandler = require('./middleware/error-handler');
 const responder = require('./middleware/send-response');
 
 const createStore = require('../create-store');
-const actions = require('../actions');
-const Tables = require('../schema');
-
-const listRouter = require('./routers/list');
 
 module.exports = settings => {
 
@@ -22,25 +19,13 @@ module.exports = settings => {
     next();
   });
 
-  app.get('/roles', api(), listRouter({ template: 'roles', schema: Tables.roles }));
+  app.use('/roles', require('./routers/roles')());
 
-  app.get('/profile/:id', api(), (req, res, next) => {
-    res.template = 'profile';
-    res.store.dispatch(actions.setSchema(Tables.places));
-    res.store.dispatch(actions.setProfile(res.data));
-    next();
-  });
+  app.use('/profile', require('./routers/profile')());
 
-  app.get('/places', api(), listRouter({ template: 'places', schema: Tables.places }), (req, res, next) => {
-    res.pdfTemplate = 'pdf/places';
-    next();
-  });
+  app.use('/places', require('./routers/places')());
 
-  app.get('/', api(), (req, res, next) => {
-    res.template = 'index';
-    res.store.dispatch(actions.setEstablishment(res.data));
-    next();
-  });
+  app.use('/', require('./routers/home')());
 
   app.use(responder());
 
