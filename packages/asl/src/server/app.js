@@ -55,7 +55,7 @@ module.exports = settings => {
 
   app.get('/places', api(), (req, res, next) => {
     res.template = 'places';
-    res.pdfTemplate = 'pdf-list';
+    res.pdfTemplate = 'pdf/places';
     res.store.dispatch(actions.setSchema(places));
     res.store.dispatch(actions.setListItems(res.data));
     res.store.dispatch(actions.setTextFilter(req.query.filter));
