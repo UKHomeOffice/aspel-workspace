@@ -1,3 +1,5 @@
+const actions = require('../../actions');
+
 module.exports = () => {
   return (req, res, next) => {
     const url = req.url;

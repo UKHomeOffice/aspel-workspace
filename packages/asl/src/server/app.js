@@ -7,8 +7,9 @@ const responder = require('./middleware/send-response');
 
 const createStore = require('../create-store');
 const actions = require('../actions');
-const { places, roles } = require('../schema');
+const Tables = require('../schema');
 
+const listRouter = require('./routers/list');
 
 module.exports = settings => {
 
@@ -21,29 +22,17 @@ module.exports = settings => {
     next();
   });
 
-  app.get('/roles', api(), (req, res, next) => {
-    res.template = 'roles';
-    res.store.dispatch(actions.setSchema(roles));
-    res.store.dispatch(actions.setListItems(res.data));
-    res.store.dispatch(actions.setTextFilter(req.query.filter));
-    res.store.dispatch(actions.setSort(req.query.sort));
-    next();
-  });
+  app.get('/roles', api(), listRouter({ template: 'roles', schema: Tables.roles }));
 
   app.get('/profile/:id', api(), (req, res, next) => {
     res.template = 'profile';
-    res.store.dispatch(actions.setSchema(places));
+    res.store.dispatch(actions.setSchema(Tables.places));
     res.store.dispatch(actions.setProfile(res.data));
     next();
   });
 
-  app.get('/places', api(), (req, res, next) => {
-    res.template = 'places';
+  app.get('/places', api(), listRouter({ template: 'places', schema: Tables.places }), (req, res, next) => {
     res.pdfTemplate = 'pdf/places';
-    res.store.dispatch(actions.setSchema(places));
-    res.store.dispatch(actions.setListItems(res.data));
-    res.store.dispatch(actions.setTextFilter(req.query.filter));
-    res.store.dispatch(actions.setSort(req.query.sort));
     next();
   });
 
