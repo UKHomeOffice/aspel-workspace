@@ -1,5 +1,5 @@
 const csv = require('csv-stringify');
-const { flattenNestedCols } = require('../reducers/list');
+const { flattenNestedCols } = require('../../reducers/list');
 
 module.exports = () => (req, res, next) => {
 

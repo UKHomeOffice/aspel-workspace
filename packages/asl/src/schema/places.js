@@ -18,5 +18,6 @@ module.exports = {
   nacwo: {
     show: true,
     accessor: 'nacwo.profile.name'
-  }
+  },
+  updatedAt: {}
 };
