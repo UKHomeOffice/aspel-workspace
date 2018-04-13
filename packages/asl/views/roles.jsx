@@ -9,7 +9,7 @@ export const formatters = {
     format: role => dictionary[role] || dictionary[role.toUpperCase()] || role,
     title: () => 'Role'
   },
-  places: { format: places => places.length || '-' },
+  places: { format: places => places || '-' },
   profile: { format: id => <a href={`/profile/${id}`}>View</a> }
 };
 

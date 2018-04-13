@@ -8,7 +8,8 @@ module.exports = {
     show: true
   },
   places: {
-    show: true
+    show: true,
+    accessor: 'places.length'
   },
   profile: {
     show: true,
