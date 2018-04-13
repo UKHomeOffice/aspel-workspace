@@ -1,20 +1,17 @@
 import React from 'react';
 import url from 'url';
+import { stringify } from 'qs';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { pick } from 'lodash';
-import { format, parse } from '../../../src/helpers/query-string';
 import Component from '../../../views/{{page}}';
 import createStore from '../../../src/create-store';
 
-const initialFilters = parse(window.location.href);
-
-const store = createStore(window.INITIAL_STATE, pick(initialFilters, ['filterBy', 'textFilter']));
+const store = createStore(window.INITIAL_STATE);
 
 store.subscribe(() => {
-  const filters = { filter: store.getState().list.filter };
+  const { filter, sort } = store.getState().list;
   const href = url.parse(window.location.href);
-  href.search = format(filters);
+  href.search = stringify({ filter, sort });
   window.history.replaceState(undefined, undefined, href.format());
 });
 

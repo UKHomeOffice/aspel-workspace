@@ -13,6 +13,7 @@ module.exports = {
   profile: {
     show: true,
     searchable: false,
+    sortable: false,
     accessor: 'profile.id'
   }
 };

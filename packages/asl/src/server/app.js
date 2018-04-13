@@ -39,25 +39,27 @@ module.exports = settings => {
 
   app.get('/roles', api(), (req, res, next) => {
     res.template = 'roles';
+    res.store.dispatch(actions.setSchema(roles));
     res.store.dispatch(actions.setListItems(res.data));
     res.store.dispatch(actions.setTextFilter(req.query.filter));
-    res.store.dispatch(actions.setSchema(roles));
+    res.store.dispatch(actions.setSort(req.query.sort));
     next();
   });
 
   app.get('/profile/:id', api(), (req, res, next) => {
     res.template = 'profile';
-    res.store.dispatch(actions.setProfile(res.data));
     res.store.dispatch(actions.setSchema(places));
+    res.store.dispatch(actions.setProfile(res.data));
     next();
   });
 
   app.get('/places', api(), (req, res, next) => {
     res.template = 'places';
     res.pdfTemplate = 'pdf-list';
+    res.store.dispatch(actions.setSchema(places));
     res.store.dispatch(actions.setListItems(res.data));
     res.store.dispatch(actions.setTextFilter(req.query.filter));
-    res.store.dispatch(actions.setSchema(places));
+    res.store.dispatch(actions.setSort(req.query.sort));
     next();
   });
 

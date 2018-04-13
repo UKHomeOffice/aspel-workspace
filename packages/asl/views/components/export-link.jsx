@@ -1,11 +1,12 @@
 import React from 'react';
-import { format } from '../../src/helpers/query-string';
+import { stringify } from 'qs';
 
 const ExportLink = ({
-  filter
+  filter,
+  sort
 }) => (
   <p>
-    Export as <a href={`?${format({ filter, format: 'pdf' })}`}>PDF</a> | <a href={`?${format({ filter, format: 'csv' })}`}>CSV</a>
+    Export as <a href={`?${stringify({ filter, sort, format: 'pdf' })}`}>PDF</a> | <a href={`?${stringify({ filter, sort, format: 'csv' })}`}>CSV</a>
   </p>
 );
 
