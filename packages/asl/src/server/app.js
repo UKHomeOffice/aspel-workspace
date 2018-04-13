@@ -1,30 +1,14 @@
 const ui = require('@asl/service/ui');
 const pdf = require('@asl/pdf-renderer');
-const errorHandler = require('./error-handler');
-const responder = require('./send-response');
+
+const api = require('./middleware/api');
+const errorHandler = require('./middleware/error-handler');
+const responder = require('./middleware/send-response');
 
 const createStore = require('../create-store');
 const actions = require('../actions');
 const { places, roles } = require('../schema');
 
-const api = () => {
-  return (req, res, next) => {
-    const url = req.url;
-    const establishment = req.user.get('establishment');
-    if (!establishment) {
-      return next(new Error('No associated establishment'));
-    }
-
-    const u = `/establishment/${establishment}${url}`;
-    req.api(u)
-      .then(response => {
-        res.store.dispatch(actions.setEstablishment(response.json.meta.establishment));
-        res.data = response.json.data;
-      })
-      .then(() => next())
-      .catch(e => next(e));
-  };
-};
 
 module.exports = settings => {
 
