@@ -4,7 +4,6 @@ const actions = require('../../actions');
 const Tables = require('../../schema');
 
 const api = require('../middleware/api');
-const list = require('../middleware/list');
 
 module.exports = () => {
 

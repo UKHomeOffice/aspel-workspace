@@ -1,8 +1,6 @@
 const ui = require('@asl/service/ui');
 const pdf = require('@asl/pdf-renderer');
 
-const api = require('./middleware/api');
-const list = require('./middleware/list');
 const errorHandler = require('./middleware/error-handler');
 const responder = require('./middleware/send-response');
 

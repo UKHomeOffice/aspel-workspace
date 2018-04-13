@@ -3,7 +3,6 @@ const { Router } = require('express');
 const actions = require('../../actions');
 
 const api = require('../middleware/api');
-const list = require('../middleware/list');
 
 module.exports = () => {
 

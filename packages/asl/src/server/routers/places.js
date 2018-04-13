@@ -14,7 +14,7 @@ module.exports = () => {
   router.get('/', list({ schema: Tables.places }));
 
   router.get('/', (req, res, next) => {
-    res.template = 'places'
+    res.template = 'places';
     res.pdfTemplate = 'pdf/places';
     next();
   });

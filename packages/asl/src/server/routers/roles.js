@@ -14,7 +14,7 @@ module.exports = () => {
   router.get('/', list({ schema: Tables.roles }));
 
   router.get('/', (req, res, next) => {
-    res.template = 'roles'
+    res.template = 'roles';
     next();
   });
 
