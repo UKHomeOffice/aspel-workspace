@@ -1,7 +1,7 @@
 import React from 'react';
-import connect from '../src/helpers/connector';
-import Pdf from './layouts/pdf';
-import SortableTable from './components/list-table';
+import connect from '../../src/helpers/connector';
+import Pdf from '../layouts/pdf';
+import SortableTable from '../components/list-table';
 
 export const formatters = {
   suitability: { format: value => value.join(', ') },
