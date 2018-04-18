@@ -29,15 +29,11 @@ const applyFilter = ({ all, filter, schema }) => {
     return all.map(f => f);
   }
   return all.filter(row => some(flattenNestedCols(row, schema), value => {
-    try {
-      if (Array.isArray(value)) {
-        return some(value, v => v.toLowerCase() === filter.toLowerCase());
-      }
-      if (typeof value === 'string') {
-        return value.toLowerCase().includes(filter.toLowerCase());
-      }
-    } catch (e) {
-      return false;
+    if (Array.isArray(value)) {
+      return some(value, v => v.toLowerCase() === filter.toLowerCase());
+    }
+    if (typeof value === 'string') {
+      return value.toLowerCase().includes(filter.toLowerCase());
     }
     return false;
   }));
