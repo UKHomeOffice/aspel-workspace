@@ -1,6 +1,10 @@
 const csv = require('csv-stringify');
 const { flattenNestedCols } = require('../../reducers/list');
 
+const formatDataForCsv = (data, schema) => data.map(r => {
+  return flattenNestedCols(r, schema, { csv: true }).map(c => Array.isArray(c) ? c.join(', ') : c);
+});
+
 module.exports = () => (req, res, next) => {
 
   res.locals.store = res.store;
@@ -17,7 +21,7 @@ module.exports = () => (req, res, next) => {
         if (list) {
           res.type('application/csv');
           res.attachment(`${res.template}.csv`);
-          return csv(list.filtered.map(r => flattenNestedCols(r, list.schema, { csv: true })), { header: true, columns: Object.keys(list.schema) }, (err, output) => {
+          return csv(formatDataForCsv(list.filtered, list.schema), { header: true, columns: Object.keys(list.schema) }, (err, output) => {
             err ? next(err) : res.send(output);
           });
         }
