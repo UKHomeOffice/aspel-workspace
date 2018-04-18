@@ -28,9 +28,9 @@ module.exports = () => (req, res, next) => {
         if (list) {
           res.type('application/csv');
           res.attachment(`${res.template}.csv`);
-          return csv(formatDataForCsv(list.filtered, list.schema), { header: true, columns: Object.keys(list.schema) }, (err, output) => {
-            err ? next(err) : res.send(output);
-          });
+          return csv(formatDataForCsv(list.filtered, list.schema), { header: true })
+            .pipe(res)
+            .on('error', next);
         }
         throw new Error('CSV rendering is not suported for this page');
       default:
