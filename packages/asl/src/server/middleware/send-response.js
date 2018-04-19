@@ -1,9 +1,16 @@
 const csv = require('csv-stringify');
-const { flattenNestedCols } = require('../../reducers/list');
 
-const formatDataForCsv = (data, schema) => data.map(r => {
-  return flattenNestedCols(r, schema, { csv: true }).map(c => Array.isArray(c) ? c.join(', ') : c);
-});
+const { chain, get } = require('lodash');
+
+const flatten = (row, schema) => {
+  return chain(row)
+    .pick(Object.keys(schema))
+    .mapValues((val, key) => get(row, schema[key].accessor || key))
+    .mapValues(val => Array.isArray(val) ? val.join() : val)
+    .value();
+};
+
+const formatDataForCsv = (data, schema) => data.map(r => flatten(r, schema));
 
 module.exports = () => (req, res, next) => {
 
@@ -21,9 +28,9 @@ module.exports = () => (req, res, next) => {
         if (list) {
           res.type('application/csv');
           res.attachment(`${res.template}.csv`);
-          return csv(formatDataForCsv(list.filtered, list.schema), { header: true, columns: Object.keys(list.schema) }, (err, output) => {
-            err ? next(err) : res.send(output);
-          });
+          return csv(formatDataForCsv(list.filtered, list.schema), { header: true })
+            .pipe(res)
+            .on('error', next);
         }
         throw new Error('CSV rendering is not suported for this page');
       default:

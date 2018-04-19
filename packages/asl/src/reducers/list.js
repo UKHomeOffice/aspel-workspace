@@ -1,4 +1,4 @@
-const { some, pickBy, get, map, sortBy } = require('lodash');
+const { some, get, sortBy, chain } = require('lodash');
 
 const {
   SET_TEXT_FILTER,
@@ -19,10 +19,12 @@ const INITIAL_STATE = {
   }
 };
 
-const flattenNestedCols = (row, schema, { csv } = {}) =>
-  map(csv ? schema : pickBy(schema, s => s.show), (value, key) =>
-    value.accessor ? get(row, value.accessor) : row[key]
-  );
+const flattenNestedCols = (row, schema) => {
+  return chain(schema)
+    .pickBy(s => s.show)
+    .map((value, key) => get(row, value.accessor || key))
+    .value();
+};
 
 const applyFilter = ({ all, filter, schema }) => {
   if (!filter) {
@@ -92,7 +94,5 @@ const reducer = (state = INITIAL_STATE, action) => {
   filtered = applySort({ ...newState, filtered });
   return { ...newState, filtered };
 };
-
-reducer.flattenNestedCols = flattenNestedCols;
 
 module.exports = reducer;
