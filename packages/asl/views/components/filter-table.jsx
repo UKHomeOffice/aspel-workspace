@@ -1,16 +1,34 @@
 import React, { Fragment } from 'react';
-import SortableTable from '../containers/sortable-table';
+import { connect } from 'react-redux';
+import DataTable from 'govuk-react-components/components/datatable';
 import TextFilter from '../containers/text-filter';
 import ExportLink from '../containers/export-link';
+import { setSort } from '../../src/actions';
+
+const mapStateToProps = state => ({
+  data: state.list.filtered,
+  sort: state.list.sort
+});
+
+const mapDispatchToProps = dispatch => ({
+  onChange: sort => dispatch(setSort(sort))
+});
+
+const ConnectedDataTable = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DataTable);
 
 export default ({
   schema,
-  formatters,
-  data
+  formatters
 }) => (
   <Fragment>
     <TextFilter />
-    <SortableTable schema={ schema } formatters={ formatters } data={ data } />
+    <ConnectedDataTable
+      schema={ schema }
+      formatters={ formatters }
+    />
     <ExportLink />
   </Fragment>
 );

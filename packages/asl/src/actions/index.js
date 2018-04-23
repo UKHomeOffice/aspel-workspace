@@ -33,11 +33,6 @@ const setSchema = schema => ({
   schema
 });
 
-const setSortColumn = column => ({
-  type: SET_SORT_COLUMN,
-  column
-});
-
 const setSort = sort => ({
   type: SET_SORT,
   sort
@@ -49,6 +44,5 @@ module.exports = {
   setEstablishment,
   setProfile,
   setSchema,
-  setSortColumn,
   setSort
 };
