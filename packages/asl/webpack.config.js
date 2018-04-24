@@ -7,7 +7,7 @@ const env = process.env.NODE_ENV === 'production' ? 'production' : 'development'
 
 const TEMPLATE_PATH = './assets/js/pages/template.jsx';
 
-const pages = ['places', 'roles'];
+const pages = ['places', 'roles', 'profile'];
 
 module.exports = pages.map(page => ({
   devtool: env === 'development' && 'inline-source-map',

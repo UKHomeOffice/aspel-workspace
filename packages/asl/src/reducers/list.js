@@ -1,18 +1,16 @@
-const { some, get, sortBy, chain } = require('lodash');
+const { some, get, chain } = require('lodash');
 
 const {
   SET_TEXT_FILTER,
   SET_LIST_ITEMS,
-  SET_SCHEMA,
-  SET_SORT
+  SET_SCHEMA
 } = require('../constants/action-types');
 
 const INITIAL_STATE = {
   filter: '',
   all: [],
   filtered: [],
-  schema: [],
-  sort: {}
+  schema: []
 };
 
 const flattenNestedCols = (row, schema) => {
@@ -46,9 +44,6 @@ const reducer = (state = INITIAL_STATE, action) => {
       break;
     case SET_TEXT_FILTER:
       newState.filter = action.text;
-      break;
-    case SET_SORT:
-      newState.sort = action.sort;
       break;
     case SET_SCHEMA:
       newState.schema = action.schema;

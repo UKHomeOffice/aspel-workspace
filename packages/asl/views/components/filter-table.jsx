@@ -1,13 +1,12 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import DataTable from 'govuk-react-components/components/datatable';
+import DataTable, { setSort } from 'govuk-react-components/components/datatable';
 import TextFilter from '../containers/text-filter';
 import ExportLink from '../containers/export-link';
-import { setSort } from '../../src/actions';
 
 const mapStateToProps = state => ({
   data: state.list.filtered,
-  sort: state.list.sort
+  sort: state.sort
 });
 
 const mapDispatchToProps = dispatch => ({
