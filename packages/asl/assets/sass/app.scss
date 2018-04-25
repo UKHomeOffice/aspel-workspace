@@ -55,3 +55,44 @@ th:first-child, th:nth-child(2), th:nth-child(3) {
     margin-right: 1em;
   }
 }
+
+.main {
+
+  header {
+
+    h1, h2 {
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: $gutter;
+    }
+
+    h2 {
+      margin-bottom: $gutter/4;
+      font-weight: normal;
+    }
+  }
+
+  ul.dashboard {
+    list-style: none;
+    padding-left: 0;
+    li {
+      background: $highlight-colour;
+      @extend .heading-medium;
+      margin-top: 0;
+
+      a {
+        display: block;
+        padding: $gutter-half $gutter;
+      }
+    }
+  }
+
+  .establishment-summary {
+    aside {
+      border-top: 2px solid $govuk-blue;
+      padding-top: $gutter-half;
+    }  
+  }
+}

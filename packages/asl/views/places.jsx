@@ -25,11 +25,13 @@ const Places = ({
 }) => (
   <App
     store={store}
-    crumbs={['Licensed premises']}
+    crumbs={[{ href: '/', label: name }, 'Licensed premises']}
     scripts={['/public/js/pages/places.js']}
   >
-    <h2 className="headline">{name}</h2>
-    <h1>Licensed premises</h1>
+    <header>
+      <h2>{name}</h2>
+      <h1>Licensed premises</h1>
+    </header>
     <FilterTable schema={schema} formatters={formatters} data={filtered} />
   </App>
 );
