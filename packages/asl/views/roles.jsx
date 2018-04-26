@@ -22,8 +22,10 @@ const Roles = ({
     crumbs={['Named people']}
     scripts={['/public/js/pages/roles.js']}
   >
-    <h2 className="headline">{name}</h2>
-    <h1>Named people</h1>
+    <header>
+      <h2>{name}</h2>
+      <h1>Named people</h1>
+    </header>
     <FilterTable schema={ schema } formatters={ formatters } data={ filtered } />
   </App>
 );
