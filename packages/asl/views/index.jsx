@@ -33,9 +33,6 @@ const Index = ({
 
               <dt>Licence holder</dt>
               <dd><a href={`/profile/${elh.id}`}>{ elh.name }</a></dd>
-
-              <dt>Home Office liaison contact (HOLC)</dt>
-              {/* <dd><a href="/profile">{ holc.name }</a></dd> */}
             </dl>
           </aside>
         </div>
