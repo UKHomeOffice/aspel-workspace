@@ -38,7 +38,7 @@ const Index = ({
         </div>
       </div>
     </App>
-  )
-}
+  );
+};
 
 module.exports = connect(Index);
