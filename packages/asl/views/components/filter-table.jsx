@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import DataTable, { setSort } from 'govuk-react-components/components/datatable';
+import DataTable, { setSort } from 'asl-components/components/datatable';
 import TextFilter from '../containers/text-filter';
 import ExportLink from '../containers/export-link';
 
 const mapStateToProps = state => ({
   data: state.list.filtered,
+  schema: state.list.schema,
   sort: state.sort
 });
 
@@ -19,13 +20,11 @@ const ConnectedDataTable = connect(
 )(DataTable);
 
 export default ({
-  schema,
   formatters
 }) => (
   <Fragment>
     <TextFilter />
     <ConnectedDataTable
-      schema={ schema }
       formatters={ formatters }
     />
     <ExportLink />

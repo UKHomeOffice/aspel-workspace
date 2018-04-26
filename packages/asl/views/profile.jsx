@@ -1,5 +1,5 @@
 import React from 'react';
-import DataTable from 'govuk-react-components/components/datatable';
+import DataTable from 'asl-components/components/datatable';
 import { merge, omit } from 'lodash';
 import App from './layouts/app';
 import connect from '../src/helpers/connector';

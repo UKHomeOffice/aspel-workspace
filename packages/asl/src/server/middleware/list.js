@@ -1,5 +1,5 @@
 const actions = require('../../actions');
-const { setSort } = require('govuk-react-components/components/datatable');
+const { setSort } = require('asl-components/components/datatable');
 
 module.exports = ({ schema }) => {
 
