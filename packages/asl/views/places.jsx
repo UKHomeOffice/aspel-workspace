@@ -20,7 +20,7 @@ export const formatters = {
 
 const Places = ({
   store,
-  establishment: { name },
+  establishment: { name }
 }) => (
   <App
     store={store}
