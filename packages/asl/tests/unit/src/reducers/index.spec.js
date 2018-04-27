@@ -9,11 +9,11 @@ describe('Root Reducer', () => {
         all: [],
         filtered: [],
         filter: '',
-        schema: [],
-        sort: {
-          column: '',
-          ascending: true
-        }
+        schema: []
+      },
+      sort: {
+        column: '',
+        ascending: true
       }
     };
     expect(rootReducer(undefined, {})).toEqual(expected);

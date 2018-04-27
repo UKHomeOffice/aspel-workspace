@@ -20,8 +20,7 @@ export const formatters = {
 
 const Places = ({
   store,
-  establishment: { name },
-  list: { schema, filtered }
+  establishment: { name }
 }) => (
   <App
     store={store}
@@ -32,8 +31,8 @@ const Places = ({
       <h2>{name}</h2>
       <h1>Licensed premises</h1>
     </header>
-    <FilterTable schema={schema} formatters={formatters} data={filtered} />
+    <FilterTable formatters={formatters} />
   </App>
 );
 
-export default connect(Places, 'list');
+export default connect(Places);

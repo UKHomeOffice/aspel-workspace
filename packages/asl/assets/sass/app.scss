@@ -1,7 +1,7 @@
 @import "@asl/service";
+@import "@ukhomeoffice/asl-components";
 
 @import "./filters";
-@import "./sortable-table";
 
 .data {
   padding: $gutter;
@@ -93,6 +93,6 @@ th:first-child, th:nth-child(2), th:nth-child(3) {
     aside {
       border-top: 2px solid $govuk-blue;
       padding-top: $gutter-half;
-    }  
+    }
   }
 }

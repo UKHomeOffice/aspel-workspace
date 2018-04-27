@@ -15,18 +15,17 @@ export const formatters = {
 
 const Roles = ({
   store,
-  establishment: { name },
-  list: { schema, filtered }
+  establishment: { name }
 }) => (
-  <App store={store}
+  <App store={ store }
     crumbs={['Named people']}
     scripts={['/public/js/pages/roles.js']}
   >
     <header>
-      <h2>{name}</h2>
+      <h2>{ name }</h2>
       <h1>Named people</h1>
     </header>
-    <FilterTable schema={ schema } formatters={ formatters } data={ filtered } />
+    <FilterTable formatters={ formatters } />
   </App>
 );
 

@@ -96,44 +96,4 @@ describe('List Reducer', () => {
 
   });
 
-  describe('SET_SORT_COLUMN', () => {
-
-    test('sorts list by text column', () => {
-      const action = {
-        type: 'SET_SORT_COLUMN',
-        column: 'site'
-      };
-      const output = reducer(initial, action);
-      expect(output.filtered).toEqual(all);
-    });
-
-    test('reverses list when called again', () => {
-      const action = {
-        type: 'SET_SORT_COLUMN',
-        column: 'site'
-      };
-      const output = reducer(reducer(initial, action), action);
-      expect(output.filtered).toEqual(all.slice().reverse());
-    });
-
-    test('sorts on numerical fields', () => {
-      const action = {
-        type: 'SET_SORT_COLUMN',
-        column: 'number'
-      };
-      const output = reducer({ ...initial, schema: { ...schema, number: {} } }, action);
-      expect(output.filtered).toEqual([all[1], all[2], all[0]]);
-    });
-
-    test('sorts on nested fields', () => {
-      const action = {
-        type: 'SET_SORT_COLUMN',
-        column: 'nacwo'
-      };
-      const output = reducer(initial, action);
-      expect(output.filtered).toEqual([all[2], all[1], all[0]]);
-    });
-
-  });
-
 });

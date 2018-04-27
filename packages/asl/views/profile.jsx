@@ -1,8 +1,8 @@
 import React from 'react';
+import DataTable from '@ukhomeoffice/asl-components/components/datatable';
 import { merge, omit } from 'lodash';
 import App from './layouts/app';
 import connect from '../src/helpers/connector';
-import ListTable from './components/list-table';
 import dictionary from '@asl/dictionary';
 
 import { formatters } from './places';
@@ -27,6 +27,7 @@ const Roles = ({
 }) => (
   <App store={store}
     crumbs={[{ href: '/roles', label: 'Named people' }, name]}
+    scripts={['/public/js/pages/profile.js']}
   >
     <h2 className="headline">{ establistmentName }</h2>
     <h1>{name}</h1>
@@ -54,7 +55,7 @@ const Roles = ({
         <React.Fragment key={ id }>
           <h3>{ dictionary[type] || dictionary[type.toUpperCase() || type] }</h3>
           {
-            !!places.length && <ListTable data={ places } schema={ merge({}, schema, { nacwo: { show: false } }) } formatters={ omit(formatters, 'nacwo') } />
+            !!places.length && <DataTable data={ places } schema={ merge({}, schema, { nacwo: { show: false } }) } formatters={ omit(formatters, 'nacwo') } />
           }
         </React.Fragment>
       )

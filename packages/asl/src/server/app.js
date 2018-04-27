@@ -3,7 +3,6 @@ const pdf = require('@asl/pdf-renderer');
 
 const errorHandler = require('./middleware/error-handler');
 const responder = require('./middleware/send-response');
-
 const createStore = require('../create-store');
 
 module.exports = settings => {
@@ -18,15 +17,11 @@ module.exports = settings => {
   });
 
   app.use('/roles', require('./routers/roles')());
-
   app.use('/profile', require('./routers/profile')());
-
   app.use('/places', require('./routers/places')());
-
   app.use('/', require('./routers/home')());
 
   app.use(responder());
-
   app.use(errorHandler());
 
   return app;
