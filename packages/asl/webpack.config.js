@@ -3,12 +3,15 @@
 const webpack = require('webpack');
 const path = require('path');
 
+const env = process.env.NODE_ENV === 'production' ? 'production' : 'development';
+
 const TEMPLATE_PATH = './assets/js/pages/template.jsx';
 
 const pages = ['places', 'roles'];
 
 module.exports = pages.map(page => ({
-  devtool: 'inline-source-map',
+  devtool: env === 'development' && 'inline-source-map',
+  mode: env,
   entry: {
     [page]: path.resolve(__dirname, TEMPLATE_PATH)
   },
