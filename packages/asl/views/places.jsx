@@ -25,7 +25,7 @@ const Places = ({
   <App
     store={store}
     crumbs={['Licensed premises']}
-    scripts={['/public/js/pages/places.js']}
+    scripts={['/public/js/pages/common.js', '/public/js/pages/places.js']}
   >
     <header>
       <h2>{name}</h2>
