@@ -1,5 +1,5 @@
 const actions = require('../../actions');
-const { setSort } = require('asl-components/components/datatable');
+const { setSort } = require('@ukhomeoffice/asl-components/components/datatable');
 
 module.exports = ({ schema }) => {
 
@@ -11,7 +11,7 @@ module.exports = ({ schema }) => {
       const { column, ascending } = req.query.sort;
       res.store.dispatch(setSort({
         column,
-        ascending: JSON.parse(ascending)
+        ascending: ascending === 'true'
       }));
     }
     next();

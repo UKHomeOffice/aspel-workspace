@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import DataTable, { setSort } from 'asl-components/components/datatable';
+import DataTable, { setSort } from '@ukhomeoffice/asl-components/components/datatable';
 import TextFilter from '../containers/text-filter';
 import ExportLink from '../containers/export-link';
 
