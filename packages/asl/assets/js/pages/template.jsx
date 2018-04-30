@@ -12,7 +12,7 @@ const persistState = store => next => action => {
   switch (action.type) {
     case 'SET_SORT':
     case 'SET_TEXT_FILTER':
-      const { list: { filter }, sort } = store.getState();
+      const { filter, sort } = store.getState();
       const href = url.parse(window.location.href);
       href.search = stringify({ filter, sort });
       window.history.replaceState(undefined, undefined, href.format());
