@@ -19,7 +19,7 @@ const Roles = ({
 }) => (
   <App store={ store }
     crumbs={['Named people']}
-    scripts={['/public/js/pages/roles.js']}
+    scripts={['/public/js/pages/common.js', '/public/js/pages/roles.js']}
   >
     <header>
       <h2>{ name }</h2>
