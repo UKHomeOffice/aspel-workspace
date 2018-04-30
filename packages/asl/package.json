@@ -15,6 +15,7 @@
     "build:css": "npm-sass ./assets/sass/app.scss > ./public/css/app.css",
     "prebuild:js": "mkdir -p ./public/js && mkdir -p ./assets/js/.pages",
     "build:js": "webpack",
+    "postbuild:js": "rm -rf ./assets/js/.pages",
     "build": "npm run build:css && npm run build:js",
     "postinstall": "npm run build"
   },
