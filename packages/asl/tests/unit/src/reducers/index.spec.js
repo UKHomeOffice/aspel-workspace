@@ -6,15 +6,14 @@ describe('Root Reducer', () => {
       establishment: {},
       profile: {},
       list: {
-        all: [],
-        filtered: [],
-        filter: '',
-        schema: []
+        data: [],
+        schema: {}
       },
       sort: {
         column: '',
         ascending: true
-      }
+      },
+      filter: ''
     };
     expect(rootReducer(undefined, {})).toEqual(expected);
   });

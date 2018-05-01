@@ -1,7 +1,7 @@
 import React from 'react';
 import connect from '../../src/helpers/connector';
 import Pdf from '../layouts/pdf';
-import DataTable from 'govuk-react-components/components/datatable';
+import DataTable from '@ukhomeoffice/asl-components/components/datatable';
 
 export const formatters = {
   suitability: { format: value => value.join(', ') },

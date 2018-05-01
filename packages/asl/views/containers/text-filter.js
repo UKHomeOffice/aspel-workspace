@@ -1,12 +1,15 @@
-const { connect } = require('react-redux');
-const { setTextFilter } = require('../../src/actions');
-const TextFilter = require('../components/text-filter');
+import { connect } from 'react-redux';
+import TextFilter, { setTextFilter } from '@ukhomeoffice/asl-components/components/text-filter';
 
 const mapStateToProps = state => ({
-  textFilter: state.list.filter
+  filter: state.filter
+});
+
+const mapDispatchToProps = dispatch => ({
+  onChange: filter => dispatch(setTextFilter(filter))
 });
 
 module.exports = connect(
   mapStateToProps,
-  { setTextFilter }
+  mapDispatchToProps
 )(TextFilter);
