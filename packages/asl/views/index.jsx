@@ -9,7 +9,6 @@ const Index = ({
     licenceNumber,
     licenceHolder: {
       profile: {
-        id: elhId,
         name: elhName
       }
     }
@@ -17,7 +16,6 @@ const Index = ({
 }) => (
   <App
     store={store}
-    crumbs={[name]}
   >
     <header>
       <h2>&nbsp;</h2>
@@ -27,8 +25,7 @@ const Index = ({
       <div className="column-two-thirds">
         <ul className="dashboard">
           <li><a href='/details'>Establishment details</a></li>
-          <li><a href='/roles'>Named people and licence holders</a></li>
-          <li><a href='/places'>Schedule of Premises</a></li>
+          <li><a href='/places'>Licensed premesis</a></li>
         </ul>
       </div>
       <div className="column-one-third establishment-summary">
@@ -38,7 +35,7 @@ const Index = ({
             <dd>{ licenceNumber }</dd>
 
             <dt>Licence holder</dt>
-            <dd><a href={`/profile/${elhId}`}>{ elhName }</a></dd>
+            <dd>{ elhName }</dd>
           </dl>
         </aside>
       </div>
