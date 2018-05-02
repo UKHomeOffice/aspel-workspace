@@ -25,7 +25,7 @@ const Index = ({
       <div className="column-two-thirds">
         <ul className="dashboard">
           <li><a href='/details'>Establishment details</a></li>
-          <li><a href='/places'>Licensed premesis</a></li>
+          <li><a href='/places'>Licensed premises</a></li>
         </ul>
       </div>
       <div className="column-one-third establishment-summary">
