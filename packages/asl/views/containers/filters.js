@@ -1,18 +1,18 @@
-const { connect } = require('react-redux');
-const { uniq, flatten } = require('lodash');
-const Filters = require('../components/filters');
+import { pickBy, merge } from 'lodash';
+import { connect } from 'react-redux';
+import Filters, { setFilters } from '@ukhomeoffice/asl-components/components/filters';
 
-const uniqueByType = (filter, rows) => ({
-  title: filter.title,
-  label: filter.label,
-  key: filter.key,
-  values: uniq(flatten(rows.map(r => r[filter.key])))
+const mapStateToProps = ({ filters, list: { schema, data } }, { formatters }) => ({
+  schema: pickBy(merge({}, schema, formatters), item => item.filter),
+  filters,
+  data
 });
 
-const mapStateToProps = (state, { filters }) => ({
-  filters: filters.map(filter => uniqueByType(filter, state.places))
+const mapDispatchToProps = dispatch => ({
+  onChange: filters => dispatch(setFilters(filters))
 });
 
-module.exports = connect(
-  mapStateToProps
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
 )(Filters);

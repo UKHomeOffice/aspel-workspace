@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
-import TextFilter, { setTextFilter } from '@ukhomeoffice/asl-components/components/text-filter';
+import TextFilter, { setFilters } from '@ukhomeoffice/asl-components/components/filters';
 
 const mapStateToProps = state => ({
-  filter: state.filter
+  filter: state.filters['*']
 });
 
 const mapDispatchToProps = dispatch => ({
-  onChange: filter => dispatch(setTextFilter(filter))
+  onChange: filters => dispatch(setFilters(filters))
 });
 
 module.exports = connect(

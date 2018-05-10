@@ -1,8 +1,8 @@
 const { connect } = require('react-redux');
 const ExportLink = require('../components/export-link');
 
-const mapStateToProps = ({ filter, sort }) => ({
-  filter,
+const mapStateToProps = ({ filters, sort }) => ({
+  filters,
   sort
 });
 

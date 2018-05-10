@@ -1,3 +1,5 @@
+/* eslint implicit-dependencies/no-implicit: [2, { dev: true }] */
+
 import React from 'react';
 import url from 'url';
 import { stringify } from 'qs';
@@ -11,16 +13,23 @@ const persistState = store => next => action => {
   const result = next(action);
   switch (action.type) {
     case 'SET_SORT':
-    case 'SET_TEXT_FILTER':
-      const { filter, sort } = store.getState();
+    case 'SET_FILTERS':
+      const { filters, sort } = store.getState();
       const href = url.parse(window.location.href);
-      href.search = stringify({ filter, sort });
+      href.search = stringify({ filters, sort });
       window.history.replaceState(undefined, undefined, href.format());
   }
   return result;
 };
 
-const store = createStore(window.INITIAL_STATE, applyMiddleware(persistState));
+const middleware = [persistState];
+
+if (process.env.NODE_ENV === 'development') {
+  const { logger } = require('redux-logger');
+  middleware.push(logger);
+}
+
+const store = createStore(window.INITIAL_STATE, applyMiddleware(...middleware));
 
 render(
   <Provider store={store}>

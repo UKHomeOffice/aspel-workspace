@@ -1,23 +1,24 @@
 module.exports = {
   id: {},
   site: {
-    show: true
+    show: true,
+    filter: true
   },
   area: {
     show: true
   },
-  name: {
-    show: true
-  },
+  name: {},
   suitability: {
-    show: true
+    show: true,
+    filter: true,
+    comparator: 'AND',
+    exact: true
   },
   holding: {
-    show: true
-  },
-  nacwo: {
     show: true,
-    accessor: 'nacwo.profile.name'
+    filter: true,
+    comparator: 'AND',
+    exact: true
   },
   updatedAt: {}
 };

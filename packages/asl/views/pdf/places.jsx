@@ -1,22 +1,21 @@
 import React from 'react';
-import connect from '../../src/helpers/connector';
 import Pdf from '../layouts/pdf';
-import DataTable from '@ukhomeoffice/asl-components/components/datatable';
+import DataTable from '../containers/datatable';
 
 export const formatters = {
   suitability: { format: value => value.join(', ') },
-  holding: { format: value => value.join(', ') },
-  nacwo: { format: (name, nacwo) => nacwo ? name : '-' }
+  holding: { format: value => value.join(', ') }
 };
 
-const PdfList = props => {
-  const { hostname, list: { schema, filtered } } = props;
-  const state = props.store.getState();
+const PdfList = ({
+  store,
+  hostname
+}) => {
   return (
-    <Pdf {...state} hostname={hostname} >
-      <DataTable schema={ schema } formatters={ formatters } data={ filtered } />
+    <Pdf hostname={hostname} >
+      <DataTable store={store} formatters={ formatters } sortable={false} />
     </Pdf>
   );
 };
 
-export default connect(PdfList, 'list');
+export default PdfList;

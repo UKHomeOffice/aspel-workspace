@@ -4,17 +4,33 @@ import connect from '../src/helpers/connector';
 import FilterTable from './components/filter-table';
 import Acronym from './components/acronym';
 import Join from './components/join';
+import dict from '@asl/dictionary';
 
-const joinAcronyms = arr => <Join>{ arr.map(a => <Acronym key={a}>{a}</Acronym>) }</Join>;
+const joinAcronyms = data => {
+  if (Array.isArray(data)) {
+    return <Join>{ data.map(a => <Acronym key={a}>{a}</Acronym>) }</Join>;
+  }
+  return <Acronym key={data}>{data}</Acronym>;
+};
+
+const defineValue = val => `${dict[val] || dict[val.toUpperCase()]} (${val})`;
 
 export const formatters = {
-  suitability: { format: joinAcronyms },
-  holding: { format: joinAcronyms },
+  suitability: {
+    title: 'Suitability',
+    format: joinAcronyms,
+    formatFilterItems: defineValue
+  },
+  holding: {
+    title: 'Holding',
+    format: joinAcronyms,
+    formatFilterItems: defineValue
+  },
   nacwo: {
     format: (name, nacwo) => nacwo
       ? <a href={`/profile/${nacwo.profile.id}`}>{ name }</a>
       : '-',
-    title: () => <Acronym>NACWO</Acronym>
+    title: <Acronym>NACWO</Acronym>
   }
 };
 
