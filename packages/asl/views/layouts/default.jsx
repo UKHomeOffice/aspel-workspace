@@ -17,7 +17,7 @@ const Layout = ({
     headerContent={<StatusBar />}
   >
     <main className="main" id="content">
-      <PhaseBanner phase="prototype" />
+      <PhaseBanner phase="beta">This is a new service - your <a href="mailto:animalscience@digital.homeoffice.gov.uk">feedback</a> will help us to improve it.</PhaseBanner>
       <Breadcrumbs crumbs={crumbs} />
       <div className="grid-row">
         <div className="column-full">
