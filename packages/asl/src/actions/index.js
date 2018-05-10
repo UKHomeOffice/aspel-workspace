@@ -2,7 +2,8 @@ const {
   SET_LIST_ITEMS,
   SET_ESTABLISHMENT,
   SET_PROFILE,
-  SET_SCHEMA
+  SET_SCHEMA,
+  SET_USER
 } = require('../constants/action-types');
 
 const setListItems = items => ({
@@ -25,9 +26,15 @@ const setSchema = schema => ({
   schema
 });
 
+const setUser = name => ({
+  type: SET_USER,
+  name
+});
+
 module.exports = {
   setListItems,
   setEstablishment,
   setProfile,
-  setSchema
+  setSchema,
+  setUser
 };

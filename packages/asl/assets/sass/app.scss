@@ -1,7 +1,23 @@
 @import "@asl/service";
 @import "@ukhomeoffice/asl-components";
 
-@import "./filters";
+.status-bar {
+  color: white;
+  font-weight: bold;
+
+  a {
+    color: white;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  span:not(:first-child) {
+    margin-left: $gutter-half;
+  }
+}
 
 .data {
   padding: $gutter;

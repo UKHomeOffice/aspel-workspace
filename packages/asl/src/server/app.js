@@ -4,6 +4,7 @@ const pdf = require('@asl/pdf-renderer');
 const errorHandler = require('./middleware/error-handler');
 const responder = require('./middleware/send-response');
 const createStore = require('../create-store');
+const { setUser } = require('../actions');
 
 module.exports = settings => {
 
@@ -13,6 +14,11 @@ module.exports = settings => {
 
   app.use((req, res, next) => {
     res.store = createStore();
+    next();
+  });
+
+  app.use((req, res, next) => {
+    res.store.dispatch(setUser(req.user.get('name')));
     next();
   });
 
