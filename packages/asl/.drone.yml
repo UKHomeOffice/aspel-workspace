@@ -105,7 +105,8 @@ pipeline:
     image: node:8
     secrets:
       - npm_auth_token
-      - asl_password_holc
+      - aws_access_key
+      - aws_secret
     commands:
       - npm install
       - npm run test:functional -- --suite smoke
