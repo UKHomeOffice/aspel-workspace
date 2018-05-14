@@ -2,14 +2,12 @@ const actions = require('../../actions');
 
 module.exports = url => {
   return (req, res, next) => {
-    url = url || req.originalUrl;
+    const u = url || req.originUrl;
     const establishment = req.user.get('establishment');
     if (!establishment) {
       return next(new Error('No associated establishment'));
     }
-
-    const u = `/establishment/${establishment}${url}`;
-    req.api(u)
+    req.api(`/establishment/${establishment}${u}`)
       .then(response => {
         res.store.dispatch(actions.setEstablishment(response.json.meta.establishment));
         res.data = response.json.data;
