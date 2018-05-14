@@ -9,7 +9,7 @@ const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development
 const TEMPLATE_PATH = path.resolve(__dirname, './assets/js/pages/template.jsx');
 const template = fs.readFileSync(TEMPLATE_PATH).toString();
 
-const pages = ['places', 'roles', 'profile'];
+const pages = ['places', 'roles', 'profile', 'details'];
 
 const entry = pages.reduce((entrypoints, page) => {
   const file = path.resolve(__dirname, `./assets/js/.pages/${page}.js`);

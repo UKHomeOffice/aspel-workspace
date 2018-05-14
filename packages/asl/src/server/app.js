@@ -25,6 +25,7 @@ module.exports = settings => {
   app.use('/roles', require('./routers/roles')());
   app.use('/profile', require('./routers/profile')());
   app.use('/places', require('./routers/places')());
+  app.use('/details', require('./routers/details')());
   app.use('/', require('./routers/home')());
 
   app.use(responder());
