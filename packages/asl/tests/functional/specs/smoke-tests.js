@@ -14,4 +14,18 @@ describe('Smoke tests', () => {
     assert.equal(title, 'University of Croydon');
   });
 
+  it('can access details page', () => {
+    browser.withUser('holc');
+    browser.click('a[href*="/details"]')
+    const title = browser.getText('h1');
+    assert.equal(title, 'Establishment Details');
+  });
+
+  it('can access schedule of premises page', () => {
+    browser.withUser('holc');
+    browser.click('a[href*="/places"]')
+    const title = browser.getText('h1');
+    assert.equal(title, 'Licensed premises');
+  });
+
 });
