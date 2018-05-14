@@ -2,7 +2,7 @@ const actions = require('../../actions');
 
 module.exports = url => {
   return (req, res, next) => {
-    const u = url || req.originUrl;
+    const u = url || req.originalUrl;
     const establishment = req.user.get('establishment');
     if (!establishment) {
       return next(new Error('No associated establishment'));
