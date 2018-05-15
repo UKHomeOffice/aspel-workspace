@@ -122,10 +122,10 @@ pipeline:
     template: >
       {{#success build.status}}
         Deployment of {{repo.name}} to {{build.deployTo}} succeeded.
-        > {{commit.message}}
+        `{{commit.message}}`
       {{else}}
         @channel Deployment of {{repo.name}} to {{build.deployTo}} failed - {{build.link}}
-        > {{commit.message}}
+        `{{commit.message}}`
       {{/success}}
     when:
       event: deployment
