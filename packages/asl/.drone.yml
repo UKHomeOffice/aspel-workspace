@@ -119,7 +119,7 @@ pipeline:
     secrets:
       - slack_webhook_url
     image: plugins/slack
-    webhook: ${SLACK_WEBHOOK_URL}
+    webhook: $${SLACK_WEBHOOK_URL}
     channel: developers
     template: >
       {{#success build.status}}
