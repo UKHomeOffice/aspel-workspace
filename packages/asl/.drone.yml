@@ -121,9 +121,9 @@ pipeline:
     channel: developers
     template: >
       {{#success build.status}}
-        Deployment of {{build.name}} ({{build.number}}) to {{build.environment}} succeeded.
+        Deployment of {{repo.name}} ({{build.number}}) to {{build.deployTo}} succeeded.
       {{else}}
-        Deployment of {{build.name}} ({{build.number}}) to {{build.environment}} failed. Fix me please.
+        Deployment of {{repo.name}} ({{build.number}}) to {{build.deployTo}} failed - {{build.link}}
       {{/success}}
     when:
       event: deployment
