@@ -115,6 +115,22 @@ pipeline:
         - dev
         - preprod
 
+  slack:
+    image: plugins/slack
+    webhook: https://hooks.slack.com/services/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
+    channel: development
+    template: >
+      {{#success build.status}}
+        Deployment of {{build.name}} ({{build.number}}) to {{build.environment}} succeeded.
+      {{else}}
+        Deployment of {{build.name}} ({{build.number}}) to {{build.environment}} failed. Fix me please.
+      {{/success}}
+    when:
+      event: deployment
+      environment:
+        - dev
+        - preprod
+
 matrix:
   NPM_AUTH_USERNAME:
     - asl
