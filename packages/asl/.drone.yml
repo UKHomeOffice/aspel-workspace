@@ -116,8 +116,10 @@ pipeline:
         - preprod
 
   slack:
+    secrets:
+      - slack_webhook_url
     image: plugins/slack
-    webhook: https://hooks.slack.com/services/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
+    webhook: ${SLACK_WEBHOOK_URL}
     channel: developers
     template: >
       {{#success build.status}}
