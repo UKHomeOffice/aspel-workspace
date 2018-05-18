@@ -2,5 +2,3 @@
 deploy
 node_modules
 tests
-assets
-.babelrc

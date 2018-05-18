@@ -10,15 +10,6 @@ pipeline:
     when:
       event: [push, pull_request, tag]
 
-  compile:
-    image: node:8
-    secrets:
-      - npm_auth_token
-    commands:
-      - npm run build
-    when:
-      event: [push, pull_request, tag]
-
   build:
     image: docker:17.09.1
     secrets:
