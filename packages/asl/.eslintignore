@@ -1,4 +1,2 @@
 tests/functional
 wdio.conf.js
-public
-assets/js/.pages

@@ -57,6 +57,4 @@ typings/
 # dotenv environment variables file
 .env
 
-public
 tests/functional/screenshots
-assets/js/.pages
