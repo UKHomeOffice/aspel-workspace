@@ -1,0 +1,13 @@
+extends:
+  - lennym
+
+env:
+  mocha: true
+
+globals:
+  browser: true
+
+rules:
+  implicit-dependencies/no-implicit:
+    - error
+    - dev: true

@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config",
-    "test": "eslint ."
+    "test": "eslint .",
+    "test:functional": "asl-test ./tests/functional/config",
+    "test:functional:local": "funkie --driver chromedriver npm run test:functional"
   },
   "repository": {
     "type": "git",
@@ -23,9 +25,12 @@
     "@asl/service": "^2.1.1"
   },
   "devDependencies": {
+    "@ukhomeoffice/asl-functional-testing": "^1.1.0",
     "dotenv": "^5.0.1",
     "eslint": "^4.18.1",
     "eslint-config-lennym": "^1.4.0",
+    "funkie": "0.0.6",
+    "funkie-chromedriver": "0.0.1",
     "nodemon": "^1.17.2"
   }
 }
