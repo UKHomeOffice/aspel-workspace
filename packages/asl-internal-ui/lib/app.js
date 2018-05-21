@@ -1,34 +1,52 @@
 const ui = require('@asl/service/ui');
-const errorHandler = require('./error-handler');
+const { crumbs } = require('@asl/service/ui/middleware');
+const {
+  establishments,
+  establishment,
+  details,
+  places,
+  profile
+} = require('@asl/service/pages');
 
 module.exports = settings => {
-
   const app = ui(settings);
-
-  app.static.use((req, res, next) => {
-    res.locals.propositionHeader = 'Animal Science Inspection';
-    next();
-  });
 
   app.protect('inspector');
 
-  app.use((req, res, next) => {
-    req.api('/establishments')
-      .then(response => {
-        res.locals.api = response;
-        res.locals.api.data = JSON.stringify(response.json, null, '  ');
-      })
-      .then(() => next())
-      .catch(e => next(e));
-
+  app.use('/establishment/:id', (req, res, next) => {
+    req.establishment = req.params.id;
+    next();
   });
 
-  app.get('/', (req, res) => {
-    res.render('index');
-  });
+  app.use('/establishment/:id/profile/:profile',
+    (req, res, next) => {
+      req.profile = req.params.profile;
+      next();
+    },
+    profile(),
+    crumbs([
+      { href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' },
+      { href: '/establishment/{{establishment.id}}/profiles', label: 'Profiles' },
+      '{{profile.name}}'
+    ])
+  );
 
-  app.use(errorHandler());
+  app.use('/establishment/:id/places',
+    places(),
+    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, 'Licenced Premises'])
+  );
+
+  app.use('/establishment/:id/details',
+    details(),
+    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, 'Establishment Details'])
+  );
+
+  app.use('/establishment/:id',
+    establishment(),
+    crumbs([ '{{establishment.name}}' ])
+  );
+
+  app.use('/', establishments());
 
   return app;
-
 };
