@@ -20,7 +20,7 @@
       secret: true
       name: asl-dev-auth
       key: secret
-    API_URL: https://inspector-api.notprod.asl.homeoffice.gov.uk
+    API_URL: https://public-api.notprod.asl.homeoffice.gov.uk
 
 - name: inspector-ui-redis
   recipe: redis
