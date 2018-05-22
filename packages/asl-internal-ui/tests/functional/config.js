@@ -28,7 +28,7 @@ module.exports = {
     s3: {
       region: 'eu-west-2',
       bucket: 'asl-screenshots',
-      prefix: 'public-ui',
+      prefix: 'internal-ui',
       accessKey: process.env.AWS_ACCESS_KEY,
       secret: process.env.AWS_SECRET
     }
