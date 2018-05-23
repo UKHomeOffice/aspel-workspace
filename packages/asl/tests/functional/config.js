@@ -1,6 +1,6 @@
 require('dotenv/config');
 
-module.exports = {
+module.exports = env => ({
   specs: './tests/functional/specs/**/*.js',
   users: {
     'holc': 'holc'
@@ -15,11 +15,12 @@ module.exports = {
       smoke: ['./tests/functional/specs/smoke-tests.js']
     }
   },
-  screenshots: {
+  screenshots: env !== 'local' && {
     user: 'holc',
     urls: [
       '/',
       '/places',
+      '/people',
       '/details'
     ],
     // uncomment to save local screenshots
@@ -32,4 +33,4 @@ module.exports = {
       secret: process.env.AWS_SECRET
     }
   }
-};
+});

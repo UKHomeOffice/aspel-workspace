@@ -25,7 +25,7 @@
     "@asl/service": "^2.4.0"
   },
   "devDependencies": {
-    "@ukhomeoffice/asl-functional-testing": "^1.1.0",
+    "@ukhomeoffice/asl-functional-testing": "^1.2.0",
     "dotenv": "^5.0.1",
     "eslint": "^4.15.0",
     "eslint-config-lennym": "^2.0.1",
