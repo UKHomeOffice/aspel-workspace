@@ -3,7 +3,8 @@ const { crumbs } = require('@asl/service/ui/middleware');
 const {
   establishment,
   details,
-  places
+  places,
+  people
 } = require('@asl/service/pages');
 
 module.exports = settings => {
@@ -13,6 +14,11 @@ module.exports = settings => {
     req.establishment = req.user.get('establishment');
     next();
   });
+
+  app.use('/people',
+    people(),
+    crumbs(['Named people and licence holders'])
+  );
 
   app.use('/places',
     places(),
