@@ -29,6 +29,14 @@ describe('Smoke tests', () => {
     assert.equal(title, 'Licensed premises');
   });
 
+  it('can access named people page', () => {
+    browser.withUser('inspector');
+    browser.click('a[href*="/establishment/8201"]');
+    browser.click('a[href*="/people"]');
+    const title = browser.getText('h1');
+    assert.equal(title, 'Named people and licence holders');
+  });
+
   it('can access establishment details page', () => {
     browser.withUser('inspector');
     browser.click('a[href*="/establishment/8201"]');
