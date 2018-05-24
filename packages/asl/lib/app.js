@@ -4,7 +4,8 @@ const {
   establishment,
   details,
   places,
-  people
+  people,
+  profile
 } = require('@asl/service/pages');
 
 module.exports = settings => {
@@ -20,6 +21,15 @@ module.exports = settings => {
     err.status = 404;
     next(err);
   });
+
+  app.use('/profile/:profile',
+    (req, res, next) => {
+      req.profile = req.params.profile;
+      next();
+    },
+    profile(),
+    crumbs([{ href: '/people', label: 'Named People and licence holders' }, '{{profile.name}}'])
+  );
 
   app.use('/people',
     people(),
