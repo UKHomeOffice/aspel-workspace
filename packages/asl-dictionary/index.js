@@ -6,6 +6,11 @@ module.exports = {
   NVS: 'Named Veterinary Surgeon',
   NTCO: 'Named Training and Competency Officer',
 
+  // Licence holders
+  PELH: 'Establishent Licence Holder',
+  PILH: 'Individual Licence Holder',
+  PPLH: 'Project Licence Holder',
+  
   // holding codes
   LA: 'Large animals',
   SA: 'Small animals',
