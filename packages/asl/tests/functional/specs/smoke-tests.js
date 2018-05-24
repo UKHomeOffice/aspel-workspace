@@ -8,6 +8,12 @@ describe('Smoke tests', () => {
     assert.equal(title, 'Research and testing with animals');
   });
 
+  it('is shown a 404 error if the user has no associated establishment', () => {
+    browser.withUser('inspector');
+    const title = browser.getText('h1');
+    assert.equal(title, 'Not found');
+  });
+
   it('sees the establishment name in the h1', () => {
     browser.withUser('holc');
     const title = browser.getText('h1');

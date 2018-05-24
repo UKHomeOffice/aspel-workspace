@@ -11,8 +11,14 @@ module.exports = settings => {
   const app = ui(settings);
 
   app.use('/', (req, res, next) => {
-    req.establishment = req.user.get('establishment');
-    next();
+    const establishment = req.user.get('establishment');
+    if (establishment) {
+      req.establishment = establishment;
+      return next();
+    }
+    const err = new Error('Not found');
+    err.status = 404;
+    next(err);
   });
 
   app.use('/people',
