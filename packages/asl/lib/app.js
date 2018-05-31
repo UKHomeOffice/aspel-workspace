@@ -28,22 +28,22 @@ module.exports = settings => {
       next();
     },
     profile(),
-    crumbs([{ href: '/people', label: 'Named People and licence holders' }, '{{profile.name}}'])
+    crumbs([{ href: '/people', label: '{{content.pages.people}}' }, '{{profile.name}}'])
   );
 
   app.use('/people',
     people(),
-    crumbs(['Named people and licence holders'])
+    crumbs(['{{content.pages.people}}'])
   );
 
   app.use('/places',
     places(),
-    crumbs(['Licenced Premises'])
+    crumbs(['{{content.pages.places}}'])
   );
 
   app.use('/details',
     details(),
-    crumbs(['Establishment Details'])
+    crumbs(['{{content.pages.details}}'])
   );
 
   app.use('/', establishment());
