@@ -10,13 +10,16 @@ module.exports = {
   PELH: 'Establishent Licence Holder',
   PILH: 'Individual Licence Holder',
   PPLH: 'Project Licence Holder',
-  
+
   // holding codes
   LA: 'Large animals',
   SA: 'Small animals',
-  AQ: 'Aquatic',
+  AQ: 'Aquatic species',
+  AV: 'Birds',
+  DOG: 'Dogs',
+  CAT: 'Cats',
   NHP: 'Non-human primates',
-  EQU: 'Horses',
+  EQU: 'Equidae',
 
   // suitability codes
   STH: 'Short term holding',
