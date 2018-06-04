@@ -121,6 +121,7 @@ pipeline:
         `{{build.message}}`
       {{/success}}
     when:
+      status:  [ failure, success ]
       event: deployment
       environment:
         - dev
