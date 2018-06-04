@@ -5,7 +5,8 @@ const {
   details,
   places,
   people,
-  profile
+  profile,
+  projects
 } = require('@asl/service/pages');
 
 module.exports = settings => {
@@ -44,6 +45,11 @@ module.exports = settings => {
   app.use('/details',
     details(),
     crumbs(['{{content.pages.details}}'])
+  );
+
+  app.use('/projects',
+    projects(),
+    crumbs(['{{content.pages.projects}}'])
   );
 
   app.use('/', establishment());
