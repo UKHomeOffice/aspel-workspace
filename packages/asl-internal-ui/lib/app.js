@@ -27,24 +27,24 @@ module.exports = settings => {
     profile(),
     crumbs([
       { href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' },
-      { href: '/establishment/{{establishment.id}}/people', label: 'Named people and licence holders' },
+      { href: '/establishment/{{establishment.id}}/people', label: '{{content.pages.people}}' },
       '{{profile.name}}'
     ])
   );
 
   app.use('/establishment/:id/places',
     places(),
-    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, 'Licenced Premises'])
+    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, '{{content.pages.places}}'])
   );
 
   app.use('/establishment/:id/people',
     people(),
-    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, 'Named people and licence holders'])
+    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, '{{content.pages.people}}'])
   );
 
   app.use('/establishment/:id/details',
     details(),
-    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, 'Establishment Details'])
+    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, '{{content.pages.details}}'])
   );
 
   app.use('/establishment/:id',

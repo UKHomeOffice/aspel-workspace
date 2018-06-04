@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-inspector-ui#readme",
   "dependencies": {
-    "@asl/service": "^2.5.0"
+    "@asl/service": "^2.6.0"
   },
   "devDependencies": {
     "@ukhomeoffice/asl-functional-testing": "^1.1.0",
