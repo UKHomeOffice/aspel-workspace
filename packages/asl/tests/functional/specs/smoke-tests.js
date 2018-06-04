@@ -24,7 +24,7 @@ describe('Smoke tests', () => {
     browser.withUser('holc');
     browser.click('a[href*="/details"]');
     const title = browser.getText('h1');
-    assert.equal(title, 'Establishment Details');
+    assert.equal(title, 'Establishment details');
   });
 
   it('can access people page', () => {
