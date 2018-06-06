@@ -5,6 +5,7 @@ const {
   establishment,
   details,
   places,
+  projects,
   people,
   profile,
   place
@@ -59,6 +60,11 @@ module.exports = settings => {
   app.use('/establishment/:id/details',
     details(),
     crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, '{{content.pages.details}}'])
+  );
+
+  app.use('/establishment/:id/projects',
+    projects(),
+    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, '{{content.pages.projects}}'])
   );
 
   app.use('/establishment/:id',
