@@ -5,7 +5,7 @@ describe('Smoke tests', () => {
   it('can log in', () => {
     browser.withUser('inspector');
     const title = browser.getTitle();
-    assert.equal(title, 'Research and Testing with Animals');
+    assert.equal(title, 'Research and testing with animals');
   });
 
   it('sees the establishments page in the h1', () => {
