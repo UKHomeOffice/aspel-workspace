@@ -42,7 +42,7 @@ describe('Smoke tests', () => {
     browser.click('a[href*="/establishment/8201"]');
     browser.click('a[href*="/details"]');
     const title = browser.getText('h1');
-    assert.equal(title, 'Establishment Details');
+    assert.equal(title, 'Establishment details');
   });
 
 });
