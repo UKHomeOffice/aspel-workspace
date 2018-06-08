@@ -110,3 +110,9 @@ pipeline:
 matrix:
   NPM_AUTH_USERNAME:
     - asl
+
+services:
+  selenium:
+    image: selenium/standalone-chrome
+    when:
+      event: deployment
