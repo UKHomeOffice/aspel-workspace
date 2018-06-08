@@ -74,6 +74,19 @@ pipeline:
       environment: dev
       event: deployment
 
+  post_deploy_test:
+    image: node:8
+    secrets:
+      - npm_auth_token
+    commands:
+      - npm install
+      - npm run test:functional -- --suite smoke
+    when:
+      event: deployment
+      environment:
+        - dev
+        - preprod
+
   slack:
     image: plugins/slack
     secrets:

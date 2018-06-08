@@ -22,15 +22,8 @@ module.exports = {
       '/establishment/8201',
       '/establishment/8201/details',
       '/establishment/8201/places'
-    ],
+    ]
     // uncomment to save local screenshots
-    // path: './tests/functional/screenshots',
-    s3: {
-      region: 'eu-west-2',
-      bucket: 'asl-screenshots',
-      prefix: 'internal-ui',
-      accessKey: process.env.AWS_ACCESS_KEY,
-      secret: process.env.AWS_SECRET
-    }
+    // path: './tests/functional/screenshots'
   }
 };
