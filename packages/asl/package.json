@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl#readme",
   "dependencies": {
-    "@asl/service": "^2.10.0"
+    "@asl/service": "^2.10.1"
   },
   "devDependencies": {
     "@ukhomeoffice/asl-functional-testing": "^1.2.0",
