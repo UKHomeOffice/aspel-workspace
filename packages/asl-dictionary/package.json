@@ -1,6 +1,6 @@
 {
   "name": "@asl/dictionary",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Expansions of acronyms commonly used in ASL projects",
   "main": "index.js",
   "scripts": {
