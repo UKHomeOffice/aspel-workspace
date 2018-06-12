@@ -6,7 +6,8 @@ const {
   places,
   people,
   profile,
-  projects
+  projects,
+  place
 } = require('@asl/service/pages');
 
 module.exports = settings => {
@@ -29,7 +30,16 @@ module.exports = settings => {
       next();
     },
     profile(),
-    crumbs([{ href: '/people', label: '{{content.pages.people}}' }, '{{profile.name}}'])
+    crumbs([{ href: '/people', label: '{{content.pages.people}}' }, '{{item.name}}'])
+  );
+
+  app.use('/places/:place',
+    (req, res, next) => {
+      req.place = req.params.place;
+      next();
+    },
+    place(),
+    crumbs([{ href: '/places', label: '{{content.pages.places}}' }, '{{item.name}}'])
   );
 
   app.use('/people',
