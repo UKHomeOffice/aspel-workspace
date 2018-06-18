@@ -1,5 +1,6 @@
 const ui = require('@asl/service/ui');
 const { crumbs } = require('@asl/service/ui/middleware');
+const { pages, views, content, assets } = require('@asl/pages');
 const {
   establishment,
   details,
@@ -8,10 +9,13 @@ const {
   profile,
   projects,
   place
-} = require('@asl/service/pages');
+} = pages;
 
 module.exports = settings => {
-  const app = ui(settings);
+  const app = ui({ ...settings, views });
+
+  app.use(content);
+  app.static.use('/public', assets);
 
   app.use('/', (req, res, next) => {
     const establishment = req.user.get('establishment');
@@ -30,7 +34,7 @@ module.exports = settings => {
       next();
     },
     profile(),
-    crumbs([{ href: '/people', label: '{{content.pages.people}}' }, '{{item.name}}'])
+    crumbs([{ href: '/people', label: '{{static.content.pages.people}}' }, '{{item.name}}'])
   );
 
   app.use('/places/:place',
@@ -39,27 +43,27 @@ module.exports = settings => {
       next();
     },
     place(),
-    crumbs([{ href: '/places', label: '{{content.pages.places}}' }, '{{item.name}}'])
+    crumbs([{ href: '/places', label: '{{static.content.pages.places}}' }, '{{item.name}}'])
   );
 
   app.use('/people',
     people(),
-    crumbs(['{{content.pages.people}}'])
+    crumbs(['{{static.content.pages.people}}'])
   );
 
   app.use('/places',
     places(),
-    crumbs(['{{content.pages.places}}'])
+    crumbs(['{{static.content.pages.places}}'])
   );
 
   app.use('/details',
     details(),
-    crumbs(['{{content.pages.details}}'])
+    crumbs(['{{static.content.pages.details}}'])
   );
 
   app.use('/projects',
     projects(),
-    crumbs(['{{content.pages.projects}}'])
+    crumbs(['{{static.content.pages.projects}}'])
   );
 
   app.use('/', establishment());
