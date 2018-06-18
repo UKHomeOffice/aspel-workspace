@@ -1,5 +1,6 @@
 const ui = require('@asl/service/ui');
 const { crumbs } = require('@asl/service/ui/middleware');
+const { pages, assets, content, views } = require('@asl/pages');
 const {
   establishments,
   establishment,
@@ -9,10 +10,13 @@ const {
   people,
   profile,
   place
-} = require('@asl/service/pages');
+} = pages;
 
 module.exports = settings => {
-  const app = ui(settings);
+  const app = ui({ ...settings, views });
+
+  app.use(content);
+  app.static.use('/public', assets);
 
   app.protect('inspector');
 
@@ -28,8 +32,8 @@ module.exports = settings => {
     },
     profile(),
     crumbs([
-      { href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' },
-      { href: '/establishment/{{establishment.id}}/people', label: '{{content.pages.people}}' },
+      { href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' },
+      { href: '/establishment/{{static.establishment.id}}/people', label: '{{static.content.pages.people}}' },
       '{{profile.name}}'
     ])
   );
@@ -41,35 +45,35 @@ module.exports = settings => {
     },
     place(),
     crumbs([
-      { href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' },
-      { href: '/establishment/{{establishment.id}}/places', label: '{{content.pages.places}}' },
+      { href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' },
+      { href: '/establishment/{{static.establishment.id}}/places', label: '{{static.content.pages.places}}' },
       '{{item.name}}'
     ])
   );
 
   app.use('/establishment/:id/places',
     places(),
-    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, '{{content.pages.places}}'])
+    crumbs([{ href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' }, '{{static.content.pages.places}}'])
   );
 
   app.use('/establishment/:id/people',
     people(),
-    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, '{{content.pages.people}}'])
+    crumbs([{ href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' }, '{{static.content.pages.people}}'])
   );
 
   app.use('/establishment/:id/details',
     details(),
-    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, '{{content.pages.details}}'])
+    crumbs([{ href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' }, '{{static.content.pages.details}}'])
   );
 
   app.use('/establishment/:id/projects',
     projects(),
-    crumbs([{ href: '/establishment/{{establishment.id}}', label: '{{establishment.name}}' }, '{{content.pages.projects}}'])
+    crumbs([{ href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' }, '{{static.content.pages.projects}}'])
   );
 
   app.use('/establishment/:id',
     establishment(),
-    crumbs([ '{{establishment.name}}' ])
+    crumbs([ '{{static.establishment.name}}' ])
   );
 
   app.use('/', establishments());
