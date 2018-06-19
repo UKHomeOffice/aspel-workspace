@@ -30,6 +30,9 @@
   },
   "devDependencies": {
     "@ukhomeoffice/asl-functional-testing": "^1.2.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
     "dotenv": "^5.0.1",
     "eslint": "^4.15.0",
     "eslint-config-lennym": "^2.0.1",
