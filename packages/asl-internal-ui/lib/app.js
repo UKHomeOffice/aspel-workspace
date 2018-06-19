@@ -2,14 +2,22 @@ const ui = require('@asl/service/ui');
 const { crumbs } = require('@asl/service/ui/middleware');
 const { pages, assets, content, views } = require('@asl/pages');
 const {
-  establishments,
-  establishment,
-  details,
-  places,
-  projects,
-  people,
-  profile,
-  place
+  establishment: {
+    details,
+    dashboard,
+    list: establishments
+  },
+  place: {
+    list: places,
+    view: place
+  },
+  profile: {
+    list: people,
+    view: profile
+  },
+  project: {
+    list: projects
+  }
 } = pages;
 
 module.exports = settings => {
@@ -72,7 +80,7 @@ module.exports = settings => {
   );
 
   app.use('/establishment/:id',
-    establishment(),
+    dashboard(),
     crumbs([ '{{static.establishment.name}}' ])
   );
 
