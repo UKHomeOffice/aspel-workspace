@@ -3,12 +3,9 @@ const { crumbs } = require('@asl/service/ui/middleware');
 const { pages, views, content } = require('@asl/pages');
 const {
   establishment,
-  details,
-  places,
-  people,
+  place,
   profile,
-  projects,
-  place
+  project
 } = pages;
 
 module.exports = settings => {
@@ -32,7 +29,7 @@ module.exports = settings => {
       req.profile = req.params.profile;
       next();
     },
-    profile(),
+    profile.view(),
     crumbs([{ href: '/people', label: '{{static.content.pages.people}}' }, '{{item.name}}'])
   );
 
@@ -41,31 +38,31 @@ module.exports = settings => {
       req.place = req.params.place;
       next();
     },
-    place(),
+    place.view(),
     crumbs([{ href: '/places', label: '{{static.content.pages.places}}' }, '{{item.name}}'])
   );
 
   app.use('/people',
-    people(),
+    profile.list(),
     crumbs(['{{static.content.pages.people}}'])
   );
 
   app.use('/places',
-    places(),
+    place.list(),
     crumbs(['{{static.content.pages.places}}'])
   );
 
   app.use('/details',
-    details(),
+    establishment.details(),
     crumbs(['{{static.content.pages.details}}'])
   );
 
   app.use('/projects',
-    projects(),
+    project.list(),
     crumbs(['{{static.content.pages.projects}}'])
   );
 
-  app.use('/', establishment());
+  app.use('/', establishment.dashboard());
 
   return app;
 };
