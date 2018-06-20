@@ -30,16 +30,7 @@ module.exports = settings => {
       next();
     },
     profile.view(),
-    crumbs([{ href: '/people', label: '{{static.content.pages.people}}' }, '{{item.name}}'])
-  );
-
-  app.use('/places/:place',
-    (req, res, next) => {
-      req.place = req.params.place;
-      next();
-    },
-    place.view(),
-    crumbs([{ href: '/places', label: '{{static.content.pages.places}}' }, '{{item.name}}'])
+    crumbs([{ href: '/people', label: '{{static.content.pages.people}}' }, '{{model.name}}'])
   );
 
   app.use('/people',
@@ -48,7 +39,7 @@ module.exports = settings => {
   );
 
   app.use('/places',
-    place.list(),
+    place(),
     crumbs(['{{static.content.pages.places}}'])
   );
 

@@ -1,2 +1,3 @@
 tests/functional
-wdio.conf.js
+public
+.tmp
