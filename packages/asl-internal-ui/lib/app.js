@@ -1,6 +1,6 @@
 const ui = require('@asl/service/ui');
 const { crumbs } = require('@asl/service/ui/middleware');
-const { pages, assets, content, views } = require('@asl/pages');
+const { pages, content, views } = require('@asl/pages');
 const {
   establishment,
   place,
@@ -12,7 +12,6 @@ module.exports = settings => {
   const app = ui({ ...settings, views });
 
   app.use(content);
-  app.static.use('/public', assets);
 
   app.protect('inspector');
 
