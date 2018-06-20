@@ -8,7 +8,9 @@
     "dev": "nodemon -r dotenv/config",
     "test": "eslint .",
     "test:functional": "asl-test ./tests/functional/config",
-    "test:functional:local": "funkie --driver chromedriver npm run test:functional"
+    "test:functional:local": "funkie --driver chromedriver npm run test:functional",
+    "build": "webpack",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -22,16 +24,22 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-inspector-ui#readme",
   "dependencies": {
-    "@asl/pages": "^2.0.0",
-    "@asl/service": "^3.0.0"
+    "@asl/pages": "^3.0.0",
+    "@asl/service": "^3.1.2",
+    "lodash": "^4.17.10"
   },
   "devDependencies": {
     "@ukhomeoffice/asl-functional-testing": "^1.1.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
     "dotenv": "^5.0.1",
     "eslint": "^4.18.1",
     "eslint-config-lennym": "^1.4.0",
     "funkie": "0.0.6",
     "funkie-chromedriver": "0.0.1",
-    "nodemon": "^1.17.2"
+    "nodemon": "^1.17.4",
+    "webpack": "^4.12.0",
+    "webpack-cli": "^3.0.7"
   }
 }
