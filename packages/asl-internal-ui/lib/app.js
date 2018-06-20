@@ -29,7 +29,7 @@ module.exports = settings => {
     crumbs([
       { href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' },
       { href: '/establishment/{{static.establishment.id}}/people', label: '{{static.content.pages.people}}' },
-      '{{profile.name}}'
+      '{{model.name}}'
     ])
   );
 
@@ -41,21 +41,8 @@ module.exports = settings => {
     ])
   );
 
-  app.use('/establishment/:id/places/:place',
-    (req, res, next) => {
-      req.place = req.params.place;
-      next();
-    },
-    place.view(),
-    crumbs([
-      { href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' },
-      { href: '/establishment/{{static.establishment.id}}/places', label: '{{static.content.pages.places}}' },
-      '{{item.name}}'
-    ])
-  );
-
   app.use('/establishment/:id/places',
-    place.list(),
+    place(),
     crumbs([
       { href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' },
       '{{static.content.pages.places}}'
