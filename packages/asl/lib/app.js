@@ -1,6 +1,6 @@
 const ui = require('@asl/service/ui');
 const { crumbs } = require('@asl/service/ui/middleware');
-const { pages, views, content, assets } = require('@asl/pages');
+const { pages, views, content } = require('@asl/pages');
 const {
   establishment,
   details,
@@ -15,7 +15,6 @@ module.exports = settings => {
   const app = ui({ ...settings, views });
 
   app.use(content);
-  app.static.use('/public', assets);
 
   app.use('/', (req, res, next) => {
     const establishment = req.user.get('establishment');
