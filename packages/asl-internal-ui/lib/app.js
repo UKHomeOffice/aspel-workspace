@@ -8,69 +8,88 @@ const {
   project
 } = pages;
 
+const urls = {
+  establishment: {
+    list: '/',
+    dashboard: '/establishment/:establishment',
+    details: '/establishment/:establishment/details'
+  },
+  profile: {
+    list: '/establishment/:establishment/people',
+    view: '/establishment/:establishment/profile/:profile'
+  },
+  project: {
+    list: '/establishment/:establishment/projects'
+  },
+  place: {
+    list: '/establishment/:establishment/places'
+  }
+};
+
 module.exports = settings => {
-  const app = ui({ ...settings, views });
+  const app = ui({ ...settings, views, urls });
 
   app.use(content);
 
   app.protect('inspector');
 
-  app.use('/establishment/:id', (req, res, next) => {
-    req.establishment = req.params.id;
+  app.param('establishment', (req, res, next, param) => {
+    req.establishment = param;
     next();
   });
 
-  app.use('/establishment/:id/profile/:profile',
-    (req, res, next) => {
-      req.profile = req.params.profile;
-      next();
-    },
+  app.param('profile', (req, res, next, param) => {
+    req.profile = param;
+    next();
+  });
+
+  app.use(urls.profile.view,
     profile.view(),
     crumbs([
       { href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' },
-      { href: '/establishment/{{static.establishment.id}}/people', label: '{{static.content.pages.people}}' },
+      { href: '/establishment/{{static.establishment.id}}/people', label: '{{static.content.pages.profile.list}}' },
       '{{model.name}}'
     ])
   );
 
-  app.use('/establishment/:id/people',
+  app.use(urls.profile.list,
     profile.list(),
     crumbs([
       { href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' },
-      '{{static.content.pages.people}}'
+      '{{static.content.pages.profile.list}}'
     ])
   );
 
-  app.use('/establishment/:id/places',
+  app.use(urls.place.list,
     place(),
     crumbs([
       { href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' },
-      '{{static.content.pages.places}}'
+      '{{static.content.pages.place.list}}'
     ])
   );
 
-  app.use('/establishment/:id/details',
+  app.use(urls.establishment.details,
     establishment.details(),
     crumbs([
       { href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' },
-      '{{static.content.pages.details}}'
+      '{{static.content.pages.establishment.details}}'
     ])
   );
 
-  app.use('/establishment/:id/projects',
+  app.use(urls.project.list,
     project.list(),
     crumbs([
       { href: '/establishment/{{static.establishment.id}}', label: '{{static.establishment.name}}' },
-      '{{static.content.pages.projects}}'
+      '{{static.content.pages.project.list}}'
     ])
   );
 
-  app.use('/establishment/:id',
+  app.use(urls.establishment.dashboard,
     establishment.dashboard(),
     crumbs([ '{{static.establishment.name}}' ])
   );
 
-  app.use('/', establishment.list());
+  app.use(urls.establishment.list, establishment.list());
 
   return app;
 };
