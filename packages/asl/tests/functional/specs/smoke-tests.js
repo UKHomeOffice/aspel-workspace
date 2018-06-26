@@ -31,7 +31,7 @@ describe('Smoke tests', () => {
     browser.withUser('holc');
     browser.click('a[href*="/people"]');
     const title = browser.getText('h1');
-    assert.equal(title, 'Named people and licence holders');
+    assert.equal(title, 'People');
   });
 
   it('can access schedule of premises page', () => {
