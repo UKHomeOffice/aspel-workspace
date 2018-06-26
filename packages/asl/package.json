@@ -1,6 +1,6 @@
 {
   "name": "asl",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Animal Science Licensing",
   "main": "index.js",
   "scripts": {
