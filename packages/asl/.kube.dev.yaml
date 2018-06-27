@@ -21,14 +21,6 @@
       name: asl-dev-auth
       key: secret
     API_URL: https://public-api.notprod.asl.homeoffice.gov.uk
-    PDF_SERVICE: https://pdf-generator:10443/convert
-
-- name: pdf-generator
-  recipe: internal-service
-  image: quay.io/ukhomeofficedigital/html-pdf-converter:216c4dd30064b3a92ce5ca6ea429f47256069dca
-  clients: public-ui
-  env:
-    APP_PORT: '"8080"'
 
 - name: public-ui-redis
   recipe: redis
