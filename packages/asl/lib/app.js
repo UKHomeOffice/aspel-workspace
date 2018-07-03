@@ -18,10 +18,10 @@ const urls = {
     view: '/profile/:profile'
   },
   project: {
-    list: '/projects',
+    list: '/projects'
   },
   place: {
-    list: '/places',
+    list: '/places'
   }
 };
 
