@@ -35,11 +35,15 @@ module.exports = settings => {
     next();
   });
 
-  app.use(urls.establishment.dashboard, (req, res, next) => {
-    const establishment = req.user.get('establishment');
-    if (establishment) {
-      req.establishment = establishment;
-      return next();
+  app.use('/', (req, res, next) => {
+    if (req.user.profile) {
+      const establishments = req.user.profile.establishments || [];
+      const establishment = establishments.find(e => e.id === req.query.establishment) || establishments.find(e => e.id === req.session.establishment) || establishments[0];
+      if (establishment) {
+        req.establishment = establishment.id;
+        req.session.establishment = req.establishment;
+        return next();
+      }
     }
     const err = new Error('Not found');
     err.status = 404;

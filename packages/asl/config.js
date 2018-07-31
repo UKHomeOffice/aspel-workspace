@@ -12,6 +12,7 @@ module.exports = {
     realm: process.env.KEYCLOAK_REALM,
     url: process.env.KEYCLOAK_URL,
     client: process.env.KEYCLOAK_CLIENT,
-    secret: process.env.KEYCLOAK_SECRET
+    secret: process.env.KEYCLOAK_SECRET,
+    profile: process.env.API_URL
   }
 };
