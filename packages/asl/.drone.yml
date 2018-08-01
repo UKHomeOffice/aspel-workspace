@@ -5,7 +5,8 @@ pipeline:
     secrets:
       - npm_auth_token
     commands:
-      - npm install
+      - npm install -g npm@6
+      - npm ci
       - npm test
     when:
       event: [push, pull_request, tag]
@@ -15,6 +16,7 @@ pipeline:
     secrets:
       - npm_auth_token
     commands:
+      - npm install -g npm@6
       - npx @lennym/ciaudit
     when:
       event: [push, pull_request, tag]
