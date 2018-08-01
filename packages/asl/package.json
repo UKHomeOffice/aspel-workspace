@@ -27,8 +27,8 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl#readme",
   "dependencies": {
-    "@asl/pages": "^4.3.0",
-    "@asl/service": "^4.0.1",
+    "@asl/pages": "^4.4.0",
+    "@asl/service": "^4.1.0",
     "lodash": "^4.17.10"
   },
   "devDependencies": {
