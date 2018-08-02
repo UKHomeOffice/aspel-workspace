@@ -8,6 +8,8 @@ describe('People directory', () => {
 
     browser.$('.link-filter').$('a=NACWO').click();
 
+    browser.waitForExist('table:not(.loading)');
+
     const roles = browser.$$('tbody tr td:nth-child(2)')
       .map(td => browser.elementIdText(td.ELEMENT).value);
 
@@ -20,6 +22,8 @@ describe('People directory', () => {
 
     browser.$('.search-box input[type="text"]').setValue('Laur');
     browser.$('.search-box button').click();
+
+    browser.waitForExist('table:not(.loading)');
 
     const names = browser.$$('tbody tr td:nth-child(1)')
       .map(td => browser.elementIdText(td.ELEMENT).value);
@@ -35,6 +39,8 @@ describe('People directory', () => {
 
     browser.$('.search-box input[type="text"]').setValue('b');
     browser.$('.search-box button').click();
+
+    browser.waitForExist('table:not(.loading)');
 
     const roles = browser.$$('tbody tr td:nth-child(2)')
       .map(td => browser.elementIdText(td.ELEMENT).value);
