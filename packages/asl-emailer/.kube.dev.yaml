@@ -9,9 +9,9 @@
     EMAIL_ACCESS_KEY:
       secret: true
       name: asl-dev-ses-2
-      key: username
+      key: smtp_username
     EMAIL_SECRET:
       secret: true
       name: asl-dev-ses-2
-      key: password
+      key: smtp_password
     EMAIL_REGION: eu-west-2
