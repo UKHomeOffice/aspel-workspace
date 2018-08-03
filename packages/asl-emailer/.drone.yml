@@ -21,15 +21,6 @@ pipeline:
     when:
       event: [push, pull_request, tag]
 
-  compile:
-    image: node:8
-    secrets:
-      - npm_auth_token
-    commands:
-      - npm run build --production
-    when:
-      event: [push, pull_request, tag]
-
   build:
     image: docker:17.09.1
     secrets:
@@ -112,21 +103,6 @@ pipeline:
       environment: preprod
       event: deployment
 
-  post_deploy_test:
-    image: node:8
-    secrets:
-      - npm_auth_token
-      - aws_access_key
-      - aws_secret
-    commands:
-      - npm install
-      - npm run test:functional -- --suite smoke
-    when:
-      event: deployment
-      environment:
-        - dev
-        - preprod
-
   slack:
     image: plugins/slack
     secrets:
@@ -150,9 +126,3 @@ pipeline:
 matrix:
   NPM_AUTH_USERNAME:
     - asl
-
-services:
-  selenium:
-    image: selenium/standalone-chrome
-    when:
-      event: deployment
