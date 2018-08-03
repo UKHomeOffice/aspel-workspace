@@ -8,10 +8,10 @@ module.exports = settings => {
 
   const mailer = Mailer({
     ...settings.email,
-    templateDir: path.resolve(__dirname, 'templates'),
-    layout: path.resolve(__dirname, 'templates/layout.html'),
+    templateDir: path.resolve(__dirname, '../templates'),
+    layout: path.resolve(__dirname, '../templates/layout.html'),
     attachments: {
-      hologo: path.resolve(__dirname, 'hologo.png')
+      hologo: path.resolve(__dirname, '../assets/hologo.png')
     }
   });
 
