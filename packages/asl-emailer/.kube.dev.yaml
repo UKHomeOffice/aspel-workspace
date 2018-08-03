@@ -2,6 +2,8 @@
 - name: emailer
   recipe: internal-service
   image: quay.io/ukhomeofficedigital/asl-emailer:{{.DRONE_COMMIT_SHA}}
+  clients:
+    - asl-resolver
   env:
     EMAIL_FROM_ADDRESS: animalscience@digital.homeoffice.gov.uk
     EMAIL_ACCESS_KEY:
