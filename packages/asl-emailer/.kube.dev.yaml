@@ -14,4 +14,4 @@
       secret: true
       name: asl-dev-ses-2
       key: smtp_password
-    EMAIL_REGION: eu-west-2
+    EMAIL_REGION: eu-west-1
