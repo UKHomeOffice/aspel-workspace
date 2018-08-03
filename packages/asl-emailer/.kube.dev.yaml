@@ -1,0 +1,15 @@
+---
+- name: emailer
+  recipe: internal-service
+  image: quay.io/ukhomeofficedigital/asl-emailer:{{.DRONE_COMMIT_SHA}}
+  env:
+    EMAIL_FROM_ADDRESS: animalscience@digital.homeoffice.gov.uk
+    EMAIL_ACCESS_KEY:
+      secret: true
+      name: asl-dev-ses-2
+      key: username
+    EMAIL_SECRET:
+      secret: true
+      name: asl-dev-ses-2
+      key: password
+    EMAIL_REGION: eu-west-2

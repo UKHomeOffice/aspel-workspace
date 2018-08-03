@@ -1,0 +1,31 @@
+{
+  "name": "asl-emailer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint .",
+    "dev": "nodemon -r dotenv/config index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UKHomeOffice/asl-emailer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UKHomeOffice/asl-emailer/issues"
+  },
+  "homepage": "https://github.com/UKHomeOffice/asl-emailer#readme",
+  "dependencies": {
+    "@asl/service": "^4.1.0",
+    "snailmail": "^1.2.0"
+  },
+  "devDependencies": {
+    "dotenv": "^6.0.0",
+    "eslint": "^5.2.0",
+    "eslint-config-lennym": "^2.0.1",
+    "nodemon": "^1.18.3"
+  }
+}
