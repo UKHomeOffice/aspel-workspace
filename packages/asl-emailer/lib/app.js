@@ -1,7 +1,7 @@
 const path = require('path');
 
 const api = require('@asl/service/api');
-const Emailer = require('snailmail');
+const Mailer = require('snailmail');
 
 module.exports = settings => {
   const app = api(settings);
@@ -16,19 +16,20 @@ module.exports = settings => {
   });
 
   app.post('/:template', (req, res) => {
-    mailer.send({
+    const params = {
       template: req.params.template,
       to: req.body.to,
       subject: req.body.subject,
       data: req.body
-    })
-    .then(() => {
-      res.json({});
-    })
-    .catch(error => {
-      console.error(error);
-      res.status(500).json({ error });
-    });
+    };
+    mailer.send(params)
+      .then(() => {
+        res.json({});
+      })
+      .catch(error => {
+        console.error(error);
+        res.status(500).json({ error });
+      });
   });
 
   return app;
