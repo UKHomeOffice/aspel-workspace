@@ -48,8 +48,8 @@ describe('People directory', () => {
     const names = browser.$$('tbody tr td:nth-child(1)')
       .map(td => browser.elementIdText(td.ELEMENT).value);
 
-    roles.forEach(role => assert.ok(role.includes('NACWO')));
-    names.forEach(name => assert.ok(name.toLowerCase().includes('b')));
+    roles.forEach(role => assert.ok(role.includes('NACWO'), `${role} should contain "NACWO"`));
+    names.forEach(name => assert.ok(name.toLowerCase().includes('b'), `${name} should contain "b"`));
   });
 
 });
