@@ -2,7 +2,21 @@
 
 ## About
 
-The establishment facing UI for managing licences
+Web server serving the establishment facing UI for managing licences
+
+## Usage
+
+To run a local instance:
+
+```
+npm run dev
+```
+
+To rebuild js and css assets:
+
+```
+npm run build
+```
 
 ## Dependencies
 
@@ -42,3 +56,51 @@ The following services must be available in order to run:
 
 * `asl-public-api` - to access licence data
 * `redis` - to store serialised session data
+
+## Development
+
+Very little code actually resides in this repo, so development is most likely to occur on one of the dependent modules.
+
+### Using linked modules
+
+To link a local development version of a dependency - in this example `@asl/pages`:
+
+```bash
+# in the module's directory - e.g. ~/dev/asl-pages
+npm link
+
+# in this project's directory
+npm link @asl/pages
+```
+
+This will then use your local version of `@asl/pages` when you `require('@asl/pages')`.
+
+_Note: if you run `npm install [pkg]` then this will undo the linking and revert to the npm registry version, so you will need to re-execute the second command above._
+
+### Watching dependencies
+
+If you are working in a linked version of `@asl/pages` you will likely need to recompile js assets when you make changes. To do this run:
+
+```
+npm run build:js -- --watch
+```
+
+To force the server to restart on changes watch your linked directory:
+
+```
+npm run dev -- -w ../path/to/asl-pages
+```
+
+### Testing
+
+To run basic tests including eslint and unit tests:
+
+```
+npm test
+```
+
+To run the full functional test suite in an automated browser:
+
+```
+npm run test:functional:local
+```
