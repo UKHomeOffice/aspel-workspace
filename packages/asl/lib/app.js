@@ -15,7 +15,8 @@ const urls = {
   },
   profile: {
     list: '/people',
-    view: '/profile/:profile'
+    view: '/people/:profile',
+    invite: '/people/invite'
   },
   project: {
     list: '/projects'
@@ -50,13 +51,8 @@ module.exports = settings => {
     next(err);
   });
 
-  app.use(urls.profile.view,
-    profile.view(),
-    crumbs([{ href: '/people', label: '{{static.content.pages.profile.list}}' }, '{{model.name}}'])
-  );
-
   app.use(urls.profile.list,
-    profile.list(),
+    profile(),
     crumbs(['{{static.content.pages.profile.list}}'])
   );
 
