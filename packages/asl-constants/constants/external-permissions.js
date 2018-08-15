@@ -1,5 +1,5 @@
 module.exports = [
   'basic',
-  'readonly',
+  'read',
   'admin'
 ];
