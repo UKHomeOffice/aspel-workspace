@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon -r dotenv/config",
+    "dev": "nodemon -r dotenv/config -e js,jsx,json -w .",
     "test": "npm run test:lint",
     "test:lint": "eslint .",
     "test:functional": "asl-test ./tests/functional/config",
@@ -39,6 +39,7 @@
     "dotenv": "^5.0.1",
     "eslint": "^4.15.0",
     "eslint-config-lennym": "^2.0.1",
+    "eslint-plugin-undocumented-env": "^1.0.0",
     "funkie": "0.0.6",
     "funkie-chromedriver": "0.0.1",
     "nodemon": "^1.17.4",
