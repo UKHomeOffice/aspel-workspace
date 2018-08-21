@@ -33,8 +33,6 @@ module.exports = settings => {
 
   app.use(content);
 
-  app.use(urls.dashboard, dashboard());
-
   app.param('profile', (req, res, next, param) => {
     req.profile = param;
     next();
@@ -75,6 +73,8 @@ module.exports = settings => {
   );
 
   app.use(urls.establishment.dashboard, establishment.dashboard());
+
+  app.use(urls.dashboard, dashboard());
 
   return app;
 };
