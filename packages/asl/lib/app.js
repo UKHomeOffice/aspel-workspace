@@ -2,6 +2,7 @@ const ui = require('@asl/service/ui');
 const { crumbs } = require('@asl/service/ui/middleware');
 const { pages, views, content } = require('@asl/pages');
 const {
+  dashboard,
   establishment,
   place,
   profile,
@@ -9,20 +10,21 @@ const {
 } = pages;
 
 const urls = {
+  dashboard: '/',
   establishment: {
-    dashboard: '/',
-    details: '/details'
+    dashboard: '/e/:establishment',
+    details: '/e/:establishment/details'
   },
   profile: {
-    list: '/people',
-    view: '/people/:profile',
-    invite: '/people/invite'
+    list: '/e/:establishment/people',
+    view: '/e/:establishment/people/:profile',
+    invite: '/e/:establishment/people/invite'
   },
   project: {
-    list: '/projects'
+    list: '/e/:establishment/projects'
   },
   place: {
-    list: '/places'
+    list: '/e/:establishment/places'
   }
 };
 
@@ -31,18 +33,19 @@ module.exports = settings => {
 
   app.use(content);
 
+  app.use(urls.dashboard, dashboard());
+
   app.param('profile', (req, res, next, param) => {
     req.profile = param;
     next();
   });
 
-  app.use('/', (req, res, next) => {
+  app.param('establishment', (req, res, next, param) => {
     if (req.user.profile) {
       const establishments = req.user.profile.establishments || [];
-      const establishment = establishments.find(e => e.id === req.query.establishment) || establishments.find(e => e.id === req.session.establishment) || establishments[0];
+      const establishment = establishments.find(e => e.id.toString() === param);
       if (establishment) {
         req.establishment = establishment.id;
-        req.session.establishment = req.establishment;
         return next();
       }
     }
