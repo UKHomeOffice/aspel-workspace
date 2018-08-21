@@ -39,7 +39,7 @@ module.exports = settings => {
   app.use('/', (req, res, next) => {
     if (req.user.profile) {
       const establishments = req.user.profile.establishments || [];
-      const establishment = establishments.find(e => e.id === req.query.establishment) || establishments.find(e => e.id === req.session.establishment) || establishments[0];
+      const establishment = establishments.find(e => e.id === parseInt(req.query.establishment, 10)) || establishments.find(e => e.id === req.session.establishment) || establishments[0];
       if (establishment) {
         req.establishment = establishment.id;
         req.session.establishment = req.establishment;
