@@ -118,7 +118,7 @@ pipeline:
       - aws_secret
     commands:
       - npm install
-      - npm run test:functional
+      - npm run test:functional:ci
     when:
       event: deployment
       environment:
