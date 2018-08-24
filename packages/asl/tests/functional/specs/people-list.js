@@ -4,7 +4,7 @@ describe('People directory', () => {
 
   it('will filter to a particular role', () => {
     browser.withUser('holc');
-    browser.click('a[href*="/people"]');
+    browser.click('a[href*="/e/8201').click('=People');
 
     browser.$('.link-filter').$('a=NACWO').click();
 
@@ -18,7 +18,7 @@ describe('People directory', () => {
 
   it('will filter on the name', () => {
     browser.withUser('holc');
-    browser.click('a[href*="/people"]');
+    browser.click('a[href*="/e/8201').click('=People');
 
     browser.$('.search-box input[type="text"]').setValue('Laur');
     browser.$('.search-box button').click();
@@ -33,7 +33,7 @@ describe('People directory', () => {
 
   it('will filter to a particular role and name', () => {
     browser.withUser('holc');
-    browser.click('a[href*="/people"]');
+    browser.click('a[href*="/e/8201').click('=People');
 
     browser.$('.link-filter').$('a=NACWO').click();
 
