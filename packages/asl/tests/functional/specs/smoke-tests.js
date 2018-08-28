@@ -41,6 +41,15 @@ describe('Smoke tests', () => {
     assert.equal(title, 'Establishment details');
   });
 
+  it('can access profile page', () => {
+    browser.withUser('holc');
+    browser.click('a[href*="/e/8201')
+            .click('=Establishment details')
+            .click('a[href*="/e/8201/people/e649264d');
+    const title = browser.getText('h1');
+    assert.equal(title, 'Leonard Martin');
+  });
+
   it('can access schedule of premises page', () => {
     browser.withUser('holc');
     browser.click('a[href*="/e/8201').click('=Licensed premises');
