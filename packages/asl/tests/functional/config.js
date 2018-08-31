@@ -12,6 +12,9 @@ module.exports = env => ({
     preprod: 'https://public-ui.preprod.asl.homeoffice.gov.uk'
   },
   wdio: {
+    mochaOpts: {
+      timeout: 60000
+    },
     suites: {
       smoke: ['./tests/functional/specs/smoke-tests.js']
     }

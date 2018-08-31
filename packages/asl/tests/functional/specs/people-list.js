@@ -44,6 +44,8 @@ describe("People directory", () => {
       .$("a=NACWO")
       .click();
 
+    browser.waitForExist("table:not(.loading)");
+
     browser.$('.search-box input[type="text"]').setValue("b");
     browser.$(".search-box button").click();
 
