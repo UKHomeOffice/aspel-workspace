@@ -19,9 +19,9 @@ describe("Create approved area", () => {
       .click("a=University of Croydon")
       .click("a=Licensed premises")
       .click("a*=Create");
-    browser.$("#site").setValue("site");
-    browser.$("#area").setValue("area");
-    browser.$("#name").setValue("name");
+    browser.$("input[name=site]").setValue("site");
+    browser.$("input[name=area]").setValue("area");
+    browser.$("input[name=name]").setValue("name");
     browser
       .$$("#suitability .multiple-choice label")
       .find(opt => {
@@ -31,7 +31,7 @@ describe("Create approved area", () => {
     browser
       .$$("#holding .multiple-choice label")
       .find(opt => {
-        return opt.getText().indexOf("STH") > -1; //opt.getText() === "STH";
+        return opt.getText().indexOf("STH") > -1;
       })
       .click();
     browser
@@ -40,7 +40,7 @@ describe("Create approved area", () => {
         return opt.getText() === "Ian Ayers";
       })
       .click();
-    browser.$("#comments").setValue("test");
+    browser.$("textarea[name=comments]").setValue("test");
     browser.click("button*=Submit");
 
     assert.equal(browser.getText("h1"), "Confirm addition");
@@ -66,9 +66,9 @@ describe("Create approved area", () => {
       .click("a=University of Croydon")
       .click("a=Licensed premises")
       .click("a*=Create");
-    browser.$("#site").setValue("site");
-    browser.$("#area").setValue("area");
-    browser.$("#name").setValue("name");
+      browser.$("input[name=site]").setValue("site");
+      browser.$("input[name=area]").setValue("area");
+      browser.$("input[name=name]").setValue("name");
     browser
       .$$("#suitability .multiple-choice label")
       .find(opt => {
@@ -87,13 +87,13 @@ describe("Create approved area", () => {
         return opt.getText() === "Ian Ayers";
       })
       .click();
-    browser.$("#comments").setValue("test");
+    browser.$("textarea[name=comments]").setValue("test");
     browser.click("button=Submit");
     browser.click("a=Edit");
 
-    assert.equal(browser.$("#site").getValue(), "site");
-    assert.equal(browser.$("#area").getValue(), "area");
-    assert.equal(browser.$("#name").getValue(), "name");
+    assert.equal(browser.$("input[name=site]").getValue(), "site");
+    assert.equal(browser.$("input[name=area]").getValue(), "area");
+    assert.equal(browser.$("input[name=name]").getValue(), "name");
     assert(
       browser
         .$$("input:checked")

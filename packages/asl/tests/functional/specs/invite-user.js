@@ -6,9 +6,9 @@ describe("Invite user", () => {
         browser.withUser("holc");
         browser.click("*=Invite");
 
-        browser.setValue("#firstName", "Elvin");
-        browser.setValue("#lastName", "Ali");
-        browser.setValue("#email", "elvin.ali@marvel-consulting.com");
+        browser.setValue("input[name=firstName]", "Elvin");
+        browser.setValue("input[name=lastName]", "Ali");
+        browser.setValue("input[name=email]", "elvin.ali@marvel-consulting.com");
         browser.$("label[for='role-admin']").click();
 
         browser.$("button*=Send invitation").click();
