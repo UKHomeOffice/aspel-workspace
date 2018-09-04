@@ -6,7 +6,8 @@ const {
   establishment,
   place,
   profile,
-  project
+  project,
+  pil
 } = pages;
 
 const urls = {
@@ -25,6 +26,9 @@ const urls = {
   },
   place: {
     list: '/e/:establishment/places'
+  },
+  pil: {
+    apply: '/pil/categories'
   }
 };
 
@@ -74,7 +78,10 @@ module.exports = settings => {
 
   app.use(urls.establishment.dashboard, establishment.dashboard());
 
-  app.use(urls.dashboard, dashboard());
+  app.use(urls.pil.apply,
+    pil.apply(),
+    crumbs(['{{static.content.pages.pil.categories}}']));
 
+  app.use(urls.dashboard, dashboard());
   return app;
 };
