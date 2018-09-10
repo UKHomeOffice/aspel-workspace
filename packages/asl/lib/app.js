@@ -28,7 +28,12 @@ const urls = {
     list: '/e/:establishment/places'
   },
   pil: {
-    apply: '/pil/categories'
+    categories: '/pil',
+    dashboard: '/pil/apply',
+    details: '/e/:establishment/people/:profile',
+    training: '/pil/apply/training',
+    exemptions: '/pil/apply/exemptions',
+    procedures: '/pil/apply/procedures'
   }
 };
 
@@ -78,8 +83,8 @@ module.exports = settings => {
 
   app.use(urls.establishment.dashboard, establishment.dashboard());
 
-  app.use(urls.pil.apply,
-    pil.apply(),
+  app.use(urls.pil.categories,
+    pil(),
     crumbs(['{{static.content.pages.pil.categories}}']));
 
   app.use(urls.dashboard, dashboard());
