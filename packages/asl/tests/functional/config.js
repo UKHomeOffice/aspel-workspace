@@ -4,7 +4,9 @@ module.exports = env => ({
   specs: './tests/functional/specs/**/*.js',
   users: {
     'holc': 'holc',
-    'inspector': 'inspector'
+    'inspector': 'inspector',
+    'read': 'read',
+    'basic': 'basic'
   },
   urls: {
     local: 'http://localhost:8080',
