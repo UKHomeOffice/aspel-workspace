@@ -28,12 +28,13 @@ const urls = {
     list: '/e/:establishment/places'
   },
   pil: {
-    categories: '/pil',
-    dashboard: '/pil/apply',
+    categories: '/e/:establishment/pil',
+    dashboard: '/e/:establishment/pil/apply',
     details: '/e/:establishment/people/:profile',
-    training: '/pil/apply/training',
-    exemptions: '/pil/apply/exemptions',
-    procedures: '/pil/apply/procedures'
+    training: '/e/:establishment/pil/apply/training',
+    modules: '/e/:establishment/pil/apply/modules',
+    exemptions: '/e/:establishment/pil/apply/exemptions',
+    procedures: '/e/:establishment/pil/apply/procedures'
   }
 };
 
