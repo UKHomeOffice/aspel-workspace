@@ -1,6 +1,5 @@
 const ui = require('@asl/service/ui');
 const { crumbs } = require('@asl/service/ui/middleware');
-const permissions = require('@asl/service/lib/middleware/permissions');
 const { pages, views, content } = require('@asl/pages');
 const {
   dashboard,
