@@ -28,13 +28,13 @@ const urls = {
     list: '/e/:establishment/places'
   },
   pil: {
-    categories: '/e/:establishment/pil',
-    dashboard: '/e/:establishment/pil/apply',
+    categories: '/e/:establishment/people/:profile/pil',
+    dashboard: '/e/:establishment/people/:profile/pil/:pilid',
     details: '/e/:establishment/people/:profile',
-    training: '/e/:establishment/pil/apply/training',
-    modules: '/e/:establishment/pil/apply/modules',
-    exemptions: '/e/:establishment/pil/apply/exemptions',
-    procedures: '/e/:establishment/pil/apply/procedures'
+    training: '/e/:establishment/people/:profile/pil/:pilid/training',
+    // modules: '/e/:establishment/pil/:pilid/modules',
+    exemptions: '/e/:establishment/people/:profile/pil/:pilid/exemptions',
+    procedures: '/e/:establishment/people/:profile/pil/:pilid/procedures'
   }
 };
 
@@ -60,6 +60,11 @@ module.exports = settings => {
     const err = new Error('Not found');
     err.status = 404;
     next(err);
+  });
+
+  app.param('pilid', (req, res, next, param) => {
+    req.id = param;
+    next();
   });
 
   app.use(urls.profile.list,
