@@ -35,6 +35,7 @@ The following environment variables are required:
 * `KEYCLOAK_URL` - the url of the keycloak server
 * `KEYCLOAK_CLIENT` - the client name used to authenticate with keycloak
 * `KEYCLOAK_SECRET` - the secret used to authenticate with the keycloak client
+* `PERMISSIONS_SERVICE` - the hostname of the downstream permissions service
 
 The following environment variables can be optionally defined:
 
@@ -56,6 +57,7 @@ The following services must be available in order to run:
 
 * `asl-public-api` - to access licence data
 * `redis` - to store serialised session data
+* `asl-permissions` - to authenticate user tasks
 
 ## Development
 

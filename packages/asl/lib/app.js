@@ -13,7 +13,7 @@ const urls = {
   dashboard: '/',
   establishment: {
     dashboard: '/e/:establishment',
-    details: '/e/:establishment/details'
+    read: '/e/:establishment/details'
   },
   profile: {
     list: '/e/:establishment/people',
@@ -24,7 +24,8 @@ const urls = {
     list: '/e/:establishment/projects'
   },
   place: {
-    list: '/e/:establishment/places'
+    list: '/e/:establishment/places',
+    create: '/e/:establishment/places/create'
   }
 };
 
@@ -62,7 +63,7 @@ module.exports = settings => {
     crumbs(['{{static.content.pages.place.list}}'])
   );
 
-  app.use(urls.establishment.details,
+  app.use(urls.establishment.read,
     establishment.details(),
     crumbs(['{{static.content.pages.establishment.details}}'])
   );
