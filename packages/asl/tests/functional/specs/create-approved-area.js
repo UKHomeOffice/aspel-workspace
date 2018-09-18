@@ -23,13 +23,13 @@ describe('Create approved area', () => {
     browser.$('input[name=area]').setValue('area');
     browser.$('input[name=name]').setValue('name');
     browser
-      .$$('#suitability .multiple-choice label')
+      .$$('#suitability .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText().indexOf('SA') > -1;
       })
       .click();
     browser
-      .$$('#holding .multiple-choice label')
+      .$$('#holding .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText().indexOf('STH') > -1;
       })
@@ -70,13 +70,13 @@ describe('Create approved area', () => {
       browser.$('input[name=area]').setValue('area');
       browser.$('input[name=name]').setValue('name');
     browser
-      .$$('#suitability .multiple-choice label')
+      .$$('#suitability .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText().indexOf('SA') > -1;
       })
       .click();
     browser
-      .$$('#holding .multiple-choice label')
+      .$$('#holding .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText().indexOf('STH') > -1; //opt.getText() === 'STH';
       })
