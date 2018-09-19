@@ -6,7 +6,7 @@ describe('Licensed premises directory', () => {
     browser.click('a=University of Croydon').click('a=Licensed premises');
     browser.$('a=Filter by').click();
     browser
-      .$$('#site-options .multiple-choice label')
+      .$$('#site-options .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText() === 'The Marquis of Granby Replenishment Centre';
       })
@@ -28,7 +28,7 @@ describe('Licensed premises directory', () => {
     browser.click('a=University of Croydon').click('a=Licensed premises');
     browser.$('a=Filter by').click();
     browser
-      .$$('#suitability-options .multiple-choice label')
+      .$$('#suitability-options .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText() === 'LA';
       })
@@ -48,7 +48,7 @@ describe('Licensed premises directory', () => {
     browser.click('a=University of Croydon').click('a=Licensed premises');
     browser.$('a=Filter by').click();
     browser
-      .$$('#holding-options .multiple-choice label')
+      .$$('#holding-options .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText().indexOf('SEP') > -1;
       })
@@ -68,13 +68,13 @@ describe('Licensed premises directory', () => {
     browser.click('a=University of Croydon').click('a=Licensed premises');
     browser.$('a=Filter by').click();
     browser
-      .$$('#site-options .multiple-choice label')
+      .$$('#site-options .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText() === 'The Marquis of Granby Replenishment Centre';
       })
       .click();
     browser
-      .$$('#suitability-options .multiple-choice label')
+      .$$('#suitability-options .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText() === 'LA';
       })
@@ -100,13 +100,13 @@ describe('Licensed premises directory', () => {
     browser.click('a=University of Croydon').click('a=Licensed premises');
     browser.$('a=Filter by').click();
     browser
-      .$$('#site-options .multiple-choice label')
+      .$$('#site-options .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText() === 'The Marquis of Granby Replenishment Centre';
       })
       .click();
     browser
-      .$$('#holding-options .multiple-choice label')
+      .$$('#holding-options .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText().indexOf('SEP') > -1;
       })
@@ -132,13 +132,13 @@ describe('Licensed premises directory', () => {
     browser.click('a=University of Croydon').click('a=Licensed premises');
     browser.$('a=Filter by').click();
     browser
-      .$$('#suitability-options .multiple-choice label')
+      .$$('#suitability-options .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText() === 'LA';
       })
       .click();
     browser
-      .$$('#holding-options .multiple-choice label')
+      .$$('#holding-options .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText().indexOf('SEP') > -1;
       })
@@ -162,19 +162,19 @@ describe('Licensed premises directory', () => {
     browser.click('a=University of Croydon').click('a=Licensed premises');
     browser.$('a=Filter by').click();
     browser
-      .$$('#site-options .multiple-choice label')
+      .$$('#site-options .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText() === 'The Marquis of Granby Replenishment Centre';
       })
       .click();
     browser
-      .$$('#suitability-options .multiple-choice label')
+      .$$('#suitability-options .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText() === 'LA';
       })
       .click();
     browser
-      .$$('#holding-options .multiple-choice label')
+      .$$('#holding-options .govuk-checkboxes__item label')
       .find(opt => {
         return opt.getText().indexOf('SEP') > -1;
       })
