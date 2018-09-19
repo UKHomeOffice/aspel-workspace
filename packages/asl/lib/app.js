@@ -6,7 +6,8 @@ const {
   establishment,
   place,
   profile,
-  project
+  project,
+  pil
 } = pages;
 
 const urls = {
@@ -26,6 +27,15 @@ const urls = {
   place: {
     list: '/e/:establishment/places',
     create: '/e/:establishment/places/create'
+  },
+  pil: {
+    categories: '/e/:establishment/people/:profile/pil',
+    dashboard: '/e/:establishment/people/:profile/pil/:pilid',
+    details: '/e/:establishment/people/:profile',
+    training: '/e/:establishment/people/:profile/pil/:pilid/training',
+    // modules: '/e/:establishment/pil/:pilid/modules',
+    exemptions: '/e/:establishment/people/:profile/pil/:pilid/exemptions',
+    procedures: '/e/:establishment/people/:profile/pil/:pilid/procedures'
   }
 };
 
@@ -53,6 +63,11 @@ module.exports = settings => {
     next(err);
   });
 
+  app.param('pilid', (req, res, next, param) => {
+    req.id = param;
+    next();
+  });
+
   app.use(urls.profile.list,
     profile(),
     crumbs(['{{static.content.pages.profile.list}}'])
@@ -75,7 +90,10 @@ module.exports = settings => {
 
   app.use(urls.establishment.dashboard, establishment.dashboard());
 
-  app.use(urls.dashboard, dashboard());
+  app.use(urls.pil.categories,
+    pil(),
+    crumbs(['{{static.content.pages.pil.categories}}']));
 
+  app.use(urls.dashboard, dashboard());
   return app;
 };
