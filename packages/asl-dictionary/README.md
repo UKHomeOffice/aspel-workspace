@@ -14,8 +14,8 @@ npm install @asl/dictionary --save-prod
 Import as necessary:
 
 ```js
-const { NACWO, NTCO } = require('@asl/dictionary');
-console.log(NACWO);
+const dictionary = require('@asl/dictionary');
+console.log(dictionary.NACWO);
 ```
 
 result:
