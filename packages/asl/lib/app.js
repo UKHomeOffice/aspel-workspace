@@ -30,12 +30,12 @@ const urls = {
   },
   pil: {
     categories: '/e/:establishment/people/:profile/pil',
-    dashboard: '/e/:establishment/people/:profile/pil/:pilid',
+    dashboard: '/e/:establishment/people/:profile/pil/:pil',
     details: '/e/:establishment/people/:profile',
-    training: '/e/:establishment/people/:profile/pil/:pilid/training',
-    // modules: '/e/:establishment/pil/:pilid/modules',
-    exemptions: '/e/:establishment/people/:profile/pil/:pilid/exemptions',
-    procedures: '/e/:establishment/people/:profile/pil/:pilid/procedures'
+    training: '/e/:establishment/people/:profile/pil/:pil/training',
+    // modules: '/e/:establishment/pil/:pil/modules',
+    exemptions: '/e/:establishment/people/:profile/pil/:pil/exemptions',
+    procedures: '/e/:establishment/people/:profile/pil/:pil/procedures'
   }
 };
 
@@ -63,7 +63,7 @@ module.exports = settings => {
     next(err);
   });
 
-  app.param('pilid', (req, res, next, param) => {
+  app.param('pil', (req, res, next, param) => {
     req.id = param;
     next();
   });
