@@ -1,3 +1,4 @@
+const accreditingBodies = require('./constants/accrediting-bodies');
 const authorisationTypes = require('./constants/authorisation-types');
 const establishmentCountries = require('./constants/establishment-countries');
 const establishmentStatuses = require('./constants/establishment-statuses');
@@ -9,6 +10,7 @@ const roles = require('./constants/roles');
 const suitabilityCodes = require('./constants/suitability-codes');
 
 module.exports = {
+  accreditingBodies,
   authorisationTypes,
   establishmentCountries,
   establishmentStatuses,
