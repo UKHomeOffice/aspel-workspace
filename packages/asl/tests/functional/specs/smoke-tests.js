@@ -50,10 +50,36 @@ describe('Smoke tests', () => {
     browser.withUser('holc');
     browser
       .click('a=University of Croydon')
-      .click('=Establishment details')
-      .click('=Leonard Martin');
+      .click('a=Establishment details');
+    browser
+      .$('main dl')
+      .$('a=Leonard Martin')
+      .click();
     const title = browser.getText('h1');
     assert.equal(title, 'Leonard Martin');
+  });
+
+  it('can access account management page', () => {
+    browser.withUser('holc');
+    browser
+      .$('header .status-bar')
+      .$('a=Leonard Martin')
+      .click();
+    const title = browser.getText('h1');
+    assert.equal(title, 'Your account');
+  });
+
+  it('can access profile edit form', () => {
+    browser.withUser('holc');
+    browser
+      .$('header .status-bar')
+      .$('a=Leonard Martin')
+      .click();
+    browser
+      .$('a=Edit your details')
+      .click();
+    const title = browser.getText('h1');
+    assert.equal(title, 'Edit profile');
   });
 
   it('can access schedule of premises page', () => {
