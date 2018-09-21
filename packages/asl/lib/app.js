@@ -7,11 +7,16 @@ const {
   place,
   profile,
   project,
-  pil
+  pil,
+  user
 } = pages;
 
 const urls = {
   dashboard: '/',
+  account: {
+    menu: '/profile',
+    edit: '/profile/edit'
+  },
   establishment: {
     dashboard: '/e/:establishment',
     read: '/e/:establishment/details'
@@ -94,6 +99,9 @@ module.exports = settings => {
     pil(),
     crumbs(['{{static.content.pages.pil.categories}}']));
 
+  app.use(urls.account.menu, user());
+
   app.use(urls.dashboard, dashboard());
+
   return app;
 };
