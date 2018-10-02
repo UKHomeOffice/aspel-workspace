@@ -1,4 +1,5 @@
 const assert = require('assert');
+const { uniq } = require('lodash');
 
 const ADMIN_ID = '5b7bad13-f34b-4959-bd08-c6067ae2fcdd';
 const READ_ID = 'e1ef893c-0766-4ccb-b1f8-d13238deac23';
@@ -269,22 +270,34 @@ describe('User permissions', () => {
         browser.withUser('basic');
         browser.url('/e/8201/projects');
         const rows = browser.$$('table tbody tr');
-        assert.deepEqual(rows.length, 1);
+        assert.equal(rows.length, 1);
         assert(browser.$('td=Basic user project').isExisting());
+
+        const pplhs = browser.$$('table tbody tr td:nth-child(2)')
+          .map(td => browser.elementIdText(td.ELEMENT).value);
+        assert.deepEqual(pplhs, ['Basic User']);
       });
 
       it('list all projects for read only users', () => {
         browser.withUser('read');
         browser.url('/e/8201/projects?rows=100');
         const rows = browser.$$('table tbody tr');
-        assert.deepEqual(rows.length, 18);
+        assert.ok(rows.length > 10);
+
+        const pplhs = browser.$$('table tbody tr td:nth-child(2)')
+          .map(td => browser.elementIdText(td.ELEMENT).value);
+        assert.ok(uniq(pplhs).length > 1, 'Multiple users projects are visible');
       });
 
-      it('list only the users projects for admin users', () => {
+      it('list all projects for admin users', () => {
         browser.withUser('holc');
         browser.url('/e/8201/projects?rows=100');
         const rows = browser.$$('table tbody tr');
-        assert.deepEqual(rows.length, 18);
+        assert.ok(rows.length > 10);
+
+        const pplhs = browser.$$('table tbody tr td:nth-child(2)')
+          .map(td => browser.elementIdText(td.ELEMENT).value);
+        assert.ok(uniq(pplhs).length > 1, 'Multiple users projects are visible');
       });
     });
   });
