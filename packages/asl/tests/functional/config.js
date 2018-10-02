@@ -14,6 +14,7 @@ module.exports = env => ({
     preprod: 'https://public-ui.preprod.asl.homeoffice.gov.uk'
   },
   wdio: {
+    maxInstances: 1,
     mochaOpts: {
       timeout: 60000
     },
