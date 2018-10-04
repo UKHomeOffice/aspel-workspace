@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-emailer#readme",
   "dependencies": {
-    "@asl/service": "^4.1.0",
+    "@asl/service": "^6.1.1",
     "snailmail": "^1.2.0"
   },
   "devDependencies": {
