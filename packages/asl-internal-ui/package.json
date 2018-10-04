@@ -7,8 +7,8 @@
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config",
     "test": "eslint .",
-    "test:functional": "asl-test ./tests/functional/config",
-    "test:functional:local": "funkie --driver chromedriver npm run test:functional",
+    "test:functional:ci": "asl-test ./tests/functional/config",
+    "test:functional": "funkie --driver chromedriver npm run test:functional:ci",
     "build": "npm run build:js && npm run build:css",
     "build:js": "webpack",
     "prebuild:css": "mkdir -p ./public/css",
@@ -27,8 +27,8 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-inspector-ui#readme",
   "dependencies": {
-    "@asl/pages": "^4.0.0",
-    "@asl/service": "^3.3.1",
+    "@asl/pages": "^8.5.1",
+    "@asl/service": "^6.1.0",
     "lodash": "^4.17.10"
   },
   "devDependencies": {

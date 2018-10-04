@@ -89,7 +89,7 @@ pipeline:
       - npm_auth_token
     commands:
       - npm install
-      - npm run test:functional -- --suite smoke
+      - npm run test:functional:ci
     when:
       event: deployment
       environment:
