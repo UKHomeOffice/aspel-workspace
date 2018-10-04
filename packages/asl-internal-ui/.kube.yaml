@@ -1,10 +1,10 @@
 ---
-- name: inspector-ui
+- name: internal-ui
   recipe: webapp
-  url: inspector-ui.notprod.asl.homeoffice.gov.uk
+  url: internal-ui.notprod.asl.homeoffice.gov.uk
   image: quay.io/ukhomeofficedigital/asl-inspector-ui:{{.DRONE_COMMIT_SHA}}
   env:
-    REDIS_HOST: inspector-ui-redis
+    REDIS_HOST: internal-ui-redis
     REDIS_PASSWORD:
       secret: true
       name: asl-dev-redis
@@ -22,8 +22,8 @@
       key: secret
     API_URL: https://public-api.notprod.asl.homeoffice.gov.uk
 
-- name: inspector-ui-redis
+- name: internal-ui-redis
   recipe: redis
-  clients: inspector-ui
+  clients: internal-ui
   passwordName: asl-dev-redis
   passwordKey: pass
