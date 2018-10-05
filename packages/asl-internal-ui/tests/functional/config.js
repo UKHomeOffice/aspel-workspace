@@ -8,8 +8,8 @@ module.exports = {
   },
   urls: {
     local: 'http://localhost:8086',
-    dev: 'https://inspector-ui.notprod.asl.homeoffice.gov.uk',
-    preprod: 'https://inspector-ui.preprod.asl.homeoffice.gov.uk'
+    dev: 'https://internal-ui.notprod.asl.homeoffice.gov.uk',
+    preprod: 'https://internal-ui.preprod.asl.homeoffice.gov.uk'
   },
   wdio: {
     suites: {
