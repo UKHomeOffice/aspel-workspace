@@ -21,6 +21,7 @@
       name: asl-preprod-auth
       key: secret
     API_URL: https://public-api.preprod.asl.homeoffice.gov.uk
+    PERMISSIONS_SERVICE: https://permissions.notprod.asl.homeoffice.gov.uk
 
 - name: public-ui-redis
   recipe: redis
