@@ -39,7 +39,7 @@ module.exports = settings => {
   const app = ui({ ...settings, views, urls });
 
   app.use((req, res, next) => {
-    if (!req.user || !req.user.profile || !req.user.profile.asru_user) {
+    if (!req.user || !req.user.profile || !req.user.profile.asruUser) {
       return next(new NotAuthorisedError());
     }
     next();
