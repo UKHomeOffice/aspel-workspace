@@ -35,7 +35,7 @@ const urls = {
   },
   pil: {
     categories: '/e/:establishment/people/:profile/pil',
-    dashboard: '/e/:establishment/people/:profile/pil/:pil',
+    application: '/e/:establishment/people/:profile/pil/:pil',
     details: '/e/:establishment/people/:profile',
     training: '/e/:establishment/people/:profile/pil/:pil/training',
     // modules: '/e/:establishment/pil/:pil/modules',
@@ -50,7 +50,7 @@ module.exports = settings => {
   app.use(content);
 
   app.param('profile', (req, res, next, param) => {
-    req.profile = param;
+    req.profileId = param;
     next();
   });
 
@@ -59,18 +59,13 @@ module.exports = settings => {
       const establishments = req.user.profile.establishments || [];
       const establishment = establishments.find(e => e.id.toString() === param);
       if (establishment) {
-        req.establishment = establishment.id;
+        req.establishmentId = establishment.id;
         return next();
       }
     }
     const err = new Error('Not found');
     err.status = 404;
     next(err);
-  });
-
-  app.param('pil', (req, res, next, param) => {
-    req.id = param;
-    next();
   });
 
   app.use(urls.profile.list,
@@ -97,7 +92,8 @@ module.exports = settings => {
 
   app.use(urls.pil.categories,
     pil(),
-    crumbs(['{{static.content.pages.pil.categories}}']));
+    crumbs(['{{static.content.pages.pil.categories}}'])
+  );
 
   app.use(urls.account.menu, user());
 
