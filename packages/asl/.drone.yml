@@ -61,7 +61,7 @@ pipeline:
     branch: master
     secrets:
       - drone_token
-    params: REPO=${DRONE_REPO},PLUGIN_NUMBER=${DRONE_BUILD_NUMBER}
+    params: REPO=${DRONE_REPO},PLUGIN_NUMBER=${DRONE_BUILD_NUMBER},DEPLOY_VERSION=${DRONE_COMMIT_SHA}
     deploy_to: dev
     when:
       branch: master
