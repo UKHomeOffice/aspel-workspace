@@ -21,6 +21,7 @@
       name: asl-dev-auth
       key: secret
     API_URL: https://public-api.notprod.asl.homeoffice.gov.uk
+    WORKFLOW_URL: https://workflow.notprod.asl.homeoffice.gov.uk
 
 - name: internal-ui-redis
   recipe: redis
