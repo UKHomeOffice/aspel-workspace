@@ -8,7 +8,9 @@ pipeline:
       - npm ci
       - npm test
     when:
-      event: [push, pull_request, tag]
+      event:
+        - push
+        - pull_request
 
   audit:
     image: node:10
@@ -17,7 +19,9 @@ pipeline:
     commands:
       - npx @lennym/ciaudit
     when:
-      event: [push, pull_request, tag]
+      event:
+        - push
+        - pull_request
 
   compile:
     image: node:10
@@ -26,7 +30,9 @@ pipeline:
     commands:
       - npm run build --production
     when:
-      event: [push, pull_request, tag]
+      event:
+        - push
+        - pull_request
 
   build:
     image: docker:17.09.1
@@ -54,83 +60,21 @@ pipeline:
       branch: master
       event: push
 
-  trigger_dev_deploy:
-    image: quay.io/ukhomeofficedigital/drone-trigger:latest
-    drone_server: https://drone.acp.homeoffice.gov.uk
-    repo: UKHomeOffice/asl-deploy-bot
-    branch: master
+  update_manifest:
+    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
     secrets:
-      - drone_token
-    params: REPO=${DRONE_REPO},PLUGIN_NUMBER=${DRONE_BUILD_NUMBER}
-    deploy_to: dev
+      - github_access_token
+    commands:
+      - update
+        --repo ukhomeoffice/asl-deployments
+        --token $${GITHUB_ACCESS_TOKEN}
+        --file versions.yml
+        --service asl-internal-ui
+        --version $${DRONE_COMMIT_SHA}
     when:
       branch: master
       event: push
 
-  configure_deploy:
-    image: node:10
-    secrets:
-      - npm_auth_token
-    commands:
-      - mkdir deploy
-      - npx kube-cookbook --out deploy
-    when:
-      environment: dev
-      event: deployment
-
-  dev_deploy:
-    image: quay.io/ukhomeofficedigital/kd:v0.5.0
-    environment:
-      KUBE_NAMESPACE: asl-dev
-      INSECURE_SKIP_TLS_VERIFY: "TRUE"
-    secrets:
-      - kube_server
-      - kube_token
-    commands:
-      - kd -f deploy
-    when:
-      environment: dev
-      event: deployment
-
-  post_deploy_test:
-    image: node:10
-    secrets:
-      - npm_auth_token
-    commands:
-      - npm install
-      - npm run test:functional:ci
-    when:
-      event: deployment
-      environment:
-        - dev
-        - preprod
-
-  slack:
-    image: plugins/slack
-    secrets:
-      - slack_webhook
-    channel: developers
-    template: >
-      {{#success build.status}}
-        Deployment of {{repo.name}} to {{build.deployTo}} succeeded.
-        `{{build.message}}`
-      {{else}}
-        @channel Deployment of {{repo.name}} to {{build.deployTo}} failed - {{build.link}}
-        `{{build.message}}`
-      {{/success}}
-    when:
-      status:  [ failure, success ]
-      event: deployment
-      environment:
-        - dev
-        - preprod
-
 matrix:
   NPM_AUTH_USERNAME:
     - asl
-
-services:
-  selenium:
-    image: selenium/standalone-chrome
-    when:
-      event: deployment
