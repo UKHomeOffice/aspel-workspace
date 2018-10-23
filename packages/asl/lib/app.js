@@ -32,7 +32,7 @@ const urls = {
   place: {
     list: '/e/:establishment/places',
     create: {
-      create: '/e/:establishment/places/create',
+      new: '/e/:establishment/places/create',
       confirm: '/e/:establishment/places/create/confirm',
       success: '/e/:establishment/places/create/success'
     },
