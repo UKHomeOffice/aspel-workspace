@@ -24,23 +24,37 @@ const urls = {
   profile: {
     list: '/e/:establishment/people',
     view: '/e/:establishment/people/:profile',
-    invite: '/e/:establishment/people/invite'
+    invite: '/e/:establishment/people/invite',
   },
   project: {
     list: '/e/:establishment/projects'
   },
   place: {
     list: '/e/:establishment/places',
-    create: '/e/:establishment/places/create'
+    create: {
+      create: '/e/:establishment/places/create',
+      confirm: '/e/:establishment/places/create/confirm',
+      success: '/e/:establishment/places/create/success'
+    },
+    delete: {
+      confirm: '/e/:establishment/places/:id/delete/confirm',
+      success: '/e/:establishment/places/:id/delete/success'
+    },
+    update: {
+      confirm: '/e/:establishment/places/:id/edit/confirm',
+      success: '/e/:establishment/places/:id/edit/success'
+    }
   },
   pil: {
     categories: '/e/:establishment/people/:profile/pil',
     application: '/e/:establishment/people/:profile/pil/:pil',
     details: '/e/:establishment/people/:profile',
     training: '/e/:establishment/people/:profile/pil/:pil/training',
-    // modules: '/e/:establishment/pil/:pil/modules',
     exemptions: '/e/:establishment/people/:profile/pil/:pil/exemptions',
-    procedures: '/e/:establishment/people/:profile/pil/:pil/procedures'
+    procedures: '/e/:establishment/people/:profile/pil/:pil/procedures',
+    success: '/e/:establishment/people/:profile/pil/:pil/success',
+    trainingModules: '/e/:establishment/people/:profile/pil/:pil/training/modules',
+    exemptionModules: '/e/:establishment/people/:profile/pil/:pil/exemptions/modules'
   }
 };
 
