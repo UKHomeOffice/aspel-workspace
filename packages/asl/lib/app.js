@@ -24,7 +24,7 @@ const urls = {
   profile: {
     list: '/e/:establishment/people',
     view: '/e/:establishment/people/:profile',
-    invite: '/e/:establishment/people/invite',
+    invite: '/e/:establishment/people/invite'
   },
   project: {
     list: '/e/:establishment/projects'
