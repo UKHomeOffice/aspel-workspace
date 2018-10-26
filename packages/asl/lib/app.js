@@ -18,43 +18,48 @@ const urls = {
     edit: '/profile/edit'
   },
   establishment: {
-    dashboard: '/e/:establishment',
-    read: '/e/:establishment/details'
+    dashboard: '/e/:establishmentId',
+    read: '/e/:establishmentId/details'
   },
   profile: {
-    list: '/e/:establishment/people',
-    view: '/e/:establishment/people/:profile',
-    invite: '/e/:establishment/people/invite'
+    list: '/e/:establishmentId/people',
+    view: '/e/:establishmentId/people/:profileId',
+    invite: '/e/:establishmentId/people/invite'
   },
   project: {
-    list: '/e/:establishment/projects'
+    list: '/e/:establishmentId/projects'
   },
   place: {
-    list: '/e/:establishment/places',
+    list: '/e/:establishmentId/places',
     create: {
-      new: '/e/:establishment/places/create',
-      confirm: '/e/:establishment/places/create/confirm',
-      success: '/e/:establishment/places/create/success'
+      new: '/e/:establishmentId/places/create',
+      confirm: '/e/:establishmentId/places/create/confirm',
+      success: '/e/:establishmentId/places/create/success'
     },
     delete: {
-      confirm: '/e/:establishment/places/:id/delete/confirm',
-      success: '/e/:establishment/places/:id/delete/success'
+      confirm: '/e/:establishmentId/places/:placeId/delete/confirm',
+      success: '/e/:establishmentId/places/:placeId/delete/success'
     },
     update: {
-      confirm: '/e/:establishment/places/:id/edit/confirm',
-      success: '/e/:establishment/places/:id/edit/success'
+      confirm: '/e/:establishmentId/places/:placeId/edit/confirm',
+      success: '/e/:establishmentId/places/:placeId/edit/success'
     }
   },
   pil: {
-    categories: '/e/:establishment/people/:profile/pil',
-    application: '/e/:establishment/people/:profile/pil/:pil',
-    details: '/e/:establishment/people/:profile',
-    training: '/e/:establishment/people/:profile/pil/:pil/training',
-    exemptions: '/e/:establishment/people/:profile/pil/:pil/exemptions',
-    procedures: '/e/:establishment/people/:profile/pil/:pil/procedures',
-    success: '/e/:establishment/people/:profile/pil/:pil/success',
-    trainingModules: '/e/:establishment/people/:profile/pil/:pil/training/modules',
-    exemptionModules: '/e/:establishment/people/:profile/pil/:pil/exemptions/modules'
+    base: '/e/:establishmentId/people/:profileId/pil',
+    create: '/e/:establishmentId/people/:profileId/pil/create',
+    read: '/e/:establishmentId/people/:profileId/pil/:pilId',
+    update: '/e/:establishmentId/people/:profileId/pil/:pilId/edit',
+    procedures: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/procedures',
+    training: {
+      certificate: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training',
+      modules: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training/modules',
+    },
+    exemptions: {
+      exempt: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/exemptions',
+      modules: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/exemptions/modules'
+    },
+    success: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/success',
   }
 };
 
@@ -63,12 +68,12 @@ module.exports = settings => {
 
   app.use(content);
 
-  app.param('profile', (req, res, next, param) => {
+  app.param('profileId', (req, res, next, param) => {
     req.profileId = param;
     next();
   });
 
-  app.param('establishment', (req, res, next, param) => {
+  app.param('establishmentId', (req, res, next, param) => {
     if (req.user.profile) {
       const establishments = req.user.profile.establishments || [];
       const establishment = establishments.find(e => e.id.toString() === param);
@@ -104,7 +109,7 @@ module.exports = settings => {
 
   app.use(urls.establishment.dashboard, establishment.dashboard());
 
-  app.use(urls.pil.categories,
+  app.use(urls.pil.base,
     pil(),
     crumbs(['{{static.content.pages.pil.categories}}'])
   );
