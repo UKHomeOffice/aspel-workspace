@@ -53,13 +53,13 @@ const urls = {
     procedures: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/procedures',
     training: {
       certificate: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training',
-      modules: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training/modules',
+      modules: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training/modules'
     },
     exemptions: {
       exempt: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/exemptions',
       modules: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/exemptions/modules'
     },
-    success: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/success',
+    success: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/success'
   }
 };
 
