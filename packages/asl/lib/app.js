@@ -52,6 +52,7 @@ const urls = {
     update: '/e/:establishmentId/people/:profileId/pil/:pilId/edit',
     procedures: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/procedures',
     training: {
+      exempt: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training/exempt',
       certificate: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training',
       modules: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training/modules'
     },
