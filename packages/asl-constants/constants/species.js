@@ -30,7 +30,7 @@ module.exports = [
   'Quails (Coturnix coturnix)',
   'Other birds (other Aves)',
   'Reptiles (Reptilia)',
-  'Rana (Rana temporaria - Common Frog and Rana pipiens - Northern Leopard Frog)',
+  'Rana (Rana temporaria - common frog and Rana pipiens - Northern leopard frog)',
   'Xenopus (Xenopus laevis and Xenopus tropicalis)',
   'Other amphibians (other Amphibia)',
   'Zebra fish (Danio rerio)',
