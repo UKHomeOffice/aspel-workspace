@@ -17,3 +17,7 @@ pipeline:
     email: ${NPM_EMAIL}
     when:
       event: tag
+
+matrix:
+  NPM_AUTH_USERNAME:
+    - asl
