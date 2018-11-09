@@ -31,6 +31,7 @@ The following environment variables are required:
 
 * `API_URL` - the hostname of the downstream API service
 * `SESSION_SECRET` - an arbitrary string used to sign session data
+* `JWT_SECRET` - secret used to sign invitation tokens. Needs to match the same variable in `asl-resolver`.
 * `KEYCLOAK_REALM` - the keycloak realm used for authentication
 * `KEYCLOAK_URL` - the url of the keycloak server
 * `KEYCLOAK_CLIENT` - the client name used to authenticate with keycloak

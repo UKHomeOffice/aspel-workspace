@@ -29,6 +29,7 @@
   "dependencies": {
     "@asl/pages": "^12.3.0",
     "@asl/service": "^6.1.5",
+    "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.10"
   },
   "devDependencies": {
