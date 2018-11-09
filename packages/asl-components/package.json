@@ -5,7 +5,6 @@
   "main": "dist/asl-components.js",
   "module": "dist/asl-components.module.js",
   "scripts": {
-    "pretest:unit-built": "npm run build",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint .",
     "test:unit": "jest",
