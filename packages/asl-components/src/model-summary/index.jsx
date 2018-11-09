@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import React, { Fragment } from 'react';
 import map from 'lodash/map';
 import pick from 'lodash/pick';
+import size from 'lodash/size';
 import { connect } from 'react-redux';
 import { Snippet } from '../';
 
@@ -13,7 +14,7 @@ const getValue = (value, format) => {
 };
 
 const ModelSummary = ({ model, schema, formatters = {}, className }) => {
-  if (schema) {
+  if (size(schema)) {
     model = pick(model, Object.keys(schema));
   }
   return (
@@ -30,10 +31,10 @@ const ModelSummary = ({ model, schema, formatters = {}, className }) => {
   );
 };
 
-const mapStateToProps = ({ model, static: { schema } }, { formatters, schema: ownSchema }) => ({
-  model,
-  formatters,
-  schema: ownSchema || schema
+const mapStateToProps = ({ model, static: { schema } }, { formatters, schema: ownSchema, model: ownModel }) => ({
+  model: ownModel || model,
+  schema: ownSchema || schema,
+  formatters
 });
 
 export default connect(mapStateToProps)(ModelSummary);

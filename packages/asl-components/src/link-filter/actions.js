@@ -1,5 +1,6 @@
 import { queryStringFromState } from '../utils';
 import { fetchItems } from '../actions';
+import merge from 'lodash/merge';
 
 export const setFilter = (key, value) => ({
   type: 'SET_FILTER',

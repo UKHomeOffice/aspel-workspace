@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { doSearch } from './actions';
 import { ApplyChanges } from '../';
 
-class Search extends React.Component {
+export class Search extends Component {
 
   componentDidMount() {
     this.setState({ value: this.props.filter });

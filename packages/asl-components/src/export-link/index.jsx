@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { stringify } from 'qs';
 
-const ExportLink = ({
+export const ExportLink = ({
   label = 'Export as',
   ...props
 }) => (

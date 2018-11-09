@@ -1,3 +1,5 @@
+import fetch from 'r2';
+
 const FETCH_TIMEOUT = 5000;
 
 const requestItems = () => ({
@@ -37,7 +39,5 @@ export const fetchItems = (url, dispatch) => {
     .then(({ datatable: { data: { rows }, pagination: { count, totalCount } } }) => {
       dispatch(receiveItems({ rows, count, totalCount }));
     })
-    .catch(err => {
-      dispatch(requestFailed(err));
-    });
+    .catch(err => dispatch(requestFailed(err)));
 };

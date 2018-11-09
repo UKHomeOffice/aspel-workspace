@@ -6,7 +6,7 @@ import { render } from 'mustache';
 
 const trim = value => value.split('\n').map(s => s.trim()).join('\n').trim();
 
-const Snippet = ({ content, children, optional, ...props }) => {
+export const Snippet = ({ content, children, optional, ...props }) => {
   const str = get(content, children);
   if (str === undefined && optional) {
     return null;

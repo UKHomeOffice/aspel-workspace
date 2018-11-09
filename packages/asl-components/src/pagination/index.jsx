@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ApplyChanges } from '../';
 import { changePage } from './actions';
 
-const Pagination = ({
+export const Pagination = ({
   totalPages,
   limit,
   page,

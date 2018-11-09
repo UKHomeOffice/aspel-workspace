@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { ApplyChanges, Snippet } from '../';
 import { changeFilters } from './actions';
 
-class Filters extends Component {
+export class Filters extends Component {
 
   componentDidMount() {
     const { active } = this.props;

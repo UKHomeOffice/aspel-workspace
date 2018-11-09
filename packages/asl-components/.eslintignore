@@ -1,7 +1,2 @@
-example
-components
 dist
-assets
-scripts
-__tests__
 *.spec.*

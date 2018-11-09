@@ -7,7 +7,7 @@ export { default as Breadcrumbs } from './breadcrumbs';
 export { default as Completable } from './completable';
 export { default as Controls } from './controls';
 export { default as ConditionalReveal } from './conditional-reveal';
-export { default as DataTable } from './datatable';
+export { default as Datatable } from './datatable';
 export { default as Diff } from './diff';
 export { default as ErrorSummary } from './error-summary';
 export { default as ExpandingPanel } from './expanding-panel';
@@ -33,3 +33,5 @@ export { default as Sidebar } from './sidebar';
 export { default as Snippet } from './snippet';
 export { default as StatusBar } from './status-bar';
 export { default as Tasklist } from './tasklist';
+
+export * from './layouts';

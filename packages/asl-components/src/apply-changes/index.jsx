@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { stringify } from 'qs';
 import omit from 'lodash/omit';
 
-const ApplyChanges = ({
+export const ApplyChanges = ({
   id,
   type,
   label,

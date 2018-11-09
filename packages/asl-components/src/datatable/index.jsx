@@ -9,7 +9,7 @@ import { getValue } from '../utils';
 import DatatableHeader from './header';
 import { Pagination } from '../';
 
-class Datatable extends Component {
+export class Datatable extends Component {
   constructor(options) {
     super(options);
     this.toggleContent = this.toggleContent.bind(this);

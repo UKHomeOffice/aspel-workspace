@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { clickLinkFilter } from './actions';
 import { ApplyChanges } from '../';
 
-const LinkFilter = ({
+export const LinkFilter = ({
   filters,
   selected,
   onChange,

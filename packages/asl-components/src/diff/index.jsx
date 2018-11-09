@@ -10,7 +10,7 @@ const getValue = (key, { format } = {}) => {
   return value || '-';
 };
 
-const Diff = ({
+export const Diff = ({
   diff,
   formatters = {},
   comparator = (a, b) => !(isEqual(a, b)),

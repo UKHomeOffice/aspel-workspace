@@ -6,7 +6,7 @@ import { ApplyChanges, Snippet } from '../';
 
 const getLabel = id => <Snippet>{`fields.${id}.label`}</Snippet>;
 
-const TableHeader = ({
+export const TableHeader = ({
   id,
   column,
   ascending,

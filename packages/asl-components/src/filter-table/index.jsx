@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { DataTable, Filters, FilterSummary, Link, Snippet } from '../';
+import { Datatable, Filters, FilterSummary, Link, Snippet } from '../';
 
 const FilterTable = ({
   formatters,
@@ -14,7 +14,7 @@ const FilterTable = ({
         createPath && <Link label={<Snippet>addNew</Snippet>} page={createPath} />
       }
     </div>
-    <DataTable formatters={ formatters } ExpandableRow={ExpandableRow} />
+    <Datatable formatters={ formatters } ExpandableRow={ExpandableRow} />
   </Fragment>
 );
 

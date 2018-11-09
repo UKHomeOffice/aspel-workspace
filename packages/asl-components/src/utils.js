@@ -1,4 +1,3 @@
-import fetch from 'r2';
 import { stringify } from 'qs';
 import get from 'lodash/get';
 

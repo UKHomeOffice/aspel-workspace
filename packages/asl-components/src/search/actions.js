@@ -1,3 +1,4 @@
+import merge from 'lodash/merge';
 import { queryStringFromState } from '../utils';
 import { fetchItems } from '../actions';
 import { setFilter } from '../link-filter/actions';
