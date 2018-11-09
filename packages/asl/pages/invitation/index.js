@@ -7,7 +7,14 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
-    req.api(`/establishments/${req.invitation.establishmentId}/invite-user/${req.params.token}`)
+    if (req.user.profile.establishments.find(e => e.id === req.invitation.establishmentId)) {
+      return res.redirect('/');
+    }
+    next();
+  });
+
+  app.use((req, res, next) => {
+    req.api(`/invitation/${req.params.token}`)
       .then(response => {
         res.locals.static.establishment = response.json.meta.establishment;
       })
@@ -16,8 +23,9 @@ module.exports = settings => {
   });
 
   app.post('/', (req, res, next) => {
-    req.api(`/establishments/${req.invitation.establishmentId}/invite-user/${req.params.token}`, { method: 'PUT' })
+    req.api(`/invitation/${req.params.token}`, { method: 'PUT' })
       .then(() => {
+        delete req.session.profile;
         res.redirect('/');
       })
       .catch(next);

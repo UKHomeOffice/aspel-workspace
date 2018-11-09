@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
-import {connect} from 'react-redux';
-import Inset from '@asl/pages/pages/common/views/components/inset';
-import Snippet from '@asl/pages/pages/common/views/containers/snippet';
+import { connect } from 'react-redux';
+import { Inset, Snippet } from '@asl/components';
 import { Button } from '@ukhomeoffice/react-components';
 
 const Accept = ({ establishment }) => {
