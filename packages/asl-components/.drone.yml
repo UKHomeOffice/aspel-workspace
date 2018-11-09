@@ -9,12 +9,11 @@ pipeline:
       event: [push, pull_request, tag]
 
   publish:
-    image: plugins/npm
+    image: node:10
     secrets:
-      - npm_token
-      - npm_email
-    token: ${NPM_TOKEN}
-    email: ${NPM_EMAIL}
+      - npm_auth_token
+    commands:
+      - npm publish
     when:
       event: tag
 
