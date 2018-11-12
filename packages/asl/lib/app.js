@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 const ui = require('@asl/service/ui');
 const { crumbs } = require('@asl/service/ui/middleware');
 const { pages, views, content } = require('@asl/pages');
@@ -10,6 +12,8 @@ const {
   pil,
   user
 } = pages;
+
+const invitation = require('../pages/invitation');
 
 const urls = {
   dashboard: '/',
@@ -87,6 +91,18 @@ module.exports = settings => {
     err.status = 404;
     next(err);
   });
+
+  app.param('token', (req, res, next, param) => {
+    jwt.verify(param, settings.jwt, (err, token) => {
+      if (err) {
+        return next(err);
+      }
+      req.invitation = token;
+      next();
+    });
+  });
+
+  app.use('/invitation/:token', invitation());
 
   app.use(urls.profile.list,
     profile(),
