@@ -67,7 +67,7 @@ const urls = {
     },
     success: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/success'
   },
-  task: '/tasks'
+  task: '/task(s)?'
 };
 
 module.exports = settings => {
