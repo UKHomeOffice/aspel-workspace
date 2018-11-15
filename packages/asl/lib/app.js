@@ -67,7 +67,12 @@ const urls = {
     },
     success: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/success'
   },
-  task: '/task(s)?'
+  task: {
+    base: '/tasks',
+    read: '/tasks/:taskId',
+    confirm: '/tasks/:taskId/confirm',
+    success: '/tasks/:taskId/success'
+  }
 };
 
 module.exports = settings => {
@@ -137,7 +142,7 @@ module.exports = settings => {
 
   app.use(urls.dashboard, dashboard());
 
-  app.use(urls.task, task());
+  app.use(urls.task.base, task());
 
   return app;
 };
