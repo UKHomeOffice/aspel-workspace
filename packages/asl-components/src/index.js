@@ -1,6 +1,7 @@
 export { default as Accordion } from './accordion';
 export { default as Acronym } from './acronym';
 export { default as AddAnother } from './add-another';
+export { default as Alert } from './alert';
 export { default as ApplicationConfirm } from './application-confirm';
 export { default as ApplyChanges } from './apply-changes';
 export { default as Breadcrumbs } from './breadcrumbs';
@@ -33,5 +34,6 @@ export { default as Sidebar } from './sidebar';
 export { default as Snippet } from './snippet';
 export { default as StatusBar } from './status-bar';
 export { default as Tasklist } from './tasklist';
+export { default as Wrapper } from './wrapper';
 
 export * from './layouts';

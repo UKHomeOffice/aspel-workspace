@@ -1,6 +1,8 @@
 import fetch from 'r2';
 
 const FETCH_TIMEOUT = 5000;
+const NOTIFICATION_DURATION = 5000;
+let notificationTimeout;
 
 const requestItems = () => ({
   type: 'REQUEST_ITEMS'
@@ -13,9 +15,22 @@ const receiveItems = ({ rows, count, totalCount }) => ({
   totalCount
 });
 
-const requestFailed = () => ({
-  type: 'REQUEST_FAILED'
+const showError = message => ({
+  type: 'SHOW_ERROR',
+  message
 });
+
+export const hideMessage = () => {
+  clearTimeout(notificationTimeout);
+  return {
+    type: 'HIDE_MESSAGE'
+  };
+};
+
+export const showErrorNotification = message => (dispatch, getState) => {
+  notificationTimeout = setTimeout(() => dispatch(hideMessage()), NOTIFICATION_DURATION);
+  return dispatch(showError(message));
+};
 
 export const fetchItems = (url, dispatch) => {
   dispatch(requestItems());
@@ -39,5 +54,5 @@ export const fetchItems = (url, dispatch) => {
     .then(({ datatable: { data: { rows }, pagination: { count, totalCount } } }) => {
       dispatch(receiveItems({ rows, count, totalCount }));
     })
-    .catch(err => dispatch(requestFailed(err)));
+    .catch(err => dispatch(showErrorNotification(err.message)));
 };
