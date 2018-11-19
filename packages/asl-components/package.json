@@ -4,6 +4,7 @@
   "description": "React components for ASL layouts and elements",
   "main": "dist/asl-components.js",
   "module": "dist/asl-components.module.js",
+  "styles": "src/index.scss",
   "scripts": {
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint .",
@@ -29,6 +30,7 @@
     "date-fns": "^1.29.0",
     "mustache": "^3.0.0",
     "r2": "^2.0.1",
+    "react-addons-css-transition-group": "^15.6.2",
     "react-markdown": "^4.0.3",
     "react-redux": "^5.1.0",
     "redux": "^4.0.1"
