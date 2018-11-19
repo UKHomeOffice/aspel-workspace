@@ -4,6 +4,7 @@
   "description": "React components for ASL layouts and elements",
   "main": "dist/asl-components.js",
   "module": "dist/asl-components.module.js",
+  "styles": "src/index.scss",
   "scripts": {
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint .",
