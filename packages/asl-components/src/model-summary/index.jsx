@@ -18,7 +18,7 @@ const ModelSummary = ({ model, schema, formatters = {}, className }) => {
     model = pick(model, Object.keys(schema));
   }
   return (
-    <dl className={classnames('inline', className)}>
+    <dl className={classnames('model-summary', 'inline', className)}>
       {
         map(model, (item, key) =>
           <Fragment key={key}>

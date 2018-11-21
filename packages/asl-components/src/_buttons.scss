@@ -1,0 +1,22 @@
+button.link {
+  display: inline;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  @extend .govuk-body;
+
+  span {
+    color: $ho-link;
+    text-decoration: underline;
+
+    &:hover {
+      color: $ho-link-hover;
+    }
+
+    &:active {
+      color: $ho-link-active;
+    }
+  }
+}

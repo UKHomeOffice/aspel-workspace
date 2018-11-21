@@ -1,0 +1,14 @@
+.application-confirm {
+  legend {
+    @extend h2;
+  }
+
+  border: 3px solid govuk-colour('grey-2');
+  background-color: $white;
+  padding: $govuk-gutter;
+
+  .govuk-form-group:last-child,
+  .govuk-button:last-child {
+    margin-bottom: 0;
+  }
+}

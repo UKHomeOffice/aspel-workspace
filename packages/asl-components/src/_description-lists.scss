@@ -1,0 +1,30 @@
+dl {
+  margin-bottom: $govuk-gutter;
+
+  dt {
+    font-weight: bold;
+  }
+
+  dd {
+    margin-bottom: $govuk-gutter/2;
+    white-space: pre-line;
+  }
+
+  &.light {
+    dt {
+      font-weight: normal;
+    }
+  }
+
+  &.inline {
+    @extend .govuk-grid-row;
+
+    > dt {
+      @extend .govuk-grid-column-one-third;
+    }
+
+    > dd {
+      @extend .govuk-grid-column-two-thirds;
+    }
+  }
+}

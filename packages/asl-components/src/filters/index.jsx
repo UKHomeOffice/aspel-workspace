@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import map from 'lodash/map';
 import some from 'lodash/some';
 import { connect } from 'react-redux';
-import { ApplyChanges, Snippet } from '../';
+import { ApplyChanges, Snippet, ControlBar } from '../';
 import { changeFilters } from './actions';
 
 export class Filters extends Component {
@@ -115,7 +115,7 @@ export class Filters extends Component {
                 )
               }
             </div>
-            <p className="control-bar">
+            <ControlBar>
               <button type="submit" className="govuk-button"><Snippet>filters.applyLabel</Snippet></button>
               <ApplyChanges
                 query={{
@@ -123,7 +123,7 @@ export class Filters extends Component {
                 }}
                 onApply={() => this.clearFilters()}
                 label={<Snippet>filters.clearLabel</Snippet>} />
-            </p>
+            </ControlBar>
           </ApplyChanges>
         </section>
 
