@@ -10,6 +10,7 @@ const {
   profile,
   project,
   pil,
+  task,
   user
 } = pages;
 
@@ -65,6 +66,12 @@ const urls = {
       modules: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/exemptions/modules'
     },
     success: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/success'
+  },
+  task: {
+    base: '/tasks',
+    read: '/tasks/:taskId',
+    confirm: '/tasks/:taskId/confirm',
+    success: '/tasks/:taskId/success'
   }
 };
 
@@ -134,6 +141,8 @@ module.exports = settings => {
   app.use(urls.account.menu, user());
 
   app.use(urls.dashboard, dashboard());
+
+  app.use(urls.task.base, task());
 
   return app;
 };
