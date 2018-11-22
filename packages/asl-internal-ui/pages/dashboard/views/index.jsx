@@ -1,40 +1,44 @@
-import moment from 'moment';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import DataTable from '@asl/pages/pages/common/views/containers/datatable';
+import {
+  Datatable,
+  Link,
+  Snippet
+} from '@asl/components';
 
-const mapStateToProps = state => {
-  return {
-    profile: state.static.profile
-  };
-};
-
-const formatters = {
-  created_at: {
-    format: value => moment(value).format('D MMMM YYYY HH:mm')
-  },
+export const formatters = {
   type: {
-    format: data => `${data.action} ${data.model}`
-  },
-  id: {
-    format: (id, obj) => {
-      if (obj.status === 'resolved') {
-        return null;
-      }
-      return <form method="post" action={`/task/${id}`}><input type="submit" value="approve" className="govuk-button" /></form>
+    format: (name, data) => {
+      return (<Fragment>
+        <a href={data.action.url}>{data.action.label}</a>
+        <br />
+        {data.action.details}
+      </Fragment>);
     }
   }
-}
+};
 
-class Dashboard extends React.Component {
+const Index = ({
+  profile: {
+    firstName,
+    establishments
+  },
+  tasks
+}) => (
+  <Fragment>
+    <header>
+      <h2>&nbsp;</h2>
+      <h1><Snippet name={firstName}>pages.dashboard.greeting</Snippet></h1>
+    </header>
+    <div className="govuk-grid-row">
+      <div className="govuk-grid-column-full">
+        <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
 
-  render() {
-    return <div className="js-enabled">
-      <h1>Hello { this.props.profile.firstName }</h1>
-      <DataTable formatters={formatters} />
+        <Datatable formatters={formatters} />
+      </div>
     </div>
-  }
+  </Fragment>
+);
 
-}
-
-export default connect(mapStateToProps)(Dashboard);
+const mapStateToProps = ({ static: { profile, tasks } }) => ({ profile, tasks });
+export default connect(mapStateToProps)(Index);

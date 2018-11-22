@@ -7,7 +7,8 @@ const {
   place,
   profile,
   project,
-  user
+  user,
+  feedback
 } = pages;
 
 const dashboard = require('../pages/dashboard');
@@ -32,7 +33,8 @@ const urls = {
   },
   place: {
     list: '/establishment/:establishment/places'
-  }
+  },
+  feedback: '/feedback'
 };
 
 module.exports = settings => {
@@ -84,6 +86,7 @@ module.exports = settings => {
   app.use(urls.account.menu, user());
 
   app.use(urls.dashboard, dashboard(settings));
+  app.use(urls.feedback, feedback(settings));
 
   return app;
 };
