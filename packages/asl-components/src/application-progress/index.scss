@@ -1,0 +1,25 @@
+.application-progress {
+  list-style: none;
+  overflow: auto;
+
+  li {
+    display: block;
+    float: left;
+    width: 29%;
+    margin: 0 10px;
+    padding: 6px 0;
+    border-bottom: 3px solid $white;
+    opacity: 0.5;
+    text-align: left;
+    font-weight: bold;
+
+    &.complete {
+      opacity: 1;
+    }
+
+    &.active {
+      opacity: 1;
+      border-bottom: 5px solid $white;
+    }
+  }
+}

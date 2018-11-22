@@ -1,0 +1,12 @@
+.status-label {
+  display: block;
+  float: right;
+  padding: 0 6px;
+  text-transform: uppercase;
+  font-weight: bold;
+
+  &.completed {
+    background-color: $blue;
+    color: $white;
+  }
+}

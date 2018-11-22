@@ -39,9 +39,9 @@ export const Pagination = ({
     }
   ];
   return (
-    <nav role="navigation" aria-label="Pagination">
+    <nav className="pagination" role="navigation" aria-label="Pagination">
       <div className="pagination-summary">{`Showing ${count ? page * limit + 1 : 0} – ${(page + 1) * limit < count ? (page + 1) * limit : count} of ${count} results`}</div>
-      <ul className="pagination">
+      <ul>
         {
           links.map((link, key) =>
             <li className="pagination-item" key={key}>
