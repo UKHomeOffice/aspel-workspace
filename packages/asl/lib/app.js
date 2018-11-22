@@ -11,7 +11,8 @@ const {
   project,
   pil,
   task,
-  user
+  user,
+  feedback
 } = pages;
 
 const invitation = require('../pages/invitation');
@@ -72,7 +73,8 @@ const urls = {
     read: '/tasks/:taskId',
     confirm: '/tasks/:taskId/confirm',
     success: '/tasks/:taskId/success'
-  }
+  },
+  feedback: '/feedback'
 };
 
 module.exports = settings => {
@@ -141,6 +143,7 @@ module.exports = settings => {
   app.use(urls.account.menu, user());
 
   app.use(urls.dashboard, dashboard());
+  app.use(urls.feedback, feedback());
 
   app.use(urls.task.base, task());
 
