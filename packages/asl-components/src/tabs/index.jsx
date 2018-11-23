@@ -1,16 +1,12 @@
 import React from 'react';
-import map from 'lodash/map';
 import classnames from 'classnames';
-import { Link, Snippet } from '../';
 
-const Tabs = ({ tabs, activeTab }) => (
+const Tabs = ({ active, children }) => (
   <nav className="govuk-tabs">
     <ul>
       {
-        map(tabs, (tab, key) => (
-          <li className={classnames({ active: key === activeTab })}>
-            <Link page={tab.page} label={<Snippet>{`tabs.${key}`}</Snippet>} />
-          </li>
+        React.Children.map(children, (child, index) => (
+          <li className={classnames({ active: index === active })}>{ child }</li>
         ))
       }
     </ul>
