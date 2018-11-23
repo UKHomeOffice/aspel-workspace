@@ -21,18 +21,18 @@ const urls = {
   },
   establishment: {
     list: '/establishments',
-    dashboard: '/establishment/:establishment',
-    read: '/establishment/:establishment/details'
+    dashboard: '/establishment/:establishmentId',
+    read: '/establishment/:establishmentId/details'
   },
   profile: {
-    list: '/establishment/:establishment/people',
-    view: '/establishment/:establishment/profile/:profile'
+    list: '/establishment/:establishmentId/people',
+    view: '/establishment/:establishmentId/profile/:profileId'
   },
   project: {
-    list: '/establishment/:establishment/projects'
+    list: '/establishment/:establishmentId/projects'
   },
   place: {
-    list: '/establishment/:establishment/places'
+    list: '/establishment/:establishmentId/places'
   },
   feedback: '/feedback'
 };
@@ -49,13 +49,13 @@ module.exports = settings => {
 
   app.use(content);
 
-  app.param('profile', (req, res, next, param) => {
-    req.profile = param;
+  app.param('profileId', (req, res, next, param) => {
+    req.profileId = param;
     next();
   });
 
-  app.param('establishment', (req, res, next, param) => {
-    req.establishment = param;
+  app.param('establishmentId', (req, res, next, param) => {
+    req.establishmentId = param;
     next();
   });
 
