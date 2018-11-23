@@ -27,8 +27,9 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-inspector-ui#readme",
   "dependencies": {
-    "@asl/pages": "^9.0.1",
-    "@asl/service": "^6.1.3",
+    "@asl/components": "^1.4.0",
+    "@asl/pages": "^14.2.1",
+    "@asl/service": "^6.5.0",
     "lodash": "^4.17.10"
   },
   "devDependencies": {

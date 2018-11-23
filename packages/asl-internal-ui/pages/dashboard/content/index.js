@@ -1,19 +1,23 @@
 module.exports = {
+  tasklist: {
+    title: 'Tasks',
+    outstanding: {
+      none: 'You have no outstanding tasks',
+      some: 'You have {{count}} outstanding tasks'
+    }
+  },
   fields: {
-    type: {
-      label: 'Type'
+    updatedAt: {
+      label: 'Received'
     },
     establishment: {
       label: 'Establishment'
     },
-    created_at: {
-      label: 'Submitted'
+    licence: {
+      label: 'Licence'
     },
-    status: {
-      label: 'Status'
-    },
-    id: {
-      label: 'Approve'
+    type: {
+      label: 'Type'
     }
   }
 };
