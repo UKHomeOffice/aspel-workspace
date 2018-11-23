@@ -27,7 +27,16 @@ $highlight-colour: govuk-colour('grey-4');
 @import 'section-list/index';
 @import 'sidebar/index';
 @import 'status-bar/index';
+@import 'tabs/index';
 
 .hidden {
   display: none;
+}
+
+.float-right {
+  float: right
+}
+
+.float-left {
+  float: left;
 }
