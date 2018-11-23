@@ -26,7 +26,7 @@ const urls = {
   },
   profile: {
     list: '/establishment/:establishmentId/people',
-    view: '/establishment/:establishmentId/profile/:profileId'
+    view: '/establishment/:establishmentId/people/:profileId'
   },
   project: {
     list: '/establishment/:establishmentId/projects'
