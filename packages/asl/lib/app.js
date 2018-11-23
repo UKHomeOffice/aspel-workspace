@@ -4,7 +4,6 @@ const ui = require('@asl/service/ui');
 const { crumbs } = require('@asl/service/ui/middleware');
 const { pages, views, content } = require('@asl/pages');
 const {
-  dashboard,
   establishment,
   place,
   profile,
@@ -15,6 +14,7 @@ const {
   feedback
 } = pages;
 
+const dashboard = require('../pages/dashboard');
 const invitation = require('../pages/invitation');
 
 const urls = {
@@ -74,6 +74,7 @@ const urls = {
     confirm: '/tasks/:taskId/confirm',
     success: '/tasks/:taskId/success'
   },
+  invitation: '/invitation/:token',
   feedback: '/feedback'
 };
 
@@ -109,7 +110,7 @@ module.exports = settings => {
     });
   });
 
-  app.use('/invitation/:token', invitation());
+  app.use(urls.invitation, invitation());
 
   app.use(urls.profile.list,
     profile(),
