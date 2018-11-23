@@ -39,6 +39,7 @@ export { default as SectionList } from './section-list';
 export { default as Sidebar } from './sidebar';
 export { default as Snippet } from './snippet';
 export { default as StatusBar } from './status-bar';
+export { default as Tabs } from './tabs';
 export { default as Tasklist } from './tasklist';
 export { default as Wrapper } from './wrapper';
 
