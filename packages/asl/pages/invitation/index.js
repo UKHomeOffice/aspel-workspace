@@ -1,5 +1,7 @@
 const page = require('@asl/pages/lib/page');
 
+const ErrorPage = require('./views/error');
+
 module.exports = settings => {
   const app = page({
     ...settings,
@@ -7,7 +9,7 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
-    if (req.user.profile.establishments.find(e => e.id === req.invitation.establishmentId)) {
+    if (req.invitation && req.user.profile.establishments.find(e => e.id === req.invitation.establishmentId)) {
       return res.redirect('/');
     }
     next();
@@ -29,6 +31,13 @@ module.exports = settings => {
         res.redirect('/');
       })
       .catch(next);
+  });
+
+  app.use((err, req, res, next) => {
+    if (err.status === 404) {
+      err.template = ErrorPage;
+    }
+    return next(err);
   });
 
   return app;

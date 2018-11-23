@@ -102,10 +102,8 @@ module.exports = settings => {
   });
 
   app.param('token', (req, res, next, param) => {
+    // eslint-disable-next-line handle-callback-err
     jwt.verify(param, settings.jwt, (err, token) => {
-      if (err) {
-        return next(err);
-      }
       req.invitation = token;
       next();
     });

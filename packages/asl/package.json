@@ -29,7 +29,7 @@
   "dependencies": {
     "@asl/components": "^1.2.0",
     "@asl/pages": "^14.2.1",
-    "@asl/service": "^6.5.0",
+    "@asl/service": "^6.6.0",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.10"
   },
