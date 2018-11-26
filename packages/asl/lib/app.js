@@ -30,7 +30,8 @@ const urls = {
   profile: {
     list: '/e/:establishmentId/people',
     view: '/e/:establishmentId/people/:profileId',
-    invite: '/e/:establishmentId/people/invite'
+    invite: '/e/:establishmentId/people/invite',
+    invitations: '/e/:establishmentId/people/invitations'
   },
   project: {
     list: '/e/:establishmentId/projects'
