@@ -1,29 +1,34 @@
 import React from 'react';
+import Link from '../link';
+import Snippet from '../snippet';
 
 export const Breadcrumb = ({
-  crumb
-}) => typeof crumb === 'string'
-  ? <li className="govuk-breadcrumbs__list-item">{crumb}</li>
-  : <li className="govuk-breadcrumbs__list-item">
-    <a href={crumb.href} className="govuk-breadcrumbs__link">{crumb.label}</a>
+  crumb = {},
+  link = false
+}) => {
+  return <li className="govuk-breadcrumbs__list-item">
+  {
+    link ?
+      <Link page={crumb} label={<Snippet>{`breadcrumbs.${crumb}`}</Snippet>} /> :
+      <Snippet>{`breadcrumbs.${crumb}`}</Snippet>
+  }
   </li>;
+};
 
 const renderNull = crumbs => !crumbs || !crumbs.length || !Array.isArray(crumbs);
 
 const Breadcrumbs = ({
-  crumbs,
-  homeLabel = 'Home'
+  crumbs
 }) => {
   if (renderNull(crumbs)) {
     return null;
   }
-  crumbs = [ { label: homeLabel, href: '/' }, ...crumbs ];
   return (
     <div className="govuk-breadcrumbs">
       <ol className="govuk-breadcrumbs__list">
         {
           crumbs.map((crumb, index) =>
-            <Breadcrumb key={index} crumb={crumb} />
+            <Breadcrumb key={index} crumb={crumb} link={index !== crumbs.length - 1} />
           )
         }
       </ol>

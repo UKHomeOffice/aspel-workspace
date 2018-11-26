@@ -19,54 +19,46 @@ describe('<Breadcrumbs />', () => {
   });
 
   describe('with one crumb', () => {
-    const crumbs = ['A crumb'];
+    const crumbs = ['dashboard'];
     const wrapper = shallow(<Breadcrumbs crumbs={crumbs} />);
 
-    test('renders 2 <Breadcrumb /> elements', () => {
-      expect(wrapper.find(Breadcrumb).length).toBe(2);
+    test('renders 1 <Breadcrumb /> elements', () => {
+      expect(wrapper.find(Breadcrumb).length).toBe(1);
     });
 
-    test('passes a home link crumb to the first <Breadcrumb />', () => {
-      const el = wrapper.find(Breadcrumb).first();
-      expect(el.props().crumb).toEqual({ href: '/', label: 'Home' });
-    });
-
-    test('passes a label crumb to the last <Breadcrumb />', () => {
+    test('passes a label crumb to the <Breadcrumb />', () => {
       const el = wrapper.find(Breadcrumb).last();
-      expect(el.props().crumb).toBe('A crumb');
+      expect(el.props().crumb).toEqual('dashboard');
+      expect(el.props().link).toEqual(false);
     });
   });
 
   describe('with many crumbs', () => {
     const crumbs = [
-      { href: '/page-1', label: 'Page 1' },
-      { href: '/page-1/child-page', label: 'Child Page' },
-      'A crumb'
+      'dashboard',
+      'establishment.dashboard',
+      'projects'
     ];
     const wrapper = shallow(<Breadcrumbs crumbs={crumbs} />);
 
-    test('renders 4 <Breadcrumb /> elements', () => {
-      expect(wrapper.find(Breadcrumb).length).toBe(4);
+    test('renders 3 <Breadcrumb /> elements', () => {
+      expect(wrapper.find(Breadcrumb).length).toBe(3);
     });
 
-    test('passes a home link crumb to the first <Breadcrumb />', () => {
-      const el = wrapper.find(Breadcrumb).first();
-      expect(el.props().crumb).toEqual({ href: '/', label: 'Home' });
+    test('passes links to the first 2 <Breadcrumb /> elements', () => {
+      const el0 = wrapper.find(Breadcrumb).at(0);
+      expect(el0.props().crumb).toEqual('dashboard');
+      expect(el0.props().link).toEqual(true);
+      const el1 = wrapper.find(Breadcrumb).at(1);
+      expect(el1.props().crumb).toEqual('establishment.dashboard');
+      expect(el1.props().link).toEqual(true);
     });
 
-    test('passes a label crumb to the last <Breadcrumb />', () => {
+    test('does not link the last <Breadcrumb />', () => {
       const el = wrapper.find(Breadcrumb).last();
-      expect(el.props().crumb).toBe('A crumb');
+      expect(el.props().crumb).toEqual('projects');
+      expect(el.props().link).toEqual(false);
     });
 
-    test('passes an intermediate link crumb to the second <Breadcrumb />', () => {
-      const el = wrapper.find(Breadcrumb).at(1);
-      expect(el.props().crumb).toEqual(crumbs[0]);
-    });
-
-    test('passes an intermediate link crumb to the third <Breadcrumb />', () => {
-      const el = wrapper.find(Breadcrumb).at(2);
-      expect(el.props().crumb).toBe(crumbs[1]);
-    });
   });
 });
