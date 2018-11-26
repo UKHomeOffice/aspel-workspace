@@ -1,24 +1,12 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
-  Datatable,
   Link,
   Snippet,
   Header,
   PanelList
 } from '@asl/components';
-
-export const formatters = {
-  type: {
-    format: (name, data) => {
-      return (<Fragment>
-        <a href={data.action.url}>{data.action.label}</a>
-        <br />
-        {data.action.details}
-      </Fragment>);
-    }
-  }
-};
+import TaskList from '@asl/pages/pages/task/list/views/tasklist';
 
 const EstablishmentPanel = ({ id, name }) => (
   <Fragment>
@@ -44,8 +32,7 @@ const Index = ({
     firstName,
     establishments,
     invitations
-  },
-  tasks
+  }
 }) => {
   return <Fragment>
     <Header
@@ -54,7 +41,7 @@ const Index = ({
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
         <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
-        <Datatable formatters={formatters} />
+        <TaskList />
 
         {
           !!establishments.length && <Fragment>
@@ -74,5 +61,5 @@ const Index = ({
   </Fragment>
 };
 
-const mapStateToProps = ({ static: { profile, tasks } }) => ({ profile, tasks });
+const mapStateToProps = ({ static: { profile } }) => ({ profile });
 export default connect(mapStateToProps)(Index);
