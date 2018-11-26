@@ -30,7 +30,8 @@ const urls = {
   profile: {
     list: '/e/:establishmentId/people',
     view: '/e/:establishmentId/people/:profileId',
-    invite: '/e/:establishmentId/people/invite'
+    invite: '/e/:establishmentId/people/invite',
+    invitations: '/e/:establishmentId/people/invitations'
   },
   project: {
     list: '/e/:establishmentId/projects'
@@ -112,10 +113,7 @@ module.exports = settings => {
 
   app.use(urls.invitation, invitation());
 
-  app.use(urls.profile.list,
-    profile(),
-    crumbs(['{{static.content.pages.profile.list}}'])
-  );
+  app.use(urls.profile.list, profile());
 
   app.use(urls.place.list,
     place(),
