@@ -1,46 +1,37 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { Breadcrumb } from './';
+import Snippet from '../snippet';
+import Link from '../link';
 
 describe('<Breadcrumb />', () => {
-  describe('with a string', () => {
-    const crumb = 'A crumb';
-    const wrapper = shallow(<Breadcrumb crumb={crumb} />);
-    const el = wrapper.find('li');
 
-    test('renders one li', () => {
-      expect(el.length).toBe(1);
-    });
-
-    test('renders the crumb text', () => {
-      expect(el.text()).toBe(crumb);
-    });
-
-    test('doesn\'t render a link', () => {
-      expect(el.find('a').length).toBe(0);
-    });
+  test('renders one li', () => {
+    const wrapper = shallow(<Breadcrumb crumb="dashboard" link={true} />);
+    expect(wrapper.find('li').length).toBe(1);
   });
 
-  describe('with an object', () => {
-    const crumb = { href: '/a-link', label: 'A link' };
-    const wrapper = shallow(<Breadcrumb crumb={crumb} />);
-    const el = wrapper.find('li');
-
-    test('renders one li', () => {
-      expect(el.length).toBe(1);
-    });
-
-    test('renders the crumb label', () => {
-      expect(el.text()).toBe(crumb.label);
-    });
-
-    test('renders a link', () => {
-      expect(el.find('a').length).toBe(1);
-    });
-
-    test('passes the href and label as props', () => {
-      expect(el.find('a').props()).toHaveProperty('children', 'A link');
-      expect(el.find('a').props()).toHaveProperty('href', '/a-link');
-    });
+  test('renders a Link component if `link` prop is true', () => {
+    const wrapper = shallow(<Breadcrumb crumb="dashboard" link={true} />);
+    expect(wrapper.find(Link).length).toBe(1);
+    expect(wrapper.find(Link).last().props().page).toBe('dashboard');
   });
+
+  test('passes a Snippet as the link label', () => {
+    const wrapper = shallow(<Breadcrumb crumb="dashboard" link={true} />);
+    expect(wrapper.find(Link).length).toBe(1);
+    expect(wrapper.find(Link).at(0).props().label).toEqual(<Snippet>breadcrumbs.dashboard</Snippet>);
+  });
+
+  test('does not render a Link component if `link` prop is false', () => {
+    const wrapper = shallow(<Breadcrumb crumb="dashboard" link={false} />);
+    expect(wrapper.find(Link).length).toBe(0);
+  });
+
+  test('renders a Snippet', () => {
+    const wrapper = shallow(<Breadcrumb crumb="dashboard" link={false} />);
+    expect(wrapper.find(Snippet).length).toBe(1);
+    expect(wrapper.find(Snippet).props().children).toEqual('breadcrumbs.dashboard');
+  });
+
 });

@@ -30,6 +30,6 @@ export const Snippet = ({ content, children, optional, ...props }) => {
   );
 };
 
-const mapStateToProps = ({ static: { content } }) => ({ content });
+const mapStateToProps = ({ static: { content, establishment }, model }) => ({ content, establishment, model });
 
 export default connect(mapStateToProps)(Snippet);
