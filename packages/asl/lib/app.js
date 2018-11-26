@@ -113,10 +113,7 @@ module.exports = settings => {
 
   app.use(urls.invitation, invitation());
 
-  app.use(urls.profile.list,
-    profile(),
-    crumbs(['{{static.content.pages.profile.list}}'])
-  );
+  app.use(urls.profile.list, profile());
 
   app.use(urls.place.list,
     place(),
