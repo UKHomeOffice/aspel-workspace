@@ -1,14 +1,11 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Inset, Snippet } from '@asl/components';
+import { Inset, Snippet, Header } from '@asl/components';
 import { Button } from '@ukhomeoffice/react-components';
 
 const Accept = ({ establishment }) => {
   return <Fragment>
-    <header>
-      <h2>{establishment.name}</h2>
-      <h1><Snippet>title</Snippet></h1>
-    </header>
+    <Header title={<Snippet>title</Snippet>} subtitle={establishment.name} />
     <Inset>
       <Snippet>preamble</Snippet>
     </Inset>
