@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 const ui = require('@asl/service/ui');
-const { crumbs } = require('@asl/service/ui/middleware');
 const { pages, views, content } = require('@asl/pages');
 const {
   establishment,
@@ -14,70 +13,9 @@ const {
   feedback
 } = pages;
 
+const urls = require('./urls');
 const dashboard = require('../pages/dashboard');
 const invitation = require('../pages/invitation');
-
-const urls = {
-  dashboard: '/',
-  account: {
-    menu: '/profile',
-    edit: '/profile/edit'
-  },
-  establishment: {
-    dashboard: '/e/:establishmentId',
-    read: '/e/:establishmentId/details'
-  },
-  profile: {
-    list: '/e/:establishmentId/people',
-    view: '/e/:establishmentId/people/:profileId',
-    invite: '/e/:establishmentId/people/invite',
-    invitations: '/e/:establishmentId/people/invitations'
-  },
-  project: {
-    list: '/e/:establishmentId/projects'
-  },
-  place: {
-    list: '/e/:establishmentId/places',
-    create: {
-      new: '/e/:establishmentId/places/create',
-      confirm: '/e/:establishmentId/places/create/confirm',
-      success: '/e/:establishmentId/places/create/success'
-    },
-    delete: {
-      confirm: '/e/:establishmentId/places/:placeId/delete/confirm',
-      success: '/e/:establishmentId/places/:placeId/delete/success'
-    },
-    update: {
-      confirm: '/e/:establishmentId/places/:placeId/edit/confirm',
-      success: '/e/:establishmentId/places/:placeId/edit/success'
-    }
-  },
-  pil: {
-    base: '/e/:establishmentId/people/:profileId/pil',
-    create: '/e/:establishmentId/people/:profileId/pil/create',
-    read: '/e/:establishmentId/people/:profileId/pil/:pilId',
-    update: '/e/:establishmentId/people/:profileId/pil/:pilId/edit',
-    procedures: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/procedures',
-    training: {
-      exempt: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training/exempt',
-      certificate: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training',
-      modules: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training/modules'
-    },
-    exemptions: {
-      exempt: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/exemptions',
-      modules: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/exemptions/modules'
-    },
-    success: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/success'
-  },
-  task: {
-    base: '/tasks',
-    read: '/tasks/:taskId',
-    confirm: '/tasks/:taskId/confirm',
-    success: '/tasks/:taskId/success'
-  },
-  invitation: '/invitation/:token',
-  feedback: '/feedback'
-};
 
 module.exports = settings => {
   const app = ui({ ...settings, views, urls });
@@ -111,38 +49,32 @@ module.exports = settings => {
     });
   });
 
+  app.use(urls.dashboard, dashboard());
+
+  // add "home" breadcrmb to every subsequent page
+  app.use((req, res, next) => {
+    req.breadcrumb('dashboard');
+    next();
+  });
+
   app.use(urls.invitation, invitation());
+  app.use(urls.feedback, feedback());
+  app.use(urls.account.menu, user());
+  app.use(urls.task.base, task());
 
-  app.use(urls.profile.list, profile());
-
-  app.use(urls.place.list,
-    place(),
-    crumbs(['{{static.content.pages.place.list}}'])
-  );
-
-  app.use(urls.establishment.read,
-    establishment.details(),
-    crumbs(['{{static.content.pages.establishment.details}}'])
-  );
-
-  app.use(urls.project.list,
-    project.list(),
-    crumbs(['{{static.content.pages.project.list}}'])
-  );
+  // add "establishment" breacrumb to all pages scoped under an establishment
+  app.use(urls.establishment.dashboard, (req, res, next) => {
+    req.breadcrumb('establishment.dashboard');
+    next();
+  });
 
   app.use(urls.establishment.dashboard, establishment.dashboard());
+  app.use(urls.establishment.read, establishment.details());
 
-  app.use(urls.pil.base,
-    pil(),
-    crumbs(['{{static.content.pages.pil.categories}}'])
-  );
-
-  app.use(urls.account.menu, user());
-
-  app.use(urls.dashboard, dashboard());
-  app.use(urls.feedback, feedback());
-
-  app.use(urls.task.base, task());
+  app.use(urls.profile.list, profile());
+  app.use(urls.place.list, place());
+  app.use(urls.project.list, project.list());
+  app.use(urls.pil.base, pil());
 
   return app;
 };

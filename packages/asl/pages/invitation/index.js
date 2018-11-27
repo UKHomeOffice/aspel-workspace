@@ -8,20 +8,25 @@ module.exports = settings => {
     root: __dirname
   });
 
-  app.use((req, res, next) => {
+  app.get('/', (req, res, next) => {
     if (req.invitation && req.user.profile.establishments.find(e => e.id === req.invitation.establishmentId)) {
       return res.redirect('/');
     }
     next();
   });
 
-  app.use((req, res, next) => {
+  app.get('/', (req, res, next) => {
     req.api(`/invitation/${req.params.token}`)
       .then(response => {
         res.locals.static.establishment = response.json.meta.establishment;
       })
       .then(() => next())
       .catch(next);
+  });
+
+  app.get('/', (req, res, next) => {
+    req.breadcrumb('invitation');
+    next();
   });
 
   app.post('/', (req, res, next) => {
@@ -32,6 +37,8 @@ module.exports = settings => {
       })
       .catch(next);
   });
+
+  app.get('/', (req, res) => res.sendResponse());
 
   app.use((err, req, res, next) => {
     if (err.status === 404) {
