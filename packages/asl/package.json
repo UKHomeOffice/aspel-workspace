@@ -8,8 +8,6 @@
     "dev": "nodemon -r dotenv/config -e js,jsx,json -w .",
     "test": "npm run test:lint",
     "test:lint": "eslint .",
-    "test:functional": "funkie --driver chromedriver npm run test:functional:ci",
-    "test:functional:ci": "asl-test ./tests/functional/config",
     "build": "npm run build:js && npm run build:css",
     "build:js": "webpack",
     "prebuild:css": "mkdir -p ./public/css",
@@ -34,7 +32,6 @@
     "lodash": "^4.17.10"
   },
   "devDependencies": {
-    "@ukhomeoffice/asl-functional-testing": "^1.2.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -44,8 +41,6 @@
     "eslint": "^4.15.0",
     "eslint-config-lennym": "^2.0.1",
     "eslint-plugin-undocumented-env": "^1.0.0",
-    "funkie": "0.0.6",
-    "funkie-chromedriver": "0.0.1",
     "nodemon": "^1.17.4",
     "npm-sass": "^2.3.0",
     "webpack": "^4.12.0",
