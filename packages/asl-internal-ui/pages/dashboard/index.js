@@ -12,7 +12,9 @@ module.exports = settings => {
     next();
   });
 
-  app.use(taskList());
+  app.get('/', taskList());
+
+  app.get('/', (req, res) => res.sendResponse());
 
   return app;
 };
