@@ -1,5 +1,5 @@
 const { page } = require('@asl/pages');
-const taskList = require('@asl/pages/pages/common/routers/task-list');
+const taskList = require('@asl/pages/pages/task/list/router');
 
 module.exports = settings => {
   const app = page({

@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import {
   Datatable,
   Link,
-  Snippet
+  Snippet,
+  Header
 } from '@asl/components';
 
 export const formatters = {
@@ -26,10 +27,9 @@ const Index = ({
   tasks
 }) => (
   <Fragment>
-    <header>
-      <h2>&nbsp;</h2>
-      <h1><Snippet name={firstName}>pages.dashboard.greeting</Snippet></h1>
-    </header>
+    <Header
+      title={<Snippet name={firstName}>pages.dashboard.greeting</Snippet>}
+    />
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
         <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
