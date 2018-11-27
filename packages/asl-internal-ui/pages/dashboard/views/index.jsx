@@ -1,23 +1,11 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
-  Datatable,
   Link,
   Snippet,
   Header
 } from '@asl/components';
-
-export const formatters = {
-  type: {
-    format: (name, data) => {
-      return (<Fragment>
-        <a href={data.action.url}>{data.action.label}</a>
-        <br />
-        {data.action.details}
-      </Fragment>);
-    }
-  }
-};
+import Tasklist from '@asl/pages/pages/task/list/views/tasklist';
 
 const Index = ({
   profile: {
@@ -33,8 +21,7 @@ const Index = ({
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
         <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
-
-        <Datatable formatters={formatters} />
+        <Tasklist />
       </div>
     </div>
   </Fragment>
