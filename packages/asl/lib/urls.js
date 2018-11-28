@@ -12,7 +12,8 @@ module.exports = {
     list: '/e/:establishmentId/people',
     view: '/e/:establishmentId/people/:profileId',
     invite: '/e/:establishmentId/people/invite',
-    invitations: '/e/:establishmentId/people/invitations'
+    invitations: '/e/:establishmentId/people/invitations',
+    permission: '/e/:establishmentId/people/:profileId/permission'
   },
   project: {
     list: '/e/:establishmentId/projects'
