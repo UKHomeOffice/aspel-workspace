@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon -r dotenv/config",
+    "dev": "nodemon -r dotenv/config -e .js,.jsx",
     "test": "eslint .",
     "test:functional:ci": "asl-test ./tests/functional/config",
     "test:functional": "funkie --driver chromedriver npm run test:functional:ci",
