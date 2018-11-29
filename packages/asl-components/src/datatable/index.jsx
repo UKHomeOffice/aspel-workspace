@@ -47,11 +47,12 @@ export class Datatable extends Component {
       schema,
       sortable,
       isFetching,
-      ExpandableRow
+      ExpandableRow,
+      className
     } = this.props;
 
     return (
-      <table className={classnames('govuk-table', 'govuk-react-datatable', isFetching && 'loading')}>
+      <table className={classnames('govuk-table', 'govuk-react-datatable', className, isFetching && 'loading')}>
         <thead>
           <tr>
             {
