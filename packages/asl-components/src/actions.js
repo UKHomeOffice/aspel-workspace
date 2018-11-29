@@ -15,6 +15,10 @@ const receiveItems = ({ rows, count, totalCount }) => ({
   totalCount
 });
 
+const requestFailed = () => ({
+  type: 'REQUEST_FAILED'
+});
+
 const showError = message => ({
   type: 'SHOW_ERROR',
   message
@@ -54,5 +58,9 @@ export const fetchItems = (url, dispatch) => {
     .then(({ datatable: { data: { rows }, pagination: { count, totalCount } } }) => {
       dispatch(receiveItems({ rows, count, totalCount }));
     })
-    .catch(err => dispatch(showErrorNotification(err.message)));
+    .catch(err => {
+      dispatch(showErrorNotification(err.message));
+      dispatch(requestFailed());
+      throw err;
+    });
 };
