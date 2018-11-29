@@ -4,6 +4,14 @@ import { Datatable } from './';
 import TableHeader from './header';
 
 describe('<Datatable />', () => {
+  test('renders any class names passed to it', () => {
+    const schema = { site: {}, name: {}, number: {} };
+    const wrapper = shallow(<Datatable schema={schema} className="foo bar" />);
+    const table = wrapper.find('table');
+    expect(table.hasClass('foo')).toEqual(true);
+    expect(table.hasClass('bar')).toEqual(true);
+  });
+
   test('renders a <TableHeader /> element for each column, taken from schema', () => {
     const schema = { site: {}, name: {}, number: {} };
     const wrapper = shallow(<Datatable schema={schema} />);
