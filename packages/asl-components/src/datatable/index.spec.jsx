@@ -12,6 +12,13 @@ describe('<Datatable />', () => {
     expect(table.hasClass('bar')).toEqual(true);
   });
 
+  test('doesnt render class of "undefined" if no className passed', () => {
+    const schema = { site: {}, name: {}, number: {} };
+    const wrapper = shallow(<Datatable schema={schema} />);
+    const table = wrapper.find('table');
+    expect(table.hasClass('undefined')).toEqual(false);
+  });
+
   test('renders a <TableHeader /> element for each column, taken from schema', () => {
     const schema = { site: {}, name: {}, number: {} };
     const wrapper = shallow(<Datatable schema={schema} />);
