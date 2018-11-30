@@ -15,5 +15,6 @@ module.exports = {
     secret: process.env.KEYCLOAK_SECRET,
     profile: process.env.API_URL,
     permissions: process.env.PERMISSIONS_SERVICE
-  }
+  },
+  verboseErrors: process.env.VERBOSE_ERRORS === 'TRUE'
 };
