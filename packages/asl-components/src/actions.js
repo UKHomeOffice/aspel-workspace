@@ -1,5 +1,3 @@
-import fetch from 'r2';
-
 const FETCH_TIMEOUT = 5000;
 const NOTIFICATION_DURATION = 5000;
 let notificationTimeout;
@@ -45,14 +43,26 @@ export const fetchItems = (url, dispatch) => {
           reject(new Error('Request timed out'));
         }, FETCH_TIMEOUT);
 
-        fetch(url, {
+        window.fetch(url, {
           credentials: 'include',
           headers: {
             Accept: 'application/json'
           }
         })
-          .json
-          .then(resolve, reject);
+          .then(response => {
+            return response.json()
+              .then(json => {
+                if (response.status > 399) {
+                  const err = new Error(json.message);
+                  err.status = response.status;
+                  Object.assign(err, json);
+                  throw err;
+                }
+                return json;
+              });
+          })
+          .then(resolve)
+          .catch(reject);
       });
     })
     .then(({ datatable: { data: { rows }, pagination: { count, totalCount } } }) => {

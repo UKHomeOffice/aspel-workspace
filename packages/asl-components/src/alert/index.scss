@@ -20,7 +20,8 @@
     >:first-child:after {
       content: "✕";
       position: absolute;
-      right: 0;
+      top: 0;
+      right: -1em;
       color: white;
       height: 1em;
       width: 1em;
