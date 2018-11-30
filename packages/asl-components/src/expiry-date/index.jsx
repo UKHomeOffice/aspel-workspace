@@ -34,6 +34,9 @@ const ExpiryDate = ({
   if (urgent) {
     contentKey = diff === 0 ? 'diff.singular' : 'diff.plural';
   }
+  if (diff < 0) {
+    contentKey = 'diff.expired';
+  }
 
   return (
     <Fragment>
