@@ -1,5 +1,7 @@
 const FETCH_TIMEOUT = 5000;
 const NOTIFICATION_DURATION = 5000;
+const DEFAULT_ERROR_MESSAGE = 'Something went wrong';
+
 let notificationTimeout;
 
 const requestItems = () => ({
@@ -53,7 +55,7 @@ export const fetchItems = (url, dispatch) => {
             return response.json()
               .then(json => {
                 if (response.status > 399) {
-                  const err = new Error(json.message);
+                  const err = new Error(json.message || DEFAULT_ERROR_MESSAGE);
                   err.status = response.status;
                   Object.assign(err, json);
                   throw err;
