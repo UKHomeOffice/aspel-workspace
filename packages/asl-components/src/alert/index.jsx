@@ -21,22 +21,23 @@ class Alert extends Component {
   }
 
   alert() {
-    if (!this.props.message) {
+    const { message, type, timeout, hideNotification, ...props } = this.props;
+    if (!message) {
       return;
     }
     this.timer();
     return (
       <div
-        className={`alert alert-${this.props.type}`}
+        className={`alert alert-${type}`}
         key="alert"
         onClick={() => {
           clearTimeout(notificationTimeout);
-          this.props.hideNotification();
+          hideNotification();
         }}>
         <div className="govuk-width-container">
           <p>
             {
-              <Snippet fallback={this.props.message}>{`notification.${this.props.message}`}</Snippet>
+              <Snippet fallback={message} {...props}>{`notification.${message}`}</Snippet>
             }
           </p>
         </div>
@@ -62,6 +63,6 @@ Alert.defaultProps = {
   type: 'alert'
 };
 
-const mapStateToProps = ({ notification: { message, type, timeout } }) => ({ message, type, timeout });
+const mapStateToProps = ({ notification }) => ({ ...notification });
 
 export default connect(mapStateToProps, { hideNotification })(Alert);
