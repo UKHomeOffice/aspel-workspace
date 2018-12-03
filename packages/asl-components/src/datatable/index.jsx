@@ -13,11 +13,11 @@ export class Datatable extends Component {
   constructor(options) {
     super(options);
     this.toggleContent = this.toggleContent.bind(this);
-    this.isExpandable = this.isExpandable.bind(this);
+    this.isExpanded = this.isExpanded.bind(this);
   }
 
   componentDidMount() {
-    if (!this.props.ExpandableRow) {
+    if (!this.props.expands) {
       return;
     }
     const expanded = this.props.data.reduce((obj, { id }) => {
@@ -32,8 +32,8 @@ export class Datatable extends Component {
     this.setState({ expanded });
   }
 
-  isExpandable(id) {
-    if (this.props.ExpandableRow) {
+  isExpanded(id) {
+    if (this.props.expands) {
       if (!this.state) {
         return true;
       }
@@ -47,7 +47,7 @@ export class Datatable extends Component {
       schema,
       sortable,
       isFetching,
-      ExpandableRow,
+      expands,
       className
     } = this.props;
 
@@ -65,14 +65,14 @@ export class Datatable extends Component {
         </thead>
         <tbody>
           {
-            data.map(row => (
-              <Fragment key={row.id}>
+            data.map(row => {
+              const expansion = expands && expands(row);
+              const expandable = !!expansion;
+              const expanded = this.isExpanded(row.id);
+              return <Fragment key={row.id}>
                 <tr
-                  onClick={ExpandableRow && (() => this.toggleContent(row.id))}
-                  className={classnames({
-                    expandable: ExpandableRow,
-                    expanded: ExpandableRow && this.state && this.state.expanded[row.id]
-                  })}
+                  onClick={expansion && (() => this.toggleContent(row.id))}
+                  className={classnames({ expandable, expanded })}
                 >
                   {
                     map(schema, (column, key) => {
@@ -84,22 +84,17 @@ export class Datatable extends Component {
                   }
                 </tr>
                 {
-                  this.isExpandable(row.id) && (
+                  expanded && (
                     <tr className='expanded-content' onClick={() => this.toggleContent(row.id)}>
                       <td colSpan={size(schema)}>
-                        {
-                          <ExpandableRow
-                            row={row}
-                            schema={schema}
-                          />
-                        }
+                        { expansion }
                       </td>
                     </tr>
                   )
                 }
               </Fragment>
 
-            ))
+            })
           }
         </tbody>
         <tfoot>

@@ -102,25 +102,41 @@ describe('<Datatable />', () => {
     let schema;
     let data;
 
+    const expands = row => {
+      return row.number % 2 ? null : <div className="expanding">{ row.number }</div>;
+    }
+
     beforeEach(() => {
       data = [
-        { id: 1, site: 'A Site', name: 'The Name', number: 3 }
+        { id: 1, site: 'A Site', name: 'The Name', number: 3 },
+        { id: 2, site: 'A Site', name: 'The Name', number: 4 },
+        { id: 3, site: 'A Site', name: 'The Name', number: 5 },
+        { id: 4, site: 'A Site', name: 'The Name', number: 6 }
       ];
       schema = {
         site: { show: true },
         name: { show: true },
         number: { show: true }
       };
-      wrapper = shallow(<Datatable data={data} schema={schema} ExpandableRow={() => {}} />);
+      wrapper = shallow(<Datatable data={data} schema={schema} expands={expands} />);
     });
 
     test('renders expandable rows if expandable prop is true', () => {
-      expect(wrapper.find('tr.expandable').length).toBe(1);
+      expect(wrapper.find('tr.expandable').length).toBe(2);
     });
 
-    test('sets state to expanded for the row if clicked', () => {
-      wrapper.find('tr.expandable').simulate('click');
-      expect(wrapper.instance().state.expanded).toEqual({ '1': true });
+    test('shows expanding content for a row when clicked', () => {
+      wrapper.find('tr.expandable').first().simulate('click');
+      const expanded = wrapper.find('div.expanding');
+      expect(expanded.length).toEqual(1);
+      expect(expanded.text()).toEqual('4');
+    });
+
+    test('clicking an open row closes it', () => {
+      wrapper.find('tr.expandable').first().simulate('click');
+      expect(wrapper.find('div.expanding').length).toEqual(1);
+      wrapper.find('tr.expandable').first().simulate('click');
+      expect(wrapper.find('div.expanding').length).toEqual(0);
     });
 
   });

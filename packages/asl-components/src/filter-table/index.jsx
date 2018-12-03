@@ -3,7 +3,7 @@ import { Datatable, Filters, FilterSummary, Link, Snippet } from '../';
 
 const FilterTable = ({
   formatters,
-  ExpandableRow,
+  expands,
   createPath
 }) => (
   <Fragment>
@@ -14,7 +14,7 @@ const FilterTable = ({
         createPath && <Link label={<Snippet>addNew</Snippet>} page={createPath} />
       }
     </div>
-    <Datatable formatters={ formatters } ExpandableRow={ExpandableRow} />
+    <Datatable formatters={ formatters } expands={expands} />
   </Fragment>
 );
 
