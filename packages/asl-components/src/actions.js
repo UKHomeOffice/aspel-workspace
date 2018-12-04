@@ -1,7 +1,6 @@
-const FETCH_TIMEOUT = 5000;
-const NOTIFICATION_DURATION = 5000;
+import { showNotification } from './notification/actions';
 
-let notificationTimeout;
+const FETCH_TIMEOUT = 5000;
 
 const requestItems = () => ({
   type: 'REQUEST_ITEMS'
@@ -17,23 +16,6 @@ const receiveItems = ({ rows, count, totalCount }) => ({
 const requestFailed = () => ({
   type: 'REQUEST_FAILED'
 });
-
-const showError = message => ({
-  type: 'SHOW_ERROR',
-  message
-});
-
-export const hideMessage = () => {
-  clearTimeout(notificationTimeout);
-  return {
-    type: 'HIDE_MESSAGE'
-  };
-};
-
-export const showErrorNotification = message => (dispatch, getState) => {
-  notificationTimeout = setTimeout(() => dispatch(hideMessage()), NOTIFICATION_DURATION);
-  return dispatch(showError(message));
-};
 
 export const fetchItems = (url, dispatch) => {
   dispatch(requestItems());
@@ -70,7 +52,7 @@ export const fetchItems = (url, dispatch) => {
       dispatch(receiveItems({ rows, count, totalCount }));
     })
     .catch(err => {
-      dispatch(showErrorNotification(err.message));
+      dispatch(showNotification({ message: err.message, type: 'error' }));
       dispatch(requestFailed());
       throw err;
     });

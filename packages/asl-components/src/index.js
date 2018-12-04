@@ -1,7 +1,6 @@
 export { default as Accordion } from './accordion';
 export { default as Acronym } from './acronym';
 export { default as AddAnother } from './add-another';
-export { default as Alert } from './alert';
 export { default as ApplicationProgress } from './application-progress';
 export { default as ApplicationConfirm } from './application-confirm';
 export { default as ApplyChanges } from './apply-changes';
@@ -30,7 +29,7 @@ export { default as JoinAcronyms } from './join-acronyms';
 export { default as Link } from './link';
 export { default as LinkFilter } from './link-filter';
 export { default as ModelSummary } from './model-summary';
-export { default as Notifications } from './notifications';
+export { default as Notification } from './notification';
 export { default as Pagination } from './pagination';
 export { default as Panel } from './panel';
 export { default as PanelList } from './panel-list';
