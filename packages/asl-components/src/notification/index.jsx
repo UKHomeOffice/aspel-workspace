@@ -15,8 +15,8 @@ class Notification extends Component {
   }
 
   timer() {
+    clearTimeout(notificationTimeout);
     if (this.props.timeout && this.props.message) {
-      clearTimeout(notificationTimeout);
       notificationTimeout = setTimeout(this.props.hideNotification, this.props.timeout);
     }
   }
