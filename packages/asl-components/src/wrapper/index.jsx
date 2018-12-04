@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Notifiction } from '../';
+import { Notification } from '../';
 
 const Wrapper = ({ children }) => (
   <Fragment>
