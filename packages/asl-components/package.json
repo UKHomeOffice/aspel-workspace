@@ -6,9 +6,10 @@
   "module": "dist/asl-components.module.js",
   "styles": "src/index.scss",
   "scripts": {
-    "test": "npm run test:lint && npm run test:unit",
+    "test": "npm run test:lint && npm run test:unit && npm run test:css",
     "test:lint": "eslint .",
     "test:unit": "jest",
+    "test:css": "npm-sass ./test/test.scss > /dev/null",
     "build": "npm run build:js",
     "build:js": "rollup -c rollup.config.js",
     "prepublish": "npm run build"
@@ -39,6 +40,7 @@
     "react": ">= 16.0.0"
   },
   "devDependencies": {
+    "@ukhomeoffice/frontend-toolkit": "^2.3.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.6",
     "babel-jest": "^22.4.4",
