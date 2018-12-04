@@ -1,6 +1,6 @@
 {
   "name": "@asl/components",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "React components for ASL layouts and elements",
   "main": "dist/asl-components.js",
   "module": "dist/asl-components.module.js",
