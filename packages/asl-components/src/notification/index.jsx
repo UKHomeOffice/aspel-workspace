@@ -38,7 +38,7 @@ class Notification extends Component {
         <div className="govuk-width-container">
           <p>
             {
-              <Snippet fallback={message} {...props}>{`notification.${message}`}</Snippet>
+              <Snippet fallback={message} {...props}>{`notifications.${message}`}</Snippet>
             }
           </p>
         </div>
