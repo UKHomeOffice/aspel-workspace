@@ -7,7 +7,7 @@ import { Snippet } from '../';
 const NOTIFICATION_DURATION = 5000;
 let notificationTimeout;
 
-class Alert extends Component {
+class Notification extends Component {
 
   componentDidMount() {
     this.timer = this.timer.bind(this);
@@ -58,11 +58,11 @@ class Alert extends Component {
   }
 }
 
-Alert.defaultProps = {
+Notification.defaultProps = {
   timeout: NOTIFICATION_DURATION,
   type: 'alert'
 };
 
 const mapStateToProps = ({ notification }) => ({ ...notification });
 
-export default connect(mapStateToProps, { hideNotification })(Alert);
+export default connect(mapStateToProps, { hideNotification })(Notification);

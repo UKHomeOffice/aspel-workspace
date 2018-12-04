@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
-import { Alert } from '../';
+import { Notifiction } from '../';
 
 const Wrapper = ({ children }) => (
   <Fragment>
-    <Alert />
+    <Notification />
     { children }
   </Fragment>
 );

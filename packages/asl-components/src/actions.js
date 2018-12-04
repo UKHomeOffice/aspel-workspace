@@ -1,4 +1,4 @@
-import { showNotification } from './alert/actions';
+import { showNotification } from './notification/actions';
 
 const FETCH_TIMEOUT = 5000;
 
