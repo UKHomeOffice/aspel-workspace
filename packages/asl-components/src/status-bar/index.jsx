@@ -11,7 +11,7 @@ class StatusBar extends Component {
       <div className="status-bar">
         { user && user.profile && (
           <Fragment>
-            <span><a href="/profile">{`${user.profile.firstName} ${user.profile.lastName}`}</a></span>
+            <span><a href="/account">{`${user.profile.firstName} ${user.profile.lastName}`}</a></span>
             |
           </Fragment>
         )}
