@@ -1,5 +1,5 @@
 const { router } = require('@asl/service/ui');
-const { NotAuthorisedError } = require('./errors');
+const { NotAuthorisedError, NotFoundError } = require('./errors');
 const { pages, content, views } = require('@asl/pages');
 const {
   establishment,
@@ -34,6 +34,9 @@ module.exports = settings => {
 
   app.param('establishmentId', (req, res, next, param) => {
     req.establishmentId = parseInt(param, 10);
+    if (isNaN(req.establishmentId)) {
+      return next(new NotFoundError());
+    }
     next();
   });
 
