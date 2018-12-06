@@ -1,4 +1,4 @@
-const { page } = require('@asl/pages');
+const { page } = require('@asl/service/ui');
 const taskList = require('@asl/pages/pages/task/list/router');
 
 module.exports = settings => {

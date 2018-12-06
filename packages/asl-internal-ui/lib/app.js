@@ -1,4 +1,4 @@
-const ui = require('@asl/service/ui');
+const { router } = require('@asl/service/ui');
 const { NotAuthorisedError } = require('./errors');
 const { pages, content, views } = require('@asl/pages');
 const {
@@ -16,7 +16,7 @@ const establishmentList = require('../pages/establishment-list');
 const urls = require('./urls');
 
 module.exports = settings => {
-  const app = ui({ ...settings, views, urls });
+  const app = router({ ...settings, views, urls });
 
   app.use((req, res, next) => {
     if (!req.user || !req.user.profile || !req.user.profile.asruUser) {
