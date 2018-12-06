@@ -1,5 +1,4 @@
-const page = require('@asl/pages/lib/page');
-
+const { page } = require('@asl/service/ui');
 const ErrorPage = require('./views/error');
 
 module.exports = settings => {
