@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const ui = require('@asl/service/ui');
+const { router } = require('@asl/service/ui');
 const { pages, views, content } = require('@asl/pages');
 const {
   establishment,
@@ -18,7 +18,7 @@ const dashboard = require('../pages/dashboard');
 const invitation = require('../pages/invitation');
 
 module.exports = settings => {
-  const app = ui({ ...settings, views, urls });
+  const app = router({ ...settings, views, urls });
 
   app.use(content);
 
