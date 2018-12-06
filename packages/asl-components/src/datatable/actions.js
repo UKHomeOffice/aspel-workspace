@@ -1,13 +1,13 @@
-import { queryStringFromState, getSort } from '../utils';
-import { fetchItems } from '../actions';
-import merge from 'lodash/merge';
+const { queryStringFromState, getSort } = require('../utils');
+const { fetchItems } = require('../actions');
+const merge = require('lodash/merge');
 
 const setSort = sort => ({
   type: 'SET_SORT',
   sort
 });
 
-export const doSort = column => (dispatch, getState) => {
+const doSort = column => (dispatch, getState) => {
   const state = getState();
   const sort = getSort(column, state.datatable.sort);
   const query = queryStringFromState(merge({}, state, {
@@ -15,4 +15,8 @@ export const doSort = column => (dispatch, getState) => {
   }));
   return fetchItems(`${state.static.url}?${query}`, dispatch)
     .then(() => dispatch(setSort(sort)));
+};
+
+module.exports = {
+  doSort
 };

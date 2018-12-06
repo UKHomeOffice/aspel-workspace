@@ -1,4 +1,4 @@
-import { showNotification } from './notification/actions';
+const { showNotification } = require('./notification/actions');
 
 const FETCH_TIMEOUT = 5000;
 
@@ -17,7 +17,7 @@ const requestFailed = () => ({
   type: 'REQUEST_FAILED'
 });
 
-export const fetchItems = (url, dispatch) => {
+const fetchItems = (url, dispatch) => {
   dispatch(requestItems());
   return Promise.resolve()
     .then(() => {
@@ -56,4 +56,8 @@ export const fetchItems = (url, dispatch) => {
       dispatch(requestFailed());
       throw err;
     });
+};
+
+module.exports = {
+  fetchItems
 };

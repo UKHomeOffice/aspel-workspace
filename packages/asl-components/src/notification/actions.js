@@ -1,8 +1,8 @@
-export const hideNotification = () => ({
+const hideNotification = () => ({
   type: 'HIDE_MESSAGE'
 });
 
-export const showNotification = ({ message, type, timeout }) => ({
+const showNotification = ({ message, type, timeout }) => ({
   type: 'SHOW_MESSAGE',
   notification: {
     message,
@@ -10,3 +10,8 @@ export const showNotification = ({ message, type, timeout }) => ({
     timeout
   }
 });
+
+module.exports = {
+  hideNotification,
+  showNotification
+};
