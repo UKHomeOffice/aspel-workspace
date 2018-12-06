@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { hideNotification } from './actions';
-import { Snippet } from '../';
 
 const NOTIFICATION_DURATION = 5000;
 let notificationTimeout;
@@ -36,11 +35,7 @@ class Notification extends Component {
           hideNotification();
         }}>
         <div className="govuk-width-container">
-          <p>
-            {
-              <Snippet fallback={message} {...props}>{`notifications.${message}`}</Snippet>
-            }
-          </p>
+          <p>{ message }</p>
         </div>
       </div>
     );

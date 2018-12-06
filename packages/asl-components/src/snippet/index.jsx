@@ -11,9 +11,6 @@ export const Snippet = ({ content, children, optional, fallback, ...props }) => 
   if (str === undefined && optional) {
     return null;
   }
-  if (str === undefined && fallback) {
-    return fallback;
-  }
   if (str === undefined) {
     throw new Error(`Failed to lookup content snippet: ${children}`);
   }
