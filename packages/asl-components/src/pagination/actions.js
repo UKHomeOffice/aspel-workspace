@@ -1,17 +1,21 @@
-import { queryStringFromState } from '../utils';
-import { fetchItems } from '../actions';
-import merge from 'lodash/merge';
+const { queryStringFromState } = require('../utils');
+const { fetchItems } = require('../actions');
+const merge = require('lodash/merge');
 
 const setPage = page => ({
   type: 'SET_PAGE',
   page
 });
 
-export const changePage = page => (dispatch, getState) => {
+const changePage = page => (dispatch, getState) => {
   const state = getState();
   const query = queryStringFromState(merge({}, state, {
     datatable: { pagination: { page } }
   }));
   return fetchItems(`${state.static.url}?${query}`, dispatch)
     .then(() => dispatch(setPage(page)));
+};
+
+module.exports = {
+  changePage
 };

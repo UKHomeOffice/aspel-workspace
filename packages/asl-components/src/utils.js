@@ -1,7 +1,7 @@
-import { stringify } from 'qs';
-import get from 'lodash/get';
+const { stringify } = require('qs');
+const get = require('lodash/get');
 
-export const getValue = ({ row, schema, key }) => {
+const getValue = ({ row, schema, key }) => {
   const accessor = schema.accessor || key;
   if (typeof accessor === 'function') {
     return accessor(row);
@@ -9,7 +9,7 @@ export const getValue = ({ row, schema, key }) => {
   return get(row, accessor);
 };
 
-export const queryStringFromState = ({
+const queryStringFromState = ({
   datatable: {
     filters: {
       active: filters
@@ -26,7 +26,13 @@ export const queryStringFromState = ({
   return stringify({ filters, sort, page });
 };
 
-export const getSort = (column, state) => ({
+const getSort = (column, state) => ({
   column,
   ascending: state.column === column ? !state.ascending : true
 });
+
+module.exports = {
+  getValue,
+  queryStringFromState,
+  getSort
+};

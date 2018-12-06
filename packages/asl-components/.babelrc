@@ -1,18 +1,4 @@
 {
-  "presets": [
-    ["env", {"modules": false}],
-    "stage-0",
-    "react"
-  ],
-  "plugins": [
-  ],
-  "env": {
-    "test": {
-      "presets": [
-        ["env", {"modules": "commonjs"}],
-        "stage-0",
-        "react"
-      ]
-    }
-  }
+  "presets": ["env", "react"],
+  "plugins": ["transform-object-rest-spread"]
 }
