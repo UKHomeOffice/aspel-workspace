@@ -1,8 +1,8 @@
 module.exports = {
   dashboard: '/',
   account: {
-    menu: '/profile',
-    edit: '/profile/edit'
+    menu: '/account',
+    edit: '/account/edit'
   },
   establishment: {
     dashboard: '/e/:establishmentId',
