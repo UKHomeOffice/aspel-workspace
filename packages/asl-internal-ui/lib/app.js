@@ -33,7 +33,7 @@ module.exports = settings => {
   });
 
   app.param('establishmentId', (req, res, next, param) => {
-    req.establishmentId = param;
+    req.establishmentId = parseInt(param, 10);
     next();
   });
 
