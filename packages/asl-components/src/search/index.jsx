@@ -29,6 +29,7 @@ export class Search extends Component {
                 id="filter"
                 name="filter"
                 type="text"
+                placeholder={this.props.placeholder}
                 value={ this.state ? this.state.value : this.props.filter }
                 onChange={e => this.setState({ value: e.target.value })}
               />

@@ -34,6 +34,7 @@ export { default as Pagination } from './pagination';
 export { default as Panel } from './panel';
 export { default as PanelList } from './panel-list';
 export { default as Search } from './search';
+export { default as SearchPanel } from './search-panel';
 export { default as SectionList } from './section-list';
 export { default as Sidebar } from './sidebar';
 export { default as Snippet } from './snippet';
