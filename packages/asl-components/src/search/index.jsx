@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { doSearch } from './actions';
 import { ApplyChanges } from '../';
@@ -14,6 +15,8 @@ export class Search extends Component {
   }
 
   render() {
+    const id = this.props.id || 'filter';
+
     return (
       <ApplyChanges
         type="form"
@@ -22,14 +25,13 @@ export class Search extends Component {
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
             <div className="govuk-form-group search-box">
-              <label className="govuk-label" htmlFor="filter">{this.props.label || 'Search'}</label>
+              <label className="govuk-label" htmlFor={id}>{this.props.label || 'Search'}</label>
               { this.props.hint && <span className="govuk-hint">{this.props.hint}</span> }
               <input
                 className="govuk-input"
-                id="filter"
-                name="filter"
+                id={id}
+                name={id}
                 type="text"
-                placeholder={this.props.placeholder}
                 value={ this.state ? this.state.value : this.props.filter }
                 onChange={e => this.setState({ value: e.target.value })}
               />
@@ -41,6 +43,10 @@ export class Search extends Component {
     );
   }
 }
+
+Search.propTypes = {
+  placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
+};
 
 const mapStateToProps = ({ datatable: { filters } }) => ({
   filter: filters['*'] ? filters['*'][0] : ''
