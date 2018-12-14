@@ -25,7 +25,9 @@ export class Search extends Component {
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
             <div className="govuk-form-group search-box">
-              <label className="govuk-label" htmlFor={id}>{this.props.label || 'Search'}</label>
+              { !this.props.hideLabel &&
+                <label className="govuk-label" htmlFor={id}>{this.props.label || 'Search'}</label>
+              }
               { this.props.hint && <span className="govuk-hint">{this.props.hint}</span> }
               <input
                 className="govuk-input"
@@ -38,6 +40,11 @@ export class Search extends Component {
               <button type="submit" className="govuk-button"></button>
             </div>
           </div>
+          { this.props.children &&
+            <div className="govuk-grid-column-one-third">
+              { this.props.children }
+            </div>
+          }
         </div>
       </ApplyChanges>
     );
