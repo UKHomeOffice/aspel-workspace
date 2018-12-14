@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { doSearch } from './actions';
 import { ApplyChanges } from '../';
@@ -50,10 +49,6 @@ export class Search extends Component {
     );
   }
 }
-
-Search.propTypes = {
-  placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
-};
 
 const mapStateToProps = ({ datatable: { filters } }) => ({
   filter: filters['*'] ? filters['*'][0] : ''
