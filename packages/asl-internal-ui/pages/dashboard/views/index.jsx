@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Header, Link, Search, Snippet } from '@asl/components';
+import { ApplyChanges, Header, Link, Search, Snippet } from '@asl/components';
 import Tasklist from '@asl/pages/pages/task/list/views/tasklist';
 
 const models = [
@@ -33,31 +33,41 @@ const Index = ({
             )) }
           </ul>
 
-          <Search hideLabel={true}>
-            <div className="view-all-link">
-              { searchType === 'establishments' &&
-                <Link
-                  page="establishment.list"
-                  label={<Snippet>searchPanel.establishments.viewAll</Snippet>}
-                  className="view-all-establishments"
-                />
-              }
-              { searchType === 'people' &&
-                <Link
-                  page="profile.list"
-                  label={<Snippet>searchPanel.people.viewAll</Snippet>}
-                  className="view-all-people"
-                />
-              }
-              { searchType === 'projects' &&
-                <Link
-                  page="project.list"
-                  label={<Snippet>searchPanel.projects.viewAll</Snippet>}
-                  className="view-all-projects"
-                />
-              }
+          <ApplyChanges type="form" onApply={() => this.emitChange()}>
+            <div className="govuk-grid-row">
+
+              <div className="govuk-grid-column-two-thirds">
+                <Search hideLabel={true} />
+              </div>
+
+              <div className="govuk-grid-column-one-third">
+                <div className="view-all-link">
+                  { searchType === 'establishments' &&
+                    <Link
+                      page="establishment.list"
+                      label={<Snippet>searchPanel.establishments.viewAll</Snippet>}
+                      className="view-all-establishments"
+                    />
+                  }
+                  { searchType === 'people' &&
+                    <Link
+                      page="profile.list"
+                      label={<Snippet>searchPanel.people.viewAll</Snippet>}
+                      className="view-all-people"
+                    />
+                  }
+                  { searchType === 'projects' &&
+                    <Link
+                      page="project.list"
+                      label={<Snippet>searchPanel.projects.viewAll</Snippet>}
+                      className="view-all-projects"
+                    />
+                  }
+                </div>
+              </div>
+
             </div>
-          </Search>
+          </ApplyChanges>
         </div>
       </div>
     </div>
