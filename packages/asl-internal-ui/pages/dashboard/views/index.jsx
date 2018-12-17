@@ -36,7 +36,7 @@ const Index = ({
           <div className="govuk-grid-row">
 
             <div className="govuk-grid-column-two-thirds">
-              <Search hideLabel={true} />
+              <Search />
             </div>
 
             <div className="govuk-grid-column-one-third">
