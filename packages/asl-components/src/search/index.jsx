@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { doSearch } from './actions';
+import { ApplyChanges } from '../';
 
 export class Search extends Component {
 
@@ -16,21 +17,23 @@ export class Search extends Component {
     const name = this.props.name;
 
     return (
-      <div className="govuk-form-group search-box">
-        { !this.props.hideLabel &&
-          <label className="govuk-label" htmlFor={name}>{this.props.label}</label>
-        }
-        { this.props.hint && <span className="govuk-hint">{this.props.hint}</span> }
-        <input
-          className="govuk-input"
-          id={name}
-          name={name}
-          type="text"
-          value={ this.state ? this.state.value : this.props.filter }
-          onChange={e => this.setState({ value: e.target.value })}
-        />
-        <button type="submit" className="govuk-button"></button>
-      </div>
+      <ApplyChanges type="form" onApply={() => this.emitChange()}>
+        <div className="govuk-form-group search-box">
+          { !this.props.hideLabel &&
+            <label className="govuk-label" htmlFor={name}>{this.props.label}</label>
+          }
+          { this.props.hint && <span className="govuk-hint">{this.props.hint}</span> }
+          <input
+            className="govuk-input"
+            id={name}
+            name={name}
+            type="text"
+            value={ this.state ? this.state.value : this.props.filter }
+            onChange={e => this.setState({ value: e.target.value })}
+          />
+          <button type="submit" className="govuk-button"></button>
+        </div>
+      </ApplyChanges>
     );
   }
 }
