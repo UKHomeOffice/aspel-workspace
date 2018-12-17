@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { ApplyChanges, Header, Link, Search, Snippet } from '@asl/components';
+import { Header, Link, Search, Snippet } from '@asl/components';
 import Tasklist from '@asl/pages/pages/task/list/views/tasklist';
 
 const models = [
