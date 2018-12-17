@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import {
-  ApplyChanges,
   Datatable,
   Search,
   FilterSummary,
@@ -21,13 +20,11 @@ const Index = () => (
   <Fragment>
     <Header title={<Snippet>pages.establishment.list</Snippet>} />
 
-    <ApplyChanges type="form" onApply={() => this.emitChange()}>
-      <div className="govuk-grid-row">
-        <div className="govuk-grid-column-two-thirds">
-          <Search label={<Snippet>searchText</Snippet>} />
-        </div>
+    <div className="govuk-grid-row">
+      <div className="govuk-grid-column-two-thirds">
+        <Search label={<Snippet>searchText</Snippet>} />
       </div>
-    </ApplyChanges>
+    </div>
 
     <FilterSummary />
     <Datatable formatters={formatters} />

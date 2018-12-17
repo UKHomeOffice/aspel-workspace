@@ -33,41 +33,39 @@ const Index = ({
             )) }
           </ul>
 
-          <ApplyChanges type="form" onApply={() => this.emitChange()}>
-            <div className="govuk-grid-row">
+          <div className="govuk-grid-row">
 
-              <div className="govuk-grid-column-two-thirds">
-                <Search hideLabel={true} />
-              </div>
-
-              <div className="govuk-grid-column-one-third">
-                <div className="view-all-link">
-                  { searchType === 'establishments' &&
-                    <Link
-                      page="establishment.list"
-                      label={<Snippet>searchPanel.establishments.viewAll</Snippet>}
-                      className="view-all-establishments"
-                    />
-                  }
-                  { searchType === 'people' &&
-                    <Link
-                      page="profile.list"
-                      label={<Snippet>searchPanel.people.viewAll</Snippet>}
-                      className="view-all-people"
-                    />
-                  }
-                  { searchType === 'projects' &&
-                    <Link
-                      page="project.list"
-                      label={<Snippet>searchPanel.projects.viewAll</Snippet>}
-                      className="view-all-projects"
-                    />
-                  }
-                </div>
-              </div>
-
+            <div className="govuk-grid-column-two-thirds">
+              <Search hideLabel={true} />
             </div>
-          </ApplyChanges>
+
+            <div className="govuk-grid-column-one-third">
+              <div className="view-all-link">
+                { searchType === 'establishments' &&
+                  <Link
+                    page="establishment.list"
+                    label={<Snippet>searchPanel.establishments.viewAll</Snippet>}
+                    className="view-all-establishments"
+                  />
+                }
+                { searchType === 'people' &&
+                  <Link
+                    page="profile.list"
+                    label={<Snippet>searchPanel.people.viewAll</Snippet>}
+                    className="view-all-people"
+                  />
+                }
+                { searchType === 'projects' &&
+                  <Link
+                    page="project.list"
+                    label={<Snippet>searchPanel.projects.viewAll</Snippet>}
+                    className="view-all-projects"
+                  />
+                }
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
