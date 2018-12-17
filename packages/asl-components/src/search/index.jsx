@@ -19,7 +19,7 @@ export class Search extends Component {
     return (
       <ApplyChanges type="form" onApply={() => this.emitChange()}>
         <div className="govuk-form-group search-box">
-          { !this.props.hideLabel &&
+          { this.props.label &&
             <label className="govuk-label" htmlFor={name}>{this.props.label}</label>
           }
           { this.props.hint && <span className="govuk-hint">{this.props.hint}</span> }
@@ -39,9 +39,7 @@ export class Search extends Component {
 }
 
 Search.defaultProps = {
-  name: 'filter',
-  hideLabel: false,
-  label: 'Search'
+  name: 'filter'
 };
 
 const mapStateToProps = ({ datatable: { filters } }) => ({
