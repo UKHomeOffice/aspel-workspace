@@ -9,14 +9,9 @@ const models = [
   'projects'
 ];
 
-const Index = ({
-  profile: {
-    firstName
-  },
-  searchType
-}) => (
+const Index = ({ profile, searchType }) => (
   <Fragment>
-    <Header title={<Snippet name={firstName}>pages.dashboard.greeting</Snippet>} />
+    <Header title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>} />
 
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
@@ -79,4 +74,5 @@ const Index = ({
 const mapStateToProps = ({
   static: { profile, searchType }
 }) => ({ profile, searchType });
+
 export default connect(mapStateToProps)(Index);
