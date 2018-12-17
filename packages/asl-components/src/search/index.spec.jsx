@@ -14,11 +14,6 @@ describe('<Search />', () => {
     expect(wrapper.find('.search-box label').text()).toEqual('Search by name');
   });
 
-  test('Adds a default label of "Search"', () => {
-    const wrapper = shallow(<Search />);
-    expect(wrapper.find('.search-box label').text()).toEqual('Search');
-  });
-
   test('Sets the value of the input to the filter attr if passed', () => {
     const filter = 'Hi';
     const wrapper = shallow(<Search filter={ filter } />);
