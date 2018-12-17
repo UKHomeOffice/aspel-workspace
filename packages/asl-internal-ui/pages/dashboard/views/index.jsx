@@ -45,21 +45,18 @@ const Index = ({
                   <Link
                     page="establishment.list"
                     label={<Snippet>searchPanel.establishments.viewAll</Snippet>}
-                    className="view-all-establishments"
                   />
                 }
                 { searchType === 'people' &&
                   <Link
                     page="profile.list"
                     label={<Snippet>searchPanel.people.viewAll</Snippet>}
-                    className="view-all-people"
                   />
                 }
                 { searchType === 'projects' &&
                   <Link
                     page="project.list"
                     label={<Snippet>searchPanel.projects.viewAll</Snippet>}
-                    className="view-all-projects"
                   />
                 }
               </div>
