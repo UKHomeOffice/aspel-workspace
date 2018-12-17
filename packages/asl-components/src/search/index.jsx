@@ -14,32 +14,33 @@ export class Search extends Component {
   }
 
   render() {
+    const name = this.props.name;
+
     return (
-      <ApplyChanges
-        type="form"
-        onApply={() => this.emitChange()}
-      >
-        <div className="govuk-grid-row">
-          <div className="govuk-grid-column-two-thirds">
-            <div className="govuk-form-group search-box">
-              <label className="govuk-label" htmlFor="filter">{this.props.label || 'Search'}</label>
-              { this.props.hint && <span className="govuk-hint">{this.props.hint}</span> }
-              <input
-                className="govuk-input"
-                id="filter"
-                name="filter"
-                type="text"
-                value={ this.state ? this.state.value : this.props.filter }
-                onChange={e => this.setState({ value: e.target.value })}
-              />
-              <button type="submit" className="govuk-button"></button>
-            </div>
-          </div>
+      <ApplyChanges type="form" onApply={() => this.emitChange()}>
+        <div className="govuk-form-group search-box">
+          { this.props.label &&
+            <label className="govuk-label" htmlFor={name}>{this.props.label}</label>
+          }
+          { this.props.hint && <span className="govuk-hint">{this.props.hint}</span> }
+          <input
+            className="govuk-input"
+            id={name}
+            name={name}
+            type="text"
+            value={ this.state ? this.state.value : this.props.filter }
+            onChange={e => this.setState({ value: e.target.value })}
+          />
+          <button type="submit" className="govuk-button"></button>
         </div>
       </ApplyChanges>
     );
   }
 }
+
+Search.defaultProps = {
+  name: 'filter'
+};
 
 const mapStateToProps = ({ datatable: { filters } }) => ({
   filter: filters['*'] ? filters['*'][0] : ''
