@@ -27,8 +27,8 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-inspector-ui#readme",
   "dependencies": {
-    "@asl/components": "^2.3.1",
-    "@asl/pages": "^14.13.1",
+    "@asl/components": "^3.2.0",
+    "@asl/pages": "^14.14.1",
     "@asl/service": "^6.14.2",
     "lodash": "^4.17.10"
   },
@@ -40,8 +40,8 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "dotenv": "^5.0.1",
-    "eslint": "^4.18.1",
-    "eslint-config-lennym": "^1.4.0",
+    "eslint": "^5.10.0",
+    "eslint-config-lennym": "^2.0.1",
     "funkie": "0.0.6",
     "funkie-chromedriver": "0.0.1",
     "nodemon": "^1.17.4",

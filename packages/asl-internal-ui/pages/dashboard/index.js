@@ -9,6 +9,7 @@ module.exports = settings => {
 
   app.get('/', (req, res, next) => {
     res.locals.static.profile = req.user.profile;
+    res.locals.static.searchType = req.query.searchType || 'establishments';
     next();
   });
 

@@ -19,7 +19,13 @@ const formatters = {
 const Index = () => (
   <Fragment>
     <Header title={<Snippet>pages.establishment.list</Snippet>} />
-    <Search label={<Snippet>searchText</Snippet>} />
+
+    <div className="govuk-grid-row">
+      <div className="govuk-grid-column-two-thirds">
+        <Search label={<Snippet>searchText</Snippet>} />
+      </div>
+    </div>
+
     <FilterSummary />
     <Datatable formatters={formatters} />
   </Fragment>
