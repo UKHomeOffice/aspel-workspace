@@ -15,7 +15,7 @@ td .govuk-button {
   }
 
   ul.search-type {
-    margin-bottom: $govuk-gutter-half;
+    padding-inline-start: 0;
 
     li+li {
       border-left: 1px solid $white;
