@@ -8,16 +8,16 @@ module.exports = settings => {
   router.use(datatable({
     getApiPath: (req, res, next) => {
       switch (req.query.searchType) {
-        case 'people':
-          req.datatable.apiPath = `/search/profiles`;
-          break;
+        // case 'people':
+        //   req.datatable.apiPath = `/search/profiles`;
+        //   break;
 
-        case 'projects':
-          req.datatable.apiPath = `/search/projects`;
-          break;
+        // case 'projects':
+        //   req.datatable.apiPath = `/search/projects`;
+        //   break;
 
         default:
-          req.datatable.apiPath = `/search/establishments`;
+          req.datatable.apiPath = `/search/profiles`;
           break;
       }
       return next();
