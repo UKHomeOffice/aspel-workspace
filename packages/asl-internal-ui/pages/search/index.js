@@ -23,18 +23,12 @@ module.exports = settings => {
     next();
   });
 
-  app.use((req, res, next) => {
-    if (!req.query.filters) {
-      return next('router'); // skip the datatable router if no search has been performed
-    }
-    next();
-  });
-
   app.use('/', datatable({
     configure: (req, res, next) => {
       const searchType = req.query.searchType;
       req.datatable.searchType = searchType;
       req.datatable.schema = schemas[searchType];
+      req.datatable.disable = !req.query.filters;
 
       if (searchType && !searchableModels.includes(searchType)) {
         return next(new NotFoundError());
