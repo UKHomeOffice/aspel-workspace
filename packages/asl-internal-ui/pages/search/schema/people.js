@@ -2,15 +2,14 @@ module.exports = {
   id: {
     filter: false
   },
-  name: {
-    show: true,
-    filter: false,
-    sort: 'lastName'
+  lastName: {
+    show: true
   },
-  dob: {
+  email: {
     show: true
   },
   establishments: {
-    show: true
+    show: true,
+    sortable: false
   }
 };

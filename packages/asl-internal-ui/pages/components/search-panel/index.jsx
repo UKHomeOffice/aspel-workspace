@@ -1,23 +1,18 @@
 import React, { Component } from 'react';
 import { Link, Search, Snippet } from '@asl/components';
 
-const models = [
-  'establishments',
-  'people',
-  'projects'
-];
-
 class SearchPanel extends Component {
   render() {
-    const searchType = this.props.searchType;
+    const searchableModels = this.props.searchableModels;
+    const searchType = this.props.searchType || searchableModels[0];
 
     return (
       <div className="search-panel">
         <h2><Snippet>searchPanel.title</Snippet></h2>
 
         <ul className="search-type">
-          { models.map((model, index) => (
-            <li key={index}>
+          { searchableModels.map(model => (
+            <li key={model}>
               <a href={`/search?searchType=${model}`} className={searchType === model ? 'active' : ''}>
                 <Snippet>{`searchPanel.${model}.label`}</Snippet>
               </a>
@@ -57,5 +52,13 @@ class SearchPanel extends Component {
     );
   }
 }
+
+SearchPanel.defaultProps = {
+  searchableModels: [
+    'establishments',
+    'people',
+    'projects'
+  ]
+};
 
 export default SearchPanel;

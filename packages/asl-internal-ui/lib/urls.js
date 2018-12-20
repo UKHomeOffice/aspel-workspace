@@ -1,5 +1,11 @@
 module.exports = {
   dashboard: '/',
+  search: {
+    base: '/search',
+    establishments: '/search/establishments',
+    people: '/search/people',
+    projects: '/search/projects'
+  },
   account: {
     menu: '/profile',
     edit: '/profile/edit'
