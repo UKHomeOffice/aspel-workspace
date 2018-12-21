@@ -54,8 +54,8 @@ pipeline:
       - DOCKER_HOST=tcp://172.17.0.1:2375
     commands:
       - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag asl quay.io/ukhomeofficedigital/asl-inspector-ui:$${DRONE_COMMIT_SHA}
-      - docker push quay.io/ukhomeofficedigital/asl-inspector-ui:$${DRONE_COMMIT_SHA}
+      - docker tag asl quay.io/ukhomeofficedigital/asl-internal-ui:$${DRONE_COMMIT_SHA}
+      - docker push quay.io/ukhomeofficedigital/asl-internal-ui:$${DRONE_COMMIT_SHA}
     when:
       branch: master
       event: push
