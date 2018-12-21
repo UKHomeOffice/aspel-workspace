@@ -1,5 +1,5 @@
 {
-  "name": "asl-inspector-ui",
+  "name": "asl-internal-ui",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -17,15 +17,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/UKHomeOffice/asl-inspector-ui.git"
+    "url": "git+https://github.com/UKHomeOffice/asl-internal-ui.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/UKHomeOffice/asl-inspector-ui/issues"
+    "url": "https://github.com/UKHomeOffice/asl-internal-ui/issues"
   },
-  "homepage": "https://github.com/UKHomeOffice/asl-inspector-ui#readme",
+  "homepage": "https://github.com/UKHomeOffice/asl-internal-ui#readme",
   "dependencies": {
     "@asl/components": "^3.2.0",
     "@asl/pages": "^15.0.0",
