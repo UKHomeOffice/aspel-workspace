@@ -92,7 +92,7 @@ export class Datatable extends Component {
                     </tr>
                   )
                 }
-              </Fragment>
+              </Fragment>;
 
             })
           }
