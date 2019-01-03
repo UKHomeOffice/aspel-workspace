@@ -34,7 +34,7 @@ module.exports = settings => {
 
       req.datatable.searchType = searchType;
       req.datatable.schema = schemas[searchType];
-      req.datatable.disable = !req.query.filters; // disable the datatable until we have a search query
+      req.datatable.disable = !req.query.filters; // disable the datatable unless we have a search query
       req.datatable.apiPath = `/search/${searchType}`;
 
       next();
