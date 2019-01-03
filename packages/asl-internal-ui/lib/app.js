@@ -12,6 +12,7 @@ const {
 
 const dashboard = require('../pages/dashboard');
 const search = require('../pages/search');
+const globalProfile = require('../pages/profile');
 
 const urls = require('./urls');
 
@@ -42,6 +43,7 @@ module.exports = settings => {
 
   app.use(urls.dashboard, dashboard(settings));
   app.use(urls.search, search(settings));
+  app.use(urls.global.profile, globalProfile());
 
   app.use((req, res, next) => {
     req.breadcrumb('dashboard');

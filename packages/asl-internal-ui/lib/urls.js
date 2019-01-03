@@ -1,6 +1,9 @@
 module.exports = {
   dashboard: '/',
   search: '/search(/:searchType)?',
+  global: {
+    profile: '/profile/:profileId'
+  },
   account: {
     menu: '/account',
     edit: '/account/edit'
