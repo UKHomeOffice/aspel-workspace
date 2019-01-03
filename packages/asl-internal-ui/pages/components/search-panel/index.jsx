@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Search, Snippet } from '@asl/components';
+import { Search, Snippet } from '@asl/components';
 
 class SearchPanel extends Component {
   render() {
@@ -27,24 +27,9 @@ class SearchPanel extends Component {
 
           <div className="govuk-grid-column-one-third">
             <div className="view-all-link">
-              { searchType === 'establishments' &&
-                <Link
-                  page="establishment.list"
-                  label={<Snippet>searchPanel.establishments.viewAll</Snippet>}
-                />
-              }
-              { searchType === 'profiles' &&
-                <Link
-                  page="profile.list"
-                  label={<Snippet>searchPanel.profiles.viewAll</Snippet>}
-                />
-              }
-              { searchType === 'projects' &&
-                <Link
-                  page="project.list"
-                  label={<Snippet>searchPanel.projects.viewAll</Snippet>}
-                />
-              }
+              <a href={`/search/${searchType}`}>
+                <Snippet>{`searchPanel.${searchType}.viewAll`}</Snippet>
+              </a>
             </div>
           </div>
         </div>

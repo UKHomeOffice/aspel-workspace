@@ -24,14 +24,8 @@ const Index = ({ profile, searchType, searchableModels, filters }) => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
           <SearchPanel searchType={searchType} searchableModels={searchableModels} />
-
-          { filters.active['*'] &&
-            <Fragment>
-              <FilterSummary />
-              <Datatable formatters={formatters[searchType]} />
-            </Fragment>
-          }
-
+          <FilterSummary />
+          <Datatable formatters={formatters[searchType]} />
         </div>
       </div>
 
