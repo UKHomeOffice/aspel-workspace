@@ -4,12 +4,16 @@ import { Datatable, FilterSummary, Header, Snippet } from '@asl/components';
 import SearchPanel from '../../components/search-panel';
 
 const formatters = {
-  lastName: {
-    format: (lastName, profile) => `${profile.firstName} ${lastName}`
+  establishments: {},
+  profiles: {
+    lastName: {
+      format: (lastName, profile) => `${profile.firstName} ${lastName}`
+    },
+    establishments: {
+      format: establishments => establishments.map(establishment => establishment.name).join(', ')
+    }
   },
-  establishments: {
-    format: establishments => establishments.map(establishment => establishment.name).join(', ')
-  }
+  projects: {}
 };
 
 const Index = ({ profile, searchType, searchableModels, filters }) => {
@@ -24,7 +28,7 @@ const Index = ({ profile, searchType, searchableModels, filters }) => {
           { filters.active['*'] &&
             <Fragment>
               <FilterSummary />
-              <Datatable formatters={formatters} />
+              <Datatable formatters={formatters[searchType]} />
             </Fragment>
           }
 

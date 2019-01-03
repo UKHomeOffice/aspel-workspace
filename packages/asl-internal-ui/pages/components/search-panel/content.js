@@ -5,7 +5,7 @@ module.exports = {
     placeholder: 'Search by name',
     viewAll: 'View all establishments'
   },
-  people: {
+  profiles: {
     label: 'People',
     placeholder: 'Search by name or licence number',
     viewAll: 'View all people'

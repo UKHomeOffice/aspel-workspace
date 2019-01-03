@@ -33,10 +33,10 @@ class SearchPanel extends Component {
                   label={<Snippet>searchPanel.establishments.viewAll</Snippet>}
                 />
               }
-              { searchType === 'people' &&
+              { searchType === 'profiles' &&
                 <Link
                   page="profile.list"
-                  label={<Snippet>searchPanel.people.viewAll</Snippet>}
+                  label={<Snippet>searchPanel.profiles.viewAll</Snippet>}
                 />
               }
               { searchType === 'projects' &&
@@ -54,11 +54,7 @@ class SearchPanel extends Component {
 }
 
 SearchPanel.defaultProps = {
-  searchableModels: [
-    'establishments',
-    'people',
-    'projects'
-  ]
+  searchableModels: ['establishments', 'profiles', 'projects']
 };
 
 export default SearchPanel;

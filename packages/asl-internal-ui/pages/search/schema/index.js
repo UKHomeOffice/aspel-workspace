@@ -1,5 +1,5 @@
 module.exports = {
   establishments: require('./establishments'),
-  people: require('./people'),
+  profiles: require('./profiles'),
   projects: require('./projects')
 };
