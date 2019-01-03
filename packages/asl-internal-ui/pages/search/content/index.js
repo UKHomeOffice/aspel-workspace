@@ -2,9 +2,7 @@ const searchPanel = require('../../components/search-panel/content');
 
 module.exports = {
   breadcrumbs: {
-    search: {
-      base: 'Search'
-    }
+    search: 'Search'
   },
   searchPanel,
   fields: {

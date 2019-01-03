@@ -3,11 +3,7 @@ const datatable = require('@asl/pages/pages/common/routers/datatable');
 const schemas = require('./schema');
 const NotFoundError = require('../../lib/errors/not-found');
 
-const searchableModels = [
-  'establishments',
-  'people',
-  'projects'
-];
+const searchableModels = ['establishments', 'people', 'projects'];
 
 module.exports = settings => {
   const app = page({
@@ -16,16 +12,18 @@ module.exports = settings => {
   });
 
   app.use('/', (req, res, next) => {
-    req.breadcrumb('search.base');
+    req.breadcrumb('search');
+    req.searchType = req.params.searchType || searchableModels[0];
+
     res.locals.static.profile = req.user.profile;
-    res.locals.static.searchType = req.query.searchType;
+    res.locals.static.searchType = req.searchType;
     res.locals.static.searchableModels = req.query.searchableModels;
     next();
   });
 
   app.use('/', datatable({
     configure: (req, res, next) => {
-      const searchType = req.query.searchType;
+      const searchType = req.searchType;
       req.datatable.searchType = searchType;
       req.datatable.schema = schemas[searchType];
       req.datatable.disable = !req.query.filters;
@@ -50,6 +48,10 @@ module.exports = settings => {
       next();
     }
   })());
+
+  app.use((req, res, next) => {
+    res.sendResponse();
+  });
 
   return app;
 };

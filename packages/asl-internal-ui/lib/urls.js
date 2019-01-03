@@ -1,11 +1,6 @@
 module.exports = {
   dashboard: '/',
-  search: {
-    base: '/search',
-    establishments: '/search/establishments',
-    people: '/search/people',
-    projects: '/search/projects'
-  },
+  search: '/search(/:searchType)?',
   account: {
     menu: '/profile',
     edit: '/profile/edit'

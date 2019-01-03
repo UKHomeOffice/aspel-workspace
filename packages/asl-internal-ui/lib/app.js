@@ -42,7 +42,7 @@ module.exports = settings => {
   });
 
   app.use(urls.dashboard, dashboard(settings));
-  app.use(urls.search.base, search(settings));
+  app.use(urls.search, search(settings));
 
   app.use((req, res, next) => {
     req.breadcrumb('dashboard');

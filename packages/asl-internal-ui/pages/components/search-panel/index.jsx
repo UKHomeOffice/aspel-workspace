@@ -13,7 +13,7 @@ class SearchPanel extends Component {
         <ul className="search-type">
           { searchableModels.map(model => (
             <li key={model}>
-              <a href={`/search?searchType=${model}`} className={searchType === model ? 'active' : ''}>
+              <a href={`/search/${model}`} className={searchType === model ? 'active' : ''}>
                 <Snippet>{`searchPanel.${model}.label`}</Snippet>
               </a>
             </li>
