@@ -19,14 +19,19 @@ const formatters = {
   },
   projects: {
     establishment: {
-      format: establishment => <Link page="establishment.read" establishmentId={establishment.id} label={establishment.name} />
+      format: establishment => {
+        return <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />;
+      }
     },
     licenceHolder: {
-      format: ({ id, firstName, lastName }) =>
-        <Link page="profile.view" profileId={id} label={`${firstName} ${lastName}`} />
+      format: ({ id, firstName, lastName }) => {
+        return <Link page="global.profile" profileId={id} label={`${firstName} ${lastName}`} />;
+      }
     },
     expiryDate: {
-      format: date => <ExpiryDate date={date}/>
+      format: date => {
+        return <ExpiryDate date={date}/>;
+      }
     }
   }
 };
