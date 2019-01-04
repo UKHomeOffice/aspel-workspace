@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Datatable, FilterSummary, Header, Link, Snippet } from '@asl/components';
+import { Datatable, ExpiryDate, FilterSummary, Header, Link, Snippet } from '@asl/components';
 import SearchPanel from '../../components/search-panel';
 
 const formatters = {
@@ -17,7 +17,18 @@ const formatters = {
       format: establishments => establishments.map(establishment => establishment.name).join(', ')
     }
   },
-  projects: {}
+  projects: {
+    establishment: {
+      format: establishment => <Link page="establishment.read" establishmentId={establishment.id} label={establishment.name} />
+    },
+    licenceHolder: {
+      format: ({ id, firstName, lastName }) =>
+        <Link page="profile.view" profileId={id} label={`${firstName} ${lastName}`} />
+    },
+    expiryDate: {
+      format: date => <ExpiryDate date={date}/>
+    }
+  }
 };
 
 const Index = ({ profile, searchType, searchableModels, filters }) => {
