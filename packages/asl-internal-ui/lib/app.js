@@ -11,7 +11,6 @@ const {
 } = pages;
 
 const dashboard = require('../pages/dashboard');
-const establishmentList = require('../pages/establishment-list');
 const search = require('../pages/search');
 
 const urls = require('./urls');
@@ -51,12 +50,6 @@ module.exports = settings => {
 
   app.use(urls.account.menu, user());
   app.use(urls.feedback, feedback(settings));
-  app.use(urls.establishment.list, establishmentList());
-
-  app.use(urls.establishment.list, (req, res, next) => {
-    req.breadcrumb('establishment.list');
-    next();
-  });
 
   app.use(urls.establishment.dashboard, (req, res, next) => {
     req.breadcrumb('establishment.dashboard');

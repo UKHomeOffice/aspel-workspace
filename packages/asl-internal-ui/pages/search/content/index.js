@@ -1,19 +1,18 @@
 const searchPanel = require('../../components/search-panel/content');
+const establishments = require('./establishments');
+const profiles = require('./profiles');
+const projects = require('./projects');
 
-module.exports = {
+const fields = {
+  establishments,
+  profiles,
+  projects
+};
+
+module.exports = (searchType) => ({
   breadcrumbs: {
     search: 'Search'
   },
   searchPanel,
-  fields: {
-    lastName: {
-      label: 'Name'
-    },
-    email: {
-      label: 'Email'
-    },
-    establishments: {
-      label: 'Establishments'
-    }
-  }
-};
+  fields: fields[searchType]
+});

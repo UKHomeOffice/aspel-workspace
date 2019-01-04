@@ -1,15 +1,23 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Datatable, FilterSummary, Header, Snippet } from '@asl/components';
+import { Datatable, FilterSummary, Header, Link, Snippet } from '@asl/components';
 import SearchPanel from '../../components/search-panel';
 
 const formatters = {
-  lastName: {
-    format: (lastName, profile) => `${profile.firstName} ${lastName}`
-  },
   establishments: {
-    format: establishments => establishments.map(establishment => establishment.name).join(', ')
-  }
+    name: {
+      format: (name, establishment) => <Link page="establishment.read" establishmentId={establishment.id} label={name} />
+    }
+  },
+  profiles: {
+    lastName: {
+      format: (lastName, profile) => `${profile.firstName} ${lastName}`
+    },
+    establishments: {
+      format: establishments => establishments.map(establishment => establishment.name).join(', ')
+    }
+  },
+  projects: {}
 };
 
 const Index = ({ profile, searchType, searchableModels, filters }) => {
@@ -20,14 +28,8 @@ const Index = ({ profile, searchType, searchableModels, filters }) => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
           <SearchPanel searchType={searchType} searchableModels={searchableModels} />
-
-          { filters.active['*'] &&
-            <Fragment>
-              <FilterSummary />
-              <Datatable formatters={formatters} />
-            </Fragment>
-          }
-
+          <FilterSummary />
+          <Datatable formatters={formatters[searchType]} />
         </div>
       </div>
 

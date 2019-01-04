@@ -6,7 +6,6 @@ module.exports = {
     edit: '/account/edit'
   },
   establishment: {
-    list: '/establishments',
     dashboard: '/establishments/:establishmentId',
     read: '/establishments/:establishmentId/details'
   },
