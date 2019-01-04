@@ -1,10 +1,14 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Datatable, FilterSummary, Header, Snippet } from '@asl/components';
+import { Datatable, FilterSummary, Header, Link, Snippet } from '@asl/components';
 import SearchPanel from '../../components/search-panel';
 
 const formatters = {
-  establishments: {},
+  establishments: {
+    name: {
+      format: (name, establishment) => <Link page="establishment.read" establishmentId={establishment.id} label={name} />
+    }
+  },
   profiles: {
     lastName: {
       format: (lastName, profile) => `${profile.firstName} ${lastName}`
