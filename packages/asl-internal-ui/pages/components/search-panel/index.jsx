@@ -22,7 +22,7 @@ class SearchPanel extends Component {
 
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
-            <Search />
+            <Search action={this.props.action} name="filter-*" />
           </div>
 
           <div className="govuk-grid-column-one-third">
@@ -39,7 +39,8 @@ class SearchPanel extends Component {
 }
 
 SearchPanel.defaultProps = {
-  searchableModels: ['establishments', 'profiles', 'projects']
+  searchableModels: ['establishments', 'profiles', 'projects'],
+  action: ''
 };
 
 export default SearchPanel;

@@ -10,7 +10,7 @@ const Index = ({ profile, searchType }) => (
 
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
-        <SearchPanel searchType={searchType} />
+        <SearchPanel searchType={searchType} action={`/search/${searchType}`} />
       </div>
     </div>
 
