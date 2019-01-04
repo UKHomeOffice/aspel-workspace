@@ -6,15 +6,23 @@ import SearchPanel from '../../components/search-panel';
 const formatters = {
   establishments: {
     name: {
-      format: (name, establishment) => <Link page="establishment.read" establishmentId={establishment.id} label={name} />
+      format: (name, establishment) => {
+        return <Link page="establishment.read" establishmentId={establishment.id} label={name} />;
+      }
     }
   },
   profiles: {
     lastName: {
-      format: (lastName, profile) => `${profile.firstName} ${lastName}`
+      format: (lastName, profile) => {
+        return <Link page="global.profile" profileId={profile.id} label={`${profile.firstName} ${lastName}`} />;
+      }
     },
     establishments: {
-      format: establishments => establishments.map(establishment => establishment.name).join(', ')
+      format: establishments => establishments.map((establishment, i) => [
+        // separate links with line breaks #hack
+        i > 0 && <br />,
+        <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
+      ])
     }
   },
   projects: {}
