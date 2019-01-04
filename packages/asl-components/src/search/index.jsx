@@ -16,8 +16,11 @@ export class Search extends Component {
   render() {
     const name = this.props.name;
 
+    // if we have a form action, just perform a standard form submit
+    const onApply = this.props.action ? e => e.target.submit() : () => this.emitChange();
+
     return (
-      <ApplyChanges type="form" onApply={() => this.emitChange()}>
+      <ApplyChanges type="form" action={this.props.action} onApply={onApply}>
         <div className="govuk-form-group search-box">
           { this.props.label &&
             <label className="govuk-label" htmlFor={name}>{this.props.label}</label>
