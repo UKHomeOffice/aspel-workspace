@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Datatable, FilterSummary, Header, Link, Snippet } from '@asl/components';
+import { Datatable, ExpiryDate, FilterSummary, Header, Link, Snippet } from '@asl/components';
 import SearchPanel from '../../components/search-panel';
 
 const formatters = {
@@ -25,7 +25,23 @@ const formatters = {
       ])
     }
   },
-  projects: {}
+  projects: {
+    establishment: {
+      format: establishment => {
+        return <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />;
+      }
+    },
+    licenceHolder: {
+      format: ({ id, firstName, lastName }) => {
+        return <Link page="global.profile" profileId={id} label={`${firstName} ${lastName}`} />;
+      }
+    },
+    expiryDate: {
+      format: date => {
+        return <ExpiryDate date={date}/>;
+      }
+    }
+  }
 };
 
 const Index = ({ profile, searchType, searchableModels, filters }) => {
