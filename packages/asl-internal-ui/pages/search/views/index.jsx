@@ -7,7 +7,7 @@ const formatters = {
   establishments: {
     name: {
       format: (name, establishment) => {
-        return <Link page="establishment.read" establishmentId={establishment.id} label={name} />;
+        return <Link page="establishment.dashboard" establishmentId={establishment.id} label={name} />;
       }
     }
   },
