@@ -21,10 +21,15 @@ class ASRUAdmin extends React.Component {
 
   render () {
 
-    const model = this.props.model;
+    const { model, canAdmin } = this.props;
     const hasEstablishments = !!model.establishments.length;
 
     if (hasEstablishments) {
+      return null;
+    }
+
+    // profile is not an asru user and user cannot make them one
+    if (!canAdmin && !model.asruUser) {
       return null;
     }
 
