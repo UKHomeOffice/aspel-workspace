@@ -18,11 +18,16 @@ const formatters = {
       }
     },
     establishments: {
-      format: establishments => establishments.map((establishment, i) => [
-        // separate links with line breaks #hack
-        i > 0 && <br />,
-        <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
-      ])
+      format: (establishments, profile) => {
+        if (profile.asruUser) {
+          return 'ASRU';
+        }
+        return establishments.map((establishment, i) => [
+          // separate links with line breaks #hack
+          i > 0 && <br />,
+          <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
+        ]);
+      }
     }
   },
   projects: {
