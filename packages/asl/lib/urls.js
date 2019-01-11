@@ -13,7 +13,12 @@ module.exports = {
     view: '/e/:establishmentId/people/:profileId',
     invite: '/e/:establishmentId/people/invite',
     invitations: '/e/:establishmentId/people/invitations',
-    permission: '/e/:establishmentId/people/:profileId/permission'
+    permission: '/e/:establishmentId/people/:profileId/permission',
+    role: {
+      apply: '/e/:establishmentId/people/:profileId/role',
+      confirm: '/e/:establishmentId/people/:profileId/role/confirm',
+      success: '/e/:establishmentId/people/:profileId/role/success'
+    }
   },
   project: {
     list: '/e/:establishmentId/projects'
