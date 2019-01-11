@@ -17,7 +17,7 @@ class Index extends React.Component {
         <dd><a href={`mailto:${model.email}`}>{ model.email }</a></dd>
       </dl>
 
-      { hasEstablishments ? null : <ASRUAdmin /> }
+      <ASRUAdmin />
 
     </Fragment>
   }

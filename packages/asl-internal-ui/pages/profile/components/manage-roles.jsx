@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { Snippet, ControlBar } from '@asl/components';
 import { CheckboxGroup, Button } from '@ukhomeoffice/react-components';
 
+import ASRURoles from './asru-roles';
+
 class ManageRoles extends React.Component {
 
   componentWillMount () {
@@ -25,28 +27,23 @@ class ManageRoles extends React.Component {
     }
 
     const available = ['asruAdmin', 'asruLicensing', 'asruInspector'];
-    const options = available.map(value => ({ value, label: <Snippet>{ `roles.${value}` }</Snippet> }));
+    const options = available.map(value => ({ value, label: <Snippet>{ `asru.roles.${value}` }</Snippet> }));
     const roles = available.filter(role => model[role]);
 
     if (this.state && !this.state.expanded) {
       return <Fragment>
-        <h3>Roles</h3>
-        <ul>
-          {
-            roles.map(role => <li key={ role }><Snippet>{ `roles.${role}` }</Snippet></li>)
-          }
-        </ul>
-        <Button onClick={e => this.toggle(e)}>Manage roles</Button>
-      </Fragment>;
+        <ASRURoles />
+        <Button onClick={e => this.toggle(e)}><Snippet>asru.roles.manage</Snippet></Button>
+      </Fragment>
     }
 
     return <Fragment>
       <form action="" method="post">
-        <CheckboxGroup label="Roles" name="roles" options={options} value={roles} className="box" />
+        <CheckboxGroup label={ <Snippet>asru.roles.title</Snippet> } name="roles" options={options} value={roles} className="box" />
         <ControlBar>
-          <Button type="submit">Save changes</Button>
+          <Button type="submit"><Snippet>asru.roles.save</Snippet></Button>
           {
-            this.state && <a href="" onClick={e => this.toggle(e)}>Cancel</a>
+            this.state && <a href="" onClick={e => this.toggle(e)}><Snippet>asru.roles.cancel</Snippet></a>
           }
         </ControlBar>
       </form>

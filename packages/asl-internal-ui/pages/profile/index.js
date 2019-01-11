@@ -11,6 +11,11 @@ module.exports = settings => {
 
   app.use(bodyParser.urlencoded({ extended: true }));
 
+  app.use((req, res, next) => {
+    res.locals.static.canAdmin = req.user.profile.asruAdmin && req.profileId !== req.user.profile.id;
+    next();
+  });
+
   app.post('/', (req, res, next) => {
     let data;
     if (req.body.roles) {

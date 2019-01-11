@@ -1,26 +1,28 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
+import { Snippet } from '@asl/components';
 import { Button } from '@ukhomeoffice/react-components';
 
 class ToggleASRU extends React.Component {
 
   renderAdd() {
     return <Fragment>
-      <h3>Add to ASRU</h3>
+      <h3><Snippet>asru.add</Snippet></h3>
       <form action="" method="post">
         <input type="hidden" name="asruUser" value="true" />
-        <Button type="submit" className="button-secondary">Add to ASRU</Button>
+        <Button type="submit" className="button-secondary"><Snippet>asru.add</Snippet></Button>
       </form>
     </Fragment>;
   }
 
   renderRemove() {
     return <Fragment>
-      <h3>Remove from ASRU</h3>
+      <hr />
+      <h3><Snippet>asru.remove</Snippet></h3>
       <form action="" method="post">
         <input type="hidden" name="asruUser" value="false" />
-        <Button type="submit" className="button-secondary">Remove from ASRU</Button>
+        <Button type="submit" className="button-secondary"><Snippet>asru.remove</Snippet></Button>
       </form>
     </Fragment>;
   }

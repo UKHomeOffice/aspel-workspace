@@ -1,13 +1,19 @@
 module.exports = {
-  roles: {
-    asruAdmin: 'User admin',
-    asruLicensing: 'Licensing officer',
-    asruInspector: 'Inspector'
+  asru: {
+    title: 'ASRU',
+    add: 'Add to ASRU',
+    remove: 'Remove from ASRU',
+    roles: {
+      title: 'Roles',
+      manage: 'Manage roles',
+      save: 'Save changes',
+      cancel: 'Cancel',
+      asruAdmin: 'User admin',
+      asruLicensing: 'Licensing officer',
+      asruInspector: 'Inspector'
+    }
   },
   notifications: {
     success: 'Changes saved!'
-  },
-  breadcrumbs: {
-    search: 'People'
   }
 };
