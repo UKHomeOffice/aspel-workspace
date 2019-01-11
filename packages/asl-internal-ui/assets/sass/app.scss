@@ -60,3 +60,15 @@ td .govuk-button {
     }
   }
 }
+
+.box {
+  background: $highlight-colour;
+  border: 1px solid govuk-colour('grey-1');
+  padding: $govuk-gutter;
+  margin-bottom: $govuk-gutter;
+
+  legend {
+    float: left;
+    margin-bottom: $govuk-gutter;
+  }
+}
