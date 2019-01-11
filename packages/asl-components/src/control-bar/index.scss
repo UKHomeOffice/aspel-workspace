@@ -1,4 +1,11 @@
 .control-bar {
+
+  margin-bottom: $govuk-gutter;
+
+  .govuk-button {
+    margin-bottom: 0;
+  }
+
   &.block {
     > * {
       display: block;
