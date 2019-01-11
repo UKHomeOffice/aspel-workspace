@@ -20,15 +20,14 @@ class ManageRoles extends React.Component {
   }
 
   render () {
-    const model = this.props.model;
+    const { model, roles } = this.props;
 
     if (!model.asruUser) {
       return null;
     }
 
-    const available = ['asruAdmin', 'asruLicensing', 'asruInspector'];
-    const options = available.map(value => ({ value, label: <Snippet>{ `asru.roles.${value}` }</Snippet> }));
-    const roles = available.filter(role => model[role]);
+    const options = roles.map(value => ({ value, label: <Snippet>{ `asru.roles.${value}` }</Snippet> }));
+    const userRoles = roles.filter(role => model[role]);
 
     if (this.state && !this.state.expanded) {
       return <Fragment>
@@ -39,7 +38,7 @@ class ManageRoles extends React.Component {
 
     return <Fragment>
       <form action="" method="post">
-        <CheckboxGroup label={ <Snippet>asru.roles.title</Snippet> } name="roles" options={options} value={roles} className="box" />
+        <CheckboxGroup label={ <Snippet>asru.roles.title</Snippet> } name="roles" options={options} value={userRoles} className="box" />
         <ControlBar>
           <Button type="submit"><Snippet>asru.roles.save</Snippet></Button>
           {
@@ -53,6 +52,6 @@ class ManageRoles extends React.Component {
 
 }
 
-const mapStateToProps = ({ model }) => ({ model });
+const mapStateToProps = ({ model, static: { roles } }) => ({ model, roles });
 
 export default connect(mapStateToProps)(ManageRoles);

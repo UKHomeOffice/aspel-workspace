@@ -6,15 +6,14 @@ import { Snippet } from '@asl/components';
 class Roles extends React.Component {
 
   render () {
-    const model = this.props.model;
+    const { model, roles } = this.props;
 
-    const available = ['asruAdmin', 'asruLicensing', 'asruInspector'];
-    const roles = available.filter(role => model[role]);
+    const userRoles = roles.filter(role => model[role]);
     return <Fragment>
       <h3><Snippet>asru.roles.title</Snippet></h3>
       <ul>
         {
-          roles.map(role => <li key={ role }><Snippet>{ `asru.roles.${role}` }</Snippet></li>)
+          userRoles.map(role => <li key={ role }><Snippet>{ `asru.roles.${role}` }</Snippet></li>)
         }
       </ul>
     </Fragment>;
@@ -23,6 +22,6 @@ class Roles extends React.Component {
 
 }
 
-const mapStateToProps = ({ model }) => ({ model });
+const mapStateToProps = ({ model, static: { roles } }) => ({ model, roles });
 
 export default connect(mapStateToProps)(Roles);
