@@ -12,6 +12,7 @@ class ApplicationConfirm extends Component {
   }
 
   onChange(event) {
+    const declarations = this.props.schema.declarations.options;
     const checked = event.target.checked;
     const value = event.target.value;
 
@@ -26,7 +27,7 @@ class ApplicationConfirm extends Component {
 
       return {
         values,
-        submitDisabled: this.props.declarations.length !== values.length
+        submitDisabled: declarations.length !== values.length
       };
     });
   }
@@ -37,7 +38,7 @@ class ApplicationConfirm extends Component {
         <CheckboxGroup
           name="declarations"
           label={<Snippet>declarations.title</Snippet>}
-          options={this.props.declarations}
+          options={this.props.schema.declarations.options}
           error={this.props.error}
           onChange={this.onChange.bind(this)}
           value={this.state ? this.state.values : []}
@@ -50,6 +51,6 @@ class ApplicationConfirm extends Component {
   }
 }
 
-const mapStateToProps = ({ static: { declarations, error } }) => ({ declarations, error });
+const mapStateToProps = ({ static: { schema, error } }) => ({ schema, error });
 
 export default connect(mapStateToProps)(ApplicationConfirm);
