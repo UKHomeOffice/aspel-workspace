@@ -43,7 +43,7 @@ class ApplicationConfirm extends Component {
           onChange={this.onChange.bind(this)}
           value={this.state ? this.state.values : []}
         />
-        <button type="submit" className="govuk-button" disabled={!this.state || this.state.submitDisabled}>
+        <button type="submit" className="govuk-button" disabled={this.state && this.state.submitDisabled}>
           <Snippet>buttons.submit</Snippet>
         </button>
       </div>
