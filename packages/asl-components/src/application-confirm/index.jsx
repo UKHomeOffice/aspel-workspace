@@ -6,26 +6,29 @@ import { Snippet } from '../';
 class ApplicationConfirm extends Component {
   componentDidMount() {
     this.setState({
-      declarationCount: this.props.declarations.length,
-      checkedCount: 0,
-      disabled: true
+      submitDisabled: true,
+      values: []
     });
   }
 
   onChange(event) {
-    console.log(this.state);
-    console.log(event.target);
+    const checked = event.target.checked;
+    const value = event.target.value;
 
     this.setState(state => {
-      const checkedCount = event.target.checked ? state.checkedCount + 1 : state.checkedCount - 1;
+      const values = state.values;
+
+      if (checked) {
+        values.push(value);
+      } else {
+        values.splice(values.indexOf(value), 1);
+      }
 
       return {
-        checkedCount,
-        disabled: checkedCount < state.declarationCount
+        values,
+        submitDisabled: this.props.declarations.length !== values.length
       };
     });
-
-    return true;
   }
 
   render() {
@@ -33,12 +36,13 @@ class ApplicationConfirm extends Component {
       <div className="application-confirm">
         <CheckboxGroup
           name="declarations"
-          label={<Snippet>declaration.title</Snippet>}
+          label={<Snippet>declarations.title</Snippet>}
           options={this.props.declarations}
           error={this.props.error}
           onChange={this.onChange.bind(this)}
+          value={this.state ? this.state.values : []}
         />
-        <button type="submit" className="govuk-button" disabled={!this.state || this.state.disabled}>
+        <button type="submit" className="govuk-button" disabled={!this.state || this.state.submitDisabled}>
           <Snippet>buttons.submit</Snippet>
         </button>
       </div>
