@@ -9,14 +9,14 @@ class Roles extends React.Component {
     const { model, roles } = this.props;
 
     const userRoles = roles.filter(role => model[role]);
-    return <Fragment>
+    return <div className="asru-roles">
       <h3><Snippet>asru.roles.title</Snippet></h3>
       <ul>
         {
           userRoles.map(role => <li key={ role }><Snippet>{ `asru.roles.${role}` }</Snippet></li>)
         }
       </ul>
-    </Fragment>;
+    </div>;
 
   }
 
