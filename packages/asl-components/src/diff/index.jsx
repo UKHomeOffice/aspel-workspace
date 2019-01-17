@@ -45,6 +45,9 @@ export const Diff = ({
 const mapStateToProps = ({ model, static: { values, schema } }) => {
   return {
     diff: reduce(schema, (all, value, key) => {
+      if (value.showDiff === false) {
+        return all;
+      }
       return { ...all,
         [key]: {
           oldValue: model[key],
