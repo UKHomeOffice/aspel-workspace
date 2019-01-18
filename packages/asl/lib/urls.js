@@ -17,7 +17,8 @@ module.exports = {
     role: {
       apply: '/e/:establishmentId/people/:profileId/role',
       confirm: '/e/:establishmentId/people/:profileId/role/confirm',
-      success: '/e/:establishmentId/people/:profileId/role/success'
+      success: '/e/:establishmentId/people/:profileId/role/success',
+      remove: '/e/:establishmentId/people/:profileId/role/remove'
     }
   },
   project: {
