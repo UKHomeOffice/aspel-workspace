@@ -15,10 +15,16 @@ module.exports = {
     invitations: '/e/:establishmentId/people/invitations',
     permission: '/e/:establishmentId/people/:profileId/permission',
     role: {
-      apply: '/e/:establishmentId/people/:profileId/role',
-      confirm: '/e/:establishmentId/people/:profileId/role/confirm',
-      success: '/e/:establishmentId/people/:profileId/role/success',
-      remove: '/e/:establishmentId/people/:profileId/role/remove'
+      apply: {
+        base: '/e/:establishmentId/people/:profileId/role/apply',
+        confirm: '/e/:establishmentId/people/:profileId/role/apply/confirm',
+        success: '/e/:establishmentId/people/:profileId/role/apply/success'
+      },
+      remove: {
+        base: '/e/:establishmentId/people/:profileId/role/remove',
+        confirm: '/e/:establishmentId/people/:profileId/role/remove/confirm',
+        success: '/e/:establishmentId/people/:profileId/role/remove/success'
+      }
     }
   },
   project: {
