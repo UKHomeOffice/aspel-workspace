@@ -28,6 +28,8 @@ const Invitation = ({ token, establishment }) => (
 );
 
 const Index = ({
+  tabs,
+  progress,
   profile: {
     firstName,
     establishments,
@@ -41,7 +43,7 @@ const Index = ({
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
         <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
-        <TaskList />
+        <TaskList tabs={ tabs } progress={ progress } />
 
         {
           !!establishments.length && <Fragment>
@@ -61,5 +63,5 @@ const Index = ({
   </Fragment>
 };
 
-const mapStateToProps = ({ static: { profile } }) => ({ profile });
+const mapStateToProps = ({ static: { profile, tabs, progress } }) => ({ profile, tabs, progress });
 export default connect(mapStateToProps)(Index);
