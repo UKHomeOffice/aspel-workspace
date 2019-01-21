@@ -4,7 +4,7 @@ import { Header, Snippet } from '@asl/components';
 import Tasklist from '@asl/pages/pages/task/list/views/tasklist';
 import SearchPanel from '../../components/search-panel';
 
-const Index = ({ profile, searchType }) => (
+const Index = ({ profile, searchType, progress, tabs }) => (
   <Fragment>
     <Header title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>} />
 
@@ -17,14 +17,14 @@ const Index = ({ profile, searchType }) => (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
         <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
-        <Tasklist />
+        <Tasklist tabs={tabs} progress={progress} />
       </div>
     </div>
   </Fragment>
 );
 
 const mapStateToProps = ({
-  static: { profile, searchType }
-}) => ({ profile, searchType });
+  static: { profile, searchType, progress, tabs }
+}) => ({ profile, searchType, progress, tabs });
 
 export default connect(mapStateToProps)(Index);

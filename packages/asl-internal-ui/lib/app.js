@@ -7,6 +7,7 @@ const {
   profile,
   project,
   user,
+  task,
   feedback
 } = pages;
 
@@ -47,6 +48,8 @@ module.exports = settings => {
     req.breadcrumb('dashboard');
     next();
   });
+
+  app.use(urls.task.base, task());
 
   app.use(urls.search, search(settings));
   app.use(urls.global.profile, globalProfile());
