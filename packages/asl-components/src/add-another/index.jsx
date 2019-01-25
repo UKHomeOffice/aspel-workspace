@@ -29,9 +29,14 @@ class AddAnother extends Component {
     const visible = (this.state && this.state.visible) || Array(totalCount).fill(false);
     return (
       <Fragment>
-        {visible.map((val) => {
-          return val ? children : null;
-        })}
+        {
+          visible
+            .filter(Boolean)
+            .map((val, i) => {
+              const id = children.props.id ? `${children.props.id}-${i}` : undefined;
+              return React.cloneElement(children, { id, key: i });
+            })
+        }
         <div><a href="#" onClick={e => this.addAnother(e)}>{label}</a></div>
       </Fragment>
     );
