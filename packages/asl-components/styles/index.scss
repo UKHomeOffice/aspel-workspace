@@ -27,6 +27,8 @@ $highlight-colour: govuk-colour('grey-4');
 @import '../src/section-list/index';
 @import '../src/sidebar/index';
 @import '../src/status-bar/index';
+@import '../src/sticky-nav/index';
+@import '../src/sticky-nav-anchor/index';
 @import '../src/tabs/index';
 
 .hidden {
