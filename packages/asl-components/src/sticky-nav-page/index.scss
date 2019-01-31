@@ -1,0 +1,6 @@
+.sticky-nav-page {
+  @extend .govuk-grid-row;
+  > .govuk-grid-column-one-third {
+    min-height: 1em;
+  }
+}

@@ -42,7 +42,10 @@ export const Diff = ({
   </table>
 );
 
-const mapStateToProps = ({ model, static: { values, schema } }) => {
+const mapStateToProps = ({ model, static: { values, schema } }, ownProps) => {
+  model = ownProps.model || model;
+  schema = ownProps.schema || schema;
+  values = ownProps.values || values;
   return {
     diff: reduce(schema, (all, value, key) => {
       if (value.showDiff === false) {
