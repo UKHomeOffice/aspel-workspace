@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import isUndefined from 'lodash/isUndefined';
 import { TextArea } from '@ukhomeoffice/react-components';
 import ReactMarkdown from 'react-markdown';
@@ -6,9 +7,14 @@ import ReactMarkdown from 'react-markdown';
 class Field extends Component {
   constructor (props) {
     super(props);
+
+    const content = this.props.model
+      ? this.props.model[this.props.name] || this.props.content
+      : this.props.content;
+
     this.state = {
-      editing: false,
-      content: this.props.content
+      editing: !!(this.props.model && this.props.model[this.props.name]),
+      content
     }
     this.toggleEditing = this.toggleEditing.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -48,4 +54,6 @@ class Field extends Component {
   }
 }
 
-export default Field;
+const mapStateToProps = ({ model }) => ({ model })
+
+export default connect(mapStateToProps)(Field);

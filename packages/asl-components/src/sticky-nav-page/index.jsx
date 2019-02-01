@@ -6,7 +6,7 @@ import reduce from 'lodash/reduce';
 class StickyNavPage extends Component {
   constructor(props) {
     super(props);
-    this.sections = React.Children.toArray(this.props.children).reduce((refs, child) => {
+    this.sections = React.Children.toArray(this.props.children).filter(Boolean).reduce((refs, child) => {
       return {
         ...refs,
         [child.props.id]: React.createRef()
@@ -68,7 +68,7 @@ class StickyNavPage extends Component {
         <div className="govuk-grid-column-one-third">
           <StickyNav
             active={this.state.active}
-            sections={React.Children.map(this.props.children, child => child.props.id)}
+            sections={React.Children.toArray(this.props.children).filter(Boolean).map(child => child.props.id)}
             linkClicked={this.linkClicked}
           />
           &nbsp;
@@ -76,7 +76,7 @@ class StickyNavPage extends Component {
         <div className="govuk-grid-column-two-thirds">
           {
             React.Children.map(this.props.children, child =>
-              React.cloneElement(child, { ref: this.sections[child.props.id] })
+              child && React.cloneElement(child, { ref: this.sections[child.props.id] })
             )
           }
         </div>
