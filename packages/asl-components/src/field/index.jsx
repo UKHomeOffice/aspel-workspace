@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Fragment, Component } from 'react';
 import { connect } from 'react-redux';
 import isUndefined from 'lodash/isUndefined';
 import { TextArea } from '@ukhomeoffice/react-components';
@@ -38,12 +38,15 @@ class Field extends Component {
         <h2>{ title }</h2>
         {
           this.props.editable && (!this.state || this.state.editing)
-            ? <TextArea
-              label=""
-              name={name}
-              value={this.state ? this.state.content : content}
-              onChange={this.onChange}
-            />
+            ? <Fragment>
+              <ReactMarkdown>{ content }</ReactMarkdown>
+              <TextArea
+                label=""
+                name={name}
+                value={this.state ? this.state.content : content}
+                onChange={this.onChange}
+              />
+            </Fragment>
             : <ReactMarkdown>{ content }</ReactMarkdown>
         }
         {
