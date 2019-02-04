@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import isUndefined from 'lodash/isUndefined';
 import { TextArea } from '@ukhomeoffice/react-components';
@@ -36,18 +36,16 @@ class Field extends Component {
     return (
       <div className="field">
         <h2>{ title }</h2>
+        <ReactMarkdown>{ content }</ReactMarkdown>
         {
-          this.props.editable && (!this.state || this.state.editing)
-            ? <Fragment>
-              <ReactMarkdown>{ content }</ReactMarkdown>
-              <TextArea
-                label=""
-                name={name}
-                value={this.state ? this.state.content : content}
-                onChange={this.onChange}
-              />
-            </Fragment>
-            : <ReactMarkdown>{ content }</ReactMarkdown>
+          this.props.editable && (!this.state || this.state.editing) && (
+            <TextArea
+              label=""
+              name={name}
+              value={this.state ? this.state.content : content}
+              onChange={this.onChange}
+            />
+          )
         }
         {
           this.props.editable && this.state && <a href="#" onClick={this.toggleEditing}>{this.state.editing ? 'Cancel' : 'Edit'}</a>
