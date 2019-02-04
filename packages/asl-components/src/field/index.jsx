@@ -36,15 +36,16 @@ class Field extends Component {
     return (
       <div className="field">
         <h2>{ title }</h2>
+        <ReactMarkdown>{ content }</ReactMarkdown>
         {
-          this.props.editable && (!this.state || this.state.editing)
-            ? <TextArea
+          this.props.editable && (!this.state || this.state.editing) && (
+            <TextArea
               label=""
               name={name}
               value={this.state ? this.state.content : content}
               onChange={this.onChange}
             />
-            : <ReactMarkdown>{ content }</ReactMarkdown>
+          )
         }
         {
           this.props.editable && this.state && <a href="#" onClick={this.toggleEditing}>{this.state.editing ? 'Cancel' : 'Edit'}</a>
