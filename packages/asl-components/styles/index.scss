@@ -7,6 +7,7 @@ $highlight-colour: govuk-colour('grey-4');
 @import 'buttons';
 
 @import '../src/accordion/index';
+@import '../src/add-another/index';
 @import '../src/application-confirm/index';
 @import '../src/application-progress/index';
 @import '../src/completable/index';
