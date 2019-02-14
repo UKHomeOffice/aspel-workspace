@@ -38,7 +38,7 @@ class AddAnother extends Component {
 
     return (
       <div className="add-another">
-        { visible.filter(Boolean).map((isVisible, index) => {
+        { visible.map((isVisible, index) => {
           const id = children.props.id ? `${children.props.id}-${index}` : undefined;
           return isVisible &&
             <div key={index} className="govuk-grid-row add-another-item">
