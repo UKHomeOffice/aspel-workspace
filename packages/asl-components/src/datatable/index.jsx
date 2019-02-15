@@ -48,7 +48,9 @@ export class Datatable extends Component {
       sortable,
       isFetching,
       expands,
-      className
+      className,
+      Actions,
+      actionsHeader = 'Actions'
     } = this.props;
 
     return (
@@ -59,6 +61,9 @@ export class Datatable extends Component {
               map(schema, (column, key) =>
                 <DatatableHeader key={key} id={key} sortable={sortable} { ...column } />
               )
+            }
+            {
+              Actions && <th>{actionsHeader}</th>
             }
           </tr>
           <tr id="filter-header"></tr>
@@ -82,6 +87,9 @@ export class Datatable extends Component {
                       </td>;
                     })
                   }
+                  {
+                    Actions && <td><Actions model={row} /></td>
+                  }
                 </tr>
                 {
                   expanded && (
@@ -99,7 +107,7 @@ export class Datatable extends Component {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan={size(schema)}>
+            <td colSpan={size(schema) + Actions ? 1 : 0 }>
               <Pagination />
             </td>
           </tr>
