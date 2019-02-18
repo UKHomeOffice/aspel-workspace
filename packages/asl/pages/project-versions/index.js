@@ -36,18 +36,13 @@ module.exports = settings => {
           data: omit(req.body, 'id')
         }
       }
-    }
-    console.log(opts)
+    };
     req.api(`/establishments/${req.establishmentId}/project-versions/${req.model.id}`, opts)
-      .then(response => {
-        console.log('RES', response)
-      })
       .then(() => next())
       .catch(next);
   });
 
   app.use((req, res) => res.sendResponse());
-
 
   return app;
 };

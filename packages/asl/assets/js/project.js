@@ -5,8 +5,8 @@ const updateProject = project => {
   return {
     type: 'UPDATE_PROJECT',
     project
-  }
-}
+  };
+};
 
 const state = window.INITIAL_STATE;
 
@@ -20,19 +20,19 @@ const postData = debounce(data => {
     body: JSON.stringify(data)
   })
     .then(response => {
-      console.log('ok', response)
+      console.log('ok', response);
     })
-    .catch(err => console.log('err', err))
-}, 500, { maxWait: 5000 })
+    .catch(err => console.log('err', err));
+}, 500, { maxWait: 5000 });
 
 const onUpdate = props => {
   return (dispatch, getState) => {
     const project = getState().project;
     const data = { ...project, ...props };
     dispatch(updateProject(data));
-    return postData(data)
-  }
-}
+    return postData(data);
+  };
+};
 
 start({
   basename: state.static.basename,
