@@ -9,7 +9,7 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
-    req.api(`/establishments/${req.establishmentId}/project-versions/${req.versionId}`)
+    req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/project-versions/${req.versionId}`)
       .then(({ json: { data } }) => {
         req.model = data;
       })
@@ -37,7 +37,7 @@ module.exports = settings => {
         }
       }
     };
-    req.api(`/establishments/${req.establishmentId}/project-versions/${req.model.id}`, opts)
+    req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/project-versions/${req.model.id}`, opts)
       .then(() => next())
       .catch(next);
   });
