@@ -66,7 +66,7 @@ module.exports = settings => {
   app.use(urls.establishment.read, establishment.details());
   app.use(urls.profile.list, profile());
   app.use(urls.place.list, place());
-  app.use(urls.project.list, project.list());
+  app.use(urls.project.list, project());
 
   return app;
 };
