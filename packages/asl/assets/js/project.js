@@ -22,7 +22,7 @@ const postData = debounce(data => {
       // notifiy saved
     })
     .catch(err => {
-      // notify error
+      console.error(err);
     });
 }, 500, { maxWait: 5000 });
 
