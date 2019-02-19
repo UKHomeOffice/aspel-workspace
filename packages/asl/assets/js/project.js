@@ -1,5 +1,6 @@
 import start from '@asl/peephole';
 import debounce from 'lodash/debounce';
+import fetch from 'r2';
 
 const updateProject = project => {
   return {
@@ -11,18 +12,18 @@ const updateProject = project => {
 const state = window.INITIAL_STATE;
 
 const postData = debounce(data => {
-  window.fetch(state.static.basename, {
+  fetch(state.static.basename, {
     method: 'PUT',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
+    json: data
   })
+    .response
     .then(response => {
-      console.log('ok', response);
+      // notifiy saved
     })
-    .catch(err => console.log('err', err));
+    .catch(err => {
+      // notify error
+    });
 }, 500, { maxWait: 5000 });
 
 const onUpdate = props => {

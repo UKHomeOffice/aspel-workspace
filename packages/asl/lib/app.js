@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-
 const { router } = require('@asl/service/ui');
 const { pages, views, content } = require('@asl/pages');
 const {
