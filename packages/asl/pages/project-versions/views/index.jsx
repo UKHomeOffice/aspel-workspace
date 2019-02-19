@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Project = () => (
-  <div id="app"></div>
+  <div id="ppl-drafting-tool"></div>
 )
 
 export default Project;
