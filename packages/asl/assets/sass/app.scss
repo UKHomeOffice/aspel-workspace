@@ -1,2 +1,8 @@
 @import "@asl/pages";
 @import "@asl/peephole";
+
+#app .banner {
+  h2, h1 {
+    color: $white;
+  }
+}
