@@ -28,7 +28,10 @@ module.exports = {
     }
   },
   project: {
-    list: '/e/:establishmentId/projects'
+    list: '/e/:establishmentId/projects',
+    read: '/e/:establishmentId/projects/:projectId',
+    versions: '/e/:establishmentId/projects/:projectId/versions',
+    version: '/e/:establishmentId/projects/:projectId/versions/:versionId'
   },
   place: {
     list: '/e/:establishmentId/places',
