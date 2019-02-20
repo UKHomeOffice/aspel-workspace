@@ -31,7 +31,9 @@ module.exports = {
     list: '/e/:establishmentId/projects',
     read: '/e/:establishmentId/projects/:projectId',
     versions: '/e/:establishmentId/projects/:projectId/versions',
-    version: '/e/:establishmentId/projects/:projectId/versions/:versionId'
+    version: '/e/:establishmentId/projects/:projectId/versions/:versionId',
+    submit: '/e/:establishmentId/projects/:projectId/versions/:versionId/submit',
+    success: '/e/:establishmentId/projects/:projectId/versions/:versionId/success'
   },
   place: {
     list: '/e/:establishmentId/places',
