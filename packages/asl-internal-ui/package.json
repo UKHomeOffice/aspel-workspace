@@ -28,7 +28,7 @@
   "homepage": "https://github.com/UKHomeOffice/asl-internal-ui#readme",
   "dependencies": {
     "@asl/components": "^3.9.3",
-    "@asl/pages": "^15.17.2",
+    "@asl/pages": "^15.18.0",
     "@asl/service": "^6.19.1",
     "@ukhomeoffice/react-components": "^0.6.0",
     "body-parser": "^1.18.3",
