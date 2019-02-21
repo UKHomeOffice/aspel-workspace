@@ -11,7 +11,6 @@ import TaskList from '@asl/pages/pages/task/list/views/tasklist';
 import format from 'date-fns/format';
 import { isEmpty, sortBy } from 'lodash';
 import dict from '@asl/dictionary';
-import PilApply from '@asl/pages/pages/profile/read/views/pil-apply';
 
 const Invitation = ({ token, establishment }) => (
   <Fragment>
@@ -26,8 +25,6 @@ const defineValue = val => `${dict[val.toUpperCase()]} (${val})`;
 const Index = ({
   tabs,
   progress,
-  isUser,
-  allowedActions,
   profile: {
     firstName,
     establishments,
@@ -38,17 +35,10 @@ const Index = ({
     address,
     telephone,
     email,
-    postcode
+    postcode,
+    allowedActions
   }
 }) => {
-
-  console.log('----------------PilApply---------------------');
-  console.log(JSON.stringify(PilApply));
-  console.log('-------------------------------------');
-
-  console.log('----------------TaskList---------------------');
-  console.log(JSON.stringify(TaskList));
-  console.log('-------------------------------------');
 
   return <Fragment>
     <Header
@@ -68,33 +58,39 @@ const Index = ({
                     <Link page="establishment.dashboard" establishmentId={establishment.id} label='About this establishment' />
                   </p>
                   <div className='separator' />
-                  <h3><Snippet>projects.title</Snippet></h3>
-                  {
-                    projects && projects.length > 0 && (
-                      <dl>
-                        {
-                          projects.map(project =>
-                            <Fragment key={project.id}>
-                              <dd>
-                                <Link page="project.list" establishmentId={establishment.id} label={project.title} />
-                              </dd>
-                              <dd>
-                                <span><Snippet licenceNumber={project.licenceNumber}>projects.licenceNumber</Snippet></span>
-                              </dd>
-                              <dd>
-                                <span><Snippet expiryDate={format(project.expiryDate, 'DD MMMM YYYY')}>projects.expiryDate</Snippet></span>
-                              </dd>
-                            </Fragment>
-                          )
-                        }
-                      </dl>
-
-                    )
+                  <Fragment><h3><Snippet>projects.title</Snippet></h3></Fragment>
+                  <Fragment>
+                    {
+                      projects && projects.filter(({ establishmentId }) => establishmentId === establishment.id).length && (
+                        <dl>
+                          {
+                            projects.filter(({ establishmentId }) => establishmentId === establishment.id).map(project =>
+                              <Fragment key={project.id}>
+                                <dd>
+                                  <Link page="project.list" establishmentId={establishment.id} label={project.title} />
+                                </dd>
+                                <dd>
+                                  <span><Snippet licenceNumber={project.licenceNumber}>projects.licenceNumber</Snippet></span>
+                                </dd>
+                                <dd>
+                                  <span><Snippet expiryDate={format(project.expiryDate, 'DD MMMM YYYY')}>projects.expiryDate</Snippet></span>
+                                </dd>
+                              </Fragment>
+                            )
+                          }
+                        </dl>
+                      )
+                    }
+                  </Fragment>
+                  {/* TODO: replace link  pil.create with ppl.create*/
+                    <Link
+                      page='pil.create'
+                      className="govuk-button"
+                      label={<Snippet>{`buttons.pplApply`}</Snippet>}
+                    />
                   }
-                  {/* TODO: replace with PPLApply */}
-                  <PilApply pil={pil} />
                   <div className='separator' />
-                  <h3><Snippet>responsibilities.title</Snippet></h3>
+                  <p><h3><Snippet>responsibilities.title</Snippet></h3></p>
                   {!isEmpty(roles) &&
                       <dl>
                         {
@@ -104,22 +100,48 @@ const Index = ({
                         }
                       </dl>
                   }
-                  { isEmpty(roles) && <Snippet>responsibilities.noRoles</Snippet> }
+                  <p>{
+                    isEmpty(roles) && <Snippet>responsibilities.noRoles</Snippet>
+                  }</p>
+                  <p>
+                    <Link
+                      page='profile.role.apply.base'
+                      className="govuk-button"
+                      label={<Snippet>{`buttons.roleApply`}</Snippet>}
+                    />
+                  </p>
                   <div className='separator' />
+                  <p><h3><Snippet>pil.title</Snippet></h3></p>
                   {
                     pil && pil.licenceNumber && (
-                      <Fragment>
+                      <dl>
                         <dt><Snippet>personalLicenceNumber</Snippet></dt>
                         <dd><Link page="pil.read" pilId={pil.id} label={pil.licenceNumber} /></dd>
-                      </Fragment>
+                      </dl>
                     )
                   }
+                  <p>{ !pil && <Snippet>pil.noPil</Snippet> }</p>
+                  <p>{ !pil && allowedActions[establishment.id].includes('pil.create') &&
+                        <Link
+                          page='pil.create'
+                          className="govuk-button"
+                          label={<Snippet>{`buttons.pilApply`}</Snippet>}
+                        />
+                  }</p>
                   <div className='separator' />
                   {
                     (address || telephone || email) && (
                       <Fragment>
-                        <Snippet>contactDetails.title</Snippet>
+                        <p><h3><Snippet>contactDetails.title</Snippet></h3></p>
                         <dl>
+                          {
+                            email && (
+                              <Fragment>
+                                <dt><Snippet>contactDetails.email</Snippet></dt>
+                                <dd><a href={`mailto:${email}`}>{email}</a></dd>
+                              </Fragment>
+                            )
+                          }
                           {
                             address && (
                               <Fragment>
@@ -136,31 +158,15 @@ const Index = ({
                               </Fragment>
                             )
                           }
-                          {
-                            email && (
-                              <Fragment>
-                                <dt><Snippet>contactDetails.email</Snippet></dt>
-                                <dd><a href={`mailto:${email}`}>{email}</a></dd>
-                              </Fragment>
-                            )
-                          }
                         </dl>
                       </Fragment>
                     )
                   }
-                  {
-                    !isUser && allowedActions.includes('profile.permissions') && (
-                      <Fragment>
-                        {/* <dt>{profileRole}</dt> */}
-                        <dd><Link page="profile.permission" label={<Snippet>pages.profile.permission.change</Snippet>} /></dd>
-                      </Fragment>
-                    )
-                  }
+
                 </ExpandingPanel>);
             })} />
           </Fragment>
         }
-
         {
           !!invitations.length && <Fragment>
             <h2>Pending Invitations</h2>

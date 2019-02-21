@@ -17,15 +17,21 @@ module.exports = merge({}, baseContent, {
   },
   responsibilities: {
     title: 'Roles',
-    roles: 'Roles',
-    noRoles: 'This person has no named roles',
-    roleApply: 'Apply for named role',
-    roleRemove: 'Remove a named role'
+    noRoles: 'You don\'t have any named roles'
   },
   contactDetails: {
     title: 'Contact Details',
     professionalAddress: 'Professional Address',
     telephone: 'Telephone',
     email: 'Email Address'
+  },
+  pil: {
+    title: 'Personal Licence',
+    noPil: 'You don\'t have a personal licence (PIL)'
+  },
+  buttons: {
+    pplApply: 'Apply for project licence',
+    pilApply: 'Apply for personal licence',
+    roleApply: 'Apply for named role'
   }
 });
