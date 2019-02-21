@@ -13,7 +13,8 @@ module.exports = merge({}, baseContent, {
     title: 'Active Projects',
     projectTitles: 'Project titles',
     licenceNumber: 'Licence number: {{licenceNumber}}',
-    expiryDate: 'Expiry date: {{expiryDate}}'
+    expiryDate: 'Expiry date: {{expiryDate}}',
+    noProjects: 'You don\'t have any active projects'
   },
   responsibilities: {
     title: 'Roles',

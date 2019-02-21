@@ -36,18 +36,30 @@
 
 }
 
-.govuk-heading-m, h2, .application-confirm legend, .panel-list li {
-  font-size: 14px;
+.govuk-heading-m, .application-confirm legend, .panel-list li {
+  font-size: 16px;
   font-weight: inherit;
   @media (min-width: 40.0625em) {
-    .govuk-heading-m, h2, .application-confirm legend, .panel-list li {
+    .govuk-heading-m, .application-confirm legend, .panel-list li {
       font-size: inherit;
       line-height: inherit;
     }
   }
 }
 
+h2 {
+  @media (min-width: 40.0625em)  {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+}
+
 .separator {
   border-bottom: 1px solid $govuk-border-colour;
   margin-bottom: 15px;
+}
+
+.add-margin {
+  margin-bottom:20px !important;
 }

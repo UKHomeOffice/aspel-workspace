@@ -11,6 +11,7 @@ import TaskList from '@asl/pages/pages/task/list/views/tasklist';
 import format from 'date-fns/format';
 import { isEmpty, sortBy } from 'lodash';
 import dict from '@asl/dictionary';
+import { Button } from '@ukhomeoffice/react-components';
 
 const Invitation = ({ token, establishment }) => (
   <Fragment>
@@ -36,7 +37,8 @@ const Index = ({
     telephone,
     email,
     postcode,
-    allowedActions
+    allowedActions,
+    id
   }
 }) => {
 
@@ -52,16 +54,17 @@ const Index = ({
           !!establishments.length && <Fragment>
             <h2>Establishments</h2>
             <PanelList panels={sortBy(establishments, 'name').map(establishment => {
+
               return (
                 <ExpandingPanel key={establishment.id} title={establishment.name}>
-                  <p>
-                    <Link page="establishment.dashboard" establishmentId={establishment.id} label='About this establishment' />
-                  </p>
+                  <p><Link page="establishment.dashboard" establishmentId={establishment.id} label='About this establishment' /></p>
                   <div className='separator' />
-                  <Fragment><h3><Snippet>projects.title</Snippet></h3></Fragment>
+
+                  <h3><Snippet>projects.title</Snippet></h3>
+
                   <Fragment>
                     {
-                      projects && projects.filter(({ establishmentId }) => establishmentId === establishment.id).length && (
+                      projects && !isEmpty(projects.filter(({ establishmentId }) => establishmentId === establishment.id)) && (
                         <dl>
                           {
                             projects.filter(({ establishmentId }) => establishmentId === establishment.id).map(project =>
@@ -81,58 +84,70 @@ const Index = ({
                         </dl>
                       )
                     }
+                    {
+                      projects && isEmpty(projects.filter(({ establishmentId }) => establishmentId === establishment.id)) &&
+                        <p><Snippet>projects.noProjects</Snippet></p>
+                    }
+                    {
+                      allowedActions[establishment.id].includes('project.apply') && (
+                        <form method="POST" action={`/e/${establishment.id}/projects/create`}>
+                          <Button className="govuk-button add-margin"><Snippet>buttons.pplApply</Snippet></Button>
+                        </form>
+                      )
+                    }
                   </Fragment>
-                  {/* TODO: replace link  pil.create with ppl.create*/
-                    <Link
-                      page='pil.create'
-                      className="govuk-button"
-                      label={<Snippet>{`buttons.pplApply`}</Snippet>}
-                    />
-                  }
                   <div className='separator' />
-                  <p><h3><Snippet>responsibilities.title</Snippet></h3></p>
-                  {!isEmpty(roles) &&
+
+                  <h3><Snippet>responsibilities.title</Snippet></h3>
+                  <Fragment>
+                    {!isEmpty(roles.filter(({ establishmentId }) => establishmentId === establishment.id)) &&
                       <dl>
                         {
-                          roles.map(({ type, id }) => <Fragment key={id}>
+                          roles.filter(({ establishmentId }) => establishmentId === establishment.id).map(({ type, id }) => <Fragment key={id}>
                             <dd>{defineValue(type.toUpperCase())}</dd>
                           </Fragment>)
                         }
                       </dl>
-                  }
-                  <p>{
-                    isEmpty(roles) && <Snippet>responsibilities.noRoles</Snippet>
-                  }</p>
-                  <p>
-                    <Link
-                      page='profile.role.apply.base'
-                      className="govuk-button"
-                      label={<Snippet>{`buttons.roleApply`}</Snippet>}
-                    />
-                  </p>
+                    }
+                    {
+                      isEmpty(roles.filter(({ establishmentId }) => establishmentId === establishment.id)) && <Snippet>responsibilities.noRoles</Snippet>
+                    }
+                    {
+                      <p><Link
+                        page='profile.role.apply.base' establishmentId={establishment.id} profileId={id}
+                        className="govuk-button"
+                        label={<Snippet>{`buttons.roleApply`}</Snippet>}
+                      /></p>
+                    }
+                  </Fragment>
+
                   <div className='separator' />
-                  <p><h3><Snippet>pil.title</Snippet></h3></p>
-                  {
-                    pil && pil.licenceNumber && (
-                      <dl>
-                        <dt><Snippet>personalLicenceNumber</Snippet></dt>
-                        <dd><Link page="pil.read" pilId={pil.id} label={pil.licenceNumber} /></dd>
-                      </dl>
-                    )
-                  }
-                  <p>{ !pil && <Snippet>pil.noPil</Snippet> }</p>
-                  <p>{ !pil && allowedActions[establishment.id].includes('pil.create') &&
-                        <Link
-                          page='pil.create'
+
+                  <h3><Snippet>pil.title</Snippet></h3>
+                  <Fragment>
+                    {
+                      pil && pil.licenceNumber && (
+                        <dl>
+                          <dt><Snippet>personalLicenceNumber</Snippet></dt>
+                          <dd><Link page="pil.read" establishmentId={establishment.id} profileId={id} pilId={pil.id} label={pil.licenceNumber} /></dd>
+                        </dl>
+                      )
+                    }
+                    { !pil && <p className="add-margin"><Snippet>pil.noPil</Snippet></p> }
+                    { !pil && allowedActions[establishment.id].includes('pil.create') &&
+                        <p><Link
+                          page='pil.create' establishmentId={establishment.id} profileId={id}
                           className="govuk-button"
                           label={<Snippet>{`buttons.pilApply`}</Snippet>}
-                        />
-                  }</p>
+                        /></p>
+                    }
+                  </Fragment>
                   <div className='separator' />
+
+                  <h3><Snippet>contactDetails.title</Snippet></h3>
                   {
                     (address || telephone || email) && (
                       <Fragment>
-                        <p><h3><Snippet>contactDetails.title</Snippet></h3></p>
                         <dl>
                           {
                             email && (
