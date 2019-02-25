@@ -38,6 +38,7 @@ const mapStateToProps = (state, props) => {
       'profileId',
       'pilId',
       'projectId',
+      'versionId',
       'placeId'
     ), props);
 };
