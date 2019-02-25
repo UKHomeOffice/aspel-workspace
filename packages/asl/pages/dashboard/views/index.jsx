@@ -31,13 +31,12 @@ const Index = ({
     />
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
-        <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
+        <h3><Snippet>pages.dashboard.tasks</Snippet></h3>
         <TaskList tabs={ tabs } progress={ progress } />
         {
           !!profile.establishments.length && <Fragment>
-            <h2>Establishments</h2>
+            <h3>Establishments</h3>
             <PanelList panels={sortBy(profile.establishments, 'name').map(establishment => {
-
               return (
                 <ExpandingPanel key={establishment.id} title={establishment.name}>
                   <Profile establishment={establishment} profile={profile} allowedActions={profile.allowedActions[establishment.id]}/>
@@ -48,7 +47,7 @@ const Index = ({
         }
         {
           !!profile.invitations.length && <Fragment>
-            <h2>Pending Invitations</h2>
+            <h3>Pending Invitations</h3>
             <PanelList panels={profile.invitations.map(invitation => <Invitation key={invitation.id} establishment={ invitation.establishment.name } token={invitation.token} />)}/>
           </Fragment>
         }
