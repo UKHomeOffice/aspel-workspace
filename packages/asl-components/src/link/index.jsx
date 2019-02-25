@@ -30,17 +30,10 @@ const Link = ({
 };
 
 const mapStateToProps = (state, props) => {
-  return Object.assign({},
-    pick(state.static,
-      'url',
-      'urls',
-      'establishmentId',
-      'profileId',
-      'pilId',
-      'projectId',
-      'versionId',
-      'placeId'
-    ), props);
+  return {
+    ...state.static,
+    ...props
+  };
 };
 
 export default connect(mapStateToProps)(Link);
