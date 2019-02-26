@@ -37,11 +37,9 @@ const Index = ({
         <h3>Establishments</h3>
         <PanelList panels={sortBy(profile.establishments, 'name').map(establishment => {
           return (
-            <div className="landing" key={establishment.id}>
-              <ExpandingPanel title={establishment.name}>
-                <Profile establishment={establishment} profile={profile} allowedActions={profile.allowedActions[establishment.id]}/>
-              </ExpandingPanel>
-            </div>
+            <ExpandingPanel key={establishment.id} title={establishment.name}>
+              <Profile establishment={establishment} profile={profile} allowedActions={profile.allowedActions[establishment.id]}/>
+            </ExpandingPanel>
           );
         })} />
       </Fragment>
