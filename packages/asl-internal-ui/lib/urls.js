@@ -19,7 +19,13 @@ module.exports = {
     invitations: '/establishments/:establishmentId/people/invitations'
   },
   project: {
-    list: '/establishments/:establishmentId/projects'
+    list: '/establishments/:establishmentId/projects',
+    read: '/establishments/:establishmentId/projects/:projectId',
+    versions: '/establishments/:establishmentId/projects/:projectId/versions',
+    version: '/establishments/:establishmentId/projects/:projectId/versions/:versionId',
+    submit: '/establishments/:establishmentId/projects/:projectId/versions/:versionId/submit',
+    success: '/establishments/:establishmentId/projects/:projectId/versions/:versionId/success',
+    task: '/establishments/:establishmentId/projects/:projectId/versions/:versionId/task'
   },
   place: {
     list: '/establishments/:establishmentId/places',
