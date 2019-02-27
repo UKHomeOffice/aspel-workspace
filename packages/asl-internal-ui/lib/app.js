@@ -14,6 +14,7 @@ const {
 const dashboard = require('../pages/dashboard');
 const search = require('../pages/search');
 const globalProfile = require('../pages/profile');
+const version = require('../pages/project-versions');
 
 const urls = require('./urls');
 
@@ -31,6 +32,11 @@ module.exports = settings => {
 
   app.param('profileId', (req, res, next, param) => {
     req.profileId = param;
+    next();
+  });
+
+  app.param('versionId', (req, res, next, param) => {
+    req.versionId = param;
     next();
   });
 
@@ -67,6 +73,7 @@ module.exports = settings => {
   app.use(urls.profile.list, profile());
   app.use(urls.place.list, place());
   app.use(urls.project.list, project());
+  app.use(urls.project.version, version());
 
   return app;
 };

@@ -1,4 +1,13 @@
 @import "@asl/pages";
+@import "@asl/peephole";
+
+#ppl-drafting-tool {
+  margin-bottom: $govuk-gutter;
+}
+
+.page-header {
+  margin-bottom: $govuk-gutter;
+}
 
 td .govuk-button {
   margin-bottom: 0;
