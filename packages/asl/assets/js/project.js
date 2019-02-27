@@ -35,9 +35,15 @@ const onUpdate = props => {
   };
 };
 
+const onComplete = () => {
+  window.location.href = `${state.static.basename}/submit`;
+};
+
 start({
   basename: state.static.basename,
-  onUpdate
+  onUpdate,
+  onComplete,
+  readonly: state.model.status !== 'draft'
 }, {
   project: {
     ...state.model.data,
