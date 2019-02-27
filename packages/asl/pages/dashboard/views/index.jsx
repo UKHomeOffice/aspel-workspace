@@ -1,23 +1,15 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
+import sortBy from 'lodash/sortBy';
 import {
   Link,
   Snippet,
   Header,
-  PanelList
+  PanelList,
+  ExpandingPanel
 } from '@asl/components';
 import TaskList from '@asl/pages/pages/task/list/views/tasklist';
-
-const EstablishmentPanel = ({ id, name }) => (
-  <Fragment>
-    <p>
-      <Link page="establishment.dashboard" establishmentId={id} label={name} />
-    </p>
-    <p>
-      <Link page="profile.invite" establishmentId={id} label={<Snippet>pages.dashboard.invite</Snippet>}/>
-    </p>
-  </Fragment>
-);
+import Profile from '@asl/pages/pages/profile/read/views/profile';
 
 const Invitation = ({ token, establishment }) => (
   <Fragment>
@@ -30,38 +22,37 @@ const Invitation = ({ token, establishment }) => (
 const Index = ({
   tabs,
   progress,
-  profile: {
-    firstName,
-    establishments,
-    invitations
-  }
+  profile
 }) => {
+
   return <Fragment>
     <Header
-      title={<Snippet name={firstName}>pages.dashboard.greeting</Snippet>}
+      title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>}
     />
-    <div className="govuk-grid-row">
-      <div className="govuk-grid-column-full">
-        <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
-        <TaskList tabs={ tabs } progress={ progress } />
 
-        {
-          !!establishments.length && <Fragment>
-            <h2>Establishments</h2>
+    <h3><Snippet>pages.dashboard.tasks</Snippet></h3>
+    <TaskList tabs={ tabs } progress={ progress } />
+    {
+      !!profile.establishments.length && <Fragment>
+        <h3>Establishments</h3>
+        <PanelList panels={sortBy(profile.establishments, 'name').map(establishment => {
+          return (
+            <ExpandingPanel key={establishment.id} title={establishment.name}>
+              <Profile establishment={establishment} profile={profile} allowedActions={profile.allowedActions[establishment.id]}/>
+            </ExpandingPanel>
+          );
+        })} />
+      </Fragment>
+    }
+    {
+      !!profile.invitations.length && <Fragment>
+        <h3>Pending Invitations</h3>
+        <PanelList panels={profile.invitations.map(invitation => <Invitation key={invitation.id} establishment={ invitation.establishment.name } token={invitation.token} />)}/>
+      </Fragment>
+    }
 
-            <PanelList panels={establishments.map(establishment => <EstablishmentPanel key={establishment.id} { ...establishment } />)}/>
-          </Fragment>
-        }
-        {
-          !!invitations.length && <Fragment>
-            <h2>Pending Invitations</h2>
-            <PanelList panels={invitations.map(invitation => <Invitation key={invitation.id} establishment={ invitation.establishment.name } token={invitation.token} />)}/>
-          </Fragment>
-        }
-      </div>
-    </div>
-  </Fragment>
+  </Fragment>;
 };
 
-const mapStateToProps = ({ static: { profile, tabs, progress } }) => ({ profile, tabs, progress });
+const mapStateToProps = ({ static: { profile, tabs, progress, isUser } }) => ({ profile, tabs, progress, isUser });
 export default connect(mapStateToProps)(Index);

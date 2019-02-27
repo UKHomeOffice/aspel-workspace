@@ -12,8 +12,8 @@ const Accept = ({ establishment }) => {
     <form method="post" action="">
       <Button type="submit"><Snippet>accept</Snippet></Button>
     </form>
-  </Fragment>
-}
+  </Fragment>;
+};
 
 const mapStateToProps = ({ static: { establishment } }) => ({ establishment });
 

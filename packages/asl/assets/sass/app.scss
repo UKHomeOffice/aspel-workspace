@@ -10,3 +10,15 @@
 .page-header {
   margin-bottom: $govuk-gutter;
 }
+
+.panel-list .expanding-panel  {
+  border-top: none;
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .content {
+    padding: $govuk-gutter-half;
+    padding-left: 0;
+  }
+}

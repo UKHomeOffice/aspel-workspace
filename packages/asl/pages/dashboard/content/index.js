@@ -1,7 +1,8 @@
 const { merge } = require('lodash');
 const baseContent = require('@asl/pages/pages/task/list/content');
+const profileContent = require('@asl/pages/pages/profile/read/content');
 
-module.exports = merge({}, baseContent, {
+module.exports = merge({}, baseContent, profileContent, {
   tasklist: {
     title: 'Tasks',
     outstanding: {
