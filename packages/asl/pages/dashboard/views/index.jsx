@@ -35,6 +35,13 @@ const Index = ({
     {
       !!profile.establishments.length && <Fragment>
         <h3>Establishments</h3>
+        {
+          !!profile.invitations.length && <Fragment>
+            <h3>Pending Invitations</h3>
+            <PanelList panels={profile.invitations.map(invitation => <Invitation key={invitation.id} establishment={ invitation.establishment.name } token={invitation.token} />)}/>
+          </Fragment>
+        }
+
         <PanelList panels={sortBy(profile.establishments, 'name').map(establishment => {
           return (
             <ExpandingPanel key={establishment.id} title={establishment.name}>
@@ -42,12 +49,6 @@ const Index = ({
             </ExpandingPanel>
           );
         })} />
-      </Fragment>
-    }
-    {
-      !!profile.invitations.length && <Fragment>
-        <h3>Pending Invitations</h3>
-        <PanelList panels={profile.invitations.map(invitation => <Invitation key={invitation.id} establishment={ invitation.establishment.name } token={invitation.token} />)}/>
       </Fragment>
     }
 
