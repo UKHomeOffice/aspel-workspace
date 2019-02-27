@@ -30,6 +30,4 @@ const config = merge(
   }
 );
 
-delete config.module.rules[0].loader;
-
 module.exports = config;
