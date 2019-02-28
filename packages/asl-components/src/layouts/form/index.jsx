@@ -3,7 +3,7 @@ import { ErrorSummary, Form } from '../../';
 
 const FormLayout = ({
   children,
-  formatters
+  ...props
 }) => (
   <div className="govuk-grid-row">
     <div className="govuk-grid-column-two-thirds">
@@ -11,7 +11,7 @@ const FormLayout = ({
       {
         children
       }
-      <Form formatters={formatters} />
+      <Form {...props} />
     </div>
   </div>
 );
