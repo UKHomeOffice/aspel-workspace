@@ -1,3 +1,4 @@
+const { get } = require('lodash');
 const { page } = require('@asl/service/ui');
 
 module.exports = settings => {
@@ -19,9 +20,9 @@ module.exports = settings => {
     res.locals.static.basename = req.buildRoute('project.version');
     res.locals.static.establishments = req.user.profile.establishments;
     res.locals.scripts = ['/public/js/project/bundle.js'];
-    res.locals.static.establishmentId = req.establishmentId;
-    res.locals.static.projectId = req.projectId;
-    res.locals.static.versionId = req.versionId;
+    const task = get(req.project, 'openTasks[0]');
+    res.locals.static.taskId = task.id;
+    res.locals.static.isActionable = get(task, 'data.data.version') === req.versionId;
     res.locals.model = req.model;
     res.template = require('./views/index.jsx').default;
     next();
