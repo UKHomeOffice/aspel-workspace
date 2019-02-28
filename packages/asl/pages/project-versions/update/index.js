@@ -1,6 +1,6 @@
 const { page } = require('@asl/service/ui');
 const bodyParser = require('body-parser');
-const { omit } = require('lodash');
+const { omit, get, pick } = require('lodash');
 
 module.exports = settings => {
   const app = page({
@@ -15,6 +15,14 @@ module.exports = settings => {
       })
       .then(() => next())
       .catch(next);
+  });
+
+  app.use((req, res, next) => {
+    const authorities = get(req.project, 'openTasks[0].data.data');
+    if (authorities) {
+      Object.assign(req.model, pick(authorities, 'authority', 'awerb'));
+    }
+    next();
   });
 
   app.use((req, res, next) => {

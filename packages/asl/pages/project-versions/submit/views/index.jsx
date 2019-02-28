@@ -1,14 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Snippet, Header, FormLayout } from '@asl/components';
-import { Button } from '@ukhomeoffice/react-components';
+import { Button, Warning } from '@ukhomeoffice/react-components';
 
 const Submit = ({ model }) => (
   <FormLayout>
     <Header
       title={<Snippet>title</Snippet>}
-      subtitle={model.title || 'Untitled project'}
+      subtitle={model.data.title || 'Untitled project'}
     />
+    <Warning><Snippet>warning</Snippet></Warning>
+
   </FormLayout>
 )
 

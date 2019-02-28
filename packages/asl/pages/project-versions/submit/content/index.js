@@ -1,21 +1,26 @@
 module.exports = {
-  title: 'Submit to inspector',
+  title: 'Send application',
+  warning: 'Project licence applications need to be reviewed by an AWERB and endorsed by the primary establishment\'s PEL holder before a licence can be granted.',
   fields: {
     authority: {
-      label: 'Do you have the authority of the Establishment Licence Holder to submit this application?'
+      label: 'Does this application have the endorsement of your primary establishment\'s PEL holder?'
     },
     awerb: {
-      label: 'Has this application been through the AWERB process for each relevant establishment?'
+      label: 'Has this application been reviewed by the AWERB of each relevant establishment?'
+    },
+    ready: {
+      label: 'Is this version of your application ready for an inspector to approve?'
     }
   },
   errors: {
     authority: {
-      required: 'Select an option',
-      customValidate: 'Confirm you have the authority of the Establishment Licence Holder before submitting'
+      required: 'Select an option'
     },
     awerb: {
-      required: 'Select an option',
-      customValidate: 'Confim the application has been through the AWERB process before submitting'
+      required: 'Select an option'
+    },
+    ready: {
+      required: 'Select an option'
     }
   },
   buttons: {
