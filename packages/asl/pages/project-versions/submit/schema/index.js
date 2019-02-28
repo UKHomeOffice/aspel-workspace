@@ -1,25 +1,56 @@
-const { toArray } = require('@asl/pages/lib/utils');
-
 module.exports = {
   authority: {
-    inputType: 'checkboxGroup',
+    inputType: 'radioGroup',
+    inline: true,
+    className: 'smaller',
     options: [
       {
-        label: 'Yes',
-        value: true
+        value: 'yes',
+        label: 'Yes'
       },
       {
-        label: 'Not yet',
-        value: false
+        value: 'no',
+        label: 'Not yet'
       }
     ],
-    nullValue: [],
-    format: toArray,
     validate: [
-      'required',
+      'required'
+    ]
+  },
+  awerb: {
+    inputType: 'radioGroup',
+    inline: true,
+    className: 'smaller',
+    options: [
       {
-        customValidate: field => field
+        value: 'yes',
+        label: 'Yes'
+      },
+      {
+        value: 'no',
+        label: 'Not yet'
       }
+    ],
+    validate: [
+      'required'
+    ]
+  },
+  ready: {
+    inputType: 'radioGroup',
+    inline: true,
+    className: 'smaller',
+    options: [
+      {
+        value: 'yes',
+        label: 'Yes'
+      },
+      {
+        value: 'no',
+        label: 'Not yet'
+      }
+    ],
+    validate: [
+      'required'
     ]
   }
 };
