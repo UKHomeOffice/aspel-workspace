@@ -1,6 +1,5 @@
 .sticky-nav {
   display: block;
-  float: left;
   border-top: 4px solid $blue;
   position: -webkit-sticky;
   position: sticky;
@@ -14,6 +13,10 @@
     &.active {
       background-color: $blue;
       color: $white;
+
+      &:focus {
+        color: $white;
+      }
     }
   }
 }
