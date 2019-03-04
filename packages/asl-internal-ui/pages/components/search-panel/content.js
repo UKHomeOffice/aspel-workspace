@@ -13,6 +13,6 @@ module.exports = {
   projects: {
     label: 'Projects',
     placeholder: 'Search by name or licence number',
-    viewAll: 'View all projects'
+    viewAll: 'View all active projects'
   }
 };
