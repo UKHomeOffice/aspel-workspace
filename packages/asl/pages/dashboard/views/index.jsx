@@ -44,7 +44,7 @@ const Index = ({
         <PanelList panels={sortBy(profile.establishments, 'name').map(establishment => {
           return (
             <ExpandingPanel key={establishment.id} title={establishment.name}>
-              <Profile establishment={establishment} profile={profile} allowedActions={profile.allowedActions[establishment.id]}/>
+              <Profile establishment={establishment} profile={profile} allowedActions={profile.allowedActions[establishment.id]} isOwnProfile={true} />
             </ExpandingPanel>
           );
         })} />
@@ -54,5 +54,5 @@ const Index = ({
   </Fragment>;
 };
 
-const mapStateToProps = ({ static: { profile, tabs, progress, isUser } }) => ({ profile, tabs, progress, isUser });
+const mapStateToProps = ({ static: { profile, tabs, progress } }) => ({ profile, tabs, progress });
 export default connect(mapStateToProps)(Index);
