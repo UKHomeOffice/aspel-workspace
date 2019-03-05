@@ -22,8 +22,7 @@ const Invitation = ({ token, establishment }) => (
 const Index = ({
   tabs,
   progress,
-  profile,
-  isOwnProfile
+  profile
 }) => {
 
   return <Fragment>
@@ -55,5 +54,5 @@ const Index = ({
   </Fragment>;
 };
 
-const mapStateToProps = ({ static: { profile, tabs, progress, isOwnProfile } }) => ({ profile, tabs, progress, isOwnProfile });
+const mapStateToProps = ({ static: { profile, tabs, progress } }) => ({ profile, tabs, progress });
 export default connect(mapStateToProps)(Index);
