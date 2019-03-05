@@ -6,6 +6,10 @@
   &.green-bg {
     background-color: $green;
     color: $white;
+
+    .govuk-panel__body * {
+      color: $white;
+    }
   }
 
   .govuk-panel__title {
