@@ -45,6 +45,7 @@ The following environment variables can be optionally defined:
 * `REDIS_PORT` - port of the redis server used for session storage - default `6379`
 * `REDIS_PASSWORD` - password of the redis server used for session storage - default `undefined`
 * `VERBOSE_ERRORS` - show verbose errors in client. Default `undefined`
+* `INTERNAL_URL` - the hostname of the internal facing ui - default `undefined`
 
 
 ## Connected services
