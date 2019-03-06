@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { router } = require('@asl/service/ui');
 const { pages, views, content } = require('@asl/pages');
+const { get } = require('lodash');
+
 const {
   establishment,
   place,
@@ -20,6 +22,13 @@ const version = require('../pages/project-versions');
 
 module.exports = settings => {
   const app = router({ ...settings, views, urls });
+
+  app.use((req, res, next) => {
+    if (settings.internalUrl && get(req, 'user.profile.asruUser')) {
+      return res.redirect(settings.internalUrl);
+    }
+    next();
+  });
 
   app.use(content);
 
