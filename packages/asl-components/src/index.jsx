@@ -41,6 +41,7 @@ export { default as StatusBar } from './status-bar';
 export { default as StickyNav } from './sticky-nav';
 export { default as StickyNavAnchor } from './sticky-nav-anchor';
 export { default as StickyNavPage } from './sticky-nav-page';
+export { default as Success } from './success';
 export { default as Tabs } from './tabs';
 export { default as Tasklist } from './tasklist';
 export { default as Wrapper } from './wrapper';
