@@ -7,7 +7,7 @@ module.exports = settings => {
     root: __dirname
   });
 
-  app.use(success());
+  app.use(success({ licence: 'project', status: 'resubmitted' }));
 
   return app;
 };
