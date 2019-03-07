@@ -44,6 +44,10 @@ const Index = ({
         <PanelList panels={sortBy(profile.establishments, 'name').map(establishment => {
           return (
             <ExpandingPanel key={establishment.id} title={establishment.name}>
+              <p>
+                <Link page="establishment.dashboard" establishmentId={establishment.id} label={<Snippet>establishment.link</Snippet>} />
+              </p>
+              <hr />
               <Profile establishment={establishment} profile={profile} allowedActions={profile.allowedActions[establishment.id]} isOwnProfile={true} />
             </ExpandingPanel>
           );

@@ -9,5 +9,8 @@ module.exports = merge({}, baseContent, profileContent, {
       none: 'You have no outstanding tasks',
       some: 'You have {{count}} outstanding tasks'
     }
+  },
+  establishment: {
+    link: 'About this establishment'
   }
 });
