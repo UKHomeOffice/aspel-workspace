@@ -1,6 +1,10 @@
 @import "@asl/peephole";
 @import "@asl/pages";
 
+h3 {
+  margin-bottom: $govuk-gutter-half;
+}
+
 #ppl-drafting-tool .banner {
   h2, h1 {
     color: $white;
