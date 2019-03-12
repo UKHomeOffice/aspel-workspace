@@ -3,11 +3,9 @@ const path = require('path');
 const api = require('@asl/service/api');
 const Mailer = require('snailmail');
 
-const bodyParser = require('body-parser');
-
 module.exports = settings => {
   const app = api(settings);
-  app.use(bodyParser.json());
+
   const mailer = Mailer({
     ...settings.email,
     templateDir: path.resolve(__dirname, '../templates'),
@@ -20,19 +18,13 @@ module.exports = settings => {
   app.post('/:template', (req, res) => {
     const params = {
       template: req.params.template,
-      // to: req.body.to,
-      to: 'swagbag@swagbag.club',
+      to: req.body.to,
       subject: req.body.subject,
       data: req.body
     };
 
-    // res.json(req.params.template, {...req.body});
-
-    console.log('-----------------REQUEST BODY BEGIN---------------------------');
-    console.log(JSON.stringify(req.body));
-    console.log('-----------------REQUEST BODY END---------------------------');
-
-    mailer.send(params)
+    mailer
+      .send(params)
       .then(() => {
         res.json({});
       })
