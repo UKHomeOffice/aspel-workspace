@@ -29,6 +29,22 @@ Any extra params in the body will be passed to the template on render.
   - `name` - the name of the recipient
   - `acceptLink` - the link they click to accept the invitation.
 
+*  `notification_other.html` - `POST http://localhost:8080/notification_other` - template for 'licence granting and application progress events' email notifications for the applicant/initiator of the amendment, AND for inspectors/HOLCs/Licensing officers/Other interested parties. Required params:
+  - `taskType` - one of PPL application, PPL amendment, PIL application, PIL amendment, PEL amendment
+  - `name` - name of the recipient
+  - `identifier` - one of Project name, Applicant name, Licence holder name, Establishment name
+  - `identifierValue` - one of projectName, applicantName, licenceHolderName, establishmentName
+  - `prevStatus` - previous status of the application/amendment
+  - `newStatus` - new status of the application/amendment
+  - `url` - application/amendment url
+
+*  `notification_action.html` - `POST http://localhost:8080/notification_action` - template for 'licence granting and application progress events' email notifications for the user who needs to take action. Required params:
+  - `taskType` - one of PPL application, PPL amendment, PIL application, PIL amendment, PEL amendment
+  - `name` - name of the recipient
+  - `identifier` - one of Project name, Applicant name, Licence holder name, Establishment name
+  - `identifierValue` - one of projectName, applicantName, licenceHolderName, establishmentName
+  - `url` - application/amendment url
+
 ## Dependencies
 
 * `@asl/service/ui` provides the common ui boilerplate

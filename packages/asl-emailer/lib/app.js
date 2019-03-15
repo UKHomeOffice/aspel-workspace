@@ -22,7 +22,9 @@ module.exports = settings => {
       subject: req.body.subject,
       data: req.body
     };
-    mailer.send(params)
+
+    mailer
+      .send(params)
       .then(() => {
         res.json({});
       })
