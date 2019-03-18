@@ -4,5 +4,6 @@ module.exports = [
   'nvs',
   'nio',
   'ntco',
+  'nprc',
   'holc'
 ];
