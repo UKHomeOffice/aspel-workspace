@@ -1,6 +1,6 @@
 {
   "name": "@asl/constants",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Shared constants for ASL modules",
   "main": "index.js",
   "scripts": {
