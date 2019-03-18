@@ -5,6 +5,7 @@ module.exports = {
   NIO: 'Named Information Officer',
   NVS: 'Named Veterinary Surgeon',
   NTCO: 'Named Training and Competency Officer',
+  NPRC: 'Named Person Responsible for ensuring Compliance',
 
   // Licence holders
   PELH: 'Establishent Licence Holder',
