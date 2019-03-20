@@ -1,6 +1,7 @@
 module.exports = {
   // roles
   ELH: 'Establishment Licence Holder',
+  HOLC: 'Home Office Liaison Contact',
   NACWO: 'Named Animal Care and Welfare Officer',
   NIO: 'Named Information Officer',
   NVS: 'Named Veterinary Surgeon',
