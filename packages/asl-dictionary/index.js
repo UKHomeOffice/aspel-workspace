@@ -9,7 +9,7 @@ module.exports = {
   NPRC: 'Named Person Responsible for Compliance',
 
   // Licence holders
-  PELH: 'Establishent Licence Holder',
+  PELH: 'Establishment Licence Holder',
   PILH: 'Individual Licence Holder',
   PPLH: 'Project Licence Holder',
 
