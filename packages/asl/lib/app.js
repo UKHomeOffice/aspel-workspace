@@ -83,8 +83,10 @@ module.exports = settings => {
     next();
   });
 
-  app.use(urls.establishment.dashboard, establishment.dashboard());
-  app.use(urls.establishment.read, establishment.details());
+  app.use(urls.establishment.dashboard, establishment());
+
+  // app.use(urls.establishment.dashboard, establishment.dashboard());
+  // app.use(urls.establishment.read, establishment.details());
 
   app.use(urls.profile.list, profile());
   app.use(urls.place.list, place());
