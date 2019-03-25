@@ -53,6 +53,6 @@ start({
   },
   application: {
     readonly: state.model.status !== 'draft',
-    schemaVersion: state.model.project.schemaVersion 
+    schemaVersion: state.model.project.schemaVersion
   }
 });
