@@ -1,4 +1,4 @@
-import start from '@asl/peephole';
+import start from '@asl/projects';
 import debounce from 'lodash/debounce';
 import fetch from 'r2';
 
@@ -42,8 +42,7 @@ const onComplete = () => {
 start({
   basename: state.static.basename,
   onUpdate,
-  onComplete,
-  readonly: state.model.status !== 'draft'
+  onComplete
 }, {
   project: {
     ...state.model.data,
@@ -51,5 +50,9 @@ start({
   },
   settings: {
     establishments: state.static.establishments.map(e => e.name)
+  },
+  application: {
+    readonly: state.model.status !== 'draft',
+    schemaVersion: state.model.project.schemaVersion
   }
 });
