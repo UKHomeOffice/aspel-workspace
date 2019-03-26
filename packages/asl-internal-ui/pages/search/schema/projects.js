@@ -12,6 +12,9 @@ module.exports = {
     show: true,
     sort: 'licenceHolder.lastName'
   },
+  status: {
+    show: true
+  },
   expiryDate: {
     show: true
   }
