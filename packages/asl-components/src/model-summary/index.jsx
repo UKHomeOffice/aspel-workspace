@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import React, { Fragment } from 'react';
 import map from 'lodash/map';
-import pick from 'lodash/pick';
+import pickBy from 'lodash/pickBy';
 import size from 'lodash/size';
 import { connect } from 'react-redux';
 import { Snippet } from '../';
@@ -14,13 +14,14 @@ const getValue = (value, format, model) => {
 };
 
 const ModelSummary = ({ model, schema, formatters = {}, className }) => {
+  let fields = model;
   if (size(schema)) {
-    model = pick(model, Object.keys(schema));
+    fields = pickBy(model, (field, key) => schema[key] && schema[key].show !== false);
   }
   return (
     <dl className={classnames('model-summary', 'inline', className)}>
       {
-        map(model, (item, key) =>
+        map(fields, (item, key) =>
           <Fragment key={key}>
             <dt><Snippet>{`fields.${key}.label`}</Snippet></dt>
             <dd>{getValue(model[key], formatters[key] && formatters[key].format, model)}</dd>
