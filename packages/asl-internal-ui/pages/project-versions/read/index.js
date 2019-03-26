@@ -21,7 +21,7 @@ module.exports = settings => {
     res.locals.static.establishments = req.user.profile.establishments;
     res.locals.scripts = ['/public/js/project/bundle.js'];
     const task = get(req.project, 'openTasks[0]');
-    res.locals.static.taskId = task.id;
+    res.locals.static.taskId = task ? task.id : null;
     res.locals.static.isActionable = get(task, 'data.data.version') === req.versionId;
     res.locals.model = req.model;
     res.template = require('./views/index.jsx').default;
