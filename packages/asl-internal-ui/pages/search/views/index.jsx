@@ -31,6 +31,11 @@ const formatters = {
     }
   },
   projects: {
+    title: {
+      format: (title, project) => {
+        return <Link page="project.read" establishmentId={project.establishment.id} projectId={project.id} label={title} />;
+      }
+    },
     establishment: {
       format: establishment => {
         return <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />;
