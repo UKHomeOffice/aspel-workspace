@@ -10,5 +10,8 @@ module.exports = {
   },
   expiryDate: {
     label: 'Expiry date'
+  },
+  status: {
+    label: 'Status'
   }
 };
