@@ -34,7 +34,7 @@ module.exports = settings => {
     next();
   });
 
-  app.put('/', bodyParser.json());
+  app.put('/', bodyParser.json({ limit: '5mb' }));
 
   app.put('/', (req, res, next) => {
     const opts = {
