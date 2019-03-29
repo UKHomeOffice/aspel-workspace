@@ -26,8 +26,10 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
+    const establishment = req.establishment;
     res.locals.static.basename = req.buildRoute('project.version');
-    res.locals.static.establishments = req.user.profile.establishments;
+    res.locals.static.establishments = req.user.profile.establishments.filter(e => e.id !== establishment.id);
+    res.locals.static.establishment = establishment;
     res.locals.scripts = ['/public/js/project/bundle.js'];
     res.locals.model = req.model;
     res.template = require('./views/index.jsx').default;
