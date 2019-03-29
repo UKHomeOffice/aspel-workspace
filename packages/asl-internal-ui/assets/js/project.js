@@ -14,6 +14,7 @@ start({
   },
   application: {
     readonly: true,
-    schemaVersion: state.model.project.schemaVersion
+    schemaVersion: state.model.project.schemaVersion,
+    establishment: state.static.establishment.name
   }
 });

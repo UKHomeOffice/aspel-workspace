@@ -18,7 +18,9 @@ module.exports = settings => {
 
   app.use((req, res, next) => {
     res.locals.static.basename = req.buildRoute('project.version');
-    res.locals.static.establishments = req.user.profile.establishments;
+    const establishment = req.establishment;
+    res.locals.static.establishments = req.user.profile.establishments.filter(e => e.id !== establishment.id);
+    res.locals.static.establishment = establishment;
     res.locals.scripts = ['/public/js/project/bundle.js'];
     const task = get(req.project, 'openTasks[0]');
     res.locals.static.taskId = task ? task.id : null;
