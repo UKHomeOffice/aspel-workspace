@@ -10,7 +10,8 @@ module.exports = {
   },
   establishment: {
     dashboard: '/establishments/:establishmentId',
-    read: '/establishments/:establishmentId/details'
+    read: '/establishments/:establishmentId/details',
+    inspectors: '/establishments/:establishmentId/inspectors'
   },
   profile: {
     list: '/establishments/:establishmentId/people',

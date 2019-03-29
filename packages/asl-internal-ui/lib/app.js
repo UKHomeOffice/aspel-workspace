@@ -16,6 +16,7 @@ const dashboard = require('../pages/dashboard');
 const search = require('../pages/search');
 const globalProfile = require('../pages/profile');
 const version = require('../pages/project-versions');
+const inspectors = require('../pages/inspectors');
 
 const urls = require('./urls');
 
@@ -75,6 +76,7 @@ module.exports = settings => {
   app.use(urls.place.list, place());
   app.use(urls.project.list, project());
   app.use(urls.project.version, version());
+  app.use(urls.establishment.inspectors, inspectors());
 
   return app;
 };
