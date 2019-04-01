@@ -48,7 +48,7 @@ module.exports = settings => {
       }
     };
     req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/project-versions/${req.model.id}`, opts)
-      .then(() => next())
+      .then(() => res.json({}))
       .catch(next);
   });
 
