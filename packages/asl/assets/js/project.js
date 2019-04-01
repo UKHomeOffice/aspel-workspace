@@ -28,7 +28,7 @@ const postData = debounce((data, dispatch) => {
             Object.assign(err, json);
             throw err;
           }
-        })
+        });
     })
     .catch(err => {
       dispatch(throwError(err.message));
