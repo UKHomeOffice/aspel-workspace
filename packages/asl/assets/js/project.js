@@ -1,4 +1,5 @@
 import start from '@asl/projects';
+import { throwError } from '@asl/projects/client/actions/messages';
 import debounce from 'lodash/debounce';
 import fetch from 'r2';
 
@@ -11,7 +12,7 @@ const updateProject = project => {
 
 const state = window.INITIAL_STATE;
 
-const postData = debounce(data => {
+const postData = debounce((data, dispatch) => {
   fetch(state.static.basename, {
     method: 'PUT',
     credentials: 'include',
@@ -19,10 +20,18 @@ const postData = debounce(data => {
   })
     .response
     .then(response => {
-      // notifiy saved
+      return response.json()
+        .then(json => {
+          if (response.status > 399) {
+            const err = new Error(json.message || `Fetch failed with status code: ${response.status}`);
+            err.status = response.status;
+            Object.assign(err, json);
+            throw err;
+          }
+        })
     })
     .catch(err => {
-      console.error(err);
+      dispatch(throwError(err.message));
     });
 }, 500, { maxWait: 5000 });
 
@@ -31,7 +40,7 @@ const onUpdate = props => {
     const project = getState().project;
     const data = { ...project, ...props };
     dispatch(updateProject(data));
-    return postData(data);
+    return postData(data, dispatch);
   };
 };
 
@@ -52,7 +61,7 @@ start({
     establishments: state.static.establishments.map(e => e.name)
   },
   application: {
-    readonly: state.model.status !== 'draft',
+    readonly: state.model.status !== 'draft' || !state.static.canUpdate,
     schemaVersion: state.model.project.schemaVersion,
     establishment: state.static.establishment.name
   }
