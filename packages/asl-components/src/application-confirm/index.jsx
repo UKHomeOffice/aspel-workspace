@@ -6,13 +6,11 @@ import { Snippet } from '../';
 class ApplicationConfirm extends Component {
   componentDidMount() {
     this.setState({
-      submitDisabled: true,
       values: []
     });
   }
 
   onChange(event) {
-    const declarations = this.props.schema.declarations.options;
     const checked = event.target.checked;
     const value = event.target.value;
 
@@ -26,8 +24,7 @@ class ApplicationConfirm extends Component {
       }
 
       return {
-        values,
-        submitDisabled: declarations.length !== values.length
+        values
       };
     });
   }
@@ -43,7 +40,7 @@ class ApplicationConfirm extends Component {
           onChange={this.onChange.bind(this)}
           value={this.state ? this.state.values : []}
         />
-        <button type="submit" className="govuk-button" disabled={this.state && this.state.submitDisabled}>
+        <button type="submit" className="govuk-button">
           <Snippet>buttons.submit</Snippet>
         </button>
       </div>
