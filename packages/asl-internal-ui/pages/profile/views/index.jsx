@@ -1,7 +1,11 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Header } from '@asl/components';
+import sortBy from 'lodash/sortBy';
+import { Header, PanelList, Link, ExpandingPanel, Snippet } from '@asl/components';
 
+import dateFormatter from 'date-fns/format';
+
+import Profile from '@asl/pages/pages/profile/read/views/profile';
 import ASRUAdmin from '../components/asru-admin';
 
 class Index extends React.Component {
@@ -15,9 +19,37 @@ class Index extends React.Component {
       <dl>
         <dt>Email:</dt>
         <dd><a href={`mailto:${model.email}`}>{ model.email }</a></dd>
+        {
+          model.telephone && <Fragment>
+            <dt>Telephone:</dt>
+            <dd>{ model.telephone }</dd>
+          </Fragment>
+        }
+        {
+          model.dob && <Fragment>
+            <dt>Date of birth:</dt>
+            <dd>{ dateFormatter(model.dob, 'DD MMMM YYYY') }</dd>
+          </Fragment>
+        }
       </dl>
 
       <ASRUAdmin />
+
+      {
+        hasEstablishments && <Fragment>
+          <h3>Establishments</h3>
+          <PanelList panels={sortBy(model.establishments, 'name').map(establishment => {
+            return (
+              <ExpandingPanel key={establishment.id} title={establishment.name}>
+                <p>
+                  <Link page="establishment.dashboard" establishmentId={establishment.id} label={<Snippet>establishment.link</Snippet>} />
+                </p>
+                <Profile establishment={establishment} profile={model} allowedActions={[]} />
+              </ExpandingPanel>
+            );
+          })} />
+        </Fragment>
+      }
 
     </Fragment>
   }

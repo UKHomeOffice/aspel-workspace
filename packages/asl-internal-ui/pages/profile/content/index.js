@@ -1,4 +1,10 @@
-module.exports = {
+const { merge } = require('lodash');
+const profileContent = require('@asl/pages/pages/profile/read/content');
+
+module.exports = merge({}, profileContent, {
+  establishment: {
+    link: 'About this establishment'
+  },
   asru: {
     title: 'ASRU',
     add: 'Add to ASRU',
@@ -16,4 +22,4 @@ module.exports = {
   notifications: {
     success: 'Changes saved!'
   }
-};
+});
