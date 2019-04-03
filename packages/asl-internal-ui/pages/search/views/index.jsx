@@ -25,7 +25,7 @@ const formatters = {
         return establishments.map((establishment, i) => [
           // separate links with line breaks #hack
           i > 0 && <br />,
-          <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
+          <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} key={establishment.id}/>
         ]);
       }
     }

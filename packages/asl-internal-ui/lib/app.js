@@ -76,7 +76,7 @@ module.exports = settings => {
   app.use(urls.place.list, place());
   app.use(urls.project.list, project());
   app.use(urls.project.version, version());
-  app.use(urls.establishment.inspectors, inspectors());
+  app.use(urls.establishment.asru.inspectors, inspectors());
 
   return app;
 };

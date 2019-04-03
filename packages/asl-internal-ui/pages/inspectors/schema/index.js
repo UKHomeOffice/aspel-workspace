@@ -1,32 +1,37 @@
-const { toArray } = require('@asl/pages/lib/utils');
-const { getInspectors } = require('@asl/pages/pages/common/helpers');
+const { merge } = require('lodash');
+const { getInspectors } = require('../../common/helpers');
 
 const schema = {
-  inspectors: {
-    inputType: 'checkboxGroup',
-    format: toArray,
-    nullValue: []
+  inspector: {
+    inputType: 'select',
+    accessor: 'id',
+    validate: ['required']
   }
 };
 
-const mapSchema = inspectors => {
-  const options = inspectors.map(({ firstName, lastName, id }) => ({
+const mapSchema = (profiles, schema) => {
+
+  const options = profiles.map(({ firstName, lastName, id }) => ({
     label: `${firstName} ${lastName}`,
     value: id
   }));
-  return {
-    inspectors: {
-      inputType: 'checkboxGroup',
+
+  return merge({}, schema, {
+    inspector: {
       options,
-      format: toArray,
-      nullValue: []
+      validate: [
+        ...schema.inspector.validate,
+        {
+          definedValues: options.map(option => option.value)
+        }
+      ]
     }
-  };
+  });
 };
 
-const getSchemaWithInspectors = req =>
+const getSchemaWithInspectors = (req, schema) =>
   getInspectors(req)
-    .then(inspectors => Promise.resolve(mapSchema(inspectors)))
+    .then(inspectors => Promise.resolve(mapSchema(inspectors, schema)))
     .catch(err => Promise.reject(err));
 
 module.exports = {

@@ -1,10 +1,11 @@
 module.exports = {
   buttons: {
-    submit: 'Save'
+    submit: 'Save',
+    remove: 'Unassign'
   },
   title: 'Assign an inspector',
   fields: {
-    inspectors: {
+    inspector: {
       label: ''
     }
   }
