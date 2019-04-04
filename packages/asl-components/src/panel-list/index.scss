@@ -2,7 +2,7 @@
   list-style: none;
   padding-left: 0;
 
-  li {
+  &>li {
     background: $highlight-colour;
     @extend .govuk-heading-m;
     border: 1px solid govuk-colour('grey-1');
