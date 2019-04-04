@@ -4,6 +4,7 @@ import sortBy from 'lodash/sortBy';
 import { Header, PanelList, Link, ExpandingPanel, Snippet } from '@asl/components';
 
 import dateFormatter from 'date-fns/format';
+import { dateFormat } from '@asl/pages/constants';
 
 import Profile from '@asl/pages/pages/profile/read/views/profile';
 import ASRUAdmin from '../components/asru-admin';
@@ -28,7 +29,7 @@ class Index extends React.Component {
         {
           model.dob && <Fragment>
             <dt>Date of birth:</dt>
-            <dd>{ dateFormatter(model.dob, 'DD MMMM YYYY') }</dd>
+            <dd>{ dateFormatter(model.dob, dateFormat.medium) }</dd>
           </Fragment>
         }
       </dl>
@@ -51,7 +52,7 @@ class Index extends React.Component {
         </Fragment>
       }
 
-    </Fragment>
+    </Fragment>;
   }
 
 }
