@@ -13,10 +13,13 @@ class ASRUAdmin extends React.Component {
     if (!this.props.canAdmin) {
       return <ASRURoles />;
     }
-    return <Fragment>
-      <ManageRoles />
-      <ToggleASRU />
-    </Fragment>;
+
+    return (
+      <Fragment>
+        <ManageRoles />
+        <ToggleASRU />
+      </Fragment>
+    );
   }
 
   render () {
@@ -33,15 +36,18 @@ class ASRUAdmin extends React.Component {
       return null;
     }
 
-    return <Fragment>
-      <hr />
-      <h2><Snippet>asru.title</Snippet></h2>
-      { this.renderRoles() }
-    </Fragment>
+    return (
+      <div className="panel-list">
+        <li>
+          <h2><Snippet>asru.title</Snippet></h2>
+          { this.renderRoles() }
+        </li>
+      </div>
+    );
+
   }
 
 }
-
 
 const mapStateToProps = ({ model, static: { canAdmin } }) => ({ model, canAdmin });
 
