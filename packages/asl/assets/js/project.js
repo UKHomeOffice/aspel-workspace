@@ -1,7 +1,10 @@
 import start from '@asl/projects';
 import { throwError } from '@asl/projects/client/actions/messages';
+import { updateSavedProject } from '@asl/projects/client/actions/projects';
 import debounce from 'lodash/debounce';
 import fetch from 'r2';
+import cloneDeep from 'lodash/cloneDeep';
+import { diff, applyChange } from 'deep-diff';
 
 const updateProject = project => {
   return {
@@ -10,13 +13,21 @@ const updateProject = project => {
   };
 };
 
+const applyPatches = (source, patches = []) => {
+  const patched = cloneDeep(source);
+  patches.forEach(p => {
+    applyChange(patched, p);
+  });
+  return patched;
+};
+
 const state = window.INITIAL_STATE;
 
-const postData = debounce((data, dispatch) => {
+const postData = debounce((patch, getState, dispatch) => {
   fetch(state.static.basename, {
     method: 'PUT',
     credentials: 'include',
-    json: data
+    json: patch
   })
     .response
     .then(response => {
@@ -28,19 +39,24 @@ const postData = debounce((data, dispatch) => {
             Object.assign(err, json);
             throw err;
           }
+        })
+        .then(() => {
+          const patched = applyPatches(getState().savedProject, patch);
+          dispatch(updateSavedProject(patched));
         });
     })
     .catch(err => {
-      dispatch(throwError(err.message));
+      dispatch(throwError("data sync failed, please try again"));
     });
 }, 500, { maxWait: 5000 });
 
 const onUpdate = props => {
   return (dispatch, getState) => {
-    const project = getState().project;
-    const data = { ...project, ...props };
-    dispatch(updateProject(data));
-    return postData(data, dispatch);
+    const { project, savedProject } = getState();
+    const newState = { ...project, ...props };
+    dispatch(updateProject(newState));
+    const patch = diff(savedProject, newState);
+    return postData(patch, getState, dispatch);
   };
 };
 
