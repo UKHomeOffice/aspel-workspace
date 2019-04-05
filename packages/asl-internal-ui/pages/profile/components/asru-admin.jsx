@@ -37,12 +37,12 @@ class ASRUAdmin extends React.Component {
     }
 
     return (
-      <div className="panel-list">
+      <ul className="panel-list">
         <li>
           <h2><Snippet>asru.title</Snippet></h2>
           { this.renderRoles() }
         </li>
-      </div>
+      </ul>
     );
 
   }
