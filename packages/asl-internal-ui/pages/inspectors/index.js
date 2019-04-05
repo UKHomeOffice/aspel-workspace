@@ -15,6 +15,9 @@ module.exports = settings => {
   app.use((req, res, next) => {
     req.model = buildModel(schema);
     req.model.id = 'asru-establishment';
+    res.locals.static.baseUrl = req.baseUrl;
+    res.locals.static.estId = req.establishment.id;
+    res.locals.static.asru = req.establishment.asru;
     next();
   });
 
@@ -30,16 +33,6 @@ module.exports = settings => {
     }
   }));
 
-  app.use('/', (req, res, next) => {
-    return req.api('/asru')
-      .then(({ json: { data, meta } }) => {
-        res.locals.static.inspectors = data.filter(ae => ae.establishmentId === req.establishment.id);
-        res.locals.static.baseUrl = req.baseUrl;
-      })
-      .then(() => next())
-      .catch(next);
-  });
-
   app.post('/delete', (req, res, next) => {
 
     return Promise.resolve()
@@ -48,14 +41,12 @@ module.exports = settings => {
         json: {
           data: {
             profileId: req.body['profileId'],
-            establishmentId: req.body['establishmentId']
+            establishmentId: req.establishmentId
           }
         }
       }))
       .then(() => {
-        // TODO: check if we want to go est dashboard and if it works
         return res.redirect(req.buildRoute('establishment.dashboard', { establishmentId: req.establishment.id }));
-        // return res.redirect(req.buildRoute('dashboard'));
       })
       .catch(next);
 
@@ -74,9 +65,7 @@ module.exports = settings => {
         }
       }))
       .then(() => {
-        // TODO: check if we want to go est dashboard and if it works
         return res.redirect(req.buildRoute('establishment.dashboard', { establishmentId: req.establishment.id }));
-        // return res.redirect(req.buildRoute('dashboard'));
       })
       .catch(next);
 
