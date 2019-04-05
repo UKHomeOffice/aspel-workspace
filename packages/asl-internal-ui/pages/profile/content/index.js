@@ -10,9 +10,9 @@ module.exports = merge({}, profileContent, {
     add: 'Add to ASRU',
     remove: 'Remove from ASRU',
     roles: {
-      title: 'Roles',
-      manage: 'Manage roles',
-      save: 'Save changes',
+      title: 'Permissions',
+      manage: 'Edit',
+      save: 'Save',
       cancel: 'Cancel',
       asruAdmin: 'User admin',
       asruLicensing: 'Licensing officer',

@@ -8,7 +8,7 @@ import ASRURoles from './asru-roles';
 
 class ManageRoles extends React.Component {
 
-  componentWillMount () {
+  componentDidMount () {
     this.setState({ expanded: false });
   }
 
@@ -16,7 +16,7 @@ class ManageRoles extends React.Component {
     e.preventDefault();
     this.setState({
       expanded: !this.state.expanded
-    })
+    });
   }
 
   render () {
@@ -33,12 +33,12 @@ class ManageRoles extends React.Component {
       return <Fragment>
         <ASRURoles />
         <Button onClick={e => this.toggle(e)}><Snippet>asru.roles.manage</Snippet></Button>
-      </Fragment>
+      </Fragment>;
     }
 
     return <Fragment>
       <form action="" method="post">
-        <CheckboxGroup label={ <Snippet>asru.roles.title</Snippet> } name="roles" options={options} value={userRoles} className="box" />
+        <CheckboxGroup label={ <Snippet>asru.roles.title</Snippet> } name="roles" options={options} value={userRoles} />
         <ControlBar>
           <Button type="submit"><Snippet>asru.roles.save</Snippet></Button>
           {

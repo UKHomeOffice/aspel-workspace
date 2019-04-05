@@ -81,3 +81,14 @@ td .govuk-button {
     margin-bottom: $govuk-gutter;
   }
 }
+
+.asru-roles {
+  h3 {
+    margin-top: $govuk-gutter;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+}

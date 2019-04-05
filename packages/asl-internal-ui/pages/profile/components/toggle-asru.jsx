@@ -8,7 +8,7 @@ class ToggleASRU extends React.Component {
 
   renderAdd() {
     return <Fragment>
-      <h3><Snippet>asru.add</Snippet></h3>
+      <hr />
       <form action="" method="post">
         <input type="hidden" name="asruUser" value="true" />
         <Button type="submit" className="button-secondary"><Snippet>asru.add</Snippet></Button>
@@ -19,7 +19,6 @@ class ToggleASRU extends React.Component {
   renderRemove() {
     return <Fragment>
       <hr />
-      <h3><Snippet>asru.remove</Snippet></h3>
       <form action="" method="post">
         <input type="hidden" name="asruUser" value="false" />
         <Button type="submit" className="button-secondary"><Snippet>asru.remove</Snippet></Button>
