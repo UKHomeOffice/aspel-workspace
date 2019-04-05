@@ -46,7 +46,8 @@ const postData = debounce((patch, getState, dispatch) => {
         });
     })
     .catch(err => {
-      dispatch(throwError("data sync failed, please try again"));
+      console.error(err);
+      dispatch(throwError('data sync failed, please try again'));
     });
 }, 500, { maxWait: 5000 });
 
