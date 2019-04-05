@@ -1,6 +1,6 @@
 const { page } = require('@asl/service/ui');
 const bodyParser = require('body-parser');
-const { omit, get, pick } = require('lodash');
+const { get, pick } = require('lodash');
 
 module.exports = settings => {
   const app = page({
@@ -43,11 +43,11 @@ module.exports = settings => {
       method: 'PUT',
       json: {
         data: {
-          data: omit(req.body, 'id')
+          patch: req.body
         }
       }
     };
-    req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/project-versions/${req.model.id}`, opts)
+    req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/project-versions/${req.model.id}/patch`, opts)
       .then(() => res.json({}))
       .catch(next);
   });

@@ -1,5 +1,8 @@
-@import "@asl/projects";
 @import "@asl/pages";
+@import "@asl/projects";
+
+$govuk-gutter: '20px';
+$govuk-gutter-half: '20px';
 
 h3 {
   margin-bottom: $govuk-gutter-half;
