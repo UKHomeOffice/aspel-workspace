@@ -12,11 +12,9 @@ const Page = ({ asru, baseUrl }) => {
           <p key={`${profile.id}`}>{profile.firstName} {profile.lastName}
             <form method='POST' action={`${baseUrl}/delete`}>
               <input type="hidden" name="profileId" value={profile.id} />
-              <p className="control-panel">
-                <Button className='govuk-button add-margin'>
-                  <Snippet>buttons.remove</Snippet>
-                </Button>
-              </p>
+              <Button className='govuk-button add-margin'>
+                <Snippet>buttons.remove</Snippet>
+              </Button>
             </form>
           </p>
         ))

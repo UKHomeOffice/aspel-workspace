@@ -16,7 +16,7 @@ const dashboard = require('../pages/dashboard');
 const search = require('../pages/search');
 const globalProfile = require('../pages/profile');
 const version = require('../pages/project-versions');
-const inspectors = require('../pages/inspectors');
+const asru = require('../pages/asru');
 
 const urls = require('./urls');
 
@@ -50,6 +50,11 @@ module.exports = settings => {
     next();
   });
 
+  app.param('asruUser', (req, res, next, param) => {
+    req.asruUser = param;
+    next();
+  });
+
   app.use(urls.dashboard, dashboard(settings));
 
   app.use((req, res, next) => {
@@ -76,7 +81,7 @@ module.exports = settings => {
   app.use(urls.place.list, place());
   app.use(urls.project.list, project());
   app.use(urls.project.version, version());
-  app.use(urls.establishment.asru.inspectors, inspectors());
+  app.use(urls.establishment.asru, asru());
 
   return app;
 };

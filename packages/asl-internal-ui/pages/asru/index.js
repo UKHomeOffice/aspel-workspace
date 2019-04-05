@@ -1,8 +1,8 @@
-const { page } = require('@asl/service/ui');
-const form = require('@asl/pages/pages/common/routers/form');
-const { buildModel } = require('@asl/pages/lib/utils');
-const { schema, getSchemaWithInspectors } = require('./schema');
 const bodyParser = require('body-parser');
+const { page } = require('@asl/service/ui');
+const { buildModel } = require('@asl/pages/lib/utils');
+const form = require('@asl/pages/pages/common/routers/form');
+const { schema, getSchemaWithInspectors, getSchemaWithSpocs } = require('./schema');
 
 module.exports = settings => {
   const app = page({
@@ -17,24 +17,33 @@ module.exports = settings => {
     req.model.id = 'asru-establishment';
     res.locals.static.baseUrl = req.baseUrl;
     res.locals.static.estId = req.establishment.id;
-    res.locals.static.asru = req.establishment.asru;
+    req.asruUser === 'inspectors'
+      ? res.locals.static.asru = req.establishment.asru.filter(
+        p => p.asruInspector
+      ) : res.locals.static.asru = req.establishment.asru.filter(
+        p => p.asruLicensing
+      );
     next();
-  });
-
-  app.use('/', form({
+  }, form({
     model: 'asruEstablishment',
     configure: (req, res, next) => {
-      getSchemaWithInspectors(req, schema)
-        .then(mappedSchema => {
-          req.form.schema = mappedSchema;
-        })
-        .then(() => next())
-        .catch(next);
+      req.asruUser === 'inspectors'
+        ? getSchemaWithInspectors(req, schema)
+          .then(mappedSchema => {
+            req.form.schema = mappedSchema;
+          })
+          .then(() => next())
+          .catch(next)
+        : getSchemaWithSpocs(req, schema)
+          .then(mappedSchema => {
+            req.form.schema = mappedSchema;
+          })
+          .then(() => next())
+          .catch(next);
     }
   }));
 
   app.post('/delete', (req, res, next) => {
-
     return Promise.resolve()
       .then(() => req.api('/asru', {
         method: 'DELETE',
@@ -53,13 +62,12 @@ module.exports = settings => {
   });
 
   app.post('/', (req, res, next) => {
-
     return Promise.resolve()
       .then(() => req.api('/asru', {
         method: 'POST',
         json: {
           data: {
-            profileId: req.session.form[req.model.id].values['inspector'],
+            profileId: req.session.form[req.model.id].values['asru'],
             establishmentId: req.establishmentId
           }
         }

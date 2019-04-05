@@ -1,8 +1,8 @@
 const { merge } = require('lodash');
-const { getInspectors } = require('../../common/helpers');
+const { getInspectors, getSpocs } = require('../../common/helpers');
 
 const schema = {
-  inspector: {
+  asru: {
     inputType: 'select',
     accessor: 'id',
     validate: ['required']
@@ -10,17 +10,16 @@ const schema = {
 };
 
 const mapSchema = (profiles, schema) => {
-
   const options = profiles.map(({ firstName, lastName, id }) => ({
     label: `${firstName} ${lastName}`,
     value: id
   }));
 
   return merge({}, schema, {
-    inspector: {
+    asru: {
       options,
       validate: [
-        ...schema.inspector.validate,
+        ...schema.asru.validate,
         {
           definedValues: options.map(option => option.value)
         }
@@ -31,10 +30,16 @@ const mapSchema = (profiles, schema) => {
 
 const getSchemaWithInspectors = (req, schema) =>
   getInspectors(req)
-    .then(inspectors => Promise.resolve(mapSchema(inspectors, schema)))
+    .then(asru => Promise.resolve(mapSchema(asru, schema)))
+    .catch(err => Promise.reject(err));
+
+const getSchemaWithSpocs = (req, schema) =>
+  getSpocs(req)
+    .then(asru => Promise.resolve(mapSchema(asru, schema)))
     .catch(err => Promise.reject(err));
 
 module.exports = {
   schema,
-  getSchemaWithInspectors
+  getSchemaWithInspectors,
+  getSchemaWithSpocs
 };

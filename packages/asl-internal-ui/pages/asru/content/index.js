@@ -3,9 +3,9 @@ module.exports = {
     submit: 'Save',
     remove: 'Unassign'
   },
-  title: 'Assign an inspector',
+  title: 'Assign Single Point of Contact',
   fields: {
-    inspector: {
+    asru: {
       label: ''
     }
   }

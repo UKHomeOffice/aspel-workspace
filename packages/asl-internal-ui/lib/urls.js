@@ -11,10 +11,9 @@ module.exports = {
   establishment: {
     dashboard: '/establishments/:establishmentId',
     read: '/establishments/:establishmentId/details',
-    asru: {
-      inspectors: '/establishments/:establishmentId/asru/inspectors',
-      spocs: '/establishments/:establishmentId/asru/spocs'
-    }
+    asru: '/establishments/:establishmentId/:asruUser',
+    inspectors: '/establishments/:establishmentId/inspectors',
+    spocs: '/establishments/:establishmentId/spocs'
   },
   profile: {
     list: '/establishments/:establishmentId/people',
