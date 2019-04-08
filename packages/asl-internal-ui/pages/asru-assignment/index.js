@@ -15,29 +15,35 @@ module.exports = settings => {
     res.locals.static.baseUrl = req.baseUrl;
     res.locals.static.estId = req.establishment.id;
     res.locals.static.asruUser = req.asruUser;
-    req.asruUser === 'inspectors'
-      ? res.locals.static.asru = req.establishment.asru.filter(
-        p => p.asruInspector
-      ) : res.locals.static.asru = req.establishment.asru.filter(
+
+    if (req.asruUser === 'inspectors') {
+      res.locals.static.asru = req.establishment.asru.filter(
+        p => p.asruInspector);
+    } else if (req.asruUser === 'spocs') {
+      res.locals.static.asru = req.establishment.asru.filter(
         p => p.asruLicensing
       );
+    }
+
     next();
   }, form({
     model: 'asruEstablishment',
     configure: (req, res, next) => {
-      req.asruUser === 'inspectors'
-        ? getSchemaWithInspectors(req, schema)
-          .then(mappedSchema => {
-            req.form.schema = mappedSchema;
-          })
-          .then(() => next())
-          .catch(next)
-        : getSchemaWithSpocs(req, schema)
+      if (req.asruUser === 'inspectors') {
+        getSchemaWithInspectors(req, schema)
           .then(mappedSchema => {
             req.form.schema = mappedSchema;
           })
           .then(() => next())
           .catch(next);
+      } else if (req.asruUser === 'spocs') {
+        getSchemaWithSpocs(req, schema)
+          .then(mappedSchema => {
+            req.form.schema = mappedSchema;
+          })
+          .then(() => next())
+          .catch(next);
+      }
     }
   }));
 
