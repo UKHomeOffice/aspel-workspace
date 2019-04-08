@@ -1,4 +1,3 @@
-const bodyParser = require('body-parser');
 const { page } = require('@asl/service/ui');
 const { buildModel } = require('@asl/pages/lib/utils');
 const form = require('@asl/pages/pages/common/routers/form');
@@ -10,13 +9,12 @@ module.exports = settings => {
     ...settings
   });
 
-  app.use(bodyParser.urlencoded({ extended: true }));
-
   app.use((req, res, next) => {
     req.model = buildModel(schema);
     req.model.id = 'asru-establishment';
     res.locals.static.baseUrl = req.baseUrl;
     res.locals.static.estId = req.establishment.id;
+    res.locals.static.asruUser = req.asruUser;
     req.asruUser === 'inspectors'
       ? res.locals.static.asru = req.establishment.asru.filter(
         p => p.asruInspector
@@ -73,6 +71,7 @@ module.exports = settings => {
         }
       }))
       .then(() => {
+        req.notification({ key: 'success' });
         return res.redirect(req.buildRoute('establishment.dashboard', { establishmentId: req.establishment.id }));
       })
       .catch(next);

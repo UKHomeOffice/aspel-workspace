@@ -1,3 +1,4 @@
+const bodyParser = require('body-parser');
 const { router } = require('@asl/service/ui');
 const { NotAuthorisedError, NotFoundError } = require('./errors');
 const { pages, content, views } = require('@asl/pages');
@@ -16,7 +17,7 @@ const dashboard = require('../pages/dashboard');
 const search = require('../pages/search');
 const globalProfile = require('../pages/profile');
 const version = require('../pages/project-versions');
-const asru = require('../pages/asru');
+const asru = require('../pages/asru-assignment');
 
 const urls = require('./urls');
 
@@ -31,6 +32,8 @@ module.exports = settings => {
   });
 
   app.use(content);
+
+  app.use(bodyParser.urlencoded({ extended: true }));
 
   app.param('profileId', (req, res, next, param) => {
     req.profileId = param;
