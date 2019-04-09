@@ -7,5 +7,11 @@ module.exports = {
   },
   status: {
     show: true
+  },
+  inspector: {
+    show: true
+  },
+  spoc: {
+    show: true
   }
 };
