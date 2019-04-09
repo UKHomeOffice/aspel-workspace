@@ -11,6 +11,19 @@ import ASRUAdmin from '../components/asru-admin';
 
 class Index extends React.Component {
 
+  renderAsruAssociation (establishments) {
+    return (<ul className="panel-list">
+      {establishments.map(establishment => {
+        return (
+          <li key={establishment.id}>
+            <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
+          </li>
+        );
+      })}
+    </ul>);
+
+  }
+
   render () {
 
     const model = this.props.model;
@@ -52,7 +65,18 @@ class Index extends React.Component {
           })} />
         </Fragment>
       }
-
+      {
+        model.asruInspector && model.asru.length && <Fragment>
+          <h3>Inspector for:</h3>
+          { this.renderAsruAssociation(model.asru) }
+        </Fragment>
+      }
+      {
+        model.asruLicensing && model.asru.length && <Fragment>
+          <h3>Single Point of Contact (SPoC) for:</h3>
+          { this.renderAsruAssociation(model.asru) }
+        </Fragment>
+      }
     </Fragment>;
   }
 
