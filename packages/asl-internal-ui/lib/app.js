@@ -1,3 +1,4 @@
+const bodyParser = require('body-parser');
 const { router } = require('@asl/service/ui');
 const { NotAuthorisedError, NotFoundError } = require('./errors');
 const { pages, content, views } = require('@asl/pages');
@@ -16,6 +17,7 @@ const dashboard = require('../pages/dashboard');
 const search = require('../pages/search');
 const globalProfile = require('../pages/profile');
 const version = require('../pages/project-versions');
+const asru = require('../pages/asru-assignment');
 
 const urls = require('./urls');
 
@@ -30,6 +32,8 @@ module.exports = settings => {
   });
 
   app.use(content);
+
+  app.use(bodyParser.urlencoded({ extended: true }));
 
   app.param('profileId', (req, res, next, param) => {
     req.profileId = param;
@@ -46,6 +50,11 @@ module.exports = settings => {
     if (isNaN(req.establishmentId)) {
       return next(new NotFoundError());
     }
+    next();
+  });
+
+  app.param('asruUser', (req, res, next, param) => {
+    req.asruUser = param;
     next();
   });
 
@@ -75,6 +84,7 @@ module.exports = settings => {
   app.use(urls.place.list, place());
   app.use(urls.project.list, project());
   app.use(urls.project.version, version());
+  app.use(urls.establishment.asru, asru());
 
   return app;
 };

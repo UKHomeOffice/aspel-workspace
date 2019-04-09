@@ -15,6 +15,7 @@ class Index extends React.Component {
 
     const model = this.props.model;
     const hasEstablishments = !!model.establishments.length;
+
     return <Fragment>
       <Header title={`${model.firstName} ${model.lastName}`} />
       <dl>

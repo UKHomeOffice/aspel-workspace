@@ -22,11 +22,9 @@ const formatters = {
         if (profile.asruUser) {
           return 'ASRU';
         }
-        return establishments.map((establishment, i) => [
-          // separate links with line breaks #hack
-          i > 0 && <br />,
-          <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
-        ]);
+        return establishments.map(establishment =>
+          <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} key={establishment.id}/>
+        );
       }
     }
   },
