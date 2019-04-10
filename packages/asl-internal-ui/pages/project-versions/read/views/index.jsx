@@ -6,18 +6,17 @@ const Project = ({ isActionable, taskId }) => (
   <Fragment>
     <div id="ppl-drafting-tool"></div>
     {
-       isActionable && (
+      isActionable && (
         <Link
           className="govuk-button"
           page="task.read"
           taskId={taskId}
-          label="Next steps"
+          label="Make decision"
         />
       )
     }
   </Fragment>
 );
-
 
 const mapStateToProps = ({ static: { isActionable, taskId } }) => ({ isActionable, taskId });
 
