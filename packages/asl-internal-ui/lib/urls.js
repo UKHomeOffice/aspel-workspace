@@ -23,7 +23,8 @@ module.exports = {
     list: '/establishments/:establishmentId/projects',
     read: '/establishments/:establishmentId/projects/:projectId',
     version: {
-      read: '/establishments/:establishmentId/projects/:projectId/versions/:versionId'
+      read: '/establishments/:establishmentId/projects/:projectId/versions/:versionId',
+      pdf: '/establishments/:establishmentId/projects/:projectId/versions/:versionId/pdf'
     }
   },
   place: {
