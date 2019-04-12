@@ -30,10 +30,13 @@ module.exports = {
   project: {
     list: '/e/:establishmentId/projects',
     read: '/e/:establishmentId/projects/:projectId',
-    versions: '/e/:establishmentId/projects/:projectId/versions',
-    version: '/e/:establishmentId/projects/:projectId/versions/:versionId',
-    submit: '/e/:establishmentId/projects/:projectId/versions/:versionId/submit',
-    success: '/e/:establishmentId/projects/:projectId/versions/:versionId/success'
+    version: {
+      list: '/e/:establishmentId/projects/:projectId/versions',
+      read: '/e/:establishmentId/projects/:projectId/versions/:versionId',
+      update: '/e/:establishmentId/projects/:projectId/versions/:versionId/edit',
+      submit: '/e/:establishmentId/projects/:projectId/versions/:versionId/edit/submit',
+      success: '/e/:establishmentId/projects/:projectId/versions/:versionId/edit/success'
+    }
   },
   place: {
     list: '/e/:establishmentId/places',

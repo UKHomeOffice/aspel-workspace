@@ -9,30 +9,19 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
-    req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/project-versions/${req.versionId}`)
-      .then(({ json: { data } }) => {
-        req.model = data;
-      })
-      .then(() => next())
-      .catch(next);
-  });
-
-  app.use((req, res, next) => {
     const authorities = get(req.project, 'openTasks[0].data.data');
     if (authorities) {
-      Object.assign(req.model, pick(authorities, 'authority', 'awerb'));
+      Object.assign(req.version, pick(authorities, 'authority', 'awerb'));
     }
     next();
   });
 
   app.use((req, res, next) => {
     const establishment = req.establishment;
-    res.locals.static.basename = req.buildRoute('project.version');
+    res.locals.static.basename = req.buildRoute('project.version.update');
     res.locals.static.establishments = req.user.profile.establishments.filter(e => e.id !== establishment.id);
     res.locals.static.establishment = establishment;
-    res.locals.scripts = ['/public/js/project/bundle.js'];
-    res.locals.model = req.model;
-    res.template = require('./views/index.jsx').default;
+    res.locals.model = req.version;
     next();
   });
 
@@ -51,6 +40,8 @@ module.exports = settings => {
       .then(() => res.json({}))
       .catch(next);
   });
+
+  app.use((req, res, next) => res.sendResponse());
 
   return app;
 };

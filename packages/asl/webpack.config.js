@@ -5,12 +5,13 @@ const defaults = require('@asl/service/ui/webpack.config');
 const babelrc = require('@asl/service/.babelrc.json');
 
 const config = merge(
-  {
-    entry: {
-      project: path.resolve(__dirname, 'assets/js/project.js')
-    }
-  },
-  defaults([ pages, __dirname ]),
+  defaults([
+    {
+      dir: pages,
+      ignore: ['./pages/common/**', './pages/project-version/pdf/**']
+    },
+    __dirname
+  ]),
   {
     output: {
       path: path.resolve(__dirname, './public/js')

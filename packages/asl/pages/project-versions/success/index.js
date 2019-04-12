@@ -9,5 +9,7 @@ module.exports = settings => {
 
   app.use(success({ licence: 'project', status: 'resubmitted' }));
 
+  app.use((req, res, next) => res.sendResponse());
+
   return app;
 };
