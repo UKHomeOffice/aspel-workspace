@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const { router } = require('@asl/service/ui');
 const { pages, views, content } = require('@asl/pages');
 const { get } = require('lodash');
+const { getVersion } = require('@asl/pages/pages/project-version/middleware');
 
 const {
   establishment,
@@ -11,14 +12,15 @@ const {
   pil,
   task,
   user,
-  feedback
+  feedback,
+  projectVersion
 } = pages;
 
 const urls = require('./urls');
 const dashboard = require('../pages/dashboard');
 const invitation = require('../pages/invitation');
 
-const version = require('../pages/project-versions');
+const updateVersion = require('../pages/project-versions');
 
 module.exports = settings => {
   const app = router({ ...settings, views, urls });
@@ -32,14 +34,14 @@ module.exports = settings => {
 
   app.use(content);
 
-  app.param('versionId', (req, res, next, versionId) => {
-    req.versionId = versionId;
-    next();
-  });
-
   app.param('profileId', (req, res, next, param) => {
     req.profileId = param;
     next();
+  });
+
+  app.param('versionId', (req, res, next, param) => {
+    req.versionId = param;
+    getVersion(req, res, next);
   });
 
   app.param('establishmentId', (req, res, next, param) => {
@@ -88,7 +90,8 @@ module.exports = settings => {
   app.use(urls.profile.list, profile());
   app.use(urls.place.list, place());
   app.use(urls.project.list, project());
-  app.use(urls.project.version, version());
+  app.use(urls.project.version.update, updateVersion());
+  app.use(urls.project.version.read, projectVersion(settings));
   app.use(urls.pil.base, pil());
 
   return app;

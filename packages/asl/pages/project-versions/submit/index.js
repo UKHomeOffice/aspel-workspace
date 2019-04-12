@@ -9,6 +9,11 @@ module.exports = settings => {
     root: __dirname
   });
 
+  app.use((req, res, next) => {
+    req.model = req.version;
+    next();
+  });
+
   app.use(form({ schema }));
 
   app.post('/', (req, res, next) => {
@@ -23,9 +28,11 @@ module.exports = settings => {
     };
     req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/project-versions/${req.versionId}/submit`, { method: 'POST' })
       .then(() => req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/grant`, { method: 'POST', json }))
-      .then(() => res.redirect(req.buildRoute('project.success')))
+      .then(() => res.redirect(req.buildRoute('project.version.success')))
       .catch(next);
   });
+
+  app.use((req, res) => res.sendResponse());
 
   return app;
 };
