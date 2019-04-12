@@ -22,11 +22,9 @@ module.exports = {
   project: {
     list: '/establishments/:establishmentId/projects',
     read: '/establishments/:establishmentId/projects/:projectId',
-    versions: '/establishments/:establishmentId/projects/:projectId/versions',
-    version: '/establishments/:establishmentId/projects/:projectId/versions/:versionId',
-    submit: '/establishments/:establishmentId/projects/:projectId/versions/:versionId/submit',
-    success: '/establishments/:establishmentId/projects/:projectId/versions/:versionId/success',
-    task: '/establishments/:establishmentId/projects/:projectId/versions/:versionId/task'
+    version: {
+      read: '/establishments/:establishmentId/projects/:projectId/versions/:versionId'
+    }
   },
   place: {
     list: '/establishments/:establishmentId/places',
