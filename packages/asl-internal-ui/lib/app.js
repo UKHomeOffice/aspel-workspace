@@ -10,13 +10,13 @@ const {
   user,
   task,
   feedback,
+  projectVersion,
   pil
 } = pages;
 
 const dashboard = require('../pages/dashboard');
 const search = require('../pages/search');
 const globalProfile = require('../pages/profile');
-const version = require('../pages/project-versions');
 const asru = require('../pages/asru-assignment');
 
 const urls = require('./urls');
@@ -83,7 +83,7 @@ module.exports = settings => {
   app.use(urls.pil.base, pil());
   app.use(urls.place.list, place());
   app.use(urls.project.list, project());
-  app.use(urls.project.version, version());
+  app.use(urls.project.version.read, projectVersion(settings));
   app.use(urls.establishment.asru, asru());
 
   return app;
