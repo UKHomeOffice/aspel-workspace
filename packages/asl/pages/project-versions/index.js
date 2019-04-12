@@ -3,7 +3,6 @@ const update = require('./update');
 const submit = require('./submit');
 const success = require('./success');
 const { getVersion } = require('@asl/pages/pages/project-version/middleware');
-console.log(getVersion.toString())
 
 module.exports = () => {
   const app = Router();
