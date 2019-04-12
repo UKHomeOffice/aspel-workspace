@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const { router } = require('@asl/service/ui');
 const { pages, views, content } = require('@asl/pages');
 const { get } = require('lodash');
-const { getVersion } = require('@asl/pages/pages/project-version/middleware');
 
 const {
   establishment,
@@ -41,7 +40,7 @@ module.exports = settings => {
 
   app.param('versionId', (req, res, next, param) => {
     req.versionId = param;
-    getVersion(req, res, next);
+    next();
   });
 
   app.param('establishmentId', (req, res, next, param) => {
