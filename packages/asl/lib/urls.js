@@ -33,6 +33,7 @@ module.exports = {
     version: {
       list: '/e/:establishmentId/projects/:projectId/versions',
       read: '/e/:establishmentId/projects/:projectId/versions/:versionId',
+      pdf: '/e/:establishmentId/projects/:projectId/versions/:versionId/pdf',
       update: '/e/:establishmentId/projects/:projectId/versions/:versionId/edit',
       submit: '/e/:establishmentId/projects/:projectId/versions/:versionId/edit/submit',
       success: '/e/:establishmentId/projects/:projectId/versions/:versionId/edit/success'
