@@ -66,13 +66,13 @@ class Index extends React.Component {
         </Fragment>
       }
       {
-        model.asruInspector && model.asru && model.asru.length && <Fragment>
+        model.asruInspector && model.asru && !!model.asru.length && <Fragment>
           <h3>Inspector for:</h3>
           { this.renderAsruAssociation(model.asru) }
         </Fragment>
       }
       {
-        model.asruLicensing && model.asru && model.asru.length && <Fragment>
+        model.asruLicensing && model.asru && !!model.asru.length && <Fragment>
           <h3>Single Point of Contact (SPoC) for:</h3>
           { this.renderAsruAssociation(model.asru) }
         </Fragment>
