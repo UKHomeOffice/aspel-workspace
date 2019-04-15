@@ -36,7 +36,7 @@ module.exports = settings => {
         }
       }
     };
-    req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/project-versions/${req.model.id}/patch`, opts)
+    req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/project-versions/${req.version.id}/patch`, opts)
       .then(() => res.json({}))
       .catch(next);
   });
