@@ -59,6 +59,7 @@ module.exports = settings => {
         }
       }))
       .then(() => {
+        req.notification({ key: 'success' });
         return res.redirect(req.buildRoute('establishment.dashboard', { establishmentId: req.establishment.id }));
       })
       .catch(next);
