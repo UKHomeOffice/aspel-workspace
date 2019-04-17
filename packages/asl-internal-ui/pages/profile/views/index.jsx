@@ -59,7 +59,7 @@ class Index extends React.Component {
                 <p>
                   <Link page="establishment.dashboard" establishmentId={establishment.id} label={<Snippet>establishment.link</Snippet>} />
                 </p>
-                <Profile establishment={establishment} profile={model} allowedActions={[]} />
+                <Profile establishment={establishment} profile={model} allowedActions={this.props.allowedActions} />
               </ExpandingPanel>
             );
           })} />
@@ -82,6 +82,6 @@ class Index extends React.Component {
 
 }
 
-const mapStateToProps = ({ model }) => ({ model });
+const mapStateToProps = ({ model, static: { allowedActions } }) => ({ model, allowedActions });
 
 export default connect(mapStateToProps)(Index);
