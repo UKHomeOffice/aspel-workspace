@@ -45,9 +45,8 @@ module.exports = settings => {
         res.attachment(`nts-${req.params.year}.zip`);
         archive.finalize();
         archive.pipe(res);
-        //res.send('done');
       })
-      .catch(err => console.error(err));
+      .catch(err => next(err));
   });
 
   app.get('/', (req, res) => res.sendResponse());

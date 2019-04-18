@@ -188,7 +188,6 @@ module.exports = project => {
       table.getRow(16).mergeCells(1, 2);
       table.getRow(17).mergeCells(1, 2);
       table.getRow(18).mergeCells(1, 2);
-      table.getRow(19).mergeCells(1, 2);
 
       table.getCell(0, 0).addParagraph(new Paragraph('Project').style('Heading2'));
       table.getCell(0, 1).addParagraph(new Paragraph(project.project.title).style('Heading2'));
