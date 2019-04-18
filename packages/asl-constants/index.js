@@ -4,6 +4,7 @@ const establishmentCountries = require('./constants/establishment-countries');
 const establishmentStatuses = require('./constants/establishment-statuses');
 const externalPermissions = require('./constants/external-permissions');
 const holdingCodes = require('./constants/holding-codes');
+const licenceStatuses = require('./constants/licence-statuses');
 const moduleCodes = require('./constants/module-codes');
 const pilStatuses = require('./constants/pil-statuses');
 const procedureCodes = require('./constants/procedure-codes');
@@ -19,6 +20,7 @@ module.exports = {
   establishmentStatuses,
   externalPermissions,
   holdingCodes,
+  licenceStatuses,
   moduleCodes,
   pilStatuses,
   procedureCodes,
