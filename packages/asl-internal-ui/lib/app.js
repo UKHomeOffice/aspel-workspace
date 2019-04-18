@@ -19,6 +19,8 @@ const search = require('../pages/search');
 const globalProfile = require('../pages/profile');
 const asru = require('../pages/asru-assignment');
 
+const reporting = require('../pages/reporting');
+
 const urls = require('./urls');
 
 module.exports = settings => {
@@ -85,6 +87,8 @@ module.exports = settings => {
   app.use(urls.project.list, project());
   app.use(urls.project.version.read, projectVersion(settings));
   app.use(urls.establishment.asru, asru());
+
+  app.use('/reporting', reporting());
 
   return app;
 };
