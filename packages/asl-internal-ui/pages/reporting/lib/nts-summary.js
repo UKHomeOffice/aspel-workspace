@@ -122,10 +122,10 @@ const addStyles = doc => {
     .basedOn('Normal')
     .next('Normal')
     .quickFormat()
-    .size(32)
+    .size(24)
     .bold()
     .font('Helvetica')
-    .spacing({ before: 400, after: 300 });
+    .spacing({ before: 200, after: 200 });
 
   doc.Styles.createParagraphStyle('Heading3', 'Heading 3')
     .basedOn('Normal')
@@ -223,17 +223,17 @@ module.exports = project => {
       table.getCell(15, 0).addParagraph(new Paragraph('Application of the 3Rs').style('body'));
 
       table.getCell(16, 0)
-        .addParagraph(new Paragraph('1. Replacement').style('body').bold())
+        .addParagraph(new Paragraph('1. Replacement').style('Heading2'))
         .addParagraph(new Paragraph('State why you need to use animals and why you cannot use non-animal alternatives').style('body'));
       renderTextEditor(table.getCell(16, 1), project.data['nts-replacement']);
 
       table.getCell(17, 0)
-        .addParagraph(new Paragraph('2. Reduction').style('body').bold())
+        .addParagraph(new Paragraph('2. Reduction').style('Heading2'))
         .addParagraph(new Paragraph('Explain how you will assure the use of minimum numbers of animals').style('body'));
       renderTextEditor(table.getCell(17, 1), project.data['nts-reduction']);
 
       table.getCell(18, 0)
-        .addParagraph(new Paragraph('3. Replacement').style('body').bold())
+        .addParagraph(new Paragraph('3. Replacement').style('Heading2'))
         .addParagraph(new Paragraph('Explain the choice of species and why the animal model(s) you will use are the most refined, having regard to the objectives. Explain the general measures you will take to minimise welfare costs (harms) to the animals.').style('body'));
       renderTextEditor(table.getCell(18, 1), project.data['nts-refinement']);
 
