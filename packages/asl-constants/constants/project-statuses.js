@@ -1,7 +1,3 @@
-module.exports = [
-  'active',
-  'pending',
-  'inactive',
-  'expired',
-  'revoked'
-];
+const licenceStatuses = require('./licence-statuses');
+
+module.exports = licenceStatuses;
