@@ -40,7 +40,8 @@ module.exports = settings => {
                     return archive.append(Buffer.from(doc), { name: `${project.title}-${project.id}.docx` });
                   });
               }
-            });
+            })
+            .catch(e => req.log('error', { message: e.message }));
         }, Promise.resolve());
 
       })

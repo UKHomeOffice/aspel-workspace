@@ -1,4 +1,5 @@
 const { Document, Packer, Paragraph, WidthType, TextRun, Numbering } = require('docx');
+const { get } = require('lodash');
 
 const pack = document => {
   const packer = new Packer();
@@ -15,11 +16,9 @@ const renderDuration = (doc, value) => {
 };
 
 const renderTextEditor = (doc, value) => {
-  try {
-    const content = JSON.parse(value);
-    const nodes = content.document.nodes;
-    nodes.forEach(node => renderNode(doc, node));
-  } catch (e) {}
+  const content = JSON.parse(value || '{}');
+  const nodes = get(content, 'document.nodes', []);
+  nodes.forEach(node => renderNode(doc, node));
 };
 
 const renderNode = (doc, node) => {
@@ -180,7 +179,8 @@ module.exports = project => {
       table.getRow(0).mergeCells(1, 2);
       table.getRow(1).mergeCells(1, 2);
       table.getRow(2).mergeCells(1, 2);
-      table.getColumn(0).mergeCells(3, 11);
+      table.getColumn(0).mergeCells(3, 10);
+      table.getRow(11).mergeCells(1, 2);
       table.getRow(12).mergeCells(1, 2);
       table.getRow(13).mergeCells(1, 2);
       table.getRow(14).mergeCells(1, 2);
@@ -199,13 +199,21 @@ module.exports = project => {
 
       table.getCell(3, 0).addParagraph(new Paragraph('Purpose of the project as in ASPA section 5C(3) (Mark all boxes that apply)').style('body'));
 
+      table.getCell(3, 1).addParagraph(new Paragraph('  ').style('body'));
       table.getCell(3, 2).addParagraph(new Paragraph('Basic research').style('body'));
+      table.getCell(4, 1).addParagraph(new Paragraph('  ').style('body'));
       table.getCell(4, 2).addParagraph(new Paragraph('Translational and applied research').style('body'));
+      table.getCell(5, 1).addParagraph(new Paragraph('  ').style('body'));
       table.getCell(5, 2).addParagraph(new Paragraph('Regulatory use and routine production').style('body'));
+      table.getCell(6, 1).addParagraph(new Paragraph('  ').style('body'));
       table.getCell(6, 2).addParagraph(new Paragraph('Protection of the natural environment in the interests of the health or welfare of humans or animals').style('body'));
+      table.getCell(7, 1).addParagraph(new Paragraph('  ').style('body'));
       table.getCell(7, 2).addParagraph(new Paragraph('Preservation of species').style('body'));
+      table.getCell(8, 1).addParagraph(new Paragraph('  ').style('body'));
       table.getCell(8, 2).addParagraph(new Paragraph('Higher education or training').style('body'));
+      table.getCell(9, 1).addParagraph(new Paragraph('  ').style('body'));
       table.getCell(9, 2).addParagraph(new Paragraph('Forensic enquiries').style('body'));
+      table.getCell(10, 1).addParagraph(new Paragraph('  ').style('body'));
       table.getCell(10, 2).addParagraph(new Paragraph('Maintenance of colonies of genetically altered animals').style('body'));
 
       table.getCell(11, 0).addParagraph(new Paragraph('Describe the objectives of the project (e.g. the scientific unknowns or scientific/clinical needs being addressed)').style('body'));
