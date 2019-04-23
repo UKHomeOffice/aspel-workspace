@@ -13,6 +13,9 @@ module.exports = settings => {
   app.get('/:year', (req, res, next) => {
     const archive = archiver('zip');
 
+    res.attachment(`nts-${req.params.year}.zip`);
+    archive.pipe(res);
+
     req.api('/search/projects?limit=1')
       .then(response => {
         return req.api(`/search/projects?limit=${response.json.meta.count}`);
@@ -42,9 +45,7 @@ module.exports = settings => {
 
       })
       .then(() => {
-        res.attachment(`nts-${req.params.year}.zip`);
         archive.finalize();
-        archive.pipe(res);
       })
       .catch(err => next(err));
   });
