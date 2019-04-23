@@ -26,7 +26,7 @@ class LicenceStatusBanner extends Component {
     }
 
     return (
-      <div className={classnames('licence-status-banner', licence.status, this.isOpen() ? 'open' : '')}>
+      <div className={classnames('licence-status-banner', licence.status, { open: this.isOpen() })}>
         <header onClick={() => this.toggle()}>
           <p className="toggle-switch">
             <a href="#">{this.isOpen() ? 'Show less' : 'Show more'}</a>
