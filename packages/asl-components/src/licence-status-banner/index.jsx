@@ -25,8 +25,6 @@ class LicenceStatusBanner extends Component {
       return null;
     }
 
-    console.log(' ');
-
     return (
       <div className={classnames('licence-status-banner', licence.status, this.isOpen() ? 'open' : '')}>
         <header onClick={() => this.toggle()}>
