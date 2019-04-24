@@ -1,6 +1,7 @@
 const { page } = require('@asl/service/ui');
 const archiver = require('archiver');
 const { get } = require('lodash');
+const filenamify = require('filenamify');
 
 const nts = require('./lib/nts-summary');
 
@@ -37,7 +38,7 @@ module.exports = settings => {
                 return req.api(`${url}/project-version/${grantedId}`)
                   .then(response => nts(response.json.data))
                   .then(doc => {
-                    return archive.append(Buffer.from(doc), { name: `${project.title}-${project.id}.docx` });
+                    return archive.append(Buffer.from(doc), { name: `${filenamify(project.title)}-${project.id}.docx` });
                   });
               }
             })
