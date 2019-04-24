@@ -19,11 +19,7 @@ const renderTextEditor = (doc, value) => {
   const content = JSON.parse(value || '{}');
   const nodes = get(content, 'document.nodes', []);
   nodes.forEach(node => {
-    try {
-      renderNode(doc, node);
-    } catch (e) {
-      console.log(e);
-    }
+    renderNode(doc, node);
   });
 };
 
@@ -118,9 +114,9 @@ const renderNode = (doc, node) => {
 const hasPurpose = (project, purpose) => {
   let hasPurpose;
   if (purpose === 'b') {
-    hasPurpose = project['purpose-b'] && project['purpose-b'].length;
+    hasPurpose = project.data['purpose-b'] && project.data['purpose-b'].length;
   } else {
-    hasPurpose = (project.purpose || []).includes(`purpose-${purpose}`);
+    hasPurpose = (project.data.purpose || []).includes(`purpose-${purpose}`);
   }
   return hasPurpose ? 'X' : ' ';
 };
