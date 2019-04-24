@@ -82,27 +82,29 @@ const renderNode = (doc, node) => {
 
     case 'paragraph':
       paragraph = new Paragraph();
-      node.nodes[0].leaves.forEach(leaf => {
-        text = new TextRun(leaf.text);
-        if (text) {
-          (leaf.marks || []).forEach(mark => {
-            switch (mark.type) {
-              case 'bold':
-                text.bold();
-                break;
+      node.nodes.forEach(childNode => {
+        childNode.leaves.forEach(leaf => {
+          text = new TextRun(leaf.text);
+          if (text) {
+            (leaf.marks || []).forEach(mark => {
+              switch (mark.type) {
+                case 'bold':
+                  text.bold();
+                  break;
 
-              case 'italic':
-                text.italics();
-                break;
+                case 'italic':
+                  text.italics();
+                  break;
 
-              case 'underlined':
-                text.underline();
-                break;
-            }
-          });
-          paragraph.style('body');
-          paragraph.addRun(text);
-        }
+                case 'underlined':
+                  text.underline();
+                  break;
+              }
+            });
+            paragraph.style('body');
+            paragraph.addRun(text);
+          }
+        });
       });
       doc.addParagraph(paragraph);
       break;
@@ -257,7 +259,7 @@ module.exports = project => {
       renderTextEditor(table.getCell(17, 1), project.data['nts-reduction']);
 
       table.getCell(18, 0)
-        .addParagraph(new Paragraph('3. Replacement').style('Heading2'))
+        .addParagraph(new Paragraph('3. Refinement').style('Heading2'))
         .addParagraph(new Paragraph('Explain the choice of species and why the animal model(s) you will use are the most refined, having regard to the objectives. Explain the general measures you will take to minimise welfare costs (harms) to the animals.').style('body'));
       renderTextEditor(table.getCell(18, 1), project.data['nts-refinement']);
 
