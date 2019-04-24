@@ -85,7 +85,7 @@ const renderNode = (doc, node) => {
       node.nodes[0].leaves.forEach(leaf => {
         text = new TextRun(leaf.text);
         if (text) {
-          leaf.marks.forEach(mark => {
+          (leaf.marks || []).forEach(mark => {
             switch (mark.type) {
               case 'bold':
                 text.bold();
@@ -111,6 +111,16 @@ const renderNode = (doc, node) => {
       doc.createImage(node.data.src, node.data.width, node.data.height);
       break;
   }
+};
+
+const hasPurpose = (project, purpose) => {
+  let hasPurpose;
+  if (purpose === 'b') {
+    hasPurpose = project['purpose-b'] && project['purpose-b'].length;
+  } else {
+    hasPurpose = (project.purpose || []).includes(`purpose-${purpose}`);
+  }
+  return hasPurpose ? 'X' : ' ';
 };
 
 const addStyles = doc => {
@@ -205,21 +215,21 @@ module.exports = project => {
 
       table.getCell(3, 0).addParagraph(new Paragraph('Purpose of the project as in ASPA section 5C(3) (Mark all boxes that apply)').style('body'));
 
-      table.getCell(3, 1).addParagraph(new Paragraph('  ').style('body'));
+      table.getCell(3, 1).addParagraph(new Paragraph(hasPurpose(project, 'a')).style('body'));
       table.getCell(3, 2).addParagraph(new Paragraph('Basic research').style('body'));
-      table.getCell(4, 1).addParagraph(new Paragraph('  ').style('body'));
+      table.getCell(4, 1).addParagraph(new Paragraph(hasPurpose(project, 'b')).style('body'));
       table.getCell(4, 2).addParagraph(new Paragraph('Translational and applied research').style('body'));
-      table.getCell(5, 1).addParagraph(new Paragraph('  ').style('body'));
+      table.getCell(5, 1).addParagraph(new Paragraph(hasPurpose(project, 'c')).style('body'));
       table.getCell(5, 2).addParagraph(new Paragraph('Regulatory use and routine production').style('body'));
-      table.getCell(6, 1).addParagraph(new Paragraph('  ').style('body'));
+      table.getCell(6, 1).addParagraph(new Paragraph(hasPurpose(project, 'd')).style('body'));
       table.getCell(6, 2).addParagraph(new Paragraph('Protection of the natural environment in the interests of the health or welfare of humans or animals').style('body'));
-      table.getCell(7, 1).addParagraph(new Paragraph('  ').style('body'));
+      table.getCell(7, 1).addParagraph(new Paragraph(hasPurpose(project, 'e')).style('body'));
       table.getCell(7, 2).addParagraph(new Paragraph('Preservation of species').style('body'));
-      table.getCell(8, 1).addParagraph(new Paragraph('  ').style('body'));
+      table.getCell(8, 1).addParagraph(new Paragraph(hasPurpose(project, 'f')).style('body'));
       table.getCell(8, 2).addParagraph(new Paragraph('Higher education or training').style('body'));
-      table.getCell(9, 1).addParagraph(new Paragraph('  ').style('body'));
+      table.getCell(9, 1).addParagraph(new Paragraph(hasPurpose(project, 'g')).style('body'));
       table.getCell(9, 2).addParagraph(new Paragraph('Forensic enquiries').style('body'));
-      table.getCell(10, 1).addParagraph(new Paragraph('  ').style('body'));
+      table.getCell(10, 1).addParagraph(new Paragraph(' ').style('body'));
       table.getCell(10, 2).addParagraph(new Paragraph('Maintenance of colonies of genetically altered animals').style('body'));
 
       table.getCell(11, 0).addParagraph(new Paragraph('Describe the objectives of the project (e.g. the scientific unknowns or scientific/clinical needs being addressed)').style('body'));
