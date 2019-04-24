@@ -41,7 +41,7 @@ module.exports = settings => {
                   });
               }
             })
-            .catch(e => req.log('error', { message: e.message }));
+            .catch(e => req.log('error', { message: e.message, stack: e.stack }));
         }, Promise.resolve());
 
       })

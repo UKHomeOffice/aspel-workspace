@@ -18,7 +18,13 @@ const renderDuration = (doc, value) => {
 const renderTextEditor = (doc, value) => {
   const content = JSON.parse(value || '{}');
   const nodes = get(content, 'document.nodes', []);
-  nodes.forEach(node => renderNode(doc, node));
+  nodes.forEach(node => {
+    try {
+      renderNode(doc, node);
+    } catch (e) {
+      console.log(e);
+    }
+  });
 };
 
 const renderNode = (doc, node) => {
@@ -45,7 +51,7 @@ const renderNode = (doc, node) => {
       abstract.createLevel(0, 'decimal', '%2.', 'start');
       const concrete = numbering.createConcreteNumbering(abstract);
 
-      node.nodes.forEach(n => {
+      (node.nodes || []).forEach(n => {
         if (n.type !== 'list-item') {
           return renderNode(doc, n);
         }
@@ -61,7 +67,7 @@ const renderNode = (doc, node) => {
     }
 
     case 'bulleted-list':
-      node.nodes.forEach(n => {
+      (node.nodes || []).forEach(n => {
         if (n.type !== 'list-item') {
           return renderNode(doc, n);
         }
