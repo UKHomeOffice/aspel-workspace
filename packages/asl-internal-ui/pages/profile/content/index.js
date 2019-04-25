@@ -7,8 +7,9 @@ module.exports = merge({}, profileContent, {
   },
   asru: {
     title: 'ASRU',
-    add: 'Add to ASRU',
-    remove: 'Remove from ASRU',
+    add: 'Add user to ASRU',
+    remove: 'Remove user from ASRU',
+    notice: 'Adding a user to ASRU gives them full access to all information from all establishments within the system.',
     roles: {
       title: 'Permissions',
       manage: 'Edit',

@@ -8,9 +8,9 @@ class ToggleASRU extends React.Component {
 
   renderAdd() {
     return <Fragment>
-      <hr />
       <form action="" method="post">
         <input type="hidden" name="asruUser" value="true" />
+        <p><Snippet>asru.notice</Snippet></p>
         <Button type="submit" className="button-secondary"><Snippet>asru.add</Snippet></Button>
       </form>
     </Fragment>;
