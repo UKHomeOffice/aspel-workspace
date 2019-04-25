@@ -28,7 +28,7 @@ module.exports = settings => {
     res.locals.static.establishments = req.user.profile.establishments.filter(e => e.id !== establishment.id);
     res.locals.static.establishment = establishment;
     res.locals.static.user = req.user.profile;
-    res.locals.static.showComments = showComments
+    res.locals.static.showComments = showComments;
     res.locals.static.commentable = showComments && res.locals.static.isCommentable;
     res.locals.model = req.version;
     next();
