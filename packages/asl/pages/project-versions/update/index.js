@@ -1,6 +1,7 @@
 const { page } = require('@asl/service/ui');
 const bodyParser = require('body-parser');
 const { get, pick } = require('lodash');
+const { canComment } = require('@asl/pages/pages/project-version/middleware');
 
 module.exports = settings => {
   const app = page({
@@ -16,11 +17,19 @@ module.exports = settings => {
     next();
   });
 
+  app.use(canComment());
+
   app.use((req, res, next) => {
+    const openTask = get(req.project, 'openTasks[0]');
     const establishment = req.establishment;
+    const showComments = req.version.status !== 'granted' && !!openTask;
+
     res.locals.static.basename = req.buildRoute('project.version.update');
     res.locals.static.establishments = req.user.profile.establishments.filter(e => e.id !== establishment.id);
     res.locals.static.establishment = establishment;
+    res.locals.static.user = req.user.profile;
+    res.locals.static.showComments = showComments;
+    res.locals.static.commentable = showComments && res.locals.static.isCommentable;
     res.locals.model = req.version;
     next();
   });
