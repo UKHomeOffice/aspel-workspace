@@ -2,12 +2,14 @@ const { Router } = require('express');
 const update = require('./update');
 const submit = require('./submit');
 const success = require('./success');
-const { getVersion } = require('@asl/pages/pages/project-version/middleware');
+const { getVersion, getComments } = require('@asl/pages/pages/project-version/middleware');
 
 module.exports = () => {
   const app = Router();
 
   app.use(getVersion());
+
+  app.use(getComments());
 
   app.use('/submit', submit());
   app.use('/success', success());
