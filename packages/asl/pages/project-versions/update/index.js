@@ -1,20 +1,12 @@
 const { page } = require('@asl/service/ui');
 const bodyParser = require('body-parser');
-const { get, pick } = require('lodash');
+const { get } = require('lodash');
 const { canComment } = require('@asl/pages/pages/project-version/middleware');
 
 module.exports = settings => {
   const app = page({
     ...settings,
     root: __dirname
-  });
-
-  app.use((req, res, next) => {
-    const authorities = get(req.project, 'openTasks[0].data.data');
-    if (authorities) {
-      Object.assign(req.version, pick(authorities, 'authority', 'awerb'));
-    }
-    next();
   });
 
   app.use(canComment());

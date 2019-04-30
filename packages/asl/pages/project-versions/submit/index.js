@@ -10,6 +10,14 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
+    const authorities = get(req.project, 'openTasks[0].data.data');
+    if (authorities) {
+      Object.assign(req.version, pick(authorities, 'authority', 'awerb'));
+    }
+    next();
+  });
+
+  app.use((req, res, next) => {
     req.model = req.version;
     next();
   });
