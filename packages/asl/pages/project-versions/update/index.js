@@ -9,14 +9,6 @@ module.exports = settings => {
     root: __dirname
   });
 
-  app.use((req, res, next) => {
-    const authorities = get(req.project, 'openTasks[0].data.data');
-    if (authorities) {
-      Object.assign(req.version, pick(authorities, 'authority', 'awerb'));
-    }
-    next();
-  });
-
   app.use(canComment());
 
   app.use((req, res, next) => {
