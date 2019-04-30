@@ -1,6 +1,6 @@
 const { page } = require('@asl/service/ui');
 const bodyParser = require('body-parser');
-const { get, pick } = require('lodash');
+const { get } = require('lodash');
 const { canComment } = require('@asl/pages/pages/project-version/middleware');
 
 module.exports = settings => {
