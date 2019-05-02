@@ -1,6 +1,6 @@
 import start from '@asl/projects';
 import { throwError } from '@asl/projects/client/actions/messages';
-import { updateSavedProject } from '@asl/projects/client/actions/projects';
+import { updateSavedProject, addChange } from '@asl/projects/client/actions/projects';
 import debounce from 'lodash/debounce';
 import fetch from 'r2';
 import cloneDeep from 'lodash/cloneDeep';
@@ -51,12 +51,37 @@ const postData = debounce((patch, getState, dispatch) => {
     });
 }, 500, { maxWait: 5000 });
 
+const createPath = (tree, keys) => {
+  let node = tree[keys[0]];
+  let path = keys[0];
+  for (var i = 1; i < keys.length; i++) {
+    let parent = node;
+    if (node instanceof Object && !(node instanceof Array)) {
+      path = path.concat(`.${node.id}`);
+    }
+    if (isNaN(keys[i])) {
+      path = path.concat(`.${keys[i]}`);
+    }
+    node = parent[keys[i]];
+  }
+  return path;
+};
+
 const onUpdate = props => {
   return (dispatch, getState) => {
     const { project, savedProject } = getState();
     const newState = { ...project, ...props };
     dispatch(updateProject(newState));
     const patch = diff(savedProject, newState);
+    if (patch) {
+      let changes = [];
+      patch.filter(p => p.kind === 'E').forEach(p => {
+        changes.push(createPath(savedProject, p.path));
+      });
+      if (changes.length > 0) {
+        dispatch(addChange(changes));
+      }
+    }
     return postData(patch, getState, dispatch);
   };
 };
@@ -75,6 +100,10 @@ start({
     id: state.model.id
   },
   comments: state.static.comments,
+  changes: {
+    latest: (state.static.changes && state.static.changes.latest) || [],
+    granted: (state.static.changes && state.static.changes.granted) || []
+  },
   settings: {
     establishments: state.static.establishments.map(e => e.name)
   },
