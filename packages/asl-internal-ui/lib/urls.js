@@ -63,6 +63,7 @@ module.exports = {
   task: {
     base: '/tasks',
     read: '/tasks/:taskId',
+    extend: '/tasks/:taskId/extend',
     confirm: '/tasks/:taskId/confirm',
     success: '/tasks/:taskId/success'
   },
