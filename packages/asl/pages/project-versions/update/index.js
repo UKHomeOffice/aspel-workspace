@@ -2,6 +2,7 @@ const { page } = require('@asl/service/ui');
 const bodyParser = require('body-parser');
 const { get } = require('lodash');
 const { canComment } = require('@asl/pages/pages/project-version/middleware');
+const { getPreviousVersion, getGrantedVersion, getAllChanges } = require('@asl/pages/pages/project-version/middleware');
 
 module.exports = settings => {
   const app = page({
@@ -25,6 +26,8 @@ module.exports = settings => {
     res.locals.model = req.version;
     next();
   });
+
+  app.use(getPreviousVersion(), getGrantedVersion(), getAllChanges());
 
   app.put('/', bodyParser.json({ limit: '5mb' }));
 
