@@ -24,6 +24,7 @@ module.exports = {
     read: '/establishments/:establishmentId/projects/:projectId',
     version: {
       read: '/establishments/:establishmentId/projects/:projectId/versions/:versionId',
+      update: '/establishments/:establishmentId/projects/:projectId/versions/:versionId',
       pdf: '/establishments/:establishmentId/projects/:projectId/versions/:versionId/pdf'
     }
   },
