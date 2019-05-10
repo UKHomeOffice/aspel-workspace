@@ -11,7 +11,7 @@ const schema = {
 
 const mapSchema = (profiles, schema) => {
   const options = profiles.map(({ firstName, lastName, id }) => ({
-    label: `${firstName} ${lastName}`,
+    label: `${lastName}, ${firstName}`,
     value: id
   }));
 
