@@ -32,9 +32,15 @@ const formatters = {
         if (profile.asruUser) {
           return 'ASRU';
         }
-        return establishments.map(establishment =>
-          <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} key={establishment.id}/>
-        );
+        return establishments.map(establishment => {
+          return (
+            <Fragment key={establishment.id}>
+              <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
+              <br />
+            </Fragment>
+          );
+        });
+
       }
     }
   },
