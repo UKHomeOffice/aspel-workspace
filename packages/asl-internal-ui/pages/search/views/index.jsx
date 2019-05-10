@@ -12,12 +12,26 @@ const formatters = {
     },
     inspector: {
       format: (inspector, establishment) => {
-        return establishment.asru.filter(p => p.asruInspector).map(({ firstName, lastName }) => (`${firstName} ${lastName}`));
+        return establishment.asru.filter(p => p.asruInspector).map(profile => {
+          return (
+            <Fragment key={profile.id}>
+              <span>{`${profile.firstName} ${profile.lastName}`}</span>
+              <br />
+            </Fragment>
+          );
+        });
       }
     },
     spoc: {
       format: (spoc, establishment) => {
-        return establishment.asru.filter(p => p.asruLicensing).map(({ firstName, lastName }) => (`${firstName} ${lastName}`));
+        return establishment.asru.filter(p => p.asruLicensing).map(profile => {
+          return (
+            <Fragment key={profile.id}>
+              <span>{`${profile.firstName} ${profile.lastName}`}</span>
+              <br />
+            </Fragment>
+          );
+        });
       }
     }
   },
