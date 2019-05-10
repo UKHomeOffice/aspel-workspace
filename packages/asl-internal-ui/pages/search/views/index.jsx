@@ -12,26 +12,16 @@ const formatters = {
     },
     inspector: {
       format: (inspector, establishment) => {
-        return establishment.asru.filter(p => p.asruInspector).map(profile => {
-          return (
-            <Fragment key={profile.id}>
-              <span>{`${profile.firstName} ${profile.lastName}`}</span>
-              <br />
-            </Fragment>
-          );
-        });
+        return establishment.asru.filter(p => p.asruInspector).map(profile => (
+          <p key={profile.id}>{`${profile.firstName} ${profile.lastName}`}</p>
+        ));
       }
     },
     spoc: {
       format: (spoc, establishment) => {
-        return establishment.asru.filter(p => p.asruLicensing).map(profile => {
-          return (
-            <Fragment key={profile.id}>
-              <span>{`${profile.firstName} ${profile.lastName}`}</span>
-              <br />
-            </Fragment>
-          );
-        });
+        return establishment.asru.filter(p => p.asruLicensing).map(profile => (
+          <p key={profile.id}>{`${profile.firstName} ${profile.lastName}`}</p>
+        ));
       }
     }
   },
@@ -46,15 +36,9 @@ const formatters = {
         if (profile.asruUser) {
           return 'ASRU';
         }
-        return establishments.map(establishment => {
-          return (
-            <Fragment key={establishment.id}>
-              <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
-              <br />
-            </Fragment>
-          );
-        });
-
+        return establishments.map(establishment => (
+          <Link key={establishment.id} page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
+        ));
       }
     }
   },

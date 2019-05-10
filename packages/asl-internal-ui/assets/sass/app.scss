@@ -92,3 +92,14 @@ td .govuk-button {
     padding-left: 0;
   }
 }
+
+.govuk-table {
+  .inspector p,
+  .spoc p {
+    margin: 0;
+  }
+
+  td.establishments a {
+    display: block;
+  }
+}
