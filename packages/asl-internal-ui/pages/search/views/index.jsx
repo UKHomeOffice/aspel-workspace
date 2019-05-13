@@ -62,7 +62,7 @@ const formatters = {
     },
     expiryDate: {
       format: date => {
-        return <ExpiryDate date={date}/>;
+        return date ? <ExpiryDate date={date}/> : '-';
       }
     }
   }
