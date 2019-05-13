@@ -15,6 +15,11 @@ const ExpiryDate = ({
   showUrgent = 3,
   showNotice = 11
 }) => {
+
+  if (!date) {
+    return null;
+  }
+
   let differenceFunction;
   switch (unit) {
     case 'month':
