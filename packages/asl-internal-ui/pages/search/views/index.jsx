@@ -37,7 +37,9 @@ const formatters = {
           return 'ASRU';
         }
         return establishments.map(establishment => (
-          <Link key={establishment.id} page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
+          <p key={establishment.id}>
+            <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
+          </p>
         ));
       }
     }
