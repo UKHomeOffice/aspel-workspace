@@ -12,12 +12,16 @@ const formatters = {
     },
     inspector: {
       format: (inspector, establishment) => {
-        return establishment.asru.filter(p => p.asruInspector).map(({ firstName, lastName }) => (`${firstName} ${lastName}`));
+        return establishment.asru.filter(p => p.asruInspector).map(profile => (
+          <p key={profile.id}>{`${profile.firstName} ${profile.lastName}`}</p>
+        ));
       }
     },
     spoc: {
       format: (spoc, establishment) => {
-        return establishment.asru.filter(p => p.asruLicensing).map(({ firstName, lastName }) => (`${firstName} ${lastName}`));
+        return establishment.asru.filter(p => p.asruLicensing).map(profile => (
+          <p key={profile.id}>{`${profile.firstName} ${profile.lastName}`}</p>
+        ));
       }
     }
   },
@@ -32,9 +36,11 @@ const formatters = {
         if (profile.asruUser) {
           return 'ASRU';
         }
-        return establishments.map(establishment =>
-          <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} key={establishment.id}/>
-        );
+        return establishments.map(establishment => (
+          <p key={establishment.id}>
+            <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
+          </p>
+        ));
       }
     }
   },
