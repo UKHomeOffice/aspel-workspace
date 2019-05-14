@@ -26,6 +26,7 @@ module.exports = settings => {
 
   app.use((req, res, next) => {
     if (settings.internalUrl && get(req, 'user.profile.asruUser')) {
+      req.session.destroy();
       return res.redirect(settings.internalUrl);
     }
     next();
