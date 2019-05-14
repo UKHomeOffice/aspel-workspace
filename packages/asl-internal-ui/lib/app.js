@@ -14,6 +14,8 @@ const {
   pil
 } = pages;
 
+const projectVersionAsruActions = require('./routers/project-version');
+
 const dashboard = require('../pages/dashboard');
 const search = require('../pages/search');
 const globalProfile = require('../pages/profile');
@@ -85,6 +87,7 @@ module.exports = settings => {
   app.use(urls.pil.base, pil());
   app.use(urls.place.list, place());
   app.use(urls.project.list, project());
+  app.use(urls.project.version.read, projectVersionAsruActions(settings));
   app.use(urls.project.version.read, projectVersion(settings));
   app.use(urls.establishment.asru, asru());
 
