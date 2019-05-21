@@ -22,5 +22,17 @@ module.exports = merge({}, profileContent, {
   },
   notifications: {
     success: 'Changes saved!'
+  },
+  pil: {
+    training: {
+      title: 'Training',
+      certificate: {
+        number: 'Certificate number',
+        awarded: 'Date awarded',
+        body: 'Accreditation body',
+        modules: 'Modules completed'
+      },
+      none: 'No training added'
+    }
   }
 });
