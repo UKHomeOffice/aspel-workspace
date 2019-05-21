@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Snippet from '../snippet';
+import Link from '../link';
 import classnames from 'classnames';
 import formatDate from 'date-fns/format';
 
@@ -21,7 +22,7 @@ class LicenceStatusBanner extends Component {
     const licenceType = this.props.licenceType;
     const dateFormat = this.props.dateFormat;
 
-    if (licence.status === 'active') {
+    if (licence.status === 'active' && licenceType !== 'ppl') {
       return null;
     }
 
@@ -54,7 +55,15 @@ class LicenceStatusBanner extends Component {
               }
             </ul>
           }
-          <p className="summary"><Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet></p>
+
+          <p className="summary">
+            { !(licence.status === 'active' && licenceType === 'ppl') && <Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet> }
+            { licence.status === 'active' && licenceType === 'ppl' && <p>
+              <Snippet>{`invalidLicence.summary.${licenceType}_${licence.status}`}</Snippet>
+              <p><Link page="project.version.read" versionId={this.props.licence.granted.id} label={<Snippet>{'invalidLicence.view'}</Snippet>} /></p>
+            </p>
+            }
+          </p>
         </div>
       </div>
     );
