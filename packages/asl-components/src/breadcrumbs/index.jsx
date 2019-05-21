@@ -1,25 +1,30 @@
 import React from 'react';
+import { omit } from 'lodash';
 import Link from '../link';
 import Snippet from '../snippet';
 
-export const Breadcrumb = ({
-  crumb = {},
-  link = false
-}) => {
-  return <li className="govuk-breadcrumbs__list-item">
-  {
-    link ?
-      <Link page={crumb} label={<Snippet>{`breadcrumbs.${crumb}`}</Snippet>} /> :
-      <Snippet>{`breadcrumbs.${crumb}`}</Snippet>
+export const Breadcrumb = ({ crumb = {}, link = false }) => {
+  let props = null;
+
+  if (typeof crumb === 'object' && crumb !== null) {
+    props = omit(crumb, 'label');
+    crumb = crumb.label;
   }
-  </li>;
+
+  return (
+    <li className="govuk-breadcrumbs__list-item">
+      {
+        link
+          ? <Link page={crumb} label={<Snippet {...props}>{`breadcrumbs.${crumb}`}</Snippet>} {...props} />
+          : <Snippet {...props}>{`breadcrumbs.${crumb}`}</Snippet>
+      }
+    </li>
+  );
 };
 
 const renderNull = crumbs => !crumbs || !crumbs.length || !Array.isArray(crumbs);
 
-const Breadcrumbs = ({
-  crumbs
-}) => {
+const Breadcrumbs = ({ crumbs }) => {
   if (renderNull(crumbs)) {
     return null;
   }
