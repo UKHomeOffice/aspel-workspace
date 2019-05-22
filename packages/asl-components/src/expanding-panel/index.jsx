@@ -4,7 +4,7 @@ import classnames from 'classnames';
 class ExpandingPanel extends Component {
 
   componentDidMount() {
-    this.setState({ open: false });
+    this.setState({ open: this.props.isOpen });
   }
 
   controlled() {
