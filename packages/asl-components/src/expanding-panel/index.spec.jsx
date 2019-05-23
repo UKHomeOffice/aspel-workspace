@@ -4,7 +4,7 @@ import ExpandingPanel from './';
 
 describe('<ExpandingPanel />', () => {
   test('sets open state to false on mount', () => {
-    const wrapper = shallow(<ExpandingPanel />);
+    const wrapper = shallow(<ExpandingPanel isOpen={false}/>);
     expect(wrapper.instance().state.open).toBe(false);
   });
 
@@ -74,7 +74,7 @@ describe('<ExpandingPanel />', () => {
       });
 
       test('returns this.state.open if not controlled', () => {
-        const instance = shallow(<ExpandingPanel />).instance();
+        const instance = shallow(<ExpandingPanel isOpen={false}/>).instance();
         expect(instance.isOpen()).toBe(false);
       });
 
