@@ -6,7 +6,8 @@ module.exports = {
     show: true
   },
   establishment: {
-    show: true
+    show: true,
+    sort: 'establishment.name'
   },
   licenceHolder: {
     show: true,
