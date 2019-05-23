@@ -49,7 +49,6 @@ module.exports = settings => {
       const establishment = establishments.find(e => e.id.toString() === param);
       if (establishment) {
         req.establishmentId = establishment.id;
-        res.locals.static.establishmentId = establishment.id; // needed for breadcrumbs
         return next();
       }
     }
