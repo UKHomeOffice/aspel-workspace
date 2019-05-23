@@ -1,6 +1,5 @@
 import React from 'react';
 import get from 'lodash/get';
-import pick from 'lodash/pick';
 import { connect } from 'react-redux';
 
 const replace = params => fragment => {
