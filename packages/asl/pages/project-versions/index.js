@@ -5,7 +5,7 @@ const success = require('./success');
 const { getVersion, getComments } = require('@asl/pages/pages/project-version/middleware');
 
 module.exports = () => {
-  const app = Router();
+  const app = Router({ mergeParams: true });
 
   app.use(getVersion());
 
