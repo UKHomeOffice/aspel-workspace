@@ -29,7 +29,6 @@ module.exports = settings => {
     res.locals.static.showComments = showComments;
     res.locals.static.commentable = showComments && res.locals.static.isCommentable;
     res.locals.model = req.version;
-    res.locals.static.projectId = req.project.id;
     next();
   });
 
