@@ -13,6 +13,11 @@ module.exports = settings => {
   app.use(canComment());
 
   app.use((req, res, next) => {
+    if (req.project.status === 'active') {
+      req.breadcrumb('project.amend');
+    } else {
+      req.breadcrumb('project.update');
+    }
     const openTask = get(req.project, 'openTasks[0]');
     const establishment = req.establishment;
     const showComments = req.version.status !== 'granted' && !!openTask;
