@@ -8,6 +8,7 @@ import { dateFormat } from '@asl/pages/constants';
 
 import Profile from '@asl/pages/pages/profile/read/views/profile';
 import ASRUAdmin from '../components/asru-admin';
+import Modules from '@asl/pages/pages/task/read/views/modules';
 
 class Index extends React.Component {
 
@@ -50,32 +51,7 @@ class Index extends React.Component {
       <ExpandingPanel title={<Snippet>pil.training.title</Snippet>}>
         {
           model.certificates && model.certificates.length > 0
-            ? model.certificates.map((certificate, index) => (
-              <div key={index}>
-                <p><Snippet>pil.training.certificate.number</Snippet><span>:</span> {certificate.certificateNumber}</p>
-                <p><Snippet>pil.training.certificate.awarded</Snippet><span>:</span> {dateFormatter(certificate.passDate)}</p>
-                <p><Snippet>pil.training.certificate.body</Snippet><span>:</span> {certificate.accreditingBody}</p>
-                <p><Snippet>pil.training.certificate.modules</Snippet></p>
-                <p><ul>
-                  { certificate.modules.map((module, index) => (
-                    <Fragment key={index}>
-                      <li>{module.module}</li>
-                      {
-                        module.species && !!module.species.length && (
-                          <ul>
-                            {
-                              module.species.map((s, index) =>
-                                <li key={index}>{s}</li>
-                              )
-                            }
-                          </ul>
-                        )
-                      }
-                    </Fragment>
-                  )) }
-                </ul></p>
-              </div>
-            ))
+            ? <Modules certificates={model.certificates} />
             : <p><em><Snippet>pil.training.none</Snippet></em></p>
         }
       </ExpandingPanel>
