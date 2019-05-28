@@ -8,6 +8,7 @@ import { dateFormat } from '@asl/pages/constants';
 
 import Profile from '@asl/pages/pages/profile/read/views/profile';
 import ASRUAdmin from '../components/asru-admin';
+import Modules from '@asl/pages/pages/task/read/views/modules';
 
 class Index extends React.Component {
 
@@ -47,7 +48,13 @@ class Index extends React.Component {
           </Fragment>
         }
       </dl>
-
+      <ExpandingPanel title={<Snippet>pil.training.title</Snippet>}>
+        {
+          model.certificates && model.certificates.length > 0
+            ? <Modules certificates={model.certificates} />
+            : <p><em><Snippet>pil.training.none</Snippet></em></p>
+        }
+      </ExpandingPanel>
       <ASRUAdmin />
 
       {

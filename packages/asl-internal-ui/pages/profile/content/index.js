@@ -1,7 +1,8 @@
 const { merge } = require('lodash');
 const profileContent = require('@asl/pages/pages/profile/read/content');
+const pilContent = require('@asl/pages/pages/task/read/content/pil');
 
-module.exports = merge({}, profileContent, {
+module.exports = merge({}, pilContent, profileContent, {
   establishment: {
     link: 'About this establishment'
   },
@@ -22,5 +23,10 @@ module.exports = merge({}, profileContent, {
   },
   notifications: {
     success: 'Changes saved!'
+  },
+  pil: {
+    training: {
+      title: 'Training'
+    }
   }
 });
