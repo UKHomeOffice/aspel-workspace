@@ -53,9 +53,9 @@ class Index extends React.Component {
       {
         hasEstablishments && <Fragment>
           <h3>Establishments</h3>
-          <PanelList panels={sortBy(model.establishments, 'name').map((establishment, index) => {
+          <PanelList panels={sortBy(model.establishments, 'name').map((establishment) => {
             return (
-              <ExpandingPanel key={establishment.id} title={establishment.name} isOpen={index === 0}>
+              <ExpandingPanel key={establishment.id} title={establishment.name} isOpen={model.establishments.length === 1}>
                 <p>
                   <Link page="establishment.dashboard" establishmentId={establishment.id} label={<Snippet>establishment.link</Snippet>} />
                 </p>
