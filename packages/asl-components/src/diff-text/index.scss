@@ -1,0 +1,14 @@
+.diff-text {
+  white-space: pre-wrap;
+  
+  .added {
+    border-bottom: 3px solid #28a197;
+    background-color: #c6ece9;
+  }
+
+  .removed {
+    color: $dark-grey;
+    border-bottom: 3px solid #c42b2b;
+    background-color: #f3dede;
+  }
+}

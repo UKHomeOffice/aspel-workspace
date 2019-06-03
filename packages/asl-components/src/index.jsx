@@ -11,6 +11,7 @@ export { default as ControlBar } from './control-bar';
 export { default as ConditionalReveal } from './conditional-reveal';
 export { default as Datatable } from './datatable';
 export { default as Diff } from './diff';
+export { default as DiffText } from './diff-text';
 export { default as ErrorSummary } from './error-summary';
 export { default as ExpandingPanel } from './expanding-panel';
 export { default as ExpiryDate } from './expiry-date';
