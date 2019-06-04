@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { hideNotification } from './actions';
 
 const NOTIFICATION_DURATION = 5000;
@@ -20,10 +19,10 @@ class Notification extends Component {
     }
   }
 
-  alert() {
+  render() {
     const { message, type, timeout, hideNotification, ...props } = this.props;
     if (!message) {
-      return;
+      return null;
     }
     this.timer();
     return (
@@ -38,18 +37,6 @@ class Notification extends Component {
           <p>{ message }</p>
         </div>
       </div>
-    );
-  }
-
-  render() {
-    return (
-      <ReactCSSTransitionGroup
-        transitionName="alert"
-        transitionEnterTimeout={100}
-        transitionLeaveTimeout={500}
-        >
-        { this.alert() }
-      </ReactCSSTransitionGroup>
     );
   }
 }

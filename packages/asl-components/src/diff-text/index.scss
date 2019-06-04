@@ -5,6 +5,7 @@ $light-green: #c6ece9;
 
 .diff-text {
   white-space: pre-wrap;
+  word-break: break-word;
 
   .added {
     border-bottom: 3px solid $mid-green;

@@ -9,6 +9,7 @@ export { default as Completable } from './completable';
 export { default as Controls } from './controls';
 export { default as ControlBar } from './control-bar';
 export { default as ConditionalReveal } from './conditional-reveal';
+export { default as Conditions } from './conditions';
 export { default as Datatable } from './datatable';
 export { default as Diff } from './diff';
 export { default as DiffText } from './diff-text';
