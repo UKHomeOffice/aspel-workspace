@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import classnames from 'classnames';
-import * as jsdiff from 'diff';
+import { diffWords } from 'diff';
 
 const Item = ({ added, removed, value }) => (
   <span className={classnames({ added, removed })}>
@@ -18,7 +18,7 @@ const DiffText = ({
   currentLabel = 'Current',
   proposedLabel = 'Proposed'
 }) => {
-  const diff = jsdiff.diffWords(oldValue, newValue);
+  const diff = diffWords(oldValue, newValue);
 
   return (
     <div className="diff-text govuk-grid-row">
