@@ -22,9 +22,10 @@ class LicenceStatusBanner extends Component {
     const licenceType = this.props.licenceType;
     const dateFormat = this.props.dateFormat;
 
-    if (licence.status === 'active' && licenceType !== 'ppl') {
-      return null;
-    }
+    const isExpired = licence.status === 'expired';
+    const isRevoked = licence.status === 'revoked';
+    const isDraft = licence.draft || licence.status === 'inactive';
+    const isAmendment = licence.granted && licence.openTasks && licence.openTasks.length > 0;
 
     return (
       <div className={classnames('licence-status-banner', licence.status, { open: this.isOpen() })}>
@@ -40,25 +41,15 @@ class LicenceStatusBanner extends Component {
         <div className={classnames('status-details', { hidden: !this.isOpen() })}>
           { licence.issueDate &&
             <ul className="licence-dates">
-              <li>
-                Granted: <span className="date">{formatDate(licence.issueDate, dateFormat)}</span>
-              </li>
-              { licence.revocationDate &&
-                <li>
-                  Revoked: <span className="date">{formatDate(licence.revocationDate, dateFormat)}</span>
-                </li>
-              }
-              { !licence.revocationDate && licence.expiryDate &&
-                <li>
-                  Expiry: <span className="date">{formatDate(licence.expiryDate, dateFormat)}</span>
-                </li>
-              }
+              { (isRevoked || isExpired) && <li>Granted: <span className="date">{formatDate(licence.issueDate, dateFormat)}</span></li>}
+              { isRevoked && licence.revocationDate && <li>Revoked: <span className="date">{formatDate(licence.revocationDate, dateFormat)}</span></li>}
+              { isExpired && licence.expiryDate && <li>Expiry: <span className="date">{formatDate(licence.expiryDate, dateFormat)}</span></li>}
             </ul>
           }
 
           <p className="summary">
-            { !(licence.status === 'active' && licenceType === 'ppl') && <Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet> }
-            { licence.status === 'active' && licenceType === 'ppl' && <p>
+            { (isDraft || isExpired) && <Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet> }
+            { isAmendment && <p>
               <Snippet>{`invalidLicence.summary.${licenceType}_${licence.status}`}</Snippet>
               <p><Link page="project.version.read" versionId={this.props.licence.granted.id} label={<Snippet>{'invalidLicence.view'}</Snippet>} /></p>
             </p>
