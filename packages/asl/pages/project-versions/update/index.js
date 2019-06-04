@@ -30,6 +30,7 @@ module.exports = settings => {
     res.locals.static.commentable = showComments && res.locals.static.isCommentable;
     res.locals.static.newApplication = req.project.versions[req.project.versions.length - 1].id === req.version.id;
     res.locals.model = req.version;
+    res.locals.static.project = req.project;
     next();
   });
 

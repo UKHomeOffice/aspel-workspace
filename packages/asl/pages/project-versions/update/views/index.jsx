@@ -1,7 +1,15 @@
-import React from 'react';
+import React, {Fragment} from 'react';
+import { connect } from 'react-redux';
+import { LicenceStatusBanner } from '@asl/components';
 
-const Project = () => (
-  <div id="ppl-drafting-tool"></div>
-)
+const Project = ({ project }) => {
+  return (<Fragment>
+    <LicenceStatusBanner licence={project} licenceType="ppl" />
+    <div id="ppl-drafting-tool"></div>
+  </Fragment>
+  );
+};
 
-export default Project;
+const mapStateToProps = ({ static: { project } }) => ({ project });
+
+export default connect(mapStateToProps)(Project);
