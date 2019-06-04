@@ -4,16 +4,12 @@ import { Form } from '../';
 import { Warning } from '@ukhomeoffice/react-components';
 
 class Conditions extends Component {
-  constructor(options) {
-    super(options);
-    this.toggleEdit = this.toggleEdit.bind(this);
-  }
 
   componentDidMount() {
     this.setState({ editing: false });
   }
 
-  toggleEdit(e) {
+  toggleEdit = e => {
     e.preventDefault();
     this.setState({ editing: !this.state.editing });
   }
