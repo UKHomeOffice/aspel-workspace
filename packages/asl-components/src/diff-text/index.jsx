@@ -18,7 +18,7 @@ const DiffText = ({
   currentLabel = 'Current',
   proposedLabel = 'Proposed'
 }) => {
-  const diff = jsdiff.diffChars(oldValue, newValue);
+  const diff = jsdiff.diffWords(oldValue, newValue);
 
   return (
     <div className="diff-text govuk-grid-row">
