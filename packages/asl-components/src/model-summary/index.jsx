@@ -6,9 +6,8 @@ import { connect } from 'react-redux';
 import { Snippet } from '../';
 
 const getValue = (value, format, model) => {
-  return format
-    ? format(value, model) || '-'
-    : value || '-';
+  value = format ? format(value, model) : value;
+  return value || '-';
 };
 
 const ModelSummary = ({ model, schema, formatters = {}, className }) => {
