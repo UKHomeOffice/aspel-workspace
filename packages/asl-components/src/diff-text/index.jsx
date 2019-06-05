@@ -16,9 +16,12 @@ const DiffText = ({
   oldValue,
   newValue,
   currentLabel = 'Current',
-  proposedLabel = 'Proposed'
+  proposedLabel = 'Proposed',
+  emptyLabel = 'No answer provided'
 }) => {
-  const diff = diffWords(oldValue, newValue);
+  const diff = diffWords(oldValue || '', newValue || '');
+  const previous = diff.filter(item => !item.added)
+  const proposed = diff.filter(item => !item.removed)
 
   return (
     <div className="diff-text govuk-grid-row">
@@ -26,7 +29,9 @@ const DiffText = ({
         <h3>{currentLabel}</h3>
         <p>
           {
-            diff.filter(item => !item.added).map(item => <Item {...item} />)
+            previous.length
+              ? previous.map(item => <Item {...item} />)
+              : <em>{emptyLabel}</em>
           }
         </p>
       </div>
@@ -34,7 +39,9 @@ const DiffText = ({
         <h3>{proposedLabel}</h3>
         <p>
           {
-            diff.filter(item => !item.removed).map(item => <Item {...item} />)
+            proposed.length
+              ? proposed.map(item => <Item {...item} />)
+              : <em>{emptyLabel}</em>
           }
         </p>
       </div>
