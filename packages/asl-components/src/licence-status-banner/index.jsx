@@ -25,7 +25,11 @@ class LicenceStatusBanner extends Component {
     const isExpired = licence.status === 'expired';
     const isRevoked = licence.status === 'revoked';
     const isDraft = licence.draft || licence.status === 'inactive';
-    const isAmendment = licence.granted && licence.openTasks && licence.openTasks.length > 0;
+    const hasAmendment = licence.granted && licence.openTasks && licence.openTasks.length > 0;
+
+    if (!isExpired && !isRevoked && !isDraft && !hasAmendment) {
+      return null;
+    }
 
     return (
       <div className={classnames('licence-status-banner', licence.status, { open: this.isOpen() })}>
@@ -49,7 +53,7 @@ class LicenceStatusBanner extends Component {
 
           <p className="summary">
             { (isDraft || isExpired) && <Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet> }
-            { isAmendment && <p>
+            { hasAmendment && <p>
               <Snippet>{`invalidLicence.summary.${licenceType}_${licence.status}`}</Snippet>
               <p><Link page="project.version.read" versionId={this.props.licence.granted.id} label={<Snippet>{'invalidLicence.view'}</Snippet>} /></p>
             </p>
