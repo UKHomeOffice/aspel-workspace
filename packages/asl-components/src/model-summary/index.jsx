@@ -28,7 +28,7 @@ const ModelSummary = ({ model, schema, formatters = {}, className }) => {
         map(fields, (item, key) =>
           <Fragment key={key}>
             <dt><Snippet>{`fields.${key}.label`}</Snippet></dt>
-            <dd>{getValue(model[key], formatters[key] && formatters[key].format, model, schema[key].nullValue)}</dd>
+            <dd>{getValue(model[key], formatters[key] && formatters[key].format, model, schema[key] && schema[key].nullValue)}</dd>
           </Fragment>
         )
       }
