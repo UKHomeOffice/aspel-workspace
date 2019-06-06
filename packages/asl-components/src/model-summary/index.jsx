@@ -5,9 +5,11 @@ import size from 'lodash/size';
 import { connect } from 'react-redux';
 import { Snippet } from '../';
 
-const getValue = (value, format, model) => {
-  value = format ? format(value, model) : value;
-  return value || '-';
+const getValue = (value, format, model, nullValue) => {
+  if (!value) {
+    return nullValue || '-';
+  }
+  return format ? format(value, model) : value;
 };
 
 const ModelSummary = ({ model, schema, formatters = {}, className }) => {
@@ -26,7 +28,7 @@ const ModelSummary = ({ model, schema, formatters = {}, className }) => {
         map(fields, (item, key) =>
           <Fragment key={key}>
             <dt><Snippet>{`fields.${key}.label`}</Snippet></dt>
-            <dd>{getValue(model[key], formatters[key] && formatters[key].format, model)}</dd>
+            <dd>{getValue(model[key], formatters[key] && formatters[key].format, model, schema[key].nullValue)}</dd>
           </Fragment>
         )
       }
