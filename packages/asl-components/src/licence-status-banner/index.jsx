@@ -17,17 +17,42 @@ class LicenceStatusBanner extends Component {
     return !this.state || this.state.open;
   }
 
+  renderDates() {
+    const {
+      status,
+      issueDate,
+      revocationDate,
+      expiryDate
+    } = this.props.licence;
+
+    const dateFormat = this.props.dateFormat;
+
+    if (status !== 'revoked' && status !== 'expired') {
+      return null;
+    }
+
+    return <ul className="licence-dates">
+      <li>Granted: <span className="date">{formatDate(issueDate, dateFormat)}</span></li>
+      {
+        status === 'revoked' && <li>Revoked: <span className="date">{formatDate(revocationDate, dateFormat)}</span></li>
+      }
+      {
+        status === 'expired' && <li>Expiry: <span className="date">{formatDate(expiryDate, dateFormat)}</span></li>
+      }
+    </ul>;
+  }
+
   render() {
     const licence = this.props.licence;
     const licenceType = this.props.licenceType;
-    const dateFormat = this.props.dateFormat;
+    const version = this.props.version;
 
     const isExpired = licence.status === 'expired';
     const isRevoked = licence.status === 'revoked';
-    const isDraft = licence.draft || licence.status === 'inactive';
-    const hasAmendment = licence.granted && licence.openTasks && licence.openTasks.length > 0;
+    const isDraft = licence.status === 'inactive';
+    const isInactiveVersion = licence.status === 'active' && version && licence.granted && version !== licence.granted.id;
 
-    if (!isExpired && !isRevoked && !isDraft && !hasAmendment) {
+    if (licence.status === 'active' && !isInactiveVersion) {
       return null;
     }
 
@@ -43,22 +68,18 @@ class LicenceStatusBanner extends Component {
         </header>
 
         <div className={classnames('status-details', { hidden: !this.isOpen() })}>
-          { licence.issueDate &&
-            <ul className="licence-dates">
-              { (isRevoked || isExpired) && <li>Granted: <span className="date">{formatDate(licence.issueDate, dateFormat)}</span></li>}
-              { isRevoked && licence.revocationDate && <li>Revoked: <span className="date">{formatDate(licence.revocationDate, dateFormat)}</span></li>}
-              { isExpired && licence.expiryDate && <li>Expiry: <span className="date">{formatDate(licence.expiryDate, dateFormat)}</span></li>}
-            </ul>
+          {
+            this.renderDates()
           }
-
-          <p className="summary">
-            { (isDraft || isExpired) && <Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet> }
-            { hasAmendment && <p>
-              <Snippet>{`invalidLicence.summary.${licenceType}_${licence.status}`}</Snippet>
+          {
+            isInactiveVersion && <Fragment>
+              <p><Snippet>invalidLicence.summary.ppl_active</Snippet></p>
               <p><Link page="project.version.read" versionId={this.props.licence.granted.id} label={<Snippet>{'invalidLicence.view'}</Snippet>} /></p>
-            </p>
-            }
-          </p>
+            </Fragment>
+          }
+          {
+            !isInactiveVersion && <p><Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet></p>
+          }
         </div>
       </div>
     );
