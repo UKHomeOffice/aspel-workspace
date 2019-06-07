@@ -8,6 +8,6 @@ const PanelList = ({ panels }) => (
       )
     }
   </ul>
-)
+);
 
 export default PanelList;

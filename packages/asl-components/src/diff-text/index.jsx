@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import classnames from 'classnames';
 import { diffWords } from 'diff';
 
@@ -10,7 +10,7 @@ const Item = ({ added, removed, value }) => (
         : value
     }
   </span>
-)
+);
 
 const DiffText = ({
   oldValue,
@@ -20,8 +20,8 @@ const DiffText = ({
   emptyLabel = 'No answer provided'
 }) => {
   const diff = diffWords(oldValue || '', newValue || '');
-  const previous = diff.filter(item => !item.added)
-  const proposed = diff.filter(item => !item.removed)
+  const previous = diff.filter(item => !item.added);
+  const proposed = diff.filter(item => !item.removed);
 
   return (
     <div className="diff-text govuk-grid-row">
@@ -30,7 +30,7 @@ const DiffText = ({
         <p>
           {
             previous.length
-              ? previous.map(item => <Item {...item} />)
+              ? previous.map((item, i) => <Item {...item} key={i} />)
               : <em>{emptyLabel}</em>
           }
         </p>
@@ -40,13 +40,13 @@ const DiffText = ({
         <p>
           {
             proposed.length
-              ? proposed.map(item => <Item {...item} />)
+              ? proposed.map((item, i) => <Item {...item} key={i} />)
               : <em>{emptyLabel}</em>
           }
         </p>
       </div>
     </div>
-  )
+  );
 };
 
 export default DiffText;

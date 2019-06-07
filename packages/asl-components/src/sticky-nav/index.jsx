@@ -4,7 +4,7 @@ import { Snippet } from '../';
 
 class StickyNav extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.ref = React.createRef();
     this.onscroll = this.onscroll.bind(this);
   }
@@ -43,7 +43,7 @@ class StickyNav extends Component {
           ))
         }
       </nav>
-    )
+    );
   }
 }
 

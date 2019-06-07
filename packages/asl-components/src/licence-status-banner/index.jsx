@@ -47,9 +47,6 @@ class LicenceStatusBanner extends Component {
     const licenceType = this.props.licenceType;
     const version = this.props.version;
 
-    const isExpired = licence.status === 'expired';
-    const isRevoked = licence.status === 'revoked';
-    const isDraft = licence.status === 'inactive';
     const isInactiveVersion = licence.status === 'active' && version && licence.granted && version !== licence.granted.id;
 
     if (licence.status === 'active' && !isInactiveVersion) {

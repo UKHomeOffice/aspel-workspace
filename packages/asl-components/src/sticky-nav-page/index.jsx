@@ -10,11 +10,11 @@ class StickyNavPage extends Component {
       return {
         ...refs,
         [child.props.id]: React.createRef()
-      }
+      };
     }, {});
     this.state = {
       active: null
-    }
+    };
     this.linkClicked = this.linkClicked.bind(this);
     this.thresholds = {};
     this.onScroll = this.onScroll.bind(this);
@@ -23,7 +23,7 @@ class StickyNavPage extends Component {
   componentDidUpdate() {
     this.thresholds = reduce(this.sections, (obj, element, name) => {
       return { ...obj, [element.current.offsetTop]: name };
-    }, {})
+    }, {});
   }
 
   componentDidMount() {
@@ -32,18 +32,18 @@ class StickyNavPage extends Component {
 
   onScroll() {
     const thresholds = Object.keys(this.thresholds);
-    const scrollTop = document.documentElement.scrollTop
+    const scrollTop = document.documentElement.scrollTop;
     const section = thresholds.find((t, index) => {
       t = parseInt(t, 10);
       const lowerLimit = thresholds[index - 1] ? parseInt(thresholds[index - 1], 10) : 0;
       const upperLimit = thresholds[index + 1] ? parseInt(thresholds[index + 1], 10) : Infinity;
       return scrollTop >= lowerLimit && scrollTop < upperLimit;
-    })
-    this.setState({ active: this.thresholds[section] })
+    });
+    this.setState({ active: this.thresholds[section] });
   }
 
   linkClicked(e, section) {
-    e.preventDefault()
+    e.preventDefault();
     this.setState({ active: section }, () => this.scrollTo(section));
   }
 
@@ -81,7 +81,7 @@ class StickyNavPage extends Component {
           }
         </div>
       </div>
-    )
+    );
   }
 }
 

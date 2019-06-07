@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Form } from '../';
-import { Warning } from '@ukhomeoffice/react-components';
 
 class Conditions extends Component {
 
@@ -9,7 +8,7 @@ class Conditions extends Component {
     this.setState({ editing: false });
   }
 
-  toggleEdit = e => {
+  toggleEdit (e) {
     e.preventDefault();
     this.setState({ editing: !this.state.editing });
   }
@@ -38,7 +37,7 @@ class Conditions extends Component {
                   conditions && <ReactMarkdown>{ conditions }</ReactMarkdown>
                 }
                 {
-                  canUpdate && <a href="#" onClick={this.toggleEdit}>{conditions ? updateLabel : addLabel }</a>
+                  canUpdate && <a href="#" onClick={e => this.toggleEdit(e)}>{conditions ? updateLabel : addLabel }</a>
                 }
               </Fragment>
             )
