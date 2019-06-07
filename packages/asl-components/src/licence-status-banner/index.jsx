@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Snippet from '../snippet';
 import Link from '../link';
 import classnames from 'classnames';
