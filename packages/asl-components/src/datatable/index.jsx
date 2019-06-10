@@ -107,7 +107,7 @@ export class Datatable extends Component {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan={size(schema) + (Actions ? 1 : 0 )}>
+            <td colSpan={size(schema) + (Actions ? 1 : 0)}>
               <Pagination />
             </td>
           </tr>

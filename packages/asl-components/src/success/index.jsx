@@ -24,6 +24,6 @@ const Index = ({
 
     <Link page="dashboard" label={<Snippet>breadcrumbs.dashboard</Snippet>} />
   </Fragment>
-)
+);
 
 export default Index;

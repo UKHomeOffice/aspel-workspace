@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import isUndefined from 'lodash/isUndefined';
 import { TextArea } from '@ukhomeoffice/react-components';
 import ReactMarkdown from 'react-markdown';
 
@@ -15,7 +14,7 @@ class Field extends Component {
     this.state = {
       editing: !!(this.props.model && this.props.model[this.props.name]),
       content
-    }
+    };
     this.toggleEditing = this.toggleEditing.bind(this);
     this.onChange = this.onChange.bind(this);
   }
@@ -28,7 +27,7 @@ class Field extends Component {
   }
 
   onChange(e) {
-    this.setState({ content: e.target.value })
+    this.setState({ content: e.target.value });
   }
 
   render () {
@@ -51,10 +50,10 @@ class Field extends Component {
           this.props.editable && this.state && <a href="#" onClick={this.toggleEditing}>{this.state.editing ? 'Cancel' : 'Edit'}</a>
         }
       </div>
-    )
+    );
   }
 }
 
-const mapStateToProps = ({ model }) => ({ model })
+const mapStateToProps = ({ model }) => ({ model });
 
 export default connect(mapStateToProps)(Field);
