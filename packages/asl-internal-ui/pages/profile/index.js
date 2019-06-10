@@ -42,6 +42,7 @@ module.exports = settings => {
     return req.api(`/profile/${req.profileId}`)
       .then(({ json: { data, meta } }) => {
         res.locals.model = data;
+        res.locals.static.profile = data;
       })
       .then(() => next())
       .catch(next);
