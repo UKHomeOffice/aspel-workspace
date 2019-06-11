@@ -6,10 +6,7 @@ import { connect } from 'react-redux';
 import { Snippet } from '../';
 
 const getValue = (value, format, model, nullValue, formatNullValue) => {
-  if (!value) {
-    if (formatNullValue) {
-      return format(value, model);
-    }
+  if (!value && !formatNullValue) {
     return nullValue || '-';
   }
   return format ? format(value, model) : value;
