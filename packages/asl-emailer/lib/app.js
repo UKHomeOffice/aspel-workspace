@@ -3,6 +3,8 @@ const path = require('path');
 const api = require('@asl/service/api');
 const Mailer = require('snailmail');
 
+const whitelist = require('./whitelist');
+
 module.exports = settings => {
   const app = api(settings);
 
@@ -14,6 +16,8 @@ module.exports = settings => {
       hologo: path.resolve(__dirname, '../assets/hologo.png')
     }
   });
+
+  app.post('/:template', whitelist(settings));
 
   app.post('/:template', (req, res) => {
     const params = {
