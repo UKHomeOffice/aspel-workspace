@@ -6,7 +6,12 @@ module.exports = {
   },
   establishment: {
     dashboard: '/e/:establishmentId',
-    read: '/e/:establishmentId/details'
+    read: '/e/:establishmentId/details',
+    update: {
+      base: '/e/:establishmentId/details/edit',
+      confirm: '/e/:establishmentId/details/edit/confirm',
+      success: '/e/:establishmentId/details/edit/success'
+    }
   },
   profile: {
     list: '/e/:establishmentId/people',
