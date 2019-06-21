@@ -60,7 +60,7 @@ class Fieldset extends Component {
     return (
       <fieldset>
         {
-          map(schema, ({ inputType, label, conditionalReveal, showIf, accessor, format, ...props }, key) => {
+          map(schema, ({ inputType, label, conditionalReveal, showIf, format, ...props }, key) => {
             const value = values[key] || '';
             const field = fields[inputType]({
               key,
