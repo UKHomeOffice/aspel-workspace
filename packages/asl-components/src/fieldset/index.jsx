@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import map from 'lodash/map';
-import get from 'lodash/get';
 import without from 'lodash/without';
 import classnames from 'classnames';
 import ReactMarkdown from 'react-markdown';
@@ -62,7 +61,7 @@ class Fieldset extends Component {
       <fieldset>
         {
           map(schema, ({ inputType, label, conditionalReveal, showIf, accessor, format, ...props }, key) => {
-            const value = accessor ? get(values[key], accessor) : (values[key] || '');
+            const value = values[key] || '';
             const field = fields[inputType]({
               key,
               value: format ? format(value) : value,

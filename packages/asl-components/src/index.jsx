@@ -47,6 +47,7 @@ export { default as StickyNavPage } from './sticky-nav-page';
 export { default as Success } from './success';
 export { default as Tabs } from './tabs';
 export { default as Tasklist } from './tasklist';
+export { default as WidthContainer } from './width-container';
 export { default as Wrapper } from './wrapper';
 
 export * from './layouts';
