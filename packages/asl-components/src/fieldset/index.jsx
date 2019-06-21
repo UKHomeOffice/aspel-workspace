@@ -48,7 +48,11 @@ class Fieldset extends Component {
       [key]: setValue(this.state.model[key], value)
     };
 
-    this.setState({ model });
+    this.setState({ model }, () => {
+      if (this.props.onChange) {
+        this.props.onChange(this.state.model);
+      }
+    });
   }
 
   render() {
