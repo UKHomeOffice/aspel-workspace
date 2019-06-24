@@ -20,7 +20,7 @@ const fields = {
       <h3>{ props.label }</h3>
       <ReactMarkdown>{ props.value }</ReactMarkdown>
     </div>,
-  dateInput: props => <DateInput { ...props } />
+  dateInput: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />
 };
 
 class Fieldset extends Component {
