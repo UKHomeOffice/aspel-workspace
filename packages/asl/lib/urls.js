@@ -35,6 +35,11 @@ module.exports = {
   project: {
     list: '/e/:establishmentId/projects',
     read: '/e/:establishmentId/projects/:projectId',
+    updateLicenceHolder: {
+      update: '/e/:establishmentId/projects/:projectId/update-licence-holder',
+      confirm: '/e/:establishmentId/projects/:projectId/update-licence-holder/confirm',
+      success: '/e/:establishmentId/projects/:projectId/update-licence-holder/success'
+    },
     version: {
       list: '/e/:establishmentId/projects/:projectId/versions',
       read: '/e/:establishmentId/projects/:projectId/versions/:versionId',
