@@ -31,7 +31,8 @@ module.exports = settings => {
     const json = {
       meta: {
         ...values,
-        comment
+        comment,
+        version: req.version.id
       }
     };
     Promise.resolve()
