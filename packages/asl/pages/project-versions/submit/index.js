@@ -34,7 +34,7 @@ module.exports = settings => {
         comment
       }
     };
-    req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/project-versions/${req.versionId}/submit`, { method: 'POST' })
+    Promise.resolve()
       .then(() => req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/grant`, { method: 'POST', json }))
       .then(() => res.redirect(req.buildRoute('project.version.success')))
       .catch(next);
