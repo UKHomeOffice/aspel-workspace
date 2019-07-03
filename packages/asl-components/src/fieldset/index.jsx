@@ -25,6 +25,14 @@ const fields = {
 };
 
 class Fieldset extends Component {
+
+  constructor(options) {
+    super(options);
+    this.state = {
+      model: {}
+    };
+  }
+
   componentDidMount() {
     this.setState({
       model: this.props.model || {}
@@ -33,10 +41,11 @@ class Fieldset extends Component {
     this.onFieldChange = this.onFieldChange.bind(this);
   }
 
-  componentWillReceiveProps(newProps) {
-    if (!isEqual(newProps.model, this.props.model)) {
-      this.setState({ model: newProps.model });
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (!isEqual(nextProps.model, prevState.model)) {
+      return { model: nextProps.model };
     }
+    return null;
   }
 
   onFieldChange(key, value) {
