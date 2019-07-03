@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import map from 'lodash/map';
 import without from 'lodash/without';
+import isEqual from 'lodash/isEqual';
 import classnames from 'classnames';
 import ReactMarkdown from 'react-markdown';
 import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
@@ -30,6 +31,12 @@ class Fieldset extends Component {
     });
 
     this.onFieldChange = this.onFieldChange.bind(this);
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (!isEqual(newProps.model, this.props.model)) {
+      this.setState({ model: newProps.model });
+    }
   }
 
   onFieldChange(key, value) {
