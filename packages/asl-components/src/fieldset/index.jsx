@@ -62,8 +62,6 @@ class Fieldset extends Component {
       }
     });
 
-    console.log('onFieldChange: ', key, value);
-
   }
 
   render() {
