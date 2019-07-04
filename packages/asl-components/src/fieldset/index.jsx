@@ -29,23 +29,15 @@ class Fieldset extends Component {
   constructor(options) {
     super(options);
     this.state = {
-      model: {}
-    };
-  }
-
-  componentDidMount() {
-    this.setState({
       model: this.props.model || {}
-    });
-
+    };
     this.onFieldChange = this.onFieldChange.bind(this);
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (!isEqual(nextProps.model, prevState.model)) {
-      return { model: nextProps.model };
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.model, this.props.model)) {
+      return this.setState({ model: this.props.model });
     }
-    return null;
   }
 
   onFieldChange(key, value) {
@@ -69,6 +61,9 @@ class Fieldset extends Component {
         this.props.onChange(this.state.model);
       }
     });
+
+    console.log('onFieldChange: ', key, value);
+
   }
 
   render() {
