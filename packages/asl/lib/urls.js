@@ -71,6 +71,11 @@ module.exports = {
     read: '/e/:establishmentId/people/:profileId/pil/:pilId',
     update: '/e/:establishmentId/people/:profileId/pil/:pilId/edit',
     procedures: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/procedures',
+    revoke: {
+      base: '/e/:establishmentId/people/:profileId/pil/:pilId/revoke',
+      confirm: '/e/:establishmentId/people/:profileId/pil/:pilId/revoke/confirm',
+      success: '/e/:establishmentId/people/:profileId/pil/:pilId/revoke/success'
+    },
     training: {
       exempt: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training/exempt',
       certificate: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training',
