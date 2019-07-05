@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import map from 'lodash/map';
 import without from 'lodash/without';
+import isEqual from 'lodash/isEqual';
 import classnames from 'classnames';
 import ReactMarkdown from 'react-markdown';
 import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
@@ -24,12 +25,19 @@ const fields = {
 };
 
 class Fieldset extends Component {
-  componentDidMount() {
-    this.setState({
-      model: this.props.model || {}
-    });
 
+  constructor(options) {
+    super(options);
+    this.state = {
+      model: this.props.model || {}
+    };
     this.onFieldChange = this.onFieldChange.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.model, this.props.model)) {
+      return this.setState({ model: this.props.model });
+    }
   }
 
   onFieldChange(key, value) {
@@ -53,6 +61,7 @@ class Fieldset extends Component {
         this.props.onChange(this.state.model);
       }
     });
+
   }
 
   render() {
