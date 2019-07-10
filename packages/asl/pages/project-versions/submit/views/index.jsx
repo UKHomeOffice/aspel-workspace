@@ -1,18 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Snippet, Header, FormLayout } from '@asl/components';
-import { Button, Warning } from '@ukhomeoffice/react-components';
+import { Warning } from '@ukhomeoffice/react-components';
 
-const Submit = ({ model }) => (
-  <FormLayout>
-    <Header
-      title={<Snippet>title</Snippet>}
-      subtitle={model.data.title || 'Untitled project'}
-    />
-    <Warning><Snippet>warning</Snippet></Warning>
-
-  </FormLayout>
-)
+const Submit = ({ model }) => {
+  const isApplication = model.type === 'application';
+  return (
+    <FormLayout>
+      <Header
+        title={<Snippet>title</Snippet>}
+        subtitle={model.data.title || 'Untitled project'}
+      />
+      {isApplication && (
+        <Warning>
+          <Snippet>warning</Snippet>
+        </Warning>
+      )}
+    </FormLayout>
+  );
+};
 
 const mapStateToProps = ({ model }) => ({ model });
 

@@ -1,4 +1,6 @@
-module.exports = {
+const { pick } = require('lodash');
+
+const schema = {
   authority: {
     inputType: 'radioGroup',
     inline: true,
@@ -13,9 +15,7 @@ module.exports = {
         label: 'Not yet'
       }
     ],
-    validate: [
-      'required'
-    ]
+    validate: ['required']
   },
   awerb: {
     inputType: 'radioGroup',
@@ -31,9 +31,7 @@ module.exports = {
         label: 'Not yet'
       }
     ],
-    validate: [
-      'required'
-    ]
+    validate: ['required']
   },
   ready: {
     inputType: 'radioGroup',
@@ -49,8 +47,18 @@ module.exports = {
         label: 'Not yet'
       }
     ],
-    validate: [
-      'required'
-    ]
+    validate: ['required']
+  },
+  comment: {
+    inputType: 'textarea',
+    validate: ['required']
   }
 };
+
+const getSchema = type => {
+  return type === 'amendment'
+    ? pick(schema, 'authority', 'comment')
+    : pick(schema, 'authority', 'awerb', 'ready');
+};
+
+module.exports = getSchema;
