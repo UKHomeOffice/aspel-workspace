@@ -50,7 +50,8 @@ const schema = {
     validate: ['required']
   },
   comment: {
-    inputType: 'textarea'
+    inputType: 'textarea',
+    validate: ['required']
   }
 };
 
@@ -59,7 +60,5 @@ const getSchema = type => {
     ? pick(schema, 'authority', 'comment')
     : pick(schema, 'authority', 'awerb', 'ready');
 };
-
-getSchema.schema = schema;
 
 module.exports = getSchema;

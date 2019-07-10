@@ -32,9 +32,7 @@ module.exports = settings => {
   app.use(
     form({
       configure: (req, res, next) => {
-        req.form.schema = {
-          ...getSchema(req.version.type)
-        };
+        req.form.schema = getSchema(req.version.type);
         next();
       }
     })

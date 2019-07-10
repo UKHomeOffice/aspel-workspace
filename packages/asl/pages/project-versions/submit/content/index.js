@@ -24,6 +24,9 @@ module.exports = {
     },
     ready: {
       required: 'Select an option'
+    },
+    comment: {
+      required: 'Please provide a reason'
     }
   },
   buttons: {
