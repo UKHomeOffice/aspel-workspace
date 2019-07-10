@@ -1,12 +1,19 @@
 const { pick, get } = require('lodash');
 const { page } = require('@asl/service/ui');
 const form = require('@asl/pages/pages/common/routers/form');
-const schema = require('./schema');
+const getSchema = require('./schema');
 
 module.exports = settings => {
   const app = page({
     ...settings,
     root: __dirname
+  });
+
+  app.use((req, res, next) => {
+    req.version.type = req.project.versions.find(v => v.status === 'granted')
+      ? 'amendment'
+      : 'application';
+    next();
   });
 
   app.use((req, res, next) => {
@@ -22,16 +29,22 @@ module.exports = settings => {
     next();
   });
 
-  app.use(form({ schema }));
+  app.use(
+    form({
+      configure: (req, res, next) => {
+        req.form.schema = {
+          ...getSchema(req.version.type)
+        };
+        next();
+      }
+    })
+  );
 
   app.post('/', (req, res, next) => {
-    const values = pick(req.session.form[req.model.id].values, Object.keys(schema));
-    const taskId = get(req.project, 'openTasks[0].id');
-    const comment = get(req.session, `form[${taskId}-decision].values.comment`);
+    const values = pick(req.session.form[req.model.id].values, Object.keys(getSchema(req.version.type)));
     const json = {
       meta: {
         ...values,
-        comment,
         version: req.version.id
       }
     };
