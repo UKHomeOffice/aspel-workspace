@@ -11,7 +11,7 @@ const fields = {
   inputText: props => <Input { ...props } />,
   inputEmail: props => <Input type="email" { ...props } />,
   inputPassword: props => <Input type="password" { ...props } />,
-  inputDate: props => <DateInput { ...props } />,
+  inputDate: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />,
   textarea: props => <TextArea { ...props } />,
   radioGroup: props => <RadioGroup { ...props } />,
   checkboxGroup: props => <CheckboxGroup { ...props } />,
@@ -20,8 +20,7 @@ const fields = {
     <div className={classnames('govuk-form-group', props.name)}>
       <h3>{ props.label }</h3>
       <ReactMarkdown>{ props.value }</ReactMarkdown>
-    </div>,
-  dateInput: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />
+    </div>
 };
 
 class Fieldset extends Component {
