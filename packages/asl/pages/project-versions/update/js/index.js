@@ -79,17 +79,14 @@ start({
     latest: (state.static.changes && state.static.changes.latest) || [],
     granted: (state.static.changes && state.static.changes.granted) || []
   },
-  settings: {
-    establishments: state.static.establishments.map(e => e.name)
-  },
   application: {
     commentable: state.static.commentable,
+    establishment: state.static.establishment,
     showComments: state.static.showComments,
     readonly: state.model.status !== 'draft' || !state.static.canUpdate,
     user: `${state.static.user.firstName} ${state.static.user.lastName}`,
     basename: state.static.basename,
     schemaVersion: state.model.project.schemaVersion,
-    establishment: state.static.establishment.name,
     newApplication: state.static.newApplication
   }
 });
