@@ -17,7 +17,7 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
-    const authorities = get(req.project, 'openTasks[0].data.data');
+    const authorities = get(req.project, 'openTasks[0].data.meta');
     if (authorities) {
       Object.assign(req.version, pick(authorities, 'authority', 'awerb', 'ready'));
     }
