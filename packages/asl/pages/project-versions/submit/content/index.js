@@ -30,6 +30,9 @@ module.exports = {
     }
   },
   buttons: {
-    submit: 'Submit PPL application'
+    submit: {
+      application: 'Submit PPL application',
+      amendment: 'Submit PPL amendment'
+    }
   }
 };
