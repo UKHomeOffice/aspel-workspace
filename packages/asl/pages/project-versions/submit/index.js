@@ -1,4 +1,4 @@
-const { pick, get } = require('lodash');
+const { pick, get, set } = require('lodash');
 const { page } = require('@asl/service/ui');
 const form = require('@asl/pages/pages/common/routers/form');
 const getSchema = require('./schema');
@@ -10,7 +10,7 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
-    req.version.type = req.project.versions.find(v => v.status === 'granted')
+    req.version.type = req.project.status === 'active'
       ? 'amendment'
       : 'application';
     next();
@@ -33,6 +33,10 @@ module.exports = settings => {
     form({
       configure: (req, res, next) => {
         req.form.schema = getSchema(req.version.type);
+        next();
+      },
+      locals: (req, res, next) => {
+        set(res.locals, 'static.content.buttons.submit', get(res.locals, `static.content.buttons.submit.${req.version.type}`));
         next();
       }
     })
