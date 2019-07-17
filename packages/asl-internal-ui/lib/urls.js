@@ -11,13 +11,30 @@ module.exports = {
   establishment: {
     dashboard: '/establishments/:establishmentId',
     read: '/establishments/:establishmentId/details',
-    asru: '/establishments/:establishmentId/asru/:asruUser'
+    asru: '/establishments/:establishmentId/asru/:asruUser',
+    update: {
+      base: '/establishments/:establishmentId/details/edit',
+      confirm: '/establishments/:establishmentId/details/edit/confirm',
+      success: '/establishments/:establishmentId/details/edit/success'
+    }
   },
   profile: {
     list: '/establishments/:establishmentId/people',
     view: '/establishments/:establishmentId/people/:profileId',
     invite: '/establishments/:establishmentId/people/invite',
-    invitations: '/establishments/:establishmentId/people/invitations'
+    invitations: '/establishments/:establishmentId/people/invitations',
+    role: {
+      apply: {
+        base: '/establishments/:establishmentId/people/:profileId/role/apply',
+        confirm: '/establishments/:establishmentId/people/:profileId/role/apply/confirm',
+        success: '/establishments/:establishmentId/people/:profileId/role/apply/success'
+      },
+      remove: {
+        base: '/establishments/:establishmentId/people/:profileId/role/remove',
+        confirm: '/establishments/:establishmentId/people/:profileId/role/remove/confirm',
+        success: '/establishments/:establishmentId/people/:profileId/role/remove/success'
+      }
+    }
   },
   project: {
     list: '/establishments/:establishmentId/projects',
