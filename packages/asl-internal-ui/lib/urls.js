@@ -22,6 +22,7 @@ module.exports = {
     list: '/establishments/:establishmentId/people',
     view: '/establishments/:establishmentId/people/:profileId',
     invite: '/establishments/:establishmentId/people/invite',
+    permission: '/establishments/:establishmentId/people/:profileId/permission',
     invitations: '/establishments/:establishmentId/people/invitations',
     role: {
       apply: {
