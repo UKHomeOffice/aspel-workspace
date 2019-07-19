@@ -35,6 +35,7 @@ module.exports = {
   project: {
     list: '/e/:establishmentId/projects',
     read: '/e/:establishmentId/projects/:projectId',
+    import: '/e/:establishmentId/projects/import',
     updateLicenceHolder: {
       update: '/e/:establishmentId/projects/:projectId/update-licence-holder',
       confirm: '/e/:establishmentId/projects/:projectId/update-licence-holder/confirm',
