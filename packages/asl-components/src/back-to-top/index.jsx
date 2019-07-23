@@ -6,14 +6,13 @@ class BackToTop extends Component {
     super(props);
 
     this.state = {
-      isVisible: this.props.isVisible || true
+      isVisible: this.props.isVisible || false
     };
 
     this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentDidMount() {
-    console.log('component mounted');
     window.addEventListener('scroll', this.handleScroll, true);
     this.handleScroll();
   }
@@ -23,11 +22,9 @@ class BackToTop extends Component {
   }
 
   handleScroll() {
-    console.log('scrollllllll!');
-
-    if (!this.props.isVisible && window.pageYOffset > this.props.showAt) {
+    if (!this.state.isVisible && window.pageYOffset > this.props.showAt) {
       this.setState({ isVisible: true });
-    } else if (this.props.isVisible && window.pageYOffset < this.props.showAt) {
+    } else if (this.state.isVisible && window.pageYOffset < this.props.showAt) {
       this.setState({ isVisible: false });
     }
   }
