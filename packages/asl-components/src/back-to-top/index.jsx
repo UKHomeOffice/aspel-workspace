@@ -29,7 +29,8 @@ class BackToTop extends Component {
     }
   }
 
-  scrollToTop() {
+  scrollToTop(e) {
+    e.preventDefault();
     window.scrollTo({
       top: 0,
       left: 0,
@@ -40,7 +41,7 @@ class BackToTop extends Component {
   render() {
     return (
       <div className={classnames('back-to-top', { hidden: !this.state.isVisible })} >
-        <p><a href="#" onClick={() => this.scrollToTop()}>Back to top</a></p>
+        <p><a href="#" onClick={this.scrollToTop}>Back to top</a></p>
       </div>
     );
   }
