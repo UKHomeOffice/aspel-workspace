@@ -5,7 +5,7 @@ const Wrapper = ({ children }) => (
   <Fragment>
     <Notification />
     { children }
-    <BackToTop showAt={400} />
+    <BackToTop />
   </Fragment>
 );
 
