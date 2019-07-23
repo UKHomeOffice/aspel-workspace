@@ -7,11 +7,12 @@ const Form = ({
   submit = true,
   children,
   detachFields,
+  schema,
   ...props
 }) => {
   const formFields = (
     <Fragment>
-      <Fieldset { ...props } />
+      <Fieldset schema={schema} { ...props } />
       {
         submit && <button type="submit" className="govuk-button"><Snippet>buttons.submit</Snippet></button>
       }
@@ -19,7 +20,12 @@ const Form = ({
   );
 
   return (
-    <form method="POST" noValidate className={className}>
+    <form
+      method="POST"
+      noValidate
+      className={className}
+      encType={Object.values(schema).map(s => s.inputType).includes('inputFile') ? 'multipart/form-data' : null}
+    >
       <input type="hidden" name="_csrf" value={csrfToken} />
       {
         detachFields
