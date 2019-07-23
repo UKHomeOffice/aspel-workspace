@@ -13,15 +13,17 @@ class BackToTop extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
+    console.log('component mounted');
+    window.addEventListener('scroll', this.handleScroll, true);
+    this.handleScroll();
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('scroll', this.handleOnScroll);
   }
 
-  handleScroll(event) {
-    console.log('scrolll!');
+  handleScroll() {
+    console.log('scrollllllll!');
 
     if (!this.props.isVisible && window.pageYOffset > this.props.showAt) {
       this.setState({ isVisible: true });
