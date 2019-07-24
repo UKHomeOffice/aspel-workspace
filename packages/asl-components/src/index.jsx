@@ -4,6 +4,7 @@ export { default as AddAnother } from './add-another';
 export { default as ApplicationProgress } from './application-progress';
 export { default as ApplicationConfirm } from './application-confirm';
 export { default as ApplyChanges } from './apply-changes';
+export { default as BackToTop } from './back-to-top';
 export { default as Breadcrumbs } from './breadcrumbs';
 export { default as Completable } from './completable';
 export { default as Controls } from './controls';
