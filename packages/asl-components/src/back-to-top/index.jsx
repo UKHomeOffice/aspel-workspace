@@ -14,7 +14,6 @@ class BackToTop extends Component {
 
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll, true);
-    this.handleScroll();
   }
 
   componentWillUnmount() {
