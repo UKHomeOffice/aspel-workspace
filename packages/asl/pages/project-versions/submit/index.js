@@ -1,7 +1,16 @@
-const { pick, get, set } = require('lodash');
+const { pick, get, set, reduce, omit } = require('lodash');
 const { page } = require('@asl/service/ui');
 const form = require('@asl/pages/pages/common/routers/form');
 const getSchema = require('./schema');
+
+const revealedFields = schema => {
+  return reduce(schema, (obj, declaration) => {
+    declaration.options.map(option => option.reveal && option.reveal.map(field => {
+      obj[field.name] = omit(field, 'name');
+    }));
+    return obj;
+  }, {});
+};
 
 module.exports = settings => {
   const app = page({
@@ -10,16 +19,22 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
-    req.version.type = req.project.status === 'active'
-      ? 'amendment'
-      : 'application';
+    req.version.type = req.project.status === 'active' ? 'amendment' : 'application';
     next();
   });
 
   app.use((req, res, next) => {
-    const authorities = get(req.project, 'openTasks[0].data.meta');
-    if (authorities) {
-      Object.assign(req.version, pick(authorities, 'authority', 'awerb', 'ready'));
+    const declarations = get(req.project, 'openTasks[0].data.meta');
+    if (declarations) {
+      Object.assign(req.version, pick(declarations, [
+        'authority',
+        'awerb',
+        'ready',
+        'authority-pelholder-name',
+        'authority-endorsement-date',
+        'awerb-review-date',
+        'awerb-no-review-reason'
+      ]));
     }
     next();
   });
@@ -32,18 +47,26 @@ module.exports = settings => {
   app.use(
     form({
       configure: (req, res, next) => {
-        req.form.schema = getSchema(req.version.type);
+        const schema = getSchema(req.version.type);
+
+        req.form.schema = {
+          ...schema,
+          ...revealedFields(schema)
+        };
+
         next();
       },
       locals: (req, res, next) => {
         set(res.locals, 'static.content.buttons.submit', get(res.locals, `static.content.buttons.submit.${req.version.type}`));
+        const schema = getSchema(req.version.type);
+        res.locals.static.schema = omit(req.form.schema, Object.keys(revealedFields(schema)));
         next();
       }
     })
   );
 
   app.post('/', (req, res, next) => {
-    const values = pick(req.session.form[req.model.id].values, Object.keys(getSchema(req.version.type)));
+    const values = pick(req.session.form[req.model.id].values, Object.keys(req.form.schema));
     const json = {
       meta: {
         ...values,
