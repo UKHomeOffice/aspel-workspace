@@ -13,7 +13,7 @@ const fields = {
   inputFile: props => <Input type="file" {...props} value={null} />,
   inputPassword: props => <Input type="password" { ...props } />,
   inputDate: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />,
-  textarea: props => <TextArea { ...props } />,
+  textarea: props => <TextArea { ...props } autoExpand={true} />,
   radioGroup: props => <RadioGroup { ...props } />,
   checkboxGroup: props => <CheckboxGroup { ...props } />,
   select: props => <Select { ...props } />,
