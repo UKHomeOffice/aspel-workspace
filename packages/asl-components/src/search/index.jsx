@@ -45,8 +45,8 @@ Search.defaultProps = {
   name: 'filter'
 };
 
-const mapStateToProps = ({ datatable: { filters } }) => ({
-  filter: filters.active['*'] ? filters.active['*'][0] : ''
+const mapStateToProps = ({ datatable: { filters } }, { value }) => ({
+  filter: value || (filters.active['*'] ? filters.active['*'][0] : '')
 });
 
 export default connect(
