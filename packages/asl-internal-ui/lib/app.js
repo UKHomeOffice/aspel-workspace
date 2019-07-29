@@ -20,6 +20,7 @@ const dashboard = require('../pages/dashboard');
 const search = require('../pages/search');
 const globalProfile = require('../pages/profile');
 const asru = require('../pages/asru-assignment');
+const dedupe = require('../pages/deduplicate');
 
 const reporting = require('../pages/reporting');
 
@@ -73,6 +74,7 @@ module.exports = settings => {
 
   app.use(urls.search, search(settings));
   app.use(urls.global.profile, globalProfile());
+  app.use(urls.global.dedupe, dedupe());
 
   app.use(urls.account.menu, user());
   app.use(urls.feedback, feedback(settings));
@@ -84,6 +86,7 @@ module.exports = settings => {
 
   app.use(urls.establishment.dashboard, establishment());
   app.use(urls.profile.list, profile());
+  app.use(urls.profile.dedupe, dedupe());
   app.use(urls.pil.base, pil());
   app.use(urls.place.list, place());
   app.use(urls.project.list, project());

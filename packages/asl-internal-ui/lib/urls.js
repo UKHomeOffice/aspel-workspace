@@ -2,7 +2,8 @@ module.exports = {
   dashboard: '/',
   search: '/search(/:searchType)?',
   global: {
-    profile: '/profile/:profileId'
+    profile: '/profile/:profileId',
+    dedupe: '/profile/:profileId/dedupe'
   },
   account: {
     menu: '/account',
@@ -24,6 +25,7 @@ module.exports = {
     invite: '/establishments/:establishmentId/people/invite',
     permission: '/establishments/:establishmentId/people/:profileId/permission',
     invitations: '/establishments/:establishmentId/people/invitations',
+    dedupe: '/establishments/:establishmentId/people/:profileId/dedupe',
     role: {
       apply: {
         base: '/establishments/:establishmentId/people/:profileId/role/apply',
