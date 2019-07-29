@@ -5,9 +5,11 @@ const getSchema = require('./schema');
 
 const revealedFields = schema => {
   return reduce(schema, (obj, declaration) => {
-    declaration.options.map(option => option.reveal && option.reveal.map(field => {
-      obj[field.name] = omit(field, 'name');
-    }));
+    if (declaration.options) {
+      declaration.options.map(option => option.reveal && option.reveal.map(field => {
+        obj[field.name] = omit(field, 'name');
+      }));
+    }
     return obj;
   }, {});
 };
