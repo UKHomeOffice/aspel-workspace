@@ -33,19 +33,19 @@ module.exports = {
       required: 'Select an option'
     },
     'authority-pelholder-name': {
-      required: 'Please provide the name of the PEL holder'
+      customValidate: 'Please provide the name of the PEL holder'
     },
     'authority-endorsement-date': {
-      required: 'Please provide the endorsement date'
+      customValidate: 'Please provide the endorsement date'
     },
     awerb: {
       required: 'Select an option'
     },
     'awerb-review-date': {
-      required: 'Please provide the AWERB review date(s)'
+      customValidate: 'Please provide the AWERB review date(s)'
     },
     'awerb-no-review-reason': {
-      required: 'Please explain why there was no AWERB review'
+      customValidate: 'Please explain why there was no AWERB review'
     },
     ready: {
       required: 'Select an option'
