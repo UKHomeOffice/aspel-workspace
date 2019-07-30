@@ -6,6 +6,7 @@
     width: 100%;
     border-right: none;
     box-sizing: border-box;
+    padding-right: 45px;
   }
 
   button {
@@ -18,6 +19,10 @@
     border: none;
     background: govuk-colour("blue") $search-icon no-repeat left center;
     cursor: pointer;
+
+    &:active {
+      top: auto;
+    }
 
     @include govuk-media-query($from: tablet) {
       height: 38px;
