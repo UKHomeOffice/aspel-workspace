@@ -1,5 +1,12 @@
-const { omit } = require('lodash');
+const { omit, isEmpty } = require('lodash');
 const content = require('../content');
+
+const conditionalRequired = (field, expected = 'Yes') => (value, model) => {
+  if (model[field] === expected) {
+    return !isEmpty(value);
+  }
+  return true;
+};
 
 const schema = {
   authority: {
@@ -15,13 +22,21 @@ const schema = {
             name: 'authority-pelholder-name',
             inputType: 'inputText',
             label: content.fields['authority-pelholder-name'].label,
-            validate: ['required']
+            validate: [
+              {
+                customValidate: conditionalRequired('authority')
+              }
+            ]
           },
           {
             name: 'authority-endorsement-date',
             inputType: 'inputText',
             label: content.fields['authority-endorsement-date'].label,
-            validate: ['required']
+            validate: [
+              {
+                customValidate: conditionalRequired('authority')
+              }
+            ]
           }
         ]
       },
@@ -45,7 +60,11 @@ const schema = {
             name: 'awerb-review-date',
             inputType: 'textarea',
             label: content.fields['awerb-review-date'].label,
-            validate: ['required']
+            validate: [
+              {
+                customValidate: conditionalRequired('awerb')
+              }
+            ]
           }
         ]
       },
@@ -92,7 +111,11 @@ const getSchema = type => {
         name: 'awerb-no-review-reason',
         label: content.fields['awerb-no-review-reason'].label,
         inputType: 'textarea',
-        validate: ['required']
+        validate: [
+          {
+            customValidate: conditionalRequired('awerb', 'No')
+          }
+        ]
       }
     ]
   };
