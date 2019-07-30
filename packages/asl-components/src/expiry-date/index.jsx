@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import { Snippet } from '../';
-import isPast from 'date-fns/is_past';
 import differenceInMonths from 'date-fns/difference_in_months';
 import differenceInWeeks from 'date-fns/difference_in_weeks';
 import differenceInDays from 'date-fns/difference_in_days';
@@ -15,7 +14,6 @@ const ExpiryDate = ({
   showUrgent = 3,
   showNotice = 11
 }) => {
-
   if (!date) {
     return null;
   }
@@ -37,7 +35,7 @@ const ExpiryDate = ({
 
   let contentKey = 'diff.standard';
 
-  if (isPast(date)) {
+  if (diff <= 0) {
     contentKey = 'diff.expired';
   } else if (urgent) {
     contentKey = diff === 0 ? 'diff.singular' : 'diff.plural';
