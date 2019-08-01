@@ -34,7 +34,7 @@ describe('<ExpiryDate />', () => {
     const wrapper = shallow(<ExpiryDate date={addMonths(new Date(), 9)} />);
     expect(wrapper.find(Snippet).length).toBe(1);
     expect(wrapper.find(Snippet).props().unit).toEqual('month');
-    expect(wrapper.find(Snippet).props().diff).toEqual(9);
+    expect(wrapper.find(Snippet).props().children).toEqual('diff.standard');
   });
 
 });
