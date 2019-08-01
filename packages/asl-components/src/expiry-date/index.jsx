@@ -18,7 +18,7 @@ const ExpiryDate = ({ date, dateFormat, unit, adjustment, showUrgent, showNotice
     day: differenceInDays(date, now) + adjustment,
     week: differenceInWeeks(date, now) + adjustment,
     month: differenceInMonths(date, now) + adjustment
-  }
+  };
 
   const displayUnit = diff['month'] > 0 ? 'month' : (diff['week'] > 0 ? 'week' : 'day');
   const displayDiff = diff['month'] > 0 ? diff['month'] : (diff['week'] > 0 ? diff['week'] : diff['day']);
