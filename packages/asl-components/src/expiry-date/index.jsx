@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { Snippet } from '../';
-import differenceInMonths from 'date-fns/difference_in_months';
-import differenceInWeeks from 'date-fns/difference_in_weeks';
-import differenceInDays from 'date-fns/difference_in_days';
+import differenceInMonths from 'date-fns/difference_in_calendar_months';
+import differenceInWeeks from 'date-fns/difference_in_calendar_weeks';
+import differenceInDays from 'date-fns/difference_in_calendar_days';
 import format from 'date-fns/format';
 import classnames from 'classnames';
 
@@ -38,7 +38,7 @@ const ExpiryDate = ({
   if (diff <= 0) {
     contentKey = 'diff.expired';
   } else if (urgent) {
-    contentKey = diff === 0 ? 'diff.singular' : 'diff.plural';
+    contentKey = diff === 1 ? 'diff.singular' : 'diff.plural';
   }
 
   return (
@@ -46,7 +46,7 @@ const ExpiryDate = ({
       {format(date, dateFormat)}
       {diff <= showNotice && (
         <span className={classnames('notice', { urgent })}>
-          <Snippet diff={diff}>{contentKey}</Snippet>
+          <Snippet diff={diff} unit={unit}>{contentKey}</Snippet>
         </span>
       )}
     </Fragment>
