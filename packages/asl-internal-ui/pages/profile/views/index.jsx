@@ -13,7 +13,7 @@ import Modules from '@asl/pages/pages/task/read/views/modules';
 class Index extends React.Component {
 
   renderAsruAssociation (establishments) {
-    return (<ul className="panel-list">
+    return (<ul className="panel-list">Date of birth
       {establishments.map(establishment => {
         return (
           <li key={establishment.id}>
@@ -29,6 +29,7 @@ class Index extends React.Component {
 
     const model = this.props.model;
     const hasEstablishments = !!model.establishments.length;
+    const formatDate = (date, format) => (date ? dateFormatter(date, format) : '-');
 
     return <Fragment>
       <Header title={`${model.firstName} ${model.lastName}`} />
@@ -44,7 +45,7 @@ class Index extends React.Component {
         {
           model.dob && <Fragment>
             <dt>Date of birth:</dt>
-            <dd>{ dateFormatter(model.dob, dateFormat.medium) }</dd>
+            <dd>{ formatDate(model.dob, dateFormat.medium) }</dd>
           </Fragment>
         }
       </dl>
