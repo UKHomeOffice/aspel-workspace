@@ -42,9 +42,8 @@ const postData = debounce((patch, getState, dispatch) => {
           }
         })
         .then(() => {
-          const { project, savedProject } = getState();
-          const before = isEmpty(savedProject) ? project : savedProject;
-          const patched = applyPatches(before, patch);
+          const { savedProject } = getState();
+          const patched = applyPatches(savedProject, patch)
           dispatch(updateSavedProject(patched));
         });
     })
@@ -60,8 +59,7 @@ const onUpdate = props => {
     const newState = { ...project, ...props };
 
     dispatch(updateProject(newState));
-    const before = isEmpty(savedProject) ? project : savedProject;
-    const patch = diff(before, newState);
+    const patch = diff(savedProject, newState);
     return postData(patch, getState, dispatch);
   };
 };
@@ -79,6 +77,10 @@ start({
     ...state.model.data,
     id: state.model.id
   },
+  savedProject: cloneDeep({
+    ...state.model.data,
+    id: state.model.id
+  }),
   comments: state.static.comments,
   changes: {
     latest: (state.static.changes && state.static.changes.latest) || [],
