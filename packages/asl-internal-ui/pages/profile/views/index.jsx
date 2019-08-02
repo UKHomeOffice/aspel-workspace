@@ -10,6 +10,8 @@ import Profile from '@asl/pages/pages/profile/read/views/profile';
 import ASRUAdmin from '../components/asru-admin';
 import Modules from '@asl/pages/pages/task/read/views/modules';
 
+const formatDate = (date, format) => (date ? dateFormatter(date, format) : '-');
+
 class Index extends React.Component {
 
   renderAsruAssociation (establishments) {
@@ -44,7 +46,7 @@ class Index extends React.Component {
         {
           model.dob && <Fragment>
             <dt>Date of birth:</dt>
-            <dd>{ dateFormatter(model.dob, dateFormat.medium) }</dd>
+            <dd>{ formatDate(model.dob, dateFormat.medium) }</dd>
           </Fragment>
         }
       </dl>
