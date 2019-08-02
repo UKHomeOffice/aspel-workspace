@@ -4,7 +4,6 @@ import { updateSavedProject } from '@asl/projects/client/actions/projects';
 import debounce from 'lodash/debounce';
 import fetch from 'r2';
 import cloneDeep from 'lodash/cloneDeep';
-import isEmpty from 'lodash/isEmpty';
 import { diff, applyChange } from 'deep-diff';
 
 const updateProject = project => {
@@ -43,7 +42,7 @@ const postData = debounce((patch, getState, dispatch) => {
         })
         .then(() => {
           const { savedProject } = getState();
-          const patched = applyPatches(savedProject, patch)
+          const patched = applyPatches(savedProject, patch);
           dispatch(updateSavedProject(patched));
         });
     })
