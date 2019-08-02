@@ -42,7 +42,9 @@ const postData = debounce((patch, getState, dispatch) => {
           }
         })
         .then(() => {
-          const patched = applyPatches(getState().savedProject, patch);
+          const { project, savedProject } = getState();
+          const before = isEmpty(savedProject) ? project : savedProject;
+          const patched = applyPatches(before, patch);
           dispatch(updateSavedProject(patched));
         });
     })
