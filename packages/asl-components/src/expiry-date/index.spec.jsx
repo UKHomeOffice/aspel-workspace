@@ -24,7 +24,7 @@ describe('<ExpiryDate />', () => {
   });
 
   test('shows less than x weeks left if the expiry date is greater than 1 week but less than a month', () => {
-    const wrapper = shallow(<ExpiryDate date={addWeeks(new Date(), 3)} />);
+    const wrapper = shallow(<ExpiryDate date={addWeeks(new Date(), 2)} />);
     expect(wrapper.find(Snippet).length).toBe(1);
     expect(wrapper.find(Snippet).props().unit).toEqual('week');
     expect(wrapper.find(Snippet).props().children).toEqual('diff.plural');

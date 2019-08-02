@@ -7,26 +7,30 @@ import isBefore from 'date-fns/is_before';
 import format from 'date-fns/format';
 import classnames from 'classnames';
 
-const ExpiryDate = ({ date, dateFormat, unit, adjustment, showUrgent, showNotice }) => {
+const ExpiryDate = ({ date, expiry, dateFormat, unit, showUrgent, showNotice }) => {
   if (!date) {
     return null;
+  }
+
+  if (!expiry) {
+    expiry = date;
   }
 
   const now = new Date();
 
   const diff = {
-    day: differenceInDays(date, now) + adjustment,
-    week: differenceInWeeks(date, now) + adjustment,
-    month: differenceInMonths(date, now) + adjustment
+    day: differenceInDays(expiry, now),
+    week: differenceInWeeks(expiry, now),
+    month: differenceInMonths(expiry, now)
   };
 
-  const displayUnit = diff['month'] > 0 ? 'month' : (diff['week'] > 0 ? 'week' : 'day');
-  const displayDiff = diff['month'] > 0 ? diff['month'] : (diff['week'] > 0 ? diff['week'] : diff['day']);
-  const urgent = diff[unit] <= showUrgent;
+  const displayUnit = diff['day'] <= 7 ? 'day' : (diff['day'] <= 28 ? 'week' : 'month');
+  const displayDiff = displayUnit === 'day' ? diff[displayUnit] : diff[displayUnit] + 1;
+  const urgent = displayDiff <= showUrgent;
 
   let contentKey = 'diff.standard';
 
-  if (isBefore(date, new Date())) {
+  if (isBefore(expiry, now)) {
     contentKey = 'diff.expired';
   } else if (urgent) {
     contentKey = displayDiff === 1 ? 'diff.singular' : 'diff.plural';
@@ -47,7 +51,6 @@ const ExpiryDate = ({ date, dateFormat, unit, adjustment, showUrgent, showNotice
 ExpiryDate.defaultProps = {
   dateFormat: 'DD MMMM YYYY',
   unit: 'month',
-  adjustment: 0,
   showUrgent: 3,
   showNotice: 11
 };
