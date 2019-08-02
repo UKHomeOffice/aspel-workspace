@@ -10,10 +10,12 @@ import Profile from '@asl/pages/pages/profile/read/views/profile';
 import ASRUAdmin from '../components/asru-admin';
 import Modules from '@asl/pages/pages/task/read/views/modules';
 
+const formatDate = (date, format) => (date ? dateFormatter(date, format) : '-');
+
 class Index extends React.Component {
 
   renderAsruAssociation (establishments) {
-    return (<ul className="panel-list">Date of birth
+    return (<ul className="panel-list">
       {establishments.map(establishment => {
         return (
           <li key={establishment.id}>
@@ -29,7 +31,6 @@ class Index extends React.Component {
 
     const model = this.props.model;
     const hasEstablishments = !!model.establishments.length;
-    const formatDate = (date, format) => (date ? dateFormatter(date, format) : '-');
 
     return <Fragment>
       <Header title={`${model.firstName} ${model.lastName}`} />
