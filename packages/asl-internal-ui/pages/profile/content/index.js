@@ -21,7 +21,7 @@ module.exports = merge({}, pilContent, profileContent, {
       asruInspector: 'Inspector'
     }
   },
-  dedupe: 'Deduplicate',
+  dedupe: 'Merge profile',
   notifications: {
     success: 'Changes saved!'
   },
