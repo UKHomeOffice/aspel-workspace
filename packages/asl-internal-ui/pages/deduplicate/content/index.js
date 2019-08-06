@@ -4,5 +4,8 @@ module.exports = {
       label: 'Find a profile to merge with',
       hint: 'Search by name or email address'
     }
+  },
+  actions: {
+    back: 'Back to profile'
   }
 };

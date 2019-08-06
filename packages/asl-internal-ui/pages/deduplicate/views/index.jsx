@@ -1,13 +1,31 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Header, Search, Snippet } from '@asl/components';
 import classnames from 'classnames';
+import get from 'lodash/get';
+import { Header, Search, Snippet, Link } from '@asl/components';
+
+const dobsDiffer = (profile1, profile2) => profile1.dob && profile2.dob && profile1.dob !== profile2.dob;
+const bothActivePils = (profile1, profile2) => get(profile1, 'pil.status') === 'active' && get(profile2, 'pil.status') === 'active';
 
 class Index extends React.Component {
 
+  onSubmit(p, e) {
+    e.preventDefault();
+    if (bothActivePils(p, this.props.profile)) {
+      return window.alert('These profiles cannot be merged as both have active PILs');
+    }
+    if (dobsDiffer(p, this.props.profile)) {
+      if (window.confirm('These profiles have different dates of birth, are you sure you want to continue?')) {
+        return e.target.submit();
+      }
+    }
+    if (window.confirm('This action cannot be undone')) {
+      e.target.submit();
+    }
+  }
+
   render () {
     const { profile, action, alternates, search } = this.props;
-    const dobsDiffer = p => p.dob && profile.dob && p.dob !== profile.dob;
 
     return <Fragment>
       <Header subtitle={`${profile.firstName} ${profile.lastName}`} title="Merge profile" />
@@ -56,11 +74,11 @@ class Index extends React.Component {
                   <tr key={p.id}>
                     <td>{ p.firstName } { p.lastName }</td>
                     <td>{ p.email }</td>
-                    <td className={classnames({ warning: dobsDiffer(p) })}>{ p.dob || '-' }</td>
+                    <td className={classnames({ warning: dobsDiffer(p, profile) })}>{ p.dob || '-' }</td>
                     <td>
-                      <form action={action} method="post">
+                      <form action={action} method="post" onSubmit={this.onSubmit.bind(this, p)}>
                         <input type="hidden" name="profile" value={p.id} />
-                        <button className="govuk-button">Select</button>
+                        <button className="govuk-button float-right">Select</button>
                       </form>
                     </td>
                   </tr>
@@ -71,6 +89,9 @@ class Index extends React.Component {
           </Fragment>
         )
       }
+      <p>
+        <Link page="global.profile" label={<Snippet>actions.back</Snippet>} />
+      </p>
     </Fragment>;
   }
 

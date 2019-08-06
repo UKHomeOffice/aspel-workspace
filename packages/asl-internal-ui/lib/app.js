@@ -86,7 +86,6 @@ module.exports = settings => {
 
   app.use(urls.establishment.dashboard, establishment());
   app.use(urls.profile.list, profile());
-  app.use(urls.profile.dedupe, dedupe());
   app.use(urls.pil.base, pil());
   app.use(urls.place.list, place());
   app.use(urls.project.list, project());

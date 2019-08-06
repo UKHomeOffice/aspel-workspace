@@ -32,6 +32,9 @@ class Index extends React.Component {
 
     return <Fragment>
       <Header title={`${model.firstName} ${model.lastName}`} />
+      <p className="float-right">
+        <Link page="global.dedupe" className="govuk-button" label={<Snippet>dedupe</Snippet>} />
+      </p>
       <dl>
         <dt>Email:</dt>
         <dd><a href={`mailto:${model.email}`}>{ model.email }</a></dd>
