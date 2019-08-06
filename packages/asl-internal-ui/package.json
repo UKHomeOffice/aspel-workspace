@@ -43,7 +43,7 @@
     "docx": "^5.0.0-rc1",
     "express": "^4.16.4",
     "filenamify": "^4.0.0",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@ukhomeoffice/asl-functional-testing": "^1.2.0",
