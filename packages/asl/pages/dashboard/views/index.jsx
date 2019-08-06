@@ -19,19 +19,13 @@ const Invitation = ({ token, establishment }) => (
   </Fragment>
 );
 
-const Index = ({
-  tabs,
-  progress,
-  profile
-}) => {
-
-  return <Fragment>
+const Index = ({ profile }) => (
+  <Fragment>
     <Header
       title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>}
     />
-
     <h3><Snippet>pages.dashboard.tasks</Snippet></h3>
-    <TaskList tabs={ tabs } progress={ progress } />
+    <TaskList />
     {
       !!profile.invitations.length && <Fragment>
         <h3>Pending Invitations</h3>
@@ -41,8 +35,8 @@ const Index = ({
     {
       !!profile.establishments.length && <Fragment>
         <h3>Establishments</h3>
-        <PanelList panels={sortBy(profile.establishments, 'name').map((establishment) => {
-          return (
+        <PanelList
+          panels={sortBy(profile.establishments, 'name').map((establishment) => (
             <ExpandingPanel key={establishment.id} title={establishment.name} isOpen={profile.establishments.length === 1}>
               <p><Snippet>establishment.description</Snippet></p>
               <p>
@@ -50,13 +44,11 @@ const Index = ({
               </p>
               <Profile establishment={establishment} profile={profile} allowedActions={profile.allowedActions[establishment.id]} isOwnProfile={true} />
             </ExpandingPanel>
-          );
-        })} />
+          ))}
+        />
       </Fragment>
     }
+  </Fragment>
+);
 
-  </Fragment>;
-};
-
-const mapStateToProps = ({ static: { profile, tabs, progress } }) => ({ profile, tabs, progress });
-export default connect(mapStateToProps)(Index);
+export default connect(({ static: { profile } }) => ({ profile }))(Index);
