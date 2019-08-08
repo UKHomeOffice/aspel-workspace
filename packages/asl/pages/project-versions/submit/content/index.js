@@ -24,7 +24,7 @@ module.exports = {
     ready: {
       label: 'Has an inspector advised you that this version of your draft application is ready for assessment?'
     },
-    comment: {
+    comments: {
       label: 'Why are you making this amendment?'
     }
   },
