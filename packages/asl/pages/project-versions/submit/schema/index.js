@@ -91,7 +91,7 @@ const schema = {
     ],
     validate: ['required']
   },
-  comment: {
+  comments: {
     inputType: 'textarea',
     validate: ['required']
   }
@@ -99,7 +99,7 @@ const schema = {
 
 const getSchema = type => {
   if (type === 'application') {
-    return omit(schema, 'comment');
+    return omit(schema, 'comments');
   }
 
   const amendmentSchema = omit(schema, 'ready');
