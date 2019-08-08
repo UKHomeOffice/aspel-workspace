@@ -24,14 +24,14 @@ const Index = ({ profile }) => (
     <Header
       title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>}
     />
-    <h3><Snippet>pages.dashboard.tasks</Snippet></h3>
-    <TaskList />
     {
       !!profile.invitations.length && <Fragment>
-        <h3>Pending Invitations</h3>
+        <h2>{profile.invitations.length} pending invitation{profile.invitations.length === 1 ? '' : 's'}</h2>
         <PanelList panels={profile.invitations.map(invitation => <Invitation key={invitation.id} establishment={ invitation.establishment.name } token={invitation.token} />)}/>
       </Fragment>
     }
+    <h3><Snippet>pages.dashboard.tasks</Snippet></h3>
+    <TaskList />
     {
       !!profile.establishments.length && <Fragment>
         <h3>Establishments</h3>
