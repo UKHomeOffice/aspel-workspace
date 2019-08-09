@@ -52,6 +52,9 @@ class Index extends React.Component {
             <dd>{ formatDate(model.dob, dateFormat.medium) }</dd>
           </Fragment>
         }
+
+        <dt>Has login:</dt>
+        <dd>{ model.userId ? 'Yes' : 'No' }</dd>
       </dl>
       <ExpandingPanel title={<Snippet>pil.training.title</Snippet>}>
         {
