@@ -9,9 +9,11 @@ module.exports = {
     show: true
   },
   inspector: {
-    show: true
+    show: true,
+    sortable: false
   },
   spoc: {
-    show: true
+    show: true,
+    sortable: false
   }
 };
