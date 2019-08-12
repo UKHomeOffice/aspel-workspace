@@ -6,7 +6,7 @@ import differenceInDays from 'date-fns/difference_in_calendar_days';
 import isBefore from 'date-fns/is_before';
 import classnames from 'classnames';
 
-const ExpiryDate = ({ expiry, unit, showUrgent }) => {
+const Countdown = ({ expiry, unit, showUrgent }) => {
   const now = new Date();
 
   const diff = {
@@ -32,9 +32,9 @@ const ExpiryDate = ({ expiry, unit, showUrgent }) => {
   );
 };
 
-ExpiryDate.defaultProps = {
+Countdown.defaultProps = {
   unit: 'month',
   showUrgent: 3
 };
 
-export default ExpiryDate;
+export default Countdown;
