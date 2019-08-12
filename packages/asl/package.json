@@ -27,7 +27,7 @@
   "dependencies": {
     "@asl/components": "^3.21.6",
     "@asl/pages": "^15.63.0",
-    "@asl/projects": "^4.6.6",
+    "@asl/projects": "^4.7.1",
     "@asl/service": "^7.8.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
     "@babel/preset-env": "^7.3.1",
