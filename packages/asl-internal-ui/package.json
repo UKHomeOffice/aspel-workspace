@@ -27,10 +27,10 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-internal-ui#readme",
   "dependencies": {
-    "@asl/components": "^3.21.7",
-    "@asl/pages": "^15.63.1",
+    "@asl/components": "^3.21.8",
+    "@asl/pages": "^15.63.2",
     "@asl/projects": "^4.7.1",
-    "@asl/service": "^7.7.3",
+    "@asl/service": "^7.8.1",
     "@babel/core": "^7.3.3",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
     "@babel/preset-env": "^7.3.1",
@@ -43,7 +43,9 @@
     "docx": "^5.0.0-rc1",
     "express": "^4.16.4",
     "filenamify": "^4.0.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "react": "^16.9.0",
+    "react-redux": "^7.1.0"
   },
   "devDependencies": {
     "@ukhomeoffice/asl-functional-testing": "^1.2.0",
