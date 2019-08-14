@@ -8,11 +8,15 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
-    req.model = req.project;
+    req.model = req.version;
     next();
   });
 
-  app.use(success({ licence: 'project', status: 'resubmitted' }));
+  app.use((req, res, next) => success({
+    licence: 'project',
+    status: 'resubmitted',
+    type: req.project.status === 'active' ? 'amendment' : 'application'
+  })(req, res, next));
 
   app.use((req, res, next) => res.sendResponse());
 
