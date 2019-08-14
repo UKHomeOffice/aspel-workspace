@@ -1,6 +1,6 @@
 module.exports = {
   port: process.env.PORT || 8080,
-  whitelist: (process.env.DOMAIN_WHITELIST || '').split(','),
+  whitelist: (process.env.DOMAIN_WHITELIST || '').split(',').filter(Boolean),
   email: {
     from: process.env.EMAIL_FROM_ADDRESS,
     key: process.env.EMAIL_ACCESS_KEY,
