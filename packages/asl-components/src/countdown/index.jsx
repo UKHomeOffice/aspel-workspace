@@ -38,7 +38,7 @@ const Countdown = ({ expiry, unit, showNotice, showUrgent }) => {
 
 Countdown.defaultProps = {
   unit: 'month',
-  showNotice: 11,
+  showNotice: true,
   showUrgent: 3
 };
 
