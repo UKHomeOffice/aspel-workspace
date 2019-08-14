@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config -e .js,.jsx",
-    "test": "eslint .",
+    "test": "eslint . && npm run test:deduped",
+    "test:deduped": "./tests/dedupe.sh",
     "test:functional:ci": "asl-test ./tests/functional/config",
     "test:functional": "funkie --driver chromedriver npm run test:functional:ci",
     "build": "npm run build:js && npm run build:css",
