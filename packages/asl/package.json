@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config -e js,jsx,json -w .",
-    "test": "npm run test:lint",
+    "test": "npm run test:lint && npm run test:deduped",
+    "test:deduped": "./test/dedupe.sh",
     "test:lint": "eslint .",
     "build": "npm run build:js && npm run build:css",
     "build:js": "node --max_old_space_size=4096 node_modules/.bin/webpack",
