@@ -30,7 +30,7 @@
   "dependencies": {
     "@asl/components": "^4.0.1",
     "@asl/pages": "^15.64.4",
-    "@asl/projects": "^4.8.2",
+    "@asl/projects": "^4.8.3",
     "@asl/service": "^7.8.1",
     "@babel/core": "^7.3.3",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
