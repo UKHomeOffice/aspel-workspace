@@ -50,7 +50,7 @@ module.exports = {
     ready: {
       required: 'Select an option'
     },
-    comment: {
+    comments: {
       required: 'Please provide a reason'
     }
   },
