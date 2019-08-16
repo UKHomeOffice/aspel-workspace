@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import map from 'lodash/map';
 import without from 'lodash/without';
 import isEqual from 'lodash/isEqual';
-import omit from 'lodash/omit';
 import classnames from 'classnames';
 import ReactMarkdown from 'react-markdown';
 import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
@@ -11,7 +10,7 @@ import { Snippet, ConditionalReveal } from '../';
 const fields = {
   inputText: props => <Input { ...props } />,
   inputEmail: props => <Input type="email" { ...props } />,
-  inputFile: props => <Input type="file" {...omit(props, 'value')} />,
+  inputFile: props => <Input type="file" { ...props } />,
   inputPassword: props => <Input type="password" { ...props } />,
   inputDate: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />,
   textarea: props => <TextArea { ...props } autoExpand={true} />,
