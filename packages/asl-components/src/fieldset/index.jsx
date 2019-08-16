@@ -10,7 +10,7 @@ import { Snippet, ConditionalReveal } from '../';
 const fields = {
   inputText: props => <Input { ...props } />,
   inputEmail: props => <Input type="email" { ...props } />,
-  inputFile: props => <Input type="file" {...props} value={null} />,
+  inputFile: props => <Input type="file" { ...props } />,
   inputPassword: props => <Input type="password" { ...props } />,
   inputDate: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />,
   textarea: props => <TextArea { ...props } autoExpand={true} />,
