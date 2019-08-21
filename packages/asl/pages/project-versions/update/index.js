@@ -16,20 +16,23 @@ module.exports = settings => {
   );
 
   app.use((req, res, next) => {
-    if (req.project.status === 'active') {
+    const isAmendment = req.project.status !== 'inactive';
+    if (isAmendment) {
       req.breadcrumb('project.amend');
     } else {
       req.breadcrumb('project.update');
     }
     const openTask = get(req.project, 'openTasks[0]');
     const showComments = req.version.status !== 'granted' && !!openTask;
+    const previousVersion = req.project.versions.slice(1).shift();
 
     res.locals.static.basename = req.buildRoute('project.version.update');
     res.locals.static.establishment = req.project.establishment;
     res.locals.static.user = req.user.profile;
     res.locals.static.showComments = showComments;
     res.locals.static.commentable = showComments && res.locals.static.isCommentable;
-    res.locals.static.newApplication = req.project.versions[req.project.versions.length - 1].id === req.version.id;
+
+    res.locals.static.newApplication = !isAmendment && (!previousVersion || previousVersion.status === 'withdrawn');
     res.locals.model = req.version;
     res.locals.static.project = req.project;
     res.locals.static.version = req.version.id;
