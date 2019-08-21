@@ -24,7 +24,7 @@ module.exports = settings => {
     }
     const openTask = get(req.project, 'openTasks[0]');
     const showComments = req.version.status !== 'granted' && !!openTask;
-    const previousVersion = req.project.versions.slice(1).shift();
+    const previousVersion = req.project.versions[1];
 
     res.locals.static.basename = req.buildRoute('project.version.update');
     res.locals.static.establishment = req.project.establishment;
