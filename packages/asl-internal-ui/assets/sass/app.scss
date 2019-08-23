@@ -105,3 +105,14 @@ td .govuk-button {
     border-right: 3px solid govuk-colour('red');
   }
 }
+
+.metric {
+  p {
+    font-size: 80px;
+    font-weight: bold;
+    margin: 0;
+  }
+  padding-bottom: 5px;
+  border-bottom: 5px solid $govuk-brand-colour;
+  margin-bottom: $govuk-gutter;
+}
