@@ -52,6 +52,19 @@ module.exports = settings => {
       .catch(err => next(err));
   });
 
+  app.get('/', (req, res, next) => {
+    req.breadcrumb('metrics');
+    const since = req.query.since || '2019-07-31';
+    req.api(`/metrics?since=${since}`)
+      .then(response => {
+        res.locals.static.since = since;
+        res.locals.static.metrics = response.json;
+        next();
+      })
+      .catch(next);
+
+  });
+
   app.get('/', (req, res) => res.sendResponse());
 
   return app;
