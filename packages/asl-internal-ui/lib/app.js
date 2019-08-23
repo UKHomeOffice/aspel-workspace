@@ -63,6 +63,14 @@ module.exports = settings => {
     next();
   });
 
+  app.use((req, res, next) => {
+    res.locals.footerLinks = [
+      { label: 'Privacy notice', href: '/privacy' },
+      { label: 'Performance metrics', href: '/reporting' }
+    ];
+    next();
+  });
+
   app.use(urls.dashboard, dashboard(settings));
 
   app.use((req, res, next) => {
