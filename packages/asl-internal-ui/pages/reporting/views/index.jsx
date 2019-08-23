@@ -5,6 +5,9 @@ import { countBy } from 'lodash';
 import { format, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
 
 const Metric = ({ number, label }) => {
+  if (number !== Math.floor(number)) {
+    number = number.toFixed(2);
+  }
   return <div className="metric">
     <p>{ number }</p>
     <label>{ label }</label>
