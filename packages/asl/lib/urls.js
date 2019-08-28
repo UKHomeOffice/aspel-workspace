@@ -66,10 +66,7 @@ module.exports = {
       confirm: '/e/:establishmentId/places/:placeId/delete/confirm',
       success: '/e/:establishmentId/places/:placeId/delete/success'
     },
-    update: {
-      confirm: '/e/:establishmentId/places/:placeId/edit/confirm',
-      success: '/e/:establishmentId/places/:placeId/edit/success'
-    }
+    update: '/e/:establishmentId/places/:placeId/edit/'
   },
   pil: {
     base: '/e/:establishmentId/people/:profileId/pil',
