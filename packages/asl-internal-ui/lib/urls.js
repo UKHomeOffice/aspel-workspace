@@ -46,6 +46,11 @@ module.exports = {
       read: '/establishments/:establishmentId/projects/:projectId/versions/:versionId',
       update: '/establishments/:establishmentId/projects/:projectId/versions/:versionId',
       pdf: '/establishments/:establishmentId/projects/:projectId/versions/:versionId/pdf'
+    },
+    revoke: {
+      base: '/establishments/:establishmentId/projects/:projectId/revoke',
+      confirm: '/establishments/:establishmentId/projects/:projectId/revoke/confirm',
+      success: '/establishments/:establishmentId/projects/:projectId/revoke/success'
     }
   },
   place: {
