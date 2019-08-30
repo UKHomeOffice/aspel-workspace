@@ -4,6 +4,7 @@ import differenceInMonths from 'date-fns/difference_in_months';
 import differenceInWeeks from 'date-fns/difference_in_weeks';
 import differenceInDays from 'date-fns/difference_in_calendar_days';
 import isBefore from 'date-fns/is_before';
+import isToday from 'date-fns/is_today';
 import classnames from 'classnames';
 
 const Countdown = ({ expiry, unit, showNotice, showUrgent }) => {
@@ -23,10 +24,14 @@ const Countdown = ({ expiry, unit, showNotice, showUrgent }) => {
   const displayDiff = displayUnit === 'day' ? diff[displayUnit] : diff[displayUnit] + 1;
   const urgent = diff[unit] <= showUrgent;
 
-  let contentKey = displayDiff === 1 ? 'diff.singular' : 'diff.plural';
+  let contentKey = displayDiff === 1 ? 'countdown.singular' : 'countdown.plural';
 
   if (isBefore(expiry, now)) {
-    contentKey = 'diff.expired';
+    contentKey = 'countdown.expired';
+  }
+
+  if (isToday(expiry)) {
+    contentKey = 'countdown.expiresToday';
   }
 
   return (
