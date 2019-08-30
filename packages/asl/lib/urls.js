@@ -48,6 +48,11 @@ module.exports = {
       update: '/e/:establishmentId/projects/:projectId/versions/:versionId/edit',
       submit: '/e/:establishmentId/projects/:projectId/versions/:versionId/edit/submit',
       success: '/e/:establishmentId/projects/:projectId/versions/:versionId/edit/success'
+    },
+    revoke: {
+      base: '/e/:establishmentId/projects/:projectId/revoke',
+      confirm: '/e/:establishmentId/projects/:projectId/revoke/confirm',
+      success: '/e/:establishmentId/projects/:projectId/revoke/success'
     }
   },
   place: {
