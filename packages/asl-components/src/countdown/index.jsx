@@ -24,14 +24,14 @@ const Countdown = ({ expiry, unit, showNotice, showUrgent }) => {
   const displayDiff = displayUnit === 'day' ? diff[displayUnit] : diff[displayUnit] + 1;
   const urgent = diff[unit] <= showUrgent;
 
-  let contentKey = displayDiff === 1 ? 'diff.singular' : 'diff.plural';
+  let contentKey = displayDiff === 1 ? 'countdown.singular' : 'countdown.plural';
 
   if (isBefore(expiry, now)) {
-    contentKey = 'diff.expired';
+    contentKey = 'countdown.expired';
   }
 
   if (isToday(expiry)) {
-    contentKey = 'diff.expiresToday';
+    contentKey = 'countdown.expiresToday';
   }
 
   return (
