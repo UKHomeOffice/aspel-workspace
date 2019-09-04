@@ -17,7 +17,7 @@ const ModelSummary = ({ model, schema, formatters = {}, className, formatNullVal
   if (size(schema)) {
     fields = {};
     Object.keys(schema).map(key => {
-      if (schema[key].show !== false) {
+      if (schema[key].show !== false && schema[key].showDiff !== false) {
         fields[key] = model[key];
       }
     });

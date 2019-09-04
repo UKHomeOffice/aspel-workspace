@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import map from 'lodash/map';
 import without from 'lodash/without';
-import isEqual from 'lodash/isEqual';
 import classnames from 'classnames';
 import ReactMarkdown from 'react-markdown';
 import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
@@ -17,6 +16,7 @@ const fields = {
   radioGroup: props => <RadioGroup { ...props } />,
   checkboxGroup: props => <CheckboxGroup { ...props } />,
   select: props => <Select { ...props } />,
+  conditionalReveal: props => <ConditionalReveal { ...props } />,
   text: props => props.value &&
     <div className={classnames('govuk-form-group', props.name)}>
       <h3>{ props.label }</h3>
@@ -24,92 +24,74 @@ const fields = {
     </div>
 };
 
-class Fieldset extends Component {
+function Field({
+  name,
+  error,
+  inputType,
+  value,
+  format,
+  label,
+  hint,
+  onChange,
+  showIf,
+  ...props
+}) {
+  const [fieldValue, setFieldValue] = useState(value);
 
-  constructor(options) {
-    super(options);
-    this.state = {
-      model: this.props.model || {}
-    };
-    this.onFieldChange = this.onFieldChange.bind(this);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!isEqual(prevProps.model, this.props.model)) {
-      return this.setState({ model: this.props.model });
+  useEffect(() => {
+    if (onChange) {
+      onChange({
+        ...props.values,
+        [name]: fieldValue
+      });
     }
-  }
+  }, [fieldValue]);
 
-  onFieldChange(key, value) {
-    const setValue = (field, value) => {
-      if (Array.isArray(field)) {
-        if (field.includes(value)) {
-          return without(field, value);
-        }
-        return [ ...field, value ];
+  function onFieldChange(e) {
+    let v = e.target.value;
+    if (Array.isArray(value)) {
+      if (fieldValue.includes(v)) {
+        v = without(fieldValue, v);
+      } else {
+        v = [...fieldValue, v];
       }
-      return value;
-    };
-
-    const model = {
-      ...this.state.model,
-      [key]: setValue(this.state.model[key], value)
-    };
-
-    this.setState({ model }, () => {
-      if (this.props.onChange) {
-        this.props.onChange(this.state.model);
-      }
-    });
-
+    }
+    setFieldValue(v);
   }
 
-  render() {
-    const {
-      schema,
-      errors = {}
-    } = this.props;
-    const values = (this.state && this.state.model) || this.props.model;
-    return (
-      <fieldset>
-        {
-          map(schema, ({ inputType, label, conditionalReveal, showIf, format, ...props }, key) => {
-            const value = values[key] || '';
-            const field = fields[inputType]({
-              key,
-              value: format ? format(value) : value,
-              label: label || <Snippet>{`fields.${key}.label`}</Snippet>,
-              hint: <Snippet optional>{`fields.${key}.hint`}</Snippet>,
-              name: key,
-              error: errors[key] && <Snippet>{`errors.${key}.${errors[key]}`}</Snippet>,
-              onChange: e => this.onFieldChange(key, e.target.value),
-              ...props
-            });
+  const Component = fields[inputType];
 
-            if (showIf && !showIf(values)) {
-              return null;
-            }
-
-            // TODO: replace previous instances of conditionalReveal with reveal property of checkboxGroup
-            if (conditionalReveal) {
-              return (
-                <ConditionalReveal
-                  key={key}
-                  fieldName={key}
-                  value={values[`conditional-reveal-${key}`]}
-                  label={<Snippet>{`fields.${key}.conditionalReveal.label`}</Snippet>}
-                  yesLabel={<Snippet>{`fields.${key}.conditionalReveal.yesLabel`}</Snippet>}
-                  noLabel={<Snippet>{`fields.${key}.conditionalReveal.noLabel`}</Snippet>}
-                >{ field }</ConditionalReveal>
-              );
-            }
-
-            return field;
-          })
-        }
-      </fieldset>
-    );
+  if (showIf && !showIf(props.values)) {
+    return null;
   }
+
+  return <Component
+    label={label || <Snippet>{`fields.${name}.label`}</Snippet>}
+    hint={<Snippet optional>{`fields.${name}.hint`}</Snippet>}
+    error={error && <Snippet>{`errors.${name}.${error}`}</Snippet>}
+    value={fieldValue}
+    onChange={onFieldChange}
+    name={name}
+    {...props}
+  />;
 }
 
-export default Fieldset;
+export default function Fieldset({ schema, errors = {}, model, ...props }) {
+  return (
+    <fieldset>
+      {
+        map(schema, (field, key) => (
+          <Field
+            {...props}
+            {...field}
+            key={key}
+            values={model}
+            value={model[key]}
+            error={errors[key]}
+            name={key}
+          />
+        ))
+      }
+    </fieldset>
+  );
+}
