@@ -1,5 +1,5 @@
 import React from 'react';
-import { ErrorSummary, Form } from '../../';
+import { ErrorSummary, OpenTaskWarning, Form } from '../../';
 
 const FormLayout = ({
   children,
@@ -7,6 +7,7 @@ const FormLayout = ({
 }) => (
   <div className="govuk-grid-row">
     <div className="govuk-grid-column-two-thirds">
+      <OpenTaskWarning />
       <ErrorSummary />
       {
         children

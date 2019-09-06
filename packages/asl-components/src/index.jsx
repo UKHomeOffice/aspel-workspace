@@ -35,6 +35,7 @@ export { default as Link } from './link';
 export { default as LinkFilter } from './link-filter';
 export { default as ModelSummary } from './model-summary';
 export { default as Notification } from './notification';
+export { default as OpenTaskWarning } from './open-task-warning';
 export { default as Pagination } from './pagination';
 export { default as Panel } from './panel';
 export { default as PanelList } from './panel-list';
