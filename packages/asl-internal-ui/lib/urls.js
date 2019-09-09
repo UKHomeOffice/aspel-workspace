@@ -13,11 +13,7 @@ module.exports = {
     dashboard: '/establishments/:establishmentId',
     read: '/establishments/:establishmentId/details',
     asru: '/establishments/:establishmentId/asru/:asruUser',
-    update: {
-      base: '/establishments/:establishmentId/details/edit',
-      confirm: '/establishments/:establishmentId/details/edit/confirm',
-      success: '/establishments/:establishmentId/details/edit/success'
-    }
+    update: '/establishments/:establishmentId/details/edit'
   },
   profile: {
     list: '/establishments/:establishmentId/people',
@@ -25,19 +21,11 @@ module.exports = {
     invite: '/establishments/:establishmentId/people/invite',
     permission: '/establishments/:establishmentId/people/:profileId/permission',
     invitations: '/establishments/:establishmentId/people/invitations',
-    dedupe: '/establishments/:establishmentId/people/:profileId/dedupe',
-    role: {
-      apply: {
-        base: '/establishments/:establishmentId/people/:profileId/role/apply',
-        confirm: '/establishments/:establishmentId/people/:profileId/role/apply/confirm',
-        success: '/establishments/:establishmentId/people/:profileId/role/apply/success'
-      },
-      remove: {
-        base: '/establishments/:establishmentId/people/:profileId/role/remove',
-        confirm: '/establishments/:establishmentId/people/:profileId/role/remove/confirm',
-        success: '/establishments/:establishmentId/people/:profileId/role/remove/success'
-      }
-    }
+    dedupe: '/establishments/:establishmentId/people/:profileId/dedupe'
+  },
+  role: {
+    create: '/establishments/:establishmentId/people/:profileId/role/apply',
+    delete: '/establishments/:establishmentId/people/:profileId/role/remove'
   },
   project: {
     list: '/establishments/:establishmentId/projects',
@@ -55,19 +43,9 @@ module.exports = {
   },
   place: {
     list: '/establishments/:establishmentId/places',
-    create: {
-      new: '/establishments/:establishmentId/places/create',
-      confirm: '/establishments/:establishmentId/places/create/confirm',
-      success: '/establishments/:establishmentId/places/create/success'
-    },
-    delete: {
-      confirm: '/establishments/:establishmentId/places/:placeId/delete/confirm',
-      success: '/establishments/:establishmentId/places/:placeId/delete/success'
-    },
-    update: {
-      confirm: '/establishments/:establishmentId/places/:placeId/edit/confirm',
-      success: '/establishments/:establishmentId/places/:placeId/edit/success'
-    }
+    create: '/establishments/:establishmentId/places/create',
+    delete: '/establishments/:establishmentId/places/:placeId/delete',
+    update: '/establishments/:establishmentId/places/:placeId/edit'
   },
   pil: {
     base: '/establishments/:establishmentId/people/:profileId/pil',

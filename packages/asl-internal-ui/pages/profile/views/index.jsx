@@ -8,7 +8,7 @@ import { dateFormat } from '@asl/pages/constants';
 
 import Profile from '@asl/pages/pages/profile/read/views/profile';
 import ASRUAdmin from '../components/asru-admin';
-import Modules from '@asl/pages/pages/task/read/views/modules';
+import Modules from '@asl/pages/pages/profile/read/views/modules';
 
 const formatDate = (date, format) => (date ? dateFormatter(date, format) : '-');
 
