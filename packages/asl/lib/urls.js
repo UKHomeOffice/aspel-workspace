@@ -2,35 +2,23 @@ module.exports = {
   dashboard: '/',
   account: {
     menu: '/account',
-    edit: '/account/edit'
+    update: '/account/edit'
   },
   establishment: {
     dashboard: '/e/:establishmentId',
     read: '/e/:establishmentId/details',
-    update: {
-      base: '/e/:establishmentId/details/edit',
-      confirm: '/e/:establishmentId/details/edit/confirm',
-      success: '/e/:establishmentId/details/edit/success'
-    }
+    update: '/e/:establishmentId/details/edit'
+  },
+  role: {
+    create: '/e/:establishmentId/people/:profileId/role/apply',
+    delete: '/e/:establishmentId/people/:profileId/role/remove'
   },
   profile: {
     list: '/e/:establishmentId/people',
     view: '/e/:establishmentId/people/:profileId',
     invite: '/e/:establishmentId/people/invite',
     invitations: '/e/:establishmentId/people/invitations',
-    permission: '/e/:establishmentId/people/:profileId/permission',
-    role: {
-      apply: {
-        base: '/e/:establishmentId/people/:profileId/role/apply',
-        confirm: '/e/:establishmentId/people/:profileId/role/apply/confirm',
-        success: '/e/:establishmentId/people/:profileId/role/apply/success'
-      },
-      remove: {
-        base: '/e/:establishmentId/people/:profileId/role/remove',
-        confirm: '/e/:establishmentId/people/:profileId/role/remove/confirm',
-        success: '/e/:establishmentId/people/:profileId/role/remove/success'
-      }
-    }
+    permission: '/e/:establishmentId/people/:profileId/permission'
   },
   project: {
     list: '/e/:establishmentId/projects',
@@ -57,19 +45,9 @@ module.exports = {
   },
   place: {
     list: '/e/:establishmentId/places',
-    create: {
-      new: '/e/:establishmentId/places/create',
-      confirm: '/e/:establishmentId/places/create/confirm',
-      success: '/e/:establishmentId/places/create/success'
-    },
-    delete: {
-      confirm: '/e/:establishmentId/places/:placeId/delete/confirm',
-      success: '/e/:establishmentId/places/:placeId/delete/success'
-    },
-    update: {
-      confirm: '/e/:establishmentId/places/:placeId/edit/confirm',
-      success: '/e/:establishmentId/places/:placeId/edit/success'
-    }
+    create: '/e/:establishmentId/places/create',
+    delete: '/e/:establishmentId/places/:placeId/delete',
+    update: '/e/:establishmentId/places/:placeId/edit'
   },
   pil: {
     base: '/e/:establishmentId/people/:profileId/pil',
