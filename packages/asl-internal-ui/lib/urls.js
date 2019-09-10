@@ -7,7 +7,7 @@ module.exports = {
   },
   account: {
     menu: '/account',
-    edit: '/account/edit'
+    update: '/account/edit'
   },
   establishment: {
     dashboard: '/establishments/:establishmentId',
