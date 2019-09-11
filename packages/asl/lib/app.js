@@ -66,6 +66,15 @@ module.exports = settings => {
     });
   });
 
+  app.use((req, res, next) => {
+    if (req.get('pragma') === 'no-cache') {
+      return req.user.refreshProfile()
+        .then(() => next())
+        .catch(next);
+    }
+    next();
+  });
+
   app.use(urls.dashboard, dashboard());
 
   // add "home" breadcrmb to every subsequent page

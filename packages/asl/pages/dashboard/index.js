@@ -8,11 +8,6 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res, next) => {
-    req.user.refreshProfile()
-      .then(() => next())
-      .catch(next);
-  },
-  (req, res, next) => {
     res.locals.static.profile = req.user.profile;
     next();
   });
