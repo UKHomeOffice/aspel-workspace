@@ -1,0 +1,56 @@
+.download-header {
+  background-color: white;
+  border-bottom: 4px solid $blue;
+  margin-bottom: $govuk-gutter;
+  padding: $govuk-gutter-half;
+  position: relative;
+
+  .left {
+    overflow: hidden;
+    padding-right: 1em;
+
+    h2 {
+      font-weight: normal;
+      margin-bottom: 0;
+    }
+  }
+
+  .right {
+    float: right;
+    border-left: 1px solid $mid-grey;
+    padding-left: 1em;
+
+    .download {
+      font-size: 1em;
+    }
+  }
+
+  .download-modal {
+    position: absolute;
+    border-bottom: 4px solid $blue;
+    padding: $govuk-gutter-half;
+    top: 100%;
+    right: 0;
+    background-color: white;
+
+    .close {
+      position: absolute;
+      top: -1em;
+      right: 1em;
+      text-decoration: none;
+    }
+  }
+
+  .download {
+    font-size: 1.2em;
+    margin-left: 0.5em;
+    &:before {
+      @include icon;
+      background-image: $download-icon;
+    }
+    + .download {
+      border-left: 1px solid;
+      padding-left: 0.5em;
+    }
+  }
+}
