@@ -15,6 +15,7 @@ export { default as Countdown } from './countdown';
 export { default as Datatable } from './datatable';
 export { default as Diff } from './diff';
 export { default as DiffText } from './diff-text';
+export { default as DownloadHeader } from './download-header';
 export { default as ErrorSummary } from './error-summary';
 export { default as ExpandingPanel } from './expanding-panel';
 export { default as ExpiryDate } from './expiry-date';
