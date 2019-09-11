@@ -40,4 +40,17 @@
       text-decoration: none;
     }
   }
+
+  .download {
+    font-size: 1.2em;
+    margin-left: 0.5em;
+    &:before {
+      @include icon;
+      background-image: $download-icon;
+    }
+    + .download {
+      border-left: 1px solid;
+      padding-left: 0.5em;
+    }
+  }
 }
