@@ -26,10 +26,12 @@ const DownloadHeader = ({ model, licenceType, isGranted, basename, showWord = tr
     download.current.style.lineHeight = `${height}px`;
   });
 
-  function toggleModal(e) {
-    e.preventDefault();
+  const toggleModal = (e, preventDefault = true) => {
+    if (preventDefault) {
+      e.preventDefault();
+    }
     updateModalShowing(!modalShowing);
-  }
+  };
 
   return (
     <div className="download-header" ref={container}>
@@ -39,9 +41,9 @@ const DownloadHeader = ({ model, licenceType, isGranted, basename, showWord = tr
           modalShowing && (
             <div className="download-modal">
               <a className="close" href="#" onClick={toggleModal}>✕</a>
-              { showPdf && <a href={`${basename}/pdf`}>As PDF</a> }
+              { showPdf && <a href={`${basename}/pdf`} onClick={e => toggleModal(e, false)}>As PDF</a> }
               { showPdf && showWord && <Fragment> | </Fragment> }
-              { showWord && <a href={`${basename}/docx`}>As Word (.docx)</a> }
+              { showWord && <a href={`${basename}/docx`} onClick={e => toggleModal(e, false)}>As Word (.docx)</a> }
             </div>
           )
         }
