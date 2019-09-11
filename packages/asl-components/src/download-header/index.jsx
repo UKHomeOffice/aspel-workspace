@@ -1,39 +1,9 @@
 import React, { useState, useRef, useEffect, Fragment } from 'react';
-import { useSelector, shallowEqual } from 'react-redux';
 
-const selector = ({
-  model,
-  licenceType,
-  isGranted,
-  basename,
-  showWord = true,
-  showPdf = true
-}) => ({
-  model,
-  licenceType,
-  isGranted,
-  basename,
-  showWord,
-  showPdf
-});
-
-export default function DownloadHeader() {
+const DownloadHeader = ({ model, licenceType, isGranted, basename, showWord = true, showPdf = true }) => {
   const [modalShowing, updateModalShowing] = useState(false);
   const container = useRef(null);
   const download = useRef(null);
-  const props = useSelector(selector, shallowEqual);
-
-  const {
-    model,
-    licenceType,
-    isGranted,
-    basename,
-    showWord,
-    showPdf
-  } = props;
-
-  console.log('props', props);
-
   let title = 'Licence';
 
   switch (licenceType) {
@@ -81,4 +51,6 @@ export default function DownloadHeader() {
       </div>
     </div>
   );
-}
+};
+
+export default DownloadHeader;
