@@ -3,6 +3,8 @@ const { router } = require('@asl/service/ui');
 const { pages, views, content } = require('@asl/pages');
 const { get } = require('lodash');
 
+const cachebuster = require('./middleware/profile-cachebuster');
+
 const {
   establishment,
   place,
@@ -66,14 +68,10 @@ module.exports = settings => {
     });
   });
 
-  app.use((req, res, next) => {
-    if (req.get('pragma') === 'no-cache') {
-      return req.user.refreshProfile()
-        .then(() => next())
-        .catch(next);
-    }
-    next();
-  });
+  app.use(cachebuster({
+    // don't invalidate profile cache on a project version update
+    whitelist: [ urls.project.version.update ]
+  }));
 
   app.use(urls.dashboard, dashboard());
 
