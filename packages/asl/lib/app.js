@@ -3,6 +3,8 @@ const { router } = require('@asl/service/ui');
 const { pages, views, content } = require('@asl/pages');
 const { get } = require('lodash');
 
+const cachebuster = require('./middleware/profile-cachebuster');
+
 const {
   establishment,
   place,
@@ -65,6 +67,11 @@ module.exports = settings => {
       next();
     });
   });
+
+  app.use(cachebuster({
+    // don't invalidate profile cache on a project version update
+    whitelist: [ urls.project.version.update ]
+  }));
 
   app.use(urls.dashboard, dashboard());
 
