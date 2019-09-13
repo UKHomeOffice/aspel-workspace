@@ -1,4 +1,4 @@
-const { omit, isEmpty } = require('lodash');
+const { omit, isEmpty, cloneDeep } = require('lodash');
 const content = require('../content');
 
 const conditionalRequired = (field, expected = 'Yes') => (value, model) => {
@@ -99,10 +99,10 @@ const schema = {
 
 const getSchema = type => {
   if (type === 'application') {
-    return omit(schema, 'comments');
+    return omit(cloneDeep(schema), 'comments');
   }
 
-  const amendmentSchema = omit(schema, 'ready');
+  const amendmentSchema = omit(cloneDeep(schema), 'ready');
   amendmentSchema.awerb.options[1] = {
     label: 'No',
     value: 'No',
