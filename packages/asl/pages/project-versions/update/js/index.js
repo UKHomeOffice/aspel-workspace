@@ -21,7 +21,7 @@ start({
     commentable: state.static.commentable,
     establishment: state.static.establishment,
     showComments: state.static.showComments,
-    readonly: (state.model.status !== 'draft' && state.model.status !== 'withdrawn') || !state.static.canUpdate,
+    readonly: state.model.status !== 'draft' || !state.static.canUpdate,
     user: `${state.static.user.firstName} ${state.static.user.lastName}`,
     basename: state.static.basename,
     schemaVersion: state.model.project.schemaVersion,
