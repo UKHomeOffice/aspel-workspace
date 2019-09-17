@@ -8,7 +8,7 @@ const config = merge(
   defaults([
     {
       dir: pages,
-      ignore: ['./pages/common/**', './pages/project-version/pdf/**']
+      ignore: ['./pages/common/**', '**/pdf/**']
     },
     __dirname
   ]),
