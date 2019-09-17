@@ -92,14 +92,14 @@ module.exports = settings => {
     next();
   });
 
-  app.use(urls.establishment.dashboard, establishment());
+  app.use(urls.establishment.dashboard, establishment(settings));
 
   app.use(urls.profile.list, profile());
   app.use(urls.place.list, place());
   app.use(urls.project.list, project());
   app.use(urls.project.version.update, updateVersion());
   app.use(urls.project.version.read, projectVersion(settings));
-  app.use(urls.pil.base, pil());
+  app.use(urls.pil.base, pil(settings));
 
   return app;
 };
