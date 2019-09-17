@@ -29,7 +29,7 @@ const Index = ({ metrics, since }) => {
   ];
   const now = new Date();
   const dates = {
-    all: '2019-07-31',
+    all: '2019-01-01',
     week: format(startOfWeek(now), 'YYYY-MM-DD'),
     month: format(startOfMonth(now), 'YYYY-MM-DD'),
     year: format(startOfYear(now), 'YYYY-MM-DD')
