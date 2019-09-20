@@ -104,6 +104,9 @@ td .govuk-button {
     background: lighten(govuk-colour('red'), 50%);
     border-right: 3px solid govuk-colour('red');
   }
+  td.numeric {
+    text-align: right;
+  }
 }
 
 .metric {

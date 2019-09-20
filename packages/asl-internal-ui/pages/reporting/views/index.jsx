@@ -6,7 +6,11 @@ import { format, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
 
 const Metric = ({ number, label }) => {
   if (number !== Math.floor(number)) {
-    number = number.toFixed(2);
+    try {
+      number = number.toFixed(2);
+    } catch (e) {
+      number = '-';
+    }
   }
   return <div className="metric">
     <p>{ number }</p>
@@ -34,8 +38,10 @@ const Index = ({ metrics, since }) => {
     month: format(startOfMonth(now), 'YYYY-MM-DD'),
     year: format(startOfYear(now), 'YYYY-MM-DD')
   }
-  const counts = countBy(metrics, 'type');
-  const pplApplications = metrics.filter(m => m.type === 'project-application');
+  const tasks = metrics.tasks;
+  const licences = metrics.counts;
+  const counts = countBy(tasks, 'type');
+  const pplApplications = tasks.filter(m => m.type === 'project-application');
   const iterations = pplApplications
     .map(m => m.iterations)
     .reduce((sum, i) => sum + i, 0);
@@ -47,7 +53,7 @@ const Index = ({ metrics, since }) => {
 
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-one-half">
-        <Metric number={metrics.length} label="total tasks completed" />
+        <Metric number={tasks.length} label="total tasks completed" />
       </div>
       <div className="govuk-grid-column-one-half">
         <Metric number={meanIterations} label="mean iterations per PPL application" />
@@ -64,10 +70,33 @@ const Index = ({ metrics, since }) => {
               types.map(type => {
                 return <tr key={type}>
                   <td><Snippet>{ type }</Snippet></td>
-                  <td>{ counts[type] || '0' }</td>
+                  <td className="numeric">{ counts[type] || '0' }</td>
                 </tr>;
               })
             }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h3>Active licences by type:</h3>
+
+    <div className="govuk-grid-row">
+      <div className="govuk-grid-column-full">
+        <table className="govuk-table">
+          <tbody>
+            <tr>
+              <td>Establishments</td>
+              <td className="numeric">{ licences.establishments }</td>
+            </tr>
+            <tr>
+              <td>Projects</td>
+              <td className="numeric">{ licences.projects }</td>
+            </tr>
+            <tr>
+              <td>PILs</td>
+              <td className="numeric">{ licences.pils }</td>
+            </tr>
           </tbody>
         </table>
       </div>
