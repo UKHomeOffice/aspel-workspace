@@ -19,7 +19,7 @@ module.exports = settings => {
 
   app.post('/', (req, res, next) => {
     let data;
-    if (req.body.roles) {
+    if (req.body.roles !== undefined) {
       data = roles.reduce((map, role) => {
         return { ...map, [role]: req.body.roles.includes(role) };
       }, {});
