@@ -38,6 +38,7 @@ class ManageRoles extends React.Component {
 
     return <Fragment>
       <form action="" method="post">
+        <input type="hidden" name="roles" value="" />
         <CheckboxGroup label={ <Snippet>asru.roles.title</Snippet> } name="roles" options={options} value={userRoles} />
         <ControlBar>
           <Button type="submit"><Snippet>asru.roles.save</Snippet></Button>
