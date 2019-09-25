@@ -1,9 +1,16 @@
-module.exports = ({ whitelist = [] }) => {
+module.exports = () => {
 
   return (req, res, next) => {
-    // destroy the profile cache if updating data
-    if (req.method !== 'get' && whitelist.includes(req.path)) {
-      req.session.profile = null;
+    const method = req.method.toLowerCase();
+    // if request is a get and the profile is stale then refresh it
+    if (method === 'get' && req.session.profile.stale) {
+      return req.user.refreshProfile()
+        .then(() => next())
+        .catch(next);
+    }
+    // mark the profile cache as stale if updating data
+    if (method !== 'get') {
+      req.session.profile.stale = true;
     }
     next();
   };

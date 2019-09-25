@@ -68,10 +68,7 @@ module.exports = settings => {
     });
   });
 
-  app.use(cachebuster({
-    // don't invalidate profile cache on a project version update
-    whitelist: [ urls.project.version.update ]
-  }));
+  app.use(cachebuster());
 
   app.use(urls.dashboard, dashboard());
 
