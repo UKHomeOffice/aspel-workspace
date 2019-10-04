@@ -31,7 +31,7 @@
     "@asl/components": "^4.3.0",
     "@asl/pages": "^16.4.2",
     "@asl/projects": "^5.2.4",
-    "@asl/service": "^7.9.1",
+    "@asl/service": "^7.9.2",
     "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
