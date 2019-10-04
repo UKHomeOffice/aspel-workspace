@@ -1,7 +1,7 @@
 #!/bin/bash
-REACT_REDUX_PATH="$(find . | grep ./node_modules/@asl/*/node_modules/react-redux/package.json)"
-REACT_ROUTER_PATH="$(find . | grep ./node_modules/@asl/*/node_modules/react-router/package.json)"
-REACT_PATH="$(find . | grep ./node_modules/@asl/*/node_modules/react/package.json)"
+REACT_REDUX_PATH="$(find . | grep ./node_modules/*/node_modules/react-redux/package.json)"
+REACT_PATH="$(find . | grep ./node_modules/*/node_modules/react/package.json)"
+REACT_ROUTER_PATH="$(find . | grep ./node_modules/*/node_modules/react-router/package.json)"
 
 if [ ! -z $REACT_PATH ]; then
   echo $REACT_PATH
@@ -17,7 +17,7 @@ fi
 
 if [ ! -z $REACT_ROUTER_PATH ]; then
   echo $REACT_ROUTER_PATH
-  echo "Found multiple versions of react-router, run npm dedupe"
+  echo "Found multiple versions of react-router, remove package-lock.json and node_modules directory and re-install"
   exit 1
 fi
 
