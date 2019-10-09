@@ -25,6 +25,7 @@ start({
     user: `${state.static.user.firstName} ${state.static.user.lastName}`,
     basename: state.static.basename,
     schemaVersion: state.model.project.schemaVersion,
-    newApplication: state.static.newApplication
+    newApplication: state.static.newApplication,
+    previousProtocols: state.static.previousProtocols
   }
 });
