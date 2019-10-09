@@ -1,7 +1,12 @@
 const { page } = require('@asl/service/ui');
 const bodyParser = require('body-parser');
 const { get } = require('lodash');
-const { canComment, getAllChanges, getProjectEstablishment } = require('@asl/pages/pages/project-version/middleware');
+const {
+  canComment,
+  getAllChanges,
+  getProjectEstablishment,
+  getPreviousProtocols
+} = require('@asl/pages/pages/project-version/middleware');
 
 module.exports = settings => {
   const app = page({
@@ -12,7 +17,8 @@ module.exports = settings => {
   app.use(
     canComment(),
     getAllChanges(),
-    getProjectEstablishment()
+    getProjectEstablishment(),
+    getPreviousProtocols()
   );
 
   app.use((req, res, next) => {
