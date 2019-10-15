@@ -1,3 +1,4 @@
+const { get } = require('lodash');
 const page = require('@asl/service/ui/page');
 const success = require('@asl/pages/pages/common/routers/success');
 
@@ -14,7 +15,7 @@ module.exports = settings => {
 
   app.use((req, res, next) => success({
     licence: 'project',
-    status: 'resubmitted',
+    status: get(req.project, 'openTasks[0].status', 'with-inspectorate'),
     type: req.project.status === 'active' ? 'amendment' : 'application'
   })(req, res, next));
 
