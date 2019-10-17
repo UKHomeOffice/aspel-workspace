@@ -11,44 +11,6 @@ const conditionalRequired = (field, expected = 'Yes') => (value, model) => {
 const getSchema = type => {
 
   const schema = {
-    authority: {
-      inputType: 'radioGroup',
-      inline: true,
-      className: 'smaller',
-      options: [
-        {
-          value: 'Yes',
-          label: 'Yes',
-          reveal: [
-            {
-              name: 'authority-pelholder-name',
-              inputType: 'inputText',
-              label: content.fields['authority-pelholder-name'].label,
-              validate: [
-                {
-                  customValidate: conditionalRequired('authority')
-                }
-              ]
-            },
-            {
-              name: 'authority-endorsement-date',
-              inputType: 'inputText',
-              label: content.fields['authority-endorsement-date'].label,
-              validate: [
-                {
-                  customValidate: conditionalRequired('authority')
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: 'Not yet',
-          label: 'Not yet'
-        }
-      ],
-      validate: ['required']
-    },
     awerb: {
       inputType: 'radioGroup',
       inline: true,
