@@ -2,7 +2,12 @@ module.exports = {
   dashboard: '/',
   account: {
     menu: '/account',
-    update: '/account/edit'
+    update: '/account/edit',
+    updateEmail: {
+      base: '/account/update-email',
+      confirm: '/account/update-email/confirm',
+      success: '/account/update-email/success'
+    }
   },
   establishment: {
     dashboard: '/e/:establishmentId',
