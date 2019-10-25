@@ -35,7 +35,8 @@ module.exports = settings => {
         'authority-pelholder-name',
         'authority-endorsement-date',
         'awerb-review-date',
-        'awerb-no-review-reason'
+        'awerb-no-review-reason',
+        'comments'
       ]));
     }
     next();
