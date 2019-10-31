@@ -13,6 +13,11 @@ module.exports = {
   PILH: 'Individual Licence Holder',
   PPLH: 'Project Licence Holder',
 
+  // Licence types
+  PIL: 'Individual Licence',
+  PPL: 'Project Licence',
+  PEL: 'Establishment Licence',
+
   // holding codes
   LA: 'Large animals',
   SA: 'Small animals',
