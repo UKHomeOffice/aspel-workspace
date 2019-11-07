@@ -3,9 +3,7 @@ const baseContent = require('../../content');
 
 module.exports = merge({}, baseContent, {
   title: 'Create an inactive establishment',
-  summary: `Once the new inactive establishment has been created, you should invite an admin user to it so they can begin to fill in further details.
-
-  When all the establishment's information has been added, you will then be able to grant the establishment's licence.`,
+  summary: `Once the new establishment has been created, you should invite an admin user to it so they can begin to fill in further details.`,
   fields: {
     name: {
       label: 'What is the name of the new establishment?'
@@ -17,6 +15,6 @@ module.exports = merge({}, baseContent, {
     }
   },
   notifications: {
-    establishmentCreated: 'Your inactive establishment has been created'
+    establishmentCreated: 'A new establishment has been created'
   }
 });

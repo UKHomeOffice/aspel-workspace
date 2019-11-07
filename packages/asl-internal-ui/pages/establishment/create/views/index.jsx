@@ -6,7 +6,7 @@ const Index = () => {
     <Fragment>
       <FormLayout>
         <Header title={<Snippet>title</Snippet>} />
-        <Snippet>summary</Snippet>
+        <p><Snippet>summary</Snippet></p>
       </FormLayout>
       <a href="?clear=true"><Snippet>buttons.cancel</Snippet></a>
     </Fragment>
