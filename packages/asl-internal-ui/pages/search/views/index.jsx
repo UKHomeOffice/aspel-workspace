@@ -81,6 +81,11 @@ const Index = ({ profile, searchType, searchableModels, filters }) => {
         </div>
       </div>
 
+      {
+        searchType === 'establishments' &&
+          <Link page="establishment.create" label={<Snippet>actions.establishment.create</Snippet>} className="govuk-button button-secondary" />
+      }
+
     </Fragment>
   );
 };

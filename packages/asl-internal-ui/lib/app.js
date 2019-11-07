@@ -14,6 +14,8 @@ const {
   pil
 } = pages;
 
+const establishmentAsruActions = require('../pages/establishment');
+
 const projectVersionAsruActions = require('./routers/project-version');
 
 const dashboard = require('../pages/dashboard');
@@ -51,6 +53,9 @@ module.exports = settings => {
   });
 
   app.param('establishmentId', (req, res, next, param) => {
+    if (param === 'create') {
+      return next();
+    }
     req.establishmentId = parseInt(param, 10);
     if (isNaN(req.establishmentId)) {
       return next(new NotFoundError());
@@ -86,6 +91,9 @@ module.exports = settings => {
 
   app.use(urls.account.menu, user());
   app.use(urls.feedback, feedback(settings));
+
+  // mount this here to avoid the establishment breadcrumb being added
+  app.use(urls.establishment.base, establishmentAsruActions(settings));
 
   app.use(urls.establishment.dashboard, (req, res, next) => {
     req.breadcrumb('establishment.dashboard');

@@ -14,5 +14,10 @@ module.exports = (searchType) => ({
     search: 'Search'
   },
   searchPanel,
-  fields: fields[searchType]
+  fields: fields[searchType],
+  actions: {
+    establishment: {
+      create: 'Create inactive establishment'
+    }
+  }
 });
