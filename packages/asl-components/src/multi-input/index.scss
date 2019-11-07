@@ -1,0 +1,25 @@
+.multi-input {
+  margin-top: $govuk-gutter-half;
+
+  > button {
+    margin-bottom: 0;
+  }
+
+  .multi-input-item {
+    display: flex;
+    margin-bottom: $govuk-gutter-half;
+
+    input, button {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: none;
+    }
+
+    :first-child {
+      flex-grow: 1;
+      margin-right: $govuk-gutter-half;
+    }
+  }
+}
