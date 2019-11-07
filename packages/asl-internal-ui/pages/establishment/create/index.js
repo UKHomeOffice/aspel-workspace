@@ -36,6 +36,7 @@ module.exports = settings => {
 
     req.api(`/establishment`, params)
       .then(response => {
+        delete req.session.form[req.model.id];
         const establishment = response.json.data;
         req.notification({ key: 'establishmentCreated' });
         res.redirect(req.buildRoute('establishment.read', { establishmentId: establishment.id }));
