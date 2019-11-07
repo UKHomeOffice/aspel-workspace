@@ -4,7 +4,7 @@ import without from 'lodash/without';
 import classnames from 'classnames';
 import ReactMarkdown from 'react-markdown';
 import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
-import { Snippet, ConditionalReveal } from '../';
+import { Snippet, ConditionalReveal, SpeciesSelector } from '../';
 
 const fields = {
   inputText: props => <Input { ...props } />,
@@ -17,6 +17,7 @@ const fields = {
   checkboxGroup: props => <CheckboxGroup { ...props } />,
   select: props => <Select { ...props } />,
   conditionalReveal: props => <ConditionalReveal { ...props } />,
+  speciesSelector: props => <SpeciesSelector {...props} />,
   text: props => props.value &&
     <div className={classnames('govuk-form-group', props.name)}>
       <h3>{ props.label }</h3>
