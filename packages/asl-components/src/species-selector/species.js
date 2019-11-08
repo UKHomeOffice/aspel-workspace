@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   sa: {
     label: 'Small animals',
     types: [
