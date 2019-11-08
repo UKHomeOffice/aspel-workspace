@@ -15,6 +15,9 @@ module.exports = {
     }
   },
   establishment: {
+    base: '/establishments',
+    create: '/establishments/create',
+    search: '/search/establishments',
     dashboard: '/establishments/:establishmentId',
     read: '/establishments/:establishmentId/details',
     asru: '/establishments/:establishmentId/asru/:asruUser',
