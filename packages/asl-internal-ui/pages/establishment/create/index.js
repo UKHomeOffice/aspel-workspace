@@ -39,7 +39,7 @@ module.exports = settings => {
         delete req.session.form[req.model.id];
         const establishment = response.json.data;
         req.notification({ key: 'establishmentCreated' });
-        res.redirect(req.buildRoute('establishment.read', { establishmentId: establishment.id }));
+        res.redirect(req.buildRoute('establishment.dashboard', { establishmentId: establishment.id }));
       })
       .catch(next);
   });
