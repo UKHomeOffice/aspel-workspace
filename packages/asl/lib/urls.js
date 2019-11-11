@@ -64,7 +64,8 @@ module.exports = {
     training: {
       exempt: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training/exempt',
       certificate: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training',
-      modules: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training/modules'
+      modules: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training/modules',
+      species: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/training/species'
     },
     exemptions: {
       exempt: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/exemptions',
