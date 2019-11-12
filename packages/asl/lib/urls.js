@@ -56,6 +56,7 @@ module.exports = {
     read: '/e/:establishmentId/people/:profileId/pil/:pilId',
     update: '/e/:establishmentId/people/:profileId/pil/:pilId/edit',
     procedures: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/procedures',
+    species: '/e/:establishmentId/people/:profileId/pil/:pilId/edit/animal-types',
     revoke: {
       base: '/e/:establishmentId/people/:profileId/pil/:pilId/revoke',
       confirm: '/e/:establishmentId/people/:profileId/pil/:pilId/revoke/confirm',
