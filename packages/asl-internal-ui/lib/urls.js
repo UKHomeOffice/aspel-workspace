@@ -61,6 +61,7 @@ module.exports = {
     read: '/establishments/:establishmentId/people/:profileId/pil/:pilId',
     update: '/establishments/:establishmentId/people/:profileId/pil/:pilId/edit',
     procedures: '/establishments/:establishmentId/people/:profileId/pil/:pilId/edit/procedures',
+    species: '/establishments/:establishmentId/people/:profileId/pil/:pilId/edit/animal-types',
     revoke: {
       base: '/establishments/:establishmentId/people/:profileId/pil/:pilId/revoke',
       confirm: '/establishments/:establishmentId/people/:profileId/pil/:pilId/revoke/confirm',
@@ -69,7 +70,8 @@ module.exports = {
     training: {
       exempt: '/establishments/:establishmentId/people/:profileId/pil/:pilId/edit/training/exempt',
       certificate: '/establishments/:establishmentId/people/:profileId/pil/:pilId/edit/training',
-      modules: '/establishments/:establishmentId/people/:profileId/pil/:pilId/edit/training/modules'
+      modules: '/establishments/:establishmentId/people/:profileId/pil/:pilId/edit/training/modules',
+      species: '/establishments/:establishmentId/people/:profileId/pil/:pilId/edit/training/species'
     },
     exemptions: {
       exempt: '/establishments/:establishmentId/people/:profileId/pil/:pilId/edit/exemptions',
