@@ -22,14 +22,8 @@ describe('<Breadcrumbs />', () => {
     const crumbs = ['dashboard'];
     const wrapper = shallow(<Breadcrumbs crumbs={crumbs} />);
 
-    test('renders 1 <Breadcrumb /> elements', () => {
-      expect(wrapper.find(Breadcrumb).length).toBe(1);
-    });
-
-    test('passes a label crumb to the <Breadcrumb />', () => {
-      const el = wrapper.find(Breadcrumb).last();
-      expect(el.props().crumb).toEqual('dashboard');
-      expect(el.props().link).toEqual(false);
+    test('doesn\'t render any elements', () => {
+      expect(wrapper.find(Breadcrumb).length).toBe(0);
     });
   });
 

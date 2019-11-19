@@ -6,6 +6,19 @@ const replace = params => fragment => {
   return fragment[0] === ':' ? params[fragment.substr(1)] : fragment;
 };
 
+function getUrl(urls, parts, replacer) {
+  let item = urls;
+  const sections = parts.map(part => {
+    const section = get(item, part);
+    if (!section) {
+      throw new Error(`Unknown link target: ${parts.join('.')}`);
+    }
+    item = section.routes;
+    return section.path.split('/').map(replacer).join('/');
+  });
+  return sections.join('');
+}
+
 const Link = ({
   url,
   urls,
@@ -16,13 +29,11 @@ const Link = ({
   ...props
 }) => {
   if (page) {
-    const href = get(urls, page);
-    if (typeof href !== 'string') {
-      throw new Error(`Unknown link target: ${page}`);
-    }
+    const parts = page.split('.');
     const replacer = replace(props);
-    url = href.split('/').map(replacer).join('/');
-    return <a className={className} href={url}>{label}</a>;
+    const href = getUrl(urls, parts, replacer);
+
+    return <a className={className} href={href}>{label}</a>;
   } else {
     return <a className={className} href={`${url}/${path}`}>{label}</a>;
   }

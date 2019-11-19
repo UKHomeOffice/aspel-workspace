@@ -71,7 +71,7 @@ class LicenceStatusBanner extends Component {
           {
             isInactiveVersion && <Fragment>
               <p><Snippet>invalidLicence.summary.ppl_active</Snippet></p>
-              <p><Link page="project.version.read" versionId={this.props.licence.granted.id} label={<Snippet>{'invalidLicence.view'}</Snippet>} /></p>
+              <p><Link page="projectVersion" versionId={this.props.licence.granted.id} label={<Snippet>{'invalidLicence.view'}</Snippet>} /></p>
             </Fragment>
           }
           {
