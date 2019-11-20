@@ -16,6 +16,7 @@ module.exports = {
     profile: process.env.API_URL,
     permissions: process.env.PERMISSIONS_SERVICE
   },
+  errorEvent: 'asl-internal.error',
   verboseErrors: process.env.VERBOSE_ERRORS === 'TRUE',
   pdfService: process.env.PDF_SERVICE
 };
