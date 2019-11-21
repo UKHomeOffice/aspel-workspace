@@ -22,7 +22,7 @@ export const Breadcrumb = ({ crumb = {}, link = false }) => {
   );
 };
 
-const renderNull = crumbs => !crumbs || !crumbs.length || crumbs.length === 1 || !Array.isArray(crumbs);
+const renderNull = crumbs => !crumbs || !Array.isArray(crumbs) || crumbs.length < 2;
 
 const Breadcrumbs = ({ crumbs }) => {
   if (renderNull(crumbs)) {
