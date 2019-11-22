@@ -10,7 +10,6 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
-    req.breadcrumb('establishment.create');
     req.model = buildModel(schema);
     req.model.id = 'new-establishment';
     next();

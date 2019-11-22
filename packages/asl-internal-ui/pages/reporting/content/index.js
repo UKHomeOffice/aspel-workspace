@@ -15,8 +15,5 @@ module.exports = {
     week: 'This week',
     month: 'This month',
     year: 'This year'
-  },
-  breadcrumbs: {
-    metrics: 'Performance metrics'
   }
 };

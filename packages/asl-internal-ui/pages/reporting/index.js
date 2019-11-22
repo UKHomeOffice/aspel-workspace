@@ -53,7 +53,6 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res, next) => {
-    req.breadcrumb('metrics');
     const since = req.query.since || '2019-07-31';
     req.api(`/metrics?since=${since}`)
       .then(response => {

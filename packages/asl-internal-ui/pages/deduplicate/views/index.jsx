@@ -90,7 +90,7 @@ class Index extends React.Component {
         )
       }
       <p>
-        <Link page="global.profile" label={<Snippet>actions.back</Snippet>} />
+        <Link page="globalProfile" label={<Snippet>actions.back</Snippet>} />
       </p>
     </Fragment>;
   }

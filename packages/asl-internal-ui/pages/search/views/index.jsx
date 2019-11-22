@@ -28,7 +28,7 @@ const formatters = {
   profiles: {
     lastName: {
       format: (lastName, profile) => {
-        return <Link page="global.profile" profileId={profile.id} label={`${profile.firstName} ${lastName}`} />;
+        return <Link page="globalProfile" profileId={profile.id} label={`${profile.firstName} ${lastName}`} />;
       }
     },
     establishments: {
@@ -57,7 +57,7 @@ const formatters = {
     },
     licenceHolder: {
       format: ({ id, firstName, lastName }) => {
-        return <Link page="global.profile" profileId={id} label={`${firstName} ${lastName}`} />;
+        return <Link page="globalProfile" profileId={id} label={`${firstName} ${lastName}`} />;
       }
     },
     expiryDate: {
@@ -83,7 +83,7 @@ const Index = ({ profile, searchType, searchableModels, filters }) => {
 
       {
         searchType === 'establishments' &&
-          <Link page="establishment.create" label={<Snippet>actions.establishment.create</Snippet>} className="govuk-button button-secondary" />
+          <Link page="createEstablishment" label={<Snippet>actions.establishment.create</Snippet>} className="govuk-button button-secondary" />
       }
 
     </Fragment>

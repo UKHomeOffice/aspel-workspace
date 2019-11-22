@@ -1,35 +1,24 @@
-const bodyParser = require('body-parser');
-const { router } = require('@asl/service/ui');
+const { router, mountRoutes } = require('@asl/service/ui');
+const { mapValues } = require('lodash');
 const { NotAuthorisedError, NotFoundError } = require('./errors');
-const { pages, content, views } = require('@asl/pages');
-const {
-  establishment,
-  place,
-  profile,
-  project,
-  user,
-  task,
-  feedback,
-  projectVersion,
-  pil
-} = pages;
+const baseContent = require('../pages/common/content');
+const { content, views } = require('@asl/pages');
 
-const establishmentAsruActions = require('../pages/establishment');
+const routes = require('./routes');
 
-const projectVersionAsruActions = require('./routers/project-version');
+function traverseRoutes(routes) {
+  return mapValues(routes, ({ path, router, routes = {} }) => {
+    return {
+      path,
+      routes: traverseRoutes(Object.assign({}, router.routes, routes))
+    };
+  });
+}
 
-const dashboard = require('../pages/dashboard');
-const search = require('../pages/search');
-const globalProfile = require('../pages/profile');
-const asru = require('../pages/asru-assignment');
-const dedupe = require('../pages/deduplicate');
-
-const reporting = require('../pages/reporting');
-
-const urls = require('./urls');
+const urls = traverseRoutes(routes);
 
 module.exports = settings => {
-  const app = router({ ...settings, views, urls });
+  const app = router({ ...settings, views, urls, content: baseContent });
 
   app.use((req, res, next) => {
     if (!req.user || !req.user.profile || !req.user.profile.asruUser) {
@@ -39,8 +28,6 @@ module.exports = settings => {
   });
 
   app.use(content);
-
-  app.use(bodyParser.urlencoded({ extended: true }));
 
   app.param('profileId', (req, res, next, param) => {
     req.profileId = param;
@@ -63,11 +50,6 @@ module.exports = settings => {
     next();
   });
 
-  app.param('asruUser', (req, res, next, param) => {
-    req.asruUser = param;
-    next();
-  });
-
   app.use((req, res, next) => {
     res.locals.footerLinks = [
       { label: 'Privacy notice', href: '/privacy' },
@@ -76,40 +58,7 @@ module.exports = settings => {
     next();
   });
 
-  app.use(urls.dashboard, dashboard(settings));
-
-  app.use((req, res, next) => {
-    req.breadcrumb('dashboard');
-    next();
-  });
-
-  app.use(urls.task.base, task());
-
-  app.use(urls.search, search(settings));
-  app.use(urls.global.profile, globalProfile());
-  app.use(urls.global.dedupe, dedupe());
-
-  app.use(urls.account.menu, user());
-  app.use(urls.feedback, feedback(settings));
-
-  // mount this here to avoid the establishment breadcrumb being added
-  app.use(urls.establishment.base, establishmentAsruActions(settings));
-
-  app.use(urls.establishment.dashboard, (req, res, next) => {
-    req.breadcrumb('establishment.dashboard');
-    next();
-  });
-
-  app.use(urls.establishment.dashboard, establishment(settings));
-  app.use(urls.profile.list, profile());
-  app.use(urls.pil.base, pil(settings));
-  app.use(urls.place.list, place());
-  app.use(urls.project.list, project());
-  app.use(urls.project.version.read, projectVersionAsruActions(settings));
-  app.use(urls.project.version.read, projectVersion(settings));
-  app.use(urls.establishment.asru, asru());
-
-  app.use('/reporting', reporting());
+  mountRoutes({ app, routes, settings });
 
   return app;
 };

@@ -11,7 +11,7 @@ module.exports = () => {
         data: req.body
       }
     };
-    req.api(`/project-versions/${req.params.versionId}/conditions`, opts)
+    req.api(`/project-versions/${req.versionId}/conditions`, opts)
       .then(() => res.json({}))
       .catch(next);
   });

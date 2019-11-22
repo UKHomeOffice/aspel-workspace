@@ -10,7 +10,6 @@ module.exports = settings => {
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.get('/', (req, res, next) => {
-    req.breadcrumb('profile.view');
     return req.api(`/profile/${req.profileId}`)
       .then(({ json: { data } }) => {
         res.locals.static.profile = data;
@@ -45,7 +44,7 @@ module.exports = settings => {
     return req.api(`/profile/${req.profileId}/merge`, params)
       .then(({ json: { data } }) => {
         req.notification({ key: 'success' });
-        return res.redirect(req.buildRoute('global.profile', { profileId: req.body.profile }));
+        return res.redirect(req.buildRoute('globalProfile', { profileId: req.body.profile }));
       })
       .catch(next);
   });

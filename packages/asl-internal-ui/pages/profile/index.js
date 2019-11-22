@@ -38,7 +38,7 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res, next) => {
-    req.breadcrumb('profile.view');
+    req.breadcrumb('profile.read');
     return req.api(`/profile/${req.profileId}`)
       .then(({ json: { data, meta } }) => {
         res.locals.model = data;
