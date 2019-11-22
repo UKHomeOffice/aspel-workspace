@@ -24,15 +24,15 @@ module.exports = settings => {
   app.use((req, res, next) => {
     const isAmendment = req.project.status !== 'inactive';
     if (isAmendment) {
-      req.breadcrumb('project.amend');
+      req.breadcrumb('projectVersion.update');
     } else {
-      req.breadcrumb('project.update');
+      req.breadcrumb('projectVersion.update-draft');
     }
     const openTask = get(req.project, 'openTasks[0]');
     const showComments = req.version.status !== 'granted' && !!openTask;
     const previousVersion = req.project.versions[1];
 
-    res.locals.static.basename = req.buildRoute('project.version.update');
+    res.locals.static.basename = req.buildRoute('projectVersion.update');
     res.locals.static.establishment = req.project.establishment;
     res.locals.static.user = req.user.profile;
     res.locals.static.showComments = showComments;

@@ -1,27 +1,22 @@
 const jwt = require('jsonwebtoken');
-const { router } = require('@asl/service/ui');
-const { pages, views, content } = require('@asl/pages');
-const { get } = require('lodash');
+const { router, mountRoutes } = require('@asl/service/ui');
+const { views, content } = require('@asl/pages');
+const { get, mapValues } = require('lodash');
 
 const cachebuster = require('./middleware/profile-cachebuster');
 
-const {
-  establishment,
-  place,
-  profile,
-  project,
-  pil,
-  task,
-  user,
-  feedback,
-  projectVersion
-} = pages;
+const routes = require('./routes');
 
-const urls = require('./urls');
-const dashboard = require('../pages/dashboard');
-const invitation = require('../pages/invitation');
+function traverseRoutes(routes) {
+  return mapValues(routes, ({ path, router, routes = {} }) => {
+    return {
+      path,
+      routes: traverseRoutes(Object.assign({}, router.routes, routes))
+    };
+  });
+}
 
-const updateVersion = require('../pages/project-versions');
+const urls = traverseRoutes(routes);
 
 module.exports = settings => {
   const app = router({ ...settings, views, urls });
@@ -70,33 +65,7 @@ module.exports = settings => {
 
   app.use(cachebuster());
 
-  app.use(urls.dashboard, dashboard());
-
-  // add "home" breadcrmb to every subsequent page
-  app.use((req, res, next) => {
-    req.breadcrumb('dashboard');
-    next();
-  });
-
-  app.use(urls.invitation, invitation());
-  app.use(urls.feedback, feedback());
-  app.use(urls.account.menu, user());
-  app.use(urls.task.base, task());
-
-  // add "establishment" breacrumb to all pages scoped under an establishment
-  app.use(urls.establishment.dashboard, (req, res, next) => {
-    req.breadcrumb('establishment.dashboard');
-    next();
-  });
-
-  app.use(urls.establishment.dashboard, establishment(settings));
-
-  app.use(urls.profile.list, profile());
-  app.use(urls.place.list, place());
-  app.use(urls.project.list, project());
-  app.use(urls.project.version.update, updateVersion());
-  app.use(urls.project.version.read, projectVersion(settings));
-  app.use(urls.pil.base, pil(settings));
+  mountRoutes({ app, routes, settings });
 
   return app;
 };

@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import { connect } from 'react-redux';
-import { LicenceStatusBanner } from '@asl/components';
+import LicenceStatusBanner from '@asl/pages/pages/common/components/licence-status-banner';
 
 const Project = ({ project, version, establishment }) => {
   return (<Fragment>
