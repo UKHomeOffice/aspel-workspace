@@ -12,6 +12,7 @@ module.exports = settings => {
   app.use((req, res, next) => {
     req.model = buildModel(schema);
     req.model.id = 'asru-establishment';
+    req.asruUser = req.params.asruUser;
     res.locals.static.baseUrl = req.baseUrl;
     res.locals.static.estId = req.establishment.id;
     res.locals.static.asruUser = req.asruUser;
@@ -26,7 +27,9 @@ module.exports = settings => {
     }
 
     next();
-  }, form({
+  });
+
+  app.use(form({
     model: 'asruEstablishment',
     configure: (req, res, next) => {
       if (req.asruUser === 'inspectors') {
@@ -43,6 +46,8 @@ module.exports = settings => {
           })
           .then(() => next())
           .catch(next);
+      } else {
+        next();
       }
     }
   }));

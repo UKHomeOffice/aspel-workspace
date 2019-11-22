@@ -14,7 +14,6 @@ module.exports = settings => {
   });
 
   app.use('/', (req, res, next) => {
-    req.breadcrumb('search');
     req.searchType = req.params.searchType || searchableModels[0];
 
     merge(res.locals.static.content, content(req.searchType));
