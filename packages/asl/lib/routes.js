@@ -12,7 +12,7 @@ module.exports = {
   account: {
     path: '/account',
     breadcrumb: false,
-    router: pages.user,
+    router: pages.user
   },
   establishment: {
     path: '/e/:establishmentId',

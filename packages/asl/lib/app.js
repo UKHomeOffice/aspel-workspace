@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { router, mountRoutes } = require('@asl/service/ui');
-const { pages, views, content } = require('@asl/pages');
+const { views, content } = require('@asl/pages');
 const { get, mapValues } = require('lodash');
-const dashboard = require('../pages/dashboard');
 
 const cachebuster = require('./middleware/profile-cachebuster');
 
@@ -66,36 +65,7 @@ module.exports = settings => {
 
   app.use(cachebuster());
 
-  mountRoutes({ app, routes, settings })
-
-  // app.use('/', dashboard());
-  //
-  // // add "home" breadcrmb to every subsequent page
-
-  // app.use(urls.invitation, invitation());
-  // app.use(urls.feedback, feedback());
-  // app.use(urls.account.menu, user());
-  // app.use(urls.task.base, task());
-  //
-  // // add "establishment" breacrumb to all pages scoped under an establishment
-  // app.use(urls.establishment.dashboard, (req, res, next) => {
-  //   req.breadcrumb('establishment.dashboard');
-  //   next();
-  // });
-  //
-  // app.use(urls.establishment.dashboard, establishment(settings));
-  //
-  // app.use(urls.profile.list, profile());
-  // app.use(urls.place.list, place());
-  // app.use(urls.project.list, project());
-  // app.use(urls.project.version.update, updateVersion());
-  // app.use(urls.project.version.read, projectVersion(settings));
-  // app.use(urls.pil, pil(settings));
-
-  // Object.keys(routes).forEach(key => {
-  //   const route = routes[key];
-  //   app.use(route.path, route.router({ ...settings, name: key }))
-  // });
+  mountRoutes({ app, routes, settings });
 
   return app;
 };
