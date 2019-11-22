@@ -40,7 +40,7 @@ const Index = ({ profile }) => (
             <ExpandingPanel key={establishment.id} title={establishment.name} isOpen={profile.establishments.length === 1}>
               <p><Snippet>establishment.description</Snippet></p>
               <p>
-                <Link page="establishment.dashboard" establishmentId={establishment.id} label={<Snippet>establishment.link</Snippet>} className="govuk-button" />
+                <Link page="establishment" establishmentId={establishment.id} label={<Snippet>establishment.link</Snippet>} className="govuk-button" />
               </p>
               <Profile establishment={establishment} profile={profile} allowedActions={profile.allowedActions[establishment.id]} isOwnProfile={true} />
             </ExpandingPanel>

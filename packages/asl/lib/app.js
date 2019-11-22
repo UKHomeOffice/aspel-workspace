@@ -1,27 +1,23 @@
 const jwt = require('jsonwebtoken');
-const { router } = require('@asl/service/ui');
+const { router, mountRoutes } = require('@asl/service/ui');
 const { pages, views, content } = require('@asl/pages');
-const { get } = require('lodash');
+const { get, mapValues } = require('lodash');
+const dashboard = require('../pages/dashboard');
 
 const cachebuster = require('./middleware/profile-cachebuster');
 
-const {
-  establishment,
-  place,
-  profile,
-  project,
-  pil,
-  task,
-  user,
-  feedback,
-  projectVersion
-} = pages;
+const routes = require('./routes');
 
-const urls = require('./urls');
-const dashboard = require('../pages/dashboard');
-const invitation = require('../pages/invitation');
+function traverseRoutes(routes) {
+  return mapValues(routes, ({ path, router, routes = {} }) => {
+    return {
+      path,
+      routes: traverseRoutes(Object.assign({}, router.routes, routes))
+    };
+  });
+}
 
-const updateVersion = require('../pages/project-versions');
+const urls = traverseRoutes(routes);
 
 module.exports = settings => {
   const app = router({ ...settings, views, urls });
@@ -70,33 +66,36 @@ module.exports = settings => {
 
   app.use(cachebuster());
 
-  app.use(urls.dashboard, dashboard());
+  mountRoutes({ app, routes, settings })
 
-  // add "home" breadcrmb to every subsequent page
-  app.use((req, res, next) => {
-    req.breadcrumb('dashboard');
-    next();
-  });
+  // app.use('/', dashboard());
+  //
+  // // add "home" breadcrmb to every subsequent page
 
-  app.use(urls.invitation, invitation());
-  app.use(urls.feedback, feedback());
-  app.use(urls.account.menu, user());
-  app.use(urls.task.base, task());
+  // app.use(urls.invitation, invitation());
+  // app.use(urls.feedback, feedback());
+  // app.use(urls.account.menu, user());
+  // app.use(urls.task.base, task());
+  //
+  // // add "establishment" breacrumb to all pages scoped under an establishment
+  // app.use(urls.establishment.dashboard, (req, res, next) => {
+  //   req.breadcrumb('establishment.dashboard');
+  //   next();
+  // });
+  //
+  // app.use(urls.establishment.dashboard, establishment(settings));
+  //
+  // app.use(urls.profile.list, profile());
+  // app.use(urls.place.list, place());
+  // app.use(urls.project.list, project());
+  // app.use(urls.project.version.update, updateVersion());
+  // app.use(urls.project.version.read, projectVersion(settings));
+  // app.use(urls.pil, pil(settings));
 
-  // add "establishment" breacrumb to all pages scoped under an establishment
-  app.use(urls.establishment.dashboard, (req, res, next) => {
-    req.breadcrumb('establishment.dashboard');
-    next();
-  });
-
-  app.use(urls.establishment.dashboard, establishment(settings));
-
-  app.use(urls.profile.list, profile());
-  app.use(urls.place.list, place());
-  app.use(urls.project.list, project());
-  app.use(urls.project.version.update, updateVersion());
-  app.use(urls.project.version.read, projectVersion(settings));
-  app.use(urls.pil.base, pil(settings));
+  // Object.keys(routes).forEach(key => {
+  //   const route = routes[key];
+  //   app.use(route.path, route.router({ ...settings, name: key }))
+  // });
 
   return app;
 };
