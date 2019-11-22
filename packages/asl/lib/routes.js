@@ -15,27 +15,27 @@ module.exports = {
     router: pages.user
   },
   establishment: {
-    path: '/e/:establishmentId',
+    path: '/establishments/:establishmentId',
     breadcrumb: false,
     router: pages.establishment
   },
   profile: {
-    path: '/e/:establishmentId/people',
+    path: '/establishments/:establishmentId/people',
     breadcrumb: false,
     router: pages.profile
   },
   role: {
-    path: '/e/:establishmentId/people/:profileId/role',
+    path: '/establishments/:establishmentId/people/:profileId/role',
     breadcrumb: false,
     router: pages.role
   },
   project: {
-    path: '/e/:establishmentId/projects',
+    path: '/establishments/:establishmentId/projects',
     breadcrumb: false,
     router: pages.project
   },
   projectVersion: {
-    path: '/e/:establishmentId/projects/:projectId/versions/:versionId',
+    path: '/establishments/:establishmentId/projects/:projectId/versions/:versionId',
     breadcrumb: false,
     router: pages.projectVersion,
     routes: {
@@ -47,12 +47,12 @@ module.exports = {
     }
   },
   place: {
-    path: '/e/:establishmentId/places',
+    path: '/establishments/:establishmentId/places',
     breadcrumb: false,
     router: pages.place
   },
   pil: {
-    path: '/e/:establishmentId/people/:profileId/pil',
+    path: '/establishments/:establishmentId/people/:profileId/pil',
     breadcrumb: false,
     router: pages.pil
   },

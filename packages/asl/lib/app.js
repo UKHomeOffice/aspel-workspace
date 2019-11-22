@@ -21,10 +21,14 @@ const urls = traverseRoutes(routes);
 module.exports = settings => {
   const app = router({ ...settings, views, urls });
 
+  app.use('/e', (req, res) => {
+    res.redirect(req.originalUrl.replace('/e', '/establishments'), 301);
+  });
+
   app.use((req, res, next) => {
     if (settings.internalUrl && get(req, 'user.profile.asruUser')) {
       req.session.destroy();
-      return res.redirect(settings.internalUrl);
+      return res.redirect(`${settings.internalUrl}${req.originalUrl}`);
     }
     next();
   });
