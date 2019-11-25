@@ -33,10 +33,6 @@ module.exports = settings => {
     configure: (req, res, next) => {
       const searchType = req.searchType;
 
-      if (searchType && !searchableModels.includes(searchType)) {
-        return next(new NotFoundError());
-      }
-
       req.datatable.searchType = searchType;
       req.datatable.schema = schemas[searchType];
       req.datatable.apiPath = `/search/${searchType}`;
@@ -45,7 +41,7 @@ module.exports = settings => {
     }
   })());
 
-  app.get('/', (req, res) => res.sendResponse())
+  app.get('/', (req, res) => res.sendResponse());
 
   return app;
 };
