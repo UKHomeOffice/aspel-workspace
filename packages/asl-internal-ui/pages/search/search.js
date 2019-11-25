@@ -15,6 +15,9 @@ module.exports = settings => {
 
   app.use((req, res, next) => {
     req.searchType = req.params.searchType || searchableModels[0];
+    if (req.searchType && !searchableModels.includes(req.searchType)) {
+      return next(new NotFoundError());
+    }
     next();
   });
 
