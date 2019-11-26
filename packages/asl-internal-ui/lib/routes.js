@@ -15,7 +15,7 @@ module.exports = {
     router: dashboard
   },
   search: {
-    path: '/search(/:searchType)?',
+    path: '/search',
     router: search
   },
   globalProfile: {
