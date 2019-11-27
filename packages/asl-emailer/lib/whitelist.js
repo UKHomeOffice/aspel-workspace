@@ -1,5 +1,4 @@
 module.exports = settings => (req, res, next) => {
-
   const domain = req.body.to.split('@')[1];
 
   const isAllowed = settings.whitelist.reduce((matched, d) => {
