@@ -2,7 +2,12 @@
   <img src="cid:hologo" alt="Home Office" width="150" height="36" style="margin-top:10px" />
 </div>
 <div style="background-color:#f3f3f3;padding:30px 66px;">
-  <p>Hello {{name}}</p>
+  {{#name}}
+    <p>Hello {{name}}</p>
+  {{/name}}
+  {{^name}}
+    <p>Hello</p>
+  {{/name}}
 
   {{>message}}
 
