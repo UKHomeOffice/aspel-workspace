@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import map from 'lodash/map';
 import without from 'lodash/without';
+import castArray from 'lodash/castArray';
 import classnames from 'classnames';
 import ReactMarkdown from 'react-markdown';
 import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
@@ -37,6 +38,10 @@ function Field({
   showIf,
   ...props
 }) {
+  if (inputType === 'checkboxGroup') {
+    value = castArray(value);
+  }
+
   const [fieldValue, setFieldValue] = useState(value);
 
   useEffect(() => {
@@ -50,7 +55,7 @@ function Field({
 
   function onFieldChange(e) {
     let v = e.target.value;
-    if (Array.isArray(value)) {
+    if (Array.isArray(fieldValue)) {
       if (fieldValue.includes(v)) {
         v = without(fieldValue, v);
       } else {
