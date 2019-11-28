@@ -27,7 +27,7 @@
   "homepage": "https://github.com/UKHomeOffice/asl#readme",
   "dependencies": {
     "@asl/components": "^5.0.0",
-    "@asl/pages": "^17.1.2",
+    "@asl/pages": "^17.1.3",
     "@asl/projects": "^5.12.17",
     "@asl/service": "^7.15.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
