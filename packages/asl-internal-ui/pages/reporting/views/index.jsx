@@ -22,8 +22,10 @@ const Index = ({ metrics, since }) => {
   const types = [
     'project-application',
     'project-amendment',
+    'project-revoke',
     'pil-grant',
     'pil-revoke',
+    'pil-transfer',
     'role-create',
     'role-delete',
     'place-update',
@@ -41,22 +43,32 @@ const Index = ({ metrics, since }) => {
   const tasks = metrics.tasks;
   const licences = metrics.counts;
   const counts = countBy(tasks, 'type');
-  const pplApplications = tasks.filter(m => m.type === 'project-application');
-  const iterations = pplApplications
-    .map(m => m.iterations)
-    .reduce((sum, i) => sum + i, 0);
-  const meanIterations = pplApplications.length ? iterations / pplApplications.length : '-';
+
+  const getMeanIterations = schemaVersion => {
+    const pplApplications = tasks.filter(m => m.type === 'project-application')
+      .filter(m => m.schemaVersion === schemaVersion);
+    const iterations = pplApplications
+      .map(m => m.iterations)
+      .reduce((sum, i) => sum + i, 0);
+    return pplApplications.length ? iterations / pplApplications.length : '-';
+  };
+
+  const meanIterationsLegacy = getMeanIterations(0);
+  const meanIterations = getMeanIterations(1);
 
   return <Fragment>
 
     <Header title="Performance metrics"/>
 
     <div className="govuk-grid-row">
-      <div className="govuk-grid-column-one-half">
+      <div className="govuk-grid-column-one-third">
         <Metric number={tasks.length} label="total tasks completed" />
       </div>
-      <div className="govuk-grid-column-one-half">
-        <Metric number={meanIterations} label="mean iterations per PPL application" />
+      <div className="govuk-grid-column-one-third">
+        <Metric number={meanIterationsLegacy} label="iterations per PPL application (Legacy)" />
+      </div>
+      <div className="govuk-grid-column-one-third">
+        <Metric number={meanIterations} label="iterations per PPL application (New)" />
       </div>
     </div>
 
