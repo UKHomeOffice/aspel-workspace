@@ -1,3 +1,4 @@
+const bodyParser = require('body-parser');
 const { page } = require('@asl/service/ui');
 const { buildModel } = require('@asl/pages/lib/utils');
 const form = require('@asl/pages/pages/common/routers/form');
@@ -52,24 +53,26 @@ module.exports = settings => {
     }
   }));
 
-  app.post('/delete', (req, res, next) => {
-    return Promise.resolve()
-      .then(() => req.api('/asru', {
-        method: 'DELETE',
-        json: {
-          data: {
-            profileId: req.body['profileId'],
-            establishmentId: req.establishmentId
+  app.post('/delete',
+    bodyParser.urlencoded(),
+    (req, res, next) => {
+      return Promise.resolve()
+        .then(() => req.api('/asru', {
+          method: 'DELETE',
+          json: {
+            data: {
+              profileId: req.body['profileId'],
+              establishmentId: req.establishmentId
+            }
           }
-        }
-      }))
-      .then(() => {
-        req.notification({ key: 'success' });
-        return res.redirect(req.buildRoute('establishment.dashboard', { establishmentId: req.establishment.id }));
-      })
-      .catch(next);
-
-  });
+        }))
+        .then(() => {
+          req.notification({ key: 'success' });
+          return res.redirect(req.buildRoute('establishment.dashboard', { establishmentId: req.establishment.id }));
+        })
+        .catch(next);
+    }
+  );
 
   app.post('/', (req, res, next) => {
     return Promise.resolve()
