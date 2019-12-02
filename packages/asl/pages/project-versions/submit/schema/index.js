@@ -19,9 +19,8 @@ const getSchema = type => {
         {
           value: 'Yes',
           label: 'Yes',
-          reveal: [
-            {
-              name: 'awerb-review-date',
+          reveal: {
+            'awerb-review-date': {
               inputType: 'textarea',
               label: content.fields['awerb-review-date'].label,
               validate: [
@@ -30,7 +29,7 @@ const getSchema = type => {
                 }
               ]
             }
-          ]
+          }
         },
         {
           value: 'Not yet',
@@ -69,9 +68,8 @@ const getSchema = type => {
   amendmentSchema.awerb.options[1] = {
     label: 'No',
     value: 'No',
-    reveal: [
-      {
-        name: 'awerb-no-review-reason',
+    reveal: {
+      'awerb-no-review-reason': {
         label: content.fields['awerb-no-review-reason'].label,
         inputType: 'textarea',
         validate: [
@@ -80,7 +78,7 @@ const getSchema = type => {
           }
         ]
       }
-    ]
+    }
   };
 
   return amendmentSchema;
