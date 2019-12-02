@@ -51,7 +51,7 @@ module.exports = settings => {
   );
 
   app.post('/', (req, res, next) => {
-    const values = pick(req.session.form[req.model.id].values, Object.keys(req.form.schema));
+    const values = req.form.values;
     const json = {
       meta: {
         ...values,
