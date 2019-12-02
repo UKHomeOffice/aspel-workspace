@@ -5,10 +5,7 @@ import { Warning } from '@ukhomeoffice/react-components';
 
 const connectComponent = (field, key) => {
   const mapStateToProps = ({ model, static: { schema, errors } }) => {
-    schema = schema[field].options.find(body => body.value === key).reveal.reduce((obj, value) => {
-      obj[value.name] = value;
-      return obj;
-    }, {});
+    schema = schema[field].options.find(body => body.value === key).reveal;
 
     return {
       model,

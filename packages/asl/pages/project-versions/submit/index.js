@@ -1,18 +1,7 @@
-const { pick, get, set, reduce, omit } = require('lodash');
+const { pick, get, set } = require('lodash');
 const { page } = require('@asl/service/ui');
 const form = require('@asl/pages/pages/common/routers/form');
 const getSchema = require('./schema');
-
-const revealedFields = schema => {
-  return reduce(schema, (obj, declaration) => {
-    if (declaration.options) {
-      declaration.options.map(option => option.reveal && option.reveal.map(field => {
-        obj[field.name] = omit(field, 'name');
-      }));
-    }
-    return obj;
-  }, {});
-};
 
 module.exports = settings => {
   const app = page({
@@ -51,18 +40,11 @@ module.exports = settings => {
     form({
       configure: (req, res, next) => {
         const schema = getSchema(req.version.type);
-
-        req.form.schema = {
-          ...schema,
-          ...revealedFields(schema)
-        };
-
+        req.form.schema = schema;
         next();
       },
       locals: (req, res, next) => {
         set(res.locals, 'static.content.buttons.submit', get(res.locals, `static.content.buttons.submit.${req.version.type}`));
-        const schema = getSchema(req.version.type);
-        res.locals.static.schema = omit(req.form.schema, Object.keys(revealedFields(schema)));
         next();
       }
     })
