@@ -19,7 +19,7 @@ module.exports = settings => {
     schema,
     cancelEdit: (req, res, next) => {
       delete req.session.form[req.model.id];
-      return res.redirect(req.buildRoute('establishment.search'));
+      return res.redirect(req.buildRoute('search'));
     }
   }));
 
