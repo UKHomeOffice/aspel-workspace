@@ -54,7 +54,7 @@ module.exports = settings => {
   }));
 
   app.post('/delete',
-    bodyParser.urlencoded(),
+    bodyParser.urlencoded({ extended: true }),
     (req, res, next) => {
       return Promise.resolve()
         .then(() => req.api('/asru', {
