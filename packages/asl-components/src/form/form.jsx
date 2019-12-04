@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Snippet, Fieldset } from '../';
 
 const Form = ({
@@ -10,11 +10,20 @@ const Form = ({
   schema,
   ...props
 }) => {
+
+  const [disabled, setDisabled] = useState(false);
+  const onSubmit = e => {
+    if (disabled) {
+      e.preventDefault();
+    }
+    setTimeout(() => setDisabled(true), 0);
+  };
+
   const formFields = (
     <Fragment>
       <Fieldset schema={schema} { ...props } />
       {
-        submit && <button type="submit" className="govuk-button"><Snippet>buttons.submit</Snippet></button>
+        submit && <button type="submit" className="govuk-button" disabled={disabled}><Snippet>buttons.submit</Snippet></button>
       }
     </Fragment>
   );
@@ -24,6 +33,7 @@ const Form = ({
       method="POST"
       noValidate
       className={className}
+      onSubmit={onSubmit}
       encType={Object.values(schema).map(s => s.inputType).includes('inputFile') ? 'multipart/form-data' : null}
     >
       <input type="hidden" name="_csrf" value={csrfToken} />
