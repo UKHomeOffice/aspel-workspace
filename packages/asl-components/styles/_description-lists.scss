@@ -17,14 +17,25 @@ dl {
   }
 
   &.inline {
-    @extend .govuk-grid-row;
-
-    > dt {
-      @extend .govuk-grid-column-one-third;
+    dt {
+      float: left;
+      margin-right: 5%;
+      max-width: 30%;
     }
 
-    > dd {
-      @extend .govuk-grid-column-two-thirds;
+    dd {
+      margin-left: 35%;
+      margin-bottom: $govuk-gutter;
+
+      ul {
+        padding-left: 1em;
+      }
+    }
+
+    dd::after {
+      content: " ";
+      display: block;
+      clear: left;
     }
   }
 }
