@@ -58,7 +58,13 @@ module.exports = settings => {
     };
     req.api(`/establishments/${req.establishmentId}/projects/${req.projectId}/project-versions/${req.version.id}/patch`, opts)
       .then(() => res.json({}))
-      .catch(next);
+      .catch(err => {
+        // if trying to edit an uneditable version then redirect
+        if (err.status === 400) {
+          return res.redirect(req.buildRoute('projectVersion.read'));
+        }
+        next(err);
+      });
   });
 
   app.use((req, res, next) => res.sendResponse());
