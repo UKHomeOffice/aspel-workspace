@@ -8,6 +8,10 @@
   padding: $govuk-gutter;
   margin-bottom: $govuk-gutter;
 
+  .govuk-checkboxes {
+    margin-bottom: 0;
+  }
+
   .govuk-form-group:last-child,
   .govuk-button:last-child {
     margin-bottom: 0;
@@ -15,5 +19,15 @@
 
   .govuk-checkboxes__label {
     font-weight: normal;
+
+    &:before {
+      top: 50%;
+      margin-top: -20px;
+    }
+
+    &:after {
+      top: 50%;
+      margin-top: -9px;
+    }
   }
 }

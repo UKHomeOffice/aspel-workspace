@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux';
 import { Warning } from '@ukhomeoffice/react-components';
 import { Snippet } from '../';
 
-export default function OpenTaskWarning() {
-  const model = useSelector(state => state.model);
+export default function OpenTaskWarning({ openTasks }) {
+  openTasks = openTasks || useSelector(state => state.model.openTasks);
 
-  if (!model.openTasks || !model.openTasks.length) {
+  if (!openTasks || !openTasks.length) {
     return null;
   }
 

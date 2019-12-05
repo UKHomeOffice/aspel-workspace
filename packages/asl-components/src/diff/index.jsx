@@ -2,62 +2,71 @@ import React from 'react';
 import map from 'lodash/map';
 import isEqual from 'lodash/isEqual';
 import reduce from 'lodash/reduce';
-import { connect } from 'react-redux';
 import { Snippet } from '../';
 
-const getValue = (key, { format } = {}) => {
+function formatValue(key, { format } = {}) {
   const value = format ? format(key) : key;
   return value || '-';
-};
+}
 
-export const Diff = ({
+function getValue(value, options, values) {
+  if (!options.getValue) {
+    return value;
+  }
+
+  return options.getValue(values);
+}
+
+function getDiff(schema, before, after) {
+  return reduce(schema, (all, options, key) => {
+    if (options.showDiff === false) {
+      return all;
+    }
+    const oldValue = getValue(before[key], options, before);
+    const newValue = getValue(after[key], options, after);
+    return { ...all,
+      [key]: {
+        oldValue,
+        newValue
+      }
+    };
+  }, {});
+}
+
+export default function Diff({
+  before,
+  after,
+  schema,
   diff,
   formatters = {},
   comparator = (a, b) => !(isEqual(a, b)),
   currentLabel = 'Current',
   proposedLabel = 'Proposed'
-}) => (
-  <table className="govuk-table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>{currentLabel}</th>
-        <th>{proposedLabel}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {
-        map(diff, ({ oldValue, newValue }, key) => {
-          const className = comparator(oldValue, newValue, formatters[key]) ? 'highlight' : '';
-          return <tr key={key}>
-            <td><Snippet>{`fields.${key}.label`}</Snippet></td>
-            <td>{getValue(oldValue, formatters[key])}</td>
-            <td>
-              <span className={className}>{getValue(newValue, formatters[key])}</span>
-            </td>
-          </tr>;
-        })
-      }
-    </tbody>
-  </table>
-);
-
-const mapStateToProps = ({ model, static: { values, schema } }, ownProps) => {
-  model = ownProps.model || model;
-  schema = ownProps.schema || schema;
-  values = ownProps.values || values;
-  return {
-    diff: reduce(schema, (all, value, key) => {
-      if (value.showDiff === false) {
-        return all;
-      }
-      return { ...all,
-        [key]: {
-          oldValue: model[key],
-          newValue: values[key]
-        }};
-    }, {})
-  };
-};
-
-export default connect(mapStateToProps)(Diff);
+}) {
+  diff = diff || getDiff(schema, before, after);
+  return (
+    <table className="govuk-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>{currentLabel}</th>
+          <th>{proposedLabel}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          map(diff, ({ oldValue, newValue }, key) => {
+            const className = comparator(oldValue, newValue, formatters[key]) ? 'highlight' : '';
+            return <tr key={key}>
+              <td><Snippet>{`fields.${key}.label`}</Snippet></td>
+              <td>{formatValue(oldValue, formatters[key])}</td>
+              <td>
+                <span className={className}>{formatValue(newValue, formatters[key])}</span>
+              </td>
+            </tr>;
+          })
+        }
+      </tbody>
+    </table>
+  );
+}
