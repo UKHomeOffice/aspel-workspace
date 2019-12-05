@@ -1,4 +1,4 @@
-const { Document, Packer, Paragraph, WidthType, TextRun, Numbering } = require('docx');
+const { Document, Packer, Paragraph, TextRun, Numbering, Table } = require('docx');
 const { get } = require('lodash');
 
 const pack = document => {
@@ -182,13 +182,12 @@ module.exports = project => {
 
       addStyles(doc);
 
-      const table = doc.createTable({
+      const table = new Table({
         rows: 19,
-        columns: 3
+        columns: 3,
+        // setting to a large number enforces equal-width columns
+        columnWidths: ['10000', '10000', '10000']
       });
-
-      table.getCell(0, 1).Properties.setWidth('10%', WidthType.PCT);
-      table.getCell(0, 2).Properties.setWidth('50%', WidthType.PCT);
 
       table.getRow(0).mergeCells(1, 2);
       table.getRow(1).mergeCells(1, 2);
@@ -258,6 +257,8 @@ module.exports = project => {
         .addParagraph(new Paragraph('3. Refinement').style('Heading2'))
         .addParagraph(new Paragraph('Explain the choice of species and why the animal model(s) you will use are the most refined, having regard to the objectives. Explain the general measures you will take to minimise welfare costs (harms) to the animals.').style('body'));
       renderTextEditor(table.getCell(18, 1), project.data['nts-refinement']);
+
+      doc.addTable(table);
 
       return pack(doc);
     });
