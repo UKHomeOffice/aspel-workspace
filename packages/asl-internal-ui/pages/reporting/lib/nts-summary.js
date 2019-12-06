@@ -23,64 +23,67 @@ const renderTextEditor = (doc, value) => {
   });
 };
 
-const renderNode = (doc, node) => {
-
+const renderNode = (doc, node, depth = 0, paragraph) => {
   let text;
-  let paragraph;
+
+  const getContent = input => {
+    return get(input, 'nodes[0].leaves[0].text', get(input, 'nodes[0].text')).trim();
+  }
+
+  const renderListItem = (doc, item, numbering) => {
+    if (item.type !== 'list-item') {
+      return renderNode(doc, item);
+    }
+
+    paragraph = paragraph = new Paragraph();
+    paragraph.style('body');
+
+    numbering
+      ? paragraph.setNumbering(numbering, depth)
+      : paragraph.bullet();
+
+    item.nodes.forEach(n => renderNode(doc, n, depth + 1, paragraph));
+  }
 
   switch (node.type) {
     case 'heading-one':
-      doc.createParagraph(node.nodes[0].leaves[0].text.trim()).heading1();
+      doc.createParagraph(getContent(node)).heading1();
       break;
 
     case 'heading-two':
-      doc.createParagraph(node.nodes[0].leaves[0].text.trim()).heading2();
+      doc.createParagraph(getContent(node)).heading2();
       break;
 
     case 'block-quote':
-      doc.createParagraph(node.nodes[0].leaves[0].text.trim()).style('aside');
+      doc.createParagraph(getContent(node)).style('aside');
+      break;
+
+    case 'table-cell':
+      node.nodes.forEach(part => renderNode(doc, part))
+      break;
+
+    case 'table':
+      renderTable(doc, node);
       break;
 
     case 'numbered-list': {
-      const numbering = new Numbering();
-      const abstract = numbering.createAbstractNumbering();
-      abstract.createLevel(0, 'decimal', '%2.', 'start');
+      abstract.createLevel(depth, 'decimal', '%2.', 'start').addParagraphProperty(new Indent(720 * (depth + 1), 0));
       const concrete = numbering.createConcreteNumbering(abstract);
-
-      (node.nodes || []).forEach(n => {
-        if (n.type !== 'list-item') {
-          return renderNode(doc, n);
-        }
-        // TODO: the item may have marks
-        text = new TextRun(n.nodes[0].leaves[0].text.trim()).size(24);
-        const paragraph = new Paragraph();
-        paragraph.setNumbering(concrete, 0);
-        paragraph.style('body');
-        paragraph.addRun(text);
-        doc.addParagraph(paragraph);
-      });
+      node.nodes.forEach(item => renderListItem(doc, item, concrete));
       break;
     }
 
     case 'bulleted-list':
-      (node.nodes || []).forEach(n => {
-        if (n.type !== 'list-item') {
-          return renderNode(doc, n);
-        }
-        // TODO: the item may have marks
-        text = new TextRun(n.nodes[0].leaves[0].text.trim()).size(24);
-        const paragraph = new Paragraph();
-        paragraph.style('body').bullet();
-        paragraph.addRun(text);
-        doc.addParagraph(paragraph);
-      });
+      node.nodes.forEach(item => renderListItem(doc, item));
       break;
 
     case 'paragraph':
-      paragraph = new Paragraph();
+    case 'block':
+      paragraph = paragraph || new Paragraph();
       node.nodes.forEach(childNode => {
-        childNode.leaves.forEach(leaf => {
-          text = new TextRun(leaf.text);
+        const leaves = childNode.leaves || [childNode];
+        leaves.forEach(leaf => {
+          text = new TextRun(stripInvalidXmlChars(leaf.text));
           if (text) {
             (leaf.marks || []).forEach(mark => {
               switch (mark.type) {
@@ -95,6 +98,14 @@ const renderNode = (doc, node) => {
                 case 'underlined':
                   text.underline();
                   break;
+
+                case 'subscript':
+                  text.subScript();
+                  break;
+
+                case 'superscript':
+                  text.superScript();
+                  break;
               }
             });
             paragraph.style('body');
@@ -108,6 +119,14 @@ const renderNode = (doc, node) => {
     case 'image':
       doc.createImage(node.data.src, node.data.width, node.data.height);
       break;
+
+    default:
+      // if there is no matching type then it's probably a denormalised text node with no wrapping paragraph
+      // attempt to render with the node wrapped in a paragraph
+      if (node.text) {
+        renderNode(doc, { object: 'block', type: 'paragraph', nodes: [ node ] }, depth, paragraph)
+      }
+
   }
 };
 
