@@ -5,13 +5,14 @@ import castArray from 'lodash/castArray';
 import classnames from 'classnames';
 import ReactMarkdown from 'react-markdown';
 import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
-import { Snippet, ConditionalReveal, SpeciesSelector } from '../';
+import { Snippet, ConditionalReveal, SpeciesSelector, ApplicationConfirm } from '../';
 
 const fields = {
   inputText: props => <Input { ...props } />,
   inputEmail: props => <Input type="email" { ...props } />,
   inputFile: props => <Input type="file" { ...props } />,
   inputPassword: props => <Input type="password" { ...props } />,
+  declaration: props => <ApplicationConfirm { ...props } />,
   inputDate: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />,
   textarea: props => <TextArea { ...props } autoExpand={true} />,
   radioGroup: props => <RadioGroup { ...props } />,
