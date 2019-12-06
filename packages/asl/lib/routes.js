@@ -3,6 +3,7 @@ const { pages } = require('@asl/pages');
 const dashboard = require('../pages/dashboard');
 const invitation = require('../pages/invitation');
 const updateVersion = require('../pages/project-versions');
+const globalProfile = require('../pages/profile');
 
 module.exports = {
   dashboard: {
@@ -23,6 +24,11 @@ module.exports = {
     path: '/establishments/:establishmentId/people',
     breadcrumb: false,
     router: pages.profile
+  },
+  globalProfile: {
+    path: '/profile/:profileId',
+    breadcrumb: false,
+    router: globalProfile
   },
   role: {
     path: '/establishments/:establishmentId/people/:profileId/role',
