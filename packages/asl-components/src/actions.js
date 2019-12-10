@@ -52,7 +52,7 @@ const fetchItems = (url, dispatch) => {
       dispatch(receiveItems({ rows, count, totalCount }));
     })
     .catch(err => {
-      dispatch(showNotification({ message: err.message, type: 'error' }));
+      dispatch(showNotification({ message: 'Connection error. Please wait a moment and try again.', type: 'error' }));
       dispatch(requestFailed());
       throw err;
     });
