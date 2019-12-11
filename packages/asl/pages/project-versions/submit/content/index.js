@@ -22,7 +22,7 @@ module.exports = {
       label: 'Why has this amendment not been reviewed by the AWERB of each relevant establishment?'
     },
     ready: {
-      label: 'Has an inspector advised you that this version of your draft application is ready for assessment?'
+      label: 'Has an inspector advised you that this version of your application is ready for assessment?'
     },
     comments: {
       label: 'Why are you making this amendment?'
