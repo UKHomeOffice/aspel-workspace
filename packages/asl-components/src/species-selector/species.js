@@ -9,8 +9,7 @@ module.exports = {
       'Hamsters (Chinese)',
       'Hamsters (Syrian)',
       'Rabbits',
-      'Rats',
-      'Other rodents'
+      'Rats'
     ]
   },
   la: {
@@ -27,25 +26,21 @@ module.exports = {
       'Xenopus',
       'Cephalopods',
       'Frogs',
-      'Other amphibians',
       'Reptiles',
-      'Zebra fish',
-      'Other fish'
+      'Zebra fish'
     ]
   },
   av: {
     label: 'Birds',
     types: [
       'Domestic fowl',
-      'Quails',
-      'Other birds'
+      'Quails'
     ]
   },
   dom: {
     label: 'Cats, dogs and equidae',
     types: [
       'Beagles',
-      'Other dogs',
       'Cats',
       'Horses, donkeys and cross-breeds'
     ]
@@ -60,9 +55,7 @@ module.exports = {
       'Rhesus monkeys',
       'Squirrel moneys',
       'Vervets',
-      'Prosimians',
-      'Other new-world monkeys',
-      'Other old-world monkeys'
+      'Prosimians'
     ]
   }
 };
