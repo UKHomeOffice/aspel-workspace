@@ -1,12 +1,12 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { Datatable } from './';
 import TableHeader from './header';
 
 describe('<Datatable />', () => {
   test('renders any class names passed to it', () => {
     const schema = { site: {}, name: {}, number: {} };
-    const wrapper = shallow(<Datatable schema={schema} className="foo bar" />);
+    const wrapper = mount(<Datatable schema={schema} className="foo bar" />);
     const table = wrapper.find('table');
     expect(table.hasClass('foo')).toEqual(true);
     expect(table.hasClass('bar')).toEqual(true);
@@ -14,14 +14,14 @@ describe('<Datatable />', () => {
 
   test('doesnt render class of "undefined" if no className passed', () => {
     const schema = { site: {}, name: {}, number: {} };
-    const wrapper = shallow(<Datatable schema={schema} />);
+    const wrapper = mount(<Datatable schema={schema} />);
     const table = wrapper.find('table');
     expect(table.hasClass('undefined')).toEqual(false);
   });
 
   test('renders a <TableHeader /> element for each column, taken from schema', () => {
     const schema = { site: {}, name: {}, number: {} };
-    const wrapper = shallow(<Datatable schema={schema} />);
+    const wrapper = mount(<Datatable schema={schema} />);
     const tableHeaders = wrapper.find(TableHeader);
     expect(tableHeaders.length).toBe(3);
     Object.keys(schema).forEach((key, index) => {
@@ -36,7 +36,7 @@ describe('<Datatable />', () => {
       { id: 2, site: 'A Site', name: 'The Name', number: 3 },
       { id: 3, site: 'A Site', name: 'The Name', number: 3 }
     ];
-    const wrapper = shallow(<Datatable data={data} schema={schema} />);
+    const wrapper = mount(<Datatable data={data} schema={schema} />);
     expect(wrapper.find('tbody tr').length).toBe(3);
   });
 
@@ -47,7 +47,7 @@ describe('<Datatable />', () => {
       { id: 2, site: 'A Site', name: 'The Name', number: 3 },
       { id: 3, site: 'A Site', name: 'The Name', number: 3 }
     ];
-    const wrapper = shallow(<Datatable data={data} schema={schema} />);
+    const wrapper = mount(<Datatable data={data} schema={schema} />);
     expect(wrapper.find('tbody tr td').length).toBe(12);
   });
 
@@ -63,7 +63,7 @@ describe('<Datatable />', () => {
       name: { show: true },
       number: { show: true }
     };
-    const wrapper = shallow(<Datatable data={data} schema={schema} />);
+    const wrapper = mount(<Datatable data={data} schema={schema} />);
     expect(wrapper.find('tbody tr td').at(0).text()).toBe('A SITE');
   });
 
@@ -79,7 +79,7 @@ describe('<Datatable />', () => {
       name: { show: true },
       number: { show: true }
     };
-    const wrapper = shallow(<Datatable data={data} schema={schema} />);
+    const wrapper = mount(<Datatable data={data} schema={schema} />);
     expect(wrapper.find('tbody tr td').at(0).text()).toBe('A Site - 1');
   });
 
@@ -93,7 +93,7 @@ describe('<Datatable />', () => {
       number: { show: true },
       nacwo: { show: true, accessor: 'nacwo.profile.name' }
     };
-    const wrapper = shallow(<Datatable data={data} schema={schema} />);
+    const wrapper = mount(<Datatable data={data} schema={schema} />);
     expect(wrapper.find('tbody tr td').at(3).text()).toBe('A Name');
   });
 
@@ -118,7 +118,7 @@ describe('<Datatable />', () => {
         name: { show: true },
         number: { show: true }
       };
-      wrapper = shallow(<Datatable data={data} schema={schema} expands={expands} />);
+      wrapper = mount(<Datatable data={data} schema={schema} expands={expands} />);
     });
 
     test('renders expandable rows if expandable prop is true', () => {

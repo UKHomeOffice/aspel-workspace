@@ -3,18 +3,18 @@ import { Datatable, Filters, FilterSummary, Link, Snippet } from '../';
 
 const FilterTable = ({
   formatters,
-  expands,
-  createPath
+  createPath,
+  ...props
 }) => (
   <Fragment>
-    <Filters formatters={ formatters }/>
+    <Filters formatters={formatters}/>
     <div className="table-heading">
       <FilterSummary />
       {
         createPath && <Link label={<Snippet>addNew</Snippet>} page={createPath} />
       }
     </div>
-    <Datatable formatters={ formatters } expands={expands} />
+    <Datatable formatters={formatters} {...props} />
   </Fragment>
 );
 

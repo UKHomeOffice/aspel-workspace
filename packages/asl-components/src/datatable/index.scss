@@ -69,7 +69,6 @@
     }
 
     &.expanded {
-      background-color: $highlight-colour;
 
       td {
         border-bottom: none;
@@ -83,7 +82,6 @@
 
   tr.expanded-content {
     cursor: pointer;
-    background-color: $highlight-colour;
 
     .govuk-grid-column-one-quarter {
       border-right: 1px solid #ccc;
@@ -100,12 +98,6 @@
         list-style-type: disc;
         list-style-position: inside;
       }
-    }
-
-    a {
-      display: block;
-      margin-left: $govuk-gutter;
-      margin-bottom: 0.5em;
     }
   }
 }
