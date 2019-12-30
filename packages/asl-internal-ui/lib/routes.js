@@ -6,6 +6,7 @@ const asruAssignment = require('../pages/asru-assignment');
 const globalProfile = require('../pages/profile');
 const projectAsruActions = require('../pages/project');
 const projectVersionAsruActions = require('./routers/project-version');
+const licenceFeesAsruActions = require('./routers/licence-fees');
 const createEstablishment = require('../pages/create-establishment');
 const search = require('../pages/search');
 const reporting = require('../pages/reporting');
@@ -48,6 +49,11 @@ module.exports = {
         path: '/asru/:asruUser',
         breadcrumb: false,
         router: asruAssignment
+      },
+      asruFees: {
+        path: '/licence-fees/:year/personal',
+        breadcrumb: false,
+        router: licenceFeesAsruActions
       }
     }
   },

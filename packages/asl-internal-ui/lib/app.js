@@ -10,7 +10,7 @@ function traverseRoutes(routes) {
   return mapValues(routes, ({ path, router, routes = {} }) => {
     return {
       path,
-      routes: traverseRoutes(Object.assign({}, router.routes, routes))
+      routes: traverseRoutes(Object.assign({}, (router || {}).routes, routes))
     };
   });
 }
