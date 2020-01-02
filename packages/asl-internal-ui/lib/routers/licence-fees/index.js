@@ -42,9 +42,10 @@ module.exports = () => {
   app.get('/billing-history/:pilId', (req, res, next) => {
     const query = {
       action: 'set-billable',
-      status: 'autoresolved'
+      status: 'autoresolved',
+      orderBy: ['updatedAt', 'desc']
     };
-    req.api(`/model-history/${req.params.pilId}`, { query })
+    req.api(`/model-tasks/${req.params.pilId}`, { query })
       .then(response => {
         res.json(response.json.data);
       })

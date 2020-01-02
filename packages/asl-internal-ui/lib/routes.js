@@ -10,6 +10,7 @@ const licenceFeesAsruActions = require('./routers/licence-fees');
 const createEstablishment = require('../pages/create-establishment');
 const search = require('../pages/search');
 const reporting = require('../pages/reporting');
+const allLicenceFees = require('../pages/licence-fees');
 
 module.exports = {
   dashboard: {
@@ -105,5 +106,10 @@ module.exports = {
   reporting: {
     path: '/reporting',
     router: reporting
+  },
+  fees: {
+    path: '/finance/:year',
+    router: allLicenceFees,
+    permissions: 'licenceFees'
   }
 };
