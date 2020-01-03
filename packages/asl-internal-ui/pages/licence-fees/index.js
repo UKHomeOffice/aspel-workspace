@@ -12,12 +12,14 @@ module.exports = () => {
     Promise.all([
       req.api('/billing/establishments/count', { query }),
       req.api('/billing/pils/count', { query }),
-      req.api('/billing/pils/count', { query: { ...query, onlyBillable: true } })
+      req.api('/billing/pils/count', { query: { ...query, onlyBillable: true } }),
+      req.api('/billing/pils/transfers', { query })
     ])
-      .then(([establishments, pils, billablePils]) => {
+      .then(([establishments, pils, billablePils, transferredPils]) => {
         req.numEstablishments = establishments.json.data;
         req.numPils = pils.json.data;
-        req.numBillable = billablePils.json.data;
+        // transferred pils are billed at both establishments.
+        req.numBillable = parseInt(billablePils.json.data, 10) + parseInt(transferredPils.json.data, 10);
       })
       .then(() => next())
       .catch(next);

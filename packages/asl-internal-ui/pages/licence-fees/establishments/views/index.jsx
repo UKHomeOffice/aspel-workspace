@@ -14,8 +14,11 @@ export default function Establishments() {
     licenceNumber: {
       format: (licenceNumber, model) => <Link page="establishment.read" label={licenceNumber} establishmentId={model.id} />
     },
+    numberOfPils: {
+      format: (numberOfPils, model) => parseInt(numberOfPils, 10) + parseInt(model.numberOfTransferredPils, 10)
+    },
     totalCost: {
-      format: (numberOfPils) => `£${numberWithCommas(numberOfPils * personalFee)}`
+      format: (numberOfPils, model) => `£${numberWithCommas((parseInt(numberOfPils, 10) + parseInt(model.numberOfTransferredPils, 10)) * personalFee)}`
     }
   }
 
