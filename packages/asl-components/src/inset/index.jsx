@@ -3,9 +3,10 @@ import classnames from 'classnames';
 
 const Inset = ({
   children,
-  className
+  className,
+  ...props
 }) => (
-  <div className={classnames('govuk-inset-text', className)}>
+  <div className={classnames('govuk-inset-text', className)} {...props}>
     {children}
   </div>
 );
