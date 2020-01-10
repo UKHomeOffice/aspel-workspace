@@ -1,9 +1,8 @@
 const { router, mountRoutes } = require('@asl/service/ui');
-const { mapValues, last } = require('lodash');
+const { mapValues } = require('lodash');
 const { NotAuthorisedError, NotFoundError } = require('./errors');
 const baseContent = require('../pages/common/content');
 const { content, views } = require('@asl/pages');
-const { financialYears } = require('@asl/pages/pages/establishment/licence-fees/constants');
 
 const routes = require('./routes');
 
@@ -45,17 +44,6 @@ module.exports = settings => {
     next();
   });
 
-  app.param('year', (req, res, next, year) => {
-    let financialYear = financialYears[year];
-    if (!financialYear) {
-      const key = last(Object.keys(financialYears));
-      financialYear = financialYears[key];
-    }
-    req.year = year;
-    req.financialYear = financialYear;
-    next();
-  });
-
   app.param('establishmentId', (req, res, next, param) => {
     if (param === 'create') {
       return next();
@@ -69,7 +57,6 @@ module.exports = settings => {
 
   app.use((req, res, next) => {
     res.locals.footerLinks = [
-      { label: 'Licence fees', href: req.buildRoute('fees.overview', { year: '2019' }) },
       { label: 'Privacy notice', href: '/privacy' },
       { label: 'Performance metrics', href: '/reporting' }
     ];
