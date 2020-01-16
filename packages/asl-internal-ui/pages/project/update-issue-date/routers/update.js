@@ -5,11 +5,6 @@ const schema = require('../schema');
 module.exports = () => {
   const app = Router();
 
-  app.use('/', (req, res, next) => {
-    console.log('update');
-    next();
-  });
-
   app.use('/', form({
     schema,
     process: (req, res, next) => {

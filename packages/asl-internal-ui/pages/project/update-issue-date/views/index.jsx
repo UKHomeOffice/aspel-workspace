@@ -19,9 +19,8 @@ export default function ProjectLandingPage() {
         title={<Snippet>title</Snippet>}
       />
 
-      <div className="govuk-warning-text">
-        <span className="govuk-warning-text__icon" aria-hidden="true">!</span>
-        <strong className="govuk-warning-text__text"><Snippet>summary</Snippet></strong>
+      <div className="govuk-inset-text">
+        <p><Snippet>summary</Snippet></p>
       </div>
 
       <dl>
