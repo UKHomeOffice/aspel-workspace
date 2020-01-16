@@ -6,6 +6,8 @@ module.exports = () => {
   const app = Router();
 
   app.use('/', (req, res, next) => {
+    console.log('confirm');
+
     const newIssueDate = get(req.session.form[req.model.id], 'values.newIssueDate');
     const duration = get(req.model, 'granted.duration');
     req.model.newIssueDate = new Date(newIssueDate); // moment is firing a deprecation warning for non-ISO date strings

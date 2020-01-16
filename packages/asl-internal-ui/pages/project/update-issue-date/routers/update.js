@@ -5,12 +5,13 @@ const schema = require('../schema');
 module.exports = () => {
   const app = Router();
 
+  app.use('/', (req, res, next) => {
+    console.log('update');
+    next();
+  });
+
   app.use('/', form({
     schema,
-    configure: (req, res, next) => {
-      console.log('update');
-      next();
-    },
     process: (req, res, next) => {
       const day = req.body['newIssueDate-day'];
       const month = req.body['newIssueDate-month'];
