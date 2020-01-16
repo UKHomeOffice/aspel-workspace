@@ -22,6 +22,13 @@ module.exports = settings => {
       .catch(next);
   });
 
+  app.use('/', (req, res, next) => {
+    req.breadcrumb('project.list');
+    req.breadcrumb('project.read');
+    req.breadcrumb('projectUpdateIssueDate');
+    next();
+  });
+
   app.use('/', update());
   app.use('/confirm', confirm());
 

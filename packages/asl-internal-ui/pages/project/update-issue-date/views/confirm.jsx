@@ -60,7 +60,7 @@ export default function ProjectLandingPage() {
 
       </FormLayout>
 
-      <p><Link page="project.updateIssueDate" label="Change" /></p>
+      <p><Link page="projectUpdateIssueDate" label="Change" /></p>
     </Fragment>
   );
 }
