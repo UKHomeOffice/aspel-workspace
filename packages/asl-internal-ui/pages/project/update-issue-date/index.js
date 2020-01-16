@@ -1,6 +1,8 @@
+const isUUID = require('uuid-validate');
 const { page } = require('@asl/service/ui');
 const confirm = require('./routers/confirm');
 const update = require('./routers/update');
+const { NotFoundError } = require('../../../lib/errors');
 
 module.exports = settings => {
   const app = page({
@@ -10,6 +12,10 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
+    if (!isUUID(req.projectId)) {
+      return next(new NotFoundError());
+    }
+
     return req.api(`/establishment/${req.establishmentId}/projects/${req.projectId}`)
       .then(({ json: { data, meta } }) => {
         req.project = data;
