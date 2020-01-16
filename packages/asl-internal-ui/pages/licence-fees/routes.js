@@ -1,21 +1,15 @@
 const overview = require('./overview');
 const establishments = require('./establishments');
-const personal = require('./personal');
 
 module.exports = {
   overview: {
-    path: '/overview',
+    path: '/:year',
     router: overview,
     breadcrumb: false
   },
   establishments: {
-    path: '/establishments',
+    path: '/:year/establishments',
     router: establishments,
-    breadcrumb: false
-  },
-  personal: {
-    path: '/personal',
-    router: personal,
     breadcrumb: false
   }
 };

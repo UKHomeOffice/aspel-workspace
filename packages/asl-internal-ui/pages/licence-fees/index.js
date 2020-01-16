@@ -4,48 +4,44 @@ const routes = require('./routes');
 module.exports = () => {
   const app = Router();
 
-  app.use('/', (req, res, next) => {
-    const query = {
-      startDate: req.financialYear.startDate,
-      endDate: req.financialYear.endDate
-    };
-    Promise.all([
-      req.api('/billing/establishments/count', { query }),
-      req.api('/billing/pils/count', { query }),
-      req.api('/billing/pils/count', { query: { ...query, onlyBillable: true } }),
-      req.api('/billing/pils/transfers', { query })
-    ])
-      .then(([establishments, pils, billablePils, transferredPils]) => {
-        req.numEstablishments = establishments.json.data;
-        req.numPils = pils.json.data;
-        // transferred pils are billed at both establishments.
-        req.numBillable = parseInt(billablePils.json.data, 10) + parseInt(transferredPils.json.data, 10);
+  app.param('year', (req, res, next, year) => {
+    req.year = year;
+    next();
+  });
+
+  app.get('/', (req, res, next) => {
+    Promise.resolve()
+      .then(() => req.api(`/billing`))
+      .then(response => {
+        const year = response.json.meta.year;
+        res.redirect(req.buildRoute('fees.overview', { year }));
       })
-      .then(() => next())
       .catch(next);
   });
 
-  app.use((req, res, next) => {
-    const prices = req.financialYear.prices;
-    const numEstablishments = req.numEstablishments;
-    const establishment = numEstablishments * prices.establishment;
+  app.use('/:year', (req, res, next) => {
+    const query = { year: req.year };
+    Promise.resolve()
+      .then(() => req.api('/billing', { query }))
+      .then(response => {
+        const startDate = response.json.meta.startDate;
+        const endDate = response.json.meta.endDate;
+        const numPils = response.json.data.numberOfPils;
+        const fees = response.json.data.fees;
+        const personal = response.json.data.pils;
+        const total = response.json.data.total;
 
-    const numBillable = req.numBillable;
-    const personal = numBillable * prices.personal;
-    res.locals.static.fees = {
-      year: req.year,
-      startDate: req.financialYear.startDate,
-      endDate: req.financialYear.endDate,
-      establishmentFee: prices.establishment,
-      personalFee: prices.personal,
-      numEstablishments,
-      numPersonal: req.numPils,
-      numBillable: numBillable,
-      establishment,
-      personal,
-      total: personal + establishment
-    };
-    next();
+        res.locals.static.fees = {
+          numPils,
+          fees,
+          personal,
+          total,
+          startDate,
+          endDate
+        };
+      })
+      .then(() => next())
+      .catch(next);
   });
 
   return app;
