@@ -20,8 +20,10 @@ module.exports = () => {
   }));
 
   app.post('/', (req, res, next) => {
-    return res.redirect(req.buildRoute('projectUpdateIssueDate', { suffix: 'confirm' }));
+    return res.redirect(req.buildRoute('projectAsruActions.updateIssueDate', { suffix: 'confirm' }));
   });
+
+  app.get('/', (req, res) => res.sendResponse());
 
   return app;
 };

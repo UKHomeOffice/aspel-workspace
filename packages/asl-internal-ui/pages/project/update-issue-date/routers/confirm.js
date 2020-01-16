@@ -6,19 +6,22 @@ module.exports = () => {
   const app = Router();
 
   app.use('/', (req, res, next) => {
-    const newIssueDate = get(req.session.form[req.model.id], 'values.newIssueDate');
+    const newIssueDate = new Date(get(req.session.form[req.model.id], 'values.newIssueDate'));
     const duration = get(req.model, 'granted.duration');
-    req.model.newIssueDate = new Date(newIssueDate); // moment is firing a deprecation warning for non-ISO date strings
-    req.model.newExpiryDate = moment(req.model.newIssueDate).add(duration);
+    req.model.newIssueDate = newIssueDate.toISOString();
+    req.model.newExpiryDate = moment(newIssueDate).add(duration).toISOString();
+    res.locals.model = req.model;
     next();
   });
 
   app.post('/', (req, res, next) => {
+    const newIssueDate = new Date(get(req.session.form[req.model.id], 'values.newIssueDate'));
+
     const opts = {
       method: 'PUT',
       json: {
         data: {
-          issueDate: req.model.newIssueDate.toISOString()
+          issueDate: newIssueDate.toISOString()
         }
       }
     };
@@ -31,6 +34,8 @@ module.exports = () => {
       })
       .catch(next);
   });
+
+  app.get('/', (req, res) => res.sendResponse());
 
   return app;
 };

@@ -1,6 +1,6 @@
 module.exports = {
   title: 'Change date granted',
-  summary: `Changing the granted date of a project licence will also update the expiry date to match the project duration.`,
+  summary: `The expiry date will automatically update to reflect the project's duration.`,
   fields: {
     issueDate: {
       label: 'Current date granted'

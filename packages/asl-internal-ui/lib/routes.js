@@ -4,7 +4,7 @@ const dashboard = require('../pages/dashboard');
 const dedupe = require('../pages/deduplicate');
 const asruAssignment = require('../pages/asru-assignment');
 const globalProfile = require('../pages/profile');
-const projectUpdateIssueDate = require('../pages/project/update-issue-date');
+const projectAsruActions = require('../pages/project');
 const projectVersionAsruActions = require('./routers/project-version');
 const createEstablishment = require('../pages/create-establishment');
 const search = require('../pages/search');
@@ -61,10 +61,10 @@ module.exports = {
     breadcrumb: false,
     router: pages.role
   },
-  projectUpdateIssueDate: {
-    path: '/establishments/:establishmentId/projects/:projectId/update-issue-date',
+  projectAsruActions: {
+    path: '/establishments/:establishmentId/projects/:projectId',
     breadcrumb: false,
-    router: projectUpdateIssueDate
+    router: projectAsruActions
   },
   project: {
     path: '/establishments/:establishmentId/projects',
