@@ -9,6 +9,7 @@ const projectVersionAsruActions = require('./routers/project-version');
 const createEstablishment = require('../pages/create-establishment');
 const search = require('../pages/search');
 const reporting = require('../pages/reporting');
+const licenceFees = require('../pages/licence-fees');
 
 module.exports = {
   dashboard: {
@@ -99,5 +100,10 @@ module.exports = {
   reporting: {
     path: '/reporting',
     router: reporting
+  },
+  fees: {
+    path: '/licence-fees',
+    router: licenceFees,
+    permissions: 'licenceFees'
   }
 };
