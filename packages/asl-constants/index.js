@@ -12,6 +12,7 @@ const projectStatuses = require('./constants/project-statuses');
 const roles = require('./constants/roles');
 const suitabilityCodes = require('./constants/suitability-codes');
 const species = require('./constants/species');
+const fees = require('./constants/fees');
 
 module.exports = {
   accreditingBodies,
@@ -27,5 +28,6 @@ module.exports = {
   projectStatuses,
   roles,
   suitabilityCodes,
-  species
+  species,
+  fees
 };
