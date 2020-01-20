@@ -13,7 +13,8 @@
     "build": "npm run build:js && npm run build:css",
     "build:js": "node --max_old_space_size=4096 node_modules/.bin/webpack",
     "prebuild:css": "mkdir -p ./public/css",
-    "build:css": "npm-sass ./assets/sass/app.scss > ./public/css/app.css"
+    "build:css": "npm-sass ./assets/sass/app.scss > ./public/css/app.css",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
