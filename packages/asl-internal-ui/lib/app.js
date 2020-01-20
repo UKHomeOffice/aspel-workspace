@@ -34,6 +34,11 @@ module.exports = settings => {
     next();
   });
 
+  app.param('projectId', (req, res, next, param) => {
+    req.projectId = param;
+    next();
+  });
+
   app.param('versionId', (req, res, next, param) => {
     req.versionId = param;
     next();

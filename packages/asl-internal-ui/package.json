@@ -46,8 +46,10 @@
     "express": "^4.17.1",
     "filenamify": "^4.1.0",
     "lodash": "^4.17.15",
+    "moment": "^2.24.0",
     "react": "^16.9.0",
-    "react-redux": "^7.1.1"
+    "react-redux": "^7.1.1",
+    "uuid-validate": "0.0.3"
   },
   "devDependencies": {
     "@ukhomeoffice/asl-functional-testing": "^1.2.4",

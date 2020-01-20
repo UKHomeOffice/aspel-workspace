@@ -4,6 +4,9 @@ module.exports = {
     globalProfile: {
       dedupe: 'Merge profile'
     },
-    createEstablishment: 'Create establishment'
+    createEstablishment: 'Create establishment',
+    projectAsruActions: {
+      updateIssueDate: 'Change date granted'
+    }
   }
 };
