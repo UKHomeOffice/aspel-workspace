@@ -1,15 +1,15 @@
 module.exports = {
-  id: {
-    filter: false
-  },
+  firstName: {},
   lastName: {
     show: true
   },
   email: {
     show: true
   },
+  phone: {},
   establishments: {
     show: true,
-    sortable: false
+    sortable: false,
+    toCSVString: row => row.establishments.map(e => e.name).join(', ')
   }
 };

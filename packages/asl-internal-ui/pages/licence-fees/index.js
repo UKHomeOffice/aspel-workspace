@@ -27,17 +27,22 @@ module.exports = () => {
         const startDate = response.json.meta.startDate;
         const endDate = response.json.meta.endDate;
         const numPils = response.json.data.numberOfPils;
+        const numPels = response.json.data.numberOfPels;
         const fees = response.json.data.fees;
-        const personal = response.json.data.pils;
+        const personal = response.json.data.personal;
+        const establishment = response.json.data.establishment;
         const total = response.json.data.total;
 
         res.locals.static.fees = {
           numPils,
+          numPels,
           fees,
           personal,
+          establishment,
           total,
           startDate,
-          endDate
+          endDate,
+          year: req.year
         };
       })
       .then(() => next())

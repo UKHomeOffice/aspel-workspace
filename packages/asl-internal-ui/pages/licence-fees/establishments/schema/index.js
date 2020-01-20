@@ -8,9 +8,10 @@ module.exports = {
   numberOfPils: {
     show: true
   },
-  totalCost: {
-    accessor: 'numberOfPils',
-    sort: 'numberOfPils',
-    show: true
+  establishment: {},
+  personal: {},
+  total: {
+    show: true,
+    sort: 'numberOfPils'
   }
 };

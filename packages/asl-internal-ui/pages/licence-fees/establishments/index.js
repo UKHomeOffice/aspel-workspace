@@ -1,3 +1,4 @@
+const { get } = require('lodash');
 const { page } = require('@asl/service/ui');
 const { datatable } = require('@asl/pages/pages/common/routers');
 const schema = require('./schema');
@@ -15,8 +16,8 @@ module.exports = settings => {
     },
     getApiPath: (req, res, next) => {
       const query = {
-        startDate: req.financialYear.startDate,
-        endDate: req.financialYear.endDate
+        year: req.year,
+        filter: get(req.query, 'filters.*')
       };
       req.datatable.apiPath = ['/billing/establishments', { query }];
       next();

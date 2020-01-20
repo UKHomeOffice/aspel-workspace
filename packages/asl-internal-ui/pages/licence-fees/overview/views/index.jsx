@@ -11,11 +11,11 @@ export default function Overview() {
       rows: [
         {
           title: 'fees.overview.establishment.count',
-          value: fees.numEstablishments
+          value: fees.numPels
         },
         {
           title: 'fees.overview.establishment.fee',
-          value: fees.establishmentFee,
+          value: fees.fees.pel,
           currency: true
         },
         {
@@ -30,15 +30,11 @@ export default function Overview() {
       rows: [
         {
           title: 'fees.overview.personal.count',
-          value: fees.numPersonal
-        },
-        {
-          title: 'fees.overview.personal.countBillable',
-          value: fees.numBillable
+          value: fees.numPils
         },
         {
           title: 'fees.overview.personal.fee',
-          value: fees.personalFee,
+          value: fees.fees.pil,
           currency: true
         },
         {

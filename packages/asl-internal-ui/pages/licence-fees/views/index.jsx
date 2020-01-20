@@ -16,11 +16,6 @@ export default function Container({ children, tab }) {
       page: 'fees.establishments',
       key: 'fees.tabs.establishments',
       year
-    },
-    {
-      page: 'fees.personal',
-      key: 'fees.tabs.personal',
-      year
     }
   ];
 

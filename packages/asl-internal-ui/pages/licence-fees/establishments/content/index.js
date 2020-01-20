@@ -13,8 +13,8 @@ module.exports = merge({}, baseContent, {
     numberOfPils: {
       label: 'Number of PILs'
     },
-    totalCost: {
-      label: 'Cost of PILs'
+    total: {
+      label: 'Total'
     }
   }
 });
