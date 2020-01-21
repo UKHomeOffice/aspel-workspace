@@ -1,6 +1,6 @@
 const { showNotification } = require('./notification/actions');
 
-const FETCH_TIMEOUT = 5000;
+const FETCH_TIMEOUT = 15000;
 
 const requestItems = () => ({
   type: 'REQUEST_ITEMS'
