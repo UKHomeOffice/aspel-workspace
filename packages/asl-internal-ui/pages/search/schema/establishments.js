@@ -14,7 +14,7 @@ module.exports = {
   inspector: {
     show: true,
     sortable: false,
-    toCSVString: establishment => {
+    toCSVString: (val, establishment) => {
       return establishment.asru
         .filter(p => p.asruInspector)
         .map(profile => `${profile.firstName} ${profile.lastName}`)
@@ -24,7 +24,7 @@ module.exports = {
   spoc: {
     show: true,
     sortable: false,
-    toCSVString: establishment => {
+    toCSVString: (val, establishment) => {
       return establishment.asru
         .filter(p => p.asruLicensing)
         .map(profile => `${profile.firstName} ${profile.lastName}`)

@@ -6,10 +6,10 @@ module.exports = {
   email: {
     show: true
   },
-  phone: {},
+  telephone: {},
   establishments: {
     show: true,
     sortable: false,
-    toCSVString: row => row.establishments.map(e => e.name).join(', ')
+    toCSVString: (val, row) => row.establishments.map(e => e.name).join(', ')
   }
 };
