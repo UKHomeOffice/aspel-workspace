@@ -20,6 +20,10 @@ module.exports = () => {
   });
 
   app.use('/:year', (req, res, next) => {
+    // skip this request if it's an XHR request for table data
+    if (req.get('accept') === 'application/json') {
+      return next();
+    }
     const query = { year: req.year };
     Promise.resolve()
       .then(() => req.api('/billing', { query }))
