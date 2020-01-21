@@ -5,13 +5,13 @@ module.exports = {
   establishment: {
     show: true,
     sort: 'establishment.name',
-    toCSVString: row => row.establishment.name
+    toCSVString: (val, row) => row.establishment.name
   },
   licenceNumber: {},
   licenceHolder: {
     show: true,
     sort: 'licenceHolder.lastName',
-    toCSVString: row => `${row.licenceHolder.firstName} ${row.licenceHolder.lastName}`
+    toCSVString: (val, row) => `${row.licenceHolder.firstName} ${row.licenceHolder.lastName}`
   },
   status: {
     show: true
