@@ -45,11 +45,6 @@ describe('<Countdown />', () => {
     expect(wrapper.find(Snippet).props().children).toEqual('countdown.plural');
   });
 
-  test('does not display if showNotice is false', () => {
-    const wrapper = shallow(<Countdown expiry={addWeeks(new Date(), 1)} showNotice={false} />);
-    expect(wrapper.find('span').length).toBe(0);
-  });
-
   test('does not display if showNotice is less than the current time difference', () => {
     const wrapper = shallow(<Countdown expiry={addMonths(new Date(), 9)} unit='month' showNotice={7} />);
     expect(wrapper.find('span').length).toBe(0);
