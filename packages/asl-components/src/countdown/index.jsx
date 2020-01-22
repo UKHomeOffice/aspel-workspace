@@ -8,6 +8,10 @@ import isToday from 'date-fns/is_today';
 import classnames from 'classnames';
 
 const Countdown = ({ expiry, unit, showNotice, showUrgent }) => {
+  if (showNotice === false) {
+    return null;
+  }
+
   const now = new Date();
 
   const diff = {
