@@ -17,7 +17,8 @@ module.exports = {
     types: [
       'Cattle',
       'Goats',
-      'Pigs'
+      'Pigs',
+      'Sheep'
     ]
   },
   aq: {
