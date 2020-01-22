@@ -46,7 +46,7 @@ describe('<Countdown />', () => {
   });
 
   test('does not display if showNotice is false', () => {
-    const wrapper = shallow(<Countdown date={addWeeks(new Date(), 1)} showNotice={false} />);
+    const wrapper = shallow(<Countdown expiry={addWeeks(new Date(), 1)} showNotice={false} />);
     expect(wrapper.find('span').length).toBe(0);
   });
 
