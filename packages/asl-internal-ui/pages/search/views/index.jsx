@@ -61,8 +61,11 @@ const formatters = {
       }
     },
     expiryDate: {
-      format: date => {
-        return date ? <ExpiryDate date={date} showNotice={11} /> : '-';
+      format: (date, model) => {
+        if (!date) {
+          return '-';
+        }
+        return <ExpiryDate date={date} showNotice={model.status === 'active' ? 11 : false} />;
       }
     }
   }
