@@ -6,7 +6,7 @@ module.exports = {
     validate: [
       'required',
       'validDate',
-      { dateIsBefore: moment().endOf('day') }
+      { dateIsBefore: () => moment().endOf('day') }
     ]
   }
 };
