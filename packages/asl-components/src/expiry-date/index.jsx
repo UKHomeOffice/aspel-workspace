@@ -14,7 +14,10 @@ const ExpiryDate = ({ date, expiry, dateFormat, unit, showUrgent, showNotice }) 
   return (
     <Fragment>
       { format(date, dateFormat) }
-      <Countdown expiry={expiry} unit={unit} showUrgent={showUrgent} showNotice={showNotice} />
+      {
+        showNotice !== false &&
+          <Countdown expiry={expiry} unit={unit} showUrgent={showUrgent} showNotice={showNotice} />
+      }
     </Fragment>
   );
 };
