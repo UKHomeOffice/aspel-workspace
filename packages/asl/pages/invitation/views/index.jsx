@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Inset, Snippet, Header } from '@asl/components';
+import { Inset, Snippet, Header, Form } from '@asl/components';
 import { Button } from '@ukhomeoffice/react-components';
 
 const Accept = ({ establishment }) => {
@@ -9,9 +9,9 @@ const Accept = ({ establishment }) => {
     <Inset>
       <Snippet>preamble</Snippet>
     </Inset>
-    <form method="post" action="">
+    <Form submit={false}>
       <Button type="submit"><Snippet>accept</Snippet></Button>
-    </form>
+    </Form>
   </Fragment>;
 };
 
