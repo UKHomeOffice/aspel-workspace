@@ -6,7 +6,8 @@ module.exports = {
     show: true
   },
   status: {
-    show: true
+    show: true,
+    filter: true
   },
   licenceNumber: {},
   issueDate: {},

@@ -1,4 +1,4 @@
-const { merge } = require('lodash');
+const { merge, set } = require('lodash');
 const { page } = require('@asl/service/ui');
 const datatable = require('@asl/pages/pages/common/routers/datatable');
 const schemas = require('./schema');
@@ -34,6 +34,7 @@ module.exports = settings => {
       const searchType = req.searchType;
 
       req.datatable.searchType = searchType;
+      set(req.datatable, 'filters.active', { status: ['active'] });
       req.datatable.schema = schemas[searchType];
       req.datatable.apiPath = `/search/${searchType}`;
 
