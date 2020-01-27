@@ -1,14 +1,14 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { LinkFilter } from './';
+import { LinkFilter, ShowAll } from './';
 import { ApplyChanges } from '../';
 
 describe('<LinkFilter />', () => {
-  test('renders an \'All\' ApplyChanges element if a filter is selected', () => {
+  test('renders an \'All\' ShowAll element if a filter is selected', () => {
     const filters = [];
     const expected = 'All';
     const wrapper = shallow(<LinkFilter filters={filters} selected={'a filter'} />);
-    const el = wrapper.find(ApplyChanges);
+    const el = wrapper.find(ShowAll);
     expect(el.length).toBe(1);
     expect(el.prop('label')).toBe(expected);
   });
@@ -16,7 +16,7 @@ describe('<LinkFilter />', () => {
   test('renders \'All\' as text if filter not selected', () => {
     const filters = [];
     const expected = 'All';
-    const wrapper = shallow(<LinkFilter filters={filters} />);
+    const wrapper = shallow(<ShowAll label={expected} />);
     expect(wrapper.find(ApplyChanges).length).toBe(0);
     expect(wrapper.text().includes(expected)).toBe(true);
   });
@@ -35,7 +35,7 @@ describe('<LinkFilter />', () => {
     const filters = ['a filter'];
     const selected = 'a filter';
     const wrapper = shallow(<LinkFilter filters={filters} selected={selected} />);
-    expect(wrapper.find(ApplyChanges).length).toBe(1);
+    expect(wrapper.find(ApplyChanges).length).toBe(0);
     expect(wrapper.text().includes(selected)).toBe(true);
   });
 
@@ -43,7 +43,7 @@ describe('<LinkFilter />', () => {
     const onChange = jest.fn();
     const filters = ['a filter'];
     const selected = 'a filter';
-    const wrapper = shallow(<LinkFilter filters={filters} selected={selected} onChange={onChange} />);
+    const wrapper = shallow(<ShowAll selected={selected} onChange={onChange} />);
     wrapper.find(ApplyChanges).prop('onApply')();
     expect(onChange.mock.calls[0][0]).toBe(null);
   });
