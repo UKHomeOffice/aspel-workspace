@@ -1,7 +1,19 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Datatable, ExpiryDate, FilterSummary, Header, Link, Snippet } from '@asl/components';
+import {
+  Datatable,
+  ExpiryDate,
+  FilterSummary,
+  Header,
+  Link,
+  Snippet,
+  LinkFilter
+} from '@asl/components';
 import SearchPanel from '../../components/search-panel';
+
+function uppercaseFirst(str) {
+  return `${str[0].toUpperCase()}${str.substring(1)}`;
+}
 
 const formatters = {
   establishments: {
@@ -71,7 +83,7 @@ const formatters = {
   }
 };
 
-const Index = ({ profile, searchType, searchableModels, filters }) => {
+const Index = ({ profile, searchType, searchableModels, hasFilters }) => {
   return (
     <Fragment>
       <Header title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>} />
@@ -79,6 +91,15 @@ const Index = ({ profile, searchType, searchableModels, filters }) => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
           <SearchPanel searchType={searchType} searchableModels={searchableModels} />
+          {
+            hasFilters && <LinkFilter
+              prop="status"
+              label="Filter by status:"
+              showAllLabel="Show all"
+              showAllBefore={false}
+              formatter={filter => uppercaseFirst(filter)}
+            />
+          }
           <FilterSummary />
           <Datatable formatters={formatters[searchType]} />
         </div>
@@ -95,7 +116,7 @@ const Index = ({ profile, searchType, searchableModels, filters }) => {
 
 const mapStateToProps = ({
   static: { profile, searchType, searchableModels },
-  datatable: { filters }
-}) => ({ profile, searchType, searchableModels, filters });
+  datatable: { filters: { options } }
+}) => ({ profile, searchType, searchableModels, hasFilters: !!options.length });
 
 export default connect(mapStateToProps)(Index);
