@@ -1,22 +1,10 @@
 import React, { useState, useRef, useEffect, Fragment } from 'react';
 
-const DownloadHeader = ({ model, licenceType, isGranted, basename, showWord = true, showPdf = true }) => {
+const DownloadHeader = ({ title, subtitle, isGranted, basename, children, showWord = true, showPdf = true }) => {
   const [modalShowing, updateModalShowing] = useState(false);
+  const [detailsShowing, updateDetailsShowing] = useState(false);
   const container = useRef(null);
   const download = useRef(null);
-  let title = 'Licence';
-
-  switch (licenceType) {
-    case 'ppl':
-      title = model.title || 'Untitled project';
-      break;
-    case 'pil':
-      title = 'Personal licence';
-      break;
-    case 'pel':
-      title = 'Establishment licence';
-      break;
-  }
 
   // title could span multiple lines, adjust download position accordingly
   useEffect(() => {
@@ -34,6 +22,11 @@ const DownloadHeader = ({ model, licenceType, isGranted, basename, showWord = tr
       e.preventDefault();
     }
     updateModalShowing(!modalShowing);
+  };
+
+  const toggleDetails = (e) => {
+    e.preventDefault();
+    updateDetailsShowing(!detailsShowing);
   };
 
   return (
@@ -56,7 +49,19 @@ const DownloadHeader = ({ model, licenceType, isGranted, basename, showWord = tr
         )
       }
       <div className="left">
-        <h2>{title}</h2>
+        <h1>{title}</h1>
+        <h2>{subtitle}</h2>
+        {
+          children &&
+            <Fragment>
+              <a href="#" onClick={toggleDetails} className="toggle-details">
+                {detailsShowing ? 'Hide details' : 'View details'}
+              </a>
+              {
+                detailsShowing && <div className="details">{children}</div>
+              }
+            </Fragment>
+        }
       </div>
     </div>
   );

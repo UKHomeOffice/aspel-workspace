@@ -9,9 +9,44 @@
     overflow: hidden;
     padding-right: 1em;
 
-    h2 {
+    h1 {
+      font-size: 24px;
       font-weight: normal;
-      margin-bottom: 0;
+      margin-bottom: 5px;
+    }
+
+    h2 {
+      display: inline;
+      font-size: 18px;
+      font-weight: normal;
+      margin-right: 1em;
+    }
+
+    a.toggle-details {
+      font-size: 16px;
+    }
+
+    dl {
+      font-size: 16px;
+      margin: $govuk-gutter-half;
+
+      dt {
+        font-weight: bold;
+        float: left;
+        margin-right: 2%;
+        width: 28%;
+      }
+
+      dd {
+        margin-left: 30%;
+        margin-bottom: .8em;
+      }
+
+      dd::after {
+        content: " ";
+        display: block;
+        clear: left;
+      }
     }
   }
 
