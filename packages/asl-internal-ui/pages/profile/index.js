@@ -1,5 +1,7 @@
 const bodyParser = require('body-parser');
 const { page } = require('@asl/service/ui');
+const { datatable } = require('@asl/pages/pages/common/routers');
+const schema = require('@asl/pages/pages/task/list/schema');
 
 const roles = ['asruAdmin', 'asruLicensing', 'asruInspector'];
 
@@ -47,6 +49,17 @@ module.exports = settings => {
       .then(() => next())
       .catch(next);
   });
+
+  app.use(datatable({
+    configure: (req, res, next) => {
+      req.datatable.sort = { column: 'updated_at', ascending: false };
+      next();
+    },
+    getApiPath: (req, res, next) => {
+      req.datatable.apiPath = `/profile/${req.profileId}/tasks`;
+      next();
+    }
+  })({ schema }));
 
   app.get('/', (req, res) => res.sendResponse());
 
