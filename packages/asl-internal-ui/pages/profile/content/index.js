@@ -1,8 +1,12 @@
 const { merge } = require('lodash');
 const profileContent = require('@asl/pages/pages/profile/read/content');
 const pilContent = require('@asl/pages/pages/task/read/content/pil');
+const statusContent = require('@asl/pages/pages/task/content/status');
+const tasksContent = require('@asl/pages/pages/task/content/tasks');
 
 module.exports = merge({}, pilContent, profileContent, {
+  status: statusContent,
+  tasks: tasksContent,
   establishment: {
     link: 'About this establishment'
   },
@@ -28,6 +32,23 @@ module.exports = merge({}, pilContent, profileContent, {
   pil: {
     training: {
       title: 'Training'
+    }
+  },
+  fields: {
+    updatedAt: {
+      label: 'Updated'
+    },
+    establishment: {
+      label: 'Establishment'
+    },
+    licence: {
+      label: 'Licence'
+    },
+    type: {
+      label: 'Type'
+    },
+    status: {
+      label: 'Status'
     }
   }
 });

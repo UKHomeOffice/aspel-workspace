@@ -9,6 +9,7 @@ import { dateFormat } from '@asl/pages/constants';
 import Profile from '@asl/pages/pages/profile/read/views/profile';
 import ASRUAdmin from '../components/asru-admin';
 import Modules from '@asl/pages/pages/profile/read/views/modules';
+import Tasklist from '@asl/pages/pages/task/list/views/table';
 
 const formatDate = (date, format) => (date ? dateFormatter(date, format) : '-');
 
@@ -56,18 +57,18 @@ class Index extends React.Component {
         <dt>Has login:</dt>
         <dd>{ model.userId ? 'Yes' : 'No' }</dd>
       </dl>
-      <ExpandingPanel title={<Snippet>pil.training.title</Snippet>}>
-        {
-          model.certificates && model.certificates.length > 0
-            ? <Modules certificates={model.certificates} />
-            : <p><em><Snippet>pil.training.none</Snippet></em></p>
-        }
-      </ExpandingPanel>
+      <h2><Snippet>pil.training.title</Snippet></h2>
+      {
+        model.certificates && model.certificates.length > 0
+          ? <Modules certificates={model.certificates} />
+          : <p><em><Snippet>pil.training.none</Snippet></em></p>
+      }
+
       <ASRUAdmin />
 
       {
         hasEstablishments && <Fragment>
-          <h3>Establishments</h3>
+          <h2>Establishments</h2>
           <PanelList panels={sortBy(model.establishments, 'name').map((establishment) => {
             return (
               <ExpandingPanel key={establishment.id} title={establishment.name} isOpen={model.establishments.length === 1}>
@@ -92,6 +93,8 @@ class Index extends React.Component {
           { this.renderAsruAssociation(model.asru) }
         </Fragment>
       }
+      <h2>Related tasks</h2>
+      <Tasklist />
     </Fragment>;
   }
 
