@@ -1,12 +1,14 @@
 import React, { useState, Fragment } from 'react';
 
-const DownloadHeader = ({ title, subtitle, basename, children, showWord = true, showPdf = true }) => {
+const DownloadHeader = ({ title, subtitle, basename, children, isGranted, showWord = true, showPdf = true }) => {
   const [detailsShowing, updateDetailsShowing] = useState(false);
 
   const toggleDetails = (e) => {
     e.preventDefault();
     updateDetailsShowing(!detailsShowing);
   };
+
+  const downloadLabel = isGranted ? 'Granted licence' : 'Full application';
 
   return (
     <div className="download-header">
@@ -30,15 +32,17 @@ const DownloadHeader = ({ title, subtitle, basename, children, showWord = true, 
       {
         (showWord || showPdf) && (
           <div className="download-options">
-            <a href="#" className="toggle-download-options" onClick={toggleDetails}>Download options</a>
+            <a href="#" className="toggle-download-options" onClick={toggleDetails}>
+              {detailsShowing ? 'Hide download options' : 'View download options'}
+            </a>
             {
               detailsShowing && (
                 <div className="details">
                   {
-                    showPdf && <p><a href={`${basename}/pdf`}>As PDF</a></p>
+                    showPdf && <p><a href={`${basename}/pdf`}>{`${downloadLabel} (.pdf)`}</a></p>
                   }
                   {
-                    showWord && <p><a href={`${basename}/docx`}>As Word (.docx)</a></p>
+                    showWord && <p><a href={`${basename}/docx`}>{`${downloadLabel} (.docx)`}</a></p>
                   }
                 </div>
               )
