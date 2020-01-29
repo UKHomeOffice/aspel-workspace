@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from 'react';
 
-const DownloadHeader = ({ title, subtitle, isGranted, basename, children, showWord = true, showPdf = true }) => {
+const DownloadHeader = ({ title, subtitle, basename, children, showWord = true, showPdf = true }) => {
   const [detailsShowing, updateDetailsShowing] = useState(false);
 
   const toggleDetails = (e) => {
@@ -35,12 +35,10 @@ const DownloadHeader = ({ title, subtitle, isGranted, basename, children, showWo
               detailsShowing && (
                 <div className="details">
                   {
-                    showPdf &&
-                      <p><a href={`${basename}/pdf`} onClick={e => toggleDetails(e, false)}>As PDF</a></p>
+                    showPdf && <p><a href={`${basename}/pdf`}>As PDF</a></p>
                   }
                   {
-                    showWord &&
-                      <p><a href={`${basename}/docx`} onClick={e => toggleDetails(e, false)}>As Word (.docx)</a></p>
+                    showWord && <p><a href={`${basename}/docx`}>As Word (.docx)</a></p>
                   }
                 </div>
               )
