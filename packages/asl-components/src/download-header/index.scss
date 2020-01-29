@@ -3,57 +3,67 @@
   border-bottom: 4px solid $blue;
   margin-bottom: $govuk-gutter;
   padding: $govuk-gutter-half;
-  position: relative;
+  overflow: auto;
+  display: flex;
+  flex-direction: row;
 
-  .left {
-    overflow: hidden;
-    padding-right: 1em;
+  .page-title {
+    flex: 1;
+    padding-right: $govuk-gutter-half;
+
+    h1 {
+      font-size: 24px;
+      font-weight: normal;
+      margin-bottom: 5px;
+    }
 
     h2 {
+      display: inline;
+      font-size: 18px;
       font-weight: normal;
-      margin-bottom: 0;
+      margin-right: 1em;
+    }
+
+    a.toggle-details {
+      font-size: 16px;
+    }
+
+    dl {
+      margin-top: $govuk-gutter-half;
+      font-size: 16px;
+    }
+
+    @include govuk-media-query($from: tablet) {
+      dl {
+        dt {
+          float: left;
+          margin-right: 2%;
+          width: 28%;
+        }
+
+        dd {
+          margin-left: 30%;
+          margin-bottom: .8em;
+        }
+
+        dd::after {
+          content: " ";
+          display: block;
+          clear: left;
+        }
+      }
     }
   }
 
-  .right {
-    float: right;
+  .download-options {
     border-left: 1px solid $mid-grey;
-    padding-left: 1em;
+    padding: $govuk-gutter-half 0 0 $govuk-gutter-half;
 
-    .download {
-      font-size: 1em;
+    .toggle-download-options {
+      &:before {
+        @include icon;
+        background-image: $download-icon;
+      }
     }
-  }
-
-  .download-modal {
-    position: absolute;
-    border-bottom: 4px solid $blue;
-    padding: $govuk-gutter-half;
-    top: 100%;
-    right: 0;
-    background-color: white;
-
-    .close {
-      position: absolute;
-      top: -1em;
-      right: 1em;
-      text-decoration: none;
-    }
-  }
-  .download {
-    font-size: 1.2em;
-    margin-left: 0.5em;
-    + .download {
-      border-left: 1px solid;
-      padding-left: 0.5em;
-    }
-  }
-
-}
-
-.download {
-  &:before {
-    @include icon;
-    background-image: $download-icon;
   }
 }

@@ -1,63 +1,56 @@
-import React, { useState, useRef, useEffect, Fragment } from 'react';
+import React, { useState, Fragment } from 'react';
 
-const DownloadHeader = ({ model, licenceType, isGranted, basename, showWord = true, showPdf = true }) => {
-  const [modalShowing, updateModalShowing] = useState(false);
-  const container = useRef(null);
-  const download = useRef(null);
-  let title = 'Licence';
+const DownloadHeader = ({ title, subtitle, basename, children, isGranted, showWord = true, showPdf = true }) => {
+  const [detailsShowing, updateDetailsShowing] = useState(false);
 
-  switch (licenceType) {
-    case 'ppl':
-      title = model.title || 'Untitled project';
-      break;
-    case 'pil':
-      title = 'Personal licence';
-      break;
-    case 'pel':
-      title = 'Establishment licence';
-      break;
-  }
-
-  // title could span multiple lines, adjust download position accordingly
-  useEffect(() => {
-    if (!showWord && !showPdf) {
-      return;
-    }
-    // subtract padding, and border
-    const height = container.current.offsetHeight - 30 - 4;
-    download.current.style.height = `${height}px`;
-    download.current.style.lineHeight = `${height}px`;
-  });
-
-  const toggleModal = (e, preventDefault = true) => {
-    if (preventDefault) {
-      e.preventDefault();
-    }
-    updateModalShowing(!modalShowing);
+  const toggleDetails = (e) => {
+    e.preventDefault();
+    updateDetailsShowing(!detailsShowing);
   };
 
+  const downloadLabel = isGranted ? 'Granted licence' : 'Full application';
+
   return (
-    <div className="download-header" ref={container}>
+    <div className="download-header">
+
+      <div className="page-title">
+        <h1>{title}</h1>
+        <h2>{subtitle}</h2>
+        {
+          children &&
+            <Fragment>
+              <a href="#" onClick={toggleDetails} className="toggle-details">
+                {detailsShowing ? 'Hide details' : 'View details'}
+              </a>
+              {
+                detailsShowing && <div className="details">{children}</div>
+              }
+            </Fragment>
+        }
+      </div>
+
       {
         (showWord || showPdf) && (
-          <div className="right" ref={download}>
-            <a href="#" className="download" onClick={toggleModal}>{`Download ${isGranted ? 'licence' : 'application'}`}</a>
+          <div className="download-options">
+            <a href="#" className="toggle-download-options" onClick={toggleDetails}>
+              {detailsShowing ? 'Hide download options' : 'View download options'}
+            </a>
             {
-              modalShowing && (
-                <div className="download-modal">
-                  <a className="close" href="#" onClick={toggleModal}>✕</a>
-                  { showPdf && <a href={`${basename}/pdf`} onClick={e => toggleModal(e, false)}>As PDF</a> }
-                  { showPdf && showWord && <Fragment> | </Fragment> }
-                  { showWord && <a href={`${basename}/docx`} onClick={e => toggleModal(e, false)}>As Word (.docx)</a> }
+              detailsShowing && (
+                <div className="details">
+                  {
+                    showPdf && <p><a href={`${basename}/pdf`}>{`${downloadLabel} (.pdf)`}</a></p>
+                  }
+                  {
+                    showWord && <p><a href={`${basename}/docx`}>{`${downloadLabel} (.docx)`}</a></p>
+                  }
                 </div>
               )
             }
           </div>
         )
       }
-      <div className="left">
-        <h2>{title}</h2>
-      </div>
+
     </div>
   );
 };
