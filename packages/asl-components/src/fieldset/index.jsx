@@ -5,7 +5,7 @@ import castArray from 'lodash/castArray';
 import classnames from 'classnames';
 import ReactMarkdown from 'react-markdown';
 import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
-import { Snippet, ConditionalReveal, SpeciesSelector, ApplicationConfirm } from '../';
+import { Snippet, ConditionalReveal, SpeciesSelector, ApplicationConfirm, RestrictionsField } from '../';
 
 const fields = {
   inputText: props => <Input { ...props } />,
@@ -20,11 +20,13 @@ const fields = {
   select: props => <Select { ...props } />,
   conditionalReveal: props => <ConditionalReveal { ...props } />,
   speciesSelector: props => <SpeciesSelector {...props} />,
-  text: props => props.value &&
+  restrictionsField: props => <RestrictionsField {...props} />,
+  text: props => (
     <div className={classnames('govuk-form-group', props.name)}>
       <h3>{ props.label }</h3>
-      <ReactMarkdown>{ props.value }</ReactMarkdown>
+      <ReactMarkdown>{ props.format ? props.format(props.value) : props.value }</ReactMarkdown>
     </div>
+  )
 };
 
 function Field({
@@ -32,7 +34,6 @@ function Field({
   error,
   inputType,
   value,
-  format,
   label,
   hint,
   onChange,
@@ -83,7 +84,7 @@ function Field({
   />;
 }
 
-export default function Fieldset({ schema, errors = {}, model, ...props }) {
+export default function Fieldset({ schema, errors = {}, formatters = {}, model, ...props }) {
   return (
     <fieldset>
       {
@@ -96,6 +97,8 @@ export default function Fieldset({ schema, errors = {}, model, ...props }) {
             value={model[key]}
             error={errors[key]}
             name={key}
+            model={props.values}
+            format={(formatters[key] || {}).format}
           />
         ))
       }

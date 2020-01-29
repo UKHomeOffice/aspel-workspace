@@ -8,14 +8,17 @@ const Form = ({
   children,
   detachFields,
   schema,
+  onSubmit = () => {},
   ...props
 }) => {
 
   const [disabled, setDisabled] = useState(false);
-  const onSubmit = e => {
+  const onFormSubmit = e => {
     if (disabled) {
       e.preventDefault();
     }
+    e.persist();
+    onSubmit(e);
     setTimeout(() => setDisabled(true), 0);
   };
 
@@ -33,7 +36,7 @@ const Form = ({
       method="POST"
       noValidate
       className={className}
-      onSubmit={onSubmit}
+      onSubmit={onFormSubmit}
       encType={Object.values(schema).map(s => s.inputType).includes('inputFile') ? 'multipart/form-data' : null}
     >
       <input type="hidden" name="_csrf" value={csrfToken} />
