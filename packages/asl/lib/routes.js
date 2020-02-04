@@ -2,7 +2,6 @@ const { pages } = require('@asl/pages');
 
 const dashboard = require('../pages/dashboard');
 const invitation = require('../pages/invitation');
-const updateVersion = require('../pages/project-versions');
 const globalProfile = require('../pages/profile');
 
 module.exports = {
@@ -43,14 +42,7 @@ module.exports = {
   projectVersion: {
     path: '/establishments/:establishmentId/projects/:projectId/versions/:versionId',
     breadcrumb: false,
-    router: pages.projectVersion,
-    routes: {
-      update: {
-        path: '/edit',
-        breadcrumb: false,
-        router: updateVersion
-      }
-    }
+    router: pages.projectVersion
   },
   place: {
     path: '/establishments/:establishmentId/places',
