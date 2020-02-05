@@ -14,6 +14,7 @@ export { default as Conditions } from './conditions';
 export { default as Countdown } from './countdown';
 export { default as CSVDownloadLink } from './csv-download';
 export { default as Datatable } from './datatable';
+export { default as Details } from './details';
 export { default as Diff } from './diff';
 export { default as DiffText } from './diff-text';
 export { default as DownloadHeader } from './download-header';
