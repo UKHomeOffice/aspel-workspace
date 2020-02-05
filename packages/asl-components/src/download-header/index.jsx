@@ -1,6 +1,7 @@
 import React, { useState, Fragment } from 'react';
+import capitalize from 'lodash/capitalize';
 
-const DownloadHeader = ({ title, subtitle, basename, children, isGranted, showWord = true, showPdf = true }) => {
+const DownloadHeader = ({ title, subtitle, basename, children, licenceStatus, showWord = true, showPdf = true }) => {
   const [detailsShowing, updateDetailsShowing] = useState(false);
 
   const toggleDetails = (e) => {
@@ -8,7 +9,16 @@ const DownloadHeader = ({ title, subtitle, basename, children, isGranted, showWo
     updateDetailsShowing(!detailsShowing);
   };
 
-  const downloadLabel = isGranted ? 'Granted licence' : 'Full application';
+  const wordLabel = 'Full application';
+  let pdfLabel = 'Draft licence';
+
+  if (licenceStatus === 'active') {
+    pdfLabel = 'Granted licence';
+  }
+
+  if (licenceStatus === 'revoked' || licenceStatus === 'expired') {
+    pdfLabel = `${capitalize(licenceStatus)} licence`;
+  }
 
   return (
     <div className="download-header">
@@ -39,10 +49,10 @@ const DownloadHeader = ({ title, subtitle, basename, children, isGranted, showWo
               detailsShowing && (
                 <div className="details">
                   {
-                    showPdf && <p><a href={`${basename}/pdf`}>{`${downloadLabel} (.pdf)`}</a></p>
+                    showPdf && <p><a href={`${basename}/pdf`}>{`${pdfLabel} (.pdf)`}</a></p>
                   }
                   {
-                    showWord && <p><a href={`${basename}/docx`}>{`${downloadLabel} (.docx)`}</a></p>
+                    showWord && <p><a href={`${basename}/docx`}>{`${wordLabel} (.docx)`}</a></p>
                   }
                 </div>
               )
