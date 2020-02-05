@@ -1,5 +1,4 @@
 import React, { useState, Fragment } from 'react';
-import capitalize from 'lodash/capitalize';
 
 const DownloadHeader = ({ title, subtitle, basename, children, licenceStatus, showWord = true, showPdf = true }) => {
   const [detailsShowing, updateDetailsShowing] = useState(false);
@@ -10,14 +9,23 @@ const DownloadHeader = ({ title, subtitle, basename, children, licenceStatus, sh
   };
 
   const wordLabel = 'Full application';
-  let pdfLabel = 'Draft licence';
+  let pdfLabel = 'Licence';
 
-  if (licenceStatus === 'active') {
-    pdfLabel = 'Granted licence';
-  }
+  switch (licenceStatus) {
+    case 'active':
+      pdfLabel = 'Granted licence';
+      break;
 
-  if (licenceStatus === 'revoked' || licenceStatus === 'expired') {
-    pdfLabel = `${capitalize(licenceStatus)} licence`;
+    case 'expired':
+      pdfLabel = 'Expired licence';
+      break;
+
+    case 'revoked':
+      pdfLabel = 'Revoked licence';
+      break;
+
+    default:
+      pdfLabel = 'Draft licence';
   }
 
   return (
