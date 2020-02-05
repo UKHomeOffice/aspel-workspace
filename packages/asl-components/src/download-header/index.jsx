@@ -9,7 +9,7 @@ const DownloadHeader = ({ title, subtitle, basename, children, licenceStatus, sh
   };
 
   const wordLabel = 'Full application';
-  let pdfLabel = 'Licence';
+  let pdfLabel;
 
   switch (licenceStatus) {
     case 'active':
