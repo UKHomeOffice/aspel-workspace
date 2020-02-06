@@ -57,10 +57,19 @@ module.exports = settings => {
 
   app.use((req, res, next) => {
     res.locals.footerLinks = [
-      { label: 'Privacy notice', href: '/privacy' },
-      { label: 'Performance metrics', href: '/reporting' },
-      { label: 'Licence fees', href: '/licence-fees' },
-      { label: 'Non-technical summaries', href: '/non-technical-summaries' }
+      {
+        sectionName: 'Reporting',
+        links: [
+          { label: 'Licence fees', href: '/licence-fees' },
+          { label: 'Performance metrics', href: '/reporting' }
+        ]
+      },
+      {
+        sectionName: 'Donwloads',
+        links: [
+          { label: 'Non-technical summaries', href: '/non-technical-summaries' }
+        ]
+      }
     ];
     next();
   });
