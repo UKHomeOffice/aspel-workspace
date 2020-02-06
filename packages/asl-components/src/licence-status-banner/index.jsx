@@ -1,6 +1,5 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import Snippet from '../snippet';
-import Link from '../link';
 import classnames from 'classnames';
 import formatDate from 'date-fns/format';
 
@@ -45,22 +44,21 @@ class LicenceStatusBanner extends Component {
   render() {
     const licence = this.props.licence;
     const licenceType = this.props.licenceType;
-    const version = this.props.version;
 
-    const isInactiveVersion = licence.status === 'active' && version && licence.granted && version !== licence.granted.id;
-
-    if (licence.status === 'active' && !isInactiveVersion) {
+    if (!this.props.children && licence.status === 'active') {
       return null;
     }
 
     return (
-      <div className={classnames('licence-status-banner', licence.status, { open: this.isOpen() })}>
+      <div className={classnames('licence-status-banner', licence.status, this.props.colour, { open: this.isOpen() })}>
         <header onClick={() => this.toggle()}>
           <p className="toggle-switch">
             <a href="#">{this.isOpen() ? 'Show less' : 'Show more'}</a>
           </p>
           <p className="status">
-            <Snippet>{`invalidLicence.status.${licence.status}`}</Snippet>
+            {
+              this.props.title || <Snippet>{`invalidLicence.status.${licence.status}`}</Snippet>
+            }
           </p>
         </header>
 
@@ -69,13 +67,7 @@ class LicenceStatusBanner extends Component {
             this.renderDates()
           }
           {
-            isInactiveVersion && <Fragment>
-              <p><Snippet>invalidLicence.summary.ppl_active</Snippet></p>
-              <p><Link page="project.version.read" versionId={this.props.licence.granted.id} label={<Snippet>{'invalidLicence.view'}</Snippet>} /></p>
-            </Fragment>
-          }
-          {
-            !isInactiveVersion && <p><Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet></p>
+            this.props.children || <p><Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet></p>
           }
         </div>
       </div>
