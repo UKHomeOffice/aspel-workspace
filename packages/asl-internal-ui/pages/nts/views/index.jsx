@@ -2,8 +2,8 @@ import React, { Fragment } from 'react';
 import range from 'lodash/range';
 import { Header, Snippet, Link } from '@asl/components';
 
-const currentYear = new Date().getFullYear();
-const supportedYears = range(currentYear, 2016, -1).map(String);
+const startYear = 2018;
+const supportedYears = range(startYear, 2016, -1).map(String);
 
 const Index = () => {
 
