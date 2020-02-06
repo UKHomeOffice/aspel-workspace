@@ -10,10 +10,6 @@ module.exports = settings => {
     root: __dirname
   });
 
-  app.get('/', (req, res, next) => {
-    next();
-  });
-
   app.get('/:year', (req, res, next) => {
     const archive = archiver('zip');
 
