@@ -59,7 +59,8 @@ module.exports = settings => {
     res.locals.footerLinks = [
       { label: 'Privacy notice', href: '/privacy' },
       { label: 'Performance metrics', href: '/reporting' },
-      { label: 'Licence fees', href: '/licence-fees' }
+      { label: 'Licence fees', href: '/licence-fees' },
+      { label: 'Non-technical summaries', href: '/non-technical-summaries' }
     ];
     next();
   });

@@ -10,6 +10,7 @@ const createEstablishment = require('../pages/create-establishment');
 const search = require('../pages/search');
 const reporting = require('../pages/reporting');
 const licenceFees = require('../pages/licence-fees');
+const nonTechnicalSummaries = require('../pages/nts');
 
 module.exports = {
   dashboard: {
@@ -105,5 +106,9 @@ module.exports = {
     path: '/licence-fees',
     router: licenceFees,
     permissions: 'licenceFees'
+  },
+  nts: {
+    path: '/non-technical-summaries',
+    router: nonTechnicalSummaries
   }
 };
