@@ -29,7 +29,7 @@
     }
   }
 
-  &.revoked {
+  &.revoked, &.red {
     background-color: govuk-colour('red');
   }
 
