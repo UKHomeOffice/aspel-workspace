@@ -7,6 +7,7 @@ module.exports = {
       dedupe: 'Merge profile'
     },
     createEstablishment: 'Create establishment',
+    revokeEstablishment: 'Revoke establishment',
     projectAsruActions: {
       updateIssueDate: 'Change date granted'
     }
