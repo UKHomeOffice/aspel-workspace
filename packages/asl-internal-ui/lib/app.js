@@ -65,7 +65,7 @@ module.exports = settings => {
         ]
       },
       {
-        sectionName: 'Donwloads',
+        sectionName: 'Downloads',
         links: [
           { label: 'Non-technical summaries', href: '/non-technical-summaries' }
         ]
