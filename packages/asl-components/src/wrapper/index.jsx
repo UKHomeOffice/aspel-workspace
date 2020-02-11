@@ -1,11 +1,10 @@
 import React, { Fragment } from 'react';
-import { BackToTop, Notification } from '../';
+import { Notification } from '../';
 
 const Wrapper = ({ children }) => (
   <Fragment>
     <Notification />
     { children }
-    <BackToTop />
   </Fragment>
 );
 
