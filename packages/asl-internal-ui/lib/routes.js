@@ -7,6 +7,7 @@ const globalProfile = require('../pages/profile');
 const projectAsruActions = require('../pages/project');
 const projectVersionAsruActions = require('./routers/project-version');
 const createEstablishment = require('../pages/create-establishment');
+const revokeEstablishment = require('../pages/revoke-establishment');
 const search = require('../pages/search');
 const reporting = require('../pages/reporting');
 const licenceFees = require('../pages/licence-fees');
@@ -52,6 +53,11 @@ module.exports = {
         router: asruAssignment
       }
     }
+  },
+  revokeEstablishment: {
+    path: '/establishments/:establishmentId/revoke',
+    router: revokeEstablishment,
+    permissions: 'establishment.revoke'
   },
   profile: {
     path: '/establishments/:establishmentId/people',
