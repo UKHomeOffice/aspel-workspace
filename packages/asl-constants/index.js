@@ -12,6 +12,7 @@ const projectStatuses = require('./constants/project-statuses');
 const roles = require('./constants/roles');
 const suitabilityCodes = require('./constants/suitability-codes');
 const species = require('./constants/species');
+const projectSpecies = require('./constants/project-species');
 const fees = require('./constants/fees');
 
 module.exports = {
@@ -25,6 +26,7 @@ module.exports = {
   moduleCodes,
   pilStatuses,
   procedureCodes,
+  projectSpecies,
   projectStatuses,
   roles,
   suitabilityCodes,
