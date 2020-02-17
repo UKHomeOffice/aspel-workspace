@@ -3,9 +3,8 @@ import map from 'lodash/map';
 import without from 'lodash/without';
 import castArray from 'lodash/castArray';
 import classnames from 'classnames';
-import ReactMarkdown from 'react-markdown';
 import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
-import { Snippet, ConditionalReveal, SpeciesSelector, ApplicationConfirm, RestrictionsField } from '../';
+import { Snippet, ConditionalReveal, SpeciesSelector, ApplicationConfirm, RestrictionsField, Markdown } from '../';
 
 const fields = {
   inputText: props => <Input { ...props } />,
@@ -24,7 +23,7 @@ const fields = {
   text: props => (
     <div className={classnames('govuk-form-group', props.name)}>
       <h3>{ props.label }</h3>
-      <ReactMarkdown>{ props.format ? props.format(props.value) : props.value }</ReactMarkdown>
+      <Markdown>{ props.format ? props.format(props.value) : props.value }</Markdown>
     </div>
   )
 };

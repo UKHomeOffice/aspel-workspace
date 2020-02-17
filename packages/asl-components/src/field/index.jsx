@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TextArea } from '@ukhomeoffice/react-components';
-import ReactMarkdown from 'react-markdown';
+import { Markdown } from '../';
 
 class Field extends Component {
   constructor (props) {
@@ -35,7 +35,7 @@ class Field extends Component {
     return (
       <div className="field">
         <h2>{ title }</h2>
-        <ReactMarkdown>{ content }</ReactMarkdown>
+        <Markdown>{ content }</Markdown>
         {
           this.props.editable && (!this.state || this.state.editing) && (
             <TextArea

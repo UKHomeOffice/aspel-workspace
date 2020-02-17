@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { TextArea, Button } from '@ukhomeoffice/react-components';
-import ReactMarkdown from 'react-markdown';
+import { Markdown } from '../';
 
 export default function EditableField({
   label,
@@ -59,7 +59,7 @@ export default function EditableField({
     <div className="govuk-form-group editable-field">
       <h2>{ label }</h2>
       { showDiff && currentLabel && <h3>{currentLabel}</h3> }
-      <ReactMarkdown>{ format ? format(original) : original }</ReactMarkdown>
+      <Markdown>{ format ? format(original) : original }</Markdown>
       {
         showDiff && (
           <Fragment>
@@ -77,7 +77,7 @@ export default function EditableField({
                     autoExpand={true}
                   />
                 )
-                : <ReactMarkdown className="highlight">{proposedContent || 'None'}</ReactMarkdown>
+                : <Markdown className="highlight">{proposedContent || 'None'}</Markdown>
             }
           </Fragment>
         )
