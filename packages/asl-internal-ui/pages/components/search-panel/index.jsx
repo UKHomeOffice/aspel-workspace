@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { stringify } from 'qs';
 import { Search, Snippet } from '@asl/components';
 
 class SearchPanel extends Component {
   render() {
     const searchableModels = this.props.searchableModels;
     const searchType = this.props.searchType || searchableModels[0];
-
+    const query = stringify({ filters: this.props.searchTerm });
     return (
       <div className="search-panel">
         <h2><Snippet>searchPanel.title</Snippet></h2>
@@ -13,7 +14,7 @@ class SearchPanel extends Component {
         <ul className="search-type">
           { searchableModels.map(model => (
             <li key={model}>
-              <a href={`/search/${model}`} className={searchType === model ? 'active' : ''}>
+              <a href={`/search/${model}?${query}`} className={searchType === model ? 'active' : ''}>
                 <Snippet>{`searchPanel.${model}.label`}</Snippet>
               </a>
             </li>
