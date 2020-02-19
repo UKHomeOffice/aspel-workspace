@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { Form } from '../';
+import { Form, Markdown } from '../';
 
 class Conditions extends Component {
 
@@ -34,7 +33,7 @@ class Conditions extends Component {
             : (
               <Fragment>
                 {
-                  conditions && <ReactMarkdown>{ conditions }</ReactMarkdown>
+                  conditions && <Markdown>{ conditions }</Markdown>
                 }
                 {
                   canUpdate && <a href="#" onClick={e => this.toggleEdit(e)}>{conditions ? updateLabel : addLabel }</a>
