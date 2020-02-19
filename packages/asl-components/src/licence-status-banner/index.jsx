@@ -24,9 +24,10 @@ class LicenceStatusBanner extends Component {
       expiryDate
     } = this.props.licence;
 
+    const isPdf = this.props.isPdf;
     const dateFormat = this.props.dateFormat;
 
-    if (status !== 'revoked' && status !== 'expired') {
+    if (isPdf || (status !== 'revoked' && status !== 'expired')) {
       return null;
     }
 
