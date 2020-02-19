@@ -26,8 +26,13 @@ const Link = ({
   path,
   label,
   className,
+  isPdf,
   ...props
 }) => {
+  if (isPdf) {
+    return null;
+  }
+
   if (page) {
     const parts = page.split('.');
     const replacer = replace(props);
