@@ -5,6 +5,6 @@ const Acronym = ({
   children
 }) => dictionary[children]
   ? <abbr title={dictionary[children]}>{children}</abbr>
-  : children;
+  : <span>{ children }</span>;
 
 export default Acronym;

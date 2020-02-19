@@ -16,16 +16,17 @@ export const Snippet = ({ content, children, optional, fallback, ...props }) => 
   }
   const source = trim(render(str, props));
 
-  const isRootParagraph = (node, i, parent) => {
-    return node.type !== 'paragraph' || parent.type !== 'root' || parent.children.length !== 1;
-  };
+  function wrapInSpanIfOnlyChild({ children, parentChildCount }) {
+    return parentChildCount > 1
+      ? <p>{ children }</p>
+      : <span>{ children }</span>;
+  }
 
   return (
     <ReactMarkdown
       source={source}
-      renderers={{ root: Fragment }}
-      allowNode={isRootParagraph}
-      unwrapDisallowed={true}
+      includeNodeIndex={true}
+      renderers={{ root: Fragment, paragraph: wrapInSpanIfOnlyChild }}
     />
   );
 };
