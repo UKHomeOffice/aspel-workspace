@@ -1,3 +1,6 @@
 const licenceStatuses = require('./licence-statuses');
 
-module.exports = licenceStatuses;
+module.exports = [
+  ...licenceStatuses,
+  'transferred'
+];
