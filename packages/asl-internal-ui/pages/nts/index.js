@@ -1,6 +1,6 @@
 const { page } = require('@asl/service/ui');
 const archiver = require('archiver');
-const { get, range, groupBy } = require('lodash');
+const { get, groupBy } = require('lodash');
 const filenamify = require('filenamify');
 const nts = require('./lib/nts-summary');
 
@@ -63,10 +63,10 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res, next) => {
-    const supportedYears = ['2017', '2018', '2019'];
+    const supportedYears = ['2017', '2018', '2019', '2020'];
     res.locals.static.projectCounts = supportedYears.reduce((obj, year) => {
       return { ...obj, [year]: req.projectsByYear[year].length };
-    }, {})
+    }, {});
     next();
   });
 
