@@ -7,7 +7,7 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res, next) => {
-    const since = req.query.since || '2019-07-31';
+    const since = req.query.since || '2019-01-01';
     req.api(`/metrics?since=${since}`)
       .then(response => {
         res.locals.static.since = since;
