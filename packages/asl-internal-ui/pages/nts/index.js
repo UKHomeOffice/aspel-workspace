@@ -49,7 +49,10 @@ module.exports = settings => {
                   });
               }
             })
-            .catch(e => req.log('error', { message: e.message, stack: e.stack }));
+            .catch(e => {
+              req.log('error', { message: e.message, stack: e.stack });
+              return archive.append(Buffer.from(`${e.stack}`), { name: `ERROR-${filenamify(project.title)}-${project.id}.txt` });
+            });
         }, Promise.resolve());
 
       })
