@@ -65,7 +65,7 @@ module.exports = settings => {
   app.get('/', (req, res, next) => {
     const supportedYears = ['2017', '2018', '2019', '2020'];
     res.locals.static.projectCounts = supportedYears.reduce((obj, year) => {
-      return { ...obj, [year]: req.projectsByYear[year].length };
+      return { ...obj, [year]: get(req.projectsByYear, `${year}.length`, 0) };
     }, {});
     next();
   });
