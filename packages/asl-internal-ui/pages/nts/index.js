@@ -1,6 +1,6 @@
 const { page } = require('@asl/service/ui');
 const archiver = require('archiver');
-const { get } = require('lodash');
+const { get, groupBy } = require('lodash');
 const filenamify = require('filenamify');
 const nts = require('./lib/nts-summary');
 
@@ -10,20 +10,28 @@ module.exports = settings => {
     root: __dirname
   });
 
+  app.use((req, res, next) => {
+    req.api('/search/projects?limit=1')
+      .then(response => {
+        return req.api(`/search/projects?limit=${response.json.meta.count}`);
+      })
+      .then(response => {
+        const projects = response.json.data.filter(p => p.issueDate);
+        req.projectsByYear = groupBy(projects, p => p.issueDate.substr(0, 4));
+        next();
+      })
+      .catch(next);
+  });
+
   app.get('/:year', (req, res, next) => {
     const archive = archiver('zip');
 
     res.attachment(`nts-${req.params.year}.zip`);
     archive.pipe(res);
 
-    req.api('/search/projects?limit=1')
-      .then(response => {
-        return req.api(`/search/projects?limit=${response.json.meta.count}`);
-      })
-      .then(response => {
-        return response.json.data.filter(project => {
-          return project.issueDate && project.issueDate.substr(0, 4) === req.params.year;
-        });
+    return Promise.resolve()
+      .then(() => {
+        return req.projectsByYear[req.params.year] || [];
       })
       .then(projects => {
         // make an NTS summary document for each project
@@ -41,7 +49,10 @@ module.exports = settings => {
                   });
               }
             })
-            .catch(e => req.log('error', { message: e.message, stack: e.stack }));
+            .catch(e => {
+              req.log('error', { message: e.message, stack: e.stack });
+              return archive.append(Buffer.from(`${e.stack}`), { name: `ERROR-${filenamify(project.title)}-${project.id}.txt` });
+            });
         }, Promise.resolve());
 
       })
@@ -49,6 +60,14 @@ module.exports = settings => {
         archive.finalize();
       })
       .catch(err => next(err));
+  });
+
+  app.get('/', (req, res, next) => {
+    const supportedYears = ['2017', '2018', '2019', '2020'];
+    res.locals.static.projectCounts = supportedYears.reduce((obj, year) => {
+      return { ...obj, [year]: get(req.projectsByYear, `${year}.length`, 0) };
+    }, {});
+    next();
   });
 
   app.get('/', (req, res) => res.sendResponse());

@@ -1,12 +1,9 @@
 import React, { Fragment } from 'react';
-import range from 'lodash/range';
+import { useSelector } from 'react-redux';
 import { Header, Snippet, Link } from '@asl/components';
 
-const startYear = 2018;
-const supportedYears = range(startYear, 2016, -1).map(String);
-
 const Index = () => {
-
+  const projectCounts = useSelector(state => state.static.projectCounts);
   return (
     <Fragment>
 
@@ -19,9 +16,9 @@ const Index = () => {
 
       <ul className="nts-downloads">
         {
-          supportedYears.map(year => (
+          Object.keys(projectCounts).map(year => (
             <li key={year}>
-              <Link url={`/non-technical-summaries`} path={year} label={<Snippet year={year}>nts.link.label</Snippet>} />
+              <Link url={`/non-technical-summaries`} path={year} label={<Snippet year={year} count={projectCounts[year]}>nts.link.label</Snippet>} />
             </li>
           ))
         }
