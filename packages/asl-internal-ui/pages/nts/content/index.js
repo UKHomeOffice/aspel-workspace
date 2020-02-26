@@ -6,7 +6,7 @@ module.exports = {
   },
   nts: {
     link: {
-      label: 'Non-technical summaries published in {{year}} (.zip)'
+      label: 'Non-technical summaries published in {{year}} ({{count}} projects) (.zip)'
     }
   }
 };

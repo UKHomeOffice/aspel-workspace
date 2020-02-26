@@ -23,7 +23,7 @@ const renderDuration = (doc, value) => {
 
 const renderAnimalQuantities = (doc, data) => {
   const species = [
-    ...data.species,
+    ...(data.species || []),
     ...(data['species-other'] || [])
   ];
 
