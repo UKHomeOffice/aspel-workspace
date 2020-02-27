@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Header, Snippet } from '@asl/components';
-import { countBy } from 'lodash';
+import countBy from 'lodash/countBy';
 import { format, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
 
 const Metric = ({ number, label }) => {
@@ -44,14 +44,14 @@ const Index = ({ metrics, since }) => {
   const tasks = metrics.tasks;
   const licences = metrics.counts;
   const counts = countBy(tasks, 'type');
+  const pplApplications = tasks.filter(m => m.type === 'project-application')
 
   const getMeanIterations = schemaVersion => {
-    const pplApplications = tasks.filter(m => m.type === 'project-application')
-      .filter(m => m.schemaVersion === schemaVersion);
-    const iterations = pplApplications
+    const applications = pplApplications.filter(m => m.schemaVersion === schemaVersion);
+    const iterations = applications
       .map(m => m.iterations)
       .reduce((sum, i) => sum + i, 0);
-    return pplApplications.length ? iterations / pplApplications.length : '-';
+    return applications.length ? iterations / applications.length : '-';
   };
 
   const meanIterationsLegacy = getMeanIterations(0);
@@ -62,13 +62,18 @@ const Index = ({ metrics, since }) => {
     <Header title="Performance metrics"/>
 
     <div className="govuk-grid-row">
-      <div className="govuk-grid-column-one-third">
+      <div className="govuk-grid-column-one-half">
         <Metric number={tasks.length} label="total tasks completed" />
       </div>
-      <div className="govuk-grid-column-one-third">
+      <div className="govuk-grid-column-one-half">
+        <Metric number={metrics.projectsOutsideSLA} label="PPL applications outside SLA" />
+      </div>
+    </div>
+    <div className="govuk-grid-row">
+      <div className="govuk-grid-column-one-half">
         <Metric number={meanIterationsLegacy} label="iterations per PPL application (Legacy)" />
       </div>
-      <div className="govuk-grid-column-one-third">
+      <div className="govuk-grid-column-one-half">
         <Metric number={meanIterations} label="iterations per PPL application (New)" />
       </div>
     </div>
