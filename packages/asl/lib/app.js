@@ -40,12 +40,19 @@ module.exports = settings => {
     next();
   });
 
+  app.param('projectId', (req, res, next, param) => {
+    req.projectId = param;
+    next();
+  });
+
   app.param('versionId', (req, res, next, param) => {
     req.versionId = param;
     next();
   });
 
   app.param('establishmentId', (req, res, next, param) => {
+    req.establishmentId = param;
+    return next();
     if (req.user.profile) {
       const establishments = req.user.profile.establishments || [];
       const establishment = establishments.find(e => e.id.toString() === param);
