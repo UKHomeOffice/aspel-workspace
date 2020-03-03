@@ -28,9 +28,9 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-internal-ui#readme",
   "dependencies": {
-    "@asl/components": "^7.0.4",
-    "@asl/pages": "^18.8.6",
-    "@asl/projects": "^5.18.15",
+    "@asl/components": "^7.1.0",
+    "@asl/pages": "^18.9.0",
+    "@asl/projects": "^5.19.0",
     "@asl/service": "^7.18.2",
     "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
