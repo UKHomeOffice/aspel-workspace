@@ -40,23 +40,19 @@ module.exports = settings => {
     next();
   });
 
+  app.param('projectId', (req, res, next, param) => {
+    req.projectId = param;
+    next();
+  });
+
   app.param('versionId', (req, res, next, param) => {
     req.versionId = param;
     next();
   });
 
   app.param('establishmentId', (req, res, next, param) => {
-    if (req.user.profile) {
-      const establishments = req.user.profile.establishments || [];
-      const establishment = establishments.find(e => e.id.toString() === param);
-      if (establishment) {
-        req.establishmentId = establishment.id;
-        return next();
-      }
-    }
-    const err = new Error('Not found');
-    err.status = 404;
-    next(err);
+    req.establishmentId = param;
+    next();
   });
 
   app.param('token', (req, res, next, param) => {
