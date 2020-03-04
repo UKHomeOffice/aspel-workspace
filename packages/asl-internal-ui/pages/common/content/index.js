@@ -9,7 +9,8 @@ module.exports = {
     createEstablishment: 'Create establishment',
     revokeEstablishment: 'Revoke establishment',
     projectAsruActions: {
-      updateIssueDate: 'Change date granted'
+      updateIssueDate: 'Change date granted',
+      updateLicenceNumber: 'Change licence number'
     }
   }
 };
