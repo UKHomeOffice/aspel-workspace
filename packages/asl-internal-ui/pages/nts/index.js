@@ -40,12 +40,17 @@ module.exports = settings => {
           return promise
             .then(() => req.api(url))
             .then(response => {
-              const grantedId = get(response.json, 'data.granted.id');
-              if (grantedId) {
-                return req.api(`${url}/project-version/${grantedId}`)
+              const project = get(response.json, 'data');
+
+              // for project stubs, use the latest version which might include NTS, otherwise only use the granted version
+              const versionId = project.isLegacyStub ? project.versions[0].id : get(project, 'granted.id');
+
+              if (versionId) {
+                return req.api(`${url}/project-version/${versionId}`)
                   .then(response => nts(response.json.data))
                   .then(doc => {
-                    return archive.append(Buffer.from(doc), { name: `${filenamify(project.title)}-${project.id}.docx` });
+                    const fileName = `${project.isLegacyStub ? `STUB-` : ''}${filenamify(project.title)}-${project.id}.docx`;
+                    return archive.append(Buffer.from(doc), { name: fileName });
                   });
               }
             })
