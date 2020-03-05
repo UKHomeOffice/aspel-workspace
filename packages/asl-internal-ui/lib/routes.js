@@ -14,6 +14,12 @@ const licenceFees = require('../pages/licence-fees');
 const nonTechnicalSummaries = require('../pages/nts');
 
 module.exports = {
+  projectVersion: {
+    path: '/establishments/:establishmentId/projects/:projectId/versions/:versionId',
+    breadcrumb: false,
+    router: pages.projectVersion,
+    before: projectVersionAsruActions()
+  },
   dashboard: {
     path: '/',
     router: dashboard
@@ -78,12 +84,6 @@ module.exports = {
     path: '/establishments/:establishmentId/projects',
     breadcrumb: false,
     router: pages.project
-  },
-  projectVersion: {
-    path: '/establishments/:establishmentId/projects/:projectId/versions/:versionId',
-    breadcrumb: false,
-    router: pages.projectVersion,
-    before: projectVersionAsruActions()
   },
   place: {
     path: '/establishments/:establishmentId/places',
