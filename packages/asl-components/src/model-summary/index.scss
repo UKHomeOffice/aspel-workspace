@@ -1,24 +1,6 @@
 .model-summary {
   &.section-data {
     @extend .govuk-body-s;
-
-    border-left: 8px solid govuk-colour('grey-2');
-    margin: $govuk-gutter-half 0;
-
-    dt {
-      @extend .govuk-grid-column-one-half;
-      font-weight: normal;
-      clear: left;
-    }
-
-    dd {
-      @extend .govuk-grid-column-one-half;
-      font-weight: bold;
-      margin-bottom: $govuk-gutter-half / 2;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
+    margin: $govuk-gutter-half 0 0;
   }
 }
