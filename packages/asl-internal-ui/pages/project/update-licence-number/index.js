@@ -19,6 +19,11 @@ module.exports = settings => {
     return req.api(`/establishment/${req.establishmentId}/projects/${req.projectId}`)
       .then(({ json: { data, meta } }) => {
         req.project = data;
+
+        if (!req.project.isLegacyStub) {
+          throw new NotFoundError();
+        }
+
         req.project.openTasks = meta.openTasks;
         req.establishment = meta.establishment;
         res.locals.static.project = req.project;
