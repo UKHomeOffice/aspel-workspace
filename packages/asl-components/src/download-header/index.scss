@@ -10,11 +10,16 @@
   .page-title {
     flex: 1;
     padding-right: $govuk-gutter-half;
+    min-width: 0; /* allows text-overflow to work inside a flexbox element */
 
     h1 {
       font-size: 24px;
       font-weight: normal;
       margin-bottom: 5px;
+
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     h2 {
