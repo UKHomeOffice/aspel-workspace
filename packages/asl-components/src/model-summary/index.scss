@@ -1,11 +1,6 @@
 .model-summary {
   &.section-data {
     @extend .govuk-body-s;
-
-    margin: $govuk-gutter-half;
-    margin-right: 0;
-    padding-left: $govuk-gutter-half;
-
-    border-left: 6px solid govuk-colour('grey-2');
+    margin: $govuk-gutter-half 0 0;
   }
 }
