@@ -10,6 +10,7 @@ import {
   LinkFilter
 } from '@asl/components';
 import SearchPanel from '../../components/search-panel';
+import { projectTitle } from '@asl/pages/pages/common/formatters';
 
 function uppercaseFirst(str) {
   return `${str[0].toUpperCase()}${str.substring(1)}`;
@@ -59,7 +60,7 @@ const formatters = {
   projects: {
     title: {
       format: (title, project) => {
-        return <Link page="project.read" establishmentId={project.establishment.id} projectId={project.id} label={title} />;
+        return <Link page="project.read" establishmentId={project.establishment.id} projectId={project.id} label={projectTitle(project)} />;
       }
     },
     establishment: {
