@@ -60,7 +60,12 @@ const formatters = {
   projects: {
     title: {
       format: (title, project) => {
-        return <Link page="project.read" establishmentId={project.establishment.id} projectId={project.id} label={projectTitle(project)} />;
+        return (
+          <Fragment>
+            <Link page="project.read" establishmentId={project.establishment.id} projectId={project.id} label={projectTitle(project)} />
+            { project.isLegacyStub ? ' - Partial record' : '' }
+          </Fragment>
+        );
       }
     },
     establishment: {
