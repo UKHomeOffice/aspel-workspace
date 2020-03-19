@@ -16,11 +16,6 @@ module.exports = settings => {
   app.use((req, res, next) => {
     res.locals.static.roles = roles;
     res.locals.static.canAdmin = req.user.profile.asruAdmin && req.profileId !== req.user.profile.id;
-
-    if (!process.env.ENABLE_PPL_CONVERSION) {
-      res.locals.static.allowedActions = (res.locals.static.allowedActions || []).filter(action => action !== 'project.convertLegacy');
-    }
-
     next();
   });
 
