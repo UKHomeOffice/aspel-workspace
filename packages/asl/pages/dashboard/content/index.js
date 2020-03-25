@@ -13,5 +13,8 @@ module.exports = merge({}, baseContent, profileContent, {
   establishment: {
     description: 'View the details of this establishment, as well as lists of approved areas, people and active projects.',
     link: 'View establishment information'
+  },
+  warnings: {
+    pilReviewRequired: '**Your personal licence is {{#overdue}}overdue{{/overdue}}{{^overdue}}due{{/overdue}} a 5 year review.** You need to [confirm your personal licence is still in use]({{pilUrl}}) or it may be revoked.'
   }
 });
