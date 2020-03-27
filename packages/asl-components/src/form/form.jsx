@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { Snippet, Fieldset } from '../';
+import { Snippet, Fieldset, Link } from '../';
 
 const Form = ({
   csrfToken,
@@ -8,6 +8,7 @@ const Form = ({
   children,
   detachFields,
   schema,
+  cancelLink,
   onSubmit = () => {},
   ...props
 }) => {
@@ -26,7 +27,16 @@ const Form = ({
     <Fragment>
       <Fieldset schema={schema} { ...props } />
       {
-        submit && <button type="submit" className="govuk-button" disabled={disabled}><Snippet>buttons.submit</Snippet></button>
+        (submit || cancelLink) && (
+          <div className="control-panel">
+            {
+              submit && <button type="submit" className="govuk-button" disabled={disabled}><Snippet>buttons.submit</Snippet></button>
+            }
+            {
+              cancelLink && <Link page={cancelLink} label={<Snippet>buttons.cancel</Snippet>} />
+            }
+          </div>
+        )
       }
     </Fragment>
   );
