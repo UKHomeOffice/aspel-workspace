@@ -80,7 +80,7 @@ const formatters = {
     },
     expiryDate: {
       format: (date, model) => {
-        if (!date) {
+        if (!date || ['revoked', 'transferred'].includes(model.status)) {
           return '-';
         }
         return <ExpiryDate date={date} showNotice={model.status === 'active' ? 11 : false} />;
