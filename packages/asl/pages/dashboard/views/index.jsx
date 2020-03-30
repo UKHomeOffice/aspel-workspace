@@ -10,6 +10,7 @@ import {
 } from '@asl/components';
 import TaskList from '@asl/pages/pages/task/list/views/tasklist';
 import Profile from '@asl/pages/pages/profile/read/views/profile';
+import { Warning } from '@ukhomeoffice/react-components';
 
 const Invitation = ({ token, establishment }) => (
   <Fragment>
@@ -19,8 +20,15 @@ const Invitation = ({ token, establishment }) => (
   </Fragment>
 );
 
-const Index = ({ profile }) => (
+const Index = ({ profile, pilReviewRequired }) => (
   <Fragment>
+    {
+      pilReviewRequired && (
+        <Warning className="info">
+          <Snippet {...pilReviewRequired}>warnings.pilReviewRequired</Snippet>
+        </Warning>
+      )
+    }
     <Header
       title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>}
     />
@@ -51,4 +59,4 @@ const Index = ({ profile }) => (
   </Fragment>
 );
 
-export default connect(({ static: { profile } }) => ({ profile }))(Index);
+export default connect(({ static: { profile, pilReviewRequired } }) => ({ profile, pilReviewRequired }))(Index);
