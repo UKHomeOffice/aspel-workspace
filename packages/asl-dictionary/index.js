@@ -5,6 +5,7 @@ module.exports = {
   NACWO: 'Named Animal Care and Welfare Officer',
   NIO: 'Named Information Officer',
   NVS: 'Named Veterinary Surgeon',
+  SQP: 'Suitably Qualified Person',
   NTCO: 'Named Training and Competency Officer',
   NPRC: 'Named Person Responsible for Compliance',
 
