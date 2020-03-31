@@ -29,6 +29,10 @@ module.exports = {
     breadcrumb: false,
     router: pages.profile
   },
+  pils: {
+    path: '/establishments/:establishmentId/pils',
+    router: pages.pils
+  },
   globalProfile: {
     path: '/profile/:profileId',
     breadcrumb: false,
