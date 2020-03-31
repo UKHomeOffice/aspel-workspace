@@ -90,6 +90,10 @@ module.exports = {
     breadcrumb: false,
     router: pages.place
   },
+  pils: {
+    path: '/establishments/:establishmentId/pils',
+    router: pages.pils
+  },
   pil: {
     path: '/establishments/:establishmentId/people/:profileId/pil',
     breadcrumb: false,
