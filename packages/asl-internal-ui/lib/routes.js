@@ -10,6 +10,7 @@ const createEstablishment = require('../pages/create-establishment');
 const revokeEstablishment = require('../pages/revoke-establishment');
 const search = require('../pages/search');
 const reporting = require('../pages/reporting');
+const downloads = require('../pages/downloads');
 const licenceFees = require('../pages/licence-fees');
 const nonTechnicalSummaries = require('../pages/nts');
 
@@ -111,6 +112,10 @@ module.exports = {
   reporting: {
     path: '/reporting',
     router: reporting
+  },
+  downloads: {
+    path: '/downloads',
+    router: downloads
   },
   fees: {
     path: '/licence-fees',

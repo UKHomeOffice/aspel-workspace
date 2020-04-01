@@ -3,6 +3,7 @@ module.exports = {
     reporting: 'Performance metrics',
     fees: 'Licence fees',
     nts: 'Non-technical summaries',
+    downloads: 'Downloads',
     globalProfile: {
       dedupe: 'Merge profile'
     },

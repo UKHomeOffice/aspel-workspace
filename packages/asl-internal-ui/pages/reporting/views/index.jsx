@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Header, Snippet } from '@asl/components';
+import { Header, Snippet, CSVDownloadLink } from '@asl/components';
 import countBy from 'lodash/countBy';
 import { format, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
 
@@ -18,25 +18,11 @@ const Metric = ({ number, label }) => {
   </div>
 }
 
-const Index = ({ metrics, since }) => {
-  const types = [
-    'project-application',
-    'project-amendment',
-    'project-revoke',
-    'pil-application',
-    'pil-amendment',
-    'pil-revoke',
-    'pil-transfer',
-    'role-create',
-    'role-delete',
-    'place-update',
-    'place-create',
-    'place-delete',
-    'profile-update'
-  ];
+const Index = ({ metrics, since, types }) => {
+
   const now = new Date();
   const dates = {
-    all: '2019-01-01',
+    all: '2019-07-01',
     week: format(startOfWeek(now), 'YYYY-MM-DD'),
     month: format(startOfMonth(now), 'YYYY-MM-DD'),
     year: format(startOfYear(now), 'YYYY-MM-DD')
@@ -78,29 +64,31 @@ const Index = ({ metrics, since }) => {
       </div>
     </div>
 
-    <h3>Tasks completed by type:</h3>
-
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
-        <table className="govuk-table">
-          <tbody>
-            {
-              types.map(type => {
-                return <tr key={type}>
-                  <td><Snippet>{ type }</Snippet></td>
-                  <td className="numeric">{ counts[type] || '0' }</td>
-                </tr>;
-              })
-            }
-          </tbody>
-        </table>
+        <div className="table-wrapper">
+          <h2>Tasks completed by type:</h2>
+          <CSVDownloadLink query={{ since }} />
+          <table className="govuk-table">
+            <tbody>
+              {
+                types.map(type => {
+                  return <tr key={type}>
+                    <td><Snippet>{ type }</Snippet></td>
+                    <td className="numeric">{ counts[type] || '0' }</td>
+                  </tr>;
+                })
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
-    <h3>Active licences by type:</h3>
 
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
+        <h2>Active licences by type:</h2>
         <table className="govuk-table">
           <tbody>
             <tr>
@@ -136,4 +124,4 @@ const Index = ({ metrics, since }) => {
   </Fragment>
 };
 
-export default connect(({ static: { metrics, since } }) => ({ metrics, since }))(Index);
+export default connect(({ static: { metrics, since, types } }) => ({ metrics, since, types }))(Index);
