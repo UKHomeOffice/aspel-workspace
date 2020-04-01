@@ -61,13 +61,8 @@ module.exports = settings => {
         sectionName: 'Reporting',
         links: [
           { label: 'Licence fees', href: '/licence-fees' },
-          { label: 'Performance metrics', href: '/reporting' }
-        ]
-      },
-      {
-        sectionName: 'Downloads',
-        links: [
-          { label: 'Non-technical summaries', href: '/non-technical-summaries' }
+          { label: 'Performance metrics', href: '/reporting' },
+          { label: 'Downloads', href: '/downloads' }
         ]
       }
     ];
