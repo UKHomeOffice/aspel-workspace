@@ -1,5 +1,6 @@
 import React from 'react';
 import get from 'lodash/get';
+import { stringify } from 'qs';
 import { connect } from 'react-redux';
 
 const replace = params => fragment => {
@@ -24,6 +25,7 @@ const Link = ({
   urls,
   page,
   path,
+  query = {},
   label,
   className,
   isPdf,
@@ -32,15 +34,15 @@ const Link = ({
   if (isPdf) {
     return null;
   }
-
+  const qs = stringify(query);
   if (page) {
     const parts = page.split('.');
     const replacer = replace(props);
     const href = getUrl(urls, parts, replacer);
 
-    return <a className={className} href={href}>{label}</a>;
+    return <a className={className} href={`${href}${qs ? '?' + qs : ''}`}>{label}</a>;
   } else {
-    return <a className={className} href={`${url}/${path}`}>{label}</a>;
+    return <a className={className} href={`${url}/${path}${qs ? '?' + qs : ''}}`}>{label}</a>;
   }
 };
 
