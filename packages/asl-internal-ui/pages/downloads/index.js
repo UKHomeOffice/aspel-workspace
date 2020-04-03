@@ -1,4 +1,5 @@
 const { page } = require('@asl/service/ui');
+const routes = require('./routes');
 
 module.exports = settings => {
   const app = page({
@@ -10,3 +11,5 @@ module.exports = settings => {
 
   return app;
 };
+
+module.exports.routes = routes;
