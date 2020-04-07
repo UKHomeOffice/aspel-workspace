@@ -128,8 +128,8 @@ const render = (doc, project) => {
   renderTextEditor(table.getCell(row, 1), project.data['project-harms-severity']);
 
   table.getRow(++row).mergeCells(1, 2);
-  table.getCell(row, 0).addParagraph(new Paragraph('Will any animals not be killed at the end of this project?').style('body'));
-  renderBoolean(table.getCell(row, 1), project.data['fate-of-animals-nts']);
+  table.getCell(row, 0).addParagraph(new Paragraph('What will happen to animals at the end of this project?').style('body'));
+  table.getCell(row, 1).addParagraph(new Paragraph((project.data['fate-of-animals-nts'] || []).join(', ')).style('body'));
 
   table.getRow(++row).mergeCells(1, 2);
   table.getCell(row, 0).addParagraph(new Paragraph('Why do you need to use animals to achieve the aim of your project?').style('body'));
