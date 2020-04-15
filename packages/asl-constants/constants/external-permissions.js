@@ -1,5 +1,6 @@
 module.exports = [
   'basic',
   'read',
-  'admin'
+  'admin',
+  'blocked'
 ];
