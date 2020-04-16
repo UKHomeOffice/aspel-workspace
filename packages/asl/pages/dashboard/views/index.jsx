@@ -20,6 +20,28 @@ const Invitation = ({ token, establishment }) => (
   </Fragment>
 );
 
+const EstablishmentPanel = ({ establishment, profile }) => {
+  return (
+    <ExpandingPanel title={establishment.name} isOpen={profile.establishments.length === 1}>
+      {
+        establishment.role === 'blocked' &&
+          <Snippet>establishment.blocked</Snippet>
+      }
+
+      {
+        establishment.role !== 'blocked' &&
+          <Fragment>
+            <p><Snippet>establishment.description</Snippet></p>
+            <p>
+              <Link page="establishment" establishmentId={establishment.id} label={<Snippet>establishment.link</Snippet>} className="govuk-button" />
+            </p>
+            <Profile establishment={establishment} profile={profile} allowedActions={profile.allowedActions[establishment.id]} isOwnProfile={true} />
+          </Fragment>
+      }
+    </ExpandingPanel>
+  );
+};
+
 const Index = ({ profile, pilReviewRequired }) => (
   <Fragment>
     {
@@ -45,13 +67,7 @@ const Index = ({ profile, pilReviewRequired }) => (
         <h3>Establishments</h3>
         <PanelList
           panels={sortBy(profile.establishments, 'name').map((establishment) => (
-            <ExpandingPanel key={establishment.id} title={establishment.name} isOpen={profile.establishments.length === 1}>
-              <p><Snippet>establishment.description</Snippet></p>
-              <p>
-                <Link page="establishment" establishmentId={establishment.id} label={<Snippet>establishment.link</Snippet>} className="govuk-button" />
-              </p>
-              <Profile establishment={establishment} profile={profile} allowedActions={profile.allowedActions[establishment.id]} isOwnProfile={true} />
-            </ExpandingPanel>
+            <EstablishmentPanel key={establishment.id} establishment={establishment} profile={profile} />
           ))}
         />
       </Fragment>
