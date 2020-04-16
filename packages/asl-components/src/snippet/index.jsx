@@ -14,6 +14,9 @@ export const Snippet = ({ content, children, optional, fallback, ...props }) => 
   if (str === undefined) {
     throw new Error(`Failed to lookup content snippet: ${children}`);
   }
+  if (typeof str !== 'string') {
+    throw new Error(`Invalid content snippet for key ${children}: ${JSON.stringify(str)}`);
+  }
   const source = trim(render(str, props));
 
   function wrapInSpanIfOnlyChild({ children, parentChildCount }) {
