@@ -11,6 +11,11 @@ const Index = () => {
     <h3><Link page="reporting" query={{ csv: 1 }} label="Completed tasks" /></h3>
     <p>View a list of all completed tasks by type, which will be downloadable in a .csv file.</p>
 
+    <h2>Contact details</h2>
+
+    <h3><Link page="downloads.report" report="named-people" label="Named people and admins" /></h3>
+    <p>View a list of contact details for all named people, admins, and HOLCs, which will be downloadable in a .csv file.</p>
+
     <h2>Personal licence downloads</h2>
 
     <h3><Link page="downloads.report" report="pil-reviews" label="Upcoming PIL reviews" /></h3>
@@ -23,7 +28,7 @@ const Index = () => {
 
     <h3><Link page="nts" label="Non-technical summaries by year" /></h3>
     <p>View a list of all non-technical summaries by year, which will be downloadable in a .zip file.</p>
-  </Fragment>
+  </Fragment>;
 };
 
 export default Index;
