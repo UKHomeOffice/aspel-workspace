@@ -5,6 +5,7 @@ const types = [
   'project-application',
   'project-amendment',
   'project-revoke',
+  'project-transfer',
   'pil-application',
   'pil-amendment',
   'pil-revoke',
