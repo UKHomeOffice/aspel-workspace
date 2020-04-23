@@ -11,8 +11,6 @@ const Index = () => {
     <h3><Link page="reporting" query={{ csv: 1 }} label="Completed tasks" /></h3>
     <p>View a list of all completed tasks by type, which will be downloadable in a .csv file.</p>
 
-    <h2>Contact details</h2>
-
     <h3><Link page="downloads.report" report="named-people" label="Named people and admins" /></h3>
     <p>View a list of contact details for all named people, admins, and HOLCs, which will be downloadable in a .csv file.</p>
 
