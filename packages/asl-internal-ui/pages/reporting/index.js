@@ -9,6 +9,7 @@ const types = [
   'pil-amendment',
   'pil-revoke',
   'pil-transfer',
+  'pil-review',
   'role-create',
   'role-delete',
   'place-update',

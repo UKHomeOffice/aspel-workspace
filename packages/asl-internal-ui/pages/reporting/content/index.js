@@ -6,6 +6,7 @@ module.exports = {
   'pil-amendment': 'PIL amendments',
   'pil-revoke': 'PIL revocations',
   'pil-transfer': 'PIL transfers',
+  'pil-review': 'PIL reviews',
   'role-create': 'Named people assignments',
   'role-delete': 'Named people revocations',
   'place-update': 'Approved area amendments',
