@@ -1,0 +1,13 @@
+{{#name}}
+Hello {{name}}
+{{/name}}
+{{^name}}
+Hello
+{{/name}}
+
+{{>message}}
+
+Many thanks,
+Animals in Science Regulation Unit
+
+(This is an automated email. Please do not reply.)

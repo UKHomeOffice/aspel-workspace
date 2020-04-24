@@ -1,42 +1,40 @@
-const path = require('path');
-
 const api = require('@asl/service/api');
-const Mailer = require('snailmail');
+const errorHandler = require('@asl/service/lib/error-handler');
 
 const whitelist = require('./whitelist');
+const Renderer = require('./renderer');
+const Emailer = require('./emailer');
 
 module.exports = settings => {
+
+  if (!settings.email.apiKey) {
+    throw new Error(`GOVUK Notify API key is not defined`);
+  }
+
   const app = api(settings);
 
-  const mailer = Mailer({
-    ...settings.email,
-    templateDir: path.resolve(__dirname, '../templates'),
-    layout: path.resolve(__dirname, '../templates/layout.html'),
-    attachments: {
-      hologo: path.resolve(__dirname, '../assets/hologo.png')
-    }
-  });
+  const render = Renderer(settings);
+  const send = Emailer(settings);
 
   app.post('/:template', whitelist(settings));
 
-  app.post('/:template', (req, res) => {
-    const params = {
-      template: req.params.template,
-      to: req.body.to,
-      subject: req.body.subject,
-      data: req.body
-    };
+  app.post('/:template', (req, res, next) => {
 
-    mailer
-      .send(params)
+    Promise.resolve()
+      .then(() => {
+        return render(req.params.template, req.body);
+      })
+      .then(content => {
+        return send({ content, subject: req.body.subject, to: req.body.to });
+      })
       .then(() => {
         res.json({});
       })
-      .catch(error => {
-        console.error(error);
-        res.status(500).json({ error });
-      });
+      .catch(next);
+
   });
+
+  app.use(errorHandler(settings));
 
   return app;
 };
