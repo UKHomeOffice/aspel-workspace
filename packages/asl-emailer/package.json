@@ -19,8 +19,9 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-emailer#readme",
   "dependencies": {
-    "@asl/service": "^7.4.0",
-    "snailmail": "^1.2.1"
+    "@asl/service": "^7.19.0",
+    "mustache": "^4.0.1",
+    "notifications-node-client": "^4.7.3"
   },
   "devDependencies": {
     "dotenv": "^6.0.0",

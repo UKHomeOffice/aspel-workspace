@@ -1,0 +1,7 @@
+You have an invitation to join {{establishment}}.
+
+To accept this invitation, please follow the link below:
+{{{acceptLink}}}
+
+This link will stop working 7 days after you've received it.
+This is to keep the service secure.
