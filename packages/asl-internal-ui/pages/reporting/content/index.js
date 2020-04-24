@@ -2,6 +2,7 @@ module.exports = {
   'project-application': 'PPL applications',
   'project-amendment': 'PPL amendments',
   'project-revoke': 'PPL revocations',
+  'project-transfer': 'PPL transfers',
   'pil-application': 'PIL applications',
   'pil-amendment': 'PIL amendments',
   'pil-revoke': 'PIL revocations',
