@@ -63,12 +63,6 @@ module.exports = () => {
       .then(message => {
         return getLayout()
           .then(layout => render(layout, data, { message }));
-      })
-      .then(content => {
-        console.log('>>>>>>>>>>>>>>>');
-        console.log(content);
-        console.log('>>>>>>>>>>>>>>>');
-        return content;
       });
   };
 
