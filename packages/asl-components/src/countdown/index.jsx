@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Snippet } from '../';
 import differenceInMonths from 'date-fns/difference_in_months';
 import differenceInWeeks from 'date-fns/difference_in_weeks';
@@ -7,7 +7,7 @@ import isBefore from 'date-fns/is_before';
 import isToday from 'date-fns/is_today';
 import classnames from 'classnames';
 
-const Countdown = ({ expiry, unit, showNotice, showUrgent }) => {
+const Countdown = ({ expiry, unit, showNotice, showUrgent, suffix }) => {
   const now = new Date();
 
   const diff = {
@@ -37,6 +37,9 @@ const Countdown = ({ expiry, unit, showNotice, showUrgent }) => {
   return (
     <span className={classnames('notice', { urgent })}>
       <Snippet diff={displayDiff} unit={displayUnit}>{contentKey}</Snippet>
+      {
+        suffix && <Fragment>{' - '}<span>{suffix}</span></Fragment>
+      }
     </span>
   );
 };
