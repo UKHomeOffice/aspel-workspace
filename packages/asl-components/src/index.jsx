@@ -49,6 +49,7 @@ export { default as PanelList } from './panel-list';
 export { default as RestrictionsField } from './restrictions-field';
 export { default as Search } from './search';
 export { default as SectionList } from './section-list';
+export { default as SelectMany } from './select-many';
 export { default as Sidebar } from './sidebar';
 export { default as Snippet } from './snippet';
 export { default as SpeciesSelector } from './species-selector';
