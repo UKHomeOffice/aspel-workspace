@@ -3,61 +3,55 @@ import map from 'lodash/map';
 import uuid from 'uuid/v4';
 import { Button, Select } from '@ukhomeoffice/react-components';
 
-export default function SelectMany({ name, label, error, value, options }) {
-  const newField = () => {
-    return { [`${name}-${uuid()}`]: '' };
-  };
+export default function SelectMany({ name, label, error, value = [], options, onChange }) {
 
-  const [fields, setFields] = useState({ ...newField() });
+  const initialFields = value.map(v => {
+    return { id: uuid(), value: v };
+  });
+  if (initialFields.length === 0) {
+    initialFields.push({ id: uuid() });
+  }
 
-  console.log({fields});
+  const [fields, setFields] = useState(initialFields);
 
-  function onFieldChange (e) {
-    console.log({
-      existingFields: fields,
-      targetName: e.target.name,
-      targetValue: e.target.value
+  function onFieldChange (id, v) {
+    const value = fields.map(f => {
+      return f.id === id ? { ...f, value: v } : f;
     });
-
-    fields[e.target.name] = e.target.value;
-    setFields(fields);
+    setFields(value);
+    onChange && onChange(value.map(v => v.value));
   }
 
   function addAnother(e) {
     e.preventDefault();
-
-    console.log(Object.keys(fields).length);
-
-    setFields({
-      ...fields,
-      ...newField()
-    });
-
-    console.log(Object.keys(fields).length);
+    setFields([...fields, { id: uuid() }]);
   }
 
   function remove(id) {
-    delete fields[id];
-    setFields(fields);
+    if (fields.length === 1) {
+      return;
+    }
+    const value = fields.filter(f => f.id !== id);
+    setFields(value);
+    onChange && onChange(value.map(v => v.value));
   }
-
-  map(fields, (value, id) => {
-    console.log({value, id});
-  });
 
   return (
     <div className="govuk-form-group select-many">
       {
-        map(fields, (value, id) => (
-          <div key={id}>
+        map(fields, (field, i) => (
+          <div key={field.id}>
             <Select
-              id={id}
-              name={id}
+              id={field.id}
+              name={name}
               label={label}
               options={options}
-              onChange={onFieldChange}
-              value={value}
+              onChange={e => onFieldChange(field.id, e.target.value)}
+              value={field.value}
             />
+            {
+              (fields.length > 1) && <Button onClick={() => remove(field.id)}>Remove</Button>
+            }
           </div>
         ))
       }
