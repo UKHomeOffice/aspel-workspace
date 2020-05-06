@@ -73,6 +73,9 @@ const formatters = {
         return <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />;
       }
     },
+    status: {
+      format: status => uppercaseFirst(status)
+    },
     licenceHolder: {
       format: ({ id, firstName, lastName }) => {
         return <Link page="globalProfile" profileId={id} label={`${firstName} ${lastName}`} />;
@@ -103,7 +106,7 @@ const Index = ({ profile, searchType, searchableModels, searchTerm, hasFilters }
               label="Filter by status:"
               showAllLabel="Show all"
               showAllBefore={false}
-              formatter={filter => uppercaseFirst(filter)}
+              formatter={filter => filter === 'transferred' ? 'Transferred out' : uppercaseFirst(filter)}
             />
           }
           <FilterSummary />
