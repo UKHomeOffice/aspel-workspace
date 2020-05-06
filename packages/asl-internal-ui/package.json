@@ -13,9 +13,7 @@
     "build": "npm run build:js && npm run build:css",
     "build:js": "node --max_old_space_size=4096 node_modules/.bin/webpack",
     "prebuild:css": "mkdir -p ./public/css",
-    "build:css": "npm run build:css:base && npm run build:css:wide",
-    "build:css:base": "npm-sass ./assets/sass/app.scss > ./public/css/app.css",
-    "build:css:wide": "npm-sass ./assets/sass/wide.scss > ./public/css/wide.css",
+    "build:css": "npm-sass ./assets/sass/app.scss > ./public/css/app.css",
     "postinstall": "npm run build"
   },
   "repository": {
@@ -33,7 +31,7 @@
     "@asl/components": "^7.2.3",
     "@asl/pages": "^18.24.9",
     "@asl/projects": "^6.6.3",
-    "@asl/service": "^7.19.2",
+    "@asl/service": "^7.20.0",
     "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
