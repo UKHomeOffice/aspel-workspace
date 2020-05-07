@@ -65,6 +65,11 @@ module.exports = settings => {
 
   app.use(cachebuster());
 
+  app.use((req, res, next) => {
+    res.locals.phaseBannerSurvey = true;
+    next();
+  });
+
   mountRoutes({ app, routes, settings });
 
   return app;
