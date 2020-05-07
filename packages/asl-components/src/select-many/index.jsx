@@ -4,10 +4,10 @@ import uuid from 'uuid/v4';
 import { Button, Select } from '@ukhomeoffice/react-components';
 
 export default function SelectMany({ name, label, error, value = [], options, onChange }) {
-
   const initialFields = value.map(v => {
     return { id: uuid(), value: v };
   });
+
   if (initialFields.length === 0) {
     initialFields.push({ id: uuid() });
   }
@@ -39,7 +39,7 @@ export default function SelectMany({ name, label, error, value = [], options, on
   return (
     <div className="govuk-form-group select-many">
       {
-        map(fields, (field, i) => (
+        map(fields, field => (
           <div key={field.id}>
             <Select
               id={field.id}
@@ -50,7 +50,7 @@ export default function SelectMany({ name, label, error, value = [], options, on
               value={field.value}
             />
             {
-              (fields.length > 1) && <Button onClick={() => remove(field.id)}>Remove</Button>
+              (fields.length > 1) && <button onClick={() => remove(field.id)} className="govuk-link">Remove</button>
             }
           </div>
         ))
