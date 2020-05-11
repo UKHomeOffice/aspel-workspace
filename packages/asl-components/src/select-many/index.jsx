@@ -3,7 +3,7 @@ import map from 'lodash/map';
 import uuid from 'uuid/v4';
 import { Button, Select } from '@ukhomeoffice/react-components';
 
-export default function SelectMany({ name, label, error, value = [], options, onChange }) {
+export default function SelectMany({ name, label, addAnotherLabel, removeLabel, value = [], options, onChange }) {
   const initialFields = value.map(v => {
     return { id: uuid(), value: v };
   });
@@ -13,6 +13,9 @@ export default function SelectMany({ name, label, error, value = [], options, on
   }
 
   const [fields, setFields] = useState(initialFields);
+
+  addAnotherLabel = addAnotherLabel || 'Add another';
+  removeLabel = removeLabel || 'Remove';
 
   function onFieldChange (id, v) {
     const value = fields.map(f => {
@@ -27,7 +30,8 @@ export default function SelectMany({ name, label, error, value = [], options, on
     setFields([...fields, { id: uuid() }]);
   }
 
-  function remove(id) {
+  function remove(e, id) {
+    e.preventDefault();
     if (fields.length === 1) {
       return;
     }
@@ -40,7 +44,7 @@ export default function SelectMany({ name, label, error, value = [], options, on
     <div className="govuk-form-group select-many">
       {
         map(fields, field => (
-          <div key={field.id}>
+          <div key={field.id} className="select-row">
             <Select
               id={field.id}
               name={name}
@@ -50,12 +54,12 @@ export default function SelectMany({ name, label, error, value = [], options, on
               value={field.value}
             />
             {
-              (fields.length > 1) && <button onClick={() => remove(field.id)} className="govuk-link">Remove</button>
+              (fields.length > 1) && <a href="#" onClick={e => remove(e, field.id)}>{removeLabel}</a>
             }
           </div>
         ))
       }
-      <Button onClick={addAnother} className="button-secondary">Add another</Button>
+      <Button onClick={addAnother} className="button-secondary">{addAnotherLabel}</Button>
     </div>
   );
 }
