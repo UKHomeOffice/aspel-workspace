@@ -4,7 +4,7 @@ import without from 'lodash/without';
 import castArray from 'lodash/castArray';
 import classnames from 'classnames';
 import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
-import { Snippet, ConditionalReveal, SpeciesSelector, ApplicationConfirm, RestrictionsField, Markdown, DurationField } from '../';
+import { Snippet, ConditionalReveal, SpeciesSelector, ApplicationConfirm, RestrictionsField, Markdown, DurationField, SelectMany } from '../';
 
 const fields = {
   inputText: props => <Input { ...props } />,
@@ -17,6 +17,7 @@ const fields = {
   radioGroup: props => <RadioGroup { ...props } />,
   checkboxGroup: props => <CheckboxGroup { ...props } />,
   select: props => <Select { ...props } />,
+  selectMany: props => <SelectMany { ...props } />,
   conditionalReveal: props => <ConditionalReveal { ...props } />,
   speciesSelector: props => <SpeciesSelector {...props} />,
   restrictionsField: props => <RestrictionsField {...props} />,
