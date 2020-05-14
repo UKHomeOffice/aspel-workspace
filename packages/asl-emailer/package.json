@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "eslint .",
+    "test:lint": "eslint .",
+    "test:unit": "mocha ./test --recursive",
+    "test": "npm run test:lint && npm run test:unit",
     "dev": "nodemon -r dotenv/config index.js"
   },
   "repository": {
@@ -27,6 +29,8 @@
     "dotenv": "^6.0.0",
     "eslint": "^5.16.0",
     "eslint-config-lennym": "^2.0.1",
-    "nodemon": "^1.18.3"
+    "mocha": "^7.1.2",
+    "nodemon": "^1.18.3",
+    "sinon": "^9.0.2"
   }
 }
