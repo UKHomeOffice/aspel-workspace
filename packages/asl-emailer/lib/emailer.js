@@ -5,7 +5,10 @@ module.exports = settings => {
   const client = new NotifyClient(settings.email.apiKey);
 
   return ({ to, content, subject }) => {
-    return client.sendEmail(settings.email.template, to, { personalisation: { content, subject } });
+    const recipients = to.split(',');
+    return Promise.all(recipients.map(recipient => {
+      return client.sendEmail(settings.email.template, recipient, { personalisation: { content, subject } });
+    }));
   };
 
 };
