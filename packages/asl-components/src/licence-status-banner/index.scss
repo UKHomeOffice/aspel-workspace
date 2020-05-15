@@ -12,24 +12,7 @@
     color: $white;
   }
 
-  &.expired {
-    background-color: govuk-colour('orange');
-    color: $black;
-
-    .toggle-switch {
-      a:link,
-      a:hover,
-      a:visited {
-        color: $black;
-      }
-    }
-
-    .status-details {
-      border-top: 1px solid $black;
-    }
-  }
-
-  &.revoked, &.red {
+  &.revoked, &.red, &.expired {
     background-color: govuk-colour('red');
   }
 
