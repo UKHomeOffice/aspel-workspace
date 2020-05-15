@@ -4,7 +4,7 @@ import uuid from 'uuid/v4';
 import { Button, Select } from '@ukhomeoffice/react-components';
 
 export default function SelectMany({ name, label, addAnotherLabel, removeLabel, value = [], options, onChange }) {
-  const initialFields = value.map(v => {
+  const initialFields = (value || []).map(v => {
     return { id: uuid(), value: v };
   });
 
