@@ -16,7 +16,10 @@ module.exports = settings => {
         return req.api(`/search/projects?limit=${response.json.meta.count}`);
       })
       .then(response => {
-        const projects = response.json.data.filter(p => p.issueDate);
+        const projects = response.json.data
+          .filter(p => p.issueDate)
+          // filter out ASRU TEST
+          .filter(p => p.establishmentId !== 1502162);
         req.projectsByYear = groupBy(projects, p => p.issueDate.substr(0, 4));
         next();
       })
@@ -41,6 +44,7 @@ module.exports = settings => {
             .then(() => req.api(url))
             .then(response => {
               const project = get(response.json, 'data');
+              project.title = project.title || 'Untitled Project';
 
               // for project stubs, use the latest version which might include NTS, otherwise only use the granted version
               const versionId = project.isLegacyStub ? project.versions[0].id : get(project, 'granted.id');
