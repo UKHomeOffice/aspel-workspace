@@ -42,7 +42,7 @@ const Link = ({
 
     return <a className={className} href={`${href}${qs ? '?' + qs : ''}`}>{label}</a>;
   } else {
-    return <a className={className} href={`${url}/${path}${qs ? '?' + qs : ''}}`}>{label}</a>;
+    return <a className={className} href={`${url}/${path}${qs ? '?' + qs : ''}`}>{label}</a>;
   }
 };
 
