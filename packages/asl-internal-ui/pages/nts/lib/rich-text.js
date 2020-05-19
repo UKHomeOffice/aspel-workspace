@@ -229,7 +229,17 @@ const renderTextEditor = (doc, value) => {
         break;
 
       case 'image':
-        doc.createImage(node.data.src, node.data.width, node.data.height);
+        try {
+          doc.createImage(node.data.src, node.data.width, node.data.height);
+        } catch (e) {
+          // `doc.createImage` sometimes fails if it's nested in certain ways
+          // the fix is complex, and this feature is short-lived so fail better instead
+          const p = new Paragraph();
+          const t = new TextRun('[IMAGE RENDER FAILED]');
+          p.style('body');
+          p.addRun(t);
+          doc.addParagraph(p);
+        }
         break;
 
       default:
