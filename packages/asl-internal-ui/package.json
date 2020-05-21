@@ -8,8 +8,6 @@
     "dev": "nodemon -r dotenv/config -e .js,.jsx",
     "test": "eslint . && npm run test:deduped",
     "test:deduped": "./tests/dedupe.sh",
-    "test:functional:ci": "asl-test ./tests/functional/config",
-    "test:functional": "funkie --driver chromedriver npm run test:functional:ci",
     "build": "npm run build:js && npm run build:css",
     "build:js": "node --max_old_space_size=4096 node_modules/.bin/webpack",
     "prebuild:css": "mkdir -p ./public/css",
@@ -53,12 +51,9 @@
     "uuid-validate": "0.0.3"
   },
   "devDependencies": {
-    "@ukhomeoffice/asl-functional-testing": "^1.2.4",
     "dotenv": "^5.0.1",
     "eslint": "^4.19.1",
     "eslint-config-lennym": "^2.0.1",
-    "funkie": "0.0.6",
-    "funkie-chromedriver": "0.0.1",
     "nodemon": "^1.19.2",
     "npm-sass": "^2.3.0",
     "webpack": "^4.41.0",
