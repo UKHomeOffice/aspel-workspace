@@ -6,9 +6,18 @@ module.exports = settings => {
 
   return ({ to, content, subject }) => {
     const recipients = to.split(',');
-    return Promise.all(recipients.map(recipient => {
-      return client.sendEmail(settings.email.template, recipient, { personalisation: { content, subject } });
-    }));
+    return Promise.resolve()
+      .then(() => {
+        return Promise.all(recipients.map(recipient => {
+          return client.sendEmail(settings.email.template, recipient, { personalisation: { content, subject } });
+        }));
+      })
+      .catch(e => {
+        // the notify client returns errors with a large amount of additional request metadata
+        // this breaks the dynamic indexing in kibana so the logs are never ingested
+        // create a new "clean" error with the message so that the logs can index correctly
+        throw new Error(e.message);
+      });
   };
 
 };
