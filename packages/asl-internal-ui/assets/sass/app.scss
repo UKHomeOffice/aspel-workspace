@@ -1,6 +1,14 @@
 @import "@asl/pages";
 @import "@asl/projects";
 
+@media (min-width: 1260px) {
+  .govuk-width-container,
+  .wrapper-header,
+  .wrapper-footer {
+    max-width: 1200px;
+  }
+}
+
 #ppl-drafting-tool {
   margin-bottom: $govuk-gutter;
 }
