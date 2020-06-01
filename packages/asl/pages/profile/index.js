@@ -1,5 +1,6 @@
 const { page } = require('@asl/service/ui');
 const { NotFoundError } = require('@asl/service/errors');
+const relatedTasks = require('@asl/pages/pages/common/middleware/related-tasks');
 
 module.exports = settings => {
   const app = page({
@@ -17,6 +18,11 @@ module.exports = settings => {
     res.locals.static.profile = req.user.profile;
     next();
   });
+
+  app.get('/', (req, res, next) => relatedTasks({
+    model: 'profile-touched',
+    modelId: req.profileId
+  })(req, res, next));
 
   app.get('/', (req, res) => res.sendResponse());
 
