@@ -1,7 +1,6 @@
 const bodyParser = require('body-parser');
 const { page } = require('@asl/service/ui');
-const { datatable } = require('@asl/pages/pages/common/routers');
-const schema = require('@asl/pages/pages/task/list/schema');
+const relatedTasks = require('@asl/pages/pages/common/middleware/related-tasks');
 
 const roles = ['asruAdmin', 'asruLicensing', 'asruInspector'];
 
@@ -50,16 +49,10 @@ module.exports = settings => {
       .catch(next);
   });
 
-  app.use(datatable({
-    configure: (req, res, next) => {
-      req.datatable.sort = { column: 'updated_at', ascending: false };
-      next();
-    },
-    getApiPath: (req, res, next) => {
-      req.datatable.apiPath = `/profile/${req.profileId}/tasks`;
-      next();
-    }
-  })({ schema }));
+  app.get('/', (req, res, next) => relatedTasks({
+    model: 'profile-touched',
+    modelId: req.profileId
+  })(req, res, next));
 
   app.get('/', (req, res) => res.sendResponse());
 
