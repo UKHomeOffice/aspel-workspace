@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import classnames from 'classnames';
 import map from 'lodash/map';
 import uuid from 'uuid/v4';
 import { Button, Select } from '@ukhomeoffice/react-components';
@@ -41,7 +42,7 @@ export default function SelectMany({ name, label, addAnotherLabel, removeLabel, 
   }
 
   return (
-    <div className="govuk-form-group select-many">
+    <div className={classnames('govuk-form-group', 'select-many', name)}>
       {
         map(fields, field => (
           <div key={field.id} className="select-row">
