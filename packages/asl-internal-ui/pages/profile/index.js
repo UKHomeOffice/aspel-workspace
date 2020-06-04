@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser');
 const { page } = require('@asl/service/ui');
-const relatedTasks = require('@asl/pages/pages/common/middleware/related-tasks');
+const { relatedTasks } = require('@asl/pages/pages/common/routers');
 
 const roles = ['asruAdmin', 'asruLicensing', 'asruInspector'];
 
@@ -49,10 +49,12 @@ module.exports = settings => {
       .catch(next);
   });
 
-  app.get('/', (req, res, next) => relatedTasks({
-    model: 'profile-touched',
-    modelId: req.profileId
-  })(req, res, next));
+  app.get('/', relatedTasks(req => {
+    return {
+      model: 'profile-touched',
+      modelId: req.profileId
+    };
+  }));
 
   app.get('/', (req, res) => res.sendResponse());
 
