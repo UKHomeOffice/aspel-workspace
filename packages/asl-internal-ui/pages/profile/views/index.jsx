@@ -9,7 +9,7 @@ import { dateFormat } from '@asl/pages/constants';
 import Profile from '@asl/pages/pages/profile/read/views/profile';
 import ASRUAdmin from '../components/asru-admin';
 import Modules from '@asl/pages/pages/profile/read/views/modules';
-import Tasklist from '@asl/pages/pages/task/list/views/table';
+import RelatedTasks from '@asl/pages/pages/task/list/views/related-tasks';
 
 const formatDate = (date, format) => (date ? dateFormatter(date, format) : '-');
 
@@ -93,8 +93,7 @@ class Index extends React.Component {
           { this.renderAsruAssociation(model.asru) }
         </Fragment>
       }
-      <h2>Related tasks</h2>
-      <Tasklist />
+      <RelatedTasks />
     </Fragment>;
   }
 
