@@ -8,6 +8,7 @@ import { dateFormat } from '@asl/pages/constants';
 
 import Profile from '@asl/pages/pages/profile/read/views/profile';
 import Modules from '@asl/pages/pages/profile/read/views/modules';
+import RelatedTasks from '@asl/pages/pages/task/list/views/related-tasks';
 
 const formatDate = (date, format) => (date ? dateFormatter(date, format) : '-');
 
@@ -57,6 +58,7 @@ export default function Index() {
         })} />
       </Fragment>
     }
+    <RelatedTasks />
   </Fragment>;
 
 }
