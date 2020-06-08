@@ -24,6 +24,9 @@ const Index = () => {
     <h3><Link page="downloads.report" report="ppl-list" label="Project list" /></h3>
     <p>Download a .csv file with summaries of the admin details of project licences such as expiry dates and statuses.</p>
 
+    <h3><Link page="downloads.pplConditionsReport" label="Project conditions and authorisations" /></h3>
+    <p>Download a .csv file with summaries of the conditions and authorisations for each project.</p>
+
     <h3><Link page="nts" label="Non-technical summaries by year" /></h3>
     <p>View a list of all non-technical summaries by year, which will be downloadable in a .zip file.</p>
   </Fragment>;
