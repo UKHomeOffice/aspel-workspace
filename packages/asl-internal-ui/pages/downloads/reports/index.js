@@ -1,5 +1,13 @@
 const { Router } = require('express');
 const csv = require('csv-stringify');
+const conditionsReportMapper = require('./conditions-report-mapper');
+
+const process = report => data => {
+  if (report === 'ppl-conditions') {
+    return conditionsReportMapper(data);
+  }
+  return data;
+};
 
 module.exports = settings => {
   const router = Router({ mergeParams: true });
@@ -7,12 +15,12 @@ module.exports = settings => {
   router.get('/', (req, res, next) => {
     const report = req.params.report;
     req.api(`/reports/${report}`)
-      .then(result => {
-        const stringifier = csv({ header: true });
+      .then(result => result.json.data)
+      .then(process(report))
+      .then(data => {
         res.attachment(`${report}.csv`);
-
-        result.json.data.forEach(row => stringifier.write(row));
-
+        const stringifier = csv({ header: true });
+        data.forEach(row => stringifier.write(row));
         stringifier.pipe(res);
         return stringifier.end();
       })
