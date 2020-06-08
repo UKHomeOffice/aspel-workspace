@@ -46,7 +46,7 @@ module.exports = data => {
     const allConditions = getAllConditions(project);
 
     if (allConditions.length > 0) {
-      allConditions.map((condition, i) => {
+      allConditions.forEach((condition, i) => {
         output.push({
           ...omit(project, 'conditions', 'protocols'),
           ...condition
