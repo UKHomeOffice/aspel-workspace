@@ -1,7 +1,7 @@
 const report = require('./reports');
 
 module.exports = {
-  'report': {
+  report: {
     path: '/:report',
     router: report,
     breadcrumb: false
