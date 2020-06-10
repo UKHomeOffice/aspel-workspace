@@ -4,7 +4,7 @@ const through = require('through2');
 const archiver = require('archiver');
 const { get } = require('lodash');
 const filenamify = require('filenamify');
-const nts = require('./lib/nts-summary');
+const nts = require('../nts/lib/nts-summary');
 const metrics = require('../../lib/middleware/metrics');
 
 module.exports = settings => {
