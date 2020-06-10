@@ -2,7 +2,6 @@ const { page } = require('@asl/service/ui');
 const { pipeline } = require('stream');
 const through = require('through2');
 const archiver = require('archiver');
-const { get } = require('lodash');
 const filenamify = require('filenamify');
 const nts = require('../nts/lib/nts-summary');
 const metrics = require('../../lib/middleware/metrics');

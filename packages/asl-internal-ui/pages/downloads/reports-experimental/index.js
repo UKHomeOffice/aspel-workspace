@@ -14,7 +14,7 @@ const process = report => (data, encoding, callback) => {
       default:
         return callback(null, data);
     }
-  } catch(e) {
+  } catch (e) {
     return callback(e);
   }
 };

@@ -1,4 +1,4 @@
-const { get, omit, concat, flatten } = require('lodash');
+const { get, omit } = require('lodash');
 
 const CONDITIONS = require('@asl/projects/client/constants/conditions').default;
 const RA = require('@asl/projects/client/constants/retrospective-assessment').default;
@@ -19,8 +19,8 @@ const getCondition = condition => {
     return {
       ...condition,
       ...defaults
-    }
-  };
+    };
+  }
 
   const defaultCondition = get(CONDITIONS[condition.level], condition.path) || {};
   const isCustom = condition.custom || condition.key === 'custom';
