@@ -2,6 +2,7 @@ module.exports = {
   port: process.env.PORT || 8080,
   api: process.env.API_URL,
   workflow: process.env.WORKFLOW_URL,
+  metrics: process.env.METRICS_URL,
   session: {
     secret: process.env.SESSION_SECRET,
     host: process.env.REDIS_HOST,
