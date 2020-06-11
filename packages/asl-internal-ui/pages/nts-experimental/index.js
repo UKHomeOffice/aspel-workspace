@@ -21,10 +21,11 @@ module.exports = settings => {
     archive.pipe(res);
 
     const writeFile = (project, encoding, callback) => {
+      project.project = { schemaVersion: project.schema_version, title: project.title };
       return Promise.resolve()
         .then(() => nts(project))
         .then(doc => {
-          const fileName = `${project.isLegacyStub ? `STUB-` : ''}${filenamify(project.title)}-${project.id}.docx`;
+          const fileName = `${project.is_legacy_stub ? `STUB-` : ''}${filenamify(project.title)}-${project.id}.docx`;
           return archive.append(Buffer.from(doc), { name: fileName });
         })
         .catch(e => {
