@@ -5,11 +5,12 @@ import { Snippet } from '@asl/components';
 
 import ManageRoles from './manage-roles';
 import ToggleASRU from './toggle-asru';
-import ASRURoles from './asru-roles';
+import ASRURoles from '@asl/pages/pages/global-profile/components/asru-roles';
 
 class ASRUAdmin extends React.Component {
 
   renderRoles () {
+    console.log('rendering roles')
     if (!this.props.canAdmin) {
       return <ASRURoles />;
     }
@@ -25,7 +26,7 @@ class ASRUAdmin extends React.Component {
   render () {
 
     const { model, canAdmin } = this.props;
-    const hasEstablishments = !!model.establishments.length;
+    const hasEstablishments = !!(model.establishments || []).length;
 
     if (hasEstablishments) {
       return null;

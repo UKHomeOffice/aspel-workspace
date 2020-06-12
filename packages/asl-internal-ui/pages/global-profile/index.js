@@ -1,21 +1,29 @@
-const bodyParser = require('body-parser');
 const { page } = require('@asl/service/ui');
+const bodyParser = require('body-parser');
 const { relatedTasks } = require('@asl/pages/pages/common/routers');
 
 const roles = ['asruAdmin', 'asruLicensing', 'asruInspector'];
 
-module.exports = settings => {
-  const app = page({
-    ...settings,
-    root: __dirname
-  });
+module.exports = () => {
+  const app = page({ root: __dirname });
 
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.use((req, res, next) => {
     res.locals.static.roles = roles;
     res.locals.static.canAdmin = req.user.profile.asruAdmin && req.profileId !== req.user.profile.id;
+    res.locals.static.asruUser = req.user.profile.asruUser;
     next();
+  });
+
+  app.get('/', (req, res, next) => {
+    return req.api(`/profile/${req.profileId}`)
+      .then(({ json: { data } }) => {
+        res.locals.model = data;
+        res.locals.static.profile = data;
+      })
+      .then(() => next())
+      .catch(next);
   });
 
   app.post('/', (req, res, next) => {
@@ -38,25 +46,12 @@ module.exports = settings => {
 
   });
 
-  app.get('/', (req, res, next) => {
-    req.breadcrumb('profile.read');
-    return req.api(`/profile/${req.profileId}`)
-      .then(({ json: { data, meta } }) => {
-        res.locals.model = data;
-        res.locals.static.profile = data;
-      })
-      .then(() => next())
-      .catch(next);
-  });
-
   app.get('/', relatedTasks(req => {
     return {
       model: 'profile-touched',
       modelId: req.profileId
     };
   }));
-
-  app.get('/', (req, res) => res.sendResponse());
 
   return app;
 };

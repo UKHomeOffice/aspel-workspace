@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Snippet, ControlBar } from '@asl/components';
 import { CheckboxGroup, Button } from '@ukhomeoffice/react-components';
 
-import ASRURoles from './asru-roles';
+import ASRURoles from '@asl/pages/pages/global-profile/components/asru-roles';
 
 class ManageRoles extends React.Component {
 
