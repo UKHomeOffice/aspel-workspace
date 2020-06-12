@@ -11,7 +11,8 @@ module.exports = merge({}, globalProfile, {
       manage: 'Edit',
       save: 'Save',
       cancel: 'Cancel',
-      asruAdmin: 'User admin'
+      asruAdmin: 'User admin',
+      asruSupport: 'Business support'
     }
   },
   dedupe: 'Merge profile'
