@@ -1,7 +1,7 @@
 import React from 'react';
-import { useSelector, shallowEqual } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Layout from '../../views';
-import { Datatable, Link, Snippet, Search, CSVDownloadLink } from '@asl/components';
+import { Datatable, Link, Search, CSVDownloadLink } from '@asl/components';
 import { numberWithCommas } from '@asl/pages/lib/utils';
 
 export default function Establishments() {
@@ -20,7 +20,7 @@ export default function Establishments() {
     total: {
       format: sum => `£${numberWithCommas(sum)}`
     }
-  }
+  };
 
   return (
     <Layout tab={1}>
