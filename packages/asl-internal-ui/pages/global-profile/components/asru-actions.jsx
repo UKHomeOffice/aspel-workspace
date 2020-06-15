@@ -8,7 +8,6 @@ import ASRURoles from '@asl/pages/pages/global-profile/components/asru-roles';
 
 export default function ASRUAdmin() {
   const { model, static: { canAdmin, roles } } = useSelector(state => state);
-  console.log(roles)
   const hasEstablishments = !!(model.establishments || []).length;
 
   if (hasEstablishments) {
