@@ -31,7 +31,7 @@ class ManageRoles extends React.Component {
 
     if (this.state && !this.state.expanded) {
       return <Fragment>
-        <ASRURoles />
+        <ASRURoles roles={roles} />
         <Button onClick={e => this.toggle(e)}><Snippet>asru.roles.manage</Snippet></Button>
       </Fragment>;
     }

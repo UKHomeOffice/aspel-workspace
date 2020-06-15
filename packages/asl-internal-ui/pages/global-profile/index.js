@@ -10,6 +10,7 @@ module.exports = () => {
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.use((req, res, next) => {
+    req.breadcrumb('profile.read');
     res.locals.static.roles = roles;
     res.locals.static.canAdmin = req.user.profile.asruAdmin && req.profileId !== req.user.profile.id;
     res.locals.static.asruUser = req.user.profile.asruUser;

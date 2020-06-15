@@ -30,7 +30,7 @@ function AsruAssociations({ establishments }) {
 export default function InternalGlobalProfile() {
   const model = useSelector(state => state.model);
   return (
-    <GlobalProfile dedupe={dedupe}>
+    <GlobalProfile dedupe={dedupe} AsruRolesComponent={AsruActions}>
       {
         model.asruInspector && model.asru && !!model.asru.length && <Fragment>
           <h3>Inspector for:</h3>
@@ -43,7 +43,6 @@ export default function InternalGlobalProfile() {
           <AsruAssociations establishments={model.asru} />
         </Fragment>
       }
-      <AsruActions />
       <RelatedTasks />
     </GlobalProfile>
   )
