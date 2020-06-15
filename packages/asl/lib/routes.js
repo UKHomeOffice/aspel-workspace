@@ -2,7 +2,6 @@ const { pages } = require('@asl/pages');
 
 const dashboard = require('../pages/dashboard');
 const invitation = require('../pages/invitation');
-const globalProfile = require('../pages/profile');
 
 module.exports = {
   projectVersion: {
@@ -36,7 +35,7 @@ module.exports = {
   globalProfile: {
     path: '/profile/:profileId',
     breadcrumb: false,
-    router: globalProfile
+    router: pages.globalProfile
   },
   role: {
     path: '/establishments/:establishmentId/people/:profileId/role',
