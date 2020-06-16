@@ -43,7 +43,9 @@ export default function InternalGlobalProfile() {
           <AsruAssociations establishments={model.asru} />
         </Fragment>
       }
-      <RelatedTasks />
+      {
+        model.asruUser && <RelatedTasks />
+      }
     </GlobalProfile>
   )
 }
