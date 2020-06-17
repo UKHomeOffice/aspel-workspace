@@ -1,5 +1,5 @@
 const { router, mountRoutes } = require('@asl/service/ui');
-const { mapValues } = require('lodash');
+const { mapValues, get } = require('lodash');
 const { NotAuthorisedError, NotFoundError } = require('./errors');
 const baseContent = require('../pages/common/content');
 const { content, views } = require('@asl/pages');
@@ -56,16 +56,25 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
-    res.locals.footerLinks = [
+    const footerLinks = [
       {
         sectionName: 'Reporting',
         links: [
-          { label: 'Licence fees', href: '/licence-fees' },
-          { label: 'Performance metrics', href: '/reporting' },
-          { label: 'Downloads', href: '/downloads' }
+          { label: 'Licence fees', href: '/licence-fees' }
         ]
       }
     ];
+
+    const allowedActions = get(req.user, 'profile.allowedActions.global', []);
+
+    if (allowedActions.includes('asruReporting')) {
+      footerLinks[0].links = [
+        ...footerLinks[0].links,
+        { label: 'Performance metrics', href: '/reporting' },
+        { label: 'Downloads', href: '/downloads' }
+      ];
+    }
+    res.locals.footerLinks = footerLinks;
     next();
   });
 
