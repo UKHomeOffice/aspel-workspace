@@ -112,11 +112,13 @@ module.exports = {
   },
   reporting: {
     path: '/reporting',
-    router: reporting
+    router: reporting,
+    permissions: 'asruReporting'
   },
   downloads: {
     path: '/downloads',
-    router: downloads
+    router: downloads,
+    permissions: 'asruReporting'
   },
   fees: {
     path: '/licence-fees',
