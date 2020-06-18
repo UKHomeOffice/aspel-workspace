@@ -16,6 +16,9 @@ const Index = () => {
 
     <h2>Personal licence downloads</h2>
 
+    <h3><Link page="downloads.report" report="pils" label="All PILs" /></h3>
+    <p>View a list of all active and revoked PILs, which will be downloadable in a .csv file.</p>
+
     <h3><Link page="downloads.report" report="pil-reviews" label="Upcoming PIL reviews" /></h3>
     <p>View a list of PILs which are due a review, which will be downloadable in a .csv file.</p>
 
@@ -29,6 +32,9 @@ const Index = () => {
 
     <h3><Link page="nts" label="Non-technical summaries by year" /></h3>
     <p>View a list of all non-technical summaries by year, which will be downloadable in a .zip file.</p>
+
+    <h3><Link page="downloads.report" report="ppl-sla" label="Expired statutory deadlines" /></h3>
+    <p>View a list of all PPL applications which passed their statutory deadline, which will be downloadable in a .csv file.</p>
   </Fragment>;
 };
 
