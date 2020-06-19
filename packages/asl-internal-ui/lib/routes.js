@@ -13,7 +13,6 @@ const reporting = require('../pages/reporting');
 const downloads = require('../pages/downloads');
 const licenceFees = require('../pages/licence-fees');
 const nonTechnicalSummaries = require('../pages/nts');
-const nonTechnicalSummariesExperimental = require('../pages/nts-experimental');
 
 module.exports = {
   projectVersion: {
@@ -128,10 +127,5 @@ module.exports = {
   nts: {
     path: '/non-technical-summaries',
     router: nonTechnicalSummaries
-  },
-  ntsExperiments: {
-    path: '/nts-experimental',
-    breadcrumb: false,
-    router: nonTechnicalSummariesExperimental
   }
 };
