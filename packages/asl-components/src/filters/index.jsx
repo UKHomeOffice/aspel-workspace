@@ -99,10 +99,10 @@ export default function Filters({ formatters }) {
           type="form"
           onApply={emitChange}
         >
-          <div className="filters govuk-grid-row">
+          <div className="filters">
             {
               map(opts, ({ values, format }, key) =>
-                <div key={key} className="govuk-grid-column-one-third">
+                <div key={key} className="filter">
                   <OptionSelect
                     title={<Snippet>{`fields.${key}.label`}</Snippet>}
                     defaultOpen={Object.keys(activeFilters).includes(key)}

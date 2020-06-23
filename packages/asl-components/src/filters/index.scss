@@ -14,6 +14,14 @@
       content: "\25ba";
     }
   }
+
+  @include govuk-media-query($from: desktop) {
+    .filters {
+      display: grid;
+      grid: auto-flow / 1fr 1fr 1fr;
+      grid-column-gap: $govuk-gutter;
+    }
+  }
 }
 
 .js-container-head {
