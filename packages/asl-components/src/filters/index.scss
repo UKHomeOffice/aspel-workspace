@@ -16,6 +16,25 @@
   }
 }
 
+.js-container-head {
+  .option-select-label:after {
+    position: absolute;
+    right: $govuk-gutter-half;
+  }
+
+  &[aria-expanded="true"] {
+    .option-select-label:after {
+      content: "\25bc";
+    }
+  }
+
+  &[aria-expanded="false"] {
+    .option-select-label:after {
+      content: "\25ba";
+    }
+  }
+}
+
 .link-filter {
   margin-bottom: $govuk-gutter;
 }

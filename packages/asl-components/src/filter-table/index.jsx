@@ -7,7 +7,7 @@ const FilterTable = ({
   ...props
 }) => (
   <Fragment>
-    <Filters formatters={formatters}/>
+    <Filters formatters={formatters} />
     <div className="table-heading">
       <FilterSummary />
       {
