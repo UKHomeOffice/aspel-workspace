@@ -25,12 +25,12 @@ module.exports = settings => {
       return Promise.resolve()
         .then(() => nts(project))
         .then(doc => {
-          const fileName = `${project.is_legacy_stub ? `STUB-` : ''}${filenamify(project.title)}-${project.id}.docx`;
+          const fileName = `${project.is_legacy_stub ? `STUB-` : ''}${filenamify(project.title || 'Untitled')}-${project.id}.docx`;
           return archive.append(Buffer.from(doc), { name: fileName });
         })
         .catch(e => {
-          req.log('error', { message: e.message, stack: e.stack });
-          return archive.append(Buffer.from(`${e.stack}`), { name: `ERROR-${filenamify(project.title)}-${project.id}.txt` });
+          req.log('error', { message: e.message, stack: e.stack, id: project.id });
+          return archive.append(Buffer.from(`${e.stack}`), { name: `ERROR-${filenamify(project.title || 'Untitled')}-${project.id}.txt` });
         })
         .then(() => callback());
     };
