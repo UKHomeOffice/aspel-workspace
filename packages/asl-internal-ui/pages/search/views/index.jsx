@@ -92,14 +92,14 @@ const formatters = {
   }
 };
 
-const Index = ({ profile, searchType, searchableModels, searchTerm, hasFilters }) => {
+const Index = ({ profile, searchType, searchTerm, hasFilters }) => {
   return (
     <Fragment>
       <Header title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>} />
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
-          <SearchPanel searchType={searchType} searchableModels={searchableModels} searchTerm={searchTerm} />
+          <SearchPanel searchType={searchType} searchTerm={searchTerm} />
           {
             hasFilters && <LinkFilter
               prop="status"
@@ -124,8 +124,8 @@ const Index = ({ profile, searchType, searchableModels, searchTerm, hasFilters }
 };
 
 const mapStateToProps = ({
-  static: { profile, searchType, searchableModels },
+  static: { profile, searchType },
   datatable: { filters: { options, active } }
-}) => ({ profile, searchType, searchableModels, hasFilters: !!options.length, searchTerm: active });
+}) => ({ profile, searchType, hasFilters: !!options.length, searchTerm: active });
 
 export default connect(mapStateToProps)(Index);
