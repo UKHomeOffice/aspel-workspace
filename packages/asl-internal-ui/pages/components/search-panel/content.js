@@ -3,7 +3,7 @@ module.exports = {
   establishments: {
     label: 'Establishments',
     placeholder: 'Search by name',
-    viewAll: 'View all establishments'
+    viewAll: 'View all active establishments'
   },
   profiles: {
     label: 'People',
