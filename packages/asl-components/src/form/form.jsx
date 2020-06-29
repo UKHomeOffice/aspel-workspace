@@ -9,6 +9,7 @@ const Form = ({
   detachFields,
   schema,
   cancelLink,
+  declaration,
   onSubmit = () => {},
   ...props
 }) => {
@@ -26,6 +27,7 @@ const Form = ({
   const formFields = (
     <Fragment>
       <Fieldset schema={schema} { ...props } />
+      { declaration }
       {
         (submit || cancelLink) && (
           <div className="control-panel">
