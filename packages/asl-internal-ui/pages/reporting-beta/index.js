@@ -4,6 +4,8 @@ const through = require('through2');
 
 const metrics = require('../../lib/middleware/metrics');
 
+const routes = require('./routes');
+
 const types = [
   'legacy-project-application',
   'legacy-project-amendment',
@@ -34,6 +36,12 @@ module.exports = settings => {
 
   app.use(metrics(settings));
 
+  app.use('/', (req, res, next) => {
+    res.locals.static.since = req.query.since || '2019-07-01';
+    res.locals.static.types = types;
+    next();
+  });
+
   app.get('/', (req, res, next) => {
     req.metrics('/active-licences', { stream: false })
       .then(json => {
@@ -41,17 +49,6 @@ module.exports = settings => {
         next();
       })
       .catch(next);
-  });
-
-  app.get('/', (req, res, next) => {
-    Promise.resolve()
-      .then(response => {
-        res.locals.static.since = req.query.since || '2019-07-01';
-        res.locals.static.types = types;
-        next();
-      })
-      .catch(next);
-
   });
 
   app.get('/ppl-sla', (req, res, next) => {
@@ -97,3 +94,5 @@ module.exports = settings => {
 
   return app;
 };
+
+module.exports.routes = routes;
