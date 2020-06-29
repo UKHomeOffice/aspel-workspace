@@ -6,6 +6,17 @@ import classnames from 'classnames';
 import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
 import { Snippet, ConditionalReveal, SpeciesSelector, ApplicationConfirm, RestrictionsField, Markdown, DurationField, SelectMany } from '../';
 
+function Autocomplete(props) {
+  useEffect(() => {
+    const accessibleAutocomplete = require('accessible-autocomplete');
+    accessibleAutocomplete.enhanceSelectElement({
+      selectElement: document.querySelector(`#${props.name}`)
+    });
+  }, []);
+
+  return <Select { ...props } />;
+}
+
 const fields = {
   inputText: props => <Input { ...props } />,
   inputEmail: props => <Input type="email" { ...props } />,
@@ -22,6 +33,7 @@ const fields = {
   speciesSelector: props => <SpeciesSelector {...props} />,
   restrictionsField: props => <RestrictionsField {...props} />,
   inputDuration: props => <DurationField {...props} />,
+  autoComplete: props => <Autocomplete {...props} />,
   text: props => (
     <div className={classnames('govuk-form-group', props.name)}>
       <h3>{ props.label }</h3>

@@ -1,3 +1,9 @@
+@import 'accessible-autocomplete';
+
+.autocomplete__input {
+  background-color: white;
+}
+
 input[type="file"] {
   border: none;
   font-size: 0.9em;
