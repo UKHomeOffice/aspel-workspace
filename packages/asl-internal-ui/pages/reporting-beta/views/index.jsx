@@ -29,20 +29,22 @@ const Index = () => {
 
   const isLoading = Object.values(loading).some(Boolean);
 
+  const setLoadingParam = (param) => setLoading(loading => ({ ...loading, ...param  }));
+
   useEffect(() => {
-    setLoading(loading => ({ ...loading, tasks: true }));
+    setLoadingParam({ tasks: true });
     fetch(`${url}/tasks?since=${startDate}`)
       .then(response => response.json())
       .then(json => setTasks(json))
-      .then(() => setLoading(loading => ({ ...loading, tasks: false })));
+      .then(() => setLoadingParam({ tasks: false }));
   }, [startDate]);
 
   useEffect(() => {
-    setLoading(loading => ({ ...loading, ppls: true }));
+    setLoadingParam({ ppls: true });
     fetch(`${url}/ppl-sla?since=${startDate}`)
       .then(response => response.json())
       .then(json => setDeadlines(json.length))
-      .then(() => setLoading(loading => ({ ...loading, ppls: false })));
+      .then(() => setLoadingParam({ ppls: false }));
   }, [startDate]);
 
   useEffect(() => {
