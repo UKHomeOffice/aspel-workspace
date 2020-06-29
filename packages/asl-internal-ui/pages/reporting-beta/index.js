@@ -4,8 +4,6 @@ const through = require('through2');
 
 const metrics = require('../../lib/middleware/metrics');
 
-const downloads = require('./downloads');
-
 const types = [
   'legacy-project-application',
   'legacy-project-amendment',
@@ -94,8 +92,6 @@ module.exports = settings => {
       })
       .catch(next);
   });
-
-  //app.use(downloads({ types }));
 
   app.get('/', (req, res) => res.sendResponse());
 

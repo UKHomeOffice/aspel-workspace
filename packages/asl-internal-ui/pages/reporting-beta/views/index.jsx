@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Snippet, CSVDownloadLink } from '@asl/components';
+import { Header, Snippet } from '@asl/components';
 import countBy from 'lodash/countBy';
 import { format, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
 
@@ -100,7 +100,6 @@ const Index = () => {
       <div className="govuk-grid-column-full">
         <div className="table-wrapper">
           <h2>Tasks completed by type:</h2>
-          <CSVDownloadLink query={{ since }} />
           <table className="govuk-table">
             <tbody>
               {
