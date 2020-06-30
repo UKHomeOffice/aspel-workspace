@@ -10,7 +10,6 @@ const createEstablishment = require('../pages/create-establishment');
 const revokeEstablishment = require('../pages/revoke-establishment');
 const search = require('../pages/search');
 const reporting = require('../pages/reporting');
-const reportingBeta = require('../pages/reporting-beta');
 const downloads = require('../pages/downloads');
 const licenceFees = require('../pages/licence-fees');
 const nonTechnicalSummaries = require('../pages/nts');
@@ -113,11 +112,6 @@ module.exports = {
   reporting: {
     path: '/reporting',
     router: reporting,
-    permissions: 'asruReporting'
-  },
-  reportingBeta: {
-    path: '/reporting-beta',
-    router: reportingBeta,
     permissions: 'asruReporting'
   },
   downloads: {

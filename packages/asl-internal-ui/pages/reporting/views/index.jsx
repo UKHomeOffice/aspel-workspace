@@ -1,6 +1,6 @@
-import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
-import { Header, Snippet, CSVDownloadLink } from '@asl/components';
+import React, { Fragment, useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Header, Snippet, Link } from '@asl/components';
 import countBy from 'lodash/countBy';
 import { format, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
 
@@ -18,7 +18,44 @@ const Metric = ({ number, label }) => {
   </div>
 }
 
-const Index = ({ metrics, since, types }) => {
+const Index = () => {
+
+  const { since, types, licences, url } = useSelector(state => state.static);
+
+  const [startDate, setStartDate] = useState(since);
+  const [loading, setLoading] = useState({});
+  const [tasks, setTasks] = useState(types.reduce((obj, type) => ({ ...obj, [type]: '-' }), { total: '-' }));
+  const [deadlines, setDeadlines] = useState('-');
+
+  const isLoading = Object.values(loading).some(Boolean);
+
+  const setLoadingParam = (param) => setLoading(loading => ({ ...loading, ...param  }));
+
+  useEffect(() => {
+    setLoadingParam({ tasks: true });
+    fetch(`${url}/tasks?since=${startDate}`)
+      .then(response => response.json())
+      .then(json => setTasks(json))
+      .then(() => setLoadingParam({ tasks: false }));
+  }, [startDate]);
+
+  useEffect(() => {
+    setLoadingParam({ ppls: true });
+    fetch(`${url}/ppl-sla?since=${startDate}`)
+      .then(response => response.json())
+      .then(json => setDeadlines(json.length))
+      .then(() => setLoadingParam({ ppls: false }));
+  }, [startDate]);
+
+  useEffect(() => {
+    window.history.replaceState(null, '', `?since=${startDate}`);
+  }, [startDate]);
+
+  const getMeanIterations = (type) => {
+    const iterations = tasks[`${type}-iterations`];
+    const count = tasks[type];
+    return isNaN(iterations / count) ? '-' : (iterations / count);
+  };
 
   const now = new Date();
   const dates = {
@@ -27,32 +64,27 @@ const Index = ({ metrics, since, types }) => {
     month: format(startOfMonth(now), 'YYYY-MM-DD'),
     year: format(startOfYear(now), 'YYYY-MM-DD')
   }
-  const tasks = metrics.tasks;
-  const licences = metrics.counts;
-  const counts = countBy(tasks, 'type');
-  const pplApplications = tasks.filter(m => m.type === 'project-application')
 
-  const getMeanIterations = schemaVersion => {
-    const applications = pplApplications.filter(m => m.schemaVersion === schemaVersion);
-    const iterations = applications
-      .map(m => m.iterations)
-      .reduce((sum, i) => sum + i, 0);
-    return applications.length ? iterations / applications.length : '-';
+  const meanIterationsLegacy = getMeanIterations('legacy-project-application');
+  const meanIterations = getMeanIterations('project-application');
+
+  const startDateHandler = date => e => {
+    e.preventDefault();
+    if (isLoading) {
+      return;
+    }
+    setStartDate(date);
   };
-
-  const meanIterationsLegacy = getMeanIterations(0);
-  const meanIterations = getMeanIterations(1);
 
   return <Fragment>
 
     <Header title="Performance metrics"/>
-
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-one-half">
-        <Metric number={tasks.length} label="total tasks completed" />
+        <Metric number={tasks.total} label="total tasks completed" />
       </div>
       <div className="govuk-grid-column-one-half">
-        <Metric number={metrics.projectsOutsideSLA} label="PPL applications outside SLA" />
+        <Metric number={deadlines} label="PPL applications outside SLA" />
       </div>
     </div>
     <div className="govuk-grid-row">
@@ -68,14 +100,14 @@ const Index = ({ metrics, since, types }) => {
       <div className="govuk-grid-column-full">
         <div className="table-wrapper">
           <h2>Tasks completed by type:</h2>
-          <CSVDownloadLink query={{ since }} />
+          <Link page="reporting.download" query={{since: startDate}} className="download" label="Download this data (.csv)" />
           <table className="govuk-table">
             <tbody>
               {
                 types.map(type => {
                   return <tr key={type}>
                     <td><Snippet>{ type }</Snippet></td>
-                    <td className="numeric">{ counts[type] || '0' }</td>
+                    <td className="numeric">{ tasks[type] || '0' }</td>
                   </tr>;
                 })
               }
@@ -109,19 +141,26 @@ const Index = ({ metrics, since, types }) => {
     </div>
 
     <div className="link-filter">
-      <label>Showing data for period:</label>
-      <ul>
-        {
-          Object.keys(dates).map(date => {
-            return dates[date] === since ?
-              <li key={date}><strong><Snippet>{ `date.${date}` }</Snippet></strong></li> :
-              <li key={date}><a href={`?since=${dates[date]}`}><Snippet>{ `date.${date}` }</Snippet></a></li>
-          })
-        }
-      </ul>
+      {
+        isLoading && <p>Loading data...</p>
+      }
+      {
+        !isLoading && <Fragment>
+          <label>Showing data for period:</label>
+          <ul>
+            {
+              Object.keys(dates).map(date => {
+                return dates[date] === startDate ?
+                  <li key={date}><strong><Snippet>{ `date.${date}` }</Snippet></strong></li> :
+                  <li key={date}><a href={isLoading ? null : `?since=${dates[date]}`} onClick={startDateHandler(dates[date])}><Snippet>{ `date.${date}` }</Snippet></a></li>
+              })
+            }
+          </ul>
+        </Fragment>
+      }
     </div>
 
   </Fragment>
 };
 
-export default connect(({ static: { metrics, since, types } }) => ({ metrics, since, types }))(Index);
+export default Index;
