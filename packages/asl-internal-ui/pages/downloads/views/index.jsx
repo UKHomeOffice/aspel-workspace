@@ -22,6 +22,9 @@ const Index = () => {
     <h3><Link page="downloads.report" report="pil-reviews" label="Upcoming PIL reviews" /></h3>
     <p>View a list of PILs which are due a review, which will be downloadable in a .csv file.</p>
 
+    <h3><Link page="downloads.report" report="completed-pil-reviews" label="Completed PIL reviews" /></h3>
+    <p>View a list of PIL reviews which have been submitted without changes, which will be downloadable in a .csv file.</p>
+
     <h2>Project licence downloads</h2>
 
     <h3><Link page="downloads.report" report="ppl-list" label="Project list" /></h3>
