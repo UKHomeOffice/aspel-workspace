@@ -66,7 +66,11 @@ module.exports = settings => {
         res.locals.static.adminPilReviewsRequired = reviews.filter(r => r.overdue > 0 || r.due > 0);
       })
       .then(() => next())
-      .catch(next);
+      .catch(err => {
+        req.log('error', { message: e.message, stack: e.stack, ...e });
+        // don't block dashboard rendering for failed PIL review lookup
+        next();
+      });
   });
 
   app.get('/', taskList());
