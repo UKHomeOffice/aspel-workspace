@@ -2,7 +2,7 @@ const { page } = require('@asl/service/ui');
 const taskList = require('@asl/pages/pages/task/list/router');
 
 function userIsNtcoAtEst(profile, estId) {
-  return (profile.roles.find(role => role.establishmentId === estId) || {}).type === 'ntco';
+  return !!profile.roles.find(role => role.establishmentId === estId && role.type === 'ntco');
 }
 
 module.exports = settings => {
