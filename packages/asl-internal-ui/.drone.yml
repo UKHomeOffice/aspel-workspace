@@ -43,8 +43,9 @@ pipeline:
     commands:
       - docker build --build-arg NPM_AUTH_USERNAME=$${NPM_AUTH_USERNAME} --build-arg NPM_AUTH_TOKEN=$${NPM_AUTH_TOKEN} -t asl .
     when:
-      branch: master
-      event: push
+      event:
+        - push
+        - pull_request
 
   image_to_quay:
     image: docker:17.09.1
