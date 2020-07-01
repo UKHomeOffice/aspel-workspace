@@ -67,7 +67,7 @@ module.exports = settings => {
       })
       .then(() => next())
       .catch(err => {
-        req.log('error', { message: e.message, stack: e.stack, ...e });
+        req.log('error', { message: err.message, stack: err.stack, ...err });
         // don't block dashboard rendering for failed PIL review lookup
         next();
       });
