@@ -42,7 +42,7 @@ const EstablishmentPanel = ({ establishment, profile }) => {
   );
 };
 
-const Index = ({ profile, pilReviewRequired }) => (
+const Index = ({ profile, pilReviewRequired, adminPilReviewsRequired }) => (
   <Fragment>
     {
       pilReviewRequired && (
@@ -50,6 +50,16 @@ const Index = ({ profile, pilReviewRequired }) => (
           <Snippet {...pilReviewRequired}>warnings.pilReviewRequired</Snippet>
         </Warning>
       )
+    }
+    {
+      adminPilReviewsRequired && adminPilReviewsRequired.map(review => (
+        <Warning className="info">
+          <Snippet {...review}>warnings.adminPilReviewsRequired</Snippet>
+          <p>
+            <Link page="pils" establishmentId={review.estId} label="Go to personal licences" />
+          </p>
+        </Warning>
+      ))
     }
     <Header
       title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>}
@@ -75,4 +85,4 @@ const Index = ({ profile, pilReviewRequired }) => (
   </Fragment>
 );
 
-export default connect(({ static: { profile, pilReviewRequired } }) => ({ profile, pilReviewRequired }))(Index);
+export default connect(({ static: { profile, pilReviewRequired, adminPilReviewsRequired } }) => ({ profile, pilReviewRequired, adminPilReviewsRequired }))(Index);
