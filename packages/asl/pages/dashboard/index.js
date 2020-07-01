@@ -1,6 +1,10 @@
 const { page } = require('@asl/service/ui');
 const taskList = require('@asl/pages/pages/task/list/router');
 
+function userIsNtcoAtEst(profile, estId) {
+  return !!profile.roles.find(role => role.establishmentId === estId && role.type === 'ntco');
+}
+
 module.exports = settings => {
   const app = page({
     ...settings,
@@ -32,6 +36,41 @@ module.exports = settings => {
     }
 
     next();
+  });
+
+  app.get('/', (req, res, next) => {
+    const adminEsts = req.user.profile.establishments.filter(est => {
+      if (est.role === 'admin' || userIsNtcoAtEst(req.user.profile, est.id)) {
+        return true;
+      }
+    });
+    Promise.all(
+      adminEsts.map(est => {
+        return Promise.all([
+          req.api(`/establishment/${est.id}/pils/reviews?status=due&onlymeta=true`),
+          req.api(`/establishment/${est.id}/pils/reviews?status=overdue&onlymeta=true`)
+        ])
+          .then(response => {
+            const due = response[0].json.meta.count;
+            const overdue = response[1].json.meta.count;
+            return {
+              estId: est.id,
+              name: est.name,
+              overdue,
+              due
+            };
+          });
+      })
+    )
+      .then(reviews => {
+        res.locals.static.adminPilReviewsRequired = reviews.filter(r => r.overdue > 0 || r.due > 0);
+      })
+      .then(() => next())
+      .catch(err => {
+        req.log('error', { message: err.message, stack: err.stack, ...err });
+        // don't block dashboard rendering for failed PIL review lookup
+        next();
+      });
   });
 
   app.get('/', taskList());
