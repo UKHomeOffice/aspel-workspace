@@ -4,7 +4,7 @@ import without from 'lodash/without';
 import castArray from 'lodash/castArray';
 import classnames from 'classnames';
 import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
-import { Snippet, ConditionalReveal, SpeciesSelector, ApplicationConfirm, RestrictionsField, Markdown, DurationField, SelectMany } from '../';
+import { Snippet, ConditionalReveal, SpeciesSelector, AutoComplete, ApplicationConfirm, RestrictionsField, Markdown, DurationField, SelectMany } from '../';
 
 const fields = {
   inputText: props => <Input { ...props } />,
@@ -22,6 +22,7 @@ const fields = {
   speciesSelector: props => <SpeciesSelector {...props} />,
   restrictionsField: props => <RestrictionsField {...props} />,
   inputDuration: props => <DurationField {...props} />,
+  autoComplete: props => <AutoComplete {...props} />,
   text: props => (
     <div className={classnames('govuk-form-group', props.name)}>
       <h3>{ props.label }</h3>
