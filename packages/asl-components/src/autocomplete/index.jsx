@@ -3,7 +3,7 @@ import AccessibleAutocomplete from 'accessible-autocomplete/react';
 
 export default function AutoComplete(props) {
   const [value, setValue] = useState(props.value);
-  const defaultValue = (props.options.find(opt => opt.value === props.value) || {});
+  const defaultValue = props.options.find(opt => opt.value === props.value);
 
   function suggest (query, syncResults) {
     syncResults(query
@@ -26,7 +26,7 @@ export default function AutoComplete(props) {
           suggestion: renderLabel
         }}
         onConfirm={option => option && setValue(option.value)}
-        defaultValue={defaultValue.label || defaultValue}
+        defaultValue={defaultValue && defaultValue.label}
       />
     </Fragment>
   );
