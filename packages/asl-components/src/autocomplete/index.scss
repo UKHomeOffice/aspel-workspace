@@ -11,3 +11,8 @@ span[id*="__assistiveHint"] {
 .autocomplete__wrapper {
   margin-bottom: $govuk-gutter;
 }
+
+.govuk-form-group--error .autocomplete__input {
+  border-color: $govuk-error-colour;
+  border-width: 4px;
+}
