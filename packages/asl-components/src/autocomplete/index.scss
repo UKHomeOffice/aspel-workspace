@@ -3,3 +3,16 @@
 .autocomplete__input {
   background-color: white;
 }
+
+span[id*="__assistiveHint"] {
+  display: none;
+}
+
+.autocomplete__wrapper {
+  margin-bottom: $govuk-gutter;
+}
+
+.govuk-form-group--error .autocomplete__input {
+  border-color: $govuk-error-colour;
+  border-width: 4px;
+}
