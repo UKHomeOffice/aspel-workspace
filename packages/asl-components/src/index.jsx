@@ -1,3 +1,4 @@
+export { default as AutoComplete } from './autocomplete';
 export { default as Accordion } from './accordion';
 export { default as Acronym } from './acronym';
 export { default as AddAnother } from './add-another';
