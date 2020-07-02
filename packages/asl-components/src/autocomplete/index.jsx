@@ -1,5 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import AccessibleAutocomplete from 'accessible-autocomplete/react';
+import { InputWrapper } from '@ukhomeoffice/react-components';
 
 export default function AutoComplete(props) {
   const [value, setValue] = useState(props.value);
@@ -17,17 +18,18 @@ export default function AutoComplete(props) {
   }
 
   return (
-    <Fragment>
+    <InputWrapper {...props}>
       <input type="hidden" name={props.name} value={value} />
       <AccessibleAutocomplete
+        id={props.name}
         source={suggest}
         templates={{
           inputValue: renderLabel,
           suggestion: renderLabel
         }}
-        onConfirm={option => option && setValue(option.value)}
+        onConfirm={option => setValue(option ? option.value : '')}
         defaultValue={defaultValue && defaultValue.label}
       />
-    </Fragment>
+    </InputWrapper>
   );
 }

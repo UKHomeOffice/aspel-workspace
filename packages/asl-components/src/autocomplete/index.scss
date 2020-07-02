@@ -3,3 +3,11 @@
 .autocomplete__input {
   background-color: white;
 }
+
+span[id*="__assistiveHint"] {
+  display: none;
+}
+
+.autocomplete__wrapper {
+  margin-bottom: $govuk-gutter;
+}
