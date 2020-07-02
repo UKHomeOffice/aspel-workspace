@@ -7,7 +7,7 @@ export default function AutoComplete(props) {
 
   function suggest (query, syncResults) {
     syncResults(query
-      ? props.options.filter(result => result.label.toLowerCase().indexOf(query.toLowerCase()) !== -1)
+      ? props.options.filter(result => result.label.toLowerCase().includes(query.toLowerCase()))
       : []
     );
   }
