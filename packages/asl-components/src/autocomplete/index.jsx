@@ -4,7 +4,6 @@ import { InputWrapper } from '@ukhomeoffice/react-components';
 
 export default function AutoComplete(props) {
   const [value, setValue] = useState(props.value);
-  const defaultValue = props.options.find(opt => opt.value === props.value);
 
   function suggest (query, syncResults) {
     syncResults(query
@@ -28,7 +27,6 @@ export default function AutoComplete(props) {
           suggestion: renderLabel
         }}
         onConfirm={option => setValue(option ? option.value : '')}
-        defaultValue={defaultValue && defaultValue.label}
       />
     </InputWrapper>
   );
