@@ -10,6 +10,13 @@ module.exports = () => {
     next();
   });
 
+  app.use((req, res, next) => {
+    if (req.query.experimental) {
+      req.session.experimentalSearch = req.query.experimental === 'true';
+    }
+    next();
+  });
+
   app.use('/:searchType', search());
   app.use('/', search());
 
