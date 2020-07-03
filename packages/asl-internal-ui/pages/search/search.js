@@ -34,6 +34,9 @@ module.exports = settings => {
       req.datatable.searchType = searchType;
       req.datatable.schema = schemas[searchType];
       req.datatable.apiPath = `/search/${searchType}`;
+      if (req.session.experimentalSearch) {
+        req.datatable.apiPath = [`/search/${searchType}`, { headers: { 'x-experimental-search': true } }];
+      }
       next();
     }
   })());
