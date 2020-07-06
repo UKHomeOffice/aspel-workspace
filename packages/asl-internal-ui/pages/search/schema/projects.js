@@ -7,7 +7,9 @@ module.exports = {
     sort: 'establishment.name',
     toCSVString: (val, row) => row.establishment.name
   },
-  licenceNumber: {},
+  licenceNumber: {
+    show: true
+  },
   licenceHolder: {
     show: true,
     sort: 'licenceHolder.lastName',

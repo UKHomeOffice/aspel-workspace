@@ -5,6 +5,9 @@ module.exports = {
   establishment: {
     label: 'Primary establishment'
   },
+  licenceNumber: {
+    label: 'Licence number'
+  },
   licenceHolder: {
     label: 'PPL holder'
   },
