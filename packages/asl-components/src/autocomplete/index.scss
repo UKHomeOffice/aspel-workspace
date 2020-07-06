@@ -10,6 +10,10 @@ span[id*="__assistiveHint"] {
 
 .autocomplete__wrapper {
   margin-bottom: $govuk-gutter;
+
+  [role="status"] {
+    display: none;
+  }
 }
 
 .govuk-form-group--error .autocomplete__input {
