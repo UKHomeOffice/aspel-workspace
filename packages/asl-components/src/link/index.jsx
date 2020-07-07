@@ -1,13 +1,13 @@
 import React from 'react';
-import get from 'lodash/get';
+import { useSelector, shallowEqual } from 'react-redux';
 import { stringify } from 'qs';
-import { connect } from 'react-redux';
+import get from 'lodash/get';
 
 const replace = params => fragment => {
   return fragment[0] === ':' ? params[fragment.substr(1)] : fragment;
 };
 
-function getUrl(urls, parts, replacer) {
+function getHref(urls, parts, replacer) {
   let item = urls;
   const sections = parts.map(part => {
     const section = get(item, part);
@@ -20,37 +20,26 @@ function getUrl(urls, parts, replacer) {
   return sections.join('');
 }
 
-const Link = ({
-  url,
-  urls,
-  page,
-  path,
-  query = {},
-  label,
-  className,
-  isPdf,
-  ...props
-}) => {
+export function getUrl({ page, url, query, path, ...props }) {
+  const { urls, ...staticProps } = useSelector(state => state.static, shallowEqual);
+  let href = `${url}/${path}`;
+
+  if (page) {
+    const parts = page.split('.');
+    const replacer = replace({ ...staticProps, ...props });
+    href = getHref(urls, parts, replacer);
+  }
+
+  return query ? `${href}${stringify(query)}` : href;
+}
+
+export default function Link({ label, className, ...props }) {
+  const isPdf = useSelector(state => state.static.isPdf);
   if (isPdf) {
     return null;
   }
-  const qs = stringify(query);
-  if (page) {
-    const parts = page.split('.');
-    const replacer = replace(props);
-    const href = getUrl(urls, parts, replacer);
 
-    return <a className={className} href={`${href}${qs ? '?' + qs : ''}`}>{label}</a>;
-  } else {
-    return <a className={className} href={`${url}/${path}${qs ? '?' + qs : ''}`}>{label}</a>;
-  }
-};
+  const href = getUrl({ ...props });
 
-const mapStateToProps = (state, props) => {
-  return {
-    ...state.static,
-    ...props
-  };
-};
-
-export default connect(mapStateToProps)(Link);
+  return <a className={className} href={href}>{label}</a>;
+}
