@@ -33,7 +33,7 @@ const EstablishmentPanel = ({ establishment, profile }) => {
           <Fragment>
             <p><Snippet>establishment.description</Snippet></p>
             <p>
-              <Link page="establishment" establishmentId={establishment.id} label={<Snippet>establishment.link</Snippet>} className="govuk-button" />
+              <Link page="establishment" establishmentId={establishment.id} label={<Snippet name={establishment.name}>establishment.link</Snippet>} className="govuk-button truncate" />
             </p>
             <Profile
               establishment={establishment}
