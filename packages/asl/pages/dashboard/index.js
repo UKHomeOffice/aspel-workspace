@@ -12,14 +12,7 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res, next) => {
-    const profile = req.user.profile;
-    res.locals.static.profile = profile;
-    (profile.establishments || []).forEach(establishment => {
-      establishment.leaveUrl = req.buildRoute('profile.remove', {
-        establishmentId: establishment.id,
-        profileId: profile.id
-      });
-    });
+    res.locals.static.profile = req.user.profile;
     next();
   });
 
