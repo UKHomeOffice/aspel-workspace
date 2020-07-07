@@ -58,7 +58,7 @@ const Index = ({ profile, pilReviewRequired, adminPilReviewsRequired }) => (
     }
     {
       adminPilReviewsRequired && adminPilReviewsRequired.map(review => (
-        <Warning className="info">
+        <Warning key={review.estId} className="info">
           <Snippet {...review}>warnings.adminPilReviewsRequired</Snippet>
           <p>
             <Link page="pils" establishmentId={review.estId} label="Go to personal licences" />
