@@ -35,7 +35,12 @@ const EstablishmentPanel = ({ establishment, profile }) => {
             <p>
               <Link page="establishment" establishmentId={establishment.id} label={<Snippet>establishment.link</Snippet>} className="govuk-button" />
             </p>
-            <Profile establishment={establishment} profile={profile} allowedActions={profile.allowedActions[establishment.id]} isOwnProfile={true} />
+            <Profile
+              establishment={establishment}
+              profile={profile}
+              allowedActions={profile.allowedActions[establishment.id]}
+              isOwnProfile={true}
+            />
           </Fragment>
       }
     </ExpandingPanel>
