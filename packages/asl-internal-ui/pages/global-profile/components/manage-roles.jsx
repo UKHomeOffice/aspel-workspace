@@ -26,20 +26,33 @@ class ManageRoles extends React.Component {
       return null;
     }
 
-    const options = roles.map(value => ({ value, label: <Snippet>{ `asru.roles.${value}` }</Snippet> }));
+    const options = roles.map(value => ({
+      value,
+      label: <Snippet>{ `asru.roles.${value}.label` }</Snippet>,
+      hint: <Snippet>{ `asru.roles.${value}.hint` }</Snippet>
+    }));
+
     const userRoles = roles.filter(role => model[role]);
 
     if (this.state && !this.state.expanded) {
       return <Fragment>
         <ASRURoles roles={roles} />
-        <Button onClick={e => this.toggle(e)}><Snippet>asru.roles.manage</Snippet></Button>
+        <ControlBar>
+          <Button onClick={e => this.toggle(e)}><Snippet>asru.roles.manage</Snippet></Button>
+        </ControlBar>
       </Fragment>;
     }
 
     return <Fragment>
       <form action="" method="post">
         <input type="hidden" name="roles" value="" />
-        <CheckboxGroup label={ <Snippet>asru.roles.title</Snippet> } name="roles" options={options} value={userRoles} />
+        <p><Snippet>asru.roles.summary</Snippet></p>
+        <CheckboxGroup
+          name="roles"
+          label={<Snippet>asru.roles.title.assign</Snippet>}
+          options={options}
+          value={userRoles}
+        />
         <ControlBar>
           <Button type="submit"><Snippet>asru.roles.save</Snippet></Button>
           {

@@ -7,12 +7,22 @@ module.exports = merge({}, globalProfile, {
     remove: 'Remove user from ASRU',
     notice: 'Adding a user to ASRU gives them full access to all information from all establishments within the system.',
     roles: {
-      title: 'Permissions',
+      summary: 'Everyone in ASRU can perform common tasks such as viewing licences or requesting changes.',
+      title: {
+        list: 'Assigned roles',
+        assign: 'Assign roles'
+      },
       manage: 'Edit',
-      save: 'Save',
+      save: 'Assign roles',
       cancel: 'Cancel',
-      asruAdmin: 'User admin',
-      asruSupport: 'Business support'
+      asruAdmin: {
+        label: 'Admin',
+        hint: 'Add or remove people from ASRU and assign them roles or establishments'
+      },
+      asruSupport: {
+        label: 'Business support',
+        hint: 'Download reports and access performance metrics'
+      }
     }
   },
   dedupe: 'Merge profile'

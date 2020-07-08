@@ -9,7 +9,7 @@ const dedupe = (
   <p className="float-right">
     <Link page="globalProfile.dedupe" className="govuk-button" label={<Snippet>dedupe</Snippet>} />
   </p>
-)
+);
 
 function AsruAssociations({ establishments }) {
   return (
@@ -47,5 +47,5 @@ export default function InternalGlobalProfile() {
         model.asruUser && <RelatedTasks />
       }
     </GlobalProfile>
-  )
+  );
 }
