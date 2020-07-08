@@ -12,7 +12,7 @@ module.exports = merge({}, baseContent, profileContent, {
   },
   establishment: {
     description: 'View the details of this establishment, as well as lists of approved areas, people and active projects.',
-    link: 'View establishment information',
+    link: 'Go to {{name}}',
     blocked: `
       Your access to this establishment has been blocked.
 

@@ -33,7 +33,7 @@ const EstablishmentPanel = ({ establishment, profile }) => {
           <Fragment>
             <p><Snippet>establishment.description</Snippet></p>
             <p>
-              <Link page="establishment" establishmentId={establishment.id} label={<Snippet>establishment.link</Snippet>} className="govuk-button" />
+              <Link page="establishment" establishmentId={establishment.id} label={<Snippet name={establishment.name}>establishment.link</Snippet>} className="govuk-button truncate" />
             </p>
             <Profile
               establishment={establishment}
@@ -58,7 +58,7 @@ const Index = ({ profile, pilReviewRequired, adminPilReviewsRequired }) => (
     }
     {
       adminPilReviewsRequired && adminPilReviewsRequired.map(review => (
-        <Warning className="info">
+        <Warning key={review.estId} className="info">
           <Snippet {...review}>warnings.adminPilReviewsRequired</Snippet>
           <p>
             <Link page="pils" establishmentId={review.estId} label="Go to personal licences" />
