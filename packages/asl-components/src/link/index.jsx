@@ -30,7 +30,7 @@ export function getUrl({ page, url, query, path, ...props }) {
     href = getHref(urls, parts, replacer);
   }
 
-  return query ? `${href}${stringify(query)}` : href;
+  return query ? `${href}?${stringify(query)}` : href;
 }
 
 export default function Link({ label, className, ...props }) {
