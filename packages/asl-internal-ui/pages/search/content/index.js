@@ -1,20 +1,24 @@
 const searchPanel = require('../../components/search-panel/content');
 const establishments = require('./establishments');
 const profiles = require('./profiles');
+const baseProjects = require('@asl/pages/pages/project/content');
 const projects = require('./projects');
 
-const fields = {
+const models = {
   establishments,
   profiles,
-  projects
+  projects: {
+    ...baseProjects,
+    ...projects
+  }
 };
 
 module.exports = (searchType) => ({
   breadcrumbs: {
     search: 'Search'
   },
+  ...models[searchType],
   searchPanel,
-  fields: fields[searchType],
   actions: {
     establishment: {
       create: 'Create inactive establishment'
