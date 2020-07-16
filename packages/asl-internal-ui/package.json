@@ -44,7 +44,7 @@
     "docx": "5.0.0-rc4",
     "express": "^4.17.1",
     "filenamify": "^4.1.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "ndjson": "^1.5.0",
     "react": "^16.9.0",
