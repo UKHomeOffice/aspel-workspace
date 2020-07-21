@@ -1,3 +1,5 @@
+# Invitation to join an establishment
+
 You have an invitation to join {{establishment}}.
 
 To accept this invitation, please follow the link below:
