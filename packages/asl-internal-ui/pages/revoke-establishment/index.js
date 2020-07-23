@@ -16,13 +16,7 @@ module.exports = () => {
 
   app.use('/', update());
   app.use('/confirm', confirm());
-  app.use('/success', (req, res, next) => {
-    success({
-      licence: 'pel',
-      type: 'revocation',
-      status: 'resolved'
-    })(req, res, next);
-  });
+  app.use('/success', success());
 
   return app;
 };
