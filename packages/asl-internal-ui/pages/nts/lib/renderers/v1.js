@@ -4,7 +4,9 @@ const renderTextEditor = require('../rich-text');
 
 const hasPurpose = (project, purpose) => {
   let hasPurpose;
-  if (purpose === 'translational-research') {
+  if (purpose === 'higher-education') {
+    hasPurpose = project.data['training-licence'];
+  } else if (purpose === 'translational-research') {
     hasPurpose = project.data['translational-research'] && project.data['translational-research'].length;
   } else {
     hasPurpose = (project.data['permissable-purpose'] || []).includes(purpose);
