@@ -3,8 +3,26 @@ import map from 'lodash/map';
 import without from 'lodash/without';
 import castArray from 'lodash/castArray';
 import classnames from 'classnames';
-import { TextArea, Input, CheckboxGroup, RadioGroup, Select, DateInput } from '@ukhomeoffice/react-components';
-import { Snippet, ConditionalReveal, SpeciesSelector, AutoComplete, ApplicationConfirm, RestrictionsField, Markdown, DurationField, SelectMany } from '../';
+import {
+  TextArea,
+  Input,
+  CheckboxGroup,
+  RadioGroup,
+  Select,
+  DateInput
+} from '@ukhomeoffice/react-components';
+import {
+  Snippet,
+  ConditionalReveal,
+  SpeciesSelector,
+  AutoComplete,
+  ApplicationConfirm,
+  RestrictionsField,
+  Markdown,
+  DurationField,
+  SelectMany,
+  Inset
+} from '../';
 
 const fields = {
   inputText: props => <Input { ...props } />,
@@ -31,6 +49,21 @@ const fields = {
   )
 };
 
+function normaliseOptions(options, props) {
+  if (!options) {
+    return;
+  }
+  return options.map(opt => {
+    if (opt.reveal) {
+      return {
+        ...opt,
+        reveal: <Inset><Fieldset schema={opt.reveal} model={props.values} /></Inset>
+      };
+    }
+    return opt;
+  });
+}
+
 function Field({
   name,
   error,
@@ -40,11 +73,14 @@ function Field({
   hint,
   onChange,
   showIf,
+  options,
   ...props
 }) {
   if (inputType === 'checkboxGroup') {
     value = castArray(value);
   }
+
+  options = normaliseOptions(options, props);
 
   const [fieldValue, setFieldValue] = useState(value);
 
@@ -88,6 +124,7 @@ function Field({
     value={fieldValue}
     onChange={onFieldChange}
     name={name}
+    options={options}
     {...props}
   />;
 }
@@ -104,6 +141,8 @@ export default function Fieldset({ schema, errors = {}, formatters = {}, model, 
             values={model}
             value={model[key]}
             error={errors[key]}
+            errors={errors}
+            formatters={formatters}
             name={key}
             model={props.values}
             format={(formatters[key] || {}).format}
