@@ -11,6 +11,7 @@ import {
 } from '@asl/components';
 import SearchPanel from '../../components/search-panel';
 import { projectTitle } from '@asl/pages/pages/common/formatters';
+import projectFormatters from '@asl/pages/pages/project/formatters';
 
 function uppercaseFirst(str) {
   return `${str[0].toUpperCase()}${str.substring(1)}`;
@@ -73,9 +74,7 @@ const formatters = {
         return <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />;
       }
     },
-    status: {
-      format: status => uppercaseFirst(status)
-    },
+    status: projectFormatters.status,
     licenceHolder: {
       format: ({ id, firstName, lastName }) => {
         return <Link page="globalProfile" profileId={id} label={`${firstName} ${lastName}`} />;
