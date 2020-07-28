@@ -59,6 +59,12 @@ function Field({
 
   function onFieldChange(e) {
     let v = e.target.value;
+    if (v === 'true') {
+      v = true;
+    }
+    if (v === 'false') {
+      v = false;
+    }
     if (Array.isArray(fieldValue)) {
       if (fieldValue.includes(v)) {
         v = without(fieldValue, v);
