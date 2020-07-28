@@ -80,7 +80,9 @@ function Field({
     value = castArray(value);
   }
 
-  options = normaliseOptions(options, props);
+  if (props.automapReveals) {
+    options = normaliseOptions(options, props);
+  }
 
   const [fieldValue, setFieldValue] = useState(value);
 
