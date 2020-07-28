@@ -66,7 +66,7 @@ module.exports = settings => {
   app.use(cachebuster());
 
   app.use((req, res, next) => {
-    res.locals.phaseBannerSurvey = true;
+    res.locals.phaseBannerSurvey = false;
     next();
   });
 
