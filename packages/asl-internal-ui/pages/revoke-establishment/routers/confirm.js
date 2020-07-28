@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { get } = require('lodash');
 const form = require('@asl/pages/pages/common/routers/form');
+const { saveTaskIdToSession } = require('@asl/pages/pages/common/helpers');
 
 module.exports = () => {
   const app = Router();
@@ -23,11 +24,9 @@ module.exports = () => {
       }
     };
     req.api(`/establishment/${req.establishmentId}/revoke`, params)
-      .then(response => {
+      .then(saveTaskIdToSession(req.session))
+      .then(() => {
         delete req.session.form[req.model.id];
-        req.session.success = {
-          taskId: get(response, 'json.data.id')
-        };
         return res.redirect(req.buildRoute('revokeEstablishment', { suffix: 'success' }));
       })
       .catch(next);
