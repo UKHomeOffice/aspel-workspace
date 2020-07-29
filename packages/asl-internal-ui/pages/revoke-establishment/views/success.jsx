@@ -1,3 +1,3 @@
-import Success from '@asl/pages/pages/common/views/success';
+import Success from '@asl/pages/pages/success/views';
 
 export default Success;
