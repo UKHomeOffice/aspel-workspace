@@ -1,5 +1,6 @@
 const accreditingBodies = require('./constants/accrediting-bodies');
 const authorisationTypes = require('./constants/authorisation-types');
+const bankHolidays = require('./constants/bank-holidays');
 const establishmentCountries = require('./constants/establishment-countries');
 const establishmentStatuses = require('./constants/establishment-statuses');
 const externalPermissions = require('./constants/external-permissions');
@@ -18,6 +19,7 @@ const fees = require('./constants/fees');
 module.exports = {
   accreditingBodies,
   authorisationTypes,
+  bankHolidays,
   establishmentCountries,
   establishmentStatuses,
   externalPermissions,
