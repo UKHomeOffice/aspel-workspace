@@ -60,6 +60,7 @@ export { default as StickyNavAnchor } from './sticky-nav-anchor';
 export { default as StickyNavPage } from './sticky-nav-page';
 export { default as Tabs } from './tabs';
 export { default as Tasklist } from './tasklist';
+export { default as TrainingSummary } from './training-summary';
 export { default as WidthContainer } from './width-container';
 export { default as Wrapper } from './wrapper';
 
