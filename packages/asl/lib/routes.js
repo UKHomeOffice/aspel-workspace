@@ -37,6 +37,11 @@ module.exports = {
     breadcrumb: false,
     router: pages.globalProfile
   },
+  training: {
+    path: '/establishments/:establishmentId/people/:profileId/training',
+    breadcrumb: false,
+    router: pages.training
+  },
   role: {
     path: '/establishments/:establishmentId/people/:profileId/role',
     breadcrumb: false,
