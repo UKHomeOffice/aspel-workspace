@@ -66,6 +66,11 @@ module.exports = {
     router: revokeEstablishment,
     permissions: 'establishment.revoke'
   },
+  training: {
+    path: '/establishments/:establishmentId/people/training',
+    breadcrumb: false,
+    router: pages.training
+  },
   profile: {
     path: '/establishments/:establishmentId/people',
     breadcrumb: false,
