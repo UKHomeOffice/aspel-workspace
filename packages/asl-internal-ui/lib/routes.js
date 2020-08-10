@@ -67,7 +67,7 @@ module.exports = {
     permissions: 'establishment.revoke'
   },
   training: {
-    path: '/establishments/:establishmentId/people/training',
+    path: '/establishments/:establishmentId/people/:profileId/training',
     breadcrumb: false,
     router: pages.training
   },
