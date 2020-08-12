@@ -90,14 +90,6 @@ module.exports = settings => {
       .catch(next);
   });
 
-  app.get('/establishments', (req, res, next) => {
-    req.metrics('/reports/establishments', { stream: false, query: req.query })
-      .then(response => {
-        res.json(response);
-      })
-      .catch(next);
-  });
-
   app.get('/', (req, res) => res.sendResponse());
 
   return app;
