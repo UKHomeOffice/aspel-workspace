@@ -28,7 +28,7 @@ module.exports = () => {
     Promise.resolve()
       .then(() => req.api('/billing', { query }))
       .then(response => {
-        const { startDate, endDate } = response.json.meta;
+        const { startDate, endDate, years } = response.json.meta;
         const numPils = response.json.data.numberOfPils;
         const numPels = response.json.data.numberOfPels;
         const { fees, personal, establishment, total } = response.json.data;
@@ -42,7 +42,8 @@ module.exports = () => {
           total,
           startDate,
           endDate,
-          year: req.year
+          year: req.year,
+          years
         };
       })
       .then(() => next())
