@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import AccessibleAutocomplete from 'accessible-autocomplete/react';
 import { InputWrapper } from '@ukhomeoffice/react-components';
 import { getUrl } from '../link';
-import fetch from 'r2';
 
 export default function AutoComplete(props) {
   const [value, setValue] = useState(props.value);
@@ -37,7 +36,8 @@ export default function AutoComplete(props) {
     if (!query) {
       return syncResults([]);
     }
-    fetch(`${apiPath}/get-autocomplete-options/${query}`).json
+    window.fetch(`${apiPath}?${query}`)
+      .then(res => res.json())
       .then(results => {
         syncResults(results || []);
       })
