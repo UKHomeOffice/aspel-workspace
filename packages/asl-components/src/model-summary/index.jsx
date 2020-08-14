@@ -2,15 +2,17 @@ import classnames from 'classnames';
 import React, { Fragment } from 'react';
 import map from 'lodash/map';
 import size from 'lodash/size';
+import get from 'lodash/get';
 import { connect } from 'react-redux';
 import { Snippet } from '../';
 
-const getValue = (value, format, model, nullValue, formatNullValue) => {
+function Value({ value, format, model, nullValue, accessor, formatNullValue }) {
+  value = accessor ? get(model, accessor) : value;
   if (!value && !formatNullValue) {
     return nullValue || '-';
   }
   return format ? format(value, model) : value;
-};
+}
 
 const ModelSummary = ({ model, schema, formatters = {}, className, formatNullValue }) => {
   let fields = model;
@@ -25,12 +27,24 @@ const ModelSummary = ({ model, schema, formatters = {}, className, formatNullVal
   return (
     <dl className={classnames('model-summary', 'inline', className)}>
       {
-        map(fields, (item, key) =>
-          <Fragment key={key}>
-            <dt><Snippet>{`fields.${key}.label`}</Snippet></dt>
-            <dd>{getValue(model[key], formatters[key] && formatters[key].format, model, schema[key] && schema[key].nullValue, formatNullValue)}</dd>
-          </Fragment>
-        )
+        map(fields, (item, key) => {
+          const options = schema[key] || {};
+          return (
+            <Fragment key={key}>
+              <dt><Snippet>{`fields.${key}.label`}</Snippet></dt>
+              <dd>
+                <Value
+                  value={model[key]}
+                  format={formatters[key] && formatters[key].format}
+                  model={model}
+                  nullValue={options.nullValue}
+                  accessor={options.accessor}
+                  formatNullValue={formatNullValue}
+                />
+              </dd>
+            </Fragment>
+          );
+        })
       }
     </dl>
   );
