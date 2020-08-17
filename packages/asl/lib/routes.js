@@ -30,7 +30,8 @@ module.exports = {
   },
   pils: {
     path: '/establishments/:establishmentId/pils',
-    router: pages.pils
+    breadcrumb: false,
+    router: pages.unscopedPils
   },
   globalProfile: {
     path: '/profile/:profileId',
