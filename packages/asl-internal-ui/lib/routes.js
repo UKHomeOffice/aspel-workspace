@@ -98,7 +98,8 @@ module.exports = {
   },
   pils: {
     path: '/establishments/:establishmentId/pils',
-    router: pages.pils
+    breadcrumb: false,
+    router: pages.unscopedPils
   },
   pil: {
     path: '/establishments/:establishmentId/people/:profileId/pil',
