@@ -7,9 +7,9 @@ export default function RestrictionsField(props) {
     currentLabel={<Snippet>fields.restrictions.currentLabel</Snippet>}
     proposedLabel={<Snippet>fields.restrictions.proposedLabel</Snippet>}
     deleteItemWarning="Are you sure you want to remove these restrictions?"
-    format={val => val || 'None'}
     original={props.model && props.model.restrictions}
     proposed={props.value}
     {...props}
+    format={val => val || 'None'}
   />;
 }
