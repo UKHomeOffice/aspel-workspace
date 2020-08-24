@@ -1,4 +1,6 @@
 module.exports = {
+  'establishment-application': 'PEL applications',
+  'establishment-revoke': 'PEL revocations',
   'legacy-project-application': 'PPL applications (Legacy)',
   'legacy-project-amendment': 'PPL amendments (Legacy)',
   'legacy-project-revoke': 'PPL revocations (Legacy)',
