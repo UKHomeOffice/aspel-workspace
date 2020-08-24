@@ -35,7 +35,7 @@ export class Search extends Component {
             value={ this.state ? this.state.value : this.props.filter }
             onChange={e => this.setState({ value: e.target.value })}
           />
-          <button type="submit" className="govuk-button"><span className="hidden">Search</span></button>
+          <button type="submit" className="govuk-button" aria-label="Search"></button>
         </div>
       </ApplyChanges>
     );
