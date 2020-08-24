@@ -7,6 +7,8 @@ const metrics = require('../../lib/middleware/metrics');
 const routes = require('./routes');
 
 const types = [
+  'establishment-application',
+  'establishment-revoke',
   'legacy-project-application',
   'legacy-project-amendment',
   'legacy-project-revoke',
