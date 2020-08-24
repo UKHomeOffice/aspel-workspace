@@ -75,11 +75,11 @@ const Index = ({ profile, pilReviewRequired, adminPilReviewsRequired }) => (
         <PanelList panels={profile.invitations.map(invitation => <Invitation key={invitation.id} establishment={ invitation.establishment.name } token={invitation.token} />)}/>
       </Fragment>
     }
-    <h3><Snippet>pages.dashboard.tasks</Snippet></h3>
+    <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
     <TaskList />
     {
       !!profile.establishments.length && <Fragment>
-        <h3>Establishments</h3>
+        <h2>Establishments</h2>
         <PanelList
           panels={sortBy(profile.establishments, 'name').map((establishment) => (
             <EstablishmentPanel key={establishment.id} establishment={establishment} profile={profile} />
