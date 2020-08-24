@@ -5,8 +5,12 @@ const Header = ({
   subtitle
 }) => (
   <header className="page-header">
-    <h2>{subtitle}</h2>
-    <h1>{title}</h1>
+    {
+      subtitle && <h2>{subtitle}</h2>
+    }
+    {
+      title && <h1>{title}</h1>
+    }
   </header>
 );
 
