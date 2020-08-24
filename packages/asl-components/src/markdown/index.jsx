@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 function RenderLink({ href, children }) {
-  return <span>[{ children }]({ href })</span>;
+  return <Fragment>[{ children }]({ href })</Fragment>;
+}
+function RenderLinkReference({ children }) {
+  return <Fragment>[{ children }]</Fragment>;
 }
 
+const renderers = {
+  link: RenderLink,
+  linkReference: RenderLinkReference
+};
+
 export default function Markdown({ children, links = false, ...props }) {
-  return <ReactMarkdown renderers={!links && { link: RenderLink }} {...props}>{ children }</ReactMarkdown>;
+  return <ReactMarkdown renderers={!links && renderers} {...props}>{ children }</ReactMarkdown>;
 }
