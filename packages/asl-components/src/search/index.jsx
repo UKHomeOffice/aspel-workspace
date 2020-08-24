@@ -31,6 +31,7 @@ export class Search extends Component {
             id={name}
             name={name}
             type="text"
+            aria-labelledby={this.props.labelledBy}
             value={ this.state ? this.state.value : this.props.filter }
             onChange={e => this.setState({ value: e.target.value })}
           />
