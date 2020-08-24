@@ -19,7 +19,7 @@ class SearchPanel extends Component {
 
     return (
       <div className="search-panel">
-        <h2><Snippet>searchPanel.title</Snippet></h2>
+        <h2 id="search-title"><Snippet>searchPanel.title</Snippet></h2>
 
         <ul className="search-type">
           { searchableModels.map(model => (
@@ -33,7 +33,7 @@ class SearchPanel extends Component {
 
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
-            <Search action={this.props.action} name="filter-*" />
+            <Search action={this.props.action} name="filter-*" labelledBy="search-title" />
           </div>
 
           <div className="govuk-grid-column-one-third">
