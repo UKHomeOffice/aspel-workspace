@@ -41,11 +41,20 @@ ApplyChanges.defaultProps = {
 };
 
 const mapStateToProps = ({
-  datatable: { filters: { active: filters }, sort, pagination: { page } }
+  datatable: { filters: { active: basefilters }, sort, pagination: { page } }
 }, {
-  query = {}
+  query = {},
+  filters = {}
 }) => ({
-  query: Object.assign({}, { filters, sort, page: page + 1 }, query)
+  query: {
+    filters: {
+      ...basefilters,
+      ...filters
+    },
+    sort,
+    page: page + 1,
+    ...query
+  }
 });
 
 export default connect(mapStateToProps)(ApplyChanges);
