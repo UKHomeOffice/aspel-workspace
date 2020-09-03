@@ -28,7 +28,8 @@ module.exports = {
       'Cephalopods',
       'Frogs',
       'Reptiles',
-      'Zebra fish'
+      'Zebra fish',
+      'All fish'
     ]
   },
   av: {
