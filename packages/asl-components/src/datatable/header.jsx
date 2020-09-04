@@ -12,7 +12,8 @@ export const TableHeader = ({
   ascending,
   onHeaderClick,
   sortable,
-  disabled
+  disabled,
+  label
 }) => {
   const isSortable = sortable !== false && column !== undefined && ascending !== undefined;
   return (
@@ -30,9 +31,9 @@ export const TableHeader = ({
             }}
             className={classnames({ disabled })}
             onApply={() => onHeaderClick(id)}
-            label={getLabel(id)}
+            label={label || getLabel(id)}
           />
-          : getLabel(id)
+          : label || getLabel(id)
       }
     </th>
   );
