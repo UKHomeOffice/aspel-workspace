@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { doSort } from './actions';
 import { ApplyChanges, Snippet } from '../';
 
-const getLabel = id => <Snippet escapeHtml={false}>{`fields.${id}.label`}</Snippet>;
+const getLabel = id => <Snippet>{`fields.${id}.label`}</Snippet>;
 
 export const TableHeader = ({
   id,
@@ -12,7 +12,8 @@ export const TableHeader = ({
   ascending,
   onHeaderClick,
   sortable,
-  disabled
+  disabled,
+  label
 }) => {
   const isSortable = sortable !== false && column !== undefined && ascending !== undefined;
   return (
@@ -30,9 +31,9 @@ export const TableHeader = ({
             }}
             className={classnames({ disabled })}
             onApply={() => onHeaderClick(id)}
-            label={getLabel(id)}
+            label={label || getLabel(id)}
           />
-          : getLabel(id)
+          : label || getLabel(id)
       }
     </th>
   );
