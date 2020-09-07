@@ -76,5 +76,9 @@ module.exports = {
   feedback: {
     path: '/feedback',
     router: pages.feedback
+  },
+  contactUs: {
+    path: '/contact-us',
+    router: pages.contactUs
   }
 };
