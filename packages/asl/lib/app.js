@@ -67,6 +67,7 @@ module.exports = settings => {
 
   app.use((req, res, next) => {
     res.locals.phaseBannerSurvey = false;
+    res.locals.contactUsLink = true;
     next();
   });
 

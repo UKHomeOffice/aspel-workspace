@@ -2,6 +2,7 @@ const { pages } = require('@asl/pages');
 
 const dashboard = require('../pages/dashboard');
 const invitation = require('../pages/invitation');
+const contactUs = require('../pages/contact');
 
 module.exports = {
   projectVersion: {
@@ -76,5 +77,9 @@ module.exports = {
   feedback: {
     path: '/feedback',
     router: pages.feedback
+  },
+  contactUs: {
+    path: '/contact-us',
+    router: contactUs
   }
 };
