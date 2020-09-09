@@ -12,7 +12,7 @@ const ALL_SPECIES = flatten(values(groups).map(g => g.types));
 
 export default function SpeciesSelector(props) {
   const parts = partition(props.value, s => ALL_SPECIES.includes(s));
-  const [value, setValue] = useState(props.value);
+  const [value, setValue] = useState(props.value || []);
   const [presetSpecies, setPresetSpecies] = useState(parts[0]);
   const [otherSpecies, setOtherSpecies] = useState(parts[1]);
 
