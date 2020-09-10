@@ -1,4 +1,5 @@
 import React from 'react';
+import sortBy from 'lodash/sortBy';
 import format from 'date-fns/format';
 import { ApplyChanges, Snippet, Link } from '../';
 import { getUrl } from '../link';
@@ -73,6 +74,7 @@ export default function SummaryTable({ certificates, actions, emptyLabel = 'No t
   if (!certificates || !certificates.length) {
     return <p>{emptyLabel}</p>;
   }
+  certificates = sortBy(certificates, ['isExemption', 'createdAt']);
   return (
     <table className="govuk-table training">
       <thead>
