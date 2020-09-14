@@ -3,6 +3,8 @@ import React, { useState, Fragment } from 'react';
 const DownloadHeader = ({ title, subtitle, basename, children, licenceStatus, showPdf = true, showAllDownloads = false }) => {
   const [detailsShowing, updateDetailsShowing] = useState(false);
 
+  basename = basename.replace(/\/$/, '');
+
   const toggleDetails = (e) => {
     e.preventDefault();
     updateDetailsShowing(!detailsShowing);
