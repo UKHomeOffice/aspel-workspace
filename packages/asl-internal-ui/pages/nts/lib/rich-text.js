@@ -252,7 +252,7 @@ const renderTextEditor = (doc, value) => {
     }
   };
 
-  const content = JSON.parse(value || '{}');
+  const content = typeof value === 'string' ? JSON.parse(value || '{}') : value;
   const nodes = get(content, 'document.nodes', []);
   nodes.forEach(node => {
     renderNode(node);
