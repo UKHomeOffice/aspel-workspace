@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Header, Snippet, Link } from '@asl/components';
-import countBy from 'lodash/countBy';
 import { format, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
 
 const Metric = ({ number, label }) => {
@@ -15,8 +14,8 @@ const Metric = ({ number, label }) => {
   return <div className="metric">
     <p>{ number }</p>
     <label>{ label }</label>
-  </div>
-}
+  </div>;
+};
 
 const Index = () => {
 
@@ -29,7 +28,7 @@ const Index = () => {
 
   const isLoading = Object.values(loading).some(Boolean);
 
-  const setLoadingParam = (param) => setLoading(loading => ({ ...loading, ...param  }));
+  const setLoadingParam = (param) => setLoading(loading => ({ ...loading, ...param }));
 
   useEffect(() => {
     setLoadingParam({ tasks: true });
@@ -63,7 +62,7 @@ const Index = () => {
     week: format(startOfWeek(now), 'YYYY-MM-DD'),
     month: format(startOfMonth(now), 'YYYY-MM-DD'),
     year: format(startOfYear(now), 'YYYY-MM-DD')
-  }
+  };
 
   const meanIterationsLegacy = getMeanIterations('legacy-project-application');
   const meanIterations = getMeanIterations('project-application');
@@ -117,7 +116,6 @@ const Index = () => {
       </div>
     </div>
 
-
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
         <h2>Active licences by type:</h2>
@@ -150,9 +148,9 @@ const Index = () => {
           <ul>
             {
               Object.keys(dates).map(date => {
-                return dates[date] === startDate ?
-                  <li key={date}><strong><Snippet>{ `date.${date}` }</Snippet></strong></li> :
-                  <li key={date}><a href={isLoading ? null : `?since=${dates[date]}`} onClick={startDateHandler(dates[date])}><Snippet>{ `date.${date}` }</Snippet></a></li>
+                return dates[date] === startDate
+                  ? <li key={date}><strong><Snippet>{ `date.${date}` }</Snippet></strong></li>
+                  : <li key={date}><a href={isLoading ? null : `?since=${dates[date]}`} onClick={startDateHandler(dates[date])}><Snippet>{ `date.${date}` }</Snippet></a></li>;
               })
             }
           </ul>
@@ -160,7 +158,7 @@ const Index = () => {
       }
     </div>
 
-  </Fragment>
+  </Fragment>;
 };
 
 export default Index;
