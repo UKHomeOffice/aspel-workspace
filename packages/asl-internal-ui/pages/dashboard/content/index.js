@@ -3,6 +3,7 @@ const baseContent = require('@asl/pages/pages/task/list/content');
 const searchPanel = require('../../components/search-panel/content');
 
 module.exports = merge({}, baseContent, {
+  pageTitle: 'Home',
   tasklist: {
     title: 'Tasks',
     outstanding: {

@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Downloads',
   'project-application': 'PPL applications',
   'project-amendment': 'PPL amendments',
   'project-revoke': 'PPL revocations',

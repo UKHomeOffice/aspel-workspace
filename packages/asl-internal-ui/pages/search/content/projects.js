@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Search projects',
   fields: {
     title: {
       label: 'Project title'

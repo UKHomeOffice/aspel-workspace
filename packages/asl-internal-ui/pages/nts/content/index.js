@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Non-technical summaries',
   page: {
     title: 'Download non-technical summaries by year',
     subTitle: 'Non-technical summaries',
