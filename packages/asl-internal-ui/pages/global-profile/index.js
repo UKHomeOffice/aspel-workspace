@@ -22,6 +22,7 @@ module.exports = () => {
       .then(({ json: { data } }) => {
         res.locals.model = data;
         res.locals.static.profile = data;
+        res.locals.pageTitle = `${data.firstName} ${data.lastName}`;
       })
       .then(() => next())
       .catch(next);

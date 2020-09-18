@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Search establishments',
   fields: {
     name: {
       label: 'Name'

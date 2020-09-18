@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Performance metrics',
   'establishment-application': 'PEL applications',
   'establishment-revoke': 'PEL revocations',
   'legacy-project-application': 'PPL applications (Legacy)',
