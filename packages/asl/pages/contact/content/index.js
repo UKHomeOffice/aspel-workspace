@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Contact us',
   breadcrumbs: {
     contactUs: 'Contact us'
   },
