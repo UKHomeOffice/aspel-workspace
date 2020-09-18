@@ -3,6 +3,7 @@ const baseContent = require('@asl/pages/pages/task/list/content');
 const profileContent = require('@asl/pages/pages/profile/read/content');
 
 module.exports = merge({}, baseContent, profileContent, {
+  pageTitle: 'Home',
   tasklist: {
     title: 'Tasks',
     outstanding: {
