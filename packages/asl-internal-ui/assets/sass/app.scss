@@ -107,14 +107,22 @@ td .govuk-button {
 }
 
 .metric {
+  label {
+    font-weight: bold;
+  }
   p {
     font-size: 80px;
     font-weight: bold;
     margin: 0;
   }
   padding-bottom: 5px;
-  border-bottom: 5px solid $govuk-brand-colour;
   margin-bottom: $govuk-gutter;
+}
+
+.deadline-exemption-summary {
+  .reason {
+    margin-bottom: $govuk-gutter;
+  }
 }
 
 ul.nts-downloads {
