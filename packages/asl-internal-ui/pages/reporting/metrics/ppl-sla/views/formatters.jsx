@@ -4,7 +4,7 @@ import { dateFormat } from '@asl/pages/constants';
 import { Link } from '@asl/components';
 
 export default {
-  deadline: {
+  deadlineDate: {
     format: val => format(val, dateFormat.medium)
   },
   projectTitle: {

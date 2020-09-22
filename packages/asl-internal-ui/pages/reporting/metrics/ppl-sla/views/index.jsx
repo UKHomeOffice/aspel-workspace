@@ -23,10 +23,10 @@ export default function PplSla() {
           <Metric label={<Snippet>metrics.passed</Snippet>} number={metrics.passed} className="passed" />
         </div>
         <div className="govuk-grid-column-one-third">
-          <Metric label={<Snippet>metrics.missed</Snippet>} number={metrics.missed} className="missed" />
+          <Metric label={<Snippet>metrics.notExempt</Snippet>} number={metrics.notExempt} className="missed" />
         </div>
         <div className="govuk-grid-column-one-third">
-          <Metric label={<Snippet>metrics.notMissed</Snippet>} number={metrics.notMissed} className="not-missed" />
+          <Metric label={<Snippet>metrics.exempt</Snippet>} number={metrics.exempt} className="not-missed" />
         </div>
       </div>
 

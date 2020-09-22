@@ -4,11 +4,11 @@ module.exports = {
     be recorded as missed.`,
   metrics: {
     passed: 'Deadlines passed',
-    missed: 'Deadlines missed',
-    notMissed: 'Deadlines not missed'
+    exempt: 'Deadlines not missed',
+    notExempt: 'Deadlines missed'
   },
   fields: {
-    deadline: {
+    deadlineDate: {
       label: 'Statutory deadline'
     },
     projectTitle: {

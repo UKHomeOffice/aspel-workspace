@@ -1,5 +1,5 @@
 module.exports = {
-  deadline: {
+  deadlineDate: {
     show: true,
     sortable: false
   },

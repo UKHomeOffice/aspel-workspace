@@ -1,7 +1,6 @@
 const bodyParser = require('body-parser');
-const { pick, set } = require('lodash');
 const { page } = require('@asl/service/ui');
-const metrics = require('../../../../lib/middleware/metrics');
+const { datatable } = require('@asl/pages/pages/common/routers');
 const schema = require('./schema');
 
 module.exports = settings => {
@@ -10,33 +9,26 @@ module.exports = settings => {
     root: __dirname
   });
 
-  app.use(metrics(settings));
   app.use(bodyParser.urlencoded({ extended: true }));
 
-  app.get('/', (req, res, next) => {
-    req.datatable = req.datatable || {};
-    req.datatable.schema = schema;
-
-    const limit = 1000;
-    const page = 0;
-
-    req.datatable.pagination = { limit, page, offset: page * limit };
-
-    return req.metrics('/reports/ppl-sla-details', { stream: false })
-      .then((response) => {
-        set(req.datatable, 'data.rows', response);
-        set(req.datatable, 'pagination.totalCount', response.length);
-        set(req.datatable, 'pagination.count', response.length);
-        Object.assign(res.locals, { datatable: pick(req.datatable, ['data', 'pagination', 'sort', 'filters', 'schema']) });
-        res.locals.static.metrics = {
-          passed: response.length,
-          missed: response.filter(row => !row.isExempt).length,
-          notMissed: response.filter(row => row.isExempt).length
-        };
-      })
-      .then(() => next())
-      .catch(next);
-  });
+  app.get('/', datatable({
+    configure: (req, res, next) => {
+      req.datatable.sort = { column: 'deadlineDate', ascending: true };
+      next();
+    },
+    getApiPath: (req, res, next) => {
+      req.datatable.apiPath = ['/tasks/deadline-passed'];
+      next();
+    },
+    getValues: (req, res, next) => {
+      res.locals.static.metrics = {
+        passed: req.datatable.data.rows.length,
+        exempt: req.datatable.data.rows.filter(row => row.isExempt).length,
+        notExempt: req.datatable.data.rows.filter(row => !row.isExempt).length
+      };
+      next();
+    }
+  })({ schema, defaultRowCount: 100 }));
 
   app.post('/', (req, res, next) => {
     const { taskId, comment, isExempt } = req.body;
