@@ -33,7 +33,7 @@ class SearchPanel extends Component {
 
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
-            <Search action={this.props.action} name="filter-*" labelledBy="search-title" />
+            <Search action={this.props.action} name="filter-*" labelledBy="search-title" query={{ sort: null, page: 1 }} />
           </div>
 
           <div className="govuk-grid-column-one-third">
