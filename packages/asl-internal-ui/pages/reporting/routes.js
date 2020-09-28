@@ -1,5 +1,5 @@
 const download = require('./download');
-const metrics = require('./metrics');
+const details = require('./details');
 
 module.exports = {
   download: {
@@ -7,9 +7,9 @@ module.exports = {
     path: '/download',
     router: download
   },
-  metrics: {
+  details: {
     breadcrumb: false,
-    path: '/metrics',
-    router: metrics
+    path: '/details',
+    router: details
   }
 };

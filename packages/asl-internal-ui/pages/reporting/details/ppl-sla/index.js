@@ -46,7 +46,7 @@ module.exports = settings => {
     return req.api(`/tasks/${taskId}/exemption`, params)
       .then(() => {
         req.notification({ key: 'success' });
-        return res.redirect(req.buildRoute('reporting.metrics.pplSla'));
+        return res.redirect(req.buildRoute('reporting.details.pplSla'));
       })
       .catch(next);
   });

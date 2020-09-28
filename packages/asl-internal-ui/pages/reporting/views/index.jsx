@@ -70,7 +70,7 @@ const Index = () => {
         <Metric number={tasks.total} label="Total tasks completed" />
       </div>
       <div className="govuk-grid-column-one-half">
-        <Metric number={deadlines} label="Statutory deadlines passed" link="reporting.metrics.pplSla" />
+        <Metric number={deadlines} label="Statutory deadlines passed" link="reporting.details.pplSla" />
       </div>
     </div>
     <div className="govuk-grid-row">
