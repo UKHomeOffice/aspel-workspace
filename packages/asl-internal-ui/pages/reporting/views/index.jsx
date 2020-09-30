@@ -1,22 +1,8 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Header, Snippet, Link } from '@asl/components';
-import countBy from 'lodash/countBy';
 import { format, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
-
-const Metric = ({ number, label }) => {
-  if (number !== Math.floor(number)) {
-    try {
-      number = number.toFixed(2);
-    } catch (e) {
-      number = '-';
-    }
-  }
-  return <div className="metric">
-    <p>{ number }</p>
-    <label>{ label }</label>
-  </div>
-}
+import Metric from './components/metric';
 
 const Index = () => {
 
@@ -29,7 +15,7 @@ const Index = () => {
 
   const isLoading = Object.values(loading).some(Boolean);
 
-  const setLoadingParam = (param) => setLoading(loading => ({ ...loading, ...param  }));
+  const setLoadingParam = (param) => setLoading(loading => ({ ...loading, ...param }));
 
   useEffect(() => {
     setLoadingParam({ tasks: true });
@@ -63,7 +49,7 @@ const Index = () => {
     week: format(startOfWeek(now), 'YYYY-MM-DD'),
     month: format(startOfMonth(now), 'YYYY-MM-DD'),
     year: format(startOfYear(now), 'YYYY-MM-DD')
-  }
+  };
 
   const meanIterationsLegacy = getMeanIterations('legacy-project-application');
   const meanIterations = getMeanIterations('project-application');
@@ -81,18 +67,18 @@ const Index = () => {
     <Header title="Performance metrics"/>
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-one-half">
-        <Metric number={tasks.total} label="total tasks completed" />
+        <Metric number={tasks.total} label="Total tasks completed" />
       </div>
       <div className="govuk-grid-column-one-half">
-        <Metric number={deadlines} label="PPL applications outside SLA" />
+        <Metric number={deadlines} label="Statutory deadlines passed" />
       </div>
     </div>
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-one-half">
-        <Metric number={meanIterationsLegacy} label="iterations per PPL application (Legacy)" />
+        <Metric number={meanIterationsLegacy} label="Iterations per PPL application (Legacy)" />
       </div>
       <div className="govuk-grid-column-one-half">
-        <Metric number={meanIterations} label="iterations per PPL application (New)" />
+        <Metric number={meanIterations} label="Iterations per PPL application (New)" />
       </div>
     </div>
 
@@ -116,7 +102,6 @@ const Index = () => {
         </div>
       </div>
     </div>
-
 
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
@@ -150,9 +135,9 @@ const Index = () => {
           <ul>
             {
               Object.keys(dates).map(date => {
-                return dates[date] === startDate ?
-                  <li key={date}><strong><Snippet>{ `date.${date}` }</Snippet></strong></li> :
-                  <li key={date}><a href={isLoading ? null : `?since=${dates[date]}`} onClick={startDateHandler(dates[date])}><Snippet>{ `date.${date}` }</Snippet></a></li>
+                return dates[date] === startDate
+                  ? <li key={date}><strong><Snippet>{ `date.${date}` }</Snippet></strong></li>
+                  : <li key={date}><a href={isLoading ? null : `?since=${dates[date]}`} onClick={startDateHandler(dates[date])}><Snippet>{ `date.${date}` }</Snippet></a></li>;
               })
             }
           </ul>
@@ -160,7 +145,7 @@ const Index = () => {
       }
     </div>
 
-  </Fragment>
+  </Fragment>;
 };
 
 export default Index;
