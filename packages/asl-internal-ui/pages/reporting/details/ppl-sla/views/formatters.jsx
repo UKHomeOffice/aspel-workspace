@@ -8,7 +8,9 @@ export default {
     format: val => format(val, dateFormat.medium)
   },
   projectTitle: {
-    format: (title, model) => <Link page="project.read" establishmentId={model.establishmentId} projectId={model.projectId} label={title} />
+    format: (title, task) => (
+      <Link page="project.read" establishmentId={task.data.modelData.establishmentId} projectId={task.data.modelData.id} label={title} />
+    )
   },
   isExempt: {
     format: val => val === true ? <label className="badge blue">Not missed</label> : <label className="badge">Missed</label>
