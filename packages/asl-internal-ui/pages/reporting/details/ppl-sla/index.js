@@ -13,7 +13,7 @@ module.exports = settings => {
 
   app.get('/', datatable({
     configure: (req, res, next) => {
-      req.datatable.sort = { column: 'deadlineDate', ascending: true };
+      req.datatable.sort = { column: 'deadlinePassedDate', ascending: true };
       next();
     },
     getApiPath: (req, res, next) => {

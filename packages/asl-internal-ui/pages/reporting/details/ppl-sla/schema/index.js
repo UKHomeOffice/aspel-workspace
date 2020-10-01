@@ -1,13 +1,9 @@
 module.exports = {
-  deadlineDate: {
+  deadlinePassedDate: {
     show: true,
     sortable: false
   },
   projectTitle: {
-    show: true,
-    sortable: false
-  },
-  daysOverdue: {
     show: true,
     sortable: false
   },

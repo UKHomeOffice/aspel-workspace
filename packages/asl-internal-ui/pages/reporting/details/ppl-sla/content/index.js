@@ -8,14 +8,11 @@ module.exports = {
     notExempt: 'Deadlines missed'
   },
   fields: {
-    deadlineDate: {
+    deadlinePassedDate: {
       label: 'Statutory deadline'
     },
     projectTitle: {
       label: 'Project title'
-    },
-    daysOverdue: {
-      label: 'Days overdue'
     },
     isExempt: {
       label: 'Deadline status'
