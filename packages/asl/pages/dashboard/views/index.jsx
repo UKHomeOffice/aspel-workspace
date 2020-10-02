@@ -59,8 +59,7 @@ const Index = ({ profile, pilReviewRequired, adminPilReviewsRequired }) => (
     {
       adminPilReviewsRequired && adminPilReviewsRequired.map(review => (
         <Warning key={review.estId} className="info">
-          <Snippet {...review}>{`warnings.adminPilReviewsRequired.overdue.${review.overdue === 1 ? 'singular' : 'plural'}`}</Snippet>
-          <Snippet {...review}>{`warnings.adminPilReviewsRequired.due.${review.due === 1 ? 'singular' : 'plural'}`}</Snippet>
+          <Snippet {...review} overdueSingular={review.overdue === 1} dueSingular={review.due === 1}>warnings.adminPilReviewsRequired</Snippet>
           <p>
             <Link page="pils" establishmentId={review.estId} label="Go to personal licences" />
           </p>
