@@ -6,7 +6,8 @@ import {
   Snippet,
   Header,
   PanelList,
-  ExpandingPanel
+  ExpandingPanel,
+  Markdown
 } from '@asl/components';
 import TaskList from '@asl/pages/pages/task/list/views/tasklist';
 import Profile from '@asl/pages/pages/profile/read/views/profile';
@@ -47,6 +48,29 @@ const EstablishmentPanel = ({ establishment, profile }) => {
   );
 };
 
+const getWarningText = review => {
+  let warningText = `${review.name} has `;
+
+  if (review.overdue > 0) {
+    if (review.overdue === 1) {
+      warningText = `${warningText}**${review.overdue} licence that is overdue** it's PIL review`;
+    } else {
+      warningText = `${warningText}**${review.overdue} licences that are overdue** their PIL review`;
+    }
+  }
+
+  if (review.due > 0) {
+    warningText = review.overdue ? `${warningText} and ` : warningText;
+    if (review.due === 1) {
+      warningText = `${warningText}${review.due} licence approaching it's deadline`;
+    } else {
+      warningText = `${warningText}${review.due} licences approaching their deadline`;
+    }
+  }
+
+  return `${warningText}.`;
+};
+
 const Index = ({ profile, pilReviewRequired, adminPilReviewsRequired }) => (
   <Fragment>
     {
@@ -59,7 +83,7 @@ const Index = ({ profile, pilReviewRequired, adminPilReviewsRequired }) => (
     {
       adminPilReviewsRequired && adminPilReviewsRequired.map(review => (
         <Warning key={review.estId} className="info">
-          <Snippet {...review} overdueSingular={review.overdue === 1} dueSingular={review.due === 1}>warnings.adminPilReviewsRequired</Snippet>
+          <Markdown>{getWarningText(review)}</Markdown>
           <p>
             <Link page="pils" establishmentId={review.estId} label="Go to personal licences" />
           </p>

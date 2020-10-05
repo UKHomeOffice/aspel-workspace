@@ -21,7 +21,6 @@ module.exports = merge({}, baseContent, profileContent, {
     `
   },
   warnings: {
-    pilReviewRequired: '**Your personal licence is {{#overdue}}overdue{{/overdue}}{{^overdue}}due{{/overdue}} a 5 year review.** You need to [confirm your personal licence is still in use]({{pilUrl}}) or it may be revoked.',
-    adminPilReviewsRequired: '{{name}} has {{#overdue}}**{{overdue}} licence{{^overdueSingular}}s{{/overdueSingular}} that {{^overdueSingular}}are{{/overdueSingular}}{{#overdueSingular}}is{{/overdueSingular}} overdue** their PIL review and{{/overdue}} {{due}} licence{{^dueSingular}}s{{/dueSingular}} approaching {{^dueSingular}}their{{/dueSingular}}{{#dueSingular}}it\'s{{/dueSingular}} deadline.'
+    pilReviewRequired: '**Your personal licence is {{#overdue}}overdue{{/overdue}}{{^overdue}}due{{/overdue}} a 5 year review.** You need to [confirm your personal licence is still in use]({{pilUrl}}) or it may be revoked.'
   }
 });
