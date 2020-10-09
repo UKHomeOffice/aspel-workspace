@@ -117,8 +117,12 @@ const Index = () => {
               <td className="numeric">{ licences.projects }</td>
             </tr>
             <tr>
-              <td>PILs</td>
+              <td>Category A, B, C, D and F PILs</td>
               <td className="numeric">{ licences.pils }</td>
+            </tr>
+            <tr>
+              <td>Category E PILs</td>
+              <td className="numeric">{ licences.trainingPils }</td>
             </tr>
           </tbody>
         </table>

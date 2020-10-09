@@ -15,8 +15,6 @@ module.exports = {
   'pil-revoke': 'PIL revocations',
   'pil-transfer': 'PIL transfers',
   'pil-review': 'PIL reviews',
-  'trainingPil-application': 'Cat E PIL applications',
-  'trainingPil-revoke': 'Cat E PIL revocations',
   'role-create': 'Named people assignments',
   'role-delete': 'Named people revocations',
   'place-update': 'Approved area amendments',
