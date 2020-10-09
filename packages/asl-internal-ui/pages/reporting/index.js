@@ -71,6 +71,11 @@ module.exports = settings => {
           stream,
           through.obj((data, enc, callback) => {
             tasks.total++;
+
+            if (data.model === 'trainingPil') {
+              data.model = 'pil'; // count training PIL tasks as PIL tasks
+            }
+
             let type = `${data.model}-${data.action}`;
             if (data.model === 'project' && data.schemaVersion === 0) {
               type = `legacy-project-${data.action}`;
