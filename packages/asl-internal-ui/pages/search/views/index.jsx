@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import sortBy from 'lodash/sortBy';
 import { connect } from 'react-redux';
 import {
   Datatable,
@@ -50,7 +51,7 @@ const formatters = {
         if (profile.asruUser) {
           return 'ASRU';
         }
-        return establishments.map(establishment => (
+        return sortBy(establishments, 'name').map(establishment => (
           <p key={establishment.id}>
             <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
           </p>
