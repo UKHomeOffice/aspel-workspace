@@ -22,6 +22,8 @@ const types = [
   'pil-revoke',
   'pil-transfer',
   'pil-review',
+  'trainingPil-application',
+  'trainingPil-revoke',
   'role-create',
   'role-delete',
   'place-update',
