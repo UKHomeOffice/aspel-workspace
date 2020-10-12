@@ -18,5 +18,6 @@ module.exports = {
   },
   errorEvent: 'asl.error',
   verboseErrors: process.env.VERBOSE_ERRORS === 'TRUE',
-  pdfService: process.env.PDF_SERVICE
+  pdfService: process.env.PDF_SERVICE,
+  bodySizeLimit: process.env.BODY_SIZE_LIMIT
 };
