@@ -61,10 +61,10 @@ export const LinkFilter = ({
   );
 };
 
-const mapStateToProps = ({ datatable: { filters: { active, options } } }, { prop, append = [] }) => {
+const mapStateToProps = ({ datatable: { filters: { active, options } } }, { prop, prepend = [], append = [] }) => {
   return {
     selected: active[prop] && active[prop][0],
-    filters: [ ...options, ...append ]
+    filters: [ ...prepend, ...options, ...append ]
   };
 };
 
