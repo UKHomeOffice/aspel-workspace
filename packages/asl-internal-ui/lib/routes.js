@@ -27,7 +27,8 @@ module.exports = {
     router: dashboard
   },
   search: {
-    path: '/search',
+    path: '/search/:searchType',
+    breadcrumb: false,
     router: search
   },
   globalProfile: {

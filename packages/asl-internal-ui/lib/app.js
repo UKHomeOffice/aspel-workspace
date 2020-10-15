@@ -44,6 +44,11 @@ module.exports = settings => {
     next();
   });
 
+  app.param('searchType', (req, res, next, param) => {
+    req.searchType = param;
+    next();
+  });
+
   app.param('establishmentId', (req, res, next, param) => {
     if (param === 'create') {
       return next();

@@ -11,6 +11,7 @@ import {
   LinkFilter
 } from '@asl/components';
 import SearchPanel from '../../components/search-panel';
+import DashboardNavigation from '../../components/dashboard-navigation';
 import { projectTitle } from '@asl/pages/pages/common/formatters';
 import projectFormatters from '@asl/pages/pages/project/formatters';
 
@@ -97,9 +98,11 @@ const formatters = {
 };
 
 const Index = ({ profile, searchType, searchTerm, hasFilters }) => {
+  const tabs = [, 'establishments', 'profiles', 'projects'];
   return (
     <Fragment>
       <Header title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>} />
+      <DashboardNavigation tab={tabs.indexOf(searchType)} />
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">

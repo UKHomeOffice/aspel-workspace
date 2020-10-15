@@ -21,61 +21,8 @@ td .govuk-button {
   margin-bottom: 0;
 }
 
-.search-panel {
-  margin-bottom: $govuk-gutter;
-  padding: $govuk-gutter;
-  padding-bottom: 0;
-  background-color: $blue;
-
-  h2 {
-    color: $white;
-  }
-
-  ul.search-type {
-    padding-inline-start: 0;
-
-    li+li {
-      border-left: 1px solid $white;
-      padding-left: $govuk-gutter-half;
-    };
-
-    li {
-      display: inline-block;
-      list-style-type: none;
-      padding-right: $govuk-gutter-half;
-
-      a:link,
-      a:visited,
-      a:active {
-        color: $white;
-      }
-
-      a.active {
-        font-weight: bold;
-        text-decoration: none;
-      }
-    }
-  }
-
-  .govuk-label {
-    color: $white;
-  }
-
-  .search-box button {
-    background-color: $black;
-  }
-
-  .view-all-link {
-    height: 40px;
-    line-height: 40px;
-    margin-left: $govuk-gutter;
-
-    a:link,
-    a:visited,
-    a:active {
-      color: $white;
-    }
-  }
+.view-all-link {
+  margin-top: 36px;
 }
 
 .box {
