@@ -13,6 +13,7 @@ const reporting = require('../pages/reporting');
 const downloads = require('../pages/downloads');
 const licenceFees = require('../pages/licence-fees');
 const nonTechnicalSummaries = require('../pages/nts');
+const asruProfilesList = require('../pages/asru-profiles-list');
 
 module.exports = {
   projectVersion: {
@@ -39,6 +40,10 @@ module.exports = {
         router: dedupe
       }
     }
+  },
+  asruProfilesList: {
+    path: '/asru/profiles',
+    router: asruProfilesList
   },
   account: {
     path: '/account',
