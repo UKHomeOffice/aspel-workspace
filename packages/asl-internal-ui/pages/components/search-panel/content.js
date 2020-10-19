@@ -1,18 +1,18 @@
 module.exports = {
   title: 'Search',
   establishments: {
-    label: 'Establishments',
-    placeholder: 'Search by name',
+    title: 'Establishments',
+    label: 'Search by name',
     viewAll: 'View all active establishments'
   },
   profiles: {
-    label: 'People',
-    placeholder: 'Search by name or licence number',
+    title: 'People',
+    label: 'Search by name or licence number',
     viewAll: 'View all people'
   },
   projects: {
-    label: 'Projects',
-    placeholder: 'Search by name or licence number',
+    title: 'Projects',
+    label: 'Search by name or licence number',
     viewAll: 'View all active projects'
   }
 };
