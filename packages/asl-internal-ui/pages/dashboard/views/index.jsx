@@ -10,7 +10,7 @@ const Index = ({ profile, searchType }) => (
     <Header title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>} />
     <DashboardNavigation tab={0} />
     <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
-    <Tasklist />
+    <Tasklist displayTabs={false} />
   </Fragment>
 );
 
