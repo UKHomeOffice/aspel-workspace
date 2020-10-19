@@ -12,6 +12,7 @@ module.exports = {
     projectAsruActions: {
       updateIssueDate: 'Change date granted',
       updateLicenceNumber: 'Change licence number'
-    }
+    },
+    asruProfilesList: 'ASRU staff directory'
   }
 };

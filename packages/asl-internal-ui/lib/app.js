@@ -62,6 +62,12 @@ module.exports = settings => {
         links: [
           { label: 'Licence fees', href: '/licence-fees' }
         ]
+      },
+      {
+        sectionName: 'ASRU',
+        links: [
+          { label: 'Staff directory', href: '/asru/profiles' }
+        ]
       }
     ];
 
