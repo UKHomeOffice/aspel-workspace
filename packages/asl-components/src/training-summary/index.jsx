@@ -19,9 +19,9 @@ function List({ items }) {
   );
 }
 
-function Row({ certificate, actions }) {
+function Row({ certificate, actions, basePage }) {
   const deleteLink = getUrl({
-    page: 'training.remove',
+    page: `${basePage}.remove`,
     certificateId: certificate.id
   });
 
@@ -53,7 +53,7 @@ function Row({ certificate, actions }) {
       {
         actions && (
           <td>
-            <Link page="training.type" certificateId={certificate.id} label="Edit" />
+            <Link page={`${basePage}.type`} certificateId={certificate.id} label="Edit" />
             <ApplyChanges
               type="form"
               method="POST"
@@ -70,7 +70,7 @@ function Row({ certificate, actions }) {
   );
 }
 
-export default function SummaryTable({ certificates, actions, emptyLabel = 'No training record' }) {
+export default function SummaryTable({ certificates, actions, emptyLabel = 'No training record', basePage = 'training' }) {
   if (!certificates || !certificates.length) {
     return <p>{emptyLabel}</p>;
   }
@@ -90,7 +90,7 @@ export default function SummaryTable({ certificates, actions, emptyLabel = 'No t
       </thead>
       <tbody>
         {
-          certificates.map(certificate => <Row key={certificate.id} certificate={certificate} actions={actions} />)
+          certificates.map(certificate => <Row key={certificate.id} certificate={certificate} actions={actions} basePage={basePage} />)
         }
       </tbody>
     </table>
