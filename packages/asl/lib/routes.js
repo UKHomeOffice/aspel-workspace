@@ -19,6 +19,11 @@ module.exports = {
     breadcrumb: false,
     router: pages.user
   },
+  ownTraining: {
+    path: '/account/training',
+    breadcrumb: false,
+    router: pages.training
+  },
   establishment: {
     path: '/establishments/:establishmentId',
     breadcrumb: false,
