@@ -67,18 +67,18 @@ const Index = () => {
     <Header title="Performance metrics"/>
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-one-half">
-        <Metric number={tasks.total} label="Total tasks completed" />
+        <Metric number={tasks.total} label="Total tasks completed" className="total-tasks" />
       </div>
       <div className="govuk-grid-column-one-half">
-        <Metric number={deadlines} label="Statutory deadlines passed" link="reporting.details.pplSla" />
+        <Metric number={deadlines} label="Statutory deadlines passed" link="reporting.details.pplSla" className="ppl-deadlines" />
       </div>
     </div>
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-one-half">
-        <Metric number={meanIterationsLegacy} label="Iterations per PPL application (Legacy)" />
+        <Metric number={meanIterationsLegacy} label="Iterations per PPL application (Legacy)" className="ppl-iterations-legacy" />
       </div>
       <div className="govuk-grid-column-one-half">
-        <Metric number={meanIterations} label="Iterations per PPL application (New)" />
+        <Metric number={meanIterations} label="Iterations per PPL application (New)" className="ppl-iterations-new" />
       </div>
     </div>
 
