@@ -36,7 +36,7 @@ export default function AutoComplete(props) {
     if (!query) {
       return syncResults([]);
     }
-    window.fetch(`${apiPath}?${query}`)
+    window.fetch(`${apiPath}?search=${query}`)
       .then(res => res.json())
       .then(results => {
         syncResults(results || []);
