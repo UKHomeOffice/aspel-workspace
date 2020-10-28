@@ -55,7 +55,7 @@ export default function Filters({ formatters }) {
   }
 
   function clearFilters() {
-    onFiltersChange(null);
+    onFiltersChange({});
     setActiveFilters({});
   }
 
