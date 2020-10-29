@@ -9,6 +9,9 @@ export default function AutoComplete(props) {
   const apiPath = props.apiPath ? getUrl({ page: props.apiPath }) : null;
 
   useEffect(() => {
+    if (!props.name) {
+      return;
+    }
     const inputElement = window.document.querySelector(`input#${props.name}`);
 
     function onBlur(event) {
@@ -24,6 +27,10 @@ export default function AutoComplete(props) {
       inputElement.removeEventListener('blur', onBlur);
     };
   });
+
+  useEffect(() => {
+    typeof props.onChange === 'function' && props.onChange(value);
+  }, [value]);
 
   function simpleSearch (query, syncResults) {
     syncResults(query
@@ -50,7 +57,9 @@ export default function AutoComplete(props) {
 
   return (
     <InputWrapper {...props}>
-      <input type="hidden" name={props.name} value={value} />
+      {
+        props.name && <input type="hidden" name={props.name} value={value} />
+      }
       <AccessibleAutocomplete
         id={props.name}
         source={props.apiPath ? apiSearch : simpleSearch}
