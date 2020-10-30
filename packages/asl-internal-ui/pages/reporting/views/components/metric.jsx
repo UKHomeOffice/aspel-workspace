@@ -11,8 +11,8 @@ export default function Metric({ number, label, link, className }) {
   }
   return (
     <div className={`metric ${className}`}>
-      <label>{ link ? <Link page={link} label={label} /> : label }</label>
       <p>{ number }</p>
+      <label>{ link ? <Link page={link} label={label} /> : label }</label>
     </div>
   );
 }

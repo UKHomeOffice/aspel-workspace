@@ -1,108 +1,144 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Snippet, Link } from '@asl/components';
-import { format, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
+import { Header, Form, Snippet } from '@asl/components';
+
 import Metric from './components/metric';
+import TaskCounts from './components/task-counts';
+import DatePicker from './components/date-picker';
+import EstablishmentSelect from './components/establishment-select';
 
 const Index = () => {
 
-  const { since, types, licences, url } = useSelector(state => state.static);
+  const {
+    licences,
+    deadlines,
+    tasks
+  } = useSelector(state => state.static);
 
-  const [startDate, setStartDate] = useState(since);
-  const [loading, setLoading] = useState({});
-  const [tasks, setTasks] = useState(types.reduce((obj, type) => ({ ...obj, [type]: '-' }), { total: '-' }));
-  const [deadlines, setDeadlines] = useState('-');
-
-  const isLoading = Object.values(loading).some(Boolean);
-
-  const setLoadingParam = (param) => setLoading(loading => ({ ...loading, ...param }));
-
-  useEffect(() => {
-    setLoadingParam({ tasks: true });
-    fetch(`${url}/tasks?since=${startDate}`)
-      .then(response => response.json())
-      .then(json => setTasks(json))
-      .then(() => setLoadingParam({ tasks: false }));
-  }, [startDate]);
-
-  useEffect(() => {
-    setLoadingParam({ ppls: true });
-    fetch(`${url}/ppl-sla?since=${startDate}`)
-      .then(response => response.json())
-      .then(json => setDeadlines(json.length))
-      .then(() => setLoadingParam({ ppls: false }));
-  }, [startDate]);
-
-  useEffect(() => {
-    window.history.replaceState(null, '', `?since=${startDate}`);
-  }, [startDate]);
-
-  const getMeanIterations = (type) => {
-    const iterations = tasks[`${type}-iterations`];
-    const count = tasks[type];
-    return isNaN(iterations / count) ? '-' : (iterations / count);
-  };
-
-  const now = new Date();
-  const dates = {
-    all: '2019-07-01',
-    week: format(startOfWeek(now), 'YYYY-MM-DD'),
-    month: format(startOfMonth(now), 'YYYY-MM-DD'),
-    year: format(startOfYear(now), 'YYYY-MM-DD')
-  };
-
-  const meanIterationsLegacy = getMeanIterations('legacy-project-application');
-  const meanIterations = getMeanIterations('project-application');
-
-  const startDateHandler = date => e => {
-    e.preventDefault();
-    if (isLoading) {
-      return;
-    }
-    setStartDate(date);
-  };
+  const {
+    start,
+    end,
+    establishment
+  } = useSelector(state => state.model);
 
   return <Fragment>
-
     <Header title="Performance metrics"/>
     <div className="govuk-grid-row">
-      <div className="govuk-grid-column-one-half">
-        <Metric number={tasks.total} label="Total tasks completed" className="total-tasks" />
-      </div>
-      <div className="govuk-grid-column-one-half">
-        <Metric number={deadlines} label="Statutory deadlines passed" link="reporting.details.pplSla" className="ppl-deadlines" />
+      <div className="govuk-grid-column-full">
+        <Form detachFields={true} className="metrics-filters">
+          <p>
+            Showing data <label htmlFor="start">from</label>:
+            <DatePicker
+              name="start"
+              title="Start date"
+              maxDate={new Date()}
+              minDate={new Date(2019, 6, 31)}
+              date={start}
+              />
+            <label htmlFor="end">to</label>
+            <DatePicker
+              name="end"
+              title="End date"
+              maxDate={new Date()}
+              minDate={new Date(2019, 6, 31)}
+              date={end}
+              />
+          </p>
+          <p>
+            <label htmlFor="establishment">
+              Filter by establishment:
+              <EstablishmentSelect
+                className="inline"
+                name="establishment"
+                value={establishment}
+                />
+            </label>
+            {
+              establishment && <a href="?establishment=all">Show all establishments</a>
+            }
+          </p>
+          <p className="control-panel">
+            <button type="submit" className="govuk-button"><Snippet>buttons.submit</Snippet></button>
+          </p>
+        </Form>
       </div>
     </div>
+    <hr />
     <div className="govuk-grid-row">
-      <div className="govuk-grid-column-one-half">
-        <Metric number={meanIterationsLegacy} label="Iterations per PPL application (Legacy)" className="ppl-iterations-legacy" />
+      <div className="govuk-grid-column-one-quarter">
+        <Metric number={tasks.total} label="Total tasks completed" className="total-tasks" />
       </div>
-      <div className="govuk-grid-column-one-half">
-        <Metric number={meanIterations} label="Iterations per PPL application (New)" className="ppl-iterations-new" />
+      <div className="govuk-grid-column-one-quarter">
+        <Metric number={deadlines} label="Statutory deadlines passed" link="reporting.details.pplSla" className="ppl-deadlines" />
+      </div>
+      <div className="govuk-grid-column-one-quarter">
+        <Metric number={0} label="Iterations per PPL application (Legacy)" className="ppl-iterations-legacy" />
+      </div>
+      <div className="govuk-grid-column-one-quarter">
+        <Metric number={0} label="Iterations per PPL application (New)" className="ppl-iterations-new" />
       </div>
     </div>
 
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
-        <div className="table-wrapper">
-          <h2>Tasks completed by type:</h2>
-          <Link page="reporting.download" query={{since: startDate}} className="download" label="Download this data (.csv)" />
-          <table className="govuk-table">
-            <tbody>
-              {
-                types.map(type => {
-                  return <tr key={type}>
-                    <td><Snippet>{ type }</Snippet></td>
-                    <td className="numeric">{ tasks[type] || '0' }</td>
-                  </tr>;
-                })
-              }
-            </tbody>
-          </table>
-        </div>
+        <h2>Tasks completed by type:</h2>
+      </div>
+      <div className="govuk-grid-column-one-half">
+        <h3>All project licence tasks</h3>
+        <TaskCounts
+          types={[
+            'all-project-application',
+            'all-project-amendment',
+            'all-project-revoke',
+            'all-project-transfer'
+          ]}
+          />
+        <h3>New project licence tasks</h3>
+        <TaskCounts
+          types={[
+            'project-application',
+            'project-amendment',
+            'project-revoke',
+            'project-transfer'
+          ]}
+          />
+        <h3>Legacy project licence tasks</h3>
+        <TaskCounts
+          types={[
+            'legacy-project-application',
+            'legacy-project-amendment',
+            'legacy-project-revoke',
+            'legacy-project-transfer'
+          ]}
+          />
+      </div>
+      <div className="govuk-grid-column-one-half">
+        <h3>Personal licence tasks</h3>
+        <TaskCounts
+          types={[
+            'pil-application',
+            'pil-amendment',
+            'pil-revoke',
+            'pil-transfer',
+            'pil-review'
+          ]}
+          />
+        <h3>Establishment licence tasks</h3>
+        <TaskCounts
+          types={[
+            'establishment-grant',
+            'establishment-revoke',
+            'establishment-update',
+            'role-create',
+            'role-delete',
+            'place-update',
+            'place-create',
+            'place-delete'
+          ]}
+          />
       </div>
     </div>
-
+    <hr />
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
         <h2>Active licences by type:</h2>
@@ -128,27 +164,6 @@ const Index = () => {
         </table>
       </div>
     </div>
-
-    <div className="link-filter">
-      {
-        isLoading && <p>Loading data...</p>
-      }
-      {
-        !isLoading && <Fragment>
-          <label>Showing data for period:</label>
-          <ul>
-            {
-              Object.keys(dates).map(date => {
-                return dates[date] === startDate
-                  ? <li key={date}><strong><Snippet>{ `date.${date}` }</Snippet></strong></li>
-                  : <li key={date}><a href={isLoading ? null : `?since=${dates[date]}`} onClick={startDateHandler(dates[date])}><Snippet>{ `date.${date}` }</Snippet></a></li>;
-              })
-            }
-          </ul>
-        </Fragment>
-      }
-    </div>
-
   </Fragment>;
 };
 
