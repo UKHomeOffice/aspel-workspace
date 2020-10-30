@@ -29,7 +29,7 @@ export default function AutoComplete(props) {
   });
 
   useEffect(() => {
-    typeof props.onChange === 'function' && props.onChange(value);
+    typeof props.onChange === 'function' && props.onChange({ target: { value } });
   }, [value]);
 
   function simpleSearch (query, syncResults) {
