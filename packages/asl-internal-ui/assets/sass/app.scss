@@ -1,6 +1,28 @@
 @import "@asl/pages";
 @import "@asl/projects";
 
+html, body {
+  font-size: 100%;
+}
+
+.metrics-filters {
+  .bpk-input {
+    @extend .govuk-input;
+    max-width: 200px;
+    margin: 0 0.5em;
+  }
+  .autocomplete__wrapper {
+    width: 100%;
+    max-width: 400px;
+    display: inline-block;
+    margin: 0 0.5em;
+  }
+  .autocomplete__menu {
+    position: absolute;
+    z-index: 1;
+  }
+}
+
 @media (min-width: 1260px) {
   .govuk-width-container,
   .wrapper-header,
@@ -48,7 +70,7 @@ td .govuk-button {
     background: lighten(govuk-colour('red'), 50%);
     border-right: 3px solid govuk-colour('red');
   }
-  td.numeric {
+  th.numeric, td.numeric {
     text-align: right;
   }
 }
