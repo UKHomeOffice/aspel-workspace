@@ -103,7 +103,7 @@ module.exports = settings => {
     };
 
     const consumePPLStream = stream => {
-      let total = {};
+      let total = 0;
       return new Promise((resolve, reject) => {
         pipeline(
           stream,
