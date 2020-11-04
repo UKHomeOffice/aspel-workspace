@@ -22,7 +22,7 @@ const TaskCounts = ({ types }) => {
         })
       }
     </tbody>
-  </table>
+  </table>;
 };
 
 export default TaskCounts;

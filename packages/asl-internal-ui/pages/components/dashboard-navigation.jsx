@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Link } from '@asl/components'
+import { Tabs, Link } from '@asl/components';
 
 export default function DashboardNavigation({ tab }) {
   return (
@@ -9,5 +9,5 @@ export default function DashboardNavigation({ tab }) {
       <Link page="search" searchType="profiles" label="People" />
       <Link page="search" searchType="projects" label="Projects" />
     </Tabs>
-  )
+  );
 }

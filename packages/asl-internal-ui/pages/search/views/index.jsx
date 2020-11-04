@@ -98,6 +98,7 @@ const formatters = {
 };
 
 const Index = ({ profile, searchType, searchTerm, hasFilters }) => {
+  // eslint-disable-next-line no-sparse-arrays
   const tabs = [, 'establishments', 'profiles', 'projects'];
   return (
     <Fragment>
