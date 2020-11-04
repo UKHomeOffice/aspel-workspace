@@ -6,7 +6,7 @@ const ErrorPage = () => {
     <Header title="Invitation not found" />
     <p>An invitation matching the provided parameters could not be found. If you were expecting an invitation then you should contact your establishment administrator.</p>
     <p><a href="/" className="govuk-button">Return to homepage</a></p>
-  </Fragment>
-}
+  </Fragment>;
+};
 
 export default ErrorPage;
