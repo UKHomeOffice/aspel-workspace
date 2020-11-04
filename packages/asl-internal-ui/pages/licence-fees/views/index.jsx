@@ -23,5 +23,5 @@ export default function Container({ children, tab }) {
     <Layout tabs={tabs} tab={tab} subtitle={<Snippet>subtitle</Snippet>}>
       { children }
     </Layout>
-  )
+  );
 }

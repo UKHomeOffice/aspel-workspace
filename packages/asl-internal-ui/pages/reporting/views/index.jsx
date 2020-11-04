@@ -34,7 +34,7 @@ const Index = () => {
               maxDate={new Date()}
               minDate={new Date(2019, 6, 31)}
               date={start}
-              />
+            />
             <label htmlFor="end">to</label>
             <DatePicker
               name="end"
@@ -42,7 +42,7 @@ const Index = () => {
               maxDate={new Date()}
               minDate={new Date(2019, 6, 31)}
               date={end}
-              />
+            />
           </p>
           <p>
             <label htmlFor="establishment">
@@ -51,7 +51,7 @@ const Index = () => {
                 className="inline"
                 name="establishment"
                 value={establishment}
-                />
+              />
             </label>
             {
               establishment && <a href="?establishment=all">Show all establishments</a>
@@ -92,7 +92,7 @@ const Index = () => {
             'all-project-revoke',
             'all-project-transfer'
           ]}
-          />
+        />
         <h3>New project licence tasks</h3>
         <TaskCounts
           types={[
@@ -101,7 +101,7 @@ const Index = () => {
             'project-revoke',
             'project-transfer'
           ]}
-          />
+        />
         <h3>Legacy project licence tasks</h3>
         <TaskCounts
           types={[
@@ -110,7 +110,7 @@ const Index = () => {
             'legacy-project-revoke',
             'legacy-project-transfer'
           ]}
-          />
+        />
       </div>
       <div className="govuk-grid-column-one-half">
         <h3>Personal licence tasks</h3>
@@ -122,7 +122,7 @@ const Index = () => {
             'pil-transfer',
             'pil-review'
           ]}
-          />
+        />
         <h3>Establishment licence tasks</h3>
         <TaskCounts
           types={[
@@ -135,7 +135,7 @@ const Index = () => {
             'place-create',
             'place-delete'
           ]}
-          />
+        />
       </div>
     </div>
     <hr />

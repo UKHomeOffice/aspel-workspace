@@ -54,7 +54,7 @@ class Index extends React.Component {
         label={<Snippet>fields.search.label</Snippet>}
         hint={<Snippet>fields.search.hint</Snippet>}
         name="search"
-        />
+      />
       {
         !!alternates.length && (
           <Fragment>
@@ -69,21 +69,21 @@ class Index extends React.Component {
                 </tr>
               </thead>
               <tbody>
-              {
-                alternates.map(p => (
-                  <tr key={p.id}>
-                    <td>{ p.firstName } { p.lastName }</td>
-                    <td>{ p.email }</td>
-                    <td className={classnames({ warning: dobsDiffer(p, profile) })}>{ p.dob || '-' }</td>
-                    <td>
-                      <form action={action} method="post" onSubmit={this.onSubmit.bind(this, p)}>
-                        <input type="hidden" name="profile" value={p.id} />
-                        <button className="govuk-button float-right">Select</button>
-                      </form>
-                    </td>
-                  </tr>
-                ))
-              }
+                {
+                  alternates.map(p => (
+                    <tr key={p.id}>
+                      <td>{ p.firstName } { p.lastName }</td>
+                      <td>{ p.email }</td>
+                      <td className={classnames({ warning: dobsDiffer(p, profile) })}>{ p.dob || '-' }</td>
+                      <td>
+                        <form action={action} method="post" onSubmit={this.onSubmit.bind(this, p)}>
+                          <input type="hidden" name="profile" value={p.id} />
+                          <button className="govuk-button float-right">Select</button>
+                        </form>
+                      </td>
+                    </tr>
+                  ))
+                }
               </tbody>
             </table>
           </Fragment>

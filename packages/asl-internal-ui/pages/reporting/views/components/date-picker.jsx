@@ -12,43 +12,43 @@ const daysOfWeek = [
     name: 'Monday',
     nameAbbr: 'Mon',
     index: 0,
-    isWeekend: false,
+    isWeekend: false
   },
   {
     name: 'Tuesday',
     nameAbbr: 'Tue',
     index: 1,
-    isWeekend: false,
+    isWeekend: false
   },
   {
     name: 'Wednesday',
     nameAbbr: 'Wed',
     index: 2,
-    isWeekend: false,
+    isWeekend: false
   },
   {
     name: 'Thursday',
     nameAbbr: 'Thu',
     index: 3,
-    isWeekend: false,
+    isWeekend: false
   },
   {
     name: 'Friday',
     nameAbbr: 'Fri',
     index: 4,
-    isWeekend: false,
+    isWeekend: false
   },
   {
     name: 'Saturday',
     nameAbbr: 'Sat',
     index: 5,
-    isWeekend: true,
+    isWeekend: true
   },
   {
     name: 'Sunday',
     nameAbbr: 'Sun',
     index: 6,
-    isWeekend: true,
+    isWeekend: true
   }
 ];
 
@@ -73,4 +73,4 @@ export default (props) => {
     />
     <input type="hidden" name={props.name} value={format(date, 'YYYY-MM-DD')} />
   </Fragment>;
-}
+};
