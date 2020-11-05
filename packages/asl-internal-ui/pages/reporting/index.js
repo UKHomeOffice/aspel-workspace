@@ -82,7 +82,6 @@ module.exports = settings => {
               type = `legacy-project-${data.action}`;
             }
             tasks[type] = tasks[type] + 1 || 1;
-
             if (data.iterations) {
               tasks[`${type}-iterations`] = tasks[`${type}-iterations`] + data.iterations || data.iterations;
             }
@@ -94,7 +93,7 @@ module.exports = settings => {
             }
             // add new style and old style project counts
             ['application', 'amendment', 'revoke', 'transfer'].forEach(action => {
-              tasks[`all-project-${action}`] = 0 + tasks[`project-${action}`] + tasks[`legacyproject-${action}`];
+              tasks[`all-project-${action}`] = 0 + (tasks[`project-${action}`] || 0) + (tasks[`legacyproject-${action}`] || 0);
             });
             resolve(tasks);
           }
