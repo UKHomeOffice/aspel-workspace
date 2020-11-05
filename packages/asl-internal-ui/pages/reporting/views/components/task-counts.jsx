@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Snippet } from '@asl/components';
+import Number from './number';
 
 const TaskCounts = ({ types }) => {
   const { tasks } = useSelector(state => state.static);
@@ -17,7 +18,7 @@ const TaskCounts = ({ types }) => {
         types.map(type => {
           return <tr key={type}>
             <td><Snippet>{ type }</Snippet></td>
-            <td className="numeric">{ tasks[type] || '0' }</td>
+            <td className="numeric"><Number number={ tasks[type] || 0 } /></td>
           </tr>;
         })
       }
