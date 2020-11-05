@@ -21,6 +21,9 @@ const Index = () => {
     establishment
   } = useSelector(state => state.model);
 
+  const iterationsNew = tasks['project-application-iterations'] / (tasks['project-applications'] || 1);
+  const iterationsLegacy = tasks['legacy-project-application-iterations'] / (tasks['legacy-project-applications'] || 1);
+
   return <Fragment>
     <Header title="Performance metrics"/>
     <div className="govuk-grid-row">
@@ -72,10 +75,10 @@ const Index = () => {
         <Metric number={deadlines} label="Statutory deadlines passed" link="reporting.details.pplSla" className="ppl-deadlines" />
       </div>
       <div className="govuk-grid-column-one-quarter">
-        <Metric number={0} label="Iterations per PPL application (Legacy)" className="ppl-iterations-legacy" />
+        <Metric number={iterationsLegacy} label="Iterations per PPL application (Legacy)" className="ppl-iterations-legacy" />
       </div>
       <div className="govuk-grid-column-one-quarter">
-        <Metric number={0} label="Iterations per PPL application (New)" className="ppl-iterations-new" />
+        <Metric number={iterationsNew} label="Iterations per PPL application (New)" className="ppl-iterations-new" />
       </div>
     </div>
 
