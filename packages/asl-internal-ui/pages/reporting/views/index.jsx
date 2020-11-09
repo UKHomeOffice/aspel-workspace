@@ -21,8 +21,8 @@ const Index = () => {
     establishment
   } = useSelector(state => state.model);
 
-  const iterationsNew = tasks['project-application-iterations'] / (tasks['project-applications'] || 1);
-  const iterationsLegacy = tasks['legacy-project-application-iterations'] / (tasks['legacy-project-applications'] || 1);
+  const iterationsNew = tasks['project-application-iterations'] / (tasks['project-application'] || 1);
+  const iterationsLegacy = tasks['legacy-project-application-iterations'] / (tasks['legacy-project-application'] || 1);
 
   return <Fragment>
     <Header title="Performance metrics"/>
