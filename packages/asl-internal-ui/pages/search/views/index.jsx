@@ -76,7 +76,7 @@ const formatters = {
         return <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />;
       }
     },
-    status: projectFormatters.status,
+    status: projectFormatters().status,
     licenceHolder: {
       format: ({ id, firstName, lastName }) => {
         return <Link page="globalProfile" profileId={id} label={`${firstName} ${lastName}`} />;
