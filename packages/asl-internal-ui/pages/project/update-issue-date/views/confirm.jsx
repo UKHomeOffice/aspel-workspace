@@ -25,7 +25,7 @@ export default function ProjectLandingPage() {
 
         <dl>
           <dt><Snippet>fields.duration.label</Snippet></dt>
-          <dd>{formatters.duration.format(model.granted)}</dd>
+          <dd>{formatters().duration.format(model.granted)}</dd>
         </dl>
 
         {
