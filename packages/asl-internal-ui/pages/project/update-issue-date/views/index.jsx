@@ -25,7 +25,7 @@ export default function ProjectLandingPage() {
 
       <dl>
         <dt><Snippet>fields.duration.label</Snippet></dt>
-        <dd>{formatters.duration.format(model.granted)}</dd>
+        <dd>{formatters().duration.format(model.granted)}</dd>
 
         <dt><Snippet>fields.expiryDate.label</Snippet></dt>
         <dd>{formatDate(model.expiryDate, dateFormat)}</dd>
