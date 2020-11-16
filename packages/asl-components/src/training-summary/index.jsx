@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import sortBy from 'lodash/sortBy';
 import format from 'date-fns/format';
 import { ApplyChanges, Snippet, Link } from '../';
@@ -20,7 +21,10 @@ function List({ items }) {
 }
 
 function Row({ certificate, actions, basePage }) {
-  const deleteLink = getUrl({
+
+  const isPdf = useSelector(state => state.static.isPdf);
+
+  const deleteLink = !isPdf && getUrl({
     page: `${basePage}.remove`,
     certificateId: certificate.id
   });
@@ -51,7 +55,7 @@ function Row({ certificate, actions, basePage }) {
         }
       </td>
       {
-        actions && (
+        actions && !isPdf && (
           <td>
             <Link page={`${basePage}.type`} certificateId={certificate.id} label="Edit" />
             <ApplyChanges
