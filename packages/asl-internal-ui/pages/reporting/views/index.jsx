@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Form, Snippet } from '@asl/components';
+import { Header, Form, Snippet, Link } from '@asl/components';
 
 import Metric from './components/metric';
 import TaskCounts from './components/task-counts';
@@ -83,8 +83,11 @@ const Index = () => {
     </div>
 
     <div className="govuk-grid-row">
-      <div className="govuk-grid-column-full">
+      <div className="govuk-grid-column-two-thirds">
         <h2>Tasks completed by type:</h2>
+      </div>
+      <div className="govuk-grid-column-one-third">
+        <Link page="reporting.download" query={{ start, end, establishment }} label="Download CSV" className="govuk-button float-right" />
       </div>
       <div className="govuk-grid-column-one-half">
         <h3>All project licence tasks</h3>
