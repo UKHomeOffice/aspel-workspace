@@ -1,0 +1,10 @@
+# Verify your email address
+
+You need to verify your email address to use ASPeL.
+
+To verify your email address, please follow the link below:
+
+[Verify email address]({{{acceptLink}}})
+
+This link will stop working in 7 days.
+This is to keep the service secure.
