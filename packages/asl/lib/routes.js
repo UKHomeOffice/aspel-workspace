@@ -3,6 +3,7 @@ const { pages } = require('@asl/pages');
 const dashboard = require('../pages/dashboard');
 const invitation = require('../pages/invitation');
 const contactUs = require('../pages/contact');
+const confirmEmail = require('../pages/confirm-email');
 
 module.exports = {
   projectVersion: {
@@ -86,5 +87,9 @@ module.exports = {
   contactUs: {
     path: '/contact-us',
     router: contactUs
+  },
+  confirmEmail: {
+    path: '/confirm-email',
+    router: confirmEmail
   }
 };
