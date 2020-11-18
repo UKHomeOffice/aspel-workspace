@@ -1,17 +1,17 @@
 module.exports = {
-  title: 'Verify email',
+  title: 'Check your email',
   breadcrumbs: {
-    confirmEmail: 'Verify email'
+    confirmEmail: 'Confirm email'
   },
   notifications: {
     'email-sent': 'Email sent to {{email}}'
   },
   content: `
-    You need to verify your email address to use this service.
+    We need to confirm your email address to finish setting up your account.
 
-    You should have received an email to **{{email}}** with a link to confirm your account details.
+    We have sent an email to **{{email}}** with a link to confirm your address.
 
-    If you have not received an email, click the button below to resend.
+    If you can't find the email, check your junk folder or resend the email. To change your email address, email [aspelqueries@homeoffice.gov.uk](mailto:aspelqueries@homeoffice.gov.uk).
   `,
   buttons: {
     submit: 'Resend email'
