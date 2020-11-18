@@ -1,5 +1,4 @@
 const { page } = require('@asl/service/ui');
-const { BadRequestError } = require('@asl/service/errors');
 const jwt = require('jsonwebtoken');
 const resend = require('../resend');
 

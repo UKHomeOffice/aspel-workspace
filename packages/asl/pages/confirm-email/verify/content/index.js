@@ -18,4 +18,4 @@ module.exports = {
     submit: 'Resend email',
     continue: 'Continue'
   }
-}
+};

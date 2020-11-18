@@ -16,4 +16,4 @@ module.exports = {
   buttons: {
     submit: 'Resend email'
   }
-}
+};
