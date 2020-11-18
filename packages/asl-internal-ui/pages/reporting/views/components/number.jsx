@@ -5,7 +5,7 @@ const format = number => {
     return '-';
   }
   if (number !== Math.floor(number) && number < 1000) {
-    number = number.toFixed(2);
+    return number.toFixed(2);
   }
   return Math.floor(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
