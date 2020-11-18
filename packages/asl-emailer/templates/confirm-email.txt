@@ -1,10 +1,7 @@
 # Verify your email address
 
-You need to verify your email address to use ASPeL.
+Confirm your email address to finish setting up your ASPEL account.
 
-To verify your email address, please follow the link below:
+[Confirm email address]({{{acceptLink}}})
 
-[Verify email address]({{{acceptLink}}})
-
-This link will stop working in 7 days.
-This is to keep the service secure.
+For security this link will stop working after 7 days.
