@@ -1,4 +1,4 @@
-.download-header {
+.document-header {
   background-color: white;
   border-bottom: 4px solid $blue;
   margin-bottom: $govuk-gutter;
@@ -60,15 +60,8 @@
     }
   }
 
-  .download-options {
+  .back-link {
     border-left: 1px solid $mid-grey;
     padding: $govuk-gutter-half 0 0 $govuk-gutter-half;
-
-    .toggle-download-options {
-      &:before {
-        @include icon;
-        background-image: $download-icon;
-      }
-    }
   }
 }
