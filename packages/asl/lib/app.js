@@ -33,6 +33,13 @@ module.exports = settings => {
     next();
   });
 
+  app.use((req, res, next) => {
+    if (!get(req, 'user.profile.emailConfirmed') && !req.path.includes(req.buildRoute('confirmEmail'))) {
+      return res.redirect(req.buildRoute('confirmEmail'));
+    }
+    next();
+  });
+
   app.use(content);
 
   app.param('profileId', (req, res, next, param) => {
