@@ -1,3 +1,14 @@
+.sticky-wrapper {
+  position: relative;
+  height: 4 * $govuk-gutter;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 100; /* this is optional and should be different for every project */
+}
+
 .document-header {
   background-color: white;
   border-bottom: 4px solid $blue;
@@ -63,5 +74,20 @@
   .back-link {
     border-left: 1px solid $mid-grey;
     padding: $govuk-gutter-half 0 0 $govuk-gutter-half;
+  }
+
+  .back-to-top {
+    // remove standard back-to-top styling
+    border: none;
+    position: static;
+    padding: 0;
+
+    p {
+      margin: 0;
+
+      &:before {
+        content: none;
+      }
+    }
   }
 }
