@@ -18,6 +18,11 @@ module.exports = settings => {
   app.get('/', (req, res, next) => {
     jwt.verify(req.params.token, settings.jwt, (err, token) => {
       if (err || token.id !== req.user.profile.id || token.action !== 'confirm-email') {
+        req.log('error', {
+          message: err ? err.message : 'Invalid token',
+          token,
+          profileId: req.user.profile.id
+        });
         res.locals.static.verificationError = true;
         return next();
       }
