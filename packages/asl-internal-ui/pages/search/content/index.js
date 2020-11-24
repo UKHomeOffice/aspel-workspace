@@ -3,6 +3,7 @@ const establishments = require('./establishments');
 const profiles = require('./profiles');
 const baseProjects = require('@asl/pages/pages/project/content');
 const projects = require('./projects');
+const projectsContent = require('./projects-content');
 
 const models = {
   establishments,
@@ -10,7 +11,8 @@ const models = {
   projects: {
     ...baseProjects,
     ...projects
-  }
+  },
+  'projects-content': projectsContent
 };
 
 module.exports = (searchType) => ({

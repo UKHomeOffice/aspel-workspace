@@ -5,7 +5,7 @@ const schemas = require('./schema');
 const NotFoundError = require('../../lib/errors/not-found');
 const content = require('./content');
 
-const searchableModels = ['establishments', 'profiles', 'projects'];
+const searchableModels = ['establishments', 'profiles', 'projects', 'projects-content'];
 
 module.exports = settings => {
   const app = page({
@@ -34,9 +34,6 @@ module.exports = settings => {
       req.datatable.searchType = searchType;
       req.datatable.schema = schemas[searchType];
       req.datatable.apiPath = `/search/${searchType}`;
-      if (req.session.experimentalSearch) {
-        req.datatable.apiPath = [`/search/${searchType}`, { headers: { 'x-experimental-search': true } }];
-      }
       next();
     }
   })());
