@@ -1,12 +1,13 @@
 .sticky-wrapper {
-  position: relative;
-  height: 4 * $govuk-gutter;
-}
+  position: relative; // needed to allow z-index to work
+  height: 4 * $govuk-gutter; // height required otherwise get flicker on slow-scroll
+  z-index: 1000;
 
-.sticky {
-  position: sticky;
-  top: 0;
-  z-index: 100; /* this is optional and should be different for every project */
+  &.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+  }
 }
 
 .document-header {
