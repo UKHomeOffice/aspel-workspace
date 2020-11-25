@@ -57,7 +57,7 @@ function Row({ certificate, actions, basePage }) {
       {
         actions && !isPdf && (
           <td>
-            <Link page={`${basePage}.type`} certificateId={certificate.id} label="Edit" />
+            <Link page={`${basePage}.${certificate.isExemption ? 'modules' : 'certificate'}`} certificateId={certificate.id} label="Edit" />
             <ApplyChanges
               type="form"
               method="POST"
