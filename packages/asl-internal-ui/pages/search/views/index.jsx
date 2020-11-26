@@ -8,12 +8,11 @@ import {
   Header,
   Link,
   Snippet,
-  LinkFilter,
-  Markdown,
-  Inset
+  LinkFilter
 } from '@asl/components';
 import SearchPanel from '../../components/search-panel';
 import DashboardNavigation from '../../components/dashboard-navigation';
+import ProjectSearchResult from './components/project-search-result';
 import { projectTitle } from '@asl/pages/pages/common/formatters';
 import projectFormatters from '@asl/pages/pages/project/formatters';
 
@@ -99,34 +98,7 @@ const formatters = {
   },
   'projects-content': {
     title: {
-      format: (title, project) => {
-        return (
-          <Fragment>
-            <h3><Link
-              page="projectVersion"
-              establishmentId={project.establishment.id}
-              projectId={project.id}
-              versionId={project.versionId}
-              label={projectTitle(project)}
-              /></h3>
-            {
-              Object.keys(project.highlight || {}).map(key => {
-                const highlight = project.highlight[key];
-                const section = key.split('.')[1];
-                let protocol = {};
-                if (section === 'protocols') {
-                  const protocolId = key.split('.')[2];
-                  protocol = project.protocols.find(p => p.id === protocolId);
-                }
-                return <Fragment>
-                  <h4><Snippet protocol={protocol.title}>{`sections.${section}`}</Snippet></h4>
-                  <Inset className="search-highlight">{ highlight.map(line => <Markdown>{ `...${line.trim()}...` }</Markdown>) }</Inset>
-                </Fragment>;
-              })
-            }
-          </Fragment>
-        );
-      }
+      format: (title, project) => <ProjectSearchResult project={project} />
     }
   }
 };
