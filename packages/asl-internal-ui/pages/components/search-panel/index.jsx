@@ -29,14 +29,15 @@ export default function SearchPanel(props) {
             query={{ sort: null, page: 1 }}
           />
         </div>
-
-        <div className="govuk-grid-column-one-third">
-          <div className="view-all-link">
-            <a href={`/search/${searchType}?${searchableModels.find(m => m.name === searchType).query}`}>
-              <Snippet>{`searchPanel.${searchType}.viewAll`}</Snippet>
-            </a>
+        {
+          (searchType !== 'projects-content') && <div className="govuk-grid-column-one-third">
+            <div className="view-all-link">
+              <a href={`/search/${searchType}?${searchableModels.find(m => m.name === searchType).query}`}>
+                <Snippet>{`searchPanel.${searchType}.viewAll`}</Snippet>
+              </a>
+            </div>
           </div>
-        </div>
+        }
       </div>
     </Fragment>
   );

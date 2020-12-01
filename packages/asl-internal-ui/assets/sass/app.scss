@@ -73,6 +73,13 @@ td .govuk-button {
   th.numeric, td.numeric {
     text-align: right;
   }
+
+  .search-highlight {
+    strong {
+      @extend .highlight;
+      font-weight: normal;
+    }
+  }
 }
 
 .metric {

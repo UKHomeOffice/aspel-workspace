@@ -12,6 +12,7 @@ import {
 } from '@asl/components';
 import SearchPanel from '../../components/search-panel';
 import DashboardNavigation from '../../components/dashboard-navigation';
+import ProjectSearchResult from './components/project-search-result';
 import { projectTitle } from '@asl/pages/pages/common/formatters';
 import projectFormatters from '@asl/pages/pages/project/formatters';
 
@@ -94,31 +95,43 @@ const formatters = {
         />;
       }
     }
+  },
+  'projects-content': {
+    title: {
+      format: (title, project) => <ProjectSearchResult project={project} />
+    }
   }
 };
 
 const Index = ({ profile, searchType, searchTerm, hasFilters }) => {
   // eslint-disable-next-line no-sparse-arrays
   const tabs = [, 'establishments', 'profiles', 'projects'];
+  const selectedTab = searchType === 'projects-content' ? 3 : tabs.indexOf(searchType);
+  const showResults = searchType !== 'projects-content' || (searchTerm['*'] && searchTerm['*'][0]);
+
   return (
     <Fragment>
       <Header title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>} />
-      <DashboardNavigation tab={tabs.indexOf(searchType)} />
+      <DashboardNavigation tab={selectedTab} />
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
           <SearchPanel searchType={searchType} searchTerm={searchTerm} />
           {
-            hasFilters && <LinkFilter
-              prop="status"
-              label="Filter by status:"
-              showAllLabel="Show all"
-              showAllBefore={false}
-              formatter={filter => filter === 'transferred' ? 'Transferred out' : uppercaseFirst(filter)}
-            />
+            showResults && <Fragment>
+              {
+                hasFilters && <LinkFilter
+                  prop="status"
+                  label="Filter by status:"
+                  showAllLabel="Show all"
+                  showAllBefore={false}
+                  formatter={filter => filter === 'transferred' ? 'Transferred out' : uppercaseFirst(filter)}
+                />
+              }
+              <FilterSummary />
+              <Datatable formatters={formatters[searchType]} />
+            </Fragment>
           }
-          <FilterSummary />
-          <Datatable formatters={formatters[searchType]} />
         </div>
       </div>
 

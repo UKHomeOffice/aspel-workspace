@@ -14,5 +14,9 @@ module.exports = {
     title: 'Projects',
     label: 'Search by name or licence number',
     viewAll: 'View all active projects'
+  },
+  'projects-content': {
+    title: 'Project Content',
+    label: 'Search full application text'
   }
 };
