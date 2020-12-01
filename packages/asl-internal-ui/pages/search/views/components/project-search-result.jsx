@@ -10,8 +10,8 @@ const Highlight = ({ project, highlight, field }) => {
   const section = field.split('.')[1];
   let protocol = {};
   if (section === 'protocols') {
-    const protocolId = field.split('.')[2];
-    protocol = project.protocols.find(p => p.id === protocolId);
+    const protocolIndex = field.split('.')[2];
+    protocol = project.protocols[protocolIndex] || {};
   }
   return <Fragment>
     <h4><Snippet protocol={protocol.title}>{`sections.${section}`}</Snippet></h4>
