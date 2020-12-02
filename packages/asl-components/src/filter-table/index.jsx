@@ -9,7 +9,7 @@ const FilterTable = ({
   <Fragment>
     <Filters formatters={formatters} />
     <div className="table-heading">
-      <FilterSummary />
+      <FilterSummary {...props} />
       {
         createPath && <Link label={<Snippet>addNew</Snippet>} page={createPath} />
       }
