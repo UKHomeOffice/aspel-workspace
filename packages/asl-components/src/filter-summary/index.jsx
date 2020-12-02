@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const FilterSummary = ({ total, filtered, filteredLabel, allShowingLabel, recordType = 'results' }) => {
-  filteredLabel = filteredLabel || `${filtered} results`;
-  allShowingLabel = allShowingLabel || `All ${total} ${recordType}`;
+const FilterSummary = ({ total, filtered, filteredLabel, allShowingLabel, resultType = 'results' }) => {
+  filteredLabel = filteredLabel || `${filtered} result${filtered === 1 ? '' : 's'}`;
+  allShowingLabel = allShowingLabel || `All ${total} ${resultType}`;
 
   return (
     <h2 className="filter-summary">
