@@ -128,7 +128,7 @@ const Index = ({ profile, searchType, searchTerm, hasFilters }) => {
                   formatter={filter => filter === 'transferred' ? 'Transferred out' : uppercaseFirst(filter)}
                 />
               }
-              <FilterSummary />
+              <FilterSummary resultType={searchType} />
               <Datatable formatters={formatters[searchType]} />
             </Fragment>
           }
