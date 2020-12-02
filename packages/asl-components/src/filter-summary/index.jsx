@@ -1,20 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const FilterSummary = ({
-  total,
-  filtered,
-  filteredLabel = `Showing ${filtered} of ${total} results`,
-  allShowingLabel = `All ${total} results`
-}) => (
-  <h2 className="filter-summary">
-    {
-      filtered !== total
-        ? filteredLabel
-        : allShowingLabel
-    }
-  </h2>
-);
+const FilterSummary = ({ total, filtered, filteredLabel, allShowingLabel, recordType = 'results' }) => {
+  filteredLabel = filteredLabel || `${filtered} results`;
+  allShowingLabel = allShowingLabel || `All ${total} ${recordType}`;
+
+  return (
+    <h2 className="filter-summary">
+      {
+        filtered !== total
+          ? filteredLabel
+          : allShowingLabel
+      }
+    </h2>
+  );
+};
 
 const mapStateToProps = ({
   datatable: {
