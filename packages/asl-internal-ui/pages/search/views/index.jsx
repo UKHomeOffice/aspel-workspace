@@ -108,6 +108,7 @@ const Index = ({ profile, searchType, searchTerm, hasFilters }) => {
   const tabs = [, 'establishments', 'profiles', 'projects'];
   const selectedTab = searchType === 'projects-content' ? 3 : tabs.indexOf(searchType);
   const showResults = searchType !== 'projects-content' || (searchTerm['*'] && searchTerm['*'][0]);
+  const resultType = searchType === 'profiles' ? 'people' : searchType;
 
   return (
     <Fragment>
@@ -128,7 +129,7 @@ const Index = ({ profile, searchType, searchTerm, hasFilters }) => {
                   formatter={filter => filter === 'transferred' ? 'Transferred out' : uppercaseFirst(filter)}
                 />
               }
-              <FilterSummary />
+              <FilterSummary resultType={resultType} />
               <Datatable formatters={formatters[searchType]} />
             </Fragment>
           }
