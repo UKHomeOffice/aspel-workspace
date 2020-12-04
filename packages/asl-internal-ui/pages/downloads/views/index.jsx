@@ -42,6 +42,9 @@ const Index = () => {
     <h3><Link page="downloads.report" report="ppl-sla" label="Expired statutory deadlines" /></h3>
     <p>View a list of all PPL applications which passed their statutory deadline, which you can download as a .csv file.</p>
 
+    <h3><Link page="downloads.report" report="ppl-applications" label="PPL Applications" /></h3>
+    <p>View a list of all PPL applications with a breakdown of time spent with the establishment and ASRU, which you can download as a .csv file.</p>
+
     <h2>Establishment licence downloads</h2>
 
     <h3><Link page="downloads.report" report="establishments" label="Establishment summaries" /></h3>
