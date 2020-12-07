@@ -5,11 +5,14 @@ module.exports = {
   name: {
     show: true
   },
+  licenceNumber: {
+    show: true,
+    sortable: false
+  },
   status: {
     show: true,
     filter: true
   },
-  licenceNumber: {},
   issueDate: {},
   revocationDate: {},
   inspector: {
