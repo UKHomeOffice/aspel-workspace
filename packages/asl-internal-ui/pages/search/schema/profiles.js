@@ -1,6 +1,5 @@
 module.exports = {
-  firstName: {},
-  lastName: {
+  name: {
     show: true
   },
   email: {

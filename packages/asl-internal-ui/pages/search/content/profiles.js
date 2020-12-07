@@ -1,7 +1,7 @@
 module.exports = {
   pageTitle: 'Search people',
   fields: {
-    lastName: {
+    name: {
       label: 'Name'
     },
     email: {
@@ -10,5 +10,8 @@ module.exports = {
     establishments: {
       label: 'Establishments'
     }
+  },
+  filter: {
+    label: 'Filter results:'
   }
 };

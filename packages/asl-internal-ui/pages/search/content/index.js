@@ -25,5 +25,11 @@ module.exports = (searchType) => ({
     establishment: {
       create: 'Create inactive establishment'
     }
+  },
+  results: {
+    filtered: {
+      singular: 'Showing {{count}} result for: **\'{{searchTerm}}\'**',
+      plural: 'Showing {{count}} results for: **\'{{searchTerm}}\'**'
+    }
   }
 });
