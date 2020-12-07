@@ -1,9 +1,7 @@
 import React, { Fragment } from 'react';
-import sortBy from 'lodash/sortBy';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   Datatable,
-  ExpiryDate,
   FilterSummary,
   Header,
   Link,
@@ -12,106 +10,29 @@ import {
 } from '@asl/components';
 import SearchPanel from '../../components/search-panel';
 import DashboardNavigation from '../../components/dashboard-navigation';
-import ProjectSearchResult from './components/project-search-result';
-import { projectTitle } from '@asl/pages/pages/common/formatters';
-import projectFormatters from '@asl/pages/pages/project/formatters';
+import formatters from '../formatters';
 
 function uppercaseFirst(str) {
   return `${str[0].toUpperCase()}${str.substring(1)}`;
 }
 
-const formatters = {
-  establishments: {
-    name: {
-      format: (name, establishment) => {
-        return <Link page="establishment.dashboard" establishmentId={establishment.id} label={name} />;
-      }
-    },
-    inspector: {
-      format: (inspector, establishment) => {
-        return establishment.asru.filter(p => p.asruInspector).map(profile => (
-          <p key={profile.id}>{`${profile.firstName} ${profile.lastName}`}</p>
-        ));
-      }
-    },
-    spoc: {
-      format: (spoc, establishment) => {
-        return establishment.asru.filter(p => p.asruLicensing).map(profile => (
-          <p key={profile.id}>{`${profile.firstName} ${profile.lastName}`}</p>
-        ));
-      }
-    }
-  },
-  profiles: {
-    lastName: {
-      format: (lastName, profile) => {
-        return <Link page="globalProfile" profileId={profile.id} label={`${profile.firstName} ${lastName}`} />;
-      }
-    },
-    establishments: {
-      format: (establishments, profile) => {
-        if (profile.asruUser) {
-          return 'ASRU';
-        }
-        return sortBy(establishments, 'name').map(establishment => (
-          <p key={establishment.id}>
-            <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
-          </p>
-        ));
-      }
-    }
-  },
-  projects: {
-    title: {
-      format: (title, project) => {
-        return (
-          <Fragment>
-            <Link page="project.read" establishmentId={project.establishment.id} projectId={project.id} label={projectTitle(project)} />
-            { project.isLegacyStub ? ' - Partial record' : '' }
-          </Fragment>
-        );
-      }
-    },
-    establishment: {
-      format: establishment => {
-        return <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />;
-      }
-    },
-    status: projectFormatters().status,
-    licenceHolder: {
-      format: ({ id, firstName, lastName }) => {
-        return <Link page="globalProfile" profileId={id} label={`${firstName} ${lastName}`} />;
-      }
-    },
-    expiryDate: {
-      format: (date, model) => {
-        if (!date || ['revoked', 'transferred'].includes(model.status)) {
-          return '-';
-        }
-        return <ExpiryDate
-          date={date}
-          dateFormat="D MMM YYYY"
-          showNotice={model.status === 'active' ? 11 : false}
-        />;
-      }
-    }
-  },
-  'projects-content': {
-    title: {
-      format: (title, project) => <ProjectSearchResult project={project} />
-    }
-  }
-};
+export default function Index () {
+  const { profile, searchType } = useSelector(state => state.static);
+  const { filters, pagination } = useSelector(state => state.datatable);
 
-const Index = ({ profile, searchType, searchTerm, hasFilters }) => {
+  const searchTerm = filters.active;
+  const count = pagination.count;
+  const hasFilters = !!filters.options.length;
+
   // eslint-disable-next-line no-sparse-arrays
   const tabs = [, 'establishments', 'profiles', 'projects'];
   const selectedTab = searchType === 'projects-content' ? 3 : tabs.indexOf(searchType);
   const showResults = searchType !== 'projects-content' || (searchTerm['*'] && searchTerm['*'][0]);
   const resultType = searchType === 'profiles' ? 'people' : searchType;
+  const searchString = searchTerm && searchTerm['*'] && searchTerm['*'][0];
 
   return (
-    <Fragment>
+    <div className="search">
       <Header title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>} />
       <DashboardNavigation tab={selectedTab} />
 
@@ -121,6 +42,15 @@ const Index = ({ profile, searchType, searchTerm, hasFilters }) => {
           {
             showResults && <Fragment>
               {
+                searchType === 'profiles' && <LinkFilter
+                  prop="establishments"
+                  label={<Snippet>filter.label</Snippet>}
+                  append={['unassociated']}
+                  showAllLabel="Show all"
+                  formatter={uppercaseFirst}
+                />
+              }
+              {
                 hasFilters && <LinkFilter
                   prop="status"
                   label="Filter by status:"
@@ -129,7 +59,12 @@ const Index = ({ profile, searchType, searchTerm, hasFilters }) => {
                   formatter={filter => filter === 'transferred' ? 'Transferred out' : uppercaseFirst(filter)}
                 />
               }
-              <FilterSummary resultType={resultType} />
+
+              <FilterSummary
+                resultType={resultType}
+                filteredLabel={<Snippet count={count} searchTerm={searchString}>{`results.filtered.${count === 1 ? 'singular' : 'plural'}`}</Snippet>}
+              />
+
               <Datatable formatters={formatters[searchType]} />
             </Fragment>
           }
@@ -141,13 +76,6 @@ const Index = ({ profile, searchType, searchTerm, hasFilters }) => {
           <Link page="createEstablishment" label={<Snippet>actions.establishment.create</Snippet>} className="govuk-button button-secondary" />
       }
 
-    </Fragment>
+    </div>
   );
-};
-
-const mapStateToProps = ({
-  static: { profile, searchType },
-  datatable: { filters: { options, active } }
-}) => ({ profile, searchType, hasFilters: !!options.length, searchTerm: active });
-
-export default connect(mapStateToProps)(Index);
+}
