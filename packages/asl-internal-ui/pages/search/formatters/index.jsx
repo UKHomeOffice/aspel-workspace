@@ -86,10 +86,11 @@ export default {
     },
     status: projectFormatters().status,
     licenceHolder: {
-      format: ({ id, firstName, lastName }, project) => {
-        const highlight = get(project, `highlight['licenceHolder.lastName'][0]`);
-        const label = highlight ? <Markdown>{`${firstName} ${highlight}`}</Markdown> : `${firstName} ${lastName}`;
-        return <Link page="globalProfile" profileId={id} label={label} />;
+      format: (profile, project) => {
+        const firstName = get(project, `highlight['licenceHolder.firstName'][0]`, profile.firstName);
+        const lastName = get(project, `highlight['licenceHolder.lastName'][0]`, profile.lastName);
+        const label = <Markdown>{`${firstName} ${lastName}`}</Markdown>;
+        return <Link page="globalProfile" profileId={profile.id} label={label} />;
       }
     },
     expiryDate: {
