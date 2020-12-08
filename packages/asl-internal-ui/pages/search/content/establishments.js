@@ -4,6 +4,9 @@ module.exports = {
     name: {
       label: 'Name'
     },
+    licenceNumber: {
+      label: 'PEL number'
+    },
     status: {
       label: 'Status'
     },

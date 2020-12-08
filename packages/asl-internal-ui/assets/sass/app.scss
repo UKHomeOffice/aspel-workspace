@@ -106,3 +106,26 @@ ul.nts-downloads {
   margin: 0;
   padding: 0;
 }
+
+.search {
+  .search-box {
+    margin-bottom: $govuk-gutter-half;
+
+    .govuk-label {
+      font-weight: normal;
+    }
+  }
+
+  .link-filter {
+    margin: 0;
+  }
+
+  h2.filter-summary {
+    font-weight: normal;
+    font-size: 18px;
+  }
+
+  .govuk-table td p {
+    margin: 0;
+  }
+}
