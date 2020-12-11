@@ -35,7 +35,7 @@ const ProjectSearchResult = ({ project }) => {
     <Fragment>
       <h3>
         <Link
-          page="projectVersion"
+          page="projectVersion.fullApplication"
           establishmentId={project.establishment.id}
           projectId={project.id}
           versionId={project.versionId}
