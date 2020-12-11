@@ -128,7 +128,7 @@ const Index = () => {
         <h3>Establishment licence tasks</h3>
         <TaskCounts
           types={[
-            'establishment-grant',
+            'establishment-application',
             'establishment-revoke',
             'establishment-update',
             'role-create',
