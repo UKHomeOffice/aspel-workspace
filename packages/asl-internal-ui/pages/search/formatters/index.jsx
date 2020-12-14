@@ -38,11 +38,24 @@ export default {
   },
   profiles: {
     name: {
-      format: (name, profile) => {
+      format: (value, profile) => {
+        const name = get(profile, `highlight.name[0]`); // partial match on name
         const firstName = get(profile, `highlight.firstName[0]`, profile.firstName);
         const lastName = get(profile, `highlight.lastName[0]`, profile.lastName);
-        const label = <Markdown>{`${firstName} ${lastName}`}</Markdown>;
+        const label = name ? <Markdown>{name}</Markdown> : <Markdown>{`${firstName} ${lastName}`}</Markdown>;
         return <Link page="globalProfile" profileId={profile.id} label={label} />;
+      }
+    },
+    email: {
+      format: (email, profile) => {
+        const highlight = get(profile, `highlight.email[0]`);
+        return highlight ? <Markdown>{highlight}</Markdown> : email;
+      }
+    },
+    pilLicenceNumber: {
+      format: (pilLicenceNumber, profile) => {
+        const highlight = get(profile, `highlight.pilLicenceNumber[0]`);
+        return highlight ? <Markdown>{highlight}</Markdown> : pilLicenceNumber;
       }
     },
     establishments: {
