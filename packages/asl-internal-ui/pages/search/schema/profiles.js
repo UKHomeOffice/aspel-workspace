@@ -5,6 +5,9 @@ module.exports = {
   email: {
     show: true
   },
+  pilLicenceNumber: {
+    show: true
+  },
   telephone: {},
   establishments: {
     show: true,

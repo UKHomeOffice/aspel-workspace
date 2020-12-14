@@ -7,6 +7,9 @@ module.exports = {
     email: {
       label: 'Email'
     },
+    pilLicenceNumber: {
+      label: 'PIL number'
+    },
     establishments: {
       label: 'Establishments'
     }
