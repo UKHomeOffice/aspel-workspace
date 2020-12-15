@@ -6,13 +6,13 @@ const FilterSummary = ({ total, filtered, filteredLabel, allShowingLabel, result
   allShowingLabel = allShowingLabel || `All ${total} ${resultType}`;
 
   return (
-    <h2 className="filter-summary">
+    <h3 className="filter-summary">
       {
         filtered !== total
           ? filteredLabel
           : allShowingLabel
       }
-    </h2>
+    </h3>
   );
 };
 
