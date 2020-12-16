@@ -4,7 +4,7 @@ import map from 'lodash/map';
 import uuid from 'uuid/v4';
 import { Button, Select } from '@ukhomeoffice/react-components';
 
-export default function SelectMany({ name, label, addAnotherLabel, removeLabel, value = [], options, onChange }) {
+export default function SelectMany({ name, label, addAnotherLabel, removeLabel, minRequiredFields = 1, value = [], options, onChange }) {
   const initialFields = (value || []).map(v => {
     return { id: uuid(), value: v };
   });
@@ -33,7 +33,7 @@ export default function SelectMany({ name, label, addAnotherLabel, removeLabel, 
 
   function remove(e, id) {
     e.preventDefault();
-    if (fields.length === 1) {
+    if (fields.length === minRequiredFields) {
       return;
     }
     const value = fields.filter(f => f.id !== id);
@@ -55,7 +55,7 @@ export default function SelectMany({ name, label, addAnotherLabel, removeLabel, 
               value={field.value}
             />
             {
-              (fields.length > 1) && <a href="#" onClick={e => remove(e, field.id)}>{removeLabel}</a>
+              (fields.length > minRequiredFields) && <a href="#" onClick={e => remove(e, field.id)}>{removeLabel}</a>
             }
           </div>
         ))
