@@ -92,7 +92,7 @@ module.exports = settings => {
               return reject(err);
             }
             // add new style and old style project counts
-            ['application', 'amendment', 'revoke', 'transfer'].forEach(action => {
+            ['application', 'amendment', 'revoke', 'transfer', 'change-pelh'].forEach(action => {
               tasks[`all-project-${action}`] = 0 + (tasks[`project-${action}`] || 0) + (tasks[`legacy-project-${action}`] || 0);
             });
             resolve(tasks);
