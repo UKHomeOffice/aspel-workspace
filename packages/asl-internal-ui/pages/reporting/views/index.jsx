@@ -91,7 +91,7 @@ const Index = () => {
           types={[
             'all-project-application',
             'all-project-amendment',
-            'all-project-change-pelh',
+            'all-project-change-licence-holder',
             'all-project-revoke',
             'all-project-transfer'
           ]}
@@ -101,7 +101,7 @@ const Index = () => {
           types={[
             'project-application',
             'project-amendment',
-            'project-change-pelh',
+            'project-change-licence-holder',
             'project-revoke',
             'project-transfer'
           ]}
@@ -111,7 +111,7 @@ const Index = () => {
           types={[
             'legacy-project-application',
             'legacy-project-amendment',
-            'legacy-project-change-pelh',
+            'legacy-project-change-licence-holder',
             'legacy-project-revoke',
             'legacy-project-transfer'
           ]}
