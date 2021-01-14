@@ -33,7 +33,7 @@ export default function SearchPanel(props) {
           (searchType !== 'projects-content') && <div className="govuk-grid-column-one-third">
             <div className="view-all-link">
               <a href={`/search/${searchType}?${searchableModels.find(m => m.name === searchType).query}`}>
-                <Snippet>{`searchPanel.${searchType}.viewAll`}</Snippet>
+                <Snippet>{`searchPanel.viewAll`}</Snippet>
               </a>
             </div>
           </div>
