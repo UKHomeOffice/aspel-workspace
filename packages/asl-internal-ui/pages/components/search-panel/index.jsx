@@ -1,38 +1,24 @@
 import React, { Fragment } from 'react';
-import { stringify } from 'qs';
 import { Search, Snippet } from '@asl/components';
 
 export default function SearchPanel(props) {
-  const searchableModels = props.searchableModels;
-  const searchType = props.searchType || searchableModels[0].name;
-
-  searchableModels.forEach(model => {
-    model.query = stringify({ filters: model.defaultFilters });
-    model.queryWithSearchTerm = stringify({
-      filters: Object.assign({}, {
-        ...props.searchTerm,
-        ...model.defaultFilters
-      })
-    });
-  });
-
   return (
     <Fragment>
-      <h2 id="search-title"><Snippet>{`searchPanel.${searchType}.title`}</Snippet></h2>
+      <h2 id="search-title"><Snippet>{`searchPanel.${props.searchType}.title`}</Snippet></h2>
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
           <Search
             action={props.action}
             name="filter-*"
-            label={<Snippet>{`searchPanel.${searchType}.label`}</Snippet>}
+            label={<Snippet>{`searchPanel.${props.searchType}.label`}</Snippet>}
             query={{ sort: null, page: 1 }}
           />
         </div>
         {
-          (searchType !== 'projects-content') && <div className="govuk-grid-column-one-third">
+          (props.searchType !== 'projects-content') && <div className="govuk-grid-column-one-third">
             <div className="view-all-link">
-              <a href={`/search/${searchType}?${searchableModels.find(m => m.name === searchType).query}`}>
+              <a href={`/search/${props.searchType}`}>
                 <Snippet>{`searchPanel.viewAll`}</Snippet>
               </a>
             </div>
@@ -44,19 +30,6 @@ export default function SearchPanel(props) {
 }
 
 SearchPanel.defaultProps = {
-  searchableModels: [
-    {
-      name: 'establishments',
-      defaultFilters: { status: ['active'] }
-    },
-    {
-      name: 'profiles',
-      defaultFilters: {}
-    },
-    {
-      name: 'projects',
-      defaultFilters: { status: ['active'] }
-    }
-  ],
+  searchType: 'establishments',
   action: ''
 };
