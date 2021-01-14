@@ -33,6 +33,9 @@ const Index = () => {
     <h3><Link page="downloads.report" report="ppl-list" label="Project list" /></h3>
     <p>Download a .csv file with summaries of the admin details of project licences such as expiry dates and statuses.</p>
 
+    <h3><Link page="downloads.report" report="ppl-details" label="Project details" /></h3>
+    <p>Download a .csv file containing details of project licences, including animal types, number of protocols and use of GA animals etc.</p>
+
     <h3><Link page="downloads.report" report="ppl-conditions" label="Project conditions and authorisations" /></h3>
     <p>Download a .csv file with summaries of the conditions and authorisations for each project.</p>
 
