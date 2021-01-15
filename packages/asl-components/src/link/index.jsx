@@ -20,7 +20,7 @@ function getHref(urls, parts, replacer) {
   return sections.join('');
 }
 
-export function getUrl({ page, url, query, path, ...props }) {
+export function getUrl({ page, url, query, path, suffix, ...props }) {
   const { urls, ...staticProps } = useSelector(state => state.static, shallowEqual);
   let href = `${url}/${path}`;
 
@@ -29,7 +29,9 @@ export function getUrl({ page, url, query, path, ...props }) {
     const replacer = replace({ ...staticProps, ...props });
     href = getHref(urls, parts, replacer);
   }
-
+  if (suffix) {
+    href += suffix;
+  }
   return query ? `${href}?${stringify(query)}` : href;
 }
 
