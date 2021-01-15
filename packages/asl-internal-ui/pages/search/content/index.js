@@ -22,6 +22,10 @@ module.exports = (searchType) => ({
   searchPanel: {
     title: 'Search',
     viewAll: 'Clear search',
+    projectToggle: {
+      projects: 'Search all projects for specific terms',
+      'projects-content': 'Back to project directory'
+    },
     establishments: {
       title: 'Establishments',
       label: 'Search by establishment name, PEL number, inspector name or SPoC name'
