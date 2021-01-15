@@ -119,4 +119,26 @@ ul.nts-downloads {
   .govuk-table td p {
     margin: 0;
   }
+  .project-search-result {
+    h2 {
+      font-weight: normal;
+    }
+    .metadata {
+      dl {
+        margin-bottom: 0;
+      }
+      dt {
+        margin-right: $govuk-gutter / 2;
+        font-weight: normal;
+      }
+      dd {
+        margin-bottom: 0;
+      }
+      dt, dd {
+        color: $govuk-secondary-text-colour;
+        display: inline-block;
+        font-size: 16px;
+      }
+    }
+  }
 }

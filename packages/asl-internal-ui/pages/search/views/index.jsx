@@ -8,7 +8,7 @@ import {
   Snippet,
   LinkFilter
 } from '@asl/components';
-import SearchPanel from '../../components/search-panel';
+import SearchPanel from './components/search-panel';
 import DashboardNavigation from '../../components/dashboard-navigation';
 import formatters from '../formatters';
 

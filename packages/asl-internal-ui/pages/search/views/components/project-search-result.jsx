@@ -1,9 +1,12 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
+import get from 'lodash/get';
+import { useSelector } from 'react-redux';
 import {
   Link,
   Markdown,
   Snippet,
-  Inset
+  Inset,
+  ExpiryDate
 } from '@asl/components';
 
 const Highlight = ({ project, highlight, field }) => {
@@ -13,27 +16,52 @@ const Highlight = ({ project, highlight, field }) => {
     const protocolIndex = field.split('.')[2];
     protocol = project.protocols[protocolIndex] || {};
   }
+
   return <Fragment>
-    <h4><Snippet protocol={protocol.title}>{`sections.${section}`}</Snippet></h4>
     <Inset className="search-highlight">
-      <Markdown>{ `...${highlight[0].trim()}...` }</Markdown>
+      <h4>
+        <Link
+          page="projectVersion.fullApplication"
+          establishmentId={project.establishment.id}
+          projectId={project.id}
+          versionId={project.versionId}
+          suffix={`/${section}`}
+          label={<Snippet protocol={protocol.title}>{`sections.${section}`}</Snippet>}
+        />
+      </h4>
+      <Markdown>{ highlight[0].trim() }</Markdown>
     </Inset>
   </Fragment>;
 };
 
+const EndDate = ({ project }) => {
+  const fields = {
+    expired: 'expiryDate',
+    active: 'expiryDate',
+    revoked: 'revocationDate'
+  };
+
+  const field = fields[project.status];
+  if (!field) {
+    return null;
+  }
+
+  return <dl>
+    <dt><Snippet>{ `fields.${field}.label` }</Snippet>:</dt>
+    <dd>
+      <ExpiryDate date={project[field]} showNotice={false} />
+    </dd>
+  </dl>;
+};
+
 const ProjectSearchResult = ({ project }) => {
-  const [expanded, setExpanded] = useState(false);
+  const searchTerm = useSelector(state => get(state, `datatable.filters.active['*'][0]`));
   const highlights = Object.keys(project.highlight || {});
   const hasMore = highlights.length > 1;
 
-  const toggle = (e) => {
-    e.preventDefault();
-    setExpanded(!expanded);
-  };
-
   return (
-    <Fragment>
-      <h3>
+    <div className="project-search-result">
+      <h2>
         <Link
           page="projectVersion.fullApplication"
           establishmentId={project.establishment.id}
@@ -41,23 +69,53 @@ const ProjectSearchResult = ({ project }) => {
           versionId={project.versionId}
           label={project.title || 'Untitled project'}
         />
-      </h3>
+      </h2>
+      <div className="metadata">
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-one-half">
+            <dl>
+              <dt><Snippet>fields.licenceHolder.label</Snippet>:</dt>
+              <dd>{ `${project.licenceHolder.firstName} ${project.licenceHolder.lastName}` }</dd>
+            </dl>
+          </div>
+          <div className="govuk-grid-column-one-half">
+            <dl>
+              <dt><Snippet>fields.status.label</Snippet>:</dt>
+              <dd><Snippet>{`status.${project.status}`}</Snippet></dd>
+            </dl>
+          </div>
+        </div>
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-one-half">
+            <dl>
+              <dt><Snippet>fields.establishment.label</Snippet>:</dt>
+              <dd>{ project.establishment.name }</dd>
+            </dl>
+          </div>
+          <div className="govuk-grid-column-one-half">
+            <EndDate project={project} />
+          </div>
+        </div>
+      </div>
 
       {
-        highlights.map((key, i) => {
-          if (i > 0 && !expanded) {
-            return null;
-          }
-          const highlight = project.highlight[key];
-          return <Highlight project={project} highlight={highlight} field={key} key={key} />;
+        highlights.slice(0, 1).map((key, i) => {
+          return <Highlight project={project} highlight={project.highlight[key]} field={key} key={key} />;
         })
       }
       {
         hasMore && (
-          <p><a href="#" onClick={toggle}>{ expanded ? 'Show fewer matches in this project' : `Show ${highlights.length - 1} more matches in this project` }</a></p>
+          <details>
+            <summary>{`Show ${highlights.length - 1} more section${highlights.length > 2 ? 's' : ''} containing '${searchTerm}'` }</summary>
+            {
+              highlights.slice(1).map((key, i) => {
+                return <Highlight project={project} highlight={project.highlight[key]} field={key} key={key} />;
+              })
+            }
+          </details>
         )
       }
-    </Fragment>
+    </div>
   );
 };
 
