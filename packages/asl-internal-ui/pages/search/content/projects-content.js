@@ -3,7 +3,28 @@ module.exports = {
   fields: {
     title: {
       label: ''
+    },
+    licenceHolder: {
+      label: 'Licence holder'
+    },
+    establishment: {
+      label: 'Establishment'
+    },
+    status: {
+      label: 'Status'
+    },
+    expiryDate: {
+      label: 'Expiry date'
+    },
+    revocationDate: {
+      label: 'Revocation date'
     }
+  },
+  status: {
+    inactive: 'Draft',
+    active: 'Active',
+    expired: 'Expired',
+    revoked: 'Revoked'
   },
   sections: {
     introduction: 'Introductory details',

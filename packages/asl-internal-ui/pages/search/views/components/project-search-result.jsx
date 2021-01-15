@@ -5,7 +5,8 @@ import {
   Link,
   Markdown,
   Snippet,
-  Inset
+  Inset,
+  ExpiryDate
 } from '@asl/components';
 
 const Highlight = ({ project, highlight, field }) => {
@@ -15,12 +16,42 @@ const Highlight = ({ project, highlight, field }) => {
     const protocolIndex = field.split('.')[2];
     protocol = project.protocols[protocolIndex] || {};
   }
+
   return <Fragment>
-    <h4><Snippet protocol={protocol.title}>{`sections.${section}`}</Snippet></h4>
     <Inset className="search-highlight">
-      <Markdown>{ `...${highlight[0].trim()}...` }</Markdown>
+      <h4>
+        <Link
+          page="projectVersion.fullApplication"
+          establishmentId={project.establishment.id}
+          projectId={project.id}
+          versionId={project.versionId}
+          suffix={`/${section}`}
+          label={<Snippet protocol={protocol.title}>{`sections.${section}`}</Snippet>}
+        />
+      </h4>
+      <Markdown>{ highlight[0].trim() }</Markdown>
     </Inset>
   </Fragment>;
+};
+
+const EndDate = ({ project }) => {
+  const fields = {
+    expired: 'expiryDate',
+    active: 'expiryDate',
+    revoked: 'revocationDate'
+  };
+
+  const field = fields[project.status];
+  if (!field) {
+    return null;
+  }
+
+  return <dl>
+    <dt><Snippet>{ `fields.${field}.label` }</Snippet>:</dt>
+    <dd>
+      <ExpiryDate date={project[field]} showNotice={false} />
+    </dd>
+  </dl>;
 };
 
 const ProjectSearchResult = ({ project }) => {
@@ -29,8 +60,8 @@ const ProjectSearchResult = ({ project }) => {
   const hasMore = highlights.length > 1;
 
   return (
-    <Fragment>
-      <h3>
+    <div className="project-search-result">
+      <h2>
         <Link
           page="projectVersion.fullApplication"
           establishmentId={project.establishment.id}
@@ -38,7 +69,34 @@ const ProjectSearchResult = ({ project }) => {
           versionId={project.versionId}
           label={project.title || 'Untitled project'}
         />
-      </h3>
+      </h2>
+      <div className="metadata">
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-one-half">
+            <dl>
+              <dt><Snippet>fields.licenceHolder.label</Snippet>:</dt>
+              <dd>{ `${project.licenceHolder.firstName} ${project.licenceHolder.lastName}` }</dd>
+            </dl>
+          </div>
+          <div className="govuk-grid-column-one-half">
+            <dl>
+              <dt><Snippet>fields.status.label</Snippet>:</dt>
+              <dd><Snippet>{`status.${project.status}`}</Snippet></dd>
+            </dl>
+          </div>
+        </div>
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-one-half">
+            <dl>
+              <dt><Snippet>fields.establishment.label</Snippet>:</dt>
+              <dd>{ project.establishment.name }</dd>
+            </dl>
+          </div>
+          <div className="govuk-grid-column-one-half">
+            <EndDate project={project} />
+          </div>
+        </div>
+      </div>
 
       {
         highlights.slice(0, 1).map((key, i) => {
@@ -57,7 +115,7 @@ const ProjectSearchResult = ({ project }) => {
           </details>
         )
       }
-    </Fragment>
+    </div>
   );
 };
 
