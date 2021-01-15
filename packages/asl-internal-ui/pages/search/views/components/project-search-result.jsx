@@ -1,4 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
+import get from 'lodash/get';
+import { useSelector } from 'react-redux';
 import {
   Link,
   Markdown,
@@ -22,14 +24,9 @@ const Highlight = ({ project, highlight, field }) => {
 };
 
 const ProjectSearchResult = ({ project }) => {
-  const [expanded, setExpanded] = useState(false);
+  const searchTerm = useSelector(state => get(state, `datatable.filters.active['*'][0]`));
   const highlights = Object.keys(project.highlight || {});
   const hasMore = highlights.length > 1;
-
-  const toggle = (e) => {
-    e.preventDefault();
-    setExpanded(!expanded);
-  };
 
   return (
     <Fragment>
@@ -44,17 +41,20 @@ const ProjectSearchResult = ({ project }) => {
       </h3>
 
       {
-        highlights.map((key, i) => {
-          if (i > 0 && !expanded) {
-            return null;
-          }
-          const highlight = project.highlight[key];
-          return <Highlight project={project} highlight={highlight} field={key} key={key} />;
+        highlights.slice(0, 1).map((key, i) => {
+          return <Highlight project={project} highlight={project.highlight[key]} field={key} key={key} />;
         })
       }
       {
         hasMore && (
-          <p><a href="#" onClick={toggle}>{ expanded ? 'Show fewer matches in this project' : `Show ${highlights.length - 1} more matches in this project` }</a></p>
+          <details>
+            <summary>{`Show ${highlights.length - 1} more section${highlights.length > 2 ? 's' : ''} containing '${searchTerm}'` }</summary>
+            {
+              highlights.slice(1).map((key, i) => {
+                return <Highlight project={project} highlight={project.highlight[key]} field={key} key={key} />;
+              })
+            }
+          </details>
         )
       }
     </Fragment>
