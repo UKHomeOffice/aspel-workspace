@@ -53,7 +53,7 @@ const getWarningText = review => {
 
   if (review.overdue > 0) {
     if (review.overdue === 1) {
-      warningText = `${warningText}**${review.overdue} licence that is overdue** it's PIL review`;
+      warningText = `${warningText}**${review.overdue} licence that is overdue** its PIL review`;
     } else {
       warningText = `${warningText}**${review.overdue} licences that are overdue** their PIL review`;
     }
@@ -62,7 +62,7 @@ const getWarningText = review => {
   if (review.due > 0) {
     warningText = review.overdue ? `${warningText} and ` : warningText;
     if (review.due === 1) {
-      warningText = `${warningText}${review.due} licence approaching it's deadline`;
+      warningText = `${warningText}${review.due} licence approaching its deadline`;
     } else {
       warningText = `${warningText}${review.due} licences approaching their deadline`;
     }
