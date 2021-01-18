@@ -24,7 +24,8 @@ module.exports = {
     inactive: 'Draft',
     active: 'Active',
     expired: 'Expired',
-    revoked: 'Revoked'
+    revoked: 'Revoked',
+    transferred: 'Transferred'
   },
   sections: {
     introduction: 'Introductory details',
