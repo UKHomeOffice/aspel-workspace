@@ -39,7 +39,7 @@ module.exports = (searchType) => ({
       label: 'Search by title, primary establishment, PPL number or licence holder'
     },
     'projects-content': {
-      title: 'Project Content',
+      title: 'Advanced project search',
       label: 'Search full application text'
     }
   },

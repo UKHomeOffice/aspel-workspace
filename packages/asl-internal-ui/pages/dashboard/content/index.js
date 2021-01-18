@@ -1,6 +1,5 @@
 const { merge } = require('lodash');
 const baseContent = require('@asl/pages/pages/task/list/content');
-const searchPanel = require('../../components/search-panel/content');
 
 module.exports = merge({}, baseContent, {
   pageTitle: 'Home',
@@ -10,6 +9,5 @@ module.exports = merge({}, baseContent, {
       none: 'You have no outstanding tasks',
       some: 'You have {{count}} outstanding tasks'
     }
-  },
-  searchPanel
+  }
 });
