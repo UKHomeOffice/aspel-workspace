@@ -56,8 +56,14 @@ const EndDate = ({ project }) => {
 
 const ProjectSearchResult = ({ project }) => {
   const searchTerm = useSelector(state => get(state, `datatable.filters.active['*'][0]`));
-  const highlights = Object.keys(project.highlight || {});
+
+  const highlights = Object.keys(project.highlight || {}).filter(h => h !== 'title');
   const hasMore = highlights.length > 1;
+
+  let title = project.title || 'Untitled project';
+  if (project.highlight.title && project.highlight.title[0]) {
+    title = <Markdown>{ project.highlight.title[0] }</Markdown>;
+  }
 
   return (
     <div className="project-search-result">
@@ -67,7 +73,7 @@ const ProjectSearchResult = ({ project }) => {
           establishmentId={project.establishment.id}
           projectId={project.id}
           versionId={project.versionId}
-          label={project.title || 'Untitled project'}
+          label={title}
         />
       </h2>
       <div className="metadata">
