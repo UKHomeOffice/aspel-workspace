@@ -30,6 +30,7 @@ export default function Index () {
   const showResults = searchType !== 'projects-content' || (searchTerm['*'] && searchTerm['*'][0]);
   const resultType = searchType === 'profiles' ? 'people' : searchType;
   const searchString = searchTerm && searchTerm['*'] && searchTerm['*'][0];
+  const queryWithCSV = { filters: searchTerm, csv: true };
 
   return (
     <div className="search">
@@ -59,7 +60,9 @@ export default function Index () {
                   formatter={filter => filter === 'transferred' ? 'Transferred out' : uppercaseFirst(filter)}
                 />
               }
-
+              {
+                searchType === 'projects-content' && <Link page="search" searchType={searchType} label="Download CSV" query={queryWithCSV} className="float-right" />
+              }
               <FilterSummary
                 resultType={resultType}
                 filteredLabel={<Snippet count={count} searchTerm={searchString}>{`results.filtered.${count === 1 ? 'singular' : 'plural'}`}</Snippet>}
