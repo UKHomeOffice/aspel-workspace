@@ -60,7 +60,7 @@ const ProjectSearchResult = ({ project }) => {
   const highlights = Object.keys(project.highlight || {}).filter(h => h !== 'title');
   const hasMore = highlights.length > 1;
 
-  let title = project.title || 'Untitled project'
+  let title = project.title || 'Untitled project';
   if (project.highlight.title && project.highlight.title[0]) {
     title = <Markdown>{ project.highlight.title[0] }</Markdown>;
   }
