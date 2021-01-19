@@ -61,7 +61,7 @@ const ProjectSearchResult = ({ project }) => {
   const hasMore = highlights.length > 1;
 
   let title = project.title || 'Untitled project';
-  if (project.highlight.title && project.highlight.title[0]) {
+  if (project.highlight && project.highlight.title && project.highlight.title[0]) {
     title = <Markdown>{ project.highlight.title[0] }</Markdown>;
   }
 
