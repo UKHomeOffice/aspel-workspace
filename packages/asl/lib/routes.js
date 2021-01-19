@@ -11,6 +11,11 @@ module.exports = {
     breadcrumb: false,
     router: pages.projectVersion
   },
+  retrospectiveAssessment: {
+    path: '/establishments/:establishmentId/projects/:projectId/retrospective-assessment/:raId',
+    breadcrumb: false,
+    router: pages.retrospectiveAssessment
+  },
   dashboard: {
     path: '/',
     router: dashboard
