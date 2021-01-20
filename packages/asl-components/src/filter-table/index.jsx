@@ -4,7 +4,7 @@ import { Datatable, Filters, FilterSummary, Link, Snippet } from '../';
 const FilterTable = ({
   formatters,
   createPath,
-  otherLinks,
+  downloadLink,
   ...props
 }) => (
   <Fragment>
@@ -12,12 +12,8 @@ const FilterTable = ({
     <div className="table-heading">
       <FilterSummary {...props} />
       <div className="actions">
-        {
-          otherLinks && otherLinks.map(link => link)
-        }
-        {
-          createPath && <Link label={<Snippet>addNew</Snippet>} page={createPath} />
-        }
+        { downloadLink && downloadLink }
+        { createPath && <Link label={<Snippet>addNew</Snippet>} page={createPath} /> }
       </div>
     </div>
     <Datatable formatters={formatters} {...props} />
