@@ -6,6 +6,8 @@ html, body {
 }
 
 .metrics-filters {
+  margin-bottom: $govuk-gutter;
+
   .bpk-input {
     @extend .govuk-input;
     max-width: 200px;

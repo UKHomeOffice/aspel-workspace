@@ -1,30 +1,14 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Form, Snippet, Link } from '@asl/components';
+import { Header, Form, Snippet, Link, Tabs } from '@asl/components';
 
 import Metric from './components/metric';
 import TaskCounts from './components/task-counts';
 import DatePicker from './components/date-picker';
 import EstablishmentSelect from './components/establishment-select';
 
-const Index = () => {
-
-  const {
-    licences,
-    deadlines,
-    tasks
-  } = useSelector(state => state.static);
-
-  const {
-    start,
-    end,
-    establishment
-  } = useSelector(state => state.model);
-
-  const iterationsNew = tasks['project-application-iterations'] / (tasks['project-application'] || 1);
-
-  return <Fragment>
-    <Header title="Performance metrics"/>
+function MetricsFilters({ start, end, establishment }) {
+  return (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
         <Form detachFields={true} className="metrics-filters">
@@ -65,7 +49,38 @@ const Index = () => {
         </Form>
       </div>
     </div>
-    <hr />
+  );
+}
+
+function InitiatedByFilters({ tabs, activeTab }) {
+  return (
+    <Tabs active={Object.keys(tabs).indexOf(activeTab)}>
+      {
+        Object.keys(tabs).map(tabKey => <a key={tabKey} href={`?initiatedBy=${tabKey}`}> {tabs[tabKey]}</a>)
+      }
+    </Tabs>
+  );
+}
+
+export default function Index() {
+  const { start, end, establishment } = useSelector(state => state.model);
+  const { licences, deadlines, tasks, initiatedBy } = useSelector(state => state.static);
+
+  const tabs = {
+    all: 'All tasks',
+    external: 'Establishment initiated tasks',
+    asru: 'ASRU initiated tasks'
+  };
+
+  const iterationsNew = tasks['project-application-iterations'] / (tasks['project-application'] || 1);
+
+  return <Fragment>
+    <Header title="Performance metrics"/>
+
+    <MetricsFilters start={start} end={end} establishment={establishment} />
+
+    <InitiatedByFilters tabs={tabs} activeTab={initiatedBy} />
+
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-one-third">
         <Metric number={tasks.total} label="Total tasks completed" className="total-tasks" />
@@ -170,6 +185,4 @@ const Index = () => {
       </div>
     </div>
   </Fragment>;
-};
-
-export default Index;
+}

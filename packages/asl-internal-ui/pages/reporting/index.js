@@ -23,6 +23,7 @@ module.exports = settings => {
       start: moment().startOf('month').format('YYYY-MM-DD'),
       end: moment().format('YYYY-MM-DD')
     };
+    res.locals.static.initiatedBy = req.query.initiatedBy || 'all';
     next();
   });
 
@@ -49,6 +50,7 @@ module.exports = settings => {
     getValues: (req, res, next) => {
       if (req.query.establishment === 'all') {
         req.form.values.establishment = '';
+        req.session.form.metrics.values.establishment = '';
       }
       next();
     },
@@ -62,7 +64,8 @@ module.exports = settings => {
   }));
 
   app.get('/', (req, res, next) => {
-    const query = req.form.values;
+    const query = { ...req.form.values, initiatedBy: req.query.initiatedBy };
+
     const consumeTaskStream = stream => {
       const tasks = {
         total: 0
