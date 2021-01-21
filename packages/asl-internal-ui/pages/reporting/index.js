@@ -59,7 +59,7 @@ module.exports = settings => {
       next();
     },
     saveValues: (req, res) => {
-      res.redirect(req.baseUrl);
+      res.redirect(req.originalUrl);
     }
   }));
 
