@@ -1,20 +1,16 @@
 import React, { Fragment } from 'react';
-import { Datatable, Filters, FilterSummary, Link, Snippet } from '../';
+import { Datatable, Filters, FilterSummary } from '../';
 
 const FilterTable = ({
   formatters,
-  createPath,
-  downloadLink,
+  actions,
   ...props
 }) => (
   <Fragment>
     <Filters formatters={formatters} />
     <div className="table-heading">
       <FilterSummary {...props} />
-      <div className="actions">
-        { downloadLink && downloadLink }
-        { createPath && <Link label={<Snippet>addNew</Snippet>} page={createPath} /> }
-      </div>
+      <div className="actions">{ actions }</div>
     </div>
     <Datatable formatters={formatters} {...props} />
   </Fragment>
