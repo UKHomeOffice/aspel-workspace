@@ -121,7 +121,7 @@ function Field({
 
   return <Component
     label={label || <Snippet>{`fields.${name}.label`}</Snippet>}
-    hint={<Snippet optional>{`fields.${name}.hint`}</Snippet>}
+    hint={hint || <Snippet optional>{`fields.${name}.hint`}</Snippet>}
     error={error && <Snippet>{`errors.${name}.${error}`}</Snippet>}
     value={fieldValue}
     onChange={onFieldChange}
