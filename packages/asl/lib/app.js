@@ -57,6 +57,11 @@ module.exports = settings => {
     next();
   });
 
+  app.param('raId', (req, res, next, param) => {
+    req.raId = param;
+    next();
+  });
+
   app.param('establishmentId', (req, res, next, param) => {
     req.establishmentId = parseInt(param, 10);
     next();
