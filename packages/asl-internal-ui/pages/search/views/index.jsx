@@ -16,6 +16,16 @@ function uppercaseFirst(str) {
   return `${str[0].toUpperCase()}${str.substring(1)}`;
 }
 
+function projectStatusFormatter(status) {
+  if (status === 'inactive') {
+    return 'Draft';
+  }
+  if (status === 'all-inactive') {
+    return 'Inactive';
+  }
+  return uppercaseFirst(status);
+}
+
 export default function Index () {
   const { profile, searchType } = useSelector(state => state.static);
   const { filters, pagination } = useSelector(state => state.datatable);
@@ -57,7 +67,7 @@ export default function Index () {
                   label="Filter by status:"
                   showAllLabel="Show all"
                   showAllBefore={false}
-                  formatter={filter => filter === 'transferred' ? 'Transferred out' : uppercaseFirst(filter)}
+                  formatter={projectStatusFormatter}
                 />
               }
               {
