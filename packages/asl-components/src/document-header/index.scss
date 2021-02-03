@@ -2,6 +2,7 @@
   position: relative; // needed to allow z-index to work
   height: 4 * $govuk-gutter; // height required otherwise get flicker on slow-scroll
   z-index: 100;
+  pointer-events: none;
 
   &.sticky {
     position: -webkit-sticky;
@@ -22,6 +23,8 @@
   overflow: auto;
   display: flex;
   flex-direction: row;
+  z-index: 101;
+  pointer-events: all;
 
   .page-title {
     flex: 1;
