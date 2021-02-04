@@ -1,6 +1,7 @@
 module.exports = {
   name: {
-    show: true
+    show: true,
+    sort: 'lastName'
   },
   email: {
     show: true
