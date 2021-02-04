@@ -6,11 +6,6 @@ const NotFoundError = require('../../lib/errors/not-found');
 const content = require('./content');
 
 const searchableModels = ['establishments', 'profiles', 'projects', 'projects-content'];
-const defaultSort = {
-  establishments: 'name',
-  profiles: 'name',
-  projects: 'title'
-};
 
 module.exports = settings => {
   const app = page({
@@ -39,9 +34,6 @@ module.exports = settings => {
       req.datatable.searchType = searchType;
       req.datatable.schema = schemas[searchType];
       req.datatable.apiPath = `/search/${searchType}`;
-      if (defaultSort[searchType]) {
-        req.datatable.sort = { column: defaultSort[searchType], ascending: true };
-      }
       next();
     }
   })());
