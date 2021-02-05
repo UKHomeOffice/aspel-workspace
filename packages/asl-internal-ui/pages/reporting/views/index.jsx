@@ -133,6 +133,12 @@ export default function Index() {
         />
       </div>
       <div className="govuk-grid-column-one-half">
+        <h3>Retrospective assessment tasks</h3>
+        <TaskCounts
+          types={[
+            'project-grant-ra'
+          ]}
+        />
         <h3>Personal licence tasks</h3>
         <TaskCounts
           types={[

@@ -15,6 +15,7 @@ module.exports = {
   'project-change-licence-holder': 'PPL holder change',
   'project-revoke': 'PPL revocations',
   'project-transfer': 'PPL transfers',
+  'project-grant-ra': 'Retrospective assessments completed',
   'all-project-application': 'PPL applications',
   'all-project-amendment': 'PPL amendments',
   'all-project-change-licence-holder': 'PPL holder change',
