@@ -123,14 +123,38 @@ module.exports = settings => {
       });
     };
 
+    const consumePPLExpiryStream = stream => {
+      const totals = { '0': 0, '1': 0 };
+      return new Promise((resolve, reject) => {
+        pipeline(
+          stream,
+          through.obj((data, enc, callback) => {
+            totals[data.schema_version]++;
+            callback();
+          }),
+          err => {
+            if (err) {
+              return reject(err);
+            }
+            resolve(totals);
+          }
+        );
+      });
+    };
+
     const requests = [
       req.metrics('/active-licences', { stream: false, query }),
+      req.metrics('/reports/ppl-expirations', { stream: true, query }).then(consumePPLExpiryStream),
       req.metrics('/reports/ppl-sla', { stream: true, query }).then(consumePPLStream),
       req.metrics('/reports/tasks', { stream: true, query }).then(consumeTaskStream)
     ];
 
     return Promise.all(requests)
-      .then(([ licences, deadlines, tasks ]) => {
+      .then(([ licences, expired, deadlines, tasks ]) => {
+        tasks['project-expiry'] = expired['1'];
+        tasks['legacy-project-expiry'] = expired['0'];
+        tasks['all-project-expiry'] = expired['0'] + expired['1'];
+
         res.locals.static.tasks = tasks;
         res.locals.static.licences = licences;
         res.locals.static.deadlines = deadlines;
