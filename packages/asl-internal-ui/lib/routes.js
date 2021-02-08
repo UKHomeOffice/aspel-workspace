@@ -14,6 +14,7 @@ const downloads = require('../pages/downloads');
 const licenceFees = require('../pages/licence-fees');
 const nonTechnicalSummaries = require('../pages/nts');
 const asruProfilesList = require('../pages/asru-profiles-list');
+const cjsm = require('../pages/cjsm');
 
 module.exports = {
   projectVersion: {
@@ -69,6 +70,11 @@ module.exports = {
         path: '/asru/:asruUser',
         breadcrumb: false,
         router: asruAssignment
+      },
+      cjsm: {
+        path: '/cjsm',
+        breadcrumb: false,
+        router: cjsm
       }
     }
   },
