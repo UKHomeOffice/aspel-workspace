@@ -7,15 +7,12 @@ const { countBy } = require('lodash');
 
 const content = require('./content');
 
-module.exports = settings => {
-  const router = Router();
-
-  router.get('/', (req, res, next) => {
-
-    req.metrics('/reports/tasks', { stream: true, query: req.query })
-      .then(stream => {
-        const tasksByDate = {};
-        const tasksByType = {};
+const fetchTasks = req => {
+  return req.metrics('/reports/tasks', { stream: true, query: req.query })
+    .then(stream => {
+      const tasksByDate = {};
+      const tasksByType = {};
+      return new Promise((resolve, reject) => {
         pipeline(
           stream,
           through.obj((data, enc, callback) => {
@@ -43,15 +40,52 @@ module.exports = settings => {
           }),
           err => {
             if (err) {
-              return next(err);
+              return reject(err);
             }
-            req.tasksByType = tasksByType;
-            req.tasksByDate = tasksByDate;
-            next();
+            resolve({ tasksByType, tasksByDate });
           }
         );
+      });
+    });
+};
+
+const fetchExpirations = req => {
+  return req.metrics('/reports/ppl-expirations', { stream: true, query: req.query })
+    .then(stream => {
+      return new Promise((resolve, reject) => {
+        const expirations = {};
+        pipeline(
+          stream,
+          through.obj((data, enc, callback) => {
+            const date = moment(data.expiry_date).startOf('week').format('YYYY-MM-DD');
+            expirations[date] = expirations[date] || [];
+            expirations[date].push(data);
+            callback();
+          }),
+          err => {
+            if (err) {
+              return reject(err);
+            }
+            resolve(expirations);
+          }
+        );
+      });
+    });
+};
+
+module.exports = settings => {
+  const router = Router();
+
+  router.get('/', (req, res, next) => {
+    Promise.all([ fetchTasks(req), fetchExpirations(req) ])
+      .then(([ tasks, expirations ]) => {
+        req.tasksByType = tasks.tasksByType;
+        req.tasksByDate = tasks.tasksByDate;
+        req.expirations = expirations;
+        next();
       })
       .catch(next);
+
   });
 
   router.get('/', (req, res, next) => {
@@ -61,19 +95,29 @@ module.exports = settings => {
     res.attachment('tasks.csv');
 
     const heading = types.map(type => content[type]);
-    stringifier.write([ 'Week commencing', ...heading, 'Total' ]);
+    stringifier.write([ 'Week commencing', ...heading, 'Total tasks' ]);
     let date = moment(req.query.start, 'YYYY-MM-DD').startOf('week');
     const end = moment(req.query.end, 'YYYY-MM-DD');
 
     while (date.isBefore(end)) {
       const isoDate = date.format('YYYY-MM-DD');
       const metricsByType = countBy(req.tasksByDate[isoDate], 'type');
-      const row = types.map(type => metricsByType[type] || 0);
+      const row = types.map(type => {
+        if (type === 'project-expiry') {
+          return (req.expirations[isoDate] || []).length;
+        }
+        return metricsByType[type] || 0;
+      });
       stringifier.write([ isoDate, ...row, (req.tasksByDate[isoDate] || []).length ]);
       date = date.add(1, 'week');
     }
 
-    const totals = types.map(type => (req.tasksByType[type] || []).length);
+    const totals = types.map(type => {
+      if (type === 'project-expiry') {
+        return Object.values(req.expirations).reduce((sum, arr) => sum + arr.length, 0);
+      }
+      return (req.tasksByType[type] || []).length;
+    });
     const total = totals.reduce((sum, num) => sum + num, 0);
     stringifier.write([ 'Total', ...totals, total ]);
 

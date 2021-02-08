@@ -11,6 +11,7 @@ module.exports = {
   'project-amendment': 'PPL amendments',
   'project-revoke': 'PPL revocations',
   'project-transfer': 'PPL transfers',
+  'project-expiry': 'PPL expirations',
   'project-grant-ra': 'Retrospective assessments',
   'pil-application': 'PIL applications',
   'pil-amendment': 'PIL amendments',
