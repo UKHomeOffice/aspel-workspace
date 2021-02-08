@@ -108,6 +108,7 @@ export default function Index() {
             'all-project-amendment',
             'all-project-change-licence-holder',
             'all-project-revoke',
+            'all-project-expiry',
             'all-project-transfer'
           ]}
         />
@@ -118,6 +119,7 @@ export default function Index() {
             'project-amendment',
             'project-change-licence-holder',
             'project-revoke',
+            'project-expiry',
             'project-transfer'
           ]}
         />
@@ -128,6 +130,7 @@ export default function Index() {
             'legacy-project-amendment',
             'legacy-project-change-licence-holder',
             'legacy-project-revoke',
+            'legacy-project-expiry',
             'legacy-project-transfer'
           ]}
         />
