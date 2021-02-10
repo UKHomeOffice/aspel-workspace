@@ -3,6 +3,9 @@ const { router, mountRoutes } = require('@asl/service/ui');
 const { views, content } = require('@asl/pages');
 const { get, mapValues } = require('lodash');
 
+const React = require('react');
+const PhaseBanner = require('./components/phase-banner').default;
+
 const cachebuster = require('./middleware/profile-cachebuster');
 
 const routes = require('./routes');
@@ -78,7 +81,11 @@ module.exports = settings => {
   app.use(cachebuster());
 
   app.use((req, res, next) => {
-    res.locals.phaseBannerSurvey = false;
+    // override the default phase banenr with ROPs survey content
+    res.locals.phaseBanner = {
+      phase: 'new survey',
+      content: React.createElement(PhaseBanner)
+    };
     res.locals.contactUsLink = true;
     next();
   });
