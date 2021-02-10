@@ -81,7 +81,7 @@ module.exports = settings => {
             }
 
             let type = `${data.model}-${data.action}`;
-            if (data.model === 'project' && data.schemaVersion === 0) {
+            if (data.model === 'project' && data.action !== 'grant-ra' && data.schemaVersion === 0) {
               type = `legacy-project-${data.action}`;
             }
             tasks[type] = tasks[type] + 1 || 1;
