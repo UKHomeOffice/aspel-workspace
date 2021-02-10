@@ -12,13 +12,12 @@ module.exports = form({
   getValues: (req, res, next) => {
     if (req.query.establishment === 'all') {
       req.form.values.establishment = '';
-      req.session.form.metrics.values.establishment = '';
+      req.session.form[req.model.id].values.establishment = '';
     }
     next();
   },
   process: (req, res, next) => {
     req.form.values.establishment = parseInt(req.form.values.establishment, 10);
-    console.log(req.form.values);
     next();
   },
   saveValues: (req, res) => {

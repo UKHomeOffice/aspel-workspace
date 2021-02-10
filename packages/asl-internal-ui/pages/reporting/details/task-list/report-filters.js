@@ -6,8 +6,6 @@ module.exports = query => {
     action
   ] = report.match(/((all|legacy)-)?(project|pil|establishment|role|place)-([a-z-]+)/).slice(2);
 
-  console.log({report, schemaVersion, model, action});
-
   let filters = {
     model,
     action: ['application', 'amendment'].includes(action) ? 'grant' : action,

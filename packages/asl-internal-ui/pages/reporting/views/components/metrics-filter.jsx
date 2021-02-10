@@ -1,10 +1,10 @@
 import React from 'react';
-import { Form, Snippet } from '@asl/components';
-
+import merge from 'lodash/merge';
+import { Form, Snippet, Link } from '@asl/components';
 import DatePicker from './date-picker';
 import EstablishmentSelect from './establishment-select';
 
-export default function MetricsFilter({ start, end, establishment }) {
+export default function MetricsFilter({ start, end, establishment, page, query = {} }) {
   return (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
@@ -37,7 +37,8 @@ export default function MetricsFilter({ start, end, establishment }) {
               />
             </label>
             {
-              establishment && <a href="?establishment=all">Show all establishments</a>
+              establishment &&
+                <Link page={page} query={merge({}, query, {establishment: 'all'})} label="Show all establishments" />
             }
           </p>
           <p className="control-panel">

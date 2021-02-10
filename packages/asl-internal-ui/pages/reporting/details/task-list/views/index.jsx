@@ -23,7 +23,7 @@ export default function Index() {
 
       <Link page="reporting" label={<Snippet>backToMetrics</Snippet>} />
 
-      <MetricsFilter start={start} end={end} establishment={establishment} />
+      <MetricsFilter page="reporting.details.filteredTasks" start={start} end={end} establishment={establishment} query={{report}} />
       <InitiatedByFilter page="reporting.details.filteredTasks" tabs={tabs} activeTab={initiatedBy} query={{report}} />
 
       <div className="govuk-grid-row">

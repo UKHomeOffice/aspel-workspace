@@ -21,7 +21,7 @@ export default function Index() {
 
   return <Fragment>
     <Header title="Performance metrics"/>
-    <MetricsFilter start={start} end={end} establishment={establishment} />
+    <MetricsFilter page="reporting" start={start} end={end} establishment={establishment} />
     <InitiatedByFilter page="reporting" tabs={tabs} activeTab={initiatedBy} />
 
     <div className="govuk-grid-row">
