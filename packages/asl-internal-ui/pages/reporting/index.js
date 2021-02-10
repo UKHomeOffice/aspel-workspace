@@ -1,11 +1,11 @@
 const { page } = require('@asl/service/ui');
-const form = require('@asl/pages/pages/common/routers/form');
 const moment = require('moment');
 
 const { pipeline } = require('stream');
 const through = require('through2');
 
 const metrics = require('../../lib/middleware/metrics');
+const metricsFilterForm = require('./metrics-filter-form');
 
 const routes = require('./routes');
 
@@ -19,7 +19,7 @@ module.exports = settings => {
 
   app.use((req, res, next) => {
     req.model = {
-      id: 'metrics',
+      id: 'metrics-filter',
       start: moment().startOf('month').format('YYYY-MM-DD'),
       end: moment().format('YYYY-MM-DD')
     };
@@ -27,7 +27,7 @@ module.exports = settings => {
     next();
   });
 
-  app.get('/', (req, res, next) => {
+  app.use((req, res, next) => {
     req.api('/search/establishments', { query: { limit: 1000 } })
       .then(response => {
         res.locals.static.establishments = response.json.data.map(e => {
@@ -38,30 +38,7 @@ module.exports = settings => {
       .catch(next);
   });
 
-  app.use(form({
-    configure: (req, res, next) => {
-      req.form.schema = {
-        start: {},
-        end: {},
-        establishment: {}
-      };
-      next();
-    },
-    getValues: (req, res, next) => {
-      if (req.query.establishment === 'all') {
-        req.form.values.establishment = '';
-        req.session.form.metrics.values.establishment = '';
-      }
-      next();
-    },
-    process: (req, res, next) => {
-      req.form.values.establishment = parseInt(req.form.values.establishment, 10);
-      next();
-    },
-    saveValues: (req, res) => {
-      res.redirect(req.originalUrl);
-    }
-  }));
+  app.use('/', metricsFilterForm);
 
   app.get('/', (req, res, next) => {
     const query = { ...req.form.values, initiatedBy: req.query.initiatedBy };
