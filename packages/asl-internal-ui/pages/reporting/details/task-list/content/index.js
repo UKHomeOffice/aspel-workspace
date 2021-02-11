@@ -33,7 +33,7 @@ module.exports = merge({}, tasklistContent, {
     'pil-transfer': 'PIL transfers granted',
     'pil-review': 'PIL reviews granted',
 
-    'establishment-grant': 'Establishment applications granted',
+    'establishment-application': 'Establishment applications granted',
     'establishment-update': 'Establishment amendments granted',
     'establishment-revoke': 'Establishment revocations granted',
 
