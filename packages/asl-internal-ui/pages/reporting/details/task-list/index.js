@@ -1,4 +1,4 @@
-const { pick } = require('lodash');
+const { pick, set } = require('lodash');
 const { page } = require('@asl/service/ui');
 const { datatable } = require('@asl/pages/pages/common/routers');
 const schema = require('./schema');
@@ -30,9 +30,7 @@ module.exports = settings => {
       next();
     },
     getValues: (req, res, next) => {
-      res.locals.static.metrics = {
-        total: req.datatable.data.rows.length
-      };
+      set(res.locals.static, 'metrics.total', req.datatable.pagination.totalCount);
       next();
     }
   })({ schema, defaultRowCount: 10 }));
