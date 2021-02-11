@@ -22,7 +22,7 @@ module.exports = settings => {
     getApiPath: (req, res, next) => {
       const query = {
         filters: {
-          ...reportFilters(req.query),
+          ...reportFilters(req),
           ...pick(req.form.values, 'start', 'end', 'establishment')
         }
       };
