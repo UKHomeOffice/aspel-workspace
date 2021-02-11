@@ -3,16 +3,13 @@ import { useSelector } from 'react-redux';
 import { Snippet, Link } from '@asl/components';
 import Number from './number';
 
-// whitelist for now, switch to nopes once most of them are tested
-const linkToTasks = [
-  'project-application',
-  'all-project-application',
-  'legacy-project-application',
-  'project-amendment',
-  'all-project-amendment',
-  'legacy-project-amendment',
-  'pil-application',
-  'pil-amendment'
+const dontLink = [
+  'project-change-licence-holder',
+  'project-expiry',
+  'all-project-change-licence-holder',
+  'all-project-expiry',
+  'legacy-project-change-licence-holder',
+  'legacy-project-expiry'
 ];
 
 const TaskCounts = ({ types }) => {
@@ -31,9 +28,9 @@ const TaskCounts = ({ types }) => {
           return <tr key={type}>
             <td>
               {
-                linkToTasks.includes(type)
-                  ? <Link page="reporting.details.filteredTasks" query={{ report: type }} label={<Snippet>{ type }</Snippet>} />
-                  : <Snippet>{ type }</Snippet>
+                dontLink.includes(type)
+                  ? <Snippet>{ type }</Snippet>
+                  : <Link page="reporting.details.filteredTasks" query={{ report: type }} label={<Snippet>{ type }</Snippet>} />
               }
             </td>
             <td className="numeric"><Number number={ tasks[type] || 0 } /></td>
