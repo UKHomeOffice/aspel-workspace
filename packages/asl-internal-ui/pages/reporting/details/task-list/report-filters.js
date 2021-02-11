@@ -1,4 +1,4 @@
-module.exports = query => {
+module.exports = ({ query, log }) => {
   const { report, initiatedBy } = query;
   const [
     schemaVersion,
@@ -6,11 +6,25 @@ module.exports = query => {
     action
   ] = report.match(/((all|legacy)-)?(project|pil|establishment|role|place)-([a-z-]+)/).slice(2);
 
-  let filters = {
+  log('debug', { matches: {
+    schemaVersion,
     model,
-    action: ['application', 'amendment'].includes(action) ? 'grant' : action,
-    isAmendment: action === 'amendment'
-  };
+    action
+  } });
+
+  let filters = { model };
+
+  switch (action) {
+    case 'application':
+    case 'amendment':
+      filters.action = 'grant';
+      filters.isAmendment = action === 'amendment';
+      break;
+
+    default:
+      filters.action = action;
+      break;
+  }
 
   if (model === 'project') {
     if (schemaVersion === 'all') {

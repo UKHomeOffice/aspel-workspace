@@ -1,4 +1,7 @@
 module.exports = {
+  log: {
+    level: process.env.LOG_LEVEL || 'info'
+  },
   port: process.env.PORT || 8080,
   api: process.env.API_URL,
   metrics: process.env.METRICS_URL,
