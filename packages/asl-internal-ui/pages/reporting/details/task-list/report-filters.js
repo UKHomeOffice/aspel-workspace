@@ -12,18 +12,11 @@ module.exports = ({ query, log }) => {
     action
   } });
 
-  let filters = { model };
+  let filters = { model, action };
 
-  switch (action) {
-    case 'application':
-    case 'amendment':
-      filters.action = 'grant';
-      filters.isAmendment = action === 'amendment';
-      break;
-
-    default:
-      filters.action = action;
-      break;
+  if (['application', 'amendment'].includes(action)) {
+    filters.action = 'grant';
+    filters.isAmendment = action === 'amendment';
   }
 
   if (model === 'project') {
