@@ -25,6 +25,10 @@ module.exports = merge({}, tasklistContent, {
     'all-project-transfer': 'Project transfers granted',
     'legacy-project-transfer': 'Legacy project transfers granted',
 
+    'project-change-licence-holder': 'New project licence holder changes granted',
+    'all-project-change-licence-holder': 'All project licence holder changes granted',
+    'legacy-project-change-licence-holder': 'Legacy project licence holder changes granted',
+
     'project-grant-ra': 'Retrospective assessments completed',
 
     'pil-application': 'PIL applications granted',

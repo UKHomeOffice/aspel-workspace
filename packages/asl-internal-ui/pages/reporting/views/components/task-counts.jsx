@@ -3,15 +3,6 @@ import { useSelector } from 'react-redux';
 import { Snippet, Link } from '@asl/components';
 import Number from './number';
 
-const dontLink = [
-  'project-change-licence-holder',
-  'project-expiry',
-  'all-project-change-licence-holder',
-  'all-project-expiry',
-  'legacy-project-change-licence-holder',
-  'legacy-project-expiry'
-];
-
 const TaskCounts = ({ types }) => {
   const { tasks } = useSelector(state => state.static);
 
@@ -28,7 +19,7 @@ const TaskCounts = ({ types }) => {
           return <tr key={type}>
             <td>
               {
-                dontLink.includes(type)
+                type.includes('expiry')
                   ? <Snippet>{ type }</Snippet>
                   : <Link page="reporting.details.filteredTasks" query={{ report: type }} label={<Snippet>{ type }</Snippet>} />
               }
