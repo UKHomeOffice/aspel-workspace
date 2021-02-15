@@ -19,7 +19,7 @@ module.exports = ({ query, log }) => {
     filters.isAmendment = action === 'amendment';
   }
 
-  if (model === 'project') {
+  if (model === 'project' && action !== 'grant-ra') {
     if (schemaVersion === 'all') {
       // don't add a schemaVersion
     } else if (schemaVersion === 'legacy') {
