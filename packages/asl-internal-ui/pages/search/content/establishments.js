@@ -16,5 +16,11 @@ module.exports = {
     spoc: {
       label: 'SPoC'
     }
+  },
+  status: {
+    active: 'Active',
+    inactive: 'Draft',
+    expired: 'Expired',
+    revoked: 'Revoked'
   }
 };
