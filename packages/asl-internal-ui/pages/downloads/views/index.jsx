@@ -14,6 +14,9 @@ const Index = () => {
     <h3><Link page="downloads.report" report="named-people" label="Named people and admins" /></h3>
     <p>View a list of contact details for all named people, admins, and HOLCs, which you can download as a .csv file.</p>
 
+    <h3><Link page="downloads.report" report="newsletter-subscriptions" label="Operational newsletter subscriptions" /></h3>
+    <p>Download a .csv file containing a list of users who are subscribed to the operational newsletter.</p>
+
     <h2>Personal licence downloads</h2>
 
     <h3><Link page="downloads.report" report="training-pils" label="Category E" /></h3>
