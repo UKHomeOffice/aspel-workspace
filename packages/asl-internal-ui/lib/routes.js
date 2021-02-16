@@ -12,7 +12,6 @@ const search = require('../pages/search');
 const reporting = require('../pages/reporting');
 const downloads = require('../pages/downloads');
 const licenceFees = require('../pages/licence-fees');
-const nonTechnicalSummaries = require('../pages/nts');
 const asruProfilesList = require('../pages/asru-profiles-list');
 const cjsm = require('../pages/cjsm');
 
@@ -146,9 +145,5 @@ module.exports = {
     path: '/licence-fees',
     router: licenceFees,
     permissions: 'licenceFees'
-  },
-  nts: {
-    path: '/non-technical-summaries',
-    router: nonTechnicalSummaries
   }
 };
