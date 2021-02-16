@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
+import classnames from 'classnames';
 import sortBy from 'lodash/sortBy';
 import get from 'lodash/get';
-import { ExpiryDate, Link, Markdown } from '@asl/components';
+import { ExpiryDate, Link, Markdown, Snippet } from '@asl/components';
 import ProjectSearchResult from '../views/components/project-search-result';
 import { projectTitle } from '@asl/pages/pages/common/formatters';
 import projectFormatters from '@asl/pages/pages/project/formatters';
@@ -19,6 +20,13 @@ export default {
       format: (licenceNumber, establishment) => {
         const highlight = get(establishment, `highlight.licenceNumber[0]`);
         return highlight ? <Markdown>{highlight}</Markdown> : licenceNumber;
+      }
+    },
+    status: {
+      format: (status, model) => {
+        const bad = ['expired', 'transferred', 'revoked'];
+        const className = classnames({ badge: true, complete: status === 'active', rejected: bad.includes(status) });
+        return <span className={ className }><Snippet>{ `status.${status}` }</Snippet></span>;
       }
     },
     inspector: {
