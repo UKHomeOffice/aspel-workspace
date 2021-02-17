@@ -2,7 +2,10 @@ module.exports = {
   cjsmEmail: {
     inputType: 'inputText',
     validate: [
-      'required'
+      'required',
+      {
+        match: /^\S+@\S+$/
+      }
     ]
   }
 };
