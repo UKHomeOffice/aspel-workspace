@@ -7,7 +7,8 @@ module.exports = {
   },
   errors: {
     cjsmEmail: {
-      required: 'Enter the CJSM email address'
+      required: 'Enter the CJSM email address',
+      match: 'Enter a valid email address'
     }
   },
   notifications: {
