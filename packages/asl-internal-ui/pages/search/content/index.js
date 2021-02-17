@@ -50,8 +50,8 @@ module.exports = (searchType) => ({
   },
   results: {
     filtered: {
-      singular: 'Showing {{count}} result for: **\'{{searchTerm}}\'**',
-      plural: 'Showing {{count}} results for: **\'{{searchTerm}}\'**'
+      singular: 'Showing {{count}} result{{#searchTerm}} for: **\'{{searchTerm}}\'**{{/searchTerm}}',
+      plural: 'Showing {{count}} results{{#searchTerm}} for: **\'{{searchTerm}}\'**{{/searchTerm}}'
     }
   }
 });
