@@ -6,5 +6,9 @@ module.exports = {
   2020: {
     pel: 915,
     pil: 299
+  },
+  2021: {
+    pel: 915,
+    pil: 299
   }
 };
