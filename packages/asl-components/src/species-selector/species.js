@@ -1,5 +1,5 @@
 module.exports = {
-  sa: {
+  SA: {
     label: 'Small animals',
     types: [
       'Mice',
@@ -12,7 +12,7 @@ module.exports = {
       'Rats'
     ]
   },
-  la: {
+  LA: {
     label: 'Large animals',
     types: [
       'Cattle',
@@ -21,7 +21,7 @@ module.exports = {
       'Sheep'
     ]
   },
-  aq: {
+  AQ: {
     label: 'Fish, reptiles and aquatic species',
     types: [
       'Xenopus',
@@ -32,14 +32,14 @@ module.exports = {
       'All fish'
     ]
   },
-  av: {
+  AV: {
     label: 'Birds',
     types: [
       'Domestic fowl',
       'Quails'
     ]
   },
-  dom: {
+  DOM: {
     label: 'Cats, dogs and equidae',
     types: [
       'Beagles',
@@ -47,7 +47,7 @@ module.exports = {
       'Horses, donkeys and cross-breeds'
     ]
   },
-  nhp: {
+  NHP: {
     label: 'Non-human primates',
     types: [
       'Apes',

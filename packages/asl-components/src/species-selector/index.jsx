@@ -1,71 +1,156 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import uniq from 'lodash/uniq';
 import map from 'lodash/map';
 import partition from 'lodash/partition';
 import values from 'lodash/values';
 import flatten from 'lodash/flatten';
+import omit from 'lodash/omit';
 import intersection from 'lodash/intersection';
-import { InputWrapper, CheckboxGroup } from '@ukhomeoffice/react-components';
-import { MultiInput } from '../';
-import groups from './species';
+import without from 'lodash/without';
+import { InputWrapper } from '@ukhomeoffice/react-components';
+import { MultiInput, Fieldset } from '../';
+import PIL_GROUPS from './species';
+import { projectSpecies as PROJECT_GROUPS } from '@asl/constants';
 
-const ALL_SPECIES = flatten(values(groups).map(g => g.types));
+const GROUP_LABELS = {
+  SA: 'Small animals',
+  LA: 'Large animals',
+  AQ: 'Fish, reptiles and aquatic species',
+  AV: 'Birds',
+  DOM: 'Cats, dogs and equidae',
+  NHP: 'Non-human primates'
+};
+
+const ALL_PIL_SPECIES = flatten(values(PIL_GROUPS).map(g => g.types));
 
 export default function SpeciesSelector(props) {
-  const parts = partition(props.value, s => ALL_SPECIES.includes(s));
-  const [value, setValue] = useState(props.value || []);
-  const [presetSpecies, setPresetSpecies] = useState(parts[0]);
-  const [otherSpecies, setOtherSpecies] = useState(parts[1]);
+  const presets = props.presets || [];
+  const species = props.projectSpecies ? omit(PROJECT_GROUPS, 'deprecated') : PIL_GROUPS;
+  let val = props.value;
 
-  function onPresetChange(e) {
-    const value = e.target.value;
-    if (presetSpecies.includes(value)) {
-      return setPresetSpecies(presetSpecies.filter(s => s !== value));
+  if (!props.projectSpecies) {
+    const parts = partition(val, s => ALL_PIL_SPECIES.includes(s));
+    val = {
+      precoded: parts[0],
+      otherSpecies: parts[1]
+    };
+  }
+
+  const INITIAL_STATE = {
+    precoded: [],
+    otherSpecies: []
+  };
+
+  const [value, setValue] = useState(val || INITIAL_STATE);
+
+  function onOtherChange(otherSpecies) {
+    setValue({ ...value, otherSpecies });
+  }
+
+  function mapOptions(option) {
+    if (typeof option === 'string') {
+      option = {
+        value: option,
+        label: option
+      };
     }
-    setPresetSpecies([ ...presetSpecies, value ]);
+    if (option.value.includes('other')) {
+      const fieldName = `${props.name}-${option.value}`;
+      return {
+        ...option,
+        reveal: {
+          [fieldName]: {
+            inputType: 'multiInput',
+            onFieldChange: vals => {
+              setValue({
+                ...value,
+                [fieldName]: vals
+              });
+            },
+            value: []
+          }
+        }
+      };
+    }
+    return {
+      ...option,
+      disabled: presets.includes(option.value)
+    };
   }
 
-  function onOtherChange(otherVals) {
-    setOtherSpecies(otherVals);
+  const onGroupChange = name => val => {
+    const nopes = props.projectSpecies
+      ? (species[name] || []).map(o => o.value)
+      : (species[name].types || []);
+    const v = uniq(value.precoded.filter(item => !nopes.includes(item)).concat(val[`_${props.name}`]));
+    setValue({
+      ...value,
+      // eslint-disable-next-line no-useless-call
+      precoded: without.apply(null, [ v, ...presets ])
+    });
+  };
+
+  function getField(options, key) {
+    return <Fieldset
+      model={{
+        ...value,
+        [`_${props.name}`]: [
+          ...presets,
+          ...value.precoded
+        ]
+      }}
+      onChange={onGroupChange(key)}
+      schema={{
+        [`_${props.name}`]: {
+          inputType: 'checkboxGroup',
+          automapReveals: true,
+          label: false,
+          options: options.map(mapOptions)
+        }
+      }}
+    />;
   }
 
-  useEffect(() => {
-    setValue([
-      ...presetSpecies,
-      ...otherSpecies
+  function getValue() {
+    if (props.projectSpecies) {
+      return JSON.stringify(value);
+    }
+    return JSON.stringify([
+      ...value.precoded,
+      ...value.otherSpecies
     ]);
-  }, [presetSpecies, otherSpecies]);
+  }
 
   return (
     <div className="species-selector">
       <InputWrapper {...props}>
         {
-          map(groups, (group, key) => (
-            <details key={key} open={intersection(group.types, presetSpecies).length}>
-              <summary>{group.label}</summary>
-              <CheckboxGroup
-                options={group.types}
-                className="smaller"
-                onChange={onPresetChange}
-                value={presetSpecies}
-              />
-            </details>
-          ))
+          map(species, (group, key) => {
+            const options = group.types || group;
+            return (
+              <details key={key} open={intersection(options.map(opt => opt.value || opt), [...presets, ...value.precoded]).length}>
+                <summary>{GROUP_LABELS[key]}</summary>
+                { getField(options, key) }
+              </details>
+            );
+          })
         }
-        <details open={otherSpecies.length}>
+        <details open={value.otherSpecies.length}>
           <summary>Other</summary>
           <MultiInput
-            value={otherSpecies}
+            value={value.otherSpecies}
             onChange={onOtherChange}
           />
         </details>
-        {
-          value.map((v, i) => <input key={i} type="hidden" name={props.name} value={v} />)
-        }
+        <input type="hidden" name={props.name} value={getValue()} />
       </InputWrapper>
     </div>
   );
 }
 
 SpeciesSelector.defaultProps = {
-  value: []
+  value: {
+    precoded: [],
+    otherSpecies: []
+  }
 };

@@ -10,18 +10,19 @@ const Form = ({
   schema,
   cancelLink,
   declaration,
+  disabled = false,
   onSubmit = () => {},
   ...props
 }) => {
 
-  const [disabled, setDisabled] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(disabled);
   const onFormSubmit = e => {
-    if (disabled) {
+    if (isDisabled) {
       e.preventDefault();
     }
     e.persist();
     onSubmit(e);
-    setTimeout(() => setDisabled(true), 0);
+    setTimeout(() => setIsDisabled(true), 0);
   };
 
   const formFields = (
@@ -32,7 +33,7 @@ const Form = ({
         (submit || cancelLink) && (
           <div className="control-panel">
             {
-              submit && <button type="submit" className="govuk-button" disabled={disabled}><Snippet>buttons.submit</Snippet></button>
+              submit && <button type="submit" className="govuk-button" disabled={isDisabled}><Snippet>buttons.submit</Snippet></button>
             }
             {
               cancelLink && <Link page={cancelLink} label={<Snippet>buttons.cancel</Snippet>} {...props} />

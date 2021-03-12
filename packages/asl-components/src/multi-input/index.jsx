@@ -12,11 +12,14 @@ function Item({ value, onRemove, showRemove, onChange }) {
   );
 }
 
-export default function MultiInput({ value, onChange }) {
+export default function MultiInput({ value, onChange, onFieldChange }) {
   const [items, setItems] = useState(value);
 
   useEffect(() => {
     onChange(items.filter(Boolean));
+    if (onFieldChange) {
+      onFieldChange(items.filter(Boolean));
+    }
   }, [items]);
 
   if (!items.length) {
