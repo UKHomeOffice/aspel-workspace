@@ -24,7 +24,7 @@ const ErrorSummary = ({
         <ul className="govuk-list govuk-error-summary__list">
           {
             Object.keys(errors).map(key =>
-              <li key={key}><a href={`#${key}`}><Snippet>{`errors.${key}.${errors[key]}`}</Snippet></a></li>
+              <li key={key}><a href={`#${key}`}><Snippet fallback={`errors.default.${errors[key]}`}>{`errors.${key}.${errors[key]}`}</Snippet></a></li>
             )
           }
         </ul>
