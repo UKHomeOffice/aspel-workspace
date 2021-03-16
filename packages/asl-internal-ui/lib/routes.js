@@ -27,6 +27,11 @@ module.exports = {
     breadcrumb: false,
     router: pages.retrospectiveAssessment
   },
+  rops: {
+    path: '/establishments/:establishmentId/projects/:projectId/rops/:ropId',
+    breadcrumb: false,
+    router: pages.rops
+  },
   dashboard: {
     path: '/',
     router: dashboard
