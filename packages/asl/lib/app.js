@@ -45,28 +45,17 @@ module.exports = settings => {
 
   app.use(content);
 
-  app.param('profileId', (req, res, next, param) => {
-    req.profileId = param;
-    next();
-  });
-
-  app.param('projectId', (req, res, next, param) => {
-    req.projectId = param;
-    next();
-  });
-
-  app.param('versionId', (req, res, next, param) => {
-    req.versionId = param;
-    next();
-  });
-
-  app.param('raId', (req, res, next, param) => {
-    req.raId = param;
-    next();
+  ['profileId', 'projectId', 'versionId', 'raId', 'ropId'].forEach(param => {
+    app.param(param, (req, res, next, value) => {
+      req[param] = value;
+      res.locals.static[param] = value;
+      next();
+    });
   });
 
   app.param('establishmentId', (req, res, next, param) => {
     req.establishmentId = parseInt(param, 10);
+    res.locals.static.establishmentId = req.establishmentId;
     next();
   });
 
