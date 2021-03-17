@@ -127,10 +127,16 @@ function Field({
     return options.map(opt => {
       if (typeof opt === 'object') {
         if (!opt.label) {
-          opt.label = getLabel(opt.value, name);
+          opt = {
+            ...opt,
+            label: getLabel(opt.value, name)
+          };
         }
         if (!opt.hint) {
-          opt.hint = getLabel(opt.value, name, 'hint');
+          opt = {
+            ...opt,
+            hint: getLabel(opt.value, name, 'hint')
+          };
         }
         return opt;
       }
