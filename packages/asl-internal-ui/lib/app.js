@@ -42,6 +42,7 @@ module.exports = settings => {
       return next();
     }
     req.establishmentId = parseInt(param, 10);
+    res.locals.static.establishmentId = req.establishmentId;
     if (isNaN(req.establishmentId)) {
       return next(new NotFoundError());
     }
