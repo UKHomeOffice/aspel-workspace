@@ -2,7 +2,7 @@ const { page } = require('@asl/service/ui');
 const bodyParser = require('body-parser');
 const { relatedTasks } = require('@asl/pages/pages/common/routers');
 
-const roles = ['asruAdmin', 'asruSupport', 'asruLicensing', 'asruInspector'];
+const roles = ['asruAdmin', 'asruSupport', 'asruLicensing', 'asruInspector', 'asruRops'];
 
 module.exports = () => {
   const app = page({ root: __dirname });

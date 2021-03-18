@@ -29,6 +29,9 @@ module.exports = settings => {
         if (profile.asruAdmin) {
           assignedRoles.push('Admin');
         }
+        if (profile.asruRops) {
+          assignedRoles.push('Returns analyst');
+        }
         return {
           ...profile,
           assignedRoles
