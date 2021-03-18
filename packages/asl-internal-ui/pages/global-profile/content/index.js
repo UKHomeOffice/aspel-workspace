@@ -22,6 +22,10 @@ module.exports = merge({}, globalProfile, {
       asruSupport: {
         label: 'Business support',
         hint: 'Download reports and access performance metrics'
+      },
+      asruRops: {
+        label: 'Returns analyst',
+        hint: 'View and download consolidated returns of procedures data for all establishments'
       }
     }
   },

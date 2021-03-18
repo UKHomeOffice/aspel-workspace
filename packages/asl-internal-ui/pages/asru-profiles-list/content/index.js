@@ -10,6 +10,7 @@ module.exports = merge({}, baseContent, {
   filters: {
     admin: 'Admin',
     support: 'Business Support',
+    rops: 'Returns analyst',
     licensing: 'Licensing Officer',
     inspector: 'Inspector'
   },
