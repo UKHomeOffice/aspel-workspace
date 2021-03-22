@@ -74,6 +74,11 @@ module.exports = settings => {
         { label: 'Downloads', href: '/downloads' }
       ];
     }
+
+    if (req.user.profile.asruRops) {
+      footerLinks[0].links.push({ label: 'Returns of procedures', href: '/reporting/rops' });
+    }
+
     res.locals.footerLinks = footerLinks;
     next();
   });
