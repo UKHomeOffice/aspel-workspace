@@ -7,20 +7,36 @@ module.exports = settings => {
     root: __dirname
   });
 
-  app.get('/', (req, res, next) => {
+  app.param('year', (req, res, next, year) => {
+    req.year = parseInt(year, 10);
+    res.locals.static.year = req.year;
+    next();
+  });
+
+  app.get('/:year?', (req, res, next) => {
     if (!req.user.profile.asruRops) {
       return next(new NotFoundError());
     }
+    next();
+  });
 
-    const year = parseInt(req.query.year, 10) || new Date().getFullYear();
-    res.locals.static.year = year;
+  app.get('/:year?', (req, res, next) => {
+    if (!req.year) {
+      req.year = new Date().getFullYear();
+    }
 
-    return req.metrics('/rops', { stream: false, query: { year } })
+    console.log('YEAR:', req.year);
+
+    return req.metrics('/rops', { stream: false, query: { year: req.year } })
       .then(ropsSummary => {
         res.locals.static.ropsSummary = ropsSummary;
       })
       .then(() => next())
-      .catch(next);
+      .catch(e => {
+        console.log('oh noes!');
+        console.log(e);
+        next(e);
+      });
   });
 
   return app;
