@@ -1,10 +1,13 @@
-const { page } = require('@asl/service/ui');
+const { Router } = require('express');
+const routes = require('./routes');
 const { NotFoundError } = require('../../../lib/errors');
 
 module.exports = settings => {
-  const app = page({
-    ...settings,
-    root: __dirname
+  const app = Router();
+
+  app.get('/', (req, res, next) => {
+    const year = new Date().getFullYear();
+    res.redirect(req.buildRoute('reporting.rops.summary', { year }));
   });
 
   app.param('year', (req, res, next, year) => {
@@ -13,31 +16,23 @@ module.exports = settings => {
     next();
   });
 
-  app.get('/:year?', (req, res, next) => {
+  app.get('/:year', (req, res, next) => {
     if (!req.user.profile.asruRops) {
       return next(new NotFoundError());
     }
     next();
   });
 
-  app.get('/:year?', (req, res, next) => {
-    if (!req.year) {
-      req.year = new Date().getFullYear();
-    }
-
-    console.log('YEAR:', req.year);
-
+  app.get('/:year', (req, res, next) => {
     return req.metrics('/rops', { stream: false, query: { year: req.year } })
       .then(ropsSummary => {
         res.locals.static.ropsSummary = ropsSummary;
       })
       .then(() => next())
-      .catch(e => {
-        console.log('oh noes!');
-        console.log(e);
-        next(e);
-      });
+      .catch(next);
   });
 
   return app;
 };
+
+module.exports.routes = routes;

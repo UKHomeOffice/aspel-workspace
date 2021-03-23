@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Header, Snippet } from '@asl/components';
-import Metric from '../../views/components/metric';
+import Metric from '../../../views/components/metric';
 
 export default function Index() {
   const { year, ropsSummary } = useSelector(state => state.static);
