@@ -1,6 +1,5 @@
 const download = require('./download');
 const details = require('./details');
-const rops = require('./rops');
 
 module.exports = {
   download: {
@@ -12,10 +11,5 @@ module.exports = {
     breadcrumb: false,
     path: '/details',
     router: details
-  },
-  rops: {
-    breadcrumb: false,
-    path: '/rops',
-    router: rops
   }
 };

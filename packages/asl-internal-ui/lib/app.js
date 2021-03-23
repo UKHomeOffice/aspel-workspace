@@ -75,8 +75,8 @@ module.exports = settings => {
       ];
     }
 
-    if (req.user.profile.asruRops) {
-      footerLinks[0].links.push({ label: 'Returns of procedures', href: '/reporting/rops' });
+    if (allowedActions.includes('asruRops')) {
+      footerLinks[0].links.push({ label: 'Returns of procedures', href: '/rops' });
     }
 
     res.locals.footerLinks = footerLinks;

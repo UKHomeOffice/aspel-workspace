@@ -1,13 +1,16 @@
 const { Router } = require('express');
 const routes = require('./routes');
-const { NotFoundError } = require('../../../lib/errors');
+const metrics = require('../../lib/middleware/metrics');
+const { NotFoundError } = require('../../lib/errors');
 
 module.exports = settings => {
   const app = Router();
 
+  app.use(metrics(settings));
+
   app.get('/', (req, res, next) => {
     const year = new Date().getFullYear();
-    res.redirect(req.buildRoute('reporting.rops.summary', { year }));
+    res.redirect(req.buildRoute('ropsReporting.summary', { year }));
   });
 
   app.param('year', (req, res, next, year) => {
