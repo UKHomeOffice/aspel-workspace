@@ -48,7 +48,7 @@ function SingleRadio(props) {
       <input type="hidden" name={props.name} value={value} />
       <h3>{ props.label }</h3>
       {
-        getLabel(value, props.fieldName)
+        settings.label || getLabel(value, props.fieldName)
       }
       {
         settings.reveal
