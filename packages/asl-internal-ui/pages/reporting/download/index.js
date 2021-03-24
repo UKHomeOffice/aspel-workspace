@@ -91,7 +91,7 @@ module.exports = settings => {
   router.get('/', (req, res, next) => {
     const types = Object.keys(content);
 
-    const stringifier = csv();
+    const stringifier = csv({ bom: true });
     res.attachment('tasks.csv');
 
     const heading = types.map(type => content[type]);
