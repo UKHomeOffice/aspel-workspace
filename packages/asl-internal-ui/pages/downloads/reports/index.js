@@ -28,7 +28,10 @@ module.exports = settings => {
     const report = req.params.report;
 
     res.attachment(`${report}.csv`);
-    const stringifier = csv({ header: true });
+    const stringifier = csv({
+      bom: true,
+      header: true
+    });
 
     req.metrics(`/reports/${report}`)
       .then(stream => {
