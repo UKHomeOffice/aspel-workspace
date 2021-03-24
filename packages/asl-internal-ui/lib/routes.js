@@ -10,6 +10,7 @@ const createEstablishment = require('../pages/create-establishment');
 const revokeEstablishment = require('../pages/revoke-establishment');
 const search = require('../pages/search');
 const reporting = require('../pages/reporting');
+const rops = require('../pages/rops');
 const downloads = require('../pages/downloads');
 const licenceFees = require('../pages/licence-fees');
 const asruProfilesList = require('../pages/asru-profiles-list');
@@ -140,6 +141,12 @@ module.exports = {
     path: '/reporting',
     router: reporting,
     permissions: 'asruReporting'
+  },
+  ropsReporting: {
+    breadcrumb: false,
+    path: '/rops',
+    router: rops,
+    permissions: 'asruRops'
   },
   downloads: {
     path: '/downloads',
