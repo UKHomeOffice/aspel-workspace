@@ -1,11 +1,10 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Snippet, Link } from '@asl/components';
+import { Header, Snippet, Link, Metric } from '@asl/components';
 import TaskTable from '@asl/pages/pages/task/list/views/table';
 
 import MetricsFilter from '../../../views/components/metrics-filter';
 import InitiatedByFilter from '../../../views/components/initiated-by-filter';
-import Metric from '../../../views/components/metric';
 
 export default function Index() {
   const { start, end, establishment } = useSelector(state => state.model);

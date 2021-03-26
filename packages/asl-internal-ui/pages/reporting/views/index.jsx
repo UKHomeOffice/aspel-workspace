@@ -1,10 +1,9 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Link } from '@asl/components';
+import { Header, Link, Metric } from '@asl/components';
 
 import MetricsFilter from './components/metrics-filter';
 import InitiatedByFilter from './components/initiated-by-filter';
-import Metric from './components/metric';
 import TaskCounts from './components/task-counts';
 
 export default function Index() {

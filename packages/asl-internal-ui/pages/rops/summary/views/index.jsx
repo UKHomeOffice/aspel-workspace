@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Snippet } from '@asl/components';
-import Metric from '../../../reporting/views/components/metric';
+import { Header, Snippet, Metric } from '@asl/components';
 
 export default function Index() {
   const { year, ropsSummary } = useSelector(state => state.static);

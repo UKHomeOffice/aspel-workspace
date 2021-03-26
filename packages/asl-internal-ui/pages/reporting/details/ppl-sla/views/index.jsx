@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Datatable, Snippet } from '@asl/components';
-import Metric from '../../../views/components/metric';
+import { Datatable, Snippet, Metric } from '@asl/components';
 import formatters from './formatters';
 import ExpandableRow from './row';
 
