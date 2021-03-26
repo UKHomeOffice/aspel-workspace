@@ -41,6 +41,7 @@ export { default as Link } from './link';
 export { default as LinkFilter } from './link-filter';
 export { default as Markdown } from './markdown';
 export { default as ModelSummary } from './model-summary';
+export { default as Metric } from './metric';
 export { default as MultiInput } from './multi-input';
 export { default as Notification } from './notification';
 export { default as OpenTaskWarning } from './open-task-warning';
