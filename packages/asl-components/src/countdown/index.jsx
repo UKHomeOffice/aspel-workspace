@@ -21,7 +21,7 @@ const Countdown = ({ expiry, unit, showNotice, showUrgent, suffix }) => {
   }
 
   const displayUnit = diff['day'] <= 7 ? 'day' : (diff['week'] <= 13 ? 'week' : 'month');
-  const displayDiff = displayUnit === 'day' ? diff[displayUnit] : diff[displayUnit] + 1;
+  const displayDiff = Math.abs(displayUnit === 'day' ? diff[displayUnit] : diff[displayUnit] + 1);
   const urgent = diff[unit] <= showUrgent;
 
   let contentKey = displayDiff === 1 ? 'countdown.singular' : 'countdown.plural';
