@@ -1,5 +1,5 @@
 import React from 'react';
-import Number from './number';
+import Number from '../number';
 import Link from '../link';
 
 export default function Metric({ number, label, link, className }) {
