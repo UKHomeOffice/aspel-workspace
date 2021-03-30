@@ -44,6 +44,7 @@ export { default as ModelSummary } from './model-summary';
 export { default as Metric } from './metric';
 export { default as MultiInput } from './multi-input';
 export { default as Notification } from './notification';
+export { default as Number } from './number';
 export { default as OpenTaskWarning } from './open-task-warning';
 export { default as Pagination } from './pagination';
 export { default as Panel } from './panel';
