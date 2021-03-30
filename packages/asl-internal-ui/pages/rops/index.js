@@ -19,14 +19,7 @@ module.exports = settings => {
     next();
   });
 
-  app.get('/:year', (req, res, next) => {
-    if (!req.user.profile.asruRops) {
-      return next(new NotFoundError());
-    }
-    next();
-  });
-
-  app.get('/:year', (req, res, next) => {
+  app.get('/:year*', (req, res, next) => {
     return req.metrics('/rops', { stream: false, query: { year: req.year } })
       .then(ropsSummary => {
         res.locals.static.ropsSummary = ropsSummary;

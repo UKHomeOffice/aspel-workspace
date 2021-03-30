@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Snippet, Metric } from '@asl/components';
+import { Header, Link, Metric, Snippet, Tabs } from '@asl/components';
 
 export default function Index() {
   const { year, ropsSummary } = useSelector(state => state.static);
@@ -25,6 +25,12 @@ export default function Index() {
           <Metric number={ropsSummary.outstanding} label={<Snippet>ropsSummary.outstanding</Snippet>} className="rops-outstanding" />
         </div>
       </div>
+
+      <Tabs active={0}>
+        <Link page="ropsReporting.summary" label="Overview" />
+        <Link page="ropsReporting.summary" label="Establishments" />
+        <Link page="ropsReporting.download" label="Download" />
+      </Tabs>
 
     </div>
   );

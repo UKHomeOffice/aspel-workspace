@@ -19,6 +19,12 @@ module.exports = {
     profile: process.env.API_URL,
     permissions: process.env.PERMISSIONS_SERVICE
   },
+  s3: {
+    region: process.env.S3_REGION,
+    accessKey: process.env.S3_ACCESS_KEY,
+    secret: process.env.S3_SECRET,
+    bucket: process.env.S3_BUCKET
+  },
   errorEvent: 'asl.error',
   verboseErrors: process.env.VERBOSE_ERRORS === 'TRUE',
   pdfService: process.env.PDF_SERVICE,
