@@ -14,6 +14,9 @@ module.exports = settings => {
   });
 
   app.param('year', (req, res, next, year) => {
+    if (!year.match(/^20[0-9]{2}/)) {
+      throw new NotFoundError();
+    }
     req.year = parseInt(year, 10);
     res.locals.static.year = req.year;
     next();
