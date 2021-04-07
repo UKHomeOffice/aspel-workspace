@@ -29,7 +29,9 @@ const List = ({ schema }) => {
     </thead>
     <tbody>
       {
-        rows.length ? rows.map(row => <Row schema={schema} row={row} key={row.id} />) : <td colSpan={Object.keys(schema).length}>No returns downloaded yet</td>
+        rows.length
+          ? rows.map(row => <Row schema={schema} row={row} key={row.id} />)
+          : <td colSpan={Object.keys(schema).length}>No returns downloaded yet</td>
       }
     </tbody>
   </table>;
