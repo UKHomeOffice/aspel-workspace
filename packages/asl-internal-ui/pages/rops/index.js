@@ -14,19 +14,15 @@ module.exports = settings => {
   });
 
   app.param('year', (req, res, next, year) => {
+    if (!year.match(/^20[0-9]{2}/)) {
+      throw new NotFoundError();
+    }
     req.year = parseInt(year, 10);
     res.locals.static.year = req.year;
     next();
   });
 
-  app.get('/:year', (req, res, next) => {
-    if (!req.user.profile.asruRops) {
-      return next(new NotFoundError());
-    }
-    next();
-  });
-
-  app.get('/:year', (req, res, next) => {
+  app.get('/:year*', (req, res, next) => {
     return req.metrics('/rops', { stream: false, query: { year: req.year } })
       .then(ropsSummary => {
         res.locals.static.ropsSummary = ropsSummary;
