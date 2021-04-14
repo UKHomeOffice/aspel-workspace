@@ -65,9 +65,12 @@ const fields = {
   declaration: props => <ApplicationConfirm { ...props } />,
   inputDate: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />,
   textarea: props => <TextArea { ...props } autoExpand={true} />,
-  radioGroup: props => props.options.length > 1
-    ? <RadioGroup { ...props } />
-    : <SingleRadio { ...props } />,
+  radioGroup: props => {
+    if (props.options === undefined) {
+      throw new Error(`radioGroup '${props.name}' has undefined options`);
+    }
+    return props.options.length > 1 ? <RadioGroup { ...props } /> : <SingleRadio { ...props } />;
+  },
   checkboxGroup: props => <CheckboxGroup { ...props } />,
   select: props => <Select { ...props } />,
   selectMany: props => <SelectMany { ...props } />,
