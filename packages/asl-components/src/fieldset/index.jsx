@@ -69,7 +69,9 @@ const fields = {
     if (props.options === undefined) {
       throw new Error(`radioGroup '${props.name}' has undefined options`);
     }
-    return props.options.length > 1 ? <RadioGroup { ...props } /> : <SingleRadio { ...props } />;
+    return props.options.length > 1
+      ? <RadioGroup { ...props } />
+      : <SingleRadio { ...props } />;
   },
   checkboxGroup: props => <CheckboxGroup { ...props } />,
   select: props => <Select { ...props } />,
