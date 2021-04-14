@@ -66,7 +66,7 @@ const fields = {
   inputDate: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />,
   textarea: props => <TextArea { ...props } autoExpand={true} />,
   radioGroup: props => {
-    if (props.options === undefined) {
+    if (!props.options) {
       throw new Error(`radioGroup '${props.name}' has undefined options`);
     }
     return props.options.length > 1
