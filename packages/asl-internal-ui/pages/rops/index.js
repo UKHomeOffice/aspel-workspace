@@ -23,9 +23,9 @@ module.exports = settings => {
   });
 
   app.get('/:year*', (req, res, next) => {
-    return req.metrics('/rops', { stream: false, query: { year: req.year } })
-      .then(ropsSummary => {
-        res.locals.static.ropsSummary = ropsSummary;
+    return req.api(`/rops/${req.year}/summary`)
+      .then(response => {
+        res.locals.static.ropsSummary = response.json.data;
       })
       .then(() => next())
       .catch(next);
