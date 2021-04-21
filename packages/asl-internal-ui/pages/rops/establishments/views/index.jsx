@@ -14,12 +14,10 @@ export default function Index() {
   };
 
   return (
-    <div>
+    <div className="rops-establishments">
       <Header />
       <Tabs active={1} />
-      <div className="rops-establishments">
-        <Datatable formatters={formatters} />
-      </div>
+      <Datatable formatters={formatters} />
     </div>
   );
 }
