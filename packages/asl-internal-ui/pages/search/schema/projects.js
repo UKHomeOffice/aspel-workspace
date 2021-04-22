@@ -19,7 +19,7 @@ module.exports = {
     show: true
   },
   issueDate: {},
-  expiryDate: {
+  endDate: {
     show: true
   },
   revocationDate: {}

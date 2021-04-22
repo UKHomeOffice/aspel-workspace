@@ -13,8 +13,8 @@ module.exports = {
     licenceHolder: {
       label: 'PPL holder'
     },
-    expiryDate: {
-      label: 'Expiry date'
+    endDate: {
+      label: 'End date'
     },
     status: {
       label: 'Status'
