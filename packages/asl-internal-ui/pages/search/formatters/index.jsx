@@ -6,6 +6,9 @@ import { ExpiryDate, Link, Markdown, Snippet } from '@asl/components';
 import ProjectSearchResult from '../views/components/project-search-result';
 import { projectTitle } from '@asl/pages/pages/common/formatters';
 import projectFormatters from '@asl/pages/pages/project/formatters';
+import format from 'date-fns/format';
+
+const DATE_FORMAT = 'D MMM YYYY';
 
 export default {
   establishments: {
@@ -114,16 +117,21 @@ export default {
         return <Link page="globalProfile" profileId={profile.id} label={label} />;
       }
     },
-    expiryDate: {
+    endDate: {
       format: (date, model) => {
-        if (!date || ['revoked', 'transferred'].includes(model.status)) {
-          return '-';
+        if (['active', 'expired'].includes(model.status)) {
+          return <ExpiryDate
+            date={date}
+            dateFormat={DATE_FORMAT}
+            showNotice={model.status === 'active' ? 11 : false}
+          />;
         }
-        return <ExpiryDate
-          date={date}
-          dateFormat="D MMM YYYY"
-          showNotice={model.status === 'active' ? 11 : false}
-        />;
+
+        if (date) {
+          return format(date, DATE_FORMAT);
+        }
+
+        return '-';
       }
     }
   },
