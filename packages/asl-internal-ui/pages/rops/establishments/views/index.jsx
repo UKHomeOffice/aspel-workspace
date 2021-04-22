@@ -9,7 +9,14 @@ export default function Index() {
 
   const formatters = {
     name: {
-      format: (name, establishment) => <Link page="establishment.rops" label={name} establishmentId={establishment.id} year={year} />
+      format: (name, establishment) => {
+        return <Link
+          page="establishment.rops.overview"
+          label={name}
+          establishmentId={establishment.id}
+          year={year}
+        />;
+      }
     }
   };
 
