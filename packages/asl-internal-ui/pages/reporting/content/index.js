@@ -29,6 +29,7 @@ module.exports = {
   'pil-revoke': 'PIL revocations',
   'pil-transfer': 'PIL transfers',
   'pil-review': 'PIL reviews',
+  'rop-submit': 'Rop submissions',
   'establishment-grant': 'PEL applications',
   'establishment-update': 'PEL detail amendments',
   'role-create': 'Named people assignments',
