@@ -78,6 +78,12 @@ export default function Index() {
         />
       </div>
       <div className="govuk-grid-column-one-half">
+        <h3>ROPs tasks</h3>
+        <TaskCounts
+          types={[
+            'rop-submit'
+          ]}
+        />
         <h3>Retrospective assessment tasks</h3>
         <TaskCounts
           types={[
