@@ -204,6 +204,7 @@ function Field({
     label={isUndefined(label) ? <Snippet>{`fields.${name}.label`}</Snippet> : label}
     hint={isUndefined(hint) ? <Snippet optional>{`fields.${name}.hint`}</Snippet> : hint}
     error={error && <Snippet fallback={`errors.default.${error}`}>{`errors.${name}.${error}`}</Snippet>}
+    initialHideReveals={true}
     value={fieldValue}
     onChange={onFieldChange}
     name={prefix ? `${prefix}-${name}` : name}
