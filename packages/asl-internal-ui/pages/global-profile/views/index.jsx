@@ -32,6 +32,12 @@ export default function InternalGlobalProfile() {
   return (
     <GlobalProfile dedupe={dedupe} AsruRolesComponent={AsruActions}>
       {
+        !model.asruUser && <Fragment>
+          <h2>Personal licences</h2>
+          <p><Link page="globalProfile.pils" profileId={model.id} label="View complete PIL history" /></p>
+        </Fragment>
+      }
+      {
         model.asruInspector && model.asru && !!model.asru.length && <Fragment>
           <h3>Inspector for:</h3>
           <AsruAssociations establishments={model.asru} />

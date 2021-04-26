@@ -29,5 +29,11 @@ module.exports = merge({}, globalProfile, {
       }
     }
   },
+  breadcrumbs: {
+    globalProfile: {
+      read: '{{profile.firstName}} {{profile.lastName}}',
+      pils: 'Personal licences'
+    }
+  },
   dedupe: 'Merge profile'
 });

@@ -1,5 +1,6 @@
 const { page } = require('@asl/service/ui');
 const bodyParser = require('body-parser');
+const routes = require('./routes');
 const { relatedTasks } = require('@asl/pages/pages/common/routers');
 
 const roles = ['asruAdmin', 'asruSupport', 'asruLicensing', 'asruInspector', 'asruRops'];
@@ -10,14 +11,13 @@ module.exports = () => {
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.use((req, res, next) => {
-    req.breadcrumb('profile.read');
     res.locals.static.roles = roles;
     res.locals.static.canAdmin = req.user.profile.asruAdmin && req.profileId !== req.user.profile.id;
     res.locals.static.asruUser = req.user.profile.asruUser;
     next();
   });
 
-  app.get('/', (req, res, next) => {
+  app.get('*', (req, res, next) => {
     return req.api(`/profile/${req.profileId}`)
       .then(({ json: { data } }) => {
         res.locals.model = data;
@@ -57,3 +57,5 @@ module.exports = () => {
 
   return app;
 };
+
+module.exports.routes = routes;
