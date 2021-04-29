@@ -14,6 +14,9 @@ module.exports = {
     },
     ropsOutstanding: {
       label: 'Returns outstanding'
+    },
+    ropsOverdue: {
+      label: 'Returns overdue'
     }
   }
 };

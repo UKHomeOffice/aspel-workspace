@@ -10,5 +10,8 @@ module.exports = {
   },
   ropsOutstanding: {
     show: true
+  },
+  ropsOverdue: {
+    show: true
   }
 };
