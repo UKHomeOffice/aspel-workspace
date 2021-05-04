@@ -42,6 +42,7 @@ function getLabel(opt, name, type = 'label') {
 function SingleRadio(props) {
   const settings = props.options[0];
   const value = isUndefined(settings.value) ? settings : settings.value;
+  const hint = settings.hint || getLabel(value, props.fieldName, 'hint');
 
   return (
     <div className="govuk-form-group">
@@ -49,6 +50,9 @@ function SingleRadio(props) {
       <h3>{ props.label }</h3>
       {
         settings.label || getLabel(value, props.fieldName)
+      }
+      {
+        hint && <p className="govuk-hint">{ hint }</p>
       }
       {
         settings.reveal
