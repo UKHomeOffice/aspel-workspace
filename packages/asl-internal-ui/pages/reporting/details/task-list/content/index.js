@@ -46,6 +46,8 @@ module.exports = merge({}, tasklistContent, {
 
     'place-update': 'Approved area amendments granted',
     'place-create': 'Approved area additions granted',
-    'place-delete': 'Approved area deletions granted'
+    'place-delete': 'Approved area deletions granted',
+
+    'rop-submit': 'Return of procedures submissions'
   }
 });

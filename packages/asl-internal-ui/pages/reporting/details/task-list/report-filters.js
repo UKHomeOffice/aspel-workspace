@@ -4,7 +4,7 @@ module.exports = ({ query, log }) => {
     schemaVersion,
     model,
     action
-  ] = report.match(/((all|legacy)-)?(project|pil|establishment|role|place)-([a-z-]+)/).slice(2);
+  ] = report.match(/((all|legacy)-)?(project|pil|establishment|role|place|rop)-([a-z-]+)/).slice(2);
 
   log('debug', { matches: {
     schemaVersion,
