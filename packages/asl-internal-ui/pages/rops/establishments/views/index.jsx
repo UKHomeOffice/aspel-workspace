@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Header from '../../components/header';
 import Tabs from '../../components/tabs';
-import { Datatable, Link } from '@asl/components';
+import { Datatable, Link, Search } from '@asl/components';
 
 export default function Index() {
   const { year } = useSelector(state => state.static);
@@ -24,6 +24,7 @@ export default function Index() {
     <div className="rops-establishments">
       <Header />
       <Tabs active={1} />
+      <Search />
       <Datatable formatters={formatters} />
     </div>
   );
