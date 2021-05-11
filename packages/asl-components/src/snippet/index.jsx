@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import get from 'lodash/get';
 import { connect } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
@@ -19,18 +19,18 @@ export const Snippet = ({ content, children, optional, fallback, ...props }) => 
   }
   const source = trim(render(str, props));
 
-  function wrapInSpanIfOnlyChild({ children, parentChildCount }) {
-    return parentChildCount > 1
-      ? <p>{ children }</p>
-      : <span>{ children }</span>;
+  function wrapInSpanIfOnlyChild({ node, siblingCount, index, ...props }) {
+    if (siblingCount === 1) {
+      return <span {...props} />;
+    }
+    return <p {...props} />;
   }
 
   return (
     <ReactMarkdown
-      source={source}
-      includeNodeIndex={true}
-      renderers={{ root: Fragment, paragraph: wrapInSpanIfOnlyChild }}
-    />
+      includeElementIndex={true}
+      components={{ p: wrapInSpanIfOnlyChild }}
+    >{ source }</ReactMarkdown>
   );
 };
 
