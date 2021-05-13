@@ -19,6 +19,11 @@ export default function AutoComplete(props) {
       if (!val) {
         setValue('');
       }
+      // this is needed if a new value can be added by the field
+      // onConfirm is not fired by autocomplete if option not found
+      if (props.allowNewOption) {
+        setValue(val);
+      }
     }
 
     inputElement.addEventListener('blur', onBlur);
@@ -34,7 +39,10 @@ export default function AutoComplete(props) {
 
   function simpleSearch (query, syncResults) {
     syncResults(query
-      ? props.options.filter(result => result.label.toLowerCase().includes(query.toLowerCase()))
+      ? props.options.filter(result => {
+        const option = typeof result === 'string' ? result : result.label;
+        return option.toLowerCase().includes(query.toLowerCase());
+      })
       : []
     );
   }
@@ -67,7 +75,12 @@ export default function AutoComplete(props) {
           inputValue: renderLabel,
           suggestion: renderLabel
         }}
-        onConfirm={option => setValue(option ? option.value : '')}
+        onConfirm={option => {
+          if (typeof option === 'string') {
+            return setValue(option);
+          }
+          setValue(option.value || '');
+        }}
         confirmOnBlur={false}
         defaultValue={defaultValue}
       />
