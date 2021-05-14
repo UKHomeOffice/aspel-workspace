@@ -79,7 +79,7 @@ export default function AutoComplete(props) {
           if (typeof option === 'string') {
             return setValue(option);
           }
-          setValue(option.value || '');
+          setValue(option ? option.value : '');
         }}
         confirmOnBlur={false}
         defaultValue={defaultValue}
