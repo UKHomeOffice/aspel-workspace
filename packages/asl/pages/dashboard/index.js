@@ -39,13 +39,25 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res, next) => {
-    const adminEsts = req.user.profile.establishments.filter(est => {
-      if (est.role === 'admin' || userIsNtcoAtEst(req.user.profile, est.id)) {
-        return true;
-      }
-    });
-    Promise.all(
+    const adminOrNtcoEsts = req.user.profile.establishments.filter(est => est.role === 'admin' || userIsNtcoAtEst(req.user.profile, est.id));
+    const adminEsts = adminOrNtcoEsts.filter(est => est.role === 'admin');
+
+    const rasDue = Promise.all(
       adminEsts.map(est => {
+        return Promise.resolve()
+          .then(() => req.api(`/establishment/${est.id}/projects/ras-due?onlymeta=true`))
+          .then(response => {
+            return {
+              estId: est.id,
+              name: est.name,
+              due: response.json.meta.count
+            };
+          });
+      })
+    );
+
+    const pilReviewsDue = Promise.all(
+      adminOrNtcoEsts.map(est => {
         return Promise.all([
           req.api(`/establishment/${est.id}/pils/reviews?status=due&onlymeta=true`),
           req.api(`/establishment/${est.id}/pils/reviews?status=overdue&onlymeta=true`)
@@ -61,9 +73,15 @@ module.exports = settings => {
             };
           });
       })
-    )
-      .then(reviews => {
+    );
+
+    Promise.all([
+      pilReviewsDue,
+      rasDue
+    ])
+      .then(([reviews, rasDue]) => {
         res.locals.static.adminPilReviewsRequired = reviews.filter(r => r.overdue > 0 || r.due > 0);
+        res.locals.static.rasDue = rasDue.filter(r => r.due > 0);
       })
       .then(() => next())
       .catch(err => {
