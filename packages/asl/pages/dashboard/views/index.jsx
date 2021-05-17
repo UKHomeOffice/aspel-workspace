@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import sortBy from 'lodash/sortBy';
 import {
   Link,
@@ -9,6 +9,7 @@ import {
   ExpandingPanel,
   Markdown
 } from '@asl/components';
+import { getUrl } from '@asl/components/src/link';
 import TaskList from '@asl/pages/pages/task/list/views/tasklist';
 import Profile from '@asl/pages/pages/profile/read/views/profile';
 import { Warning } from '@ukhomeoffice/react-components';
@@ -71,47 +72,65 @@ const getWarningText = review => {
   return `${warningText}.`;
 };
 
-const Index = ({ profile, pilReviewRequired, adminPilReviewsRequired }) => (
-  <Fragment>
-    {
-      pilReviewRequired && (
-        <Warning className="info">
-          <Snippet {...pilReviewRequired}>warnings.pilReviewRequired</Snippet>
-        </Warning>
-      )
-    }
-    {
-      adminPilReviewsRequired && adminPilReviewsRequired.map(review => (
-        <Warning key={review.estId} className="info">
-          <Markdown>{getWarningText(review)}</Markdown>
-          <p>
-            <Link page="pils" establishmentId={review.estId} label="Go to personal licences" />
-          </p>
-        </Warning>
-      ))
-    }
-    <Header
-      title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>}
-    />
-    {
-      !!profile.invitations.length && <Fragment>
-        <h2>{profile.invitations.length} pending invitation{profile.invitations.length === 1 ? '' : 's'}</h2>
-        <PanelList panels={profile.invitations.map(invitation => <Invitation key={invitation.id} establishment={ invitation.establishment.name } token={invitation.token} />)}/>
-      </Fragment>
-    }
-    <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
-    <TaskList />
-    {
-      !!profile.establishments.length && <Fragment>
-        <h2>Establishments</h2>
-        <PanelList
-          panels={sortBy(profile.establishments, 'name').map((establishment) => (
-            <EstablishmentPanel key={establishment.id} establishment={establishment} profile={profile} />
-          ))}
-        />
-      </Fragment>
-    }
-  </Fragment>
-);
+export default function Index() {
+  const { profile, pilReviewRequired, adminPilReviewsRequired, rasDue } = useSelector(state => state.static);
+  return (
+    <Fragment>
+      {
+        pilReviewRequired && (
+          <Warning className="info">
+            <Snippet {...pilReviewRequired}>warnings.pilReviewRequired</Snippet>
+          </Warning>
+        )
+      }
+      {
+        adminPilReviewsRequired && adminPilReviewsRequired.map(review => (
+          <Warning key={review.estId} className="info">
+            <Markdown>{getWarningText(review)}</Markdown>
+            <p>
+              <Link page="pils" establishmentId={review.estId} label="Go to personal licences" />
+            </p>
+          </Warning>
+        ))
+      }
+      {
+        rasDue && rasDue.map(ra => {
+          const query = {
+            status: 'inactive-statuses',
+            filters: {
+              'retrospective-assessment': ['outstanding']
+            }
+          };
+          const url = getUrl({ page: 'project.list', establishmentId: ra.estId, query });
 
-export default connect(({ static: { profile, pilReviewRequired, adminPilReviewsRequired } }) => ({ profile, pilReviewRequired, adminPilReviewsRequired }))(Index);
+          return (
+            <Warning key={ra.estId} className="info">
+              <Markdown>{`${ra.name} has ${ra.due} [projects due a retrospective assessment](${url}) in less than a month.`}</Markdown>
+            </Warning>
+          );
+        })
+      }
+      <Header
+        title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>}
+      />
+      {
+        !!profile.invitations.length && <Fragment>
+          <h2>{profile.invitations.length} pending invitation{profile.invitations.length === 1 ? '' : 's'}</h2>
+          <PanelList panels={profile.invitations.map(invitation => <Invitation key={invitation.id} establishment={ invitation.establishment.name } token={invitation.token} />)}/>
+        </Fragment>
+      }
+      <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
+      <TaskList />
+      {
+        !!profile.establishments.length && <Fragment>
+          <h2>Establishments</h2>
+          <PanelList
+            panels={sortBy(profile.establishments, 'name').map((establishment) => (
+              <EstablishmentPanel key={establishment.id} establishment={establishment} profile={profile} />
+            ))}
+          />
+        </Fragment>
+      }
+    </Fragment>
+  );
+}
