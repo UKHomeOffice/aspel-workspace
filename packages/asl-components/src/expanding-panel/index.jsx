@@ -30,7 +30,7 @@ class ExpandingPanel extends Component {
       <section className={`expanding-panel${this.isOpen() ? ' open' : ''}`}>
         <header onClick={() => this.toggle()}>
           {
-            this.props.customTitle ? this.props.customTitle : <h3>{ this.props.title }</h3>
+            this.props.wrapTitle ? <h3>{ this.props.title }</h3> : this.props.title
           }
         </header>
         <div className={classnames('content', { hidden: !this.isOpen() })}>{ this.props.children }</div>
@@ -38,5 +38,9 @@ class ExpandingPanel extends Component {
     );
   }
 }
+
+ExpandingPanel.defaultProps = {
+  wrapTitle: false
+};
 
 export default ExpandingPanel;
