@@ -40,7 +40,7 @@ class ExpandingPanel extends Component {
 }
 
 ExpandingPanel.defaultProps = {
-  wrapTitle: false
+  wrapTitle: true
 };
 
 export default ExpandingPanel;
