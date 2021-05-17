@@ -23,8 +23,14 @@ const Invitation = ({ token, establishment }) => (
 );
 
 const EstablishmentPanel = ({ establishment, profile }) => {
+  const title = <h3>
+    {establishment.name}
+    { establishment.status === 'inactive' && <span className="status-notice">(draft establishment)</span> }
+    { establishment.status === 'revoked' && <span className="status-notice">(revoked establishment)</span> }
+  </h3>;
+
   return (
-    <ExpandingPanel title={establishment.name} isOpen={profile.establishments.length === 1}>
+    <ExpandingPanel title={title} wrapTitle={false} isOpen={profile.establishments.length === 1}>
       {
         establishment.role === 'blocked' &&
           <Snippet>establishment.blocked</Snippet>
