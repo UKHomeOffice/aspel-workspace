@@ -30,7 +30,7 @@ const EstablishmentPanel = ({ establishment, profile }) => {
   </h3>;
 
   return (
-    <ExpandingPanel customTitle={title} isOpen={profile.establishments.length === 1}>
+    <ExpandingPanel title={title} wrapTitle={false} isOpen={profile.establishments.length === 1}>
       {
         establishment.role === 'blocked' &&
           <Snippet>establishment.blocked</Snippet>
