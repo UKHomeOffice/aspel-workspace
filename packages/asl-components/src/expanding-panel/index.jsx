@@ -29,7 +29,9 @@ class ExpandingPanel extends Component {
     return (
       <section className={`expanding-panel${this.isOpen() ? ' open' : ''}`}>
         <header onClick={() => this.toggle()}>
-          <h3>{ this.props.title }</h3>
+          {
+            this.props.customTitle ? this.props.customTitle : <h3>{ this.props.title }</h3>
+          }
         </header>
         <div className={classnames('content', { hidden: !this.isOpen() })}>{ this.props.children }</div>
       </section>
