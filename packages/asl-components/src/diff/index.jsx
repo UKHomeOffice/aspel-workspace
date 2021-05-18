@@ -33,13 +33,21 @@ function getDiff(schema, before, after) {
   }, {});
 }
 
+function hasChanged(before, after) {
+  // don't flag changes between `null` and `''`
+  if (!before && !after) {
+    return false;
+  }
+  return !(isEqual(before, after));
+}
+
 export default function Diff({
   before,
   after,
   schema,
   diff,
   formatters = {},
-  comparator = (a, b) => !(isEqual(a, b)),
+  comparator = hasChanged,
   currentLabel = 'Current',
   proposedLabel = 'Proposed'
 }) {
