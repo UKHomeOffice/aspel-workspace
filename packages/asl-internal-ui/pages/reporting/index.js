@@ -31,7 +31,7 @@ module.exports = settings => {
     req.api('/search/establishments', { query: { limit: 1000 } })
       .then(response => {
         res.locals.static.establishments = response.json.data.map(e => {
-          return { value: e.id, label: e.name };
+          return { value: e.id, label: e.name, status: e.status };
         });
       })
       .then(() => next())
