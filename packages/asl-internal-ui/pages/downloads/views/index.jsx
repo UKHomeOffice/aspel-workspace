@@ -55,6 +55,9 @@ const Index = () => {
 
     <h3><Link page="downloads.report" report="establishments" label="Establishment summaries" /></h3>
     <p>Download a .csv file with summaries of every establishment (name, licence number, PELH, Spocs, Inspectors, number of active PPLs, etc).</p>
+
+    <h3><Link page="downloads.report" report="establishment-conditions" label="Establishment conditions and authorisations" /></h3>
+    <p>Download a .csv file with the conditions and authorisations of every establishment (name, licence number, status, conditions, authorisations).</p>
   </Fragment>;
 };
 
