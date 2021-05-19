@@ -22,7 +22,12 @@ export default function AutoComplete(props) {
       source={search}
       templates={{
         inputValue: item => item ? item.label : '',
-        suggestion: item => item ? item.label : ''
+        suggestion: item => {
+          if (item && item.status !== 'active') {
+            return `${item.label} (${item.status === 'inactive' ? 'draft' : item.status})`;
+          }
+          return item ? item.label : '';
+        }
       }}
       onConfirm={option => setValue(option ? option.value : '')}
       defaultValue={defaultValue}
