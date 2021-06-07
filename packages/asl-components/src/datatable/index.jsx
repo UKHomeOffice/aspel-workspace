@@ -61,7 +61,8 @@ export function Datatable({
   sortable,
   data = [],
   isFetching,
-  schema: tableSchema
+  schema: tableSchema,
+  pagination
 }) {
   const schema = pickBy(merge({}, tableSchema, formatters), (item, key) => item.show);
 
@@ -85,23 +86,27 @@ export function Datatable({
           data.map(row => <Row key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} />)
         }
       </tbody>
-      <tfoot>
-        <tr>
-          <td colSpan={size(schema) + (Actions ? 1 : 0)}>
-            <Pagination />
-          </td>
-        </tr>
-      </tfoot>
+      {
+        !pagination.hideUI &&
+          <tfoot>
+            <tr>
+              <td colSpan={size(schema) + (Actions ? 1 : 0)}>
+                <Pagination />
+              </td>
+            </tr>
+          </tfoot>
+      }
     </table>
   );
 }
 
 function selector(state) {
-  const { datatable: { data: { rows, isFetching }, schema } } = state;
+  const { datatable: { data: { rows, isFetching }, schema, pagination } } = state;
   return {
     data: rows,
     isFetching,
-    schema
+    schema,
+    pagination
   };
 }
 
