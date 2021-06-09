@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import uniq from 'lodash/uniq';
 import map from 'lodash/map';
 import partition from 'lodash/partition';
@@ -7,6 +7,7 @@ import flatten from 'lodash/flatten';
 import omit from 'lodash/omit';
 import intersection from 'lodash/intersection';
 import without from 'lodash/without';
+import pick from 'lodash/pick';
 import { InputWrapper } from '@ukhomeoffice/react-components';
 import { MultiInput, Fieldset } from '../';
 import PIL_GROUPS from './species';
@@ -46,6 +47,14 @@ export default function SpeciesSelector(props) {
   function onOtherChange(otherSpecies) {
     setValue({ ...value, otherSpecies });
   }
+
+  useEffect(() => {
+    const others = (value.precoded || []).filter(s => s.includes('other-'));
+    const keysToPreserve = Object.keys(value)
+      .filter(k => k === 'precoded' || k === 'otherSpecies' || others.includes(k.replace('species-', '')));
+
+    setValue(pick(value, keysToPreserve));
+  }, [value.precoded]);
 
   function mapOptions(option) {
     if (typeof option === 'string') {
