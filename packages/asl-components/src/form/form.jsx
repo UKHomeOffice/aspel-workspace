@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { Snippet, Fieldset, Link } from '../';
+import classnames from 'classnames';
 
 const Form = ({
   csrfToken,
@@ -33,7 +34,7 @@ const Form = ({
         (submit || cancelLink) && (
           <div className="control-panel">
             {
-              submit && <button type="submit" className="govuk-button" disabled={isDisabled}><Snippet>buttons.submit</Snippet></button>
+              submit && <button type="submit" className={classnames('govuk-button', submit.className)} disabled={isDisabled}><Snippet>buttons.submit</Snippet></button>
             }
             {
               cancelLink && <Link page={cancelLink} label={<Snippet>buttons.cancel</Snippet>} {...props} />
