@@ -25,8 +25,8 @@ const Invitation = ({ token, establishment }) => (
 const EstablishmentPanel = ({ establishment, profile }) => {
   const title = <h3>
     {establishment.name}
-    { establishment.status === 'inactive' && <span className="status-notice">(draft establishment)</span> }
-    { establishment.status === 'revoked' && <span className="status-notice">(revoked establishment)</span> }
+    { establishment.status === 'inactive' && <span className="status-notice">(draft - establishment not yet licensed)</span> }
+    { establishment.status === 'revoked' && <span className="status-notice">(revoked - establishment no longer licensed)</span> }
   </h3>;
 
   return (
