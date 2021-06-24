@@ -29,7 +29,6 @@ module.exports = {
   establishment: {},
   personal: {},
   total: {
-    show: true,
-    sort: 'numberOfPils'
+    show: true
   }
 };
