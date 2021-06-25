@@ -61,7 +61,11 @@ export const LinkFilter = ({
   );
 };
 
-const mapStateToProps = ({ datatable: { filters: { active, options } } }, { prop, prepend = [], append = [] }) => {
+const mapStateToProps = ({ datatable: { filters: { active, options } } }, { prop, prepend = [], append = [], options: propOptions }) => {
+  options = propOptions || options;
+  if (options && typeof options[0] === 'object') {
+    options = (options.find(opt => opt.key === prop) || {}).values;
+  }
   return {
     selected: active[prop] && active[prop][0],
     filters: [ ...prepend, ...options, ...append ]
