@@ -27,6 +27,45 @@ module.exports = {
     revoked: 'Revoked',
     transferred: 'Transferred'
   },
+  filters: {
+    title: 'Filters',
+    species: {
+      title: 'Animal types'
+    },
+    fields: {
+      title: 'Project documents',
+      options: {
+        granted: 'Licence',
+        all: 'Application',
+        nts: 'Non-technical summary'
+      }
+    },
+    status: {
+      title: 'Licence status'
+    },
+    purposes: {
+      title: 'Permissible purposes',
+      options: {
+        a: 'a) Basic research',
+        b: 'b) Translational or applied research for:',
+        b1: '(i) prevention and treatment of disease',
+        b2: '(ii) assessment of physiological conditions',
+        b3: '(iii) improvement of animal welfare',
+        c: 'c) Manufacture or testing of drugs, food and feed',
+        d: 'd) Protection of natural environment',
+        e: 'e) Preservation of species',
+        f: 'f) Higher education or training',
+        g: 'g) Forensic enquiries'
+      }
+    },
+    extra: {
+      title: 'Continuation and RA',
+      options: {
+        ra: 'Requires a retrospecitve assessment',
+        continuation: 'Includes project continuation'
+      }
+    }
+  },
   sections: {
     introduction: 'Introductory details',
     aims: 'Aims',

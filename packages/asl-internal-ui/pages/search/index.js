@@ -29,6 +29,7 @@ module.exports = settings => {
   });
 
   app.use(datatable({
+    // filters: req.searchType === 'projects-content' ? ['species', 'documents', 'status', 'purposes', 'ra'] : ['status'],
     configure: (req, res, next) => {
       const searchType = req.searchType;
       req.datatable.searchType = searchType;
