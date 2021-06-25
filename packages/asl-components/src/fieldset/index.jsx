@@ -102,7 +102,7 @@ function automapReveals(options, props) {
     if (opt.reveal) {
       return {
         ...opt,
-        reveal: <Inset><Fieldset schema={opt.reveal} model={props.values} errors={props.errors} /></Inset>
+        reveal: <Inset><Fieldset schema={opt.reveal} model={props.values} errors={props.errors} formatters={props.formatters} /></Inset>
       };
     }
     return opt;
@@ -177,7 +177,7 @@ function Field({
   }, [fieldValue]);
 
   if (formatHint) {
-    hint = formatHint(hint);
+    hint = formatHint({ name, prefix, hint });
   }
 
   function onFieldChange(e) {
