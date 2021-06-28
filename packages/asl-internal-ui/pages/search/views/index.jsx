@@ -33,7 +33,8 @@ export default function Index () {
 
   const searchTerm = filters.active;
   const count = pagination.count;
-  const hasFilters = searchType !== 'projects-content' && !!filters.options.length;
+  const statusFilters = (filters.options.find(f => f.key === 'status') || {}).values;
+  const hasFilters = searchType !== 'projects-content' && !!statusFilters.length;
 
   // eslint-disable-next-line no-sparse-arrays
   const tabs = [, 'establishments', 'profiles', 'projects'];
