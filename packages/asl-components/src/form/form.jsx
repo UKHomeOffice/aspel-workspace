@@ -37,7 +37,15 @@ const Form = ({
               submit && <button type="submit" className={classnames('govuk-button', submit.className)} disabled={isDisabled}><Snippet>buttons.submit</Snippet></button>
             }
             {
-              cancelLink && <Link page={cancelLink} label={<Snippet>buttons.cancel</Snippet>} {...props} />
+              cancelLink && (
+                <Fragment>
+                  {
+                    typeof cancelLink === 'string'
+                      ? <Link page={cancelLink} label={<Snippet>buttons.cancel</Snippet>} {...props} />
+                      : cancelLink
+                  }
+                </Fragment>
+              )
             }
           </div>
         )
