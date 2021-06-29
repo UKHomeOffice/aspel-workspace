@@ -15,6 +15,7 @@ import {
 import {
   Snippet,
   ConditionalReveal,
+  DetailsReveal,
   SpeciesSelector,
   AutoComplete,
   ApplicationConfirm,
@@ -81,6 +82,7 @@ const fields = {
   select: props => <Select { ...props } />,
   selectMany: props => <SelectMany { ...props } />,
   conditionalReveal: props => <ConditionalReveal { ...props } />,
+  detailsReveal: props => <DetailsReveal { ...props } />,
   speciesSelector: props => <SpeciesSelector {...props} />,
   restrictionsField: props => <RestrictionsField {...props} />,
   inputDuration: props => <DurationField {...props} />,
