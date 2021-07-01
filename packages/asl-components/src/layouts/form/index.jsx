@@ -1,11 +1,12 @@
 import React from 'react';
 import classnames from 'classnames';
-import { ErrorSummary, OpenTaskWarning, Form } from '../../';
+import { ErrorSummary, OpenTaskWarning, Form, Sidebar } from '../../';
 
 const FormLayout = ({
   children,
   className,
   openTasks,
+  sidebar,
   ...props
 }) => (
   <div className={classnames('govuk-grid-row', className)}>
@@ -17,6 +18,9 @@ const FormLayout = ({
       }
       <Form {...props} />
     </div>
+    {
+      sidebar && <Sidebar>{ sidebar }</Sidebar>
+    }
   </div>
 );
 
