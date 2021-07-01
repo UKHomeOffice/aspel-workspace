@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import range from 'lodash/range';
 import Fieldset from '../fieldset';
 
-const generateOptions = range => range.map(value => ({ value, label: value }));
+const generateOptions = range => range.map(value => ({ value, label: value.toString() }));
 
 export default function DurationField(props) {
   const initialState = props.value || { years: '', months: '' };
