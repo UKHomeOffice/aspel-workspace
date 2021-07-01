@@ -15,6 +15,7 @@ import {
 import {
   Snippet,
   ConditionalReveal,
+  DetailsReveal,
   SpeciesSelector,
   AutoComplete,
   ApplicationConfirm,
@@ -81,6 +82,7 @@ const fields = {
   select: props => <Select { ...props } />,
   selectMany: props => <SelectMany { ...props } />,
   conditionalReveal: props => <ConditionalReveal { ...props } />,
+  detailsReveal: props => <DetailsReveal { ...props } />,
   speciesSelector: props => <SpeciesSelector {...props} />,
   restrictionsField: props => <RestrictionsField {...props} />,
   inputDuration: props => <DurationField {...props} />,
@@ -102,7 +104,7 @@ function automapReveals(options, props) {
     if (opt.reveal) {
       return {
         ...opt,
-        reveal: <Inset><Fieldset schema={opt.reveal} model={props.values} errors={props.errors} /></Inset>
+        reveal: <Inset><Fieldset schema={opt.reveal} model={props.values} errors={props.errors} formatters={props.formatters} /></Inset>
       };
     }
     return opt;
@@ -177,7 +179,7 @@ function Field({
   }, [fieldValue]);
 
   if (formatHint) {
-    hint = formatHint(hint);
+    hint = formatHint({ name, prefix, hint });
   }
 
   function onFieldChange(e) {
