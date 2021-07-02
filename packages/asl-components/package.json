@@ -38,7 +38,8 @@
     "react-markdown": "^6.0.2",
     "react-redux": "^7.1.0",
     "redux": "^4.0.1",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.26.0",

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import map from 'lodash/map';
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import { Button, Select } from '@ukhomeoffice/react-components';
 
 export default function SelectMany({ name, label, addAnotherLabel, removeLabel, minRequiredFields = 1, value = [], options, onChange }) {
