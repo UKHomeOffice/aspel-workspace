@@ -13,8 +13,12 @@ module.exports = {
       value: 'guinea-pigs'
     },
     {
-      label: 'Hamsters',
-      value: 'hamsters'
+      label: 'Hamsters (Syrian) (Mesocricetus auratus)',
+      value: 'hamsters-syrian'
+    },
+    {
+      label: 'Hamsters (Chinese) (Cricetulus griseus)',
+      value: 'hamsters-chinese'
     },
     {
       label: 'Gerbils',
@@ -77,8 +81,24 @@ module.exports = {
       value: 'other-amphibians'
     },
     {
-      label: 'Zebra fish',
+      label: 'Zebra fish (Danio rerio)',
       value: 'zebra-fish'
+    },
+    {
+      label: 'Medaka (Oryzias latipes)',
+      value: 'medaka'
+    },
+    {
+      label: 'Brown Trout (Salmo Trutta)',
+      value: 'brown-trout'
+    },
+    {
+      label: 'Rainbow Trout (Oncorhynchus mykiss)',
+      value: 'rainbow-trout'
+    },
+    {
+      label: 'Salmon (Salmo salar)',
+      value: 'salmon'
     },
     {
       label: 'Other fish',
@@ -91,8 +111,12 @@ module.exports = {
   ],
   AV: [
     {
-      label: 'Domestic fowl',
-      value: 'other-domestic-fowl'
+      label: 'Domestic fowl (Gallus gallus domesticus)',
+      value: 'fowl'
+    },
+    {
+      label: 'Quail (Coturnix coturnix)',
+      value: 'quails'
     },
     {
       label: 'Other birds',
@@ -149,12 +173,8 @@ module.exports = {
   ],
   deprecated: [
     {
-      label: 'Hamsters (Syrian)',
-      value: 'hamsters-syrian'
-    },
-    {
-      label: 'Hamsters (Chinese)',
-      value: 'hamsters-chinese'
+      label: 'Hamsters',
+      value: 'hamsters'
     },
     {
       label: 'Camelids',
@@ -167,14 +187,6 @@ module.exports = {
     {
       label: 'Xenopus',
       value: 'xenopus'
-    },
-    {
-      label: 'Domestic fowl',
-      value: 'fowl'
-    },
-    {
-      label: 'Quails',
-      value: 'quails'
     },
     {
       label: 'Prosimians',
@@ -203,6 +215,10 @@ module.exports = {
     {
       label: 'Apes',
       value: 'apes'
+    },
+    {
+      label: 'Domestic fowl',
+      value: 'other-domestic-fowl'
     }
   ]
 };
