@@ -13,6 +13,6 @@ const renderers = {
   linkReference: RenderLinkReference
 };
 
-export default function Markdown({ children, links = false, ...props }) {
-  return <ReactMarkdown renderers={!links && renderers} {...props}>{ children }</ReactMarkdown>;
+export default function Markdown({ children, links = false, source, ...props }) {
+  return <ReactMarkdown renderers={!links && renderers} {...props}>{ source || children }</ReactMarkdown>;
 }
