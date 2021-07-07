@@ -9,7 +9,6 @@
     "watch:client": "npm run build:js -- --watch",
     "watch:server": "nodemon -r dotenv/config -e js,jsx,json -w .",
     "watch:css": "npm run build:css -- --watch",
-    "serve": "webpack serve --open",
     "test": "npm run test:lint && npm run test:deduped",
     "test:deduped": "./test/dedupe.sh",
     "test:lint": "eslint . --ext jsx,js",
