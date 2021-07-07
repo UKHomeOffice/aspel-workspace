@@ -57,8 +57,6 @@
     "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "ndjson": "^1.5.0",
-    "node-sass": "^6.0.1",
-    "npm-run-all": "^4.1.5",
     "react": "^16.9.0",
     "react-markdown": "^6.0.2",
     "react-redux": "^7.2.2",
@@ -71,6 +69,8 @@
     "eslint": "^4.19.1",
     "eslint-config-lennym": "^2.2.1",
     "nodemon": "^2.0.6",
+    "node-sass": "^6.0.1",
+    "npm-run-all": "^4.1.5",
     "npm-sass": "^3.0.0",
     "webpack": "^4.41.0",
     "webpack-cli": "^3.3.9"
