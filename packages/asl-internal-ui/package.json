@@ -7,7 +7,7 @@
     "start": "node index.js",
     "dev": "npm-run-all --parallel watch:client watch:server watch:css",
     "watch:client": "npm run build:js -- --watch",
-    "watch:server": "nodemon -r dotenv/config -e js,jsx,json -w .",
+    "watch:server": "nodemon -r dotenv/config -e js,jsx,json -w",
     "watch:css": "npm run build:css -- --watch",
     "test": "npm run test:lint && npm run test:deduped",
     "test:lint": "eslint . --ext jsx,js",
