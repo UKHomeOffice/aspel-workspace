@@ -66,6 +66,11 @@ module.exports = settings => {
 
   app.use(cachebuster());
 
+  app.use((req, res, next) => {
+    res.locals.contactUsLink = true; // enable the contact us link in the footer
+    next();
+  });
+
   mountRoutes({ app, routes, settings });
 
   return app;
