@@ -61,7 +61,7 @@ module.exports = {
     extra: {
       title: 'Continuation and RA',
       options: {
-        ra: 'Requires a retrospecitve assessment',
+        ra: 'Requires a retrospective assessment',
         continuation: 'Includes project continuation'
       }
     }
