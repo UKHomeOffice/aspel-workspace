@@ -44,6 +44,8 @@ export default function Index() {
         <Button type="Submit" disabled={hasPendingDownload}>Download returns</Button>
       </form>
 
+      <Link className="float-right" page="ropsReporting.download.dictionary" label="Dictionary" />
+
       <h2>Previous downloads</h2>
 
       <List schema={schema} />
