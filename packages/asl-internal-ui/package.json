@@ -31,7 +31,7 @@
   "homepage": "https://github.com/UKHomeOffice/asl-internal-ui#readme",
   "dependencies": {
     "@asl/components": "^10.5.2",
-    "@asl/pages": "^26.1.4",
+    "@asl/pages": "^26.1.5",
     "@asl/projects": "^10.0.5",
     "@asl/schema": "^9.11.1",
     "@asl/service": "^8.8.5",
@@ -39,6 +39,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/preset-react": "^7.0.0",
+    "@ukhomeoffice/asl-functional-testing": "^2.14.1",
     "@ukhomeoffice/react-components": "^0.10.0",
     "accessible-autocomplete": "^2.0.3",
     "archiver": "^3.1.1",
