@@ -15,7 +15,7 @@ function Item({ item, onRemove, showRemove, onChange, name, disabled }) {
   );
 }
 
-export default function MultiInput({ value, onChange, onFieldChange, name, disabled, objectItems = false }) {
+export default function MultiInput({ value, onChange, onFieldChange, name, disabled = [], objectItems = false }) {
   const initialValue = (value ? castArray(value) : [])
     .filter(Boolean)
     .map(v => typeof v !== 'object' ? ({ id: uuid(), value: v }) : v);
