@@ -1,48 +1,66 @@
+import { v4 as uuid } from 'uuid';
 import React, { useState, useEffect } from 'react';
 import { Button, Input } from '@ukhomeoffice/react-components';
+import castArray from 'lodash/castArray';
 
-function Item({ value, onRemove, showRemove, onChange }) {
+function Item({ item, onRemove, showRemove, onChange, name, disabled }) {
+  const isDisabled = disabled.includes(item.id);
   return (
     <div className="multi-input-item">
-      <Input type="text" value={value} onChange={onChange} label="" />
+      <Input type="text" value={item.value} onChange={onChange} label="" name={name} id={item.id} disabled={isDisabled} />
       {
-        showRemove && <Button onClick={onRemove}>Remove</Button>
+        showRemove && <Button onClick={onRemove} disabled={isDisabled}>Remove</Button>
       }
     </div>
   );
 }
 
-export default function MultiInput({ value, onChange, onFieldChange }) {
-  const [items, setItems] = useState(value);
+export default function MultiInput({ value, onChange, onFieldChange, name, disabled = [], objectItems = false }) {
+  const initialValue = (value ? castArray(value) : [])
+    .filter(Boolean)
+    .map(v => typeof v !== 'object' ? ({ id: uuid(), value: v }) : v);
+  const [items, setItems] = useState(initialValue);
 
   useEffect(() => {
-    onChange(items.filter(Boolean));
+    const rtn = getItems();
+
+    onChange(rtn);
+
     if (onFieldChange) {
-      onFieldChange(items.filter(Boolean));
+      onFieldChange(rtn);
     }
   }, [items]);
 
-  if (!items.length) {
-    setItems(['']);
+  function getItems() {
+    return objectItems
+      ? items.filter(i => i.value)
+      : items.map(obj => obj.value).filter(Boolean);
   }
 
-  function removeItem(index) {
+  if (!items.length) {
+    setItems([{ id: uuid(), value: '' }]);
+  }
+
+  function removeItem(id) {
     return e => {
       e.preventDefault();
-      setItems(items.filter((item, i) => i !== index));
+      setItems(items.filter(item => item.id !== id));
     };
   }
 
   function addItem(e) {
     e.preventDefault();
-    setItems([ ...items, '' ]);
+    setItems([ ...items, { id: uuid(), value: '' } ]);
   }
 
-  function updateItem(index) {
+  function updateItem(id) {
     return e => {
-      setItems(items.map((item, i) => {
-        if (index === i) {
-          return e.target.value;
+      setItems(items.map(item => {
+        if (item.id === id) {
+          return {
+            ...item,
+            value: e.target.value
+          };
         }
         return item;
       }));
@@ -51,14 +69,19 @@ export default function MultiInput({ value, onChange, onFieldChange }) {
 
   return (
     <div className="multi-input">
-      <fieldset>
+      {
+        objectItems && <input type="hidden" name={name} value={JSON.stringify(getItems())} />
+      }
+      <fieldset id={name}>
         {
-          items.map((item, index) => (
+          items.map(item => (
             <Item
-              value={item}
-              key={index}
-              onRemove={removeItem(index)}
-              onChange={updateItem(index)}
+              item={item}
+              key={item.id}
+              name={!objectItems && name}
+              onRemove={removeItem(item.id)}
+              onChange={updateItem(item.id)}
+              disabled={disabled}
               showRemove={items.length > 1}
             />
           ))
