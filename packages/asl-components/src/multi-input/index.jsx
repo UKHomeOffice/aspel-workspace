@@ -7,7 +7,7 @@ function Item({ item, onRemove, showRemove, onChange, name, disabled }) {
   const isDisabled = disabled.includes(item.id);
   return (
     <div className="multi-input-item">
-      <Input type="text" value={item.value} onChange={onChange} label="" name={name} disabled={isDisabled} />
+      <Input type="text" value={item.value} onChange={onChange} label="" name={name} id={item.id} disabled={isDisabled} />
       {
         showRemove && <Button onClick={onRemove} disabled={isDisabled}>Remove</Button>
       }
