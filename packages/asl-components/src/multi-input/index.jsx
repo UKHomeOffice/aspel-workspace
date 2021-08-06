@@ -22,9 +22,7 @@ export default function MultiInput({ value, onChange, onFieldChange, name, disab
   const [items, setItems] = useState(initialValue);
 
   useEffect(() => {
-    const rtn = objectItems
-      ? items.filter(i => i.value)
-      : items.map(obj => obj.value).filter(Boolean);
+    const rtn = getItems();
 
     onChange(rtn);
 
@@ -32,6 +30,12 @@ export default function MultiInput({ value, onChange, onFieldChange, name, disab
       onFieldChange(rtn);
     }
   }, [items]);
+
+  function getItems() {
+    return objectItems
+      ? items.filter(i => i.value)
+      : items.map(obj => obj.value).filter(Boolean);
+  }
 
   if (!items.length) {
     setItems([{ id: uuid(), value: '' }]);
@@ -66,9 +70,9 @@ export default function MultiInput({ value, onChange, onFieldChange, name, disab
   return (
     <div className="multi-input">
       {
-        objectItems && <input type="hidden" name={name} value={JSON.stringify(items)} />
+        objectItems && <input type="hidden" name={name} value={JSON.stringify(getItems())} />
       }
-      <fieldset>
+      <fieldset id={name}>
         {
           items.map(item => (
             <Item
