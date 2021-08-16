@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+import classnames from 'classnames';
 import React, { useState, useEffect } from 'react';
 import { Button, Input } from '@ukhomeoffice/react-components';
 import castArray from 'lodash/castArray';
@@ -15,7 +16,7 @@ function Item({ item, onRemove, showRemove, onChange, name, disabled }) {
   );
 }
 
-export default function MultiInput({ value, onChange, onFieldChange, name, disabled = [], objectItems = false }) {
+export default function MultiInput({ value, onChange, onFieldChange, name, label, hint, error, disabled = [], objectItems = false }) {
   const initialValue = (value ? castArray(value) : [])
     .filter(Boolean)
     .map(v => typeof v !== 'object' ? ({ id: uuid(), value: v }) : v);
@@ -68,10 +69,13 @@ export default function MultiInput({ value, onChange, onFieldChange, name, disab
   }
 
   return (
-    <div className="multi-input">
+    <div className={classnames('govuk-form-group', 'multi-input', { 'govuk-form-group--error': error })}>
       {
         objectItems && <input type="hidden" name={name} value={JSON.stringify(getItems())} />
       }
+      <label className="govuk-label" htmlFor={name}>{label}</label>
+      { hint && <span id={`${name}-hint`} className="govuk-hint">{hint}</span> }
+      { error && <span id={`${name}-error`} className="govuk-error-message">{error}</span> }
       <fieldset id={name}>
         {
           items.map(item => (
