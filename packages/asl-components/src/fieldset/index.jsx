@@ -10,7 +10,8 @@ import {
   CheckboxGroup,
   RadioGroup,
   Select,
-  DateInput
+  DateInput,
+  Warning
 } from '@ukhomeoffice/react-components';
 import {
   Snippet,
@@ -88,6 +89,7 @@ const fields = {
   inputDuration: props => <DurationField {...props} />,
   autoComplete: props => <AutoComplete {...props} />,
   multiInput: props => <MultiInput {...props} />,
+  warning: props => <Warning><Snippet {...props}>{ props.contentKey }</Snippet></Warning>,
   text: props => (
     <div className={classnames('govuk-form-group', props.name)}>
       <h3>{ props.label }</h3>
