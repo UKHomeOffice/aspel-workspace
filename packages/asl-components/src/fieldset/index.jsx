@@ -48,12 +48,12 @@ function SingleRadio(props) {
   return (
     <div className="govuk-form-group">
       <input type="hidden" name={props.name} value={value} />
-      <h3>{ props.label }</h3>
+      { props.label && <h3>{ props.label }</h3> }
       {
         settings.label || getLabel(value, props.fieldName)
       }
       {
-        hint && <p className="govuk-hint">{ hint }</p>
+        hint && <span className="govuk-hint">{ hint }</span>
       }
       {
         settings.reveal
