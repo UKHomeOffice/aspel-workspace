@@ -62,7 +62,8 @@ export function Datatable({
   data = [],
   isFetching,
   schema: tableSchema,
-  pagination
+  pagination,
+  noDataWarning
 }) {
   const schema = pickBy(merge({}, tableSchema, formatters), (item, key) => item.show);
 
@@ -83,7 +84,9 @@ export function Datatable({
       </thead>
       <tbody>
         {
-          data.map(row => <Row key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} />)
+          data.length === 0 && noDataWarning
+            ? <tr><td colSpan={size(schema) + (Actions ? 1 : 0)}>{noDataWarning}</td></tr>
+            : data.map(row => <Row key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} />)
         }
       </tbody>
       {
