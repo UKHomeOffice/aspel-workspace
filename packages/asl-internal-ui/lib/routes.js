@@ -143,7 +143,6 @@ module.exports = {
     permissions: 'asruReporting'
   },
   ropsReporting: {
-    breadcrumb: false,
     path: '/rops',
     router: rops,
     permissions: 'asruRops'
