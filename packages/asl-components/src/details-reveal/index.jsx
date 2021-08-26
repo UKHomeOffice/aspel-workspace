@@ -8,9 +8,11 @@ export default function DetailsReveal({ label, reveal, values, ...props }) {
   });
 
   return (
-    <details open={open}>
-      <summary>{label}</summary>
-      <Fieldset {...props} model={values} schema={reveal} />
-    </details>
+    <div className="govuk-form-group">
+      <details open={open}>
+        <summary>{label}</summary>
+        <Fieldset {...props} model={values} schema={reveal} />
+      </details>
+    </div>
   );
 }
