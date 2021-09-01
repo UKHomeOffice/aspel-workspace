@@ -58,7 +58,7 @@ export default function Index () {
               prop="establishments"
               label={<Snippet>filter.label</Snippet>}
               options={['unassociated']}
-              showAllLabel="Show all"
+              showAll={{ position: 'before', label: 'Show all' }}
               formatter={uppercaseFirst}
             />
           }
@@ -66,8 +66,7 @@ export default function Index () {
             hasFilters && <LinkFilter
               prop="status"
               label="Filter by status:"
-              showAllLabel="Show all"
-              showAllBefore={false}
+              showAll={{ position: 'after', label: 'Show all' }}
               formatter={projectStatusFormatter}
             />
           }
