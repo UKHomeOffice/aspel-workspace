@@ -24,7 +24,18 @@ export default function AsruProfilesList() {
         title={<Snippet>page.title</Snippet>}
         subtitle={<Snippet>page.subtitle</Snippet>}
       />
-      <Search label={<Snippet>search</Snippet>} />
+
+      <div className="govuk-grid-row">
+        <div className="govuk-grid-column-two-thirds">
+          <Search label={<Snippet>search</Snippet>} />
+        </div>
+        <div className="govuk-grid-column-one-third">
+          <div className="view-all-link">
+            <Link page="asruProfilesList" label="Clear search" />
+          </div>
+        </div>
+      </div>
+
       <LinkFilter prop="asruRoles" formatter={filter => <Snippet>{`filters.${filter}`}</Snippet>} />
       <Datatable formatters={formatters} />
     </Fragment>
