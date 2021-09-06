@@ -22,17 +22,15 @@ export const LinkFilter = ({
   formatter,
   prop,
   label = 'Filter by:',
-  showAllLabel = 'All',
-  showAllBefore = true
+  showAll = { position: 'before', label: 'All' }
 }) => {
-  const showAll = <li><ShowAll selected={selected} label={showAllLabel} prop={prop} onChange={onChange} /></li>;
-
   return (
     <div className="link-filter">
       <label>{ label }</label>
       <ul>
         {
-          showAllBefore && showAll
+          showAll && showAll.position !== 'after' &&
+            <li><ShowAll selected={selected} label={showAll.label} prop={prop} onChange={onChange} /></li>
         }
         {
           filters.map(f => {
@@ -54,7 +52,8 @@ export const LinkFilter = ({
           })
         }
         {
-          !showAllBefore && showAll
+          showAll && showAll.position === 'after' &&
+            <li><ShowAll selected={selected} label={showAll.label} prop={prop} onChange={onChange} /></li>
         }
       </ul>
     </div>
