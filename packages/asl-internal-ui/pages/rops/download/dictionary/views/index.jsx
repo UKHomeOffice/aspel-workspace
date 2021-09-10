@@ -27,7 +27,7 @@ function Field({ name, field }) {
 }
 
 export default function Dictionary() {
-  const { ropsFields, proceduresFields } = useSelector(state => state.static, shallowEqual);
+  const { ropsFields, proceduresFields, species } = useSelector(state => state.static, shallowEqual);
 
   return (
     <Fragment>
@@ -42,6 +42,17 @@ export default function Dictionary() {
       {
         map(proceduresFields, (field, name) => <Field key={name} field={field} name={name} />)
       }
+      <h1>Species</h1>
+      <dl>
+        {
+          map(species, (s) => (
+            <Fragment key={s.value}>
+              <dt>{ s.value }</dt>
+              <dd>{ s.label }</dd>
+            </Fragment>
+          ))
+        }
+      </dl>
     </Fragment>
   );
 }
