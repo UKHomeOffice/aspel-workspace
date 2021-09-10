@@ -1,10 +1,11 @@
 const { page } = require('@asl/service/ui');
-const { pick, merge, flatten, uniq } = require('lodash');
+const { pick, merge, flatten, uniq, omit } = require('lodash');
 const getRopsSchema = require('@asl/pages/pages/rops/update/schema');
 const getProceduresSchema = require('@asl/pages/pages/rops/procedures/schema');
 const { fields: ropsFields } = require('@asl/pages/pages/rops/update/content');
 const proceduresContent = require('@asl/pages/pages/rops/procedures/content');
 const proceduresCreateContent = require('@asl/pages/pages/rops/procedures/create/content');
+const { projectSpecies } = require('@asl/constants');
 
 const proceduresFields = merge({}, proceduresContent.fields, proceduresCreateContent.fiels);
 
@@ -45,7 +46,8 @@ module.exports = () => {
     };
     const ropsSchema = getRopsSchema(params);
     const proceduresSchema = getProceduresSchema(params);
-    console.log(getAllKeys(proceduresSchema));
+
+    res.locals.static.species = flatten(Object.values(omit(projectSpecies, 'deprecated')));
     res.locals.static.ropsFields = pick(ropsFields, getAllKeys(ropsSchema));
     res.locals.static.proceduresFields = pick(proceduresFields, getAllKeys(proceduresSchema));
     next();
