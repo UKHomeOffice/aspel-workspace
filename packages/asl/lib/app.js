@@ -19,6 +19,13 @@ function traverseRoutes(routes) {
 const urls = traverseRoutes(routes);
 
 module.exports = settings => {
+  if (!settings.api) {
+    throw new Error('API_URL endpoint must be defined');
+  }
+  if (!settings.auth.permissions) {
+    throw new Error('PERMISSIONS_SERVICE endpoint must be defined');
+  }
+
   const app = router({ ...settings, views, urls });
 
   app.use('/e', (req, res) => {
