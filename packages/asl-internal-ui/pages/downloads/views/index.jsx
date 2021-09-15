@@ -6,7 +6,61 @@ const Index = () => {
   return <Fragment>
     <Header title="Downloads"/>
 
-    <h2>General downloads</h2>
+    <section>
+      <h2>Project licences</h2>
+
+      <h3><Link page="downloads.report" report="ppl-list" label="Project list" /></h3>
+      <p>Download a .csv file with summaries of the admin details of project licences such as expiry dates and statuses.</p>
+
+      <h3><Link page="downloads.report" report="ppl-details" label="Project details" /></h3>
+      <p>Download a .csv file containing details of project licences, including animal types, number of protocols and use of GA animals etc.</p>
+
+      <h3><Link page="downloads.report" report="ppl-conditions" label="Project conditions and authorisations" /></h3>
+      <p>Download a .csv file with summaries of the conditions and authorisations for each project.</p>
+
+      <h3><Link page="downloads.report" report="ppl-protocols" label="PPL protocols" /></h3>
+      <p>Download a .csv file with a list of all protocols for each project.</p>
+
+      <h3><Link page="downloads.report" report="ppl-sla" label="Expired statutory deadlines" /></h3>
+      <p>View a list of all PPL applications which passed their statutory deadline, which you can download as a .csv file.</p>
+
+      <h3><Link page="downloads.report" report="ppl-applications" label="PPL Applications" /></h3>
+      <p>View a list of all PPL applications with a breakdown of time spent with the establishment and ASRU, which you can download as a .csv file.</p>
+    </section>
+
+    <section>
+      <h2>Personal licences</h2>
+
+      <h3><Link page="downloads.report" report="training-pils" label="Category E" /></h3>
+      <p>View a list of all category E PILs, which you can download as a .csv file.</p>
+
+      <h3><Link page="downloads.report" report="pils" label="All other categories" /></h3>
+      <p>View a list of all category A, B, C, D and F PILs, which you can download as a .csv file.</p>
+
+      <h3><Link page="downloads.report" report="pil-reviews" label="Upcoming PIL reviews" /></h3>
+      <p>View a list of PILs which are due a review, which you can download as a .csv file.</p>
+
+      <h3><Link page="downloads.report" report="completed-pil-reviews" label="Completed PIL reviews" /></h3>
+      <p>View a list of PIL reviews which have been submitted without changes, which you can download as a .csv file.</p>
+    </section>
+
+    <section>
+      <h2>Establishment licences</h2>
+
+      <h3><Link page="downloads.report" report="establishments" label="Establishment summaries" /></h3>
+      <p>Download a .csv file with summaries of every establishment (name, licence number, PELH, Spocs, Inspectors, number of active PPLs, etc).</p>
+
+      <h3><Link page="downloads.report" report="establishment-conditions" label="Establishment conditions and authorisations" /></h3>
+      <p>Download a .csv file with the conditions and authorisations of every establishment (name, licence number, status, conditions, authorisations).</p>
+    </section>
+
+    <section>
+      <h2>Establishments users</h2>
+    </section>
+
+    <section>
+      <h2>Other downloads</h2>
+    </section>
 
     <h3><Link page="reporting" query={{ csv: 1 }} label="Completed tasks" /></h3>
     <p>View a list of all completed tasks by type, which you can download as a .csv file.</p>
@@ -17,47 +71,6 @@ const Index = () => {
     <h3><Link page="downloads.report" report="newsletter-subscriptions" label="Operational newsletter subscriptions" /></h3>
     <p>Download a .csv file containing a list of users who are subscribed to the operational newsletter.</p>
 
-    <h2>Personal licence downloads</h2>
-
-    <h3><Link page="downloads.report" report="training-pils" label="Category E" /></h3>
-    <p>View a list of all category E PILs, which you can download as a .csv file.</p>
-
-    <h3><Link page="downloads.report" report="pils" label="All other categories" /></h3>
-    <p>View a list of all category A, B, C, D and F PILs, which you can download as a .csv file.</p>
-
-    <h3><Link page="downloads.report" report="pil-reviews" label="Upcoming PIL reviews" /></h3>
-    <p>View a list of PILs which are due a review, which you can download as a .csv file.</p>
-
-    <h3><Link page="downloads.report" report="completed-pil-reviews" label="Completed PIL reviews" /></h3>
-    <p>View a list of PIL reviews which have been submitted without changes, which you can download as a .csv file.</p>
-
-    <h2>Project licence downloads</h2>
-
-    <h3><Link page="downloads.report" report="ppl-list" label="Project list" /></h3>
-    <p>Download a .csv file with summaries of the admin details of project licences such as expiry dates and statuses.</p>
-
-    <h3><Link page="downloads.report" report="ppl-details" label="Project details" /></h3>
-    <p>Download a .csv file containing details of project licences, including animal types, number of protocols and use of GA animals etc.</p>
-
-    <h3><Link page="downloads.report" report="ppl-conditions" label="Project conditions and authorisations" /></h3>
-    <p>Download a .csv file with summaries of the conditions and authorisations for each project.</p>
-
-    <h3><Link page="downloads.report" report="ppl-protocols" label="PPL protocols" /></h3>
-    <p>Download a .csv file with a list of all protocols for each project.</p>
-
-    <h3><Link page="downloads.report" report="ppl-sla" label="Expired statutory deadlines" /></h3>
-    <p>View a list of all PPL applications which passed their statutory deadline, which you can download as a .csv file.</p>
-
-    <h3><Link page="downloads.report" report="ppl-applications" label="PPL Applications" /></h3>
-    <p>View a list of all PPL applications with a breakdown of time spent with the establishment and ASRU, which you can download as a .csv file.</p>
-
-    <h2>Establishment licence downloads</h2>
-
-    <h3><Link page="downloads.report" report="establishments" label="Establishment summaries" /></h3>
-    <p>Download a .csv file with summaries of every establishment (name, licence number, PELH, Spocs, Inspectors, number of active PPLs, etc).</p>
-
-    <h3><Link page="downloads.report" report="establishment-conditions" label="Establishment conditions and authorisations" /></h3>
-    <p>Download a .csv file with the conditions and authorisations of every establishment (name, licence number, status, conditions, authorisations).</p>
   </Fragment>;
 };
 
