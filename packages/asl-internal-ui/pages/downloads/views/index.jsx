@@ -80,7 +80,7 @@ export default function Index() {
 
         <section>
           <h2>Other downloads</h2>
-          <p>You can <Link page="reporting" query={{ csv: 1 }} label="view and download more data on tasks completed in ASPeL" />.</p>
+          <p>You can <Link page="reporting" label="view and download more data on tasks completed in ASPeL" />.</p>
         </section>
 
       </div>
