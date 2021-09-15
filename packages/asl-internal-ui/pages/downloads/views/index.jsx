@@ -75,7 +75,7 @@ export default function Index() {
 
           <Link page="downloads.report" report="named-people" label="Named people and admins" />
           <p className="file-type-label">CSV</p>
-          <p>View a list of contact details for all named people, admins, and HOLCs, which you can download as a .csv file.</p>
+          <p>Download contact details for all named people, admins, and HOLCs at active and inactive establishments.</p>
         </section>
 
         <section>
