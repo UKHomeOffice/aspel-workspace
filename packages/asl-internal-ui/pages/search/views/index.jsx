@@ -71,7 +71,7 @@ export default function Index () {
             />
           }
           {
-            searchType === 'projects-content' && <Link page="search" searchType={searchType} label="Download CSV" query={queryWithCSV} className="float-right" />
+            searchType === 'projects-content' && <Link page="search" searchType={searchType} label="Download results (CSV)" query={queryWithCSV} className="float-right" />
           }
           <FilterSummary
             resultType={resultType === 'projects-content' ? 'projects' : resultType}
