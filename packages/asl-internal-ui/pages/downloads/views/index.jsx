@@ -8,6 +8,8 @@ export default function Index() {
 
         <Header title="Downloads"/>
 
+        <p>Download data from the animals in science e-licensing system (ASPeL) since it started use on 31 July 2019.</p>
+
         <section>
           <h2>Project licences</h2>
 
