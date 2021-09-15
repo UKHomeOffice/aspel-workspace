@@ -145,7 +145,7 @@ ul.nts-downloads {
 
 table.projects-content {
   border-top: 1px solid $govuk-border-colour;
-  
+
   thead {
     display: none;
   }
@@ -204,6 +204,17 @@ table.projects-content {
           display: none;
         }
       }
+    }
+  }
+}
+
+.asru-downloads {
+  p {
+    margin-top: 0;
+
+    &.file-type-label {
+      font-size: 12px;
+      margin-bottom: 0;
     }
   }
 }
