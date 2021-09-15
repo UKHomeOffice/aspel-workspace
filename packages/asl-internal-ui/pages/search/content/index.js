@@ -24,7 +24,7 @@ module.exports = (searchType) => ({
     viewAll: 'Clear search',
     projectToggle: {
       projects: 'Search all projects for specific terms',
-      'projects-content': 'Back to project directory'
+      'projects-content': '< Back to project directory'
     },
     establishments: {
       title: 'Establishments',
@@ -39,8 +39,8 @@ module.exports = (searchType) => ({
       label: 'Search by title, primary establishment, PPL number or licence holder'
     },
     'projects-content': {
-      title: 'Advanced project search',
-      label: 'Search full application text'
+      title: 'Search all projects',
+      label: 'Enter a search term'
     }
   },
   actions: {

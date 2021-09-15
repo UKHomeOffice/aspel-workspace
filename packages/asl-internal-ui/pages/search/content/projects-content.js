@@ -30,21 +30,27 @@ module.exports = {
   filters: {
     title: 'Filters',
     species: {
-      title: 'Animal types'
+      title: 'Animal type'
     },
     fields: {
-      title: 'Project documents',
+      title: 'Document type',
       options: {
-        granted: 'Licence',
-        all: 'Application',
-        nts: 'Non-technical summary'
+        granted: 'Licences',
+        all: 'Applications',
+        nts: 'NTSs and RAs'
       }
     },
     status: {
-      title: 'Licence status'
+      title: 'Project status',
+      options: {
+        active: 'Active projects',
+        revoked: 'Revoked projects',
+        expired: 'Expired projects',
+        inactive: 'Draft projects'
+      }
     },
     purposes: {
-      title: 'Permissible purposes',
+      title: 'Permissible purpose',
       options: {
         a: 'a) Basic research',
         b: 'b) Translational or applied research for:',
@@ -61,8 +67,8 @@ module.exports = {
     extra: {
       title: 'Continuation and RA',
       options: {
-        ra: 'Requires a retrospective assessment',
-        continuation: 'Includes project continuation'
+        ra: 'Projects requiring RAs',
+        continuation: 'Project continuations'
       }
     }
   },

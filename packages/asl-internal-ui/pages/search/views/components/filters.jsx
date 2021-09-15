@@ -5,10 +5,6 @@ import { CheckboxGroup, Input } from '@ukhomeoffice/react-components';
 import { changeFilters } from '@asl/components/src/filters/actions';
 import isEqual from 'lodash/isEqual';
 
-function uppercaseFirst(str) {
-  return `${str.charAt(0).toUpperCase()}${str.substring(1).toLowerCase()}`;
-}
-
 function Filter({ name, format, useSearch, initialFilters }) {
   const { options, active } = useSelector(state => state.datatable.filters, shallowEqual);
   initialFilters = initialFilters
@@ -73,16 +69,16 @@ export default function Filters() {
           <Filter name="species" useSearch={true} />
         </li>
         <li>
-          <Filter name="fields" initialFilters={['granted', 'all', 'nts']} />
-        </li>
-        <li>
-          <Filter name="status" format={uppercaseFirst} />
-        </li>
-        <li>
           <Filter name="purposes" initialFilters={['a', 'b', 'b1', 'b2', 'b3', 'c', 'd', 'e', 'f', 'g']} />
         </li>
         <li>
-          <Filter name="extra" initialFilters={['ra', 'continuation']} />
+          <Filter name="status" format={ status => <Snippet>{ `filters.status.options.${status}` }</Snippet> } />
+        </li>
+        <li>
+          <Filter name="fields" initialFilters={['granted', 'all', 'nts']} />
+        </li>
+        <li>
+          <Filter name="extra" initialFilters={['continuation', 'ra']} />
         </li>
       </ul>
     </div>
