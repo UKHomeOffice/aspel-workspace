@@ -46,7 +46,8 @@ module.exports = {
         active: 'Active projects',
         revoked: 'Revoked projects',
         expired: 'Expired projects',
-        inactive: 'Draft projects'
+        inactive: 'Draft projects',
+        transferred: 'Transferred projects'
       }
     },
     purposes: {
