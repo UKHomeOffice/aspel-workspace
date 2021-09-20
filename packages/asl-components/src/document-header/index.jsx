@@ -43,7 +43,17 @@ export default function DocumentHeader({ title, subtitle, backLink, children, de
     return (
       <Fragment>
         { title && <h1>{title}</h1> }
-        { subtitle && <h2>{subtitle}</h2> }
+        <div className="title-overflow">
+          { subtitle && <h2>{subtitle}</h2> }
+          {
+            children && <a href="#" onClick={toggleDetails} className="toggle-details">
+              { detailsShowing ? `Hide ${detailsLabel}` : `View ${detailsLabel}` }
+            </a>
+          }
+        </div>
+        {
+          children && detailsShowing && <div className="details">{children}</div>
+        }
       </Fragment>
     );
   }
@@ -54,17 +64,6 @@ export default function DocumentHeader({ title, subtitle, backLink, children, de
       <header className="document-header">
         <div className="page-title">
           <Headings title={title} subtitle={subtitle} />
-          {
-            !isSticky && children &&
-              <Fragment>
-                <a href="#" onClick={toggleDetails} className="toggle-details">
-                  { detailsShowing ? `Hide ${detailsLabel}` : `View ${detailsLabel}` }
-                </a>
-                {
-                  detailsShowing && <div className="details">{children}</div>
-                }
-              </Fragment>
-          }
         </div>
 
         { !isSticky && backLink && <div className="back-link">{ backLink }</div> }
