@@ -20,7 +20,7 @@ const Countdown = ({ expiry, unit, showNotice, showUrgent, contentPrefix = 'coun
     return null;
   }
 
-  const displayUnit = diff['day'] <= 7 ? 'day' : (diff['week'] <= 13 ? 'week' : 'month');
+  const displayUnit = diff['day'] <= 14 ? 'day' : (diff['week'] <= 13 ? 'week' : 'month');
   const displayDiff = Math.abs(displayUnit === 'day' ? diff[displayUnit] : diff[displayUnit] + 1);
   const urgent = diff[unit] <= showUrgent;
 

@@ -31,8 +31,8 @@ describe('<Countdown />', () => {
     expect(wrapper.find(Snippet).props().diff).toEqual(1);
   });
 
-  test('shows less than x weeks left if the expiry date is greater than 1 week but less than a month', () => {
-    const wrapper = shallow(<Countdown expiry={addWeeks(new Date(), 2)} />);
+  test('shows less than x weeks left if the expiry date is greater than 2 weeks but less than a month', () => {
+    const wrapper = shallow(<Countdown expiry={addWeeks(new Date(), 3)} />);
     expect(wrapper.find(Snippet).length).toBe(1);
     expect(wrapper.find(Snippet).props().unit).toEqual('week');
     expect(wrapper.find(Snippet).props().children).toEqual('countdown.plural');
