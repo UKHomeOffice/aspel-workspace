@@ -50,4 +50,19 @@ describe('<Countdown />', () => {
     expect(wrapper.find('span').length).toBe(0);
   });
 
+  describe('custom content key', () => {
+
+    test('uses in place of default key if provided', () => {
+      const expired = shallow(<Countdown expiry={'2017-01-01'} contentPrefix="custom" />);
+      expect(expired.find(Snippet).props().children).toEqual('custom.expired');
+
+      const today = shallow(<Countdown expiry={new Date()} contentPrefix="custom" />);
+      expect(today.find(Snippet).props().children).toEqual('custom.expiresToday');
+
+      const tomorrow = shallow(<Countdown expiry={endOfTomorrow()} contentPrefix="custom" />);
+      expect(tomorrow.find(Snippet).props().children).toEqual('custom.singular');
+    });
+
+  });
+
 });

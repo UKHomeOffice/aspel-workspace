@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Snippet } from '../';
 import differenceInMonths from 'date-fns/difference_in_months';
 import differenceInWeeks from 'date-fns/difference_in_weeks';
@@ -7,7 +7,7 @@ import isBefore from 'date-fns/is_before';
 import isToday from 'date-fns/is_today';
 import classnames from 'classnames';
 
-const Countdown = ({ expiry, unit, showNotice, showUrgent, suffix }) => {
+const Countdown = ({ expiry, unit, showNotice, showUrgent, contentPrefix = 'countdown' }) => {
   const now = new Date();
 
   const diff = {
@@ -24,22 +24,19 @@ const Countdown = ({ expiry, unit, showNotice, showUrgent, suffix }) => {
   const displayDiff = Math.abs(displayUnit === 'day' ? diff[displayUnit] : diff[displayUnit] + 1);
   const urgent = diff[unit] <= showUrgent;
 
-  let contentKey = displayDiff === 1 ? 'countdown.singular' : 'countdown.plural';
+  let contentKey = displayDiff === 1 ? `${contentPrefix}.singular` : `${contentPrefix}.plural`;
 
   if (isBefore(expiry, now)) {
-    contentKey = 'countdown.expired';
+    contentKey = `${contentPrefix}.expired`;
   }
 
   if (isToday(expiry)) {
-    contentKey = 'countdown.expiresToday';
+    contentKey = `${contentPrefix}.expiresToday`;
   }
 
   return (
     <span className={classnames('notice', { urgent })}>
       <Snippet diff={displayDiff} unit={displayUnit}>{contentKey}</Snippet>
-      {
-        suffix && <Fragment>{' - '}<span>{suffix}</span></Fragment>
-      }
     </span>
   );
 };
