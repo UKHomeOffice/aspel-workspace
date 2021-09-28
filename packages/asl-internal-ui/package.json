@@ -33,7 +33,7 @@
     "@asl/components": "^10.8.2",
     "@asl/constants": "^1.0.0",
     "@asl/pages": "^26.12.6",
-    "@asl/projects": "^10.1.0",
+    "@asl/projects": "^10.1.1",
     "@asl/schema": "^9.11.1",
     "@asl/service": "^8.8.5",
     "@babel/core": "^7.6.2",
