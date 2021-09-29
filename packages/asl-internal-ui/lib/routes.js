@@ -2,7 +2,6 @@ const { pages } = require('@asl/pages');
 
 const dashboard = require('../pages/dashboard');
 const dedupe = require('../pages/deduplicate');
-const asruAssignment = require('../pages/asru-assignment');
 const projectAsruActions = require('../pages/project');
 const projectVersionAsruActions = require('./routers/project-version');
 const globalProfile = require('../pages/global-profile');
@@ -71,11 +70,6 @@ module.exports = {
     breadcrumb: false,
     router: pages.establishment,
     routes: {
-      asru: {
-        path: '/asru/:asruUser',
-        breadcrumb: false,
-        router: asruAssignment
-      },
       cjsm: {
         path: '/cjsm',
         breadcrumb: false,
