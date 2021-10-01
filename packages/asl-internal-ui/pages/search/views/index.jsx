@@ -9,6 +9,7 @@ import {
   LinkFilter
 } from '@asl/components';
 import SearchPanel from './components/search-panel';
+import ContentSearchSummary from './components/content-search-summary';
 import DashboardNavigation from '../../components/dashboard-navigation';
 import ProjectsFilters from './components/filters';
 import formatters from '../formatters';
@@ -70,13 +71,26 @@ export default function Index () {
               formatter={projectStatusFormatter}
             />
           }
-          {
-            searchType === 'projects-content' && <Link page="search" searchType={searchType} label="Download results (CSV)" query={queryWithCSV} className="float-right" />
-          }
-          <FilterSummary
-            resultType={resultType === 'projects-content' ? 'projects' : resultType}
-            filteredLabel={<Snippet count={count} searchTerm={searchString}>{`results.filtered.${count === 1 ? 'singular' : 'plural'}`}</Snippet>}
-          />
+
+          <div className="govuk-grid-row">
+            <div className="govuk-grid-column-three-quarters">
+              {
+                resultType === 'projects-content'
+                  ? <ContentSearchSummary count={count} searchTerm={searchTerm} />
+                  : <FilterSummary
+                    resultType={resultType}
+                    filteredLabel={<Snippet count={count} searchTerm={searchString}>{`results.filtered.${count === 1 ? 'singular' : 'plural'}`}</Snippet>}
+                  />
+              }
+            </div>
+            <div className="govuk-grid-column-one-quarter">
+              {
+                searchType === 'projects-content' &&
+                  <Link page="search" searchType={searchType} label="Download results (CSV)" query={queryWithCSV} className="float-right" />
+              }
+            </div>
+          </div>
+
           <Datatable formatters={formatters[searchType]} className={searchType} />
         </div>
       </div>
