@@ -16,7 +16,7 @@ export default function ContentSearchSummary({ count, searchTerm }) {
       <p className="result-count">
         <Snippet count={count}>{`results.filtered.${count === 1 ? 'singular' : 'plural'}`}</Snippet>
       </p>
-      { searchString && <span className="summary"><strong>Search term:</strong> {searchString}</span> }
+      { searchString && <span className="summary"><strong>Search term:</strong> <span className="search-term">{searchString}</span></span> }
       { selectedFilters.length > 0 &&
         <Fragment>
           <span className="summary">
