@@ -21,7 +21,8 @@ module.exports = (searchType) => ({
   ...models[searchType],
   searchPanel: {
     title: 'Search',
-    viewAll: 'Clear search',
+    clearSearch: 'Clear search',
+    clearAll: 'Clear all',
     projectToggle: {
       projects: 'Search all projects for specific terms',
       'projects-content': '< Back to project directory'

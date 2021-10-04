@@ -1,4 +1,6 @@
 import React, { Fragment } from 'react';
+import { useSelector } from 'react-redux';
+import omit from 'lodash/omit';
 import { Link, Search, Snippet } from '@asl/components';
 
 const ProjectToggle = ({ type }) => {
@@ -15,15 +17,16 @@ const ProjectToggle = ({ type }) => {
 };
 
 const ClearLink = ({ type }) => {
-  if (type === 'projects-content') {
-    return null;
-  }
+  const { filters } = useSelector(state => state.datatable);
+  const query = { filters: omit(filters.active, '*') };
+
   return <div className="govuk-grid-column-one-third">
     <div className="view-all-link">
       <Link
         page="search"
         searchType={type}
-        label={<Snippet>{`searchPanel.viewAll`}</Snippet>}
+        query={query}
+        label={<Snippet>{`searchPanel.clearSearch`}</Snippet>}
       />
     </div>
   </div>;
