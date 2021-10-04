@@ -34,7 +34,6 @@
     "@asl/constants": "^1.0.0",
     "@asl/pages": "^26.13.1",
     "@asl/projects": "^10.1.1",
-    "@asl/schema": "^9.11.1",
     "@asl/service": "^8.8.5",
     "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
