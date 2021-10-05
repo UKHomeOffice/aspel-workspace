@@ -7,6 +7,9 @@ module.exports = merge({}, tasklistContent, {
       label: 'Completed'
     }
   },
+  buttons: {
+    submit: 'Update'
+  },
   backToMetrics: 'Back to all performance metrics',
   title: {
     'project-application': 'New project applications granted',
