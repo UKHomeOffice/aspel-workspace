@@ -20,7 +20,7 @@ module.exports = {
   'project-grant-ra': 'Retrospective assessments completed',
   'all-project-application': 'PPL applications',
   'all-project-amendment': 'PPL amendments',
-  'all-project-change-licence-holder': 'PPL holder change',
+  'all-project-change-licence-holder': 'PPL holder changes',
   'all-project-revoke': 'PPL revocations',
   'all-project-transfer': 'PPL transfers',
   'all-project-expiry': 'PPL expirations',
@@ -36,11 +36,5 @@ module.exports = {
   'role-delete': 'Named people removals',
   'place-update': 'Approved area amendments',
   'place-create': 'Approved area additions',
-  'place-delete': 'Approved area deletions',
-  date: {
-    all: 'All',
-    week: 'This week',
-    month: 'This month',
-    year: 'This year'
-  }
+  'place-delete': 'Approved area deletions'
 };

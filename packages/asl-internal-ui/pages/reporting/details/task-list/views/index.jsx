@@ -18,7 +18,7 @@ export default function Index() {
 
   return (
     <Fragment>
-      <Header title={<Snippet>{`title.${report}`}</Snippet>} />
+      <Header title={<Snippet>{`title.${report}`}</Snippet>} subtitle={<Snippet optional>{`subtitle.${report}`}</Snippet>} />
 
       <Link page="reporting" label={<Snippet>backToMetrics</Snippet>} />
 
