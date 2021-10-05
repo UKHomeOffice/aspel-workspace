@@ -36,11 +36,5 @@ module.exports = {
   'role-delete': 'Named people removals',
   'place-update': 'Approved area amendments',
   'place-create': 'Approved area additions',
-  'place-delete': 'Approved area deletions',
-  date: {
-    all: 'All',
-    week: 'This week',
-    month: 'This month',
-    year: 'This year'
-  }
+  'place-delete': 'Approved area deletions'
 };
