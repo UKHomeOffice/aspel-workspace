@@ -20,7 +20,7 @@ module.exports = {
   'project-grant-ra': 'Retrospective assessments completed',
   'all-project-application': 'PPL applications',
   'all-project-amendment': 'PPL amendments',
-  'all-project-change-licence-holder': 'PPL holder change',
+  'all-project-change-licence-holder': 'PPL holder changes',
   'all-project-revoke': 'PPL revocations',
   'all-project-transfer': 'PPL transfers',
   'all-project-expiry': 'PPL expirations',
