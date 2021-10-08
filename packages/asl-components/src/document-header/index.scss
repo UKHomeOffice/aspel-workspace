@@ -40,14 +40,16 @@
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+    h2 {
+      font-size: 18px;
+      font-weight: normal;
+    }
     .title-overflow {
       display: flex;
       flex-direction: row;
-      
+
       h2 {
         min-width: 0; /* allows text-overflow to work inside a flexbox element */
-        font-size: 18px;
-        font-weight: normal;
         margin-right: 1em;
         margin-bottom: 0 !important;
 
