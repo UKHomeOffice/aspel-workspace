@@ -32,7 +32,7 @@
   "dependencies": {
     "@asl/components": "^10.8.2",
     "@asl/constants": "^1.0.0",
-    "@asl/pages": "^27.0.5",
+    "@asl/pages": "^27.0.6",
     "@asl/projects": "^10.1.1",
     "@asl/service": "^8.8.5",
     "@babel/core": "^7.6.2",
