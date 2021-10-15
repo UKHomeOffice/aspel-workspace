@@ -5,6 +5,7 @@ module.exports = merge({}, baseContent, {
   pageTitle: 'Home',
   tasklist: {
     title: 'Tasks',
+    searchTasks: 'Search all tasks',
     outstanding: {
       none: 'You have no outstanding tasks',
       some: 'You have {{count}} outstanding tasks'

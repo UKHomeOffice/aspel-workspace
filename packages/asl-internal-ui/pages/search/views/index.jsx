@@ -38,7 +38,7 @@ export default function Index () {
   const hasFilters = searchType !== 'projects-content' && !!statusFilters.length;
 
   // eslint-disable-next-line no-sparse-arrays
-  const tabs = [, 'establishments', 'profiles', 'projects'];
+  const tabs = ['tasks', 'establishments', 'profiles', 'projects'];
   const selectedTab = searchType === 'projects-content' ? 3 : tabs.indexOf(searchType);
   const resultType = searchType === 'profiles' ? 'people' : searchType;
   const searchString = searchTerm && searchTerm['*'] && searchTerm['*'][0];
