@@ -35,7 +35,7 @@ export default function Index () {
   const searchTerm = filters.active;
   const count = pagination.count;
   const statusFilters = (filters.options.find(f => f.key === 'status') || {}).values;
-  const hasFilters = searchType !== 'projects-content' && !!statusFilters.length;
+  const showStatusFilter = !['projects-content', 'tasks'].includes(searchType) && !!statusFilters.length;
 
   // eslint-disable-next-line no-sparse-arrays
   const tabs = ['tasks', 'establishments', 'profiles', 'projects'];
@@ -63,8 +63,30 @@ export default function Index () {
               formatter={uppercaseFirst}
             />
           }
+
           {
-            hasFilters && <LinkFilter
+            searchType === 'tasks' &&
+              <div className="task-filters">
+                <p>Filter results:</p>
+                <LinkFilter
+                  prop="progress"
+                  label="By task status:"
+                  options={['open', 'closed']}
+                  showAll={{ position: 'after', label: 'All tasks' }}
+                  formatter={uppercaseFirst}
+                />
+                <LinkFilter
+                  prop="model"
+                  label="By category:"
+                  options={['pil', 'project', 'establishment', 'profile']}
+                  showAll={{ position: 'before', label: 'All' }}
+                  formatter={uppercaseFirst}
+                />
+              </div>
+          }
+
+          {
+            showStatusFilter && <LinkFilter
               prop="status"
               label="Filter by status:"
               showAll={{ position: 'after', label: 'Show all' }}
