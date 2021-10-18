@@ -9,7 +9,7 @@ const Index = ({ profile }) => (
     <Header title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>} />
     <DashboardNavigation tab={0} />
     <h2><Snippet>pages.dashboard.tasks</Snippet></h2>
-    <Link page="search" searchType="tasks" label={<Snippet>tasklist.searchTasks</Snippet>} />
+    <Link page="search" searchType="tasks" label={<Snippet>tasklist.searchTasks</Snippet>} query={{ filters: { progress: ['open'] } }} />
     <Tasklist />
   </Fragment>
 );
