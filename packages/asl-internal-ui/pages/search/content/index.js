@@ -25,7 +25,8 @@ module.exports = (searchType) => ({
     title: 'Search',
     clearSearch: 'Clear search',
     clearAll: 'Clear all',
-    projectToggle: {
+    searchToggle: {
+      tasks: '< Back to the task list',
       projects: 'Search all projects for specific terms',
       'projects-content': '< Back to project directory'
     },
