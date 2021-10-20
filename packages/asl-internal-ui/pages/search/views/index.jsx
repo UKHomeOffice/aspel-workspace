@@ -44,6 +44,13 @@ export default function Index () {
   const searchString = searchTerm && searchTerm['*'] && searchTerm['*'][0];
   const queryWithCSV = { filters: searchTerm, csv: true };
 
+  const modelFilters = {
+    pil: 'PIL',
+    project: 'PPL',
+    establishment: 'PEL',
+    profile: 'Profile'
+  };
+
   return (
     <div className="search">
       <Header title={<Snippet name={profile.firstName}>pages.dashboard.greeting</Snippet>} />
@@ -78,9 +85,9 @@ export default function Index () {
                 <LinkFilter
                   prop="model"
                   label="By category:"
-                  options={['pil', 'project', 'establishment', 'profile']}
+                  options={Object.keys(modelFilters)}
                   showAll={{ position: 'before', label: 'All' }}
-                  formatter={uppercaseFirst}
+                  formatter={filter => modelFilters[filter]}
                 />
               </div>
           }
