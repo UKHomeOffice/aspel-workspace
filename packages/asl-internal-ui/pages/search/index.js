@@ -5,7 +5,7 @@ const schemas = require('./schema');
 const NotFoundError = require('../../lib/errors/not-found');
 const content = require('./content');
 
-const searchableModels = ['establishments', 'profiles', 'projects', 'projects-content'];
+const searchableModels = ['tasks', 'establishments', 'profiles', 'projects', 'projects-content'];
 
 module.exports = settings => {
   const app = page({

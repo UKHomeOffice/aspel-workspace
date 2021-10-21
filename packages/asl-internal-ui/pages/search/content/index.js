@@ -3,6 +3,7 @@ const profiles = require('./profiles');
 const baseProjects = require('@asl/pages/pages/project/content');
 const projects = require('./projects');
 const projectsContent = require('./projects-content');
+const tasks = require('./tasks');
 
 const models = {
   establishments,
@@ -11,7 +12,8 @@ const models = {
     ...baseProjects,
     ...projects
   },
-  'projects-content': projectsContent
+  'projects-content': projectsContent,
+  tasks
 };
 
 module.exports = (searchType) => ({
@@ -23,7 +25,8 @@ module.exports = (searchType) => ({
     title: 'Search',
     clearSearch: 'Clear search',
     clearAll: 'Clear all',
-    projectToggle: {
+    searchToggle: {
+      tasks: '< Back to the task list',
       projects: 'Search all projects for specific terms',
       'projects-content': '< Back to project directory'
     },
@@ -42,6 +45,10 @@ module.exports = (searchType) => ({
     'projects-content': {
       title: 'Search all projects',
       label: 'Enter a search term'
+    },
+    tasks: {
+      title: 'Search all tasks',
+      label: 'Search tasks by applicant, licence holder, licence number or project title'
     }
   },
   actions: {

@@ -3,7 +3,10 @@ import { useSelector } from 'react-redux';
 import omit from 'lodash/omit';
 import { Link, Search, Snippet } from '@asl/components';
 
-const ProjectToggle = ({ type }) => {
+const SearchToggle = ({ type }) => {
+  if (type === 'tasks') {
+    return <p><Link page="dashboard" label={<Snippet>searchPanel.searchToggle.tasks</Snippet>} /></p>;
+  }
   if (!type.match(/^projects/)) {
     return null;
   }
@@ -11,7 +14,7 @@ const ProjectToggle = ({ type }) => {
     <Link
       page="search"
       searchType={type === 'projects' ? 'projects-content' : 'projects'}
-      label={<Snippet>{`searchPanel.projectToggle.${type}`}</Snippet>}
+      label={<Snippet>{`searchPanel.searchToggle.${type}`}</Snippet>}
     />
   </p>;
 };
@@ -45,7 +48,7 @@ export default function SearchPanel(props) {
             label={<Snippet>{`searchPanel.${props.searchType}.label`}</Snippet>}
             query={{ sort: null, page: 1 }}
           />
-          <ProjectToggle type={props.searchType} />
+          <SearchToggle type={props.searchType} />
         </div>
         <ClearLink type={props.searchType} />
       </div>
