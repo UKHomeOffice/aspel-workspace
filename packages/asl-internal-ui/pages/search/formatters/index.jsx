@@ -6,7 +6,7 @@ import { ExpiryDate, Link, Markdown, Snippet } from '@asl/components';
 import ProjectSearchResult from '../views/components/project-search-result';
 import { projectTitle } from '@asl/pages/pages/common/formatters';
 import projectFormatters from '@asl/pages/pages/project/formatters';
-import taskFormatters from '@asl/pages/pages/task/list/formatters';
+import taskFormatters from './tasks';
 import format from 'date-fns/format';
 
 const DATE_FORMAT = 'D MMM YYYY';
@@ -141,7 +141,5 @@ export default {
       format: (title, project) => <ProjectSearchResult project={project} />
     }
   },
-  tasks: {
-    ...taskFormatters
-  }
+  tasks: taskFormatters
 };
