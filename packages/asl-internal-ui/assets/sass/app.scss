@@ -131,6 +131,13 @@ ul.nts-downloads {
       }
     }
   }
+
+  .govuk-react-datatable.tasks {
+    strong {
+      @extend .highlight;
+      font-weight: normal;
+    }
+  }
 }
 
 .panel-list .asru-roles ul {
