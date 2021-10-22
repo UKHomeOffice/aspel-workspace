@@ -1,7 +1,6 @@
 module.exports = {
   updatedAt: {
-    show: true,
-    sortable: false
+    show: true
   },
   establishment: {
     show: true,
