@@ -46,8 +46,6 @@ export default {
 
   type: {
     format: (type, result) => {
-      console.log(result);
-
       const taskId = get(result, 'id');
       const status = get(result, 'modelStatus');
       let model = get(result, 'model');
