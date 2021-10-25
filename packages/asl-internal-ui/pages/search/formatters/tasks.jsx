@@ -66,6 +66,7 @@ export default {
       }
 
       switch (model) {
+        case 'establishment':
         case 'project':
         case 'pil':
         case 'role':

@@ -13,6 +13,7 @@ import ContentSearchSummary from './components/content-search-summary';
 import DashboardNavigation from '../../components/dashboard-navigation';
 import ProjectsFilters from './components/filters';
 import formatters from '../formatters';
+import TaskSearchResult from './components/task-search-result';
 
 function uppercaseFirst(str) {
   return `${str[0].toUpperCase()}${str.substring(1)}`;
@@ -120,7 +121,12 @@ export default function Index () {
             </div>
           </div>
 
-          <Datatable formatters={formatters[searchType]} className={searchType} />
+          <Datatable
+            formatters={formatters[searchType]}
+            className={searchType}
+            Expandable={searchType === 'tasks' && TaskSearchResult}
+            alwaysExpanded={searchType === 'tasks'}
+          />
         </div>
       </div>
       {
