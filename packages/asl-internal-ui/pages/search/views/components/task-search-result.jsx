@@ -8,20 +8,16 @@ export function hasProjectTitleMatch(row) {
 }
 
 export default function TaskSearchResult({ model }) {
-  if (!hasProjectTitleMatch(model)) {
+  const highlight = hasProjectTitleMatch(model);
+
+  if (!highlight) {
     return null;
   }
-
-  const highlight = get(model, `highlight['projectTitle'][0]`);
 
   return (
     <Inset>
       <h3>Project</h3>
-      {
-        highlight
-          ? <Markdown>{highlight}</Markdown>
-          : <p>{model.projectTitle}</p>
-      }
+      <Markdown>{highlight}</Markdown>
     </Inset>
   );
 }
