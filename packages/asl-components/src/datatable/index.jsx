@@ -5,13 +5,21 @@ import map from 'lodash/map';
 import merge from 'lodash/merge';
 import size from 'lodash/size';
 import pickBy from 'lodash/pickBy';
+import isFunction from 'lodash/isFunction';
 import { getValue } from '../utils';
 import DatatableHeader from './header';
 import { Pagination } from '../';
 
-export function Row({ row, schema, Expandable, Actions, expands }) {
-  const [expanded, setExpanded] = useState(false);
-  const expandable = Expandable && expands(row);
+export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded }) {
+  const [expanded, setExpanded] = useState(alwaysExpanded);
+  const expandable = Expandable && !alwaysExpanded && expands(row);
+
+  const expandableWillRender = isFunction(Expandable.willRender) ? Expandable.willRender(row) : true;
+
+  console.log({
+    isFunction: isFunction(Expandable.willRender),
+    expandableWillRender
+  });
 
   function toggleExpanded() {
     if (!expandable) {
@@ -39,7 +47,7 @@ export function Row({ row, schema, Expandable, Actions, expands }) {
         }
       </tr>
       {
-        expanded && (
+        expanded && expandableWillRender && (
           <tr className='expanded-content' onClick={toggleExpanded}>
             <td colSpan={size(schema)}>
               <Expandable model={row} />
@@ -54,6 +62,7 @@ export function Row({ row, schema, Expandable, Actions, expands }) {
 export function Datatable({
   expands = () => true,
   Expandable,
+  alwaysExpanded = false,
   className,
   Actions,
   actionsHeader = 'Actions',
@@ -86,7 +95,7 @@ export function Datatable({
         {
           data.length === 0 && noDataWarning
             ? <tr><td colSpan={size(schema) + (Actions ? 1 : 0)}>{noDataWarning}</td></tr>
-            : data.map(row => <Row key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} />)
+            : data.map(row => <Row key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} alwaysExpanded={alwaysExpanded} />)
         }
       </tbody>
       {
