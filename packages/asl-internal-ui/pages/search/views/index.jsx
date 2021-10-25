@@ -125,9 +125,9 @@ export default function Index () {
               ? <Datatable
                 formatters={formatters[searchType]}
                 className={searchType}
-                Expandable={searchType === 'tasks' && TaskSearchResult}
+                Expandable={TaskSearchResult}
                 expands={hasProjectTitleMatch}
-                alwaysExpanded={searchType === 'tasks'}
+                alwaysExpanded={true}
               />
               : <Datatable formatters={formatters[searchType]} className={searchType} />
           }
