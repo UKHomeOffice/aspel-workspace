@@ -5,21 +5,14 @@ import map from 'lodash/map';
 import merge from 'lodash/merge';
 import size from 'lodash/size';
 import pickBy from 'lodash/pickBy';
-import isFunction from 'lodash/isFunction';
 import { getValue } from '../utils';
 import DatatableHeader from './header';
 import { Pagination } from '../';
 
 export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded }) {
-  const [expanded, setExpanded] = useState(alwaysExpanded);
-  const expandable = Expandable && !alwaysExpanded && expands(row);
-
-  const expandableWillRender = isFunction(Expandable.willRender) ? Expandable.willRender(row) : true;
-
-  console.log({
-    isFunction: isFunction(Expandable.willRender),
-    expandableWillRender
-  });
+  const [expanded, setExpanded] = useState(false);
+  const rowExpands = expands(row);
+  const expandable = Expandable && rowExpands && !alwaysExpanded;
 
   function toggleExpanded() {
     if (!expandable) {
@@ -32,7 +25,7 @@ export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded 
     <Fragment>
       <tr
         onClick={toggleExpanded}
-        className={classnames({ expandable, expanded })}
+        className={classnames({ expandable, expanded: expanded || (rowExpands && alwaysExpanded) })}
       >
         {
           map(schema, (column, key) => {
@@ -47,7 +40,7 @@ export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded 
         }
       </tr>
       {
-        expanded && expandableWillRender && (
+        rowExpands && (expanded || alwaysExpanded) && (
           <tr className='expanded-content' onClick={toggleExpanded}>
             <td colSpan={size(schema)}>
               <Expandable model={row} />
