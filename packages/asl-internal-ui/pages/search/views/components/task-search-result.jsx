@@ -2,13 +2,13 @@ import React from 'react';
 import get from 'lodash/get';
 import { Inset, Markdown } from '@asl/components';
 
-export function willRender(model) {
-  const highlight = get(model, `highlight['projectTitle'][0]`);
-  return model.model === 'project' && highlight;
+export function hasProjectTitleMatch(row) {
+  const highlight = get(row, `highlight['projectTitle'][0]`);
+  return row.model === 'project' && highlight;
 }
 
 export default function TaskSearchResult({ model }) {
-  if (!willRender(model)) {
+  if (!hasProjectTitleMatch(model)) {
     return null;
   }
 

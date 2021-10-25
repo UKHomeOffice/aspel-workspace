@@ -13,7 +13,7 @@ import ContentSearchSummary from './components/content-search-summary';
 import DashboardNavigation from '../../components/dashboard-navigation';
 import ProjectsFilters from './components/filters';
 import formatters from '../formatters';
-import TaskSearchResult from './components/task-search-result';
+import TaskSearchResult, { hasProjectTitleMatch } from './components/task-search-result';
 
 function uppercaseFirst(str) {
   return `${str[0].toUpperCase()}${str.substring(1)}`;
@@ -38,7 +38,6 @@ export default function Index () {
   const statusFilters = (filters.options.find(f => f.key === 'status') || {}).values;
   const showStatusFilter = !['projects-content', 'tasks'].includes(searchType) && !!statusFilters.length;
 
-  // eslint-disable-next-line no-sparse-arrays
   const tabs = ['tasks', 'establishments', 'profiles', 'projects'];
   const selectedTab = searchType === 'projects-content' ? 3 : tabs.indexOf(searchType);
   const resultType = searchType === 'profiles' ? 'people' : searchType;
@@ -121,12 +120,17 @@ export default function Index () {
             </div>
           </div>
 
-          <Datatable
-            formatters={formatters[searchType]}
-            className={searchType}
-            Expandable={searchType === 'tasks' && TaskSearchResult}
-            alwaysExpanded={searchType === 'tasks'}
-          />
+          {
+            searchType === 'tasks'
+              ? <Datatable
+                formatters={formatters[searchType]}
+                className={searchType}
+                Expandable={searchType === 'tasks' && TaskSearchResult}
+                expands={hasProjectTitleMatch}
+                alwaysExpanded={searchType === 'tasks'}
+              />
+              : <Datatable formatters={formatters[searchType]} className={searchType} />
+          }
         </div>
       </div>
       {
