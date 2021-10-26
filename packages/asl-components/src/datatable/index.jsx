@@ -10,8 +10,8 @@ import DatatableHeader from './header';
 import { Pagination } from '../';
 
 export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded }) {
-  const [expanded, setExpanded] = useState(false);
   const rowExpands = expands(row);
+  const [expanded, setExpanded] = useState(rowExpands && alwaysExpanded);
   const expandable = Expandable && rowExpands && !alwaysExpanded;
 
   function toggleExpanded() {
@@ -25,7 +25,7 @@ export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded 
     <Fragment>
       <tr
         onClick={toggleExpanded}
-        className={classnames({ expandable, expanded: expanded || (rowExpands && alwaysExpanded) })}
+        className={classnames({ expandable, expanded })}
       >
         {
           map(schema, (column, key) => {
@@ -40,7 +40,7 @@ export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded 
         }
       </tr>
       {
-        rowExpands && (expanded || alwaysExpanded) && (
+        expanded && (
           <tr className='expanded-content' onClick={toggleExpanded}>
             <td colSpan={size(schema)}>
               <Expandable model={row} />
