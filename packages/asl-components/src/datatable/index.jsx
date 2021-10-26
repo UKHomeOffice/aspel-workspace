@@ -9,9 +9,10 @@ import { getValue } from '../utils';
 import DatatableHeader from './header';
 import { Pagination } from '../';
 
-export function Row({ row, schema, Expandable, Actions, expands }) {
-  const [expanded, setExpanded] = useState(false);
-  const expandable = Expandable && expands(row);
+export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded }) {
+  const rowExpands = expands(row);
+  const [expanded, setExpanded] = useState(rowExpands && alwaysExpanded);
+  const expandable = Expandable && rowExpands && !alwaysExpanded;
 
   function toggleExpanded() {
     if (!expandable) {
@@ -54,6 +55,7 @@ export function Row({ row, schema, Expandable, Actions, expands }) {
 export function Datatable({
   expands = () => true,
   Expandable,
+  alwaysExpanded = false,
   className,
   Actions,
   actionsHeader = 'Actions',
@@ -86,7 +88,7 @@ export function Datatable({
         {
           data.length === 0 && noDataWarning
             ? <tr><td colSpan={size(schema) + (Actions ? 1 : 0)}>{noDataWarning}</td></tr>
-            : data.map(row => <Row key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} />)
+            : data.map(row => <Row key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} alwaysExpanded={alwaysExpanded} />)
         }
       </tbody>
       {
