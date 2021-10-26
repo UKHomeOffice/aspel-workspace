@@ -137,6 +137,27 @@ ul.nts-downloads {
       @extend .highlight;
       font-weight: normal;
     }
+
+    tr.expanded {
+      td {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+    }
+
+    tr.expanded-content {
+      td {
+        padding-top: 0;
+
+        .govuk-inset-text {
+          margin: 0;
+
+          h3 {
+            margin: 0;
+          }
+        }
+      }
+    }
   }
 }
 
