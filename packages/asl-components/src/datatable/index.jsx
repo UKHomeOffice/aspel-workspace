@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import classnames from 'classnames';
 import map from 'lodash/map';
@@ -13,6 +13,10 @@ export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded 
   const rowExpands = expands(row);
   const [expanded, setExpanded] = useState(rowExpands && alwaysExpanded);
   const expandable = Expandable && rowExpands && !alwaysExpanded;
+
+  useEffect(() => {
+    setExpanded(expanded || (rowExpands && alwaysExpanded));
+  }, [rowExpands, alwaysExpanded]);
 
   function toggleExpanded() {
     if (!expandable) {
