@@ -5,6 +5,7 @@ module.exports = [
   'PILA (skills)',
   'PILB',
   'PILC',
+  'PILF',
   'K (theory)',
   'K (skills)',
   'E2',
