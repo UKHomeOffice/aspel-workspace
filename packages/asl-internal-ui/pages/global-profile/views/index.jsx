@@ -11,22 +11,6 @@ const dedupe = (
   </p>
 );
 
-function AsruAssociations({ establishments }) {
-  return (
-    <ul className="panel-list">
-      {
-        establishments.map(establishment => {
-          return (
-            <li key={establishment.id}>
-              <Link page="establishment.dashboard" establishmentId={establishment.id} label={establishment.name} />
-            </li>
-          );
-        })
-      }
-    </ul>
-  );
-}
-
 export default function InternalGlobalProfile() {
   const model = useSelector(state => state.model);
   return (
@@ -35,18 +19,6 @@ export default function InternalGlobalProfile() {
         !model.asruUser && <Fragment>
           <h2>Personal licences</h2>
           <p><Link page="globalProfile.pils" profileId={model.id} label="View complete PIL history" /></p>
-        </Fragment>
-      }
-      {
-        model.asruInspector && model.asru && !!model.asru.length && <Fragment>
-          <h3>Inspector for:</h3>
-          <AsruAssociations establishments={model.asru} />
-        </Fragment>
-      }
-      {
-        model.asruLicensing && model.asru && !!model.asru.length && <Fragment>
-          <h3>Single Point of Contact (SPoC) for:</h3>
-          <AsruAssociations establishments={model.asru} />
         </Fragment>
       }
       {
