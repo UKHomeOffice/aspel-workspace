@@ -39,7 +39,7 @@ function Row({ certificate, actions, basePage }) {
   return (
     <tr>
       <td>{certificate.isExemption ? 'Exemption' : 'Training certificate'}</td>
-      <td><List items={certificate.modules.map(module => <Snippet key={module}>{ `trainingModules.${module}` }</Snippet>)} /></td>
+      <td><List items={(certificate.modules || []).map(module => <Snippet key={module}>{ `trainingModules.${module}` }</Snippet>)} /></td>
       <td><List items={certificate.species} /></td>
       <td>
         {
