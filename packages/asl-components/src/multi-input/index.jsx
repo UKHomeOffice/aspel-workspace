@@ -1,22 +1,27 @@
 import { v4 as uuid } from 'uuid';
 import classnames from 'classnames';
-import React, { useState, useEffect } from 'react';
-import { Button, Input } from '@ukhomeoffice/react-components';
+import React, { useState, useEffect, Fragment } from 'react';
+import { Button, Input, Warning } from '@ukhomeoffice/react-components';
 import castArray from 'lodash/castArray';
 
-function Item({ item, onRemove, showRemove, onChange, name, disabled }) {
-  const isDisabled = disabled.includes(item.id);
+function Item({ item, onRemove, showRemove, onChange, name, isDisabled, disabledWarning }) {
   return (
-    <div className="multi-input-item">
-      <Input type="text" value={item.value} onChange={onChange} label="" name={name} id={item.id} disabled={isDisabled} />
+    <Fragment>
+      <div className="multi-input-item">
+        <Input type="text" value={item.value} onChange={onChange} label="" name={name} id={item.id} disabled={isDisabled} />
+        {
+          showRemove && <Button onClick={onRemove} disabled={isDisabled}>Remove</Button>
+        }
+      </div>
       {
-        showRemove && <Button onClick={onRemove} disabled={isDisabled}>Remove</Button>
+        isDisabled && disabledWarning &&
+          <Warning>{disabledWarning}</Warning>
       }
-    </div>
+    </Fragment>
   );
 }
 
-export default function MultiInput({ value, onChange, onFieldChange, name, label, hint, error, disabled = [], objectItems = false }) {
+export default function MultiInput({ value, onChange, onFieldChange, name, label, hint, error, disabled = [], disabledWarning, objectItems = false }) {
   const initialValue = (value ? castArray(value) : [])
     .filter(Boolean)
     .map(v => typeof v !== 'object' ? ({ id: uuid(), value: v }) : v);
@@ -85,7 +90,8 @@ export default function MultiInput({ value, onChange, onFieldChange, name, label
               name={!objectItems && name}
               onRemove={removeItem(item.id)}
               onChange={updateItem(item.id)}
-              disabled={disabled}
+              isDisabled={disabled.includes(item.id)}
+              disabledWarning={disabledWarning}
               showRemove={items.length > 1}
             />
           ))
