@@ -161,8 +161,18 @@ ul.nts-downloads {
   }
 }
 
-.panel-list .asru-roles ul {
-  list-style-type: none;
+.panel-list {
+  .asru-roles ul {
+    list-style-type: none;
+  }
+
+  .asru-roles-details {
+    margin-bottom: $govuk-gutter;
+
+    p {
+      font-size: 18px;
+    }
+  }
 }
 
 .rops-summary {

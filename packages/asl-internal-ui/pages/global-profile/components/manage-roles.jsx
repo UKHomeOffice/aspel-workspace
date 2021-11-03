@@ -29,7 +29,10 @@ class ManageRoles extends React.Component {
     const options = roles.map(value => ({
       value,
       label: <Snippet>{ `asru.roles.${value}.label` }</Snippet>,
-      hint: <Snippet>{ `asru.roles.${value}.hint` }</Snippet>
+      additionalContent: <details className="asru-roles-details">
+        <summary><Snippet>{`asru.roles.${value}.hint.summary`}</Snippet></summary>
+        <Snippet>{`asru.roles.${value}.hint.details`}</Snippet>
+      </details>
     }));
 
     const userRoles = roles.filter(role => model[role]);
@@ -46,7 +49,6 @@ class ManageRoles extends React.Component {
     return <Fragment>
       <form action="" method="post">
         <input type="hidden" name="roles" value="" />
-        <p><Snippet>asru.roles.summary</Snippet></p>
         <CheckboxGroup
           name="roles"
           label={<Snippet>asru.roles.title.assign</Snippet>}

@@ -23,6 +23,7 @@ export default function ASRUAdmin() {
     <ul className="panel-list">
       <li>
         <h2><Snippet>asru.title</Snippet></h2>
+        <p><Snippet>asru.roles.summary</Snippet></p>
         {
           canAdmin
             ? (
