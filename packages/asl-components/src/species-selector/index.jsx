@@ -6,7 +6,6 @@ import values from 'lodash/values';
 import flatten from 'lodash/flatten';
 import omit from 'lodash/omit';
 import intersection from 'lodash/intersection';
-import without from 'lodash/without';
 import pick from 'lodash/pick';
 import { InputWrapper } from '@ukhomeoffice/react-components';
 import { MultiInput, Fieldset } from '../';
@@ -91,11 +90,10 @@ export default function SpeciesSelector(props) {
     const nopes = props.projectSpecies
       ? (species[name] || []).map(o => o.value)
       : (species[name].types || []);
-    const v = uniq(value.precoded.filter(item => !nopes.includes(item)).concat(val[`_${props.name}`]));
+    const precoded = uniq(value.precoded.filter(item => !nopes.includes(item)).concat(val[`_${props.name}`]));
     setValue({
       ...value,
-      // eslint-disable-next-line no-useless-call
-      precoded: without.apply(null, [ v, ...presets ])
+      precoded
     });
   };
 
