@@ -3,4 +3,7 @@
     color: $blue;
     cursor: pointer;
   }
+  details > fieldset {
+    margin-bottom: $govuk-gutter-half !important;
+  }
 }
