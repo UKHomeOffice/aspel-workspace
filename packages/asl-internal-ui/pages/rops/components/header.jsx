@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
+import DateSelector from '@asl/pages/pages/establishment/rops/components/date-selector';
 import { Header, Metric, Snippet } from '@asl/components';
 
 const metrics = ['due', 'submitted', 'outstanding'];
@@ -13,7 +14,7 @@ export default function PageHeader() {
       title={<Snippet>title</Snippet>}
       subtitle={<Snippet>subtitle</Snippet>}
     />
-    <p><Snippet year={year}>reportingPeriod</Snippet></p>
+    <DateSelector year={year} />
 
     <div className="govuk-grid-row">
       {
