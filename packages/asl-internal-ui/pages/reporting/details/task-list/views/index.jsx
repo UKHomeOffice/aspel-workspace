@@ -26,7 +26,7 @@ export default function Index() {
       <InitiatedByFilter page="reporting.details.filteredTasks" tabs={tabs} activeTab={initiatedBy} query={{report}} />
 
       <div className="govuk-grid-row">
-        <div className="govuk-grid-column-one-third">
+        <div className="govuk-grid-column-two-thirds">
           <Metric number={metrics.total} label={<Snippet>{`title.${report}`}</Snippet>} className="total-tasks" />
         </div>
       </div>
