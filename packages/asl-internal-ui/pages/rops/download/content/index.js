@@ -5,6 +5,10 @@ module.exports = {
   notifications: {
     success: 'Download requested. Your download will be available shortly.'
   },
+  dictionaryLink: {
+    label: 'View data dictionary',
+    hint: '(opens in a new window)'
+  },
   fields: {
     updatedAt: {
       label: 'Downloaded on'

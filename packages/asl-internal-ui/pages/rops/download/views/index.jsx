@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { ExpiryDate, Link } from '@asl/components';
+import { ExpiryDate, Link, Snippet } from '@asl/components';
 import { Button } from '@ukhomeoffice/react-components';
 
 import Header from '../../components/header';
@@ -45,7 +45,10 @@ export default function Index() {
         <Button type="Submit" disabled={hasPendingDownload}>Download returns</Button>
       </form>
 
-      <Link className="float-right" page="ropsReporting.download.dictionary" target="_blank" label="View data dictionary" />
+      <span className="float-right align-right">
+        <Link page="ropsReporting.download.dictionary" target="_blank" label={<Snippet>dictionaryLink.label</Snippet>} />
+        <span className="govuk-hint"><Snippet>dictionaryLink.hint</Snippet></span>
+      </span>
 
       <h2>Previous downloads</h2>
 
