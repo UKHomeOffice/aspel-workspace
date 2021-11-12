@@ -35,13 +35,17 @@ export function getUrl({ page, url, query, path, suffix, ...props }) {
   return query ? `${href}?${stringify(query)}` : href;
 }
 
-export default function Link({ label, className, ...props }) {
+export default function Link({ label, className, newTab = false, ...props }) {
   const isPdf = useSelector(state => state.static.isPdf);
   if (isPdf) {
     return null;
   }
 
   const href = getUrl({ ...props });
+
+  if (newTab) {
+    return <a className={className} href={href} target="_blank" rel="noreferrer">{label}</a>;
+  }
 
   return <a className={className} href={href}>{label}</a>;
 }
