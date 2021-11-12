@@ -10,7 +10,8 @@ module.exports = {
   },
   fields: {
     year: {
-      label: 'Reporting period: '
+      label: 'Reporting period: ',
+      static: 'Reporting period: 1 January {{year}} to 31 December {{year}}'
     }
   },
   tabs: {
