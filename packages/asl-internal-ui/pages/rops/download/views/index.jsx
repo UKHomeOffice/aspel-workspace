@@ -45,7 +45,7 @@ export default function Index() {
         <Button type="Submit" disabled={hasPendingDownload}>Download returns</Button>
       </form>
 
-      <Link className="float-right" page="ropsReporting.download.dictionary" label="View data dictionary" />
+      <Link className="float-right" page="ropsReporting.download.dictionary" newTab={true} label="View data dictionary" />
 
       <h2>Previous downloads</h2>
 
