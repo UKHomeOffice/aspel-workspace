@@ -50,7 +50,7 @@ export default function Index() {
 
       {
         hasPendingDownload
-          ? <p><strong>Download requested. The page will auto-refresh in {refreshTimeoutSec} seconds to see if your download’s finished.</strong></p>
+          ? <p><strong>Download in progress - note, this can take up to 5 minutes. Please don&#39;t close this page.</strong></p>
           : <p>Download data for {ropsSummary.due} returns, including a list of establishment addresses.</p>
       }
 
