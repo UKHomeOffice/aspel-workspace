@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { ExpiryDate, Link, Snippet } from '@asl/components';
 import { Button } from '@ukhomeoffice/react-components';
@@ -29,18 +29,31 @@ const schema = {
 };
 
 export default function Index() {
-  const { ropsSummary } = useSelector(state => state.static);
-  const rows = useSelector(state => state.model);
-  const hasPendingDownload = !!rows.some(row => !row.ready);
+  const { ropsSummary, downloadReady, hasPendingDownload } = useSelector(state => state.static);
+  const refreshTimeoutSec = 10;
+
+  useEffect(() => {
+    if (hasPendingDownload) {
+      setInterval(() => window.location.reload(false), refreshTimeoutSec * 1000);
+    }
+
+    if (downloadReady) {
+      window.location.href = downloadReady;
+    }
+  });
 
   return (
     <div>
       <Header />
-
       <Tabs active={2} />
-
       <h2>Download returns</h2>
-      <p>Download data for {ropsSummary.due} returns, including a list of establishment addresses.</p>
+
+      {
+        hasPendingDownload
+          ? <p><strong>Download in progress - note, this can take up to 5 minutes. Please don&#39;t close this page.</strong></p>
+          : <p>Download data for {ropsSummary.due} returns, including a list of establishment addresses.</p>
+      }
+
       <form action="" method="post">
         <Button type="Submit" disabled={hasPendingDownload}>Download returns</Button>
       </form>
