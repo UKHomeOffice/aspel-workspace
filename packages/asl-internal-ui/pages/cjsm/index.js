@@ -20,7 +20,7 @@ module.exports = () => {
       method: 'PUT',
       json: {
         data: {
-          cjsmEmail
+          cjsmEmail: cjsmEmail || null
         }
       }
     };
