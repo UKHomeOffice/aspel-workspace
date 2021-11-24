@@ -13,6 +13,7 @@ const rops = require('../pages/rops');
 const downloads = require('../pages/downloads');
 const licenceFees = require('../pages/licence-fees');
 const asruProfilesList = require('../pages/asru-profiles-list');
+const asruWorkload = require('../pages/asru-workload');
 const cjsm = require('../pages/cjsm');
 
 module.exports = {
@@ -55,6 +56,10 @@ module.exports = {
   asruProfilesList: {
     path: '/asru/profiles',
     router: asruProfilesList
+  },
+  asruWorkload: {
+    path: '/asru/workload',
+    router: asruWorkload
   },
   account: {
     path: '/account',
