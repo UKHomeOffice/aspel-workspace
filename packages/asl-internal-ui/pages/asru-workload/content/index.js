@@ -43,5 +43,8 @@ module.exports = merge({}, baseContent, {
     total: {
       label: 'Total'
     }
+  },
+  buttons: {
+    submit: 'Update'
   }
 });
