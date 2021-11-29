@@ -9,7 +9,7 @@ module.exports = settings => {
   });
 
   app.use((req, res, next) => {
-    res.locals.pageTitle = 'ASRU Staff Directory';
+    res.locals.pageTitle = 'Staff directory';
     next();
   });
 

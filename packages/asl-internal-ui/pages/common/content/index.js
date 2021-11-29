@@ -13,6 +13,7 @@ module.exports = {
       updateIssueDate: 'Change date granted',
       updateLicenceNumber: 'Change licence number'
     },
-    asruProfilesList: 'ASRU staff directory'
+    asruProfilesList: 'Staff directory',
+    asruWorkload: 'Staff workload and performance'
   }
 };
