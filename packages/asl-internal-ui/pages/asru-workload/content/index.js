@@ -17,8 +17,14 @@ module.exports = merge({}, baseContent, {
       no: 'Tasks with establishments'
     },
     role: {
-      inspector: 'Tasks with inspectors',
-      licensing: 'Tasks with licensing officers'
+      inspector: {
+        open: 'Tasks with inspectors',
+        closed: 'Tasks closed by inspectors'
+      },
+      licensing: {
+        open: 'Tasks with licensing officers',
+        closed: 'Tasks closed by licensing officers'
+      }
     }
   },
   fields: {

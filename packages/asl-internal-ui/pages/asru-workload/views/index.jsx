@@ -65,29 +65,29 @@ export default function AsruProfilesList() {
 
       { progress === 'closed' && <CompletedBetween /> }
 
-      {
-        progress === 'open' &&
-          <div className="task-filters">
-            <LinkFilter
-              prop="withAsru"
-              label="Filter by status:"
-              options={['yes', 'no']}
-              showAll={{ position: 'after', label: 'All tasks' }}
-              formatter={filter => <Snippet>{`filters.withAsru.${filter}`}</Snippet>}
-            />
+      <div className="task-filters">
+        {
+          progress === 'open' &&
+          <LinkFilter
+            prop="withAsru"
+            label="Filter by status:"
+            options={['yes', 'no']}
+            showAll={{ position: 'after', label: 'All tasks' }}
+            formatter={filter => <Snippet>{`filters.withAsru.${filter}`}</Snippet>}
+          />
+        }
 
-            {
-              withAsru &&
-                <LinkFilter
-                  prop="role"
-                  label="Filter by role:"
-                  options={['inspector', 'licensing']}
-                  showAll={{ position: 'after', label: 'All roles' }}
-                  formatter={filter => <Snippet>{`filters.role.${filter}`}</Snippet>}
-                />
-            }
-          </div>
-      }
+        {
+          (withAsru || progress === 'closed') &&
+            <LinkFilter
+              prop="role"
+              label="Filter by role:"
+              options={['inspector', 'licensing']}
+              showAll={{ position: 'after', label: 'All roles' }}
+              formatter={filter => <Snippet>{`filters.role.${filter}.${progress}`}</Snippet>}
+            />
+        }
+      </div>
 
       <Datatable formatters={formatters} />
     </Fragment>
