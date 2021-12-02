@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { clickLinkFilter } from './actions';
 import { ApplyChanges } from '../';
@@ -12,7 +12,7 @@ export function ShowAll({ selected, label, prop, onChange }) {
         [prop]: []
       }}
     />
-    : <Fragment>{label}</Fragment>;
+    : <strong>{label}</strong>;
 }
 
 export const LinkFilter = ({
@@ -36,7 +36,7 @@ export const LinkFilter = ({
           filters.map(f => {
             const label = formatter ? formatter(f) : f;
             if (f === selected) {
-              return <li key={ f }>{ label }</li>;
+              return <li key={ f }><strong>{ label }</strong></li>;
             }
             return (
               <li key={ f }>
