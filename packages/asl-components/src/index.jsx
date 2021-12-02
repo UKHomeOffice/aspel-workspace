@@ -39,6 +39,7 @@ export { default as JoinAcronyms } from './join-acronyms';
 export { default as LicenceStatusBanner } from './licence-status-banner';
 export { default as Link } from './link';
 export { default as LinkFilter } from './link-filter';
+export { default as LinkFilterList } from './link-filter-list';
 export { default as Markdown } from './markdown';
 export { default as ModelSummary } from './model-summary';
 export { default as Metric } from './metric';
