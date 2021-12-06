@@ -18,14 +18,15 @@ const GROUP_LABELS = {
   AQ: 'Fish, reptiles and aquatic species',
   AV: 'Birds',
   DOM: 'Cats, dogs and equidae',
-  NHP: 'Non-human primates'
+  NHP: 'Non-human primates',
+  OTHER: 'Other'
 };
 
 const ALL_PIL_SPECIES = flatten(values(PIL_GROUPS).map(g => g.types));
 
 export default function SpeciesSelector(props) {
   const presets = props.presets || [];
-  const species = props.projectSpecies ? omit(PROJECT_GROUPS, 'deprecated') : PIL_GROUPS;
+  const species = props.species || (props.projectSpecies ? omit(PROJECT_GROUPS, 'deprecated') : PIL_GROUPS);
   let val = props.value;
 
   if (!props.projectSpecies) {
@@ -128,22 +129,29 @@ export default function SpeciesSelector(props) {
     ]);
   }
 
+  function isSelected(options) {
+    return intersection(options.map(opt => opt.value || opt), [...presets, ...value.precoded]).length;
+  }
+
   return (
     <div className="species-selector">
       <InputWrapper {...props}>
         {
-          map(species, (group, key) => {
+          map(omit(species, 'OTHER'), (group, key) => {
             const options = group.types || group;
             return (
-              <details key={key} open={intersection(options.map(opt => opt.value || opt), [...presets, ...value.precoded]).length}>
+              <details key={key} open={isSelected(options)}>
                 <summary>{GROUP_LABELS[key]}</summary>
                 { getField(options, key) }
               </details>
             );
           })
         }
-        <details open={value.otherSpecies.length}>
-          <summary>Other</summary>
+        <details open={value.otherSpecies.length || isSelected(species.OTHER || [])}>
+          <summary>{ GROUP_LABELS.OTHER }</summary>
+          {
+            species.OTHER && getField(species.OTHER, 'OTHER')
+          }
           <MultiInput
             value={value.otherSpecies}
             onChange={onOtherChange}
