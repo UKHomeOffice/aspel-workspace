@@ -29,7 +29,7 @@ const schema = {
 };
 
 export default function Index() {
-  const { ropsSummary, downloadReady, hasPendingDownload } = useSelector(state => state.static);
+  const { ropsSummary, downloadReady, hasPendingDownload, url } = useSelector(state => state.static);
   const refreshTimeoutSec = 10;
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function Index() {
           : <p>Download data for {ropsSummary.due} returns, including a list of establishment addresses.</p>
       }
 
-      <form action="" method="post">
+      <form action={`${url}/download`} method="post">
         <Button type="Submit" disabled={hasPendingDownload}>Download returns</Button>
       </form>
 

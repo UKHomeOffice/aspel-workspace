@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const routes = require('./routes');
 const metrics = require('../../lib/middleware/metrics');
+const { ropsYears } = require('@asl/pages/constants/index');
 const { NotFoundError } = require('../../lib/errors');
 
 module.exports = settings => {
@@ -19,6 +20,7 @@ module.exports = settings => {
     }
     req.year = parseInt(year, 10);
     res.locals.static.year = req.year;
+    res.locals.static.ropsYears = ropsYears;
     next();
   });
 

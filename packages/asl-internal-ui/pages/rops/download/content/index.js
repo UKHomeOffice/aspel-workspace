@@ -1,7 +1,7 @@
+const { merge } = require('lodash');
 const common = require('../../content');
 
-module.exports = {
-  ...common,
+module.exports = merge({}, common, {
   notifications: {
     success: 'Download requested. Your download will be available shortly.'
   },
@@ -29,4 +29,4 @@ module.exports = {
       label: 'Download'
     }
   }
-};
+});

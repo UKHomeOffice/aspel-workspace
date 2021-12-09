@@ -8,6 +8,12 @@ module.exports = {
     submitted: 'returns submitted',
     outstanding: 'returns outstanding'
   },
+  fields: {
+    year: {
+      label: 'Reporting period: ',
+      static: 'Reporting period: 1 January {{year}} to 31 December {{year}}'
+    }
+  },
   tabs: {
     summary: 'Summary',
     establishments: 'Establishments',

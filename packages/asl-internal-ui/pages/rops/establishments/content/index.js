@@ -1,7 +1,7 @@
+const { merge } = require('lodash');
 const common = require('../../content');
 
-module.exports = {
-  ...common,
+module.exports = merge({}, common, {
   fields: {
     name: {
       label: 'Establishment name'
@@ -19,4 +19,4 @@ module.exports = {
       label: 'Returns overdue'
     }
   }
-};
+});

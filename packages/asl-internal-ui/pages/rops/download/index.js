@@ -1,4 +1,5 @@
 const { page } = require('@asl/service/ui');
+const { redirectOnPost } = require('@asl/pages/pages/establishment/rops/middleware');
 const routes = require('./routes');
 
 module.exports = settings => {
@@ -26,7 +27,7 @@ module.exports = settings => {
       .catch(next);
   });
 
-  app.post('/', (req, res, next) => {
+  app.post('/download', (req, res, next) => {
     req.api(`/rops/${req.year}/export`, { method: 'post' })
       .then(() => {
         req.notification({ key: 'success' });
@@ -34,6 +35,8 @@ module.exports = settings => {
       })
       .catch(next);
   });
+
+  app.use(redirectOnPost({ target: 'ropsReporting.download' }));
 
   return app;
 };

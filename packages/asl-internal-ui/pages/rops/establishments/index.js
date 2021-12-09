@@ -1,5 +1,6 @@
 const { page } = require('@asl/service/ui');
 const datatable = require('@asl/pages/pages/common/routers/datatable');
+const { redirectOnPost } = require('@asl/pages/pages/establishment/rops/middleware');
 const schema = require('./schema');
 
 module.exports = settings => {
@@ -15,6 +16,8 @@ module.exports = settings => {
       next();
     }
   })({ schema }));
+
+  app.use(redirectOnPost({ target: 'ropsReporting.establishments' }));
 
   return app;
 };
