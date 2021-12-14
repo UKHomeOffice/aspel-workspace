@@ -79,8 +79,8 @@ export default function Index () {
                   prop="progress"
                   label="By task status:"
                   options={['open', 'closed']}
-                  showAll={{ position: 'after', label: 'All tasks' }}
-                  formatter={uppercaseFirst}
+                  showAll={{ position: 'before', label: 'All tasks' }}
+                  formatter={val => ({ open: 'Open tasks', closed: 'Complete tasks' }[val])}
                 />
                 <LinkFilter
                   prop="model"
