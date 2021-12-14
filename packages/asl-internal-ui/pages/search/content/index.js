@@ -48,7 +48,7 @@ module.exports = (searchType) => ({
     },
     tasks: {
       title: 'Search all tasks',
-      label: 'Search tasks by applicant, licence holder, licence number or project title'
+      label: 'Search by name, licence number, project title or establishment'
     }
   },
   actions: {
