@@ -10,7 +10,7 @@ module.exports = settings => {
   app.use(metrics(settings));
 
   app.get('/', (req, res, next) => {
-    const year = new Date().getFullYear();
+    const year = 2021;
     res.redirect(req.buildRoute('ropsReporting.summary', { year }));
   });
 
