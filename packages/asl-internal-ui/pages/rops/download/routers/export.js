@@ -15,7 +15,7 @@ module.exports = settings => {
   app.get('/', (req, res, next) => {
     req.api(`/rops/${req.year}/export/${req.params.exportId}`)
       .then(response => {
-        const { id, updatedAt, etag } = response.json.data;
+        const { id, updatedAt, meta: { etag } } = response.json.data;
         res.attachment(filenamify(`${req.year}-rops-${updatedAt}.zip`));
         S3.getObject({
           Bucket: settings.s3.bucket,
