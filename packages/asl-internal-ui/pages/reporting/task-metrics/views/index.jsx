@@ -12,11 +12,11 @@ export default function Index() {
         <Snippet>page.description</Snippet>
 
         {
-          reports.map(report => (
+          reports && reports.map(report => (
             <p key={report.path}>
               <Link
-                page="reporting.taskMetrics"
-                suffix={report.path}
+                page="reporting.taskMetrics.export"
+                exportId={report.id}
                 label={<Snippet year={report.year} month={report.month}>links.taskMetrics</Snippet>}
               />
             </p>
