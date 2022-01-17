@@ -13,10 +13,11 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res, next) => {
-    req.api(`/rops/${req.year}/export/${req.params.exportId}`)
+    req.api(`/reports/task-metrics/${req.params.exportId}`)
       .then(response => {
-        const { id, updatedAt, meta: { etag } } = response.json.data;
-        res.attachment(filenamify(`${req.year}-rops-${updatedAt}.zip`));
+        const { id, meta: { start, end, etag } } = response.json.data;
+
+        res.attachment(filenamify(`task-metrics_${start}_${end}.zip`));
         S3.getObject({
           Bucket: settings.s3.bucket,
           Key: id,

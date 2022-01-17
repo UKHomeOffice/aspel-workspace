@@ -1,6 +1,6 @@
 const moment = require('moment');
-const csv = require('csv-stringify');
 const { page } = require('@asl/service/ui');
+const routes = require('./routes');
 
 module.exports = settings => {
   const app = page({
@@ -8,45 +8,19 @@ module.exports = settings => {
     root: __dirname
   });
 
-  const reports = () => {
-    const earliest = moment('2021-12-01');
-    const latest = moment().startOf('month');
-    const months = [];
-    let date = earliest;
-
-    // eslint-disable-next-line no-unmodified-loop-condition
-    while (date < latest) {
-      months.unshift({ year: date.format('YYYY'), month: date.format('MMMM'), path: `/${date.format('YYYY/MM')}` });
-      date.add(1, 'month');
-    }
-
-    return months;
-  };
-
   app.get('/', (req, res, next) => {
-    res.locals.static.reports = reports();
-    next();
-  });
-
-  app.get('/:year/:month', (req, res, next) => {
-    const query = req.params;
-
-    res.attachment('task-targets.csv');
-    const stringifier = csv({ bom: true, header: true });
-
-    return req.api('/reports/task-metrics', { query })
+    req.api('/reports/task-metrics')
       .then(response => {
-        const data = response.json.data;
-        if (data.length > 0) {
-          data.forEach(row => stringifier.write(row));
-        } else {
-          stringifier.write({ note: 'no tasks exceeded their internal targets this month' });
-        }
-        stringifier.pipe(res);
-        return stringifier.end();
+        res.locals.static.reports = response.json.data.map(report => {
+          const end = moment(report.meta.end);
+          return { id: report.id, year: end.format('YYYY'), month: end.format('MMMM') };
+        });
+        next();
       })
       .catch(next);
   });
 
   return app;
 };
+
+module.exports.routes = routes;
