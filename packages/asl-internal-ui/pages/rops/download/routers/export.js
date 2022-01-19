@@ -1,30 +1,21 @@
 const { Router } = require('express');
-const AWS = require('aws-sdk');
 const filenamify = require('filenamify');
+const s3Middleware = require('../../../../lib/middleware/s-three');
 
 module.exports = settings => {
-  const app = Router({ mergeParams: true });
+  const router = Router({ mergeParams: true });
 
-  const S3 = new AWS.S3({
-    apiVersion: '2006-03-01',
-    region: settings.s3.region,
-    accessKeyId: settings.s3.accessKey,
-    secretAccessKey: settings.s3.secret
-  });
+  router.use(s3Middleware(settings));
 
-  app.get('/', (req, res, next) => {
+  router.get('/', (req, res, next) => {
     req.api(`/rops/${req.year}/export/${req.params.exportId}`)
       .then(response => {
         const { id, updatedAt, meta: { etag } } = response.json.data;
         res.attachment(filenamify(`${req.year}-rops-${updatedAt}.zip`));
-        S3.getObject({
-          Bucket: settings.s3.bucket,
-          Key: id,
-          IfMatch: etag
-        }).createReadStream().pipe(res);
+        return req.s3(id, etag).pipe(res);
       })
       .catch(next);
   });
 
-  return app;
+  return router;
 };
