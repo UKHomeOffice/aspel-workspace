@@ -21,13 +21,9 @@ module.exports = settings => {
       config.endpoint = settings.s3.localstackUrl;
     }
 
-    console.log(config);
-
     const S3 = new AWS.S3(config);
 
     req.s3 = (key, etag) => {
-      console.log({ key, etag });
-
       return S3.getObject({
         Bucket: settings.s3.bucket,
         Key: key,
