@@ -1,18 +1,22 @@
 const { Router } = require('express');
 const filenamify = require('filenamify');
-const s3Middleware = require('../../../../lib/middleware/s-three');
+const { S3 } = require('@asl/service');
 
 module.exports = settings => {
   const router = Router({ mergeParams: true });
-
-  router.use(s3Middleware(settings));
+  const s3Client = S3(settings);
 
   router.get('/', (req, res, next) => {
     req.api(`/rops/${req.year}/export/${req.params.exportId}`)
       .then(response => {
         const { id, updatedAt, meta: { etag } } = response.json.data;
         res.attachment(filenamify(`${req.year}-rops-${updatedAt}.zip`));
-        return req.s3(id, etag).pipe(res);
+
+        return s3Client.getObject({
+          Bucket: settings.s3.bucket,
+          Key: id,
+          IfMatch: etag
+        }).createReadStream().pipe(res);
       })
       .catch(next);
   });
