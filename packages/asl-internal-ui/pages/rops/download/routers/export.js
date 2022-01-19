@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const filenamify = require('filenamify');
-const { S3 } = require('@asl/service');
+const { S3 } = require('@asl/service/clients');
 
 module.exports = settings => {
   const router = Router({ mergeParams: true });
