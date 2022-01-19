@@ -1,23 +1,18 @@
 const { Router } = require('express');
-const AWS = require('aws-sdk');
 const filenamify = require('filenamify');
+const { S3 } = require('@asl/service/clients');
 
 module.exports = settings => {
-  const app = Router({ mergeParams: true });
+  const router = Router({ mergeParams: true });
+  const s3Client = S3(settings);
 
-  const S3 = new AWS.S3({
-    apiVersion: '2006-03-01',
-    region: settings.s3.region,
-    accessKeyId: settings.s3.accessKey,
-    secretAccessKey: settings.s3.secret
-  });
-
-  app.get('/', (req, res, next) => {
+  router.get('/', (req, res, next) => {
     req.api(`/rops/${req.year}/export/${req.params.exportId}`)
       .then(response => {
         const { id, updatedAt, meta: { etag } } = response.json.data;
         res.attachment(filenamify(`${req.year}-rops-${updatedAt}.zip`));
-        S3.getObject({
+
+        return s3Client.getObject({
           Bucket: settings.s3.bucket,
           Key: id,
           IfMatch: etag
@@ -26,5 +21,5 @@ module.exports = settings => {
       .catch(next);
   });
 
-  return app;
+  return router;
 };

@@ -23,7 +23,8 @@ module.exports = {
     region: process.env.S3_REGION,
     accessKey: process.env.S3_ACCESS_KEY,
     secret: process.env.S3_SECRET,
-    bucket: process.env.S3_BUCKET
+    bucket: process.env.S3_BUCKET,
+    localstackUrl: process.env.S3_LOCALSTACK_URL
   },
   errorEvent: 'asl.error',
   verboseErrors: process.env.VERBOSE_ERRORS === 'TRUE',

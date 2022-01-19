@@ -34,7 +34,7 @@
     "@asl/constants": "^1.0.0",
     "@asl/pages": "^27.7.3",
     "@asl/projects": "^10.2.10",
-    "@asl/service": "^8.9.1",
+    "@asl/service": "^8.10.0",
     "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
@@ -67,7 +67,7 @@
   "devDependencies": {
     "dotenv": "^5.0.1",
     "eslint": "^4.19.1",
-    "eslint-config-lennym": "^2.2.1",
+    "eslint-config-lennym": "^2.3.1",
     "node-sass": "^6.0.1",
     "nodemon": "^2.0.6",
     "npm-run-all": "^4.1.5",
