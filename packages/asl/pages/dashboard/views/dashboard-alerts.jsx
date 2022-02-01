@@ -25,6 +25,14 @@ function EstablishmentAlert({ name, summary }) {
   const showRa = (raDue.due + raDue.overdue) > 0;
   const showRop = (ropDue.due + ropDue.overdue) > 0;
 
+  const pluralise = (text, summary) => {
+    if (summaryContentKey(summary) === 'due') {
+      return summary.due === 1 ? text : `${text}s`;
+    }
+
+    return summary.overdue === 1 ? text : `${text}s`;
+  };
+
   if (!showPil && !showRa && !showRop) {
     return null;
   }
@@ -36,7 +44,7 @@ function EstablishmentAlert({ name, summary }) {
         {
           showPil &&
           <li>
-            <Snippet due={pilReview.due} overdue={pilReview.overdue} pilsUrl={pilReview.url}>
+            <Snippet due={pilReview.due} overdue={pilReview.overdue} pilsUrl={pilReview.url} reviews={pluralise('review', pilReview)}>
               {`warnings.establishment.pilReview.${summaryContentKey(pilReview)}`}
             </Snippet>
           </li>
@@ -45,7 +53,7 @@ function EstablishmentAlert({ name, summary }) {
         {
           showRa &&
           <li>
-            <Snippet due={raDue.due} overdue={raDue.overdue} rasUrl={raDue.url}>
+            <Snippet due={raDue.due} overdue={raDue.overdue} rasUrl={raDue.url} assessments={pluralise('assessment', raDue)}>
               {`warnings.establishment.raDue.${summaryContentKey(raDue)}`}
             </Snippet>
           </li>
@@ -54,7 +62,7 @@ function EstablishmentAlert({ name, summary }) {
         {
           showRop &&
           <li>
-            <Snippet due={ropDue.due} overdue={ropDue.overdue} ropsUrl={ropDue.url}>
+            <Snippet due={ropDue.due} overdue={ropDue.overdue} ropsUrl={ropDue.url} returns={pluralise('return', ropDue)}>
               {`warnings.establishment.ropDue.${summaryContentKey(ropDue)}`}
             </Snippet>
           </li>

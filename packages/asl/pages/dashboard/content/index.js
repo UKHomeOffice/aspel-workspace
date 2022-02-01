@@ -38,19 +38,19 @@ module.exports = merge({}, baseContent, profileContent, {
     establishment: {
       has: `{{name}} has:`,
       pilReview: {
-        due: '{{due}} personal licence reviews due in less than a month - [go to personal licences]({{pilsUrl}})',
-        overdue: '{{overdue}} **overdue personal licence reviews** - [go to personal licences]({{pilsUrl}})',
-        both: '{{overdue}} **overdue** personal licence reviews and {{due}} due in less than a month - [go to personal licences]({{pilsUrl}})'
+        due: '{{due}} personal licence {{reviews}} due in less than a month - [go to personal licences]({{pilsUrl}})',
+        overdue: '{{overdue}} **overdue personal licence {{reviews}}** - [go to personal licences]({{pilsUrl}})',
+        both: '{{overdue}} **overdue** personal licence {{reviews}} and {{due}} due in less than a month - [go to personal licences]({{pilsUrl}})'
       },
       raDue: {
-        due: '{{due}} retrospective assessments due in less than a month - [go to retrospective assessments]({{rasUrl}})',
-        overdue: '{{overdue}} **overdue retrospective assessments** - [go to retrospective assessments]({{rasUrl}})',
-        both: '{{overdue}} **overdue retrospective assessments** and {{due}} due in less than a month - [go to retrospective assessments]({{rasUrl}})'
+        due: '{{due}} retrospective {{assessments}} due in less than a month - [go to retrospective assessments]({{rasUrl}})',
+        overdue: '{{overdue}} **overdue retrospective {{assessments}}** - [go to retrospective assessments]({{rasUrl}})',
+        both: '{{overdue}} **overdue retrospective {{assessments}}** and {{due}} due in less than a month - [go to retrospective assessments]({{rasUrl}})'
       },
       ropDue: {
-        due: '{{due}} returns of procedures due in less than a month - [go to returns of procedures]({{ropsUrl}})',
-        overdue: '{{overdue}} **overdue returns of procedures** - [go to returns of procedures]({{ropsUrl}})',
-        both: '{{overdue}} **overdue returns of procedures** and {{due}} due in less than a month - [go to returns of procedures]({{ropsUrl}})'
+        due: '{{due}} {{returns}} of procedures due in less than a month - [go to returns of procedures]({{ropsUrl}})',
+        overdue: '{{overdue}} **overdue {{returns}} of procedures** - [go to returns of procedures]({{ropsUrl}})',
+        both: '{{overdue}} **overdue {{returns}} of procedures** and {{due}} due in less than a month - [go to returns of procedures]({{ropsUrl}})'
       }
     }
   }
