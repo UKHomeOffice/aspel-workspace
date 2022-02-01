@@ -36,6 +36,7 @@ module.exports = merge({}, baseContent, profileContent, {
       }
     },
     establishment: {
+      has: `{{name}} has:`,
       pilReview: {
         due: '{{due}} personal licence reviews due in less than a month - [go to personal licences]({{pilsUrl}})',
         overdue: '{{overdue}} **overdue personal licence reviews** - [go to personal licences]({{pilsUrl}})',

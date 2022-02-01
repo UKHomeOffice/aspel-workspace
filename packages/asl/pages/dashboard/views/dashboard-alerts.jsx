@@ -7,7 +7,7 @@ function PersonalAlert({ alert }) {
   const contentPath = `warnings.personal.${alert.type}.${alert.overdue ? 'overdue' : 'due'}`;
 
   return (
-    <Warning className="info dashboard-alert">
+    <Warning className="info dashboard-alert-personal">
       <p><Snippet alert={alert}>{contentPath}</Snippet></p>
     </Warning>
   );
@@ -19,7 +19,7 @@ function summaryContentKey(summary) {
     : (summary.overdue ? 'overdue' : 'due');
 }
 
-function EstablishmentAlert({ id, name, summary }) {
+function EstablishmentAlert({ name, summary }) {
   const { pilReview, raDue, ropDue } = summary;
   const showPil = (pilReview.due + pilReview.overdue) > 0;
   const showRa = (raDue.due + raDue.overdue) > 0;
@@ -30,13 +30,13 @@ function EstablishmentAlert({ id, name, summary }) {
   }
 
   return (
-    <Warning className="info dashboard-alert">
-      <p>{name} has: </p>
+    <Warning className="info dashboard-alert-establishment">
+      <p><Snippet name={name}>warnings.establishment.has</Snippet></p>
       <ul>
         {
           showPil &&
           <li>
-            <Snippet due={pilReview.due} overdue={pilReview.overdue}>
+            <Snippet due={pilReview.due} overdue={pilReview.overdue} pilsUrl={pilReview.url}>
               {`warnings.establishment.pilReview.${summaryContentKey(pilReview)}`}
             </Snippet>
           </li>
@@ -45,7 +45,7 @@ function EstablishmentAlert({ id, name, summary }) {
         {
           showRa &&
           <li>
-            <Snippet due={raDue.due} overdue={raDue.overdue}>
+            <Snippet due={raDue.due} overdue={raDue.overdue} rasUrl={raDue.url}>
               {`warnings.establishment.raDue.${summaryContentKey(raDue)}`}
             </Snippet>
           </li>
@@ -54,7 +54,7 @@ function EstablishmentAlert({ id, name, summary }) {
         {
           showRop &&
           <li>
-            <Snippet due={ropDue.due} overdue={ropDue.overdue}>
+            <Snippet due={ropDue.due} overdue={ropDue.overdue} ropsUrl={ropDue.url}>
               {`warnings.establishment.ropDue.${summaryContentKey(ropDue)}`}
             </Snippet>
           </li>
@@ -74,12 +74,7 @@ export default function DashboardAlerts() {
       }
       {
         alerts.establishments.map(establishment =>
-          <EstablishmentAlert
-            key={establishment.id}
-            id={establishment.id}
-            name={establishment.name}
-            summary={establishment.summary}
-          />
+          <EstablishmentAlert key={establishment.id} name={establishment.name} summary={establishment.summary} />
         )
       }
     </div>

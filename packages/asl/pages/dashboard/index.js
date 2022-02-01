@@ -4,23 +4,23 @@ const { page } = require('@asl/service/ui');
 const { dateFormat } = require('@asl/pages/constants');
 const taskList = require('@asl/pages/pages/task/list/router');
 
-function getAlertUrl(alert, req) {
+function getAlertUrl(alert, buildRoute) {
   switch (alert.type) {
     case 'pilReview':
-      return req.buildRoute('pil.read', {
+      return buildRoute('pil.read', {
         establishmentId: alert.model.establishmentId,
         profileId: alert.model.profileId,
         pilId: alert.model.id
       });
 
     case 'raDue':
-      return req.buildRoute('project.read', {
+      return buildRoute('project.read', {
         establishmentId: alert.model.establishmentId,
         projectId: alert.model.id
       });
 
     case 'ropDue':
-      return req.buildRoute('project.read', {
+      return buildRoute('project.read', {
         establishmentId: alert.model.establishmentId,
         projectId: alert.model.id
       });
@@ -42,7 +42,7 @@ function getAlertUrl(alert, req) {
  *   ...
  * ]
  */
-const summariseEstablishmentAlerts = (alerts = [], profileEstablishments = []) => {
+const summariseEstablishmentAlerts = (alerts = [], profileEstablishments = [], buildRoute) => {
   const summary = {
     pilReview: { due: 0, overdue: 0 },
     raDue: { due: 0, overdue: 0 },
@@ -69,6 +69,10 @@ const summariseEstablishmentAlerts = (alerts = [], profileEstablishments = []) =
     if (idx !== -1) {
       result[idx] = establishment;
     } else {
+      establishment.summary['pilReview'].url = buildRoute('pils', { establishmentId: alert.establishmentId });
+      const raUrlParams = '?status=inactive-statuses&sort%5Bcolumn%5D=raDate&sort%5Bascending%5D=true&page=1';
+      establishment.summary['raDue'].url = buildRoute('project', { establishmentId: alert.establishmentId, suffix: raUrlParams });
+      establishment.summary['ropDue'].url = buildRoute('establishment.rops', { establishmentId: alert.establishmentId });
       result.push(establishment);
     }
 
@@ -94,10 +98,10 @@ module.exports = settings => {
         const personal = (data.personal || []).map(alert => ({
           ...alert,
           deadline: moment(alert.deadline).format(dateFormat.short),
-          url: getAlertUrl(alert, req)
+          url: getAlertUrl(alert, req.buildRoute)
         }));
 
-        const establishments = summariseEstablishmentAlerts(data.establishments, req.user.profile.establishments);
+        const establishments = summariseEstablishmentAlerts(data.establishments, req.user.profile.establishments, req.buildRoute);
 
         res.locals.static.alerts = { personal, establishments };
       })
