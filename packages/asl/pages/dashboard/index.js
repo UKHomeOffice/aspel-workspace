@@ -1,9 +1,84 @@
+const moment = require('moment');
 const { page } = require('@asl/service/ui');
+const { dateFormat } = require('@asl/pages/constants');
 const taskList = require('@asl/pages/pages/task/list/router');
 
-function userIsNtcoAtEst(profile, estId) {
-  return !!profile.roles.find(role => role.establishmentId === estId && role.type === 'ntco');
+function getAlertUrl(alert, buildRoute) {
+  switch (alert.type) {
+    case 'pilReview':
+      return buildRoute('pil.read', {
+        establishmentId: alert.model.establishmentId,
+        profileId: alert.model.profileId,
+        pilId: alert.model.id
+      });
+
+    case 'raDue':
+      return buildRoute('project.read', {
+        establishmentId: alert.model.establishmentId,
+        projectId: alert.model.id
+      });
+
+    case 'ropDue':
+      return buildRoute('project.read', {
+        establishmentId: alert.model.establishmentId,
+        projectId: alert.model.id
+      });
+  }
 }
+
+/**
+ * Group alerts by establishment, type and status e.g.
+ * [
+ *   {
+ *     id,
+ *     name,
+ *     summary: {
+ *       pilReview: { due: 0, overdue: 0 },
+ *       raDue: { due: 0, overdue: 0 },
+ *       ropDue: { due: 0, overdue: 0 }
+ *     }
+ *   },
+ *   ...
+ * ]
+ */
+const summariseEstablishmentAlerts = (alerts = [], profileEstablishments = [], buildRoute) => {
+  const establishments = alerts.reduce((result, alert) => {
+    const raQueryString = '?status=inactive-statuses&sort%5Bcolumn%5D=raDate&sort%5Bascending%5D=true&page=1';
+    const urlParams = { establishmentId: alert.establishmentId };
+
+    const establishment = result[alert.establishmentId] || {
+      id: alert.establishmentId,
+      name: (profileEstablishments.find(e => e.id === alert.establishmentId) || {}).name,
+      summary: {
+        pilReview: {
+          due: 0,
+          overdue: 0,
+          url: buildRoute('pils', urlParams)
+        },
+        raDue: {
+          due: 0,
+          overdue: 0,
+          url: buildRoute('project', { ...urlParams, suffix: raQueryString })
+        },
+        ropDue: {
+          due: 0,
+          overdue: 0,
+          url: buildRoute('establishment.rops', urlParams)
+        }
+      }
+    };
+
+    if (alert.overdue) {
+      establishment.summary[alert.type].overdue++;
+    } else {
+      establishment.summary[alert.type].due++;
+    }
+
+    return { ...result, [establishment.id]: establishment };
+  }, {});
+
+  return Object.values(establishments);
+};
 
 module.exports = settings => {
   const app = page({
@@ -17,76 +92,23 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res, next) => {
-    const pil = req.user.profile.pil;
+    req.api('/me/alerts')
+      .then(response => response.json.data)
+      .then(data => {
+        const personal = (data.personal || []).map(alert => ({
+          ...alert,
+          deadline: moment(alert.deadline).format(dateFormat.short),
+          url: getAlertUrl(alert, req.buildRoute)
+        }));
 
-    if (!pil) {
-      return next();
-    }
+        const establishments = summariseEstablishmentAlerts(data.establishments, req.user.profile.establishments, req.buildRoute);
 
-    if (pil.reviewDue) {
-      const params = {
-        establishmentId: pil.establishmentId,
-        profileId: pil.profileId,
-        pilId: pil.id
-      };
-      res.locals.static.pilReviewRequired = {
-        pilUrl: req.buildRoute('pil.read', params),
-        overdue: pil.reviewOverdue
-      };
-    }
-
-    next();
-  });
-
-  app.get('/', (req, res, next) => {
-    const adminOrNtcoEsts = req.user.profile.establishments.filter(est => est.role === 'admin' || userIsNtcoAtEst(req.user.profile, est.id));
-    const adminEsts = adminOrNtcoEsts.filter(est => est.role === 'admin');
-
-    const rasDue = Promise.all(
-      adminEsts.map(est => {
-        return Promise.resolve()
-          .then(() => req.api(`/establishment/${est.id}/projects/ras-due?onlymeta=true`))
-          .then(response => {
-            return {
-              estId: est.id,
-              name: est.name,
-              due: response.json.meta.count
-            };
-          });
-      })
-    );
-
-    const pilReviewsDue = Promise.all(
-      adminOrNtcoEsts.map(est => {
-        return Promise.all([
-          req.api(`/establishment/${est.id}/pils/reviews?status=due&onlymeta=true`),
-          req.api(`/establishment/${est.id}/pils/reviews?status=overdue&onlymeta=true`)
-        ])
-          .then(response => {
-            const due = response[0].json.meta.count;
-            const overdue = response[1].json.meta.count;
-            return {
-              estId: est.id,
-              name: est.name,
-              overdue,
-              due
-            };
-          });
-      })
-    );
-
-    Promise.all([
-      pilReviewsDue,
-      rasDue
-    ])
-      .then(([reviews, rasDue]) => {
-        res.locals.static.adminPilReviewsRequired = reviews.filter(r => r.overdue > 0 || r.due > 0);
-        res.locals.static.rasDue = rasDue.filter(r => r.due > 0);
+        res.locals.static.alerts = { personal, establishments };
       })
       .then(() => next())
       .catch(err => {
         req.log('error', { message: err.message, stack: err.stack, ...err });
-        // don't block dashboard rendering for failed PIL review lookup
+        // don't block dashboard rendering for failed alerts
         next();
       });
   });
