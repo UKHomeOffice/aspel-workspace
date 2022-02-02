@@ -1,5 +1,4 @@
 const moment = require('moment');
-const { cloneDeep } = require('lodash');
 const { page } = require('@asl/service/ui');
 const { dateFormat } = require('@asl/pages/constants');
 const taskList = require('@asl/pages/pages/task/list/router');
@@ -43,22 +42,31 @@ function getAlertUrl(alert, buildRoute) {
  * ]
  */
 const summariseEstablishmentAlerts = (alerts = [], profileEstablishments = [], buildRoute) => {
-  const summary = {
-    pilReview: { due: 0, overdue: 0 },
-    raDue: { due: 0, overdue: 0 },
-    ropDue: { due: 0, overdue: 0 }
-  };
+  const establishments = alerts.reduce((result, alert) => {
+    const raQueryString = '?status=inactive-statuses&sort%5Bcolumn%5D=raDate&sort%5Bascending%5D=true&page=1';
+    const urlParams = { establishmentId: alert.establishmentId };
 
-  return alerts.reduce((result, alert) => {
-    let idx = result.findIndex(e => e.id === alert.establishmentId);
-
-    const establishment = idx !== -1
-      ? result[idx]
-      : {
-        id: alert.establishmentId,
-        name: (profileEstablishments.find(e => e.id === alert.establishmentId) || {}).name,
-        summary: cloneDeep(summary)
-      };
+    const establishment = result[alert.establishmentId] || {
+      id: alert.establishmentId,
+      name: (profileEstablishments.find(e => e.id === alert.establishmentId) || {}).name,
+      summary: {
+        pilReview: {
+          due: 0,
+          overdue: 0,
+          url: buildRoute('pils', urlParams)
+        },
+        raDue: {
+          due: 0,
+          overdue: 0,
+          url: buildRoute('project', { ...urlParams, suffix: raQueryString })
+        },
+        ropDue: {
+          due: 0,
+          overdue: 0,
+          url: buildRoute('establishment.rops', urlParams)
+        }
+      }
+    };
 
     if (alert.overdue) {
       establishment.summary[alert.type].overdue++;
@@ -66,18 +74,10 @@ const summariseEstablishmentAlerts = (alerts = [], profileEstablishments = [], b
       establishment.summary[alert.type].due++;
     }
 
-    if (idx !== -1) {
-      result[idx] = establishment;
-    } else {
-      establishment.summary['pilReview'].url = buildRoute('pils', { establishmentId: alert.establishmentId });
-      const raUrlParams = '?status=inactive-statuses&sort%5Bcolumn%5D=raDate&sort%5Bascending%5D=true&page=1';
-      establishment.summary['raDue'].url = buildRoute('project', { establishmentId: alert.establishmentId, suffix: raUrlParams });
-      establishment.summary['ropDue'].url = buildRoute('establishment.rops', { establishmentId: alert.establishmentId });
-      result.push(establishment);
-    }
+    return { ...result, [establishment.id]: establishment };
+  }, {});
 
-    return result;
-  }, []);
+  return Object.values(establishments);
 };
 
 module.exports = settings => {
