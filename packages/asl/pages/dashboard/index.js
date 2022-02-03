@@ -15,13 +15,15 @@ function getAlertUrl(alert, buildRoute) {
     case 'raDue':
       return buildRoute('project.read', {
         establishmentId: alert.model.establishmentId,
-        projectId: alert.model.id
+        projectId: alert.model.id,
+        suffix: '#reporting'
       });
 
     case 'ropDue':
       return buildRoute('project.read', {
         establishmentId: alert.model.establishmentId,
-        projectId: alert.model.id
+        projectId: alert.model.id,
+        suffix: '#reporting'
       });
   }
 }
