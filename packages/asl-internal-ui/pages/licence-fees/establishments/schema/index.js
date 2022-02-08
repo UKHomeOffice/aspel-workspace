@@ -23,6 +23,9 @@ module.exports = {
   otherInformation: {
     accessor: 'billing.otherInformation'
   },
+  updatedAt: {
+    accessor: 'billing.updatedAt'
+  },
   numberOfPils: {
     show: true
   },
