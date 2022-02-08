@@ -12,6 +12,7 @@
     "test": "npm run test:lint && npm run test:deduped",
     "test:lint": "eslint . --ext jsx,js",
     "test:deduped": "./tests/dedupe.sh",
+    "test:audit": "ciaudit --high --production",
     "build": "npm run build:js && npm run build:css",
     "build:js": "node --max_old_space_size=4096 node_modules/.bin/webpack",
     "prebuild:css": "mkdir -p ./public/css",
@@ -65,6 +66,7 @@
     "uuid-validate": "0.0.3"
   },
   "devDependencies": {
+    "@lennym/ciaudit": "^2.0.0",
     "dotenv": "^5.0.1",
     "eslint": "^4.19.1",
     "eslint-config-lennym": "^2.3.1",
