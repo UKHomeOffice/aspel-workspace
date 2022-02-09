@@ -47,6 +47,7 @@ export { default as MultiInput } from './multi-input';
 export { default as Notification } from './notification';
 export { default as Number } from './number';
 export { default as OpenTaskWarning } from './open-task-warning';
+export { default as OverflowWrapper } from './overflow-wrapper';
 export { default as Pagination } from './pagination';
 export { default as Panel } from './panel';
 export { default as PanelList } from './panel-list';
