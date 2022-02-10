@@ -1,23 +1,34 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import get from 'lodash/get';
 import { Inset, Markdown } from '@asl/components';
 
-export function hasProjectTitleMatch(row) {
-  const highlight = get(row, `highlight['projectTitle'][0]`);
-  return row.model === 'project' && highlight;
+function getHighlight(row, propName) {
+  return get(row, `highlight['${propName}'][0]`);
 }
 
 export default function TaskSearchResult({ model }) {
-  const highlight = hasProjectTitleMatch(model);
+  const titleMatch = getHighlight(model, 'projectTitle');
+  const licenceMatch = getHighlight(model, 'licenceNumber');
 
-  if (!highlight) {
+  if (!titleMatch && !licenceMatch) {
     return null;
   }
 
   return (
     <Inset>
-      <h3>Project</h3>
-      <Markdown>{highlight}</Markdown>
+      { titleMatch &&
+        <Fragment>
+          <h3>Project</h3>
+          <Markdown>{titleMatch}</Markdown>
+        </Fragment>
+      }
+
+      { licenceMatch &&
+        <Fragment>
+          <h3>Licence number</h3>
+          <Markdown>{licenceMatch}</Markdown>
+        </Fragment>
+      }
     </Inset>
   );
 }
