@@ -33,7 +33,7 @@
   "dependencies": {
     "@asl/components": "^10.12.1",
     "@asl/constants": "^1.0.0",
-    "@asl/pages": "^27.8.1",
+    "@asl/pages": "^27.8.2",
     "@asl/projects": "^10.3.0",
     "@asl/service": "^8.10.3",
     "@babel/core": "^7.6.2",
@@ -70,7 +70,7 @@
     "dotenv": "^5.0.1",
     "eslint": "^4.19.1",
     "eslint-config-lennym": "^2.3.1",
-    "node-sass": "^7.0.0",
+    "node-sass": "^7.0.1",
     "nodemon": "^2.0.6",
     "npm-run-all": "^4.1.5",
     "npm-sass": "^3.0.0",
