@@ -14,8 +14,8 @@ const formatters = {
   }
 };
 
-function CompletedBetween() {
-  const { start, end } = useSelector(state => state.static.query);
+function ActionedBetween() {
+  const { progress, start, end } = useSelector(state => state.static.query);
   return (
     <form method="GET" className="metrics-filters">
       <p>
@@ -35,7 +35,7 @@ function CompletedBetween() {
           minDate={new Date(2019, 6, 31)}
           date={end}
         />
-        <input type="hidden" name="progress" value="closed" />
+        <input type="hidden" name="progress" value={progress} />
         <button type="submit" className="govuk-button"><Snippet>buttons.submit</Snippet></button>
       </p>
     </form>
@@ -46,7 +46,7 @@ export default function AsruProfilesList() {
   const { progress } = useSelector(state => state.static.query);
   const filters = useSelector(state => state.datatable.filters);
   const withAsru = get(filters, 'active.withAsru', []).includes('yes');
-  const tabs = ['open', 'closed'];
+  const tabs = ['open', 'returned', 'closed'];
 
   return (
     <Fragment>
@@ -63,7 +63,8 @@ export default function AsruProfilesList() {
         }
       </Tabs>
 
-      { progress === 'closed' && <CompletedBetween /> }
+      { progress === 'returned' && <ActionedBetween /> }
+      { progress === 'closed' && <ActionedBetween /> }
 
       <div className="task-filters">
         {

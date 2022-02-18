@@ -19,7 +19,7 @@ module.exports = settings => {
     configure: (req, res, next) => {
       req.query.progress = req.query.progress || 'open';
 
-      if (req.query.progress === 'closed') {
+      if (req.query.progress !== 'open') {
         req.query.start = req.query.start || moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD');
         req.query.end = req.query.end || moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
       }
