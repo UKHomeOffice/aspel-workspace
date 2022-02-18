@@ -32,7 +32,7 @@
     "@asl/components": "^10.12.1",
     "@asl/pages": "^27.8.2",
     "@asl/projects": "^10.3.1",
-    "@asl/service": "^8.10.3",
+    "@asl/service": "^9.0.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
@@ -52,6 +52,7 @@
     "@babel/core": "^7.3.3",
     "babel-loader": "^8.0.5",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-require-ignore": "^0.1.1",
     "dotenv": "^5.0.1",
     "eslint": "^4.15.0",
     "eslint-config-lennym": "^2.2.1",
@@ -60,7 +61,7 @@
     "nodemon": "^2.0.15",
     "npm-run-all": "^4.1.5",
     "npm-sass": "^3.0.0",
-    "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.1"
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
   }
 }
