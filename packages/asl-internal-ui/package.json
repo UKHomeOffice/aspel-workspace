@@ -35,7 +35,7 @@
     "@asl/constants": "^1.0.0",
     "@asl/pages": "^27.8.2",
     "@asl/projects": "^10.3.0",
-    "@asl/service": "^8.10.3",
+    "@asl/service": "^9.0.0",
     "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
@@ -67,6 +67,7 @@
   },
   "devDependencies": {
     "@lennym/ciaudit": "^2.0.0",
+    "babel-plugin-transform-require-ignore": "^0.1.1",
     "dotenv": "^5.0.1",
     "eslint": "^4.19.1",
     "eslint-config-lennym": "^2.3.1",
@@ -74,7 +75,7 @@
     "nodemon": "^2.0.6",
     "npm-run-all": "^4.1.5",
     "npm-sass": "^3.0.0",
-    "webpack": "^4.41.0",
-    "webpack-cli": "^3.3.9"
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
   }
 }
