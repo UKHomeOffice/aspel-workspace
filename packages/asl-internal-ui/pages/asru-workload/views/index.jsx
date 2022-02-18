@@ -14,7 +14,7 @@ const formatters = {
   }
 };
 
-function CompletedBetween() {
+function ActionedBetween() {
   const { progress, start, end } = useSelector(state => state.static.query);
   return (
     <form method="GET" className="metrics-filters">
@@ -63,8 +63,8 @@ export default function AsruProfilesList() {
         }
       </Tabs>
 
-      { progress === 'returned' && <CompletedBetween /> }
-      { progress === 'closed' && <CompletedBetween /> }
+      { progress === 'returned' && <ActionedBetween /> }
+      { progress === 'closed' && <ActionedBetween /> }
 
       <div className="task-filters">
         {
