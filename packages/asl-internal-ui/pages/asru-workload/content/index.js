@@ -9,6 +9,7 @@ module.exports = merge({}, baseContent, {
   },
   tabs: {
     open: 'Outstanding and in progress tasks',
+    returned: 'Returned tasks',
     closed: 'Completed tasks'
   },
   filters: {
@@ -19,10 +20,12 @@ module.exports = merge({}, baseContent, {
     role: {
       inspector: {
         open: 'Tasks with inspectors',
+        returned: 'Tasks returned by inspectors',
         closed: 'Tasks closed by inspectors'
       },
       licensing: {
         open: 'Tasks with licensing officers',
+        returned: 'Tasks returned by licensing officers',
         closed: 'Tasks closed by licensing officers'
       }
     }
