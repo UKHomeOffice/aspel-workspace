@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { groupBy } = require('lodash');
 const { page } = require('@asl/service/ui');
 const { dateFormat } = require('@asl/pages/constants');
 const taskList = require('@asl/pages/pages/task/list/router');
@@ -44,42 +45,57 @@ function getAlertUrl(alert, buildRoute) {
  * ]
  */
 const summariseEstablishmentAlerts = (alerts = [], profileEstablishments = [], buildRoute) => {
-  const establishments = alerts.reduce((result, alert) => {
-    const raQueryString = '?status=inactive-statuses&sort%5Bcolumn%5D=raDate&sort%5Bascending%5D=true&page=1';
-    const urlParams = { establishmentId: alert.establishmentId };
+  const grouped = groupBy(alerts, 'establishmentId');
 
-    const establishment = result[alert.establishmentId] || {
-      id: alert.establishmentId,
-      name: (profileEstablishments.find(e => e.id === alert.establishmentId) || {}).name,
-      summary: {
-        pilReview: {
-          due: 0,
-          overdue: 0,
-          url: buildRoute('pils', urlParams)
-        },
-        raDue: {
-          due: 0,
-          overdue: 0,
-          url: buildRoute('project', { ...urlParams, suffix: raQueryString })
-        },
-        ropDue: {
-          due: 0,
-          overdue: 0,
-          url: buildRoute('establishment.rops', urlParams)
+  return Object.keys(grouped)
+    .map(id => parseInt(id, 10))
+    .map(establishmentId => {
+
+      const urlParams = { establishmentId };
+      const raQueryString = '?status=inactive-statuses&sort%5Bcolumn%5D=raDate&sort%5Bascending%5D=true&page=1';
+      const establishmentAlerts = grouped[establishmentId];
+      const establishment = profileEstablishments.find(e => e.id === establishmentId) || {};
+
+      // get the earliest year for any ROPs alert
+      const year = establishmentAlerts
+        .filter(alert => alert.type === 'ropDue')
+        .map(alert => alert.ropsYear)
+        .reduce((first, year) => Math.min(year, first), (new Date()).getFullYear());
+
+      const details = {
+        id: establishmentId,
+        name: establishment.name,
+        summary: {
+          pilReview: {
+            due: 0,
+            overdue: 0,
+            url: buildRoute('pils', urlParams)
+          },
+          raDue: {
+            due: 0,
+            overdue: 0,
+            url: buildRoute('project', { ...urlParams, suffix: raQueryString })
+          },
+          ropDue: {
+            due: 0,
+            overdue: 0,
+            // if there are only overdue rops for a single year then go direct to that year
+            url: buildRoute('establishment.rops.overview', { ...urlParams, year })
+          }
         }
-      }
-    };
+      };
 
-    if (alert.overdue) {
-      establishment.summary[alert.type].overdue++;
-    } else {
-      establishment.summary[alert.type].due++;
-    }
+      establishmentAlerts.forEach(alert => {
+        if (alert.overdue) {
+          details.summary[alert.type].overdue++;
+        } else {
+          details.summary[alert.type].due++;
+        }
+      });
 
-    return { ...result, [establishment.id]: establishment };
-  }, {});
+      return details;
 
-  return Object.values(establishments);
+    });
 };
 
 module.exports = settings => {
