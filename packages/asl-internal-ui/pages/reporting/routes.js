@@ -1,7 +1,6 @@
 const download = require('./download');
 const details = require('./details');
 const taskMetrics = require('./task-metrics');
-
 module.exports = {
   download: {
     breadcrumb: false,

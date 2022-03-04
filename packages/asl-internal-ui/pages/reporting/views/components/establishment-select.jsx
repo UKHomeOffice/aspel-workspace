@@ -5,7 +5,7 @@ import AccessibleAutocomplete from 'accessible-autocomplete/react';
 export default function AutoComplete(props) {
   const [value, setValue] = useState(props.value && props.value.toString());
 
-  const establishments = useSelector(state => state.static.establishments);
+  const establishments = useSelector(state => state.static.schema.establishment.options);
   const defaultValue = (establishments.find(opt => opt.value === props.value) || {}).label;
 
   const search = (query, callback) => {

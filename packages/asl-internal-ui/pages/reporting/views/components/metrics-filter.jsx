@@ -4,7 +4,7 @@ import { Form, Snippet, Link } from '@asl/components';
 import DatePicker from './date-picker';
 import EstablishmentSelect from './establishment-select';
 
-export default function MetricsFilter({ start, end, establishment, page, query = {} }) {
+export default function MetricsFilter({ start, end, establishment, page, filterEstablishment = true, query = {} }) {
   return (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
@@ -27,20 +27,24 @@ export default function MetricsFilter({ start, end, establishment, page, query =
               date={end}
             />
           </p>
-          <p>
-            <label htmlFor="establishment">
-              Filter by establishment:
-              <EstablishmentSelect
-                className="inline"
-                name="establishment"
-                value={establishment}
-              />
-            </label>
-            {
-              establishment &&
-                <Link page={page} query={merge({}, query, {establishment: 'all'})} label="Show all establishments" />
-            }
-          </p>
+          {
+            filterEstablishment ?
+              <p>
+                <label htmlFor="establishment">
+                  Filter by establishment:
+                  <EstablishmentSelect
+                    className="inline"
+                    name="establishment"
+                    value={establishment}
+                  />
+                </label>
+                {
+                  establishment &&
+                    <Link page={page} query={merge({}, query, {establishment: 'all'})} label="Show all establishments" />
+                }
+              </p> :
+              <input type="hidden" name="establishment" value="all" />
+          }
           <p className="control-panel">
             <button type="submit" className="govuk-button"><Snippet>buttons.submit</Snippet></button>
           </p>

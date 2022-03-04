@@ -10,7 +10,7 @@ module.exports = merge({}, tasklistContent, {
   buttons: {
     submit: 'Update'
   },
-  backToMetrics: 'Back to all performance metrics',
+  backToMetrics: 'Back to all completed tasks',
   subtitle: {
     'project-application': 'New PPLs',
     'legacy-project-application': 'Legacy PPLs',

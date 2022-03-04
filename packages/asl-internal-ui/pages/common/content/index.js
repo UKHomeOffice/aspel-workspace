@@ -1,7 +1,8 @@
 module.exports = {
   breadcrumbs: {
-    reporting: 'Performance metrics',
+    reporting: 'Data and performance',
     taskMetrics: 'Task durations and decisions',
+    completedTasks: 'Completed tasks',
     fees: 'Licence fees',
     nts: 'Non-technical summaries',
     downloads: 'Downloads',
