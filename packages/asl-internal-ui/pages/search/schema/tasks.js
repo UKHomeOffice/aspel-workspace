@@ -7,11 +7,6 @@ module.exports = {
     sortable: false,
     accessor: 'establishment.name'
   },
-  licence: {
-    show: true,
-    sortable: false,
-    accessor: 'model'
-  },
   type: {
     show: true,
     sortable: false,
@@ -20,6 +15,10 @@ module.exports = {
   status: {
     show: true,
     sortable: false
+  },
+  activeDeadline: {
+    show: true,
+    sortable: true
   },
   assignedTo: {
     show: true,
