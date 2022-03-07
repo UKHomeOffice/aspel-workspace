@@ -1,6 +1,3 @@
-1007129 && backpack-transpiled>*
+backpack-transpiled>*
 # need to include react-google-maps because of npm issue with building complete paths
-1007129 && react-google-maps>*
-
-# this isn't actually a webpack dependency (which should be ignored by --production) but npm audit ignores @asl/* scoped modules, so the child dependency of @asl/service reports as webpack.
-1006947 && webpack>*
+react-google-maps>*
