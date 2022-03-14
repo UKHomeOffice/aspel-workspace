@@ -43,7 +43,7 @@ function ActionedBetween() {
 }
 
 export default function AsruProfilesList() {
-  const { progress } = useSelector(state => state.static.query);
+  const { progress, start, end } = useSelector(state => state.static.query);
   const filters = useSelector(state => state.datatable.filters);
   const withAsru = get(filters, 'active.withAsru', []).includes('yes');
   const tabs = ['open', 'returned', 'closed'];
@@ -59,7 +59,7 @@ export default function AsruProfilesList() {
 
       <Tabs active={tabs.indexOf(progress)}>
         {
-          tabs.map(tab => <Link page="asruWorkload" key={tab} query={{progress: tab}} label={<Snippet>{`tabs.${tab}`}</Snippet>} />)
+          tabs.map(tab => <Link page="asruWorkload" key={tab} query={{progress: tab, start, end}} label={<Snippet>{`tabs.${tab}`}</Snippet>} />)
         }
       </Tabs>
 
