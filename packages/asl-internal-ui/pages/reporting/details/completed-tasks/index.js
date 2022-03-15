@@ -102,15 +102,21 @@ module.exports = settings => {
       req.metrics('/reports/tasks', { stream: true, query }).then(consumeTaskStream)
     ];
 
-    return Promise.all(requests)
+    const result = Promise.all(requests)
       .then(([ expired, tasks ]) => {
         tasks['project-expiry'] = expired['1'];
         tasks['legacy-project-expiry'] = expired['0'];
         tasks['all-project-expiry'] = expired['0'] + expired['1'];
 
         res.locals.static.tasks = tasks;
-        next();
-      })
+      });
+    res.await(result);
+    next();
+  });
+
+  app.get('/', (req, res, next) => {
+    res.settle()
+      .then(() => next())
       .catch(next);
   });
 

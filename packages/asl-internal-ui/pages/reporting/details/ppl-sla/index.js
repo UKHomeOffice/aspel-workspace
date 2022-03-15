@@ -51,5 +51,13 @@ module.exports = settings => {
       .catch(next);
   });
 
+  app.get('/', (req, res, next) => {
+    res.settle()
+      .then(() => next())
+      .catch(next);
+  });
+
+  app.get('/', (req, res) => res.sendResponse());
+
   return app;
 };

@@ -8,7 +8,7 @@ module.exports = () => {
   const router = new Router();
 
   router.use((req, res, next) => {
-    req.metrics('/reports/ppl-sla', { stream: true, query: pick(req.form.values, 'start', 'end') })
+    const slas = req.metrics('/reports/ppl-sla', { stream: true, query: pick(req.form.values, 'start', 'end') })
       .then(stream => {
         let total = 0;
         return new Promise((resolve, reject) => {
@@ -29,13 +29,14 @@ module.exports = () => {
       })
       .then(total => {
         res.locals.model.deadlines = total;
-      })
-      .then(() => next())
-      .catch(next);
+      });
+
+    res.await(slas);
+    next();
   });
 
   router.use((req, res, next) => {
-    req.metrics('/reports/internal-deadlines', { stream: true, query: pick(req.form.values, 'start', 'end') })
+    const deadlines = req.metrics('/reports/internal-deadlines', { stream: true, query: pick(req.form.values, 'start', 'end') })
       .then(stream => {
         const stats = {
           total: 0,
@@ -70,9 +71,9 @@ module.exports = () => {
       })
       .then(stats => {
         res.locals.model.internalDeadlines = stats;
-      })
-      .then(() => next())
-      .catch(next);
+      });
+    res.await(deadlines);
+    next();
   });
 
   return router;

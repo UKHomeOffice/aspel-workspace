@@ -17,7 +17,7 @@ module.exports = settings => {
 
   app.get('/', (req, res, next) => {
     const query = pick(req.form.values, 'start', 'end');
-    req.metrics('/reports/actioned-tasks', { stream: true, query })
+    const tasks = req.metrics('/reports/actioned-tasks', { stream: true, query })
       .then(stream => {
         const result = {
           application: {
@@ -36,8 +36,7 @@ module.exports = settings => {
               if (data.data.model !== 'project') {
                 return callback();
               }
-              console.log(data.id, data.metrics.resolvedAt);
-              //console.log(data.id, pick(data.metrics, 'returnedCount', 'resolvedAt', 'firstReturnedAt'));
+
               const stats = result[data.metrics.taskType === 'pplApplication' ? 'application' : 'amendment'];
               let actions = data.metrics.returnedCount;
               if (data.metrics.resolvedAt) {
@@ -62,14 +61,18 @@ module.exports = settings => {
       })
       .then(actions => {
         res.locals.model.actions = actions;
-      })
+      });
+    res.await(tasks);
+    next();
+  });
+
+  app.get('/', (req, res, next) => {
+    res.settle()
       .then(() => next())
       .catch(next);
   });
 
-  app.get('/', (req, res, next) => {
-    next();
-  });
+  app.get('/', (req, res) => res.sendResponse());
 
   return app;
 };
