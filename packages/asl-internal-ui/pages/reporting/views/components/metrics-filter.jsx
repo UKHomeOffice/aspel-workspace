@@ -28,8 +28,8 @@ export default function MetricsFilter({ start, end, establishment, page, filterE
             />
           </p>
           {
-            filterEstablishment ?
-              <p>
+            filterEstablishment
+              ? <p>
                 <label htmlFor="establishment">
                   Filter by establishment:
                   <EstablishmentSelect
@@ -42,8 +42,8 @@ export default function MetricsFilter({ start, end, establishment, page, filterE
                   establishment &&
                     <Link page={page} query={merge({}, query, {establishment: 'all'})} label="Show all establishments" />
                 }
-              </p> :
-              <input type="hidden" name="establishment" value="all" />
+              </p>
+              : <input type="hidden" name="establishment" value="all" />
           }
           <p className="control-panel">
             <button type="submit" className="govuk-button"><Snippet>buttons.submit</Snippet></button>

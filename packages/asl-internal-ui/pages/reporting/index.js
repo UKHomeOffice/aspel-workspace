@@ -1,7 +1,6 @@
 const { page } = require('@asl/service/ui');
 const moment = require('moment');
-const { pipeline } = require('stream');
-const through = require('through2');
+const reducer = require('./helpers/reduce-stream');
 const { pick } = require('lodash');
 
 const routes = require('./routes');
@@ -44,30 +43,18 @@ module.exports = settings => {
 
   app.get('/', (req, res, next) => {
     const tasks = req.metrics('/reports/tasks', { stream: true, query: pick(req.form.values, 'start', 'end') })
-      .then(stream => {
-        let total = 0;
-        let ppls = 0;
-        let iterations = 0;
-        return new Promise((resolve, reject) => {
-          pipeline(
-            stream,
-            through.obj((data, enc, callback) => {
-              total++;
-              if (data.model === 'project' && data.action === 'application') {
-                ppls++;
-                iterations += data.iterations;
-              }
-              callback();
-            }),
-            err => {
-              if (err) {
-                return reject(err);
-              }
-              resolve({ total, ppls, iterations });
-            }
-          );
-        });
-      })
+      .then(reducer((result, data) => {
+        result.total++;
+        if (data.model === 'project' && data.action === 'application') {
+          result.ppls++;
+          result.iterations += data.iterations;
+        }
+        return result;
+      }, {
+        total: 0,
+        ppls: 0,
+        iterations: 0
+      }))
       .then(stats => {
         res.locals.model.tasks = stats;
       });

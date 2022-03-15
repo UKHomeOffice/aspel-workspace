@@ -8,7 +8,7 @@ import TaskCounts from './components/task-counts';
 
 export default function Index() {
   const { start, end, establishment } = useSelector(state => state.model);
-  const { licences, deadlines, tasks, initiatedBy } = useSelector(state => state.static);
+  const { tasks, initiatedBy } = useSelector(state => state.static);
 
   const tabs = {
     all: 'All tasks',
