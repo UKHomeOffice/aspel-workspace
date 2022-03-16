@@ -283,3 +283,77 @@ table.projects-content {
     }
   }
 }
+
+.enforcement-cases {
+  .govuk-table {
+    td {
+      vertical-align: top;
+    }
+  }
+}
+
+.enforcement-case {
+  .case-number {
+    margin-bottom: $govuk-gutter;
+
+    p, a {
+      margin: 0;
+    }
+  }
+
+  .enforcement-subject {
+    background-color: govuk-colour('grey-3');
+    margin-bottom: $govuk-gutter;
+    padding: $govuk-gutter;
+
+  }
+}
+
+.enforcement-flags {
+  &>ul>li {
+    margin-bottom: $govuk-gutter;
+    color: $hint-colour;
+
+    p {
+      margin-top: 0;
+    }
+
+    ul {
+      padding-left: 1em;
+    }
+  }
+}
+
+.govuk-warning-text.enforcement {
+  padding: $govuk-gutter-half;
+  background-color: white;
+  border: 5px solid #D53880;
+
+  .govuk-warning-text__icon {
+    border-color: #D53880;
+    background-color: #D53880;
+    left: 8px;
+    top: 8px;
+    margin-top: 0;
+  }
+
+  &.closed {
+    border-color: #F47738;
+
+    .govuk-warning-text__icon {
+      border-color: #F47738;
+    }
+  }
+
+  .govuk-warning-text__text {
+    padding-left: 40px;
+
+    p:first-child {
+      margin-top: 0;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
