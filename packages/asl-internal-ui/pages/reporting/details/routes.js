@@ -6,22 +6,22 @@ const completedTasks = require('./completed-tasks');
 module.exports = {
   pplSla: {
     path: '/ppl-sla',
-    breadcrumb: false,
+    breadcrumb: 'statutoryDeadlines',
     router: pplSla
   },
   deadlines: {
     path: '/deadlines',
-    breadcrumb: false,
+    breadcrumb: 'deadlines',
     router: deadlines
   },
   filteredTasks: {
     path: '/tasks',
-    breadcrumb: false,
+    breadcrumb: 'completedTasks',
     router: taskList
   },
   completedTasks: {
     path: '/completed-tasks',
-    breadcrumb: false,
+    breadcrumb: 'completedTasks',
     router: completedTasks
   }
 };
