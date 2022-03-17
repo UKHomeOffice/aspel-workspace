@@ -79,7 +79,7 @@ export default function Deadlines() {
           </tr>
         </tbody>
       </table>
-
+      <p><Link page="downloads" suffix="#task-metrics" label="Download the a full report of download metrics from the download page" /></p>
     </Fragment>
   );
 }

@@ -80,7 +80,7 @@ export default function Index() {
           <p>Download contact details for all named people, admins, and HOLCs at active and inactive establishments.</p>
         </section>
 
-        <section>
+        <section id="task-metrics">
           <h2>Task processing metrics</h2>
           <p>Download a monthly report broken down by task type including:</p>
           <ul>
