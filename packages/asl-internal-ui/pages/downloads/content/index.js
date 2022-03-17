@@ -13,5 +13,8 @@ module.exports = {
   'place-update': 'Approved area amendments',
   'place-create': 'Approved area additions',
   'place-delete': 'Approved area deletions',
-  'profile-update': 'Profile updates'
+  'profile-update': 'Profile updates',
+  links: {
+    taskMetrics: 'Tasks processed by duration and decision for {{month}} {{year}} (ZIP)'
+  }
 };

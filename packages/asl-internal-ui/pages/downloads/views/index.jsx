@@ -1,7 +1,9 @@
 import React from 'react';
-import { Header, Link } from '@asl/components';
+import { useSelector } from 'react-redux';
+import { Header, Link, Snippet } from '@asl/components';
 
 export default function Index() {
+  const { reports } = useSelector(state => state.static);
   return (
     <div className="asru-downloads govuk-grid-row">
       <div className="govuk-grid-column-two-thirds">
@@ -76,6 +78,46 @@ export default function Index() {
           <Link page="downloads.report" report="named-people" label="Named people and admins" />
           <p className="file-type-label">CSV</p>
           <p>Download contact details for all named people, admins, and HOLCs at active and inactive establishments.</p>
+        </section>
+
+        <section>
+          <h2>Task processing metrics</h2>
+          <p>Download a monthly report broken down by task type including:</p>
+          <ul>
+            <li>The number of task processing targets exceeded</li>
+            <li>The number of submitted, approved, returned or outstanding tasks</li>
+            <li>The mean time taken to process tasks from submission</li>
+            <li>The mean time taken to process tasks from assignment</li>
+          </ul>
+          {
+            reports && reports.slice(0, 3).map(report => (
+              <p key={report.path}>
+                <Link
+                  page="downloads.taskMetrics"
+                  exportId={report.id}
+                  label={<Snippet year={report.year} month={report.month}>links.taskMetrics</Snippet>}
+                />
+              </p>
+            ))
+          }
+          {
+            reports && reports.length > 3 && (
+              <details className="gutter">
+                <summary>Older reports</summary>
+                {
+                  reports.slice(3).map(report => (
+                    <p key={report.path}>
+                      <Link
+                        page="downloads.taskMetrics"
+                        exportId={report.id}
+                        label={<Snippet year={report.year} month={report.month}>links.taskMetrics</Snippet>}
+                      />
+                    </p>
+                  ))
+                }
+              </details>
+            )
+          }
         </section>
 
         <section>
