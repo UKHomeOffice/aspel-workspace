@@ -11,10 +11,11 @@ module.exports = settings => {
     root: __dirname
   });
 
-  app.use(metricsFilterForm);
+  app.use(metricsFilterForm());
 
   app.use((req, res, next) => {
     res.locals.static.report = req.query.report;
+    res.locals.static.initiatedBy = req.query.initiatedBy || 'all';
     next();
   });
 

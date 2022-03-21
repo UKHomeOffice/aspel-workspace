@@ -20,7 +20,7 @@ export default function Index() {
     <Fragment>
       <Header title={<Snippet>{`title.${report}`}</Snippet>} subtitle={<Snippet optional>{`subtitle.${report}`}</Snippet>} />
 
-      <Link page="reporting" label={<Snippet>backToMetrics</Snippet>} />
+      <Link page="reporting.details.completedTasks" label={<Snippet>backToMetrics</Snippet>} />
 
       <MetricsFilter page="reporting.details.filteredTasks" start={start} end={end} establishment={establishment} query={{report}} />
       <InitiatedByFilter page="reporting.details.filteredTasks" tabs={tabs} activeTab={initiatedBy} query={{report}} />
