@@ -57,6 +57,7 @@ export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded 
 }
 
 export function Datatable({
+  CustomRow,
   expands = () => true,
   Expandable,
   alwaysExpanded = false,
@@ -90,9 +91,14 @@ export function Datatable({
       </thead>
       <tbody>
         {
-          data.length === 0 && noDataWarning
-            ? <tr><td colSpan={size(schema) + (Actions ? 1 : 0)}>{noDataWarning}</td></tr>
-            : data.map(row => <Row key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} alwaysExpanded={alwaysExpanded} />)
+          data.length === 0 && noDataWarning && <tr><td colSpan={size(schema) + (Actions ? 1 : 0)}>{noDataWarning}</td></tr>
+        }
+        {
+          data.length && data.map(row =>
+            CustomRow
+              ? <CustomRow key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} alwaysExpanded={alwaysExpanded} />
+              : <Row key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} alwaysExpanded={alwaysExpanded} />
+          )
         }
       </tbody>
       {
