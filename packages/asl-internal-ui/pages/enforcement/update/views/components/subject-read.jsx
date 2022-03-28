@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import { Snippet, Link } from '@asl/components';
-import EnforcementSubjectHeader from './enforcement-subject-header';
+import EnforcementSubjectHeader from './subject-header';
 import EnforcementBanner from '../../../components/enforcement-banner';
 
-function EnforcementSubjectRead({ enforcementCase, subject, idx }) {
+function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
   const status = subject.flags[0].status; // all flags have same status
   const profileFlag = subject.flags.find(flag => flag.modelType === 'profile');
   const pilFlag = subject.flags.find(flag => flag.modelType === 'pil');
@@ -11,12 +11,13 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx }) {
 
   return (
     <div className="enforcement-subject">
-      <EnforcementSubjectHeader subject={subject} idx={idx} />
+      <h3><Snippet idx={idx + 1}>subjects.repeaterHeading</Snippet></h3>
+      <EnforcementSubjectHeader subject={subject} />
 
       <div className="enforcement-flags">
         <h3><Snippet>flag.heading</Snippet></h3>
 
-        <p><strong><Snippet>flag.status</Snippet></strong></p>
+        <p><strong><Snippet>flag.status.read</Snippet></strong></p>
         <EnforcementBanner enforcementCase={enforcementCase} status={status} />
 
         <p><strong><Snippet>flag.appliedTo.heading</Snippet></strong></p>
@@ -49,7 +50,9 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx }) {
           }
         </ul>
 
-        <button className="govuk-button button-secondary"><Snippet>action.editFlag</Snippet></button>
+        <a href="#" className="govuk-button button-secondary" onClick={toggleEdit(subject.id, true)}>
+          <Snippet>action.editFlag</Snippet>
+        </a>
       </div>
 
     </div>

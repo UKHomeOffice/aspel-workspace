@@ -11,7 +11,9 @@ module.exports = merge({}, enforcementContent, {
   },
   flag: {
     heading: 'Enforcement flag',
-    status: 'Enforcement flag status',
+    status: {
+      read: 'Enforcement flag status'
+    },
     appliedTo: {
       heading: 'Flag applied to',
       profile: {
@@ -37,7 +39,8 @@ module.exports = merge({}, enforcementContent, {
   },
   action: {
     listCases: 'View all enforcement cases',
-    editFlag: 'Edit enforcement flag'
+    editFlag: 'Edit enforcement flag',
+    addSubject: 'Add another person'
   },
   caseNumber: {
     label: '**Case number** {{number}}'
@@ -53,5 +56,12 @@ module.exports = merge({}, enforcementContent, {
   },
   licences: {
     label: 'Licences'
+  },
+  buttons: {
+    add: {
+      establishment: 'Add establishment',
+      profile: 'Add person'
+    },
+    cancel: 'Cancel'
   }
 });
