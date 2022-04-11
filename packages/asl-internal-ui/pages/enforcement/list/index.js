@@ -18,7 +18,7 @@ module.exports = settings => {
       next();
     },
     locals: (req, res, next) => {
-      console.log(util.inspect(req.datatable.data.rows, false, null, true));
+      // console.log(util.inspect(req.datatable.data.rows, false, null, true));
       next();
     }
   })({ schema, apiPath: '/enforcement', defaultRowCount: 5 }));

@@ -17,6 +17,7 @@ module.exports = settings => {
   router.param('caseId', (req, res, next, caseId) => {
     return req.api(`/enforcement/${caseId}`)
       .then(({ json: { data } }) => {
+        req.enforcementCaseId = caseId;
         req.enforcementCase = data;
       })
       .then(() => next())

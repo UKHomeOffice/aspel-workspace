@@ -22,12 +22,14 @@ function EnforcementFlagForm({ subject, toggleEdit, formFields }) {
 function EnforcementSubjectEdit({ subject, idx, toggleEdit }) {
   const { url } = useSelector(state => state.static);
   const [schema, setSchema] = useState({});
+  const [model, setModel] = useState({});
+  const [errors, setErrors] = useState({});
 
   function onSubmit(e) {
     e.preventDefault();
 
     const flagStatus = e.target.flagStatus.value;
-    const flags = getCheckboxValues(e.target.flags);
+    const flags = getCheckboxValues(e.target.flags) || [];
     const remedialAction = getCheckboxValues(e.target.remedialAction);
 
     const opts = {
@@ -36,37 +38,45 @@ function EnforcementSubjectEdit({ subject, idx, toggleEdit }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ flagStatus, flags, remedialAction })
     };
-    return fetch(`${url}/subject/${subject.id}/flags`, opts)
+    return fetch(`${url}/subject/${subject.id}`, opts)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
+        if (data.errors) {
+          setErrors(data.errors);
+        } else {
+          toggleEdit(subject.id)(e);
+        }
+      })
+      .catch(e => {
+        console.log('error thrown', e);
       });
   }
 
   useEffect(() => {
-    function fetchSchema() {
-      // fetch schema & values, set schema & values
-      return fetch(`${url}/subject/${subject.id}/schema`)
+    function getEditForm() {
+      return fetch(`${url}/subject/${subject.id}/form`)
         .then(response => response.json())
-        .then(data => {
-          setSchema(data);
+        .then(({ model, schema }) => {
+          // model must be set before schema, otherwise the values are not reflected in the rendered component
+          setModel(model);
+          setSchema(schema);
         })
         .catch(e => {
           console.log(e);
         });
     }
 
-    fetchSchema();
+    getEditForm();
   }, [subject]);
 
   return (
-    <div className="enforcement-subject">
+    <div className="enforcement-subject" id={subject.id}>
       <h3><Snippet idx={idx + 1}>subjects.repeaterHeading</Snippet></h3>
       <EnforcementSubjectHeader subject={subject} />
 
       <div className="enforcement-flags">
         <h3><Snippet>flag.heading</Snippet></h3>
-        <Form schema={schema} detachFields={true} submit={false} onSubmit={onSubmit}>
+        <Form schema={schema} model={model} errors={errors} detachFields={true} submit={false} onSubmit={onSubmit}>
           <EnforcementFlagForm subject={subject} toggleEdit={toggleEdit} />
         </Form>
       </div>

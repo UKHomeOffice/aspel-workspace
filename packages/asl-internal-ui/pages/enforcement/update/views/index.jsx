@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Header, Snippet, Link } from '@asl/components';
 import SubjectRead from './components/subject-read';
@@ -10,23 +10,22 @@ function EnforcementCase() {
   const [subjects, setSubjects] = useState(enforcementCase.subjects);
   const [addSubjectActive, setAddSubject] = useState(subjects.length === 0);
 
-  const newSubject = Array.isArray(subjects) && subjects.find(s => s.id === 'new-subject');
+  const newSubject = Array.isArray(subjects) && subjects.find(s => s.id === 'new-subject' || s.new);
   const showAddButton = !newSubject && !addSubjectActive;
 
   function toggleEdit(subjectId) {
     return e => {
       e.preventDefault();
       const subject = subjects.find(s => s.id === subjectId);
+
+      if (subject.new) {
+        window.location.href = `/enforcement/${enforcementCase.id}?clear=true`;
+        return;
+      }
+
       subject.editing = !subject.editing;
       setSubjects([...subjects]);
     };
-  }
-
-  useEffect(() => {
-  }, [subjects]);
-
-  function saveEdit(e) {
-    e.preventDefault();
   }
 
   function activateAdd(e) {
@@ -67,7 +66,7 @@ function EnforcementCase() {
                       <Fragment key={subject.id}>
                         {
                           subject.editing
-                            ? <SubjectEdit idx={idx} subject={subject} enforcementCase={enforcementCase} toggleEdit={toggleEdit} save={saveEdit} />
+                            ? <SubjectEdit idx={idx} subject={subject} enforcementCase={enforcementCase} toggleEdit={toggleEdit} />
                             : <SubjectRead idx={idx} subject={subject} enforcementCase={enforcementCase} toggleEdit={toggleEdit} />
                         }
                       </Fragment>

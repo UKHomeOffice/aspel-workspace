@@ -51,7 +51,7 @@ module.exports = settings => {
         delete req.session.form[req.model.id];
         const task = response.json.data;
         req.notification({ key: 'success' });
-        res.redirect(req.buildRoute('enforcement.read', { caseId: task.data.id }));
+        res.redirect(req.buildRoute('enforcement.update', { caseId: task.data.id }));
       })
       .catch(next);
   });

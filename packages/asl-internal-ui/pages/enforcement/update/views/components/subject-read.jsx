@@ -26,8 +26,8 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
             profileFlag &&
               <li key={profileFlag.id}>
                 <Fragment>
-                  <Link page="profile.read" establishmentId={profileFlag.establishmentId} profileId={profileFlag.profile.id} label={<Snippet profile={profileFlag.profile}>flag.appliedTo.profile.link</Snippet>} />
-                  <Snippet>flag.appliedTo.profile.summary</Snippet>
+                  <Link page="profile.read" establishmentId={profileFlag.establishmentId} profileId={profileFlag.profile.id} label={<Snippet profile={profileFlag.profile}>fields.flags.options.profile.label</Snippet>} />
+                  <Snippet>fields.flags.options.profile.hint</Snippet>
                 </Fragment>
               </li>
           }
@@ -35,22 +35,22 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
             pilFlag &&
               <li key={pilFlag.id}>
                 <Fragment>
-                  <Link page="pil.read" establishmentId={pilFlag.pil.establishmentId} profileId={pilFlag.profile.id} label={<Snippet profile={pilFlag.profile}>flag.appliedTo.pil.link</Snippet>} />
-                  <Snippet>flag.appliedTo.pil.summary</Snippet>
+                  <Link page="pil.read" establishmentId={pilFlag.pil.establishmentId} profileId={pilFlag.profile.id} label={<Snippet profile={pilFlag.profile}>fields.flags.options.pil.label</Snippet>} />
+                  <Snippet>fields.flags.options.pil.hint</Snippet>
                 </Fragment>
               </li>
           }
           {
             projectFlags.map(flag => (
               <li key={flag.id}>
-                <Link page="project.read" establishmentId={flag.establishmentId} projectId={flag.modelId} label={<Snippet profile={flag.profile} project={flag.project}>flag.appliedTo.project.link</Snippet>} />
-                <Snippet>flag.appliedTo.project.summary</Snippet>
+                <Link page="project.read" establishmentId={flag.establishmentId} projectId={flag.modelId} label={<Snippet profile={flag.profile} project={flag.project}>fields.flags.options.project.label</Snippet>} />
+                <Snippet>fields.flags.options.project.hint</Snippet>
               </li>
             ))
           }
         </ul>
 
-        <a href="#" className="govuk-button button-secondary" onClick={toggleEdit(subject.id, true)}>
+        <a href="#" className="govuk-button button-secondary" onClick={toggleEdit(subject.id)}>
           <Snippet>action.editFlag</Snippet>
         </a>
       </div>

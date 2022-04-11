@@ -1,6 +1,5 @@
-const { get } = require('lodash');
 const { render } = require('mustache');
-const content = require('../content/form');
+const content = require('../content');
 
 const getSchema = subject => {
   const flags = [
@@ -29,63 +28,45 @@ const getSchema = subject => {
     });
   }
 
-  const remedialActionOptions = [
-    'inspector-advice',
-    'letter-of-reprimand',
-    'reprimand-retraining',
-    'compliance-notice',
-    'suspension-retraining',
-    'licence-revocation',
-    'other'
-  ].map(value => (
-    {
-      value,
-      label: get(content, `fields.remedialAction.options[${value}].label`, value)
-    }
-  ));
-
   return {
     flagStatus: {
       inputType: 'radioGroup',
-      label: content.fields.flagStatus.label,
       validate: ['required'],
       automapReveals: true,
       options: [
         {
           value: 'open',
-          label: content.fields.flagStatus.options.open.label,
           reveal: {
             flags: {
               inputType: 'checkboxGroup',
-              label: content.fields.flags.label,
-              hint: content.fields.flags.hint,
               options: flags
             }
           }
         },
         {
           value: 'closed',
-          label: content.fields.flagStatus.options.closed.label,
-          hint: content.fields.flagStatus.options.closed.hint,
           reveal: {
             flags: {
               inputType: 'checkboxGroup',
-              label: content.fields.flags.label,
-              hint: content.fields.flags.hint,
               options: flags
             },
             remedialAction: {
               inputType: 'checkboxGroup',
-              label: content.fields.remedialAction.label,
               validate: ['required'],
-              options: remedialActionOptions
+              options: [
+                'inspector-advice',
+                'letter-of-reprimand',
+                'reprimand-retraining',
+                'compliance-notice',
+                'suspension-retraining',
+                'licence-revocation',
+                'other'
+              ]
             }
           }
         },
         {
-          value: 'no-breach',
-          label: content.fields.flagStatus.options['no-breach'].label,
-          hint: content.fields.flagStatus.options['no-breach'].hint
+          value: 'no-breach'
         }
       ]
     }
