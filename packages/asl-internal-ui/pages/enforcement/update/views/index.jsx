@@ -10,27 +10,36 @@ function EnforcementCase() {
   const [subjects, setSubjects] = useState(enforcementCase.subjects);
   const [addSubjectActive, setAddSubject] = useState(subjects.length === 0);
 
-  const newSubject = Array.isArray(subjects) && subjects.find(s => s.id === 'new-subject' || s.new);
+  const newSubject = Array.isArray(subjects) && subjects.find(s => s.new);
   const showAddButton = !newSubject && !addSubjectActive;
 
-  function toggleEdit(subjectId) {
+  function toggleEdit(subject) {
     return e => {
       e.preventDefault();
-      const subject = subjects.find(s => s.id === subjectId);
 
-      if (subject.new) {
-        window.location.href = `/enforcement/${enforcementCase.id}?clear=true`;
-        return;
+      if (subject.new || subject.deleted) {
+        const remainingSubjects = subjects.filter(s => s.id !== subject.id);
+        setSubjects(remainingSubjects);
+        if (remainingSubjects.length === 0) {
+          setAddSubject(true);
+        }
+      } else {
+        subject.editing = !subject.editing;
+        setSubjects(subjects.map(s => s.id === subject.id ? subject : s));
       }
-
-      subject.editing = !subject.editing;
-      setSubjects([...subjects]);
     };
   }
 
   function activateAdd(e) {
     e.preventDefault();
     setAddSubject(true);
+  }
+
+  function cancelAdd(e) {
+    e.preventDefault();
+    if (subjects.length > 0) {
+      setAddSubject(false);
+    }
   }
 
   function saveAdd(subject) {
@@ -40,7 +49,17 @@ function EnforcementCase() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({subject})
     };
-    return fetch(`${url}/subject/${subject.id}`, opts).then(response => response.json());
+    return fetch(`${url}/subject/new-subject`, opts)
+      .then(response => response.json())
+      .then(subject => {
+        if (subject && subject.establishment && subject.profile) {
+          // add subject form complete, display edit form instead
+          subject.editing = true;
+          setSubjects([...subjects, subject]);
+          setAddSubject(false);
+        }
+        return subject;
+      });
   }
 
   return (
@@ -52,7 +71,7 @@ function EnforcementCase() {
 
           <div className="case-number">
             <p><Snippet number={enforcementCase.caseNumber}>caseNumber.label</Snippet></p>
-            <a href="#" className="govuk-link">Edit</a>
+            {/* <a href="#" className="govuk-link">Edit</a> */}
           </div>
 
           <div className="enforcement-subjects">
@@ -83,7 +102,7 @@ function EnforcementCase() {
 
             {
               addSubjectActive &&
-                <SubjectAdd idx={subjects.length} save={saveAdd} />
+                <SubjectAdd idx={subjects.length} save={saveAdd} cancel={cancelAdd} />
             }
           </div>
 

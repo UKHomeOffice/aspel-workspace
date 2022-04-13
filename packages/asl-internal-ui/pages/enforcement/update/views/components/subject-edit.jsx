@@ -13,7 +13,7 @@ function EnforcementFlagForm({ subject, toggleEdit, formFields }) {
       { formFields }
       <p className="control-panel">
         <button type="submit" className="govuk-button">Save</button>
-        <a href="#" onClick={toggleEdit(subject.id)}><Snippet>buttons.cancel</Snippet></a>
+        <a href="#" onClick={toggleEdit(subject)}><Snippet>buttons.cancel</Snippet></a>
       </p>
     </div>
   );
@@ -25,12 +25,25 @@ function EnforcementSubjectEdit({ subject, idx, toggleEdit }) {
   const [model, setModel] = useState({});
   const [errors, setErrors] = useState({});
 
+  useEffect(() => {
+    function getEditForm() {
+      return fetch(`${url}/subject/${subject.id}/form`)
+        .then(response => response.json())
+        .then(({ model, schema }) => {
+          // model must be set before schema, otherwise the values do not get reflected in the rendered component
+          setModel(model);
+          setSchema(schema);
+        });
+    }
+    getEditForm();
+  }, [subject]);
+
   function onSubmit(e) {
     e.preventDefault();
 
     const flagStatus = e.target.flagStatus.value;
     const flags = getCheckboxValues(e.target.flags) || [];
-    const remedialAction = getCheckboxValues(e.target.remedialAction);
+    const remedialAction = getCheckboxValues(e.target.remedialAction) || [];
 
     const opts = {
       method: 'put',
@@ -44,30 +57,10 @@ function EnforcementSubjectEdit({ subject, idx, toggleEdit }) {
         if (data.errors) {
           setErrors(data.errors);
         } else {
-          toggleEdit(subject.id)(e);
+          toggleEdit(data)(e);
         }
-      })
-      .catch(e => {
-        console.log('error thrown', e);
       });
   }
-
-  useEffect(() => {
-    function getEditForm() {
-      return fetch(`${url}/subject/${subject.id}/form`)
-        .then(response => response.json())
-        .then(({ model, schema }) => {
-          // model must be set before schema, otherwise the values are not reflected in the rendered component
-          setModel(model);
-          setSchema(schema);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    }
-
-    getEditForm();
-  }, [subject]);
 
   return (
     <div className="enforcement-subject" id={subject.id}>
@@ -80,7 +73,6 @@ function EnforcementSubjectEdit({ subject, idx, toggleEdit }) {
           <EnforcementFlagForm subject={subject} toggleEdit={toggleEdit} />
         </Form>
       </div>
-
     </div>
   );
 }

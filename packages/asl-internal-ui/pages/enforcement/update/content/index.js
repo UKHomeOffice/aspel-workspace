@@ -16,6 +16,9 @@ module.exports = merge({}, enforcementContent, {
     },
     appliedTo: {
       heading: 'Flag applied to'
+    },
+    remedialAction: {
+      heading: 'Remedial action'
     }
   },
   fields: {

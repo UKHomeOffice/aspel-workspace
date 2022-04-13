@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 import { Snippet, Link } from '@asl/components';
 
-function EnforcementSubjectHeader({ subject, idx }) {
+function EnforcementSubjectHeader({ subject }) {
   const establishment = subject && subject.establishment;
   const profile = subject && subject.profile;
   const pil = profile && profile.pil;
-  const projects = profile && profile.projects;
+  const projects = (profile && profile.projects.filter(p => p.status === 'active')) || [];
 
   return (
     <div className="enforcement-subject-header">

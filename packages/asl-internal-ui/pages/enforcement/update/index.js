@@ -1,19 +1,18 @@
-const { get, set } = require('lodash');
+const { get, set, isEmpty } = require('lodash');
 const bodyParser = require('body-parser');
 const { page } = require('@asl/service/ui');
 const { NotFoundError } = require('@asl/service/errors');
-const flagsToSubjects = require('../helpers/flags-to-subjects');
-const subjectToFlags = require('../helpers/subject-to-flags');
-const validateSubjectForm = require('../helpers/validate-subject');
 const cleanSubject = require('../helpers/clean-subject');
+const validateSubjectForm = require('../helpers/validate-subject-form');
+const processSubjectForm = require('../helpers/process-subject-form');
 const getSchema = require('./schema');
 
 const getNewSubject = (session, caseId) => {
-  return get(session, `enforcementCases[${caseId}].subject`);
+  return get(session, `enforcementCases[${caseId}].newSubject`);
 };
 
 const setNewSubject = (session, caseId, subject) => {
-  set(session, `enforcementCases[${caseId}].subject`, subject);
+  set(session, `enforcementCases[${caseId}].newSubject`, subject);
 };
 
 const getModel = subject => {
@@ -41,11 +40,6 @@ module.exports = settings => {
       setNewSubject(req.session, req.enforcementCase.id, undefined);
       return res.redirect(req.buildRoute('enforcement.update', { caseId: req.enforcementCase.id }));
     }
-    next();
-  });
-
-  app.use((req, res, next) => {
-    req.enforcementCase.subjects = flagsToSubjects(req.enforcementCase.flags);
     next();
   });
 
@@ -125,17 +119,17 @@ module.exports = settings => {
     getSubjectEstablishment,
     getSubjectProfile,
     (req, res, next) => {
-      res.json(getNewSubject(req.session, req.enforcementCase.id));
+      return res.json(getNewSubject(req.session, req.enforcementCase.id));
     }
   );
 
   app.use((req, res, next) => {
     const subject = getNewSubject(req.session, req.enforcementCase.id);
 
-    // if the new-subject is ready for flagging, add to the subjects list with the correct profile id
-    // so that it gets handled the same way as an existing subject
+    // if the new-subject is ready for flagging, add it to the subjects list
+    // so that it gets handled the same way as an existing subject (i.e. displays the edit form)
     if (subject && subject.establishment && subject.profile) {
-      req.enforcementCase.subjects.push({ ...subject, id: subject.profile.id, editing: true, new: true });
+      req.enforcementCase.subjects.push({ ...subject, editing: true });
     }
 
     next();
@@ -164,7 +158,6 @@ module.exports = settings => {
     });
   });
 
-  // edits are handled per subject but saved as flags
   app.put('/subject/:subjectId', jsonParser, (req, res, next) => {
     const errors = validateSubjectForm(req.body);
 
@@ -172,19 +165,25 @@ module.exports = settings => {
       return res.status(400).json({ errors });
     }
 
-    const flags = subjectToFlags(req.subject, req.body);
+    const subject = processSubjectForm(req.subject, req.body);
+
+    if (req.subject.new && isEmpty(subject.flags)) {
+      setNewSubject(req.session, req.enforcementCase.id, undefined);
+      return res.json({ ...req.subject, deleted: true });
+    }
 
     const params = {
       method: 'PUT',
-      json: { data: { flags } }
+      json: { data: { subject } }
     };
 
     req.api(`/enforcement/${req.enforcementCase.id}/subject/${req.subjectId}`, params)
       .then(response => {
         if (req.subject.new) {
-          setNewSubject(req.session, req.enforcementCase.id, undefined); // if the subject was new, clear the session
+          setNewSubject(req.session, req.enforcementCase.id, undefined);
         }
-        return res.json(response.json.data);
+        const updatedSubject = { ...response.json.data, editing: true }; // set editing flag so it can be toggled off
+        return res.json(updatedSubject);
       })
       .catch(next);
   });

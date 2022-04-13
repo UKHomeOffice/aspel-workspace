@@ -1,6 +1,7 @@
 module.exports = {
   caseNumber: {
     inputType: 'inputText',
-    validate: ['required']
+    validate: ['required'],
+    nullValue: ''
   }
 };

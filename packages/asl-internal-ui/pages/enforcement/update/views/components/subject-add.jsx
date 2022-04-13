@@ -5,13 +5,18 @@ import EstablishmentSelect from './establishment-select';
 import ProfileSelect from './profile-select';
 
 function EnforcementSubjectAdd({ idx, save }) {
-  const { enforcementCase } = useSelector(state => state.static);
   const sessionSubject = useSelector(state => state.static.sessionSubject);
-  const [subject, setSubject] = useState(sessionSubject || { id: 'new-subject' });
+  const [subject, setSubject] = useState(sessionSubject || { new: true });
+  const isOnlySubject = idx === 0;
 
   function formSubmit(e) {
     e.preventDefault();
-    save(subject).then(data => setSubject(data));
+    save(subject).then(subject => {
+      // prevent state update on unmounted component once we switch to edit mode
+      if (!subject.editing) {
+        setSubject(subject);
+      }
+    });
   }
 
   function handleEstablishmentChange(establishmentId) {
@@ -23,14 +28,11 @@ function EnforcementSubjectAdd({ idx, save }) {
   }
 
   function cancelAdd(e) {
-    save({ id: 'new-subject' });
+    save({}).then(subject => setSubject(subject));
   }
 
   useEffect(() => {
-    if (subject && subject.establishment && subject.profile) {
-      // add subject complete, reload for edit form
-      window.location.href = `/enforcement/${enforcementCase.id}`;
-    }
+    console.log(subject);
   }, [subject]);
 
   return (
@@ -65,7 +67,9 @@ function EnforcementSubjectAdd({ idx, save }) {
             <button type="submit" className="govuk-button">
               <Snippet>{`buttons.add.${subject.establishment ? 'profile' : 'establishment'}`}</Snippet>
             </button>
-            <a href="#" onClick={cancelAdd}><Snippet>buttons.cancel</Snippet></a>
+            {
+              !isOnlySubject && <a href="#" onClick={cancelAdd}><Snippet>buttons.cancel</Snippet></a>
+            }
           </p>
         </Fragment>
       </form>

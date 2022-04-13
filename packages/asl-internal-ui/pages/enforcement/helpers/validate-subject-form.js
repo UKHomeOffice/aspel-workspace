@@ -1,6 +1,6 @@
 const { isEmpty } = require('lodash');
 
-module.exports = formValues => {
+const validateSubjectForm = formValues => {
   let errors = {};
   const { flagStatus, flags, remedialAction } = formValues;
 
@@ -22,3 +22,5 @@ module.exports = formValues => {
 
   return isEmpty(errors) ? undefined : errors;
 };
+
+module.exports = validateSubjectForm;

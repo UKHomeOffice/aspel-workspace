@@ -1,7 +1,10 @@
-const subjectToFlags = (subject, formValues) => {
+const { pick } = require('lodash');
+
+const processEditForm = (subject, formValues) => {
   const { flagStatus, flags, remedialAction } = formValues;
 
-  return flags.map(flag => {
+  subject.flags = flags.map(flag => {
+    // flag form values are in the format `<modelType>-<modelId>` except for establishment which is just `establishment`
     const modelType = flag.substring(0, flag.indexOf('-'));
 
     // leave modelId blank for establishments (est id is int not uuid)
@@ -10,15 +13,16 @@ const subjectToFlags = (subject, formValues) => {
       : flag.substring(flag.indexOf('-') + 1);
 
     return {
-      caseId: subject.caseId,
+      subjectId: subject.id,
       establishmentId: subject.establishment.id,
-      profileId: subject.id,
       modelType,
       modelId,
       status: flagStatus,
       remedialAction
     };
   });
+
+  return pick(subject, ['id', 'caseId', 'establishmentId', 'profileId', 'flags']);
 };
 
-module.exports = subjectToFlags;
+module.exports = processEditForm;

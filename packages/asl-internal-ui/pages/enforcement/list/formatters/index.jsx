@@ -23,7 +23,7 @@ export default {
 
         case 'pil':
           const pil = flag.pil;
-          return <Link page="pil.read" establishmentId={pil.establishmentId} profileId={pil.profileId} label={`PIL: ${pil.profile.pilLicenceNumber}`} />;
+          return <Link page="pil.read" establishmentId={pil.establishmentId} profileId={pil.profileId} label={`PIL: ${flag.profile.pilLicenceNumber}`} />;
 
         case 'project':
           const project = flag.project;

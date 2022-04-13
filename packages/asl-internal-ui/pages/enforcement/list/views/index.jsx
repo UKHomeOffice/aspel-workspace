@@ -4,7 +4,13 @@ import { Header, Snippet, Datatable, Link } from '@asl/components';
 import formatters from '../formatters';
 
 function EnforcementCase({ row, schema }) {
-  const flags = row.flags;
+  const flags = row.subjects.reduce((flags, subject) => {
+    subject.flags.map(flag => {
+      flag.profile = subject.profile;
+      flags.push(flag);
+    });
+    return flags;
+  }, []);
   const firstFlag = flags[0];
 
   if (flags.length === 0) {
