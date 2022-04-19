@@ -31,7 +31,8 @@ function EnforcementCase({ row, schema }) {
         <td>{formatters.establishment.format(firstFlag)}</td>
         <td>{formatters.appliedTo.format(firstFlag)}</td>
         <td>{formatters.status.format(firstFlag)}</td>
-        <td>{formatters.updatedAt.format(firstFlag)}</td>
+        <td>{formatters.date.format(firstFlag.createdAt)}</td>
+        <td>{formatters.date.format(firstFlag.updatedAt)}</td>
         <td rowSpan={flags.length}><Link page="enforcement.update" caseId={row.id} label={<Snippet>cases.actions.view</Snippet>} /></td>
       </tr>
       {
@@ -41,7 +42,8 @@ function EnforcementCase({ row, schema }) {
             <td>{formatters.establishment.format(flag)}</td>
             <td>{formatters.appliedTo.format(flag)}</td>
             <td>{formatters.status.format(flag)}</td>
-            <td>{formatters.updatedAt.format(flag)}</td>
+            <td>{formatters.date.format(flag.createdAt)}</td>
+            <td>{formatters.date.format(flag.updatedAt)}</td>
           </tr>
         ))
       }

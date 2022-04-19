@@ -288,6 +288,10 @@ table.projects-content {
   .govuk-table {
     td {
       vertical-align: top;
+
+      .date {
+        white-space: nowrap;
+      }
     }
   }
 }

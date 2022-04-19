@@ -19,6 +19,10 @@ module.exports = {
     show: true,
     sortable: false
   },
+  createdAt: {
+    show: true,
+    sortable: true
+  },
   updatedAt: {
     show: true,
     sortable: true

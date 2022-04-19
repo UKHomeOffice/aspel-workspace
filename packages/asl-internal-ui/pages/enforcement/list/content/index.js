@@ -20,7 +20,10 @@ module.exports = merge({}, enforcementContent, {
       label: 'Flag applied to'
     },
     status: {
-      label: 'Enforcement flag'
+      label: 'Status'
+    },
+    createdAt: {
+      label: 'Created'
     },
     updatedAt: {
       label: 'Last updated'

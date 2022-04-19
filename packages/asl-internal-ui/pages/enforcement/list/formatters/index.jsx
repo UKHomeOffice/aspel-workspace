@@ -40,9 +40,9 @@ export default {
       return flag.status === 'open' ? 'Ongoing' : 'Closed';
     }
   },
-  updatedAt: {
-    format: flag => {
-      return formatDate(flag.updatedAt, 'DD MMM YYYY');
+  date: {
+    format: value => {
+      return <span className="date">{formatDate(value, 'DD MMM YYYY')}</span>;
     }
   }
 };
