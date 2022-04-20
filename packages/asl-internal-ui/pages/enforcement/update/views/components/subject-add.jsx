@@ -32,7 +32,6 @@ function EnforcementSubjectAdd({ idx, save }) {
   }
 
   useEffect(() => {
-    console.log(subject);
   }, [subject]);
 
   return (

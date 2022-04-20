@@ -22,7 +22,9 @@ function EnforcementSubjectHeader({ subject }) {
                   <dt><Snippet>roles.label</Snippet></dt>
                   <dd>
                     <ul>
-                      { profile.roles.map(role => <li key={role.id}>{role.type.toUpperCase()}</li>) }
+                      { profile.roles.map(role =>
+                        <li key={role.id}>{`${role.type.toUpperCase()} (${role.establishment.name})`}</li>
+                      ) }
                     </ul>
                   </dd>
                 </Fragment>

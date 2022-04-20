@@ -10,6 +10,7 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
   const profileFlag = subject.flags.find(flag => flag.modelType === 'profile');
   const pilFlag = subject.flags.find(flag => flag.modelType === 'pil');
   const projectFlags = subject.flags.filter(flag => flag.modelType === 'project');
+  const pelFlags = subject.flags.filter(flag => flag.modelType === 'establishment');
 
   return (
     <div className="enforcement-subject">
@@ -47,6 +48,28 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
               <li key={flag.id}>
                 <Link page="project.read" establishmentId={flag.establishmentId} projectId={flag.modelId} label={<Snippet profile={subject.profile} project={flag.project}>fields.flags.options.project.label</Snippet>} />
                 <Snippet>fields.flags.options.project.hint</Snippet>
+              </li>
+            ))
+          }
+          {
+            pelFlags.map(flag => (
+              <li key={flag.id}>
+                <Link page="establishment.read" establishmentId={flag.establishmentId} label={<Snippet profile={subject.profile} establishment={flag.establishment}>fields.flags.options.establishment.label</Snippet>} />
+                <p><Snippet>fields.flags.options.establishment.hint</Snippet></p>
+                <ul>
+                  {
+                    flag.modelOptions.includes('places') &&
+                      <li><Snippet>fields.flags.options.establishment.modelOptions.places</Snippet></li>
+                  }
+                  {
+                    flag.modelOptions.includes('roles') &&
+                      <li><Snippet>fields.flags.options.establishment.modelOptions.roles</Snippet></li>
+                  }
+                  {
+                    flag.modelOptions.includes('details') &&
+                      <li><Snippet>fields.flags.options.establishment.modelOptions.details</Snippet></li>
+                  }
+                </ul>
               </li>
             ))
           }

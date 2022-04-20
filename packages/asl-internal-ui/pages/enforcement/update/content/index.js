@@ -43,6 +43,7 @@ module.exports = merge({}, enforcementContent, {
       hint: 'Select all that apply',
       options: {
         profile: {
+          // prevent escaping in names, otherwise apostrophes (e.g. O'Brien) get's escaped
           label: `{{{profile.firstName}}} {{{profile.lastName}}}'s profile and related tasks`,
           hint: `The flag will appear on:
            * any requests by the subject to change their name or date of birth
@@ -60,6 +61,15 @@ module.exports = merge({}, enforcementContent, {
           hint: `The flag will appear on:
           * requests to amend, revoke or transfer the licence to a new establishment
           * requests to transfer the licence to another persion`
+        },
+        establishment: {
+          label: `{{{profile.firstName}}} {{{profile.lastName}}}'s establishment licence at {{establishment.name}}`,
+          hint: `The flag will appear on:`,
+          modelOptions: {
+            places: `requests to change the establishment's approved areas`,
+            roles: `requests to change the establishment's named people or PEL holder`,
+            details: `requests to change the establishment details - for example, the address or what the establishment is licensed to do`
+          }
         }
       }
     },
@@ -86,6 +96,22 @@ module.exports = merge({}, enforcementContent, {
         },
         'other': {
           label: 'Other'
+        }
+      }
+    },
+    modelOptions: {
+      label: 'Apply flags to',
+      hint: 'Select all that apply',
+      options: {
+        places: {
+          label: `request to change the establishment's approved areas`
+        },
+        roles: {
+          label: `requests to change the establishment's named people or PEL holder`
+        },
+        details: {
+          label: `requests to change the establishment details`,
+          hint: 'For example, the address or what the establishment is licensed to do'
         }
       }
     }
@@ -119,6 +145,12 @@ module.exports = merge({}, enforcementContent, {
   },
   errors: {
     flagStatus: {
+      required: 'Select an option'
+    },
+    remedialAction: {
+      required: 'Select an option'
+    },
+    modelOptions: {
       required: 'Select an option'
     }
   }

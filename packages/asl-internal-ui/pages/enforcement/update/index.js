@@ -1,11 +1,13 @@
 const { get, set, isEmpty } = require('lodash');
 const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
 const { page } = require('@asl/service/ui');
 const { NotFoundError } = require('@asl/service/errors');
 const cleanSubject = require('../helpers/clean-subject');
 const validateSubjectForm = require('../helpers/validate-subject-form');
 const processSubjectForm = require('../helpers/process-subject-form');
 const getSchema = require('./schema');
+const getModel = require('./schema/get-model');
 
 const getNewSubject = (session, caseId) => {
   return get(session, `enforcementCases[${caseId}].newSubject`);
@@ -13,20 +15,6 @@ const getNewSubject = (session, caseId) => {
 
 const setNewSubject = (session, caseId, subject) => {
   set(session, `enforcementCases[${caseId}].newSubject`, subject);
-};
-
-const getModel = subject => {
-  if (!subject.flags || subject.flags.length < 1) {
-    return {};
-  }
-
-  return {
-    flagStatus: subject.flags[0].status, // status is same for all subject flags
-    flags: subject.flags.map(f => {
-      return f.modelType === 'establishment' ? f.modelType : `${f.modelType}-${f.modelId}`;
-    }),
-    remedialAction: subject.flags[0].remedialAction
-  };
 };
 
 module.exports = settings => {
@@ -72,8 +60,6 @@ module.exports = settings => {
       .catch(next);
   });
 
-  const jsonParser = bodyParser.json();
-
   const updateNewSubject = (req, res, next) => {
     const subject = cleanSubject(req.body.subject);
     subject.caseId = req.enforcementCase.id;
@@ -101,9 +87,15 @@ module.exports = settings => {
     const subject = getNewSubject(req.session, req.enforcementCase.id);
 
     if (subject.establishmentId && subject.profileId && !subject.profile) {
-      return req.api(`/establishment/${subject.establishmentId}/profiles/${subject.profileId}`)
+      return req.api(`/profile/${subject.profileId}`)
         .then(response => {
           subject.profile = response.json.data;
+
+          subject.profile.roles = subject.profile.roles.map(r => ({
+            ...r,
+            establishment: subject.profile.establishments.find(e => e.id === r.establishmentId)
+          }));
+
           setNewSubject(req.session, req.enforcementCase.id, subject);
         })
         .then(() => next())

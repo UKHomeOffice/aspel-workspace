@@ -43,13 +43,14 @@ function EnforcementSubjectEdit({ subject, idx, toggleEdit }) {
 
     const flagStatus = e.target.flagStatus.value;
     const flags = getCheckboxValues(e.target.flags) || [];
-    const remedialAction = getCheckboxValues(e.target.remedialAction) || [];
+    const remedialAction = getCheckboxValues(e.target.remedialAction);
+    const modelOptions = getCheckboxValues(e.target.modelOptions);
 
     const opts = {
       method: 'put',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ flagStatus, flags, remedialAction })
+      body: JSON.stringify({ flagStatus, flags, remedialAction, modelOptions })
     };
     return fetch(`${url}/subject/${subject.id}`, opts)
       .then(response => response.json())

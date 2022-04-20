@@ -28,6 +28,38 @@ const getSchema = subject => {
     });
   }
 
+  const pelhEstablishments = subject.profile.roles.filter(r => r.type === 'pelh').map(r => r.establishment);
+
+  if (pelhEstablishments.length) {
+    pelhEstablishments.forEach(establishment => {
+      flags.push({
+        value: `establishment-${establishment.id}`,
+        label: render(content.fields.flags.options.establishment.label, { profile: subject.profile, establishment }),
+        hint: content.fields.flags.options.establishment.hint,
+        reveal: {
+          modelOptions: {
+            inputType: 'checkboxGroup',
+            options: [
+              {
+                value: `places-${establishment.id}`,
+                label: content.fields.modelOptions.options.places.label
+              },
+              {
+                value: `roles-${establishment.id}`,
+                label: content.fields.modelOptions.options.roles.label
+              },
+              {
+                value: `details-${establishment.id}`,
+                label: content.fields.modelOptions.options.details.label,
+                hint: content.fields.modelOptions.options.details.hint
+              }
+            ]
+          }
+        }
+      });
+    });
+  }
+
   return {
     flagStatus: {
       inputType: 'radioGroup',
@@ -39,7 +71,8 @@ const getSchema = subject => {
           reveal: {
             flags: {
               inputType: 'checkboxGroup',
-              options: flags
+              options: flags,
+              automapReveals: true
             }
           }
         },
@@ -48,7 +81,8 @@ const getSchema = subject => {
           reveal: {
             flags: {
               inputType: 'checkboxGroup',
-              options: flags
+              options: flags,
+              automapReveals: true
             },
             remedialAction: {
               inputType: 'checkboxGroup',
