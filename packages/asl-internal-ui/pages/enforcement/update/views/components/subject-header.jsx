@@ -13,9 +13,9 @@ function EnforcementSubjectHeader({ subject }) {
         subject &&
           <dl className="inline wide">
             <dt><Snippet>establishment.label</Snippet></dt>
-            <dd>{establishment.name}</dd>
+            <dd><Link page="establishment" establishmentId={establishment.id} label={establishment.name} /></dd>
             <dt><Snippet>profile.label</Snippet></dt>
-            <dd>{ profile && `${profile.firstName} ${profile.lastName}` }</dd>
+            <dd>{ profile && <Link page="globalProfile" profileId={profile.id} label={`${profile.firstName} ${profile.lastName}`} /> }</dd>
             {
               profile.roles.length > 0 &&
                 <Fragment>

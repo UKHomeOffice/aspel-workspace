@@ -8,7 +8,7 @@ const processEditForm = (subject, formValues) => {
     const modelType = flag.substring(0, flag.indexOf('-'));
 
     let modelId = flag.substring(flag.indexOf('-') + 1);
-    let establishmentId = subject.establishment.id;
+    let establishmentId;
     let modelOptions;
 
     if (modelType === 'establishment') {

@@ -11,7 +11,19 @@ export default {
   },
   establishment: {
     format: flag => {
-      return get(flag, 'establishment.name');
+      switch (flag.modelType) {
+        case 'profile':
+          return get(flag, 'profile.establishments[0].name');
+
+        case 'pil':
+          return get(flag, 'pil.establishment.name');
+
+        case 'project':
+          return get(flag, 'project.establishment.name');
+
+        default:
+          return get(flag, 'establishment.name');
+      }
     }
   },
   appliedTo: {
@@ -19,7 +31,7 @@ export default {
       switch (flag.modelType) {
         case 'profile':
           const profile = flag.profile;
-          return <Link page="profile.read" profileId={profile.id} label="Profile" />;
+          return <Link page="globalProfile" profileId={profile.id} label="Profile" />;
 
         case 'pil':
           const pil = flag.pil;

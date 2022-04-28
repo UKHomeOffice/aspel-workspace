@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import get from 'lodash/get';
 import { Snippet, Link } from '@asl/components';
-import EnforcementSubjectHeader from './subject-header';
-import EnforcementBanner from '../../../components/enforcement-banner';
+import SubjectHeader from './subject-header';
+import SubjectBanner from './subject-banner';
 
 function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
   const status = get(subject, 'flags[0].status'); // all flags have same status
@@ -15,13 +15,13 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
   return (
     <div className="enforcement-subject">
       <h3><Snippet idx={idx + 1}>subjects.repeaterHeading</Snippet></h3>
-      <EnforcementSubjectHeader subject={subject} />
+      <SubjectHeader subject={subject} />
 
       <div className="enforcement-flags">
         <h3><Snippet>flag.heading</Snippet></h3>
 
         <p><strong><Snippet>flag.status.read</Snippet></strong></p>
-        <EnforcementBanner enforcementCase={enforcementCase} status={status} />
+        <SubjectBanner enforcementCase={enforcementCase} status={status} />
 
         <p><strong><Snippet>flag.appliedTo.heading</Snippet></strong></p>
         <ul>
@@ -29,7 +29,7 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
             profileFlag &&
               <li key={profileFlag.id}>
                 <Fragment>
-                  <Link page="profile.read" establishmentId={profileFlag.establishmentId} profileId={profileFlag.profile.id} label={<Snippet profile={profileFlag.profile}>fields.flags.options.profile.label</Snippet>} />
+                  <Link page="globalProfile" profileId={profileFlag.profile.id} label={<Snippet profile={profileFlag.profile}>fields.flags.options.profile.label</Snippet>} />
                   <Snippet>fields.flags.options.profile.hint</Snippet>
                 </Fragment>
               </li>
@@ -46,7 +46,7 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
           {
             projectFlags.map(flag => (
               <li key={flag.id}>
-                <Link page="project.read" establishmentId={flag.establishmentId} projectId={flag.modelId} label={<Snippet profile={subject.profile} project={flag.project}>fields.flags.options.project.label</Snippet>} />
+                <Link page="project.read" establishmentId={flag.project.establishmentId} projectId={flag.modelId} label={<Snippet profile={subject.profile} project={flag.project}>fields.flags.options.project.label</Snippet>} />
                 <Snippet>fields.flags.options.project.hint</Snippet>
               </li>
             ))

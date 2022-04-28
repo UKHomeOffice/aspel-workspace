@@ -6,7 +6,7 @@ import formatters from '../formatters';
 function EnforcementCase({ row, schema }) {
   const flags = row.subjects.reduce((flags, subject) => {
     subject.flags.map(flag => {
-      flag.profile = subject.profile;
+      flag.profile = flag.profile || subject.profile;
       flags.push(flag);
     });
     return flags;

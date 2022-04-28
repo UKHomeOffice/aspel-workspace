@@ -20,7 +20,7 @@ const validateSubjectForm = formValues => {
     }
   }
 
-  // if an establishment flag is set, then at least one option must be set
+  // if an establishment flag is set, then at least one model option must be set
   flags.forEach(flag => {
     const [, modelType, id] = flag.match(/^([a-z]+)-([a-f0-9-]+)$/);
     if (modelType === 'establishment') {
