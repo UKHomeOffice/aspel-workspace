@@ -329,16 +329,13 @@ table.projects-content {
 }
 
 .govuk-warning-text.enforcement {
-  padding: $govuk-gutter-half;
   background-color: white;
   border: 5px solid #D53880;
 
   .govuk-warning-text__icon {
     border-color: #D53880;
     background-color: #D53880;
-    left: 8px;
-    top: 8px;
-    margin-top: 0;
+    left: 10px;
   }
 
   &.closed {
@@ -346,18 +343,40 @@ table.projects-content {
 
     .govuk-warning-text__icon {
       border-color: #F47738;
+      background-color: #F47738;
     }
   }
 
   .govuk-warning-text__text {
-    padding-left: 40px;
+    p {
+      margin: 0;
 
-    p:first-child {
-      margin-top: 0;
+      &.more-info {
+        font-weight: normal;
+      }
+    }
+  }
+
+  details {
+    font-weight: normal;
+
+    .govuk-inset-text {
+      margin: 0;
     }
 
-    p:last-child {
-      margin-bottom: 0;
+    dt {
+      font-weight: normal;
     }
+  }
+}
+
+.badge.enforcement {
+  display: inline;
+
+  &.open {
+    background-color: #D53880;
+  }
+  &.closed {
+    background-color: #F47738;
   }
 }
