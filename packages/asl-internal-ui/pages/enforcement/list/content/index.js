@@ -1,7 +1,4 @@
-const { merge } = require('lodash');
-const enforcementContent = require('../../content');
-
-module.exports = merge({}, enforcementContent, {
+module.exports = {
   page: {
     title: 'Enforcement cases',
     description: 'Flag people and licences subject to enforcement to help inspectors make informed decisions when granting or amending licences in ASPeL.'
@@ -41,4 +38,4 @@ module.exports = merge({}, enforcementContent, {
       empty: 'No subjects with ongoing or closed enforcement flags'
     }
   }
-});
+};

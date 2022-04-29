@@ -1,7 +1,4 @@
-const { merge } = require('lodash');
-const enforcementContent = require('../../content');
-
-module.exports = merge({}, enforcementContent, {
+module.exports = {
   page: {
     title: 'Add enforcement subjects'
   },
@@ -154,4 +151,4 @@ module.exports = merge({}, enforcementContent, {
       required: 'Select an option'
     }
   }
-});
+};
