@@ -57,6 +57,7 @@ export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded 
 }
 
 export function Datatable({
+  CustomRow,
   expands = () => true,
   Expandable,
   alwaysExpanded = false,
@@ -72,6 +73,8 @@ export function Datatable({
   noDataWarning
 }) {
   const schema = pickBy(merge({}, tableSchema, formatters), (item, key) => item.show);
+  const RowComponent = CustomRow || Row;
+  const colSpan = size(schema) + (Actions ? 1 : 0);
 
   return (
     <table className={classnames('govuk-table', 'govuk-react-datatable', className, isFetching && 'loading')}>
@@ -90,16 +93,19 @@ export function Datatable({
       </thead>
       <tbody>
         {
-          data.length === 0 && noDataWarning
-            ? <tr><td colSpan={size(schema) + (Actions ? 1 : 0)}>{noDataWarning}</td></tr>
-            : data.map(row => <Row key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} alwaysExpanded={alwaysExpanded} />)
+          data.length === 0 && noDataWarning && <tr><td colSpan={colSpan}>{noDataWarning}</td></tr>
+        }
+        {
+          data.map(row =>
+            <RowComponent key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} alwaysExpanded={alwaysExpanded} />
+          )
         }
       </tbody>
       {
         !pagination.hideUI &&
           <tfoot>
             <tr>
-              <td colSpan={size(schema) + (Actions ? 1 : 0)}>
+              <td colSpan={colSpan}>
                 <Pagination />
               </td>
             </tr>
