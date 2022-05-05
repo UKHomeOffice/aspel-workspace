@@ -13,6 +13,9 @@ const renderers = {
   linkReference: RenderLinkReference
 };
 
+const trim = str => str.split('\n').map(s => s.trim()).join('\n');
+
 export default function Markdown({ children, links = false, source, ...props }) {
-  return <ReactMarkdown renderers={!links && renderers} {...props}>{ source || children }</ReactMarkdown>;
+
+  return <ReactMarkdown renderers={!links && renderers} {...props}>{ trim(source || children) }</ReactMarkdown>;
 }

@@ -29,16 +29,14 @@ import {
 } from '../';
 
 function getLabel(opt, name, type = 'label') {
-  let label;
   if (type === 'hint') {
     return <Snippet optional>{`fields.${name}.options.${opt}.hint`}</Snippet>;
   }
   try {
-    label = <Snippet fallback={`fields.${name}.options.${opt}`}>{`fields.${name}.options.${opt}.label`}</Snippet>;
+    return <Snippet fallback={`fields.${name}.options.${opt}`}>{`fields.${name}.options.${opt}.label`}</Snippet>;
   } catch (e) {
     return opt;
   }
-  return label;
 }
 
 function SingleRadio(props) {
@@ -151,6 +149,9 @@ function Field({
             hint: getLabel(opt.value, name, 'hint')
           };
         }
+        if (opt.hint && typeof opt.hint === 'string') {
+          opt.hint = <Markdown>{opt.hint}</Markdown>;
+        }
         return opt;
       }
       return {
@@ -206,6 +207,10 @@ function Field({
 
   if (showIf && !showIf(props.values)) {
     return null;
+  }
+
+  if (hint && typeof hint === 'string') {
+    hint = <Markdown>{ hint }</Markdown>;
   }
 
   return <Component
