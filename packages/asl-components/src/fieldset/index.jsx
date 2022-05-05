@@ -150,7 +150,7 @@ function Field({
           };
         }
         if (opt.hint && typeof opt.hint === 'string') {
-          opt.hint = <Markdown>{opt.hint}</Markdown>;
+          opt.hint = <Markdown unwrapSingleLine={true}>{ opt.hint }</Markdown>;
         }
         return opt;
       }
@@ -210,7 +210,7 @@ function Field({
   }
 
   if (hint && typeof hint === 'string') {
-    hint = <Markdown>{ hint }</Markdown>;
+    hint = <Markdown unwrapSingleLine={true}>{ hint }</Markdown>;
   }
 
   return <Component
