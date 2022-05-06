@@ -18,6 +18,11 @@ module.exports = {
       updateLicenceNumber: 'Change licence number'
     },
     asruProfilesList: 'Staff directory',
-    asruWorkload: 'Staff workload and performance'
+    asruWorkload: 'Staff workload and performance',
+    enforcement: {
+      create: 'Add case',
+      list: 'Enforcement cases',
+      update: 'Manage case'
+    }
   }
 };

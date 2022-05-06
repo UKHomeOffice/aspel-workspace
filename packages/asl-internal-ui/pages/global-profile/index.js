@@ -2,6 +2,7 @@ const { page } = require('@asl/service/ui');
 const bodyParser = require('body-parser');
 const routes = require('./routes');
 const { relatedTasks } = require('@asl/pages/pages/common/routers');
+const { enforcementFlags } = require('@asl/pages/pages/common/middleware');
 
 const roles = ['asruAdmin', 'asruSupport', 'asruLicensing', 'asruInspector', 'asruRops'];
 
@@ -54,6 +55,11 @@ module.exports = () => {
       modelId: req.profileId
     };
   }));
+
+  app.use((req, res, next) => {
+    res.enforcementModel = res.locals.model;
+    next();
+  }, enforcementFlags);
 
   return app;
 };

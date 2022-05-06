@@ -61,7 +61,8 @@ module.exports = settings => {
         sectionName: 'ASRU',
         links: [
           { label: 'Staff directory', href: '/asru/profiles' },
-          { label: 'Staff workload and performance', href: '/asru/workload' }
+          { label: 'Staff workload and performance', href: '/asru/workload' },
+          { label: 'Enforcement cases', href: '/enforcement' }
         ]
       }
     ];

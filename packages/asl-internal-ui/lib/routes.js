@@ -15,6 +15,7 @@ const licenceFees = require('../pages/licence-fees');
 const asruProfilesList = require('../pages/asru-profiles-list');
 const asruWorkload = require('../pages/asru-workload');
 const cjsm = require('../pages/cjsm');
+const enforcement = require('../pages/enforcement');
 
 module.exports = {
   projectVersion: {
@@ -155,5 +156,11 @@ module.exports = {
     path: '/licence-fees',
     router: licenceFees,
     permissions: 'licenceFees'
+  },
+  enforcement: {
+    path: '/enforcement',
+    breadcrumb: false,
+    router: enforcement,
+    permissions: 'enforcement'
   }
 };

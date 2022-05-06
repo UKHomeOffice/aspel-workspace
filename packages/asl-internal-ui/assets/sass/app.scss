@@ -283,3 +283,100 @@ table.projects-content {
     }
   }
 }
+
+.enforcement-cases {
+  .govuk-table {
+    td {
+      vertical-align: top;
+
+      .date {
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.enforcement-case {
+  .case-number {
+    margin-bottom: $govuk-gutter;
+
+    p, a {
+      margin: 0;
+    }
+  }
+
+  .enforcement-subject {
+    background-color: govuk-colour('grey-3');
+    margin-bottom: $govuk-gutter;
+    padding: $govuk-gutter;
+
+  }
+}
+
+.enforcement-flags {
+  &>ul>li {
+    margin-bottom: $govuk-gutter;
+    color: $hint-colour;
+
+    p {
+      margin-top: 0;
+    }
+
+    ul {
+      padding-left: 1em;
+    }
+  }
+}
+
+.govuk-warning-text.enforcement {
+  background-color: white;
+  border: 5px solid #D53880;
+
+  .govuk-warning-text__icon {
+    border-color: #D53880;
+    background-color: #D53880;
+    left: 10px;
+  }
+
+  &.closed {
+    border-color: #F47738;
+
+    .govuk-warning-text__icon {
+      border-color: #F47738;
+      background-color: #F47738;
+    }
+  }
+
+  .govuk-warning-text__text {
+    p {
+      margin: 0;
+
+      &.more-info {
+        font-weight: normal;
+      }
+    }
+  }
+
+  details {
+    font-weight: normal;
+
+    .govuk-inset-text {
+      margin: 0;
+    }
+
+    dt {
+      font-weight: normal;
+    }
+  }
+}
+
+.badge.enforcement {
+  display: inline;
+
+  &.open {
+    background-color: #D53880;
+  }
+  &.closed {
+    background-color: #F47738;
+  }
+}
