@@ -8,4 +8,7 @@ const server = App(settings).listen(settings.port, (err, result) => {
   }
   const end = process.hrtime(start);
   console.log(`Listening on port ${server.address().port} after ${end[0]} seconds`);
+  setInterval(() => {
+    console.log(Math.round(process.memoryUsage.rss() / 1e6));
+  }, 500);
 });
