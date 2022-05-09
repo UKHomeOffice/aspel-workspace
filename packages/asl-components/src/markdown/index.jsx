@@ -13,7 +13,12 @@ const renderers = {
   linkReference: RenderLinkReference
 };
 
-const trim = str => str.split('\n').map(s => s.trim()).join('\n').trim();
+const trim = str => {
+  if (typeof str === 'string') {
+    return str.split('\n').map(s => s.trim()).join('\n').trim();
+  }
+  return str;
+}
 
 const wrapInSpanIfOnlyChild = enabled => ({ node, siblingCount, index, ...props }) => {
   if (enabled && siblingCount === 1) {
