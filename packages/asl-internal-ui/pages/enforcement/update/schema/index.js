@@ -18,8 +18,10 @@ const getSchema = subject => {
     });
   }
 
-  if (subject.profile.projects.length) {
-    subject.profile.projects.forEach(project => {
+  const flaggableProjects = (subject.profile.projects || []).filter(p => p.status !== 'inactive');
+
+  if (flaggableProjects.length) {
+    flaggableProjects.forEach(project => {
       flags.push({
         value: `project-${project.id}`,
         label: render(content.fields.flags.options.project.label, { profile: subject.profile, project }),
