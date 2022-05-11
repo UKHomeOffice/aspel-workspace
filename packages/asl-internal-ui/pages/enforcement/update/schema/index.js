@@ -18,15 +18,15 @@ const getSchema = subject => {
     });
   }
 
-  if (subject.profile.projects.length) {
-    subject.profile.projects.forEach(project => {
-      flags.push({
-        value: `project-${project.id}`,
-        label: render(content.fields.flags.options.project.label, { profile: subject.profile, project }),
-        hint: content.fields.flags.options.project.hint
-      });
+  const flaggableProjects = (subject.profile.projects || []).filter(p => p.status !== 'inactive');
+
+  flaggableProjects.forEach(project => {
+    flags.push({
+      value: `project-${project.id}`,
+      label: render(content.fields.flags.options.project.label, { profile: subject.profile, project }),
+      hint: content.fields.flags.options.project.hint
     });
-  }
+  });
 
   const pelhEstablishments = subject.profile.roles.filter(r => r.type === 'pelh').map(r => r.establishment);
 
