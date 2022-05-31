@@ -40,28 +40,32 @@ module.exports = {
       hint: 'Select all that apply',
       options: {
         profile: {
-          // prevent escaping in names, otherwise apostrophes (e.g. O'Brien) get's escaped
+          // prevent escaping in names, otherwise apostrophes (e.g. O'Brien) get escaped
           label: `{{{profile.firstName}}} {{{profile.lastName}}}'s profile and related tasks`,
-          hint: `The flag will appear on:
+          summary: 'Profile tasks to be flagged',
+          details: `These tasks will be flagged:
            * any requests by the subject to change their name or date of birth
            * applications for new licences
            * requests to transfer project licences if they hold one or more project licences
            * any tasks related to their named role if they hold a named role`
         },
         pil: {
-          label: `{{{profile.firstName}}} {{{profile.lastName}}}'s personal licence {{profile.pilLicenceNumber}}`,
-          hint: `The flag will appear on:
-          * requests to amend, revoke or transfer the licence to a new establishment`
+          label: `{{{profile.firstName}}} {{{profile.lastName}}}'s personal licence {{profile.pilLicenceNumber}} and related tasks`,
+          summary: 'Profile tasks to be flagged',
+          details: `These tasks will be flagged:
+           * requests to amend, revoke or transfer the licence to a new establishment`
         },
         project: {
-          label: `{{{profile.firstName}}} {{{profile.lastName}}}'s project licence {{project.licenceNumber}}`,
-          hint: `The flag will appear on:
-          * requests to amend, revoke or transfer the licence to a new establishment
-          * requests to transfer the licence to another persion`
+          label: `{{{profile.firstName}}} {{{profile.lastName}}}'s project licence {{project.licenceNumber}} and related tasks`,
+          summary: 'Profile tasks to be flagged',
+          details: `These tasks will be flagged:
+           * requests to amend, revoke or transfer the licence to a new establishment
+           * requests to transfer the licence to another persion`
         },
         establishment: {
-          label: `{{{profile.firstName}}} {{{profile.lastName}}}'s establishment licence at {{establishment.name}}`,
-          hint: `The flag will appear on:`,
+          label: `{{{profile.firstName}}} {{{profile.lastName}}}'s establishment licence at {{establishment.name}} and related tasks`,
+          summary: 'Establishment tasks to be flagged',
+          details: `These tasks will be flagged:`,
           modelOptions: {
             places: `requests to change the establishment's approved areas`,
             roles: `requests to change the establishment's named people or PEL holder`,
