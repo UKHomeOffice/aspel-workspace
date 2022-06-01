@@ -6,7 +6,7 @@ const getSchema = subject => {
     {
       value: `profile-${subject.profile.id}`,
       label: render(content.fields.flags.options.profile.label, { profile: subject.profile }),
-      hint: content.fields.flags.options.profile.hint
+      hint: content.fields.flags.options.profile.details
     }
   ];
 
@@ -14,7 +14,7 @@ const getSchema = subject => {
     flags.push({
       value: `pil-${subject.profile.pil.id}`,
       label: render(content.fields.flags.options.pil.label, { profile: subject.profile }),
-      hint: content.fields.flags.options.pil.hint
+      hint: content.fields.flags.options.pil.details
     });
   }
 
@@ -24,7 +24,7 @@ const getSchema = subject => {
     flags.push({
       value: `project-${project.id}`,
       label: render(content.fields.flags.options.project.label, { profile: subject.profile, project }),
-      hint: content.fields.flags.options.project.hint
+      hint: content.fields.flags.options.project.details
     });
   });
 
@@ -35,7 +35,6 @@ const getSchema = subject => {
       flags.push({
         value: `establishment-${establishment.id}`,
         label: render(content.fields.flags.options.establishment.label, { profile: subject.profile, establishment }),
-        hint: content.fields.flags.options.establishment.hint,
         reveal: {
           modelOptions: {
             inputType: 'checkboxGroup',

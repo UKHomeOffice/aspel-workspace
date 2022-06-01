@@ -30,7 +30,10 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
               <li key={profileFlag.id}>
                 <Fragment>
                   <Link page="globalProfile" profileId={profileFlag.profile.id} label={<Snippet profile={profileFlag.profile}>fields.flags.options.profile.label</Snippet>} />
-                  <Snippet>fields.flags.options.profile.hint</Snippet>
+                  <details>
+                    <summary><Snippet>fields.flags.options.profile.summary</Snippet></summary>
+                    <Snippet>fields.flags.options.profile.details</Snippet>
+                  </details>
                 </Fragment>
               </li>
           }
@@ -39,7 +42,10 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
               <li key={pilFlag.id}>
                 <Fragment>
                   <Link page="pil.read" establishmentId={pilFlag.pil.establishmentId} profileId={subject.profileId} label={<Snippet profile={subject.profile}>fields.flags.options.pil.label</Snippet>} />
-                  <Snippet>fields.flags.options.pil.hint</Snippet>
+                  <details>
+                    <summary><Snippet>fields.flags.options.pil.summary</Snippet></summary>
+                    <Snippet>fields.flags.options.pil.details</Snippet>
+                  </details>
                 </Fragment>
               </li>
           }
@@ -47,7 +53,10 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
             projectFlags.map(flag => (
               <li key={flag.id}>
                 <Link page="project.read" establishmentId={flag.project.establishmentId} projectId={flag.modelId} label={<Snippet profile={subject.profile} project={flag.project}>fields.flags.options.project.label</Snippet>} />
-                <Snippet>fields.flags.options.project.hint</Snippet>
+                <details>
+                  <summary><Snippet>fields.flags.options.project.summary</Snippet></summary>
+                  <Snippet>fields.flags.options.project.details</Snippet>
+                </details>
               </li>
             ))
           }
@@ -55,21 +64,24 @@ function EnforcementSubjectRead({ enforcementCase, subject, idx, toggleEdit }) {
             pelFlags.map(flag => (
               <li key={flag.id}>
                 <Link page="establishment.read" establishmentId={flag.establishmentId} label={<Snippet profile={subject.profile} establishment={flag.establishment}>fields.flags.options.establishment.label</Snippet>} />
-                <p><Snippet>fields.flags.options.establishment.hint</Snippet></p>
-                <ul>
-                  {
-                    flag.modelOptions.includes('places') &&
-                      <li><Snippet>fields.flags.options.establishment.modelOptions.places</Snippet></li>
-                  }
-                  {
-                    flag.modelOptions.includes('roles') &&
-                      <li><Snippet>fields.flags.options.establishment.modelOptions.roles</Snippet></li>
-                  }
-                  {
-                    flag.modelOptions.includes('details') &&
-                      <li><Snippet>fields.flags.options.establishment.modelOptions.details</Snippet></li>
-                  }
-                </ul>
+                <details>
+                  <summary><Snippet>fields.flags.options.establishment.summary</Snippet></summary>
+                  <Snippet>fields.flags.options.establishment.details</Snippet>
+                  <ul>
+                    {
+                      flag.modelOptions.includes('places') &&
+                        <li><Snippet>fields.flags.options.establishment.modelOptions.places</Snippet></li>
+                    }
+                    {
+                      flag.modelOptions.includes('roles') &&
+                        <li><Snippet>fields.flags.options.establishment.modelOptions.roles</Snippet></li>
+                    }
+                    {
+                      flag.modelOptions.includes('details') &&
+                        <li><Snippet>fields.flags.options.establishment.modelOptions.details</Snippet></li>
+                    }
+                  </ul>
+                </details>
               </li>
             ))
           }
