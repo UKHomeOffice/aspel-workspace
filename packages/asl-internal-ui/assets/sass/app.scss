@@ -339,11 +339,11 @@ table.projects-content {
   }
 
   &.closed {
-    border-color: #F47738;
+    border-color: #E3733B;
 
     .govuk-warning-text__icon {
-      border-color: #F47738;
-      background-color: #F47738;
+      border-color: #E3733B;
+      background-color: #E3733B;
     }
   }
 
@@ -377,6 +377,6 @@ table.projects-content {
     background-color: #D53880;
   }
   &.closed {
-    background-color: #F47738;
+    background-color: #E3733B;
   }
 }
