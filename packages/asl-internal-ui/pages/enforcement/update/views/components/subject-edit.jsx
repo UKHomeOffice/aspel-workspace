@@ -65,11 +65,11 @@ function EnforcementSubjectEdit({ subject, idx, toggleEdit }) {
 
   return (
     <div className="enforcement-subject" id={subject.id}>
-      <h3><Snippet idx={idx + 1}>subjects.repeaterHeading</Snippet></h3>
+      <h2><Snippet idx={idx + 1}>subjects.repeaterHeading</Snippet></h2>
       <EnforcementSubjectHeader subject={subject} />
 
       <div className="enforcement-flags">
-        <h3><Snippet>flag.heading</Snippet></h3>
+        <h2><Snippet>flag.heading</Snippet></h2>
         <Form schema={schema} model={model} errors={errors} detachFields={true} submit={false} onSubmit={onSubmit}>
           <EnforcementFlagForm subject={subject} toggleEdit={toggleEdit} />
         </Form>
