@@ -5,7 +5,9 @@ import castArray from 'lodash/castArray';
 class Accordion extends React.Component {
 
   componentDidMount() {
-    const open = this.props.children.map(() => false);
+    const open = this.props.children.map(child => {
+      return (child.props && child.props.isOpen) ? child.props.isOpen : false;
+    });
     this.setState({ open });
   }
 

@@ -10,6 +10,7 @@ export { default as Breadcrumbs } from './breadcrumbs';
 export { default as Completable } from './completable';
 export { default as Controls } from './controls';
 export { default as ControlBar } from './control-bar';
+export { default as ConditionReminders } from './condition-reminders';
 export { default as ConditionalReveal } from './conditional-reveal';
 export { default as Conditions } from './conditions';
 export { default as Countdown } from './countdown';

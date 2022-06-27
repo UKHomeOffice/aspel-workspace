@@ -1,52 +1,50 @@
-import React, { Component, Fragment } from 'react';
-import { Form, Markdown } from '../';
+import React, { useState, Fragment } from 'react';
+import { Form, Markdown, Inset, ConditionReminders, Snippet } from '../';
 
-class Conditions extends Component {
+function Conditions({
+  conditions,
+  label,
+  noConditionsLabel,
+  canUpdate,
+  children,
+  editing = false,
+  addLabel = 'Add conditions',
+  updateLabel = 'Update conditions',
+  reminders = []
+}) {
+  const [isEditing, setEditing] = useState(editing);
 
-  componentDidMount() {
-    this.setState({ editing: false });
-  }
-
-  toggleEdit (e) {
+  function toggleEdit(e) {
     e.preventDefault();
-    this.setState({ editing: !this.state.editing });
+    setEditing(!isEditing);
   }
 
-  render() {
-    const { editing } = this.state || {};
-    const {
-      conditions,
-      label,
-      noConditionsLabel,
-      canUpdate,
-      addLabel = 'Add conditions',
-      updateLabel = 'Update conditions',
-      children
-    } = this.props;
+  const CancelLink = <a href="#" onClick={toggleEdit}><Snippet>buttons.cancel</Snippet></a>;
 
-    return (
-      <Fragment>
-        <p>{ conditions ? label : noConditionsLabel }</p>
-        {
-          editing && canUpdate
-            ? <Form />
-            : (
-              <Fragment>
-                {
-                  conditions && <Markdown>{ conditions }</Markdown>
-                }
-                {
-                  canUpdate && <a href="#" onClick={e => this.toggleEdit(e)}>{conditions ? updateLabel : addLabel }</a>
-                }
-              </Fragment>
-            )
-        }
-        {
-          children
-        }
-      </Fragment>
-    );
-  }
+  return (
+    <div className="conditions">
+      <p>{ conditions ? label : noConditionsLabel }</p>
+      {
+        isEditing && canUpdate
+          ? <Form cancelLink={CancelLink} />
+          : (
+            <Fragment>
+              {
+                conditions &&
+                  <Fragment>
+                    <Inset className="condition"><Markdown>{ conditions }</Markdown></Inset>
+                    <ConditionReminders reminders={reminders} />
+                  </Fragment>
+              }
+              {
+                canUpdate && <a href="#" onClick={toggleEdit}>{conditions ? updateLabel : addLabel }</a>
+              }
+            </Fragment>
+          )
+      }
+      { children }
+    </div>
+  );
 }
 
 export default Conditions;
