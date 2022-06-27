@@ -13,7 +13,7 @@ function ConditionReminders({ reminders }) {
       <details>
         <summary>Show when reminders have been scheduled</summary>
         <Inset>
-          <p>This condition needs to be met by:</p>
+          <p>This condition has a reminder scheduled for:</p>
           <ul>
             {
               reminders.map(reminder => (
