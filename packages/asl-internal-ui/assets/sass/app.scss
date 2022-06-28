@@ -380,3 +380,18 @@ table.projects-content {
     background-color: #E3733B;
   }
 }
+
+.conditions .reminders {
+  margin-bottom: 0;
+
+  .govuk-form-group {
+    margin-bottom: 0;
+  }
+
+  .govuk-inset-text {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
