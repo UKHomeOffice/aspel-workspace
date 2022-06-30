@@ -17,7 +17,7 @@ module.exports = merge({}, baseContent, profileContent, {
     blocked: `
       Your access to this establishment has been blocked.
 
-      Email [aspelqueries@homeoffice.gov.uk](mailto:aspelqueries@homeoffice.gov.uk) for more information.
+      Email [aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk) for more information.
     `
   },
   warnings: {

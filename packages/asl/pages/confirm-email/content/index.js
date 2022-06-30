@@ -11,7 +11,7 @@ module.exports = {
 
     We have sent an email to **{{email}}** with a link to confirm your address.
 
-    If you can't find the email, check your junk folder or resend the email. To change your email address, email [aspelqueries@homeoffice.gov.uk](mailto:aspelqueries@homeoffice.gov.uk).
+    If you can't find the email, check your junk folder or resend the email. To change your email address, email [aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk).
   `,
   buttons: {
     submit: 'Resend email'

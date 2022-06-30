@@ -11,7 +11,7 @@ module.exports = {
     content: `
       You can resend the email confirming your address to **{{email}}**.
 
-      To change your email address, email [aspelqueries@homeoffice.gov.uk](mailto:aspelqueries@homeoffice.gov.uk).
+      To change your email address, email [aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk).
     `
   },
   buttons: {
