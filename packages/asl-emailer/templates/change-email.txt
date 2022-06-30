@@ -4,4 +4,4 @@ Previous: {{oldEmail}}
 
 New: {{newEmail}}
 
-If you did not request this change, please contact aspelqueries@homeoffice.gov.uk immediately.
+If you did not request this change, please contact aspeltechnicalqueries@homeoffice.gov.uk immediately.
