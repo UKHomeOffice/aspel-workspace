@@ -3,6 +3,7 @@ import merge from 'lodash/merge';
 import { Form, Snippet, Link } from '@asl/components';
 import DatePicker from './date-picker';
 import EstablishmentSelect from './establishment-select';
+import { Warning } from '@ukhomeoffice/react-components';
 
 export default function MetricsFilter({ start, end, establishment, page, filterEstablishment = true, query = {} }) {
   return (
@@ -49,6 +50,7 @@ export default function MetricsFilter({ start, end, establishment, page, filterE
             <button type="submit" className="govuk-button"><Snippet>buttons.submit</Snippet></button>
           </p>
         </Form>
+        { page === 'missed-deadlines' ? (start < '2022-04-01' ? <Warning>Missed internal deadline data is not available before 1 April 2022</Warning> : '') : ''}
       </div>
     </div>
   );

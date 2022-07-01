@@ -7,6 +7,7 @@ import MetricsFilter from '../../../views/components/metrics-filter';
 export default function Deadlines() {
 
   const { start, end, deadlines, internalDeadlines, actions } = useSelector(state => state.model);
+  const page = 'missed-deadlines';
 
   return (
     <Fragment>
@@ -18,14 +19,19 @@ export default function Deadlines() {
         </div>
       </div>
 
-      <MetricsFilter start={start} end={end} filterEstablishment={false} />
+      <MetricsFilter start={start} end={end} page={page} filterEstablishment={false} />
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-one-half">
           <Metric number={deadlines} label="Missed statutory deadline" />
         </div>
         <div className="govuk-grid-column-one-half">
-          <Metric number={internalDeadlines.total} label="Missed internal target" />
+          {
+            end < '2022-02-01' ? <div className="metric">
+              <p>No data</p>
+              <label>Missed internal target</label>
+            </div> : <Metric number={internalDeadlines.total} label="Missed internal target" />
+          }
         </div>
       </div>
 
@@ -45,37 +51,49 @@ export default function Deadlines() {
             <td>PPL application</td>
             <td>All</td>
             <td>{ actions.application.resubmission + actions.application.first }</td>
-            <td>{ internalDeadlines.application.resubmission + internalDeadlines.application.first }</td>
+            {
+              end < '2022-02-01' ? <td>No data</td> : <td>{ internalDeadlines.application.resubmission + internalDeadlines.application.first }</td>
+            }
           </tr>
           <tr>
             <td>PPL application</td>
             <td>First</td>
             <td>{ actions.application.first }</td>
-            <td>{ internalDeadlines.application.first }</td>
+            {
+              end < '2022-02-01' ? <td>No data</td> : <td>{ internalDeadlines.application.first }</td>
+            }
           </tr>
           <tr>
             <td>PPL application</td>
             <td>Subsequent</td>
             <td>{ actions.application.resubmission }</td>
-            <td>{ internalDeadlines.application.resubmission }</td>
+            {
+              end < '2022-02-01' ? <td>No data</td> : <td>{ internalDeadlines.application.resubmission }</td>
+            }
           </tr>
           <tr>
             <td>PPL amendment</td>
             <td>All</td>
             <td>{ actions.amendment.resubmission + actions.amendment.first }</td>
-            <td>{ internalDeadlines.amendment.resubmission + internalDeadlines.amendment.first }</td>
+            {
+              end < '2022-02-01' ? <td>No data</td> : <td>{ internalDeadlines.amendment.resubmission + internalDeadlines.amendment.first }</td>
+            }
           </tr>
           <tr>
             <td>PPL amendment</td>
             <td>First</td>
             <td>{ actions.amendment.first }</td>
-            <td>{ internalDeadlines.amendment.first }</td>
+            {
+              end < '2022-02-01' ? <td>No data</td> : <td>{ internalDeadlines.amendment.first }</td>
+            }
           </tr>
           <tr>
             <td>PPL amendment</td>
             <td>Subsequent</td>
             <td>{ actions.amendment.resubmission }</td>
-            <td>{ internalDeadlines.amendment.resubmission }</td>
+            {
+              end < '2022-02-01' ? <td>No data</td> : <td>{ internalDeadlines.amendment.resubmission }</td>
+            }
           </tr>
         </tbody>
       </table>
