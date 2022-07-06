@@ -38,6 +38,7 @@ The following environment variables are required:
 * `KEYCLOAK_SECRET` - the secret used to authenticate with the keycloak client
 * `PERMISSIONS_SERVICE` - the hostname of the downstream permissions service
 * `PDF_SERVICE` = the hostname of the html to pdf service
+* `ATTACHMENTS_SERVICE` = the hostname of the attachments S3 proxy service
 * `BODY_SIZE_LIMIT` = the size limit for body parser (PPL updates only)
 
 The following environment variables can be optionally defined:
