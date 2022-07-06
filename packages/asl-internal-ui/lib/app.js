@@ -3,6 +3,7 @@ const { mapValues, get } = require('lodash');
 const { NotAuthorisedError, NotFoundError } = require('./errors');
 const baseContent = require('../pages/common/content');
 const { content, views } = require('@asl/pages');
+const proxy = require('@asl/service/lib/middleware/proxy');
 
 const routes = require('./routes');
 
@@ -26,6 +27,8 @@ module.exports = settings => {
     }
     next();
   });
+
+  app.use('/attachment', proxy(settings.attachments));
 
   app.use(content);
 
