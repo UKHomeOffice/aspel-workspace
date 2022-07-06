@@ -13,4 +13,4 @@ This is to keep the service secure.
 If you have an account under another email address and you’d rather not set up a new one, this establishment can be
 added to your existing account. Ask for this invitation to be re-sent to your original email address.
 
-Anyone with 2 or more accounts can ask for them to be combined by emailing aspelqueries@homeoffice.gov.uk.
+Anyone with 2 or more accounts can ask for them to be combined by emailing aspeltechnicalqueries@homeoffice.gov.uk.
