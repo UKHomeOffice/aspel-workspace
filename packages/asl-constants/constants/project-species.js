@@ -77,6 +77,10 @@ module.exports = {
       value: 'african-frogs'
     },
     {
+      label: 'Rana (Rana temporaria and Rana pipiens)',
+      value: 'rana'
+    },
+    {
       label: 'Other amphibians',
       value: 'other-amphibians'
     },
@@ -165,6 +169,10 @@ module.exports = {
     {
       label: 'Cynomolgus macaques',
       value: 'cynomolgus'
+    },
+    {
+      label: 'Tamarins',
+      value: 'tamarins'
     },
     {
       label: 'Other non human primates',
