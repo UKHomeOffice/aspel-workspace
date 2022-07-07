@@ -1,13 +1,16 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Header, Link, Snippet, Metric } from '@asl/components';
+import { Warning } from '@ukhomeoffice/react-components';
+import format from 'date-fns/format';
 
 import MetricsFilter from '../../../views/components/metrics-filter';
 
 export default function Deadlines() {
 
   const { start, end, deadlines, internalDeadlines, actions } = useSelector(state => state.model);
-  const page = 'missed-deadlines';
+
+  const [startDate, setStartDate] = useState(new Date(start));
 
   return (
     <Fragment>
@@ -19,7 +22,10 @@ export default function Deadlines() {
         </div>
       </div>
 
-      <MetricsFilter start={start} end={end} page={page} filterEstablishment={false} />
+      <MetricsFilter start={startDate} end={end} filterEstablishment={false} setStartDate={setStartDate} />
+      {
+        format(startDate, 'YYYY-MM-DD') < '2022-04-01' ? <Warning>Missed internal deadline data is not available before 1 April 2022</Warning> : ''
+      }
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-one-half">

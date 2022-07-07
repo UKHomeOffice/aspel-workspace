@@ -54,8 +54,16 @@ const daysOfWeek = [
 
 export default (props) => {
 
-  const [date, setDate] = useState(new Date(props.date));
+  const existingState = props.onDateSelect !== undefined;
+  let date;
+  let setDate;
 
+  if (!existingState) {
+    [date, setDate] = useState(new Date(props.date));
+  } else {
+    setDate = props.onDateSelect;
+    date = props.date;
+  }
   return <Fragment>
     <DatePicker
       {...props}
