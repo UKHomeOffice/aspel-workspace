@@ -10,7 +10,7 @@ module.exports = {
     We aim to respond to emails within 3 working days.
 
     ## Technical issues
-    For help using this website, email [aspelqueries@homeoffice.gov.uk](mailto:aspelqueries@homeoffice.gov.uk) or call
+    For help using this website, email [aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk) or call
     020 7035 4469.
 
     [Find out about call charges](https://www.gov.uk/call-charges).
