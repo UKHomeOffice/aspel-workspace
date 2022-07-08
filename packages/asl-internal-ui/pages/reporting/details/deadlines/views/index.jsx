@@ -12,6 +12,9 @@ export default function Deadlines() {
 
   const [startDate, setStartDate] = useState(new Date(start));
 
+  // Data for missed internal deadlines was not collected before this date
+  const isBeforeInternalDeadlines = end < '2022-02-01';
+
   return (
     <Fragment>
       <Header title={<Snippet>title</Snippet>} />
@@ -33,7 +36,7 @@ export default function Deadlines() {
         </div>
         <div className="govuk-grid-column-one-half">
           {
-            end < '2022-02-01' ? <div className="metric">
+            isBeforeInternalDeadlines ? <div className="metric">
               <p>No data</p>
               <label>Missed internal target</label>
             </div> : <Metric number={internalDeadlines.total} label="Missed internal target" />
@@ -58,7 +61,7 @@ export default function Deadlines() {
             <td>All</td>
             <td>{ actions.application.resubmission + actions.application.first }</td>
             {
-              end < '2022-02-01' ? <td>No data</td> : <td>{ internalDeadlines.application.resubmission + internalDeadlines.application.first }</td>
+              isBeforeInternalDeadlines ? <td>No data</td> : <td>{ internalDeadlines.application.resubmission + internalDeadlines.application.first }</td>
             }
           </tr>
           <tr>
@@ -66,7 +69,7 @@ export default function Deadlines() {
             <td>First</td>
             <td>{ actions.application.first }</td>
             {
-              end < '2022-02-01' ? <td>No data</td> : <td>{ internalDeadlines.application.first }</td>
+              isBeforeInternalDeadlines ? <td>No data</td> : <td>{ internalDeadlines.application.first }</td>
             }
           </tr>
           <tr>
@@ -74,7 +77,7 @@ export default function Deadlines() {
             <td>Subsequent</td>
             <td>{ actions.application.resubmission }</td>
             {
-              end < '2022-02-01' ? <td>No data</td> : <td>{ internalDeadlines.application.resubmission }</td>
+              isBeforeInternalDeadlines ? <td>No data</td> : <td>{ internalDeadlines.application.resubmission }</td>
             }
           </tr>
           <tr>
@@ -82,7 +85,7 @@ export default function Deadlines() {
             <td>All</td>
             <td>{ actions.amendment.resubmission + actions.amendment.first }</td>
             {
-              end < '2022-02-01' ? <td>No data</td> : <td>{ internalDeadlines.amendment.resubmission + internalDeadlines.amendment.first }</td>
+              isBeforeInternalDeadlines ? <td>No data</td> : <td>{ internalDeadlines.amendment.resubmission + internalDeadlines.amendment.first }</td>
             }
           </tr>
           <tr>
@@ -90,7 +93,7 @@ export default function Deadlines() {
             <td>First</td>
             <td>{ actions.amendment.first }</td>
             {
-              end < '2022-02-01' ? <td>No data</td> : <td>{ internalDeadlines.amendment.first }</td>
+              isBeforeInternalDeadlines ? <td>No data</td> : <td>{ internalDeadlines.amendment.first }</td>
             }
           </tr>
           <tr>
@@ -98,7 +101,7 @@ export default function Deadlines() {
             <td>Subsequent</td>
             <td>{ actions.amendment.resubmission }</td>
             {
-              end < '2022-02-01' ? <td>No data</td> : <td>{ internalDeadlines.amendment.resubmission }</td>
+              isBeforeInternalDeadlines ? <td>No data</td> : <td>{ internalDeadlines.amendment.resubmission }</td>
             }
           </tr>
         </tbody>
