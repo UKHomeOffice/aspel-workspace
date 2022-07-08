@@ -1,12 +1,19 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Header, Link, Snippet, Metric } from '@asl/components';
+import { Warning } from '@ukhomeoffice/react-components';
+import format from 'date-fns/format';
 
 import MetricsFilter from '../../../views/components/metrics-filter';
 
 export default function Deadlines() {
 
   const { start, end, deadlines, internalDeadlines, actions } = useSelector(state => state.model);
+
+  const [startDate, setStartDate] = useState(new Date(start));
+
+  // Data for missed internal deadlines was not collected before this date
+  const isBeforeInternalDeadlines = end < '2022-02-01';
 
   return (
     <Fragment>
@@ -18,14 +25,22 @@ export default function Deadlines() {
         </div>
       </div>
 
-      <MetricsFilter start={start} end={end} filterEstablishment={false} />
+      <MetricsFilter start={startDate} end={end} filterEstablishment={false} setStartDate={setStartDate} />
+      {
+        format(startDate, 'YYYY-MM-DD') < '2022-04-01' ? <Warning>Missed internal deadline data is not available before 1 April 2022</Warning> : ''
+      }
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-one-half">
           <Metric number={deadlines} label="Missed statutory deadline" />
         </div>
         <div className="govuk-grid-column-one-half">
-          <Metric number={internalDeadlines.total} label="Missed internal target" />
+          {
+            isBeforeInternalDeadlines ? <div className="metric">
+              <p>No data</p>
+              <label>Missed internal target</label>
+            </div> : <Metric number={internalDeadlines.total} label="Missed internal target" />
+          }
         </div>
       </div>
 
@@ -45,37 +60,49 @@ export default function Deadlines() {
             <td>PPL application</td>
             <td>All</td>
             <td>{ actions.application.resubmission + actions.application.first }</td>
-            <td>{ internalDeadlines.application.resubmission + internalDeadlines.application.first }</td>
+            {
+              isBeforeInternalDeadlines ? <td>No data</td> : <td>{ internalDeadlines.application.resubmission + internalDeadlines.application.first }</td>
+            }
           </tr>
           <tr>
             <td>PPL application</td>
             <td>First</td>
             <td>{ actions.application.first }</td>
-            <td>{ internalDeadlines.application.first }</td>
+            {
+              isBeforeInternalDeadlines ? <td>No data</td> : <td>{ internalDeadlines.application.first }</td>
+            }
           </tr>
           <tr>
             <td>PPL application</td>
             <td>Subsequent</td>
             <td>{ actions.application.resubmission }</td>
-            <td>{ internalDeadlines.application.resubmission }</td>
+            {
+              isBeforeInternalDeadlines ? <td>No data</td> : <td>{ internalDeadlines.application.resubmission }</td>
+            }
           </tr>
           <tr>
             <td>PPL amendment</td>
             <td>All</td>
             <td>{ actions.amendment.resubmission + actions.amendment.first }</td>
-            <td>{ internalDeadlines.amendment.resubmission + internalDeadlines.amendment.first }</td>
+            {
+              isBeforeInternalDeadlines ? <td>No data</td> : <td>{ internalDeadlines.amendment.resubmission + internalDeadlines.amendment.first }</td>
+            }
           </tr>
           <tr>
             <td>PPL amendment</td>
             <td>First</td>
             <td>{ actions.amendment.first }</td>
-            <td>{ internalDeadlines.amendment.first }</td>
+            {
+              isBeforeInternalDeadlines ? <td>No data</td> : <td>{ internalDeadlines.amendment.first }</td>
+            }
           </tr>
           <tr>
             <td>PPL amendment</td>
             <td>Subsequent</td>
             <td>{ actions.amendment.resubmission }</td>
-            <td>{ internalDeadlines.amendment.resubmission }</td>
+            {
+              isBeforeInternalDeadlines ? <td>No data</td> : <td>{ internalDeadlines.amendment.resubmission }</td>
+            }
           </tr>
         </tbody>
       </table>

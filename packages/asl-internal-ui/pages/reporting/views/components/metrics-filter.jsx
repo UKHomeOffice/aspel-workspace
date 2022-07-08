@@ -4,7 +4,7 @@ import { Form, Snippet, Link } from '@asl/components';
 import DatePicker from './date-picker';
 import EstablishmentSelect from './establishment-select';
 
-export default function MetricsFilter({ start, end, establishment, page, filterEstablishment = true, query = {} }) {
+export default function MetricsFilter({ start, end, establishment, page, filterEstablishment = true, query = {}, setStartDate }) {
   return (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-full">
@@ -17,6 +17,7 @@ export default function MetricsFilter({ start, end, establishment, page, filterE
               maxDate={new Date()}
               minDate={new Date(2019, 6, 31)}
               date={start}
+              onDateSelect={setStartDate}
             />
             <label htmlFor="end">to</label>
             <DatePicker
