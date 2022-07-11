@@ -60,7 +60,7 @@ module.exports = {
           summary: 'Profile tasks to be flagged',
           details: `These tasks will be flagged:
            * requests to amend, revoke or transfer the licence to a new establishment
-           * requests to transfer the licence to another persion`
+           * requests to transfer the licence to another person`
         },
         establishment: {
           label: `{{{profile.firstName}}} {{{profile.lastName}}}'s establishment licence at {{establishment.name}} and related tasks`,
