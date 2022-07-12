@@ -1,6 +1,7 @@
 module.exports = {
   port: process.env.PORT || 8080,
   api: process.env.API_URL,
+  attachments: process.env.ATTACHMENTS_SERVICE,
   jwt: process.env.JWT_SECRET,
   internalUrl: process.env.INTERNAL_URL,
   session: {

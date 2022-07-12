@@ -3,6 +3,7 @@ const { router, mountRoutes } = require('@asl/service/ui');
 const { views, content } = require('@asl/pages');
 const { get, mapValues } = require('lodash');
 
+const proxy = require('@asl/service/lib/middleware/proxy');
 const cachebuster = require('./middleware/profile-cachebuster');
 
 const routes = require('./routes');
@@ -39,6 +40,8 @@ module.exports = settings => {
     }
     next();
   });
+
+  app.use('/attachment', proxy(settings.attachments));
 
   app.use((req, res, next) => {
     if (!get(req, 'user.profile.emailConfirmed') && !req.path.includes(req.buildRoute('confirmEmail'))) {
