@@ -20,6 +20,7 @@ export const Snippet = ({ content, children, optional, fallback, ...props }) => 
   return (
     <Markdown
       unwrapSingleLine={true}
+      linkTarget={props.linkTarget}
     >{ source }</Markdown>
   );
 };
