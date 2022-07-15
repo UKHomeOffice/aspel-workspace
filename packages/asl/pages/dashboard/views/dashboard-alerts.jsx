@@ -75,6 +75,11 @@ function EstablishmentAlert({ name, summary }) {
 export default function DashboardAlerts() {
   const { alerts } = useSelector(state => state.static);
 
+  // if the alerts API call failed then don't crash the dashboard
+  if (!alerts) {
+    return null;
+  }
+
   return (
     <div className="dashboard-alerts">
       {
