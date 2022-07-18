@@ -101,5 +101,10 @@ module.exports = {
     path: '/establishments/:establishmentId/projects/:projectId/rops/:ropId',
     breadcrumb: false,
     router: pages.rops
+  },
+  reminders: {
+    path: '/reminders',
+    breadcrumb: false,
+    router: pages.reminders
   }
 };
