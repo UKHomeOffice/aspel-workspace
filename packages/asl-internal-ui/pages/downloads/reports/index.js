@@ -33,7 +33,7 @@ module.exports = settings => {
       header: true
     });
 
-    req.metrics(`/reports/${report}`)
+    req.metrics(`/reports/${report}`, { query: req.query })
       .then(stream => {
         pipeline(
           stream,
