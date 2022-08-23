@@ -16,18 +16,18 @@ class LicenceStatusBanner extends Component {
     return !this.state || this.state.open;
   }
 
-  renderDates() {
+  renderDates(status) {
     const {
-      status,
       issueDate,
       revocationDate,
-      expiryDate
+      expiryDate,
+      suspendedDate
     } = this.props.licence;
 
     const isPdf = this.props.isPdf;
     const dateFormat = this.props.dateFormat;
 
-    if (isPdf || (status !== 'revoked' && status !== 'expired')) {
+    if (isPdf || !['revoked', 'expired', 'suspended'].includes(status)) {
       return null;
     }
 
@@ -39,33 +39,37 @@ class LicenceStatusBanner extends Component {
       {
         status === 'expired' && <li>Expiry: <span className="date">{formatDate(expiryDate, dateFormat)}</span></li>
       }
+      {
+        status === 'suspended' && <li>Suspended: <span className="date">{formatDate(suspendedDate, dateFormat)}</span></li>
+      }
     </ul>;
   }
 
   render() {
     const licence = this.props.licence;
     const licenceType = this.props.licenceType;
+    const licenceStatus = licence.suspendedDate ? 'suspended' : licence.status;
 
-    if (!this.props.children && licence.status === 'active') {
+    if (!this.props.children && licenceStatus === 'active') {
       return null;
     }
 
     return (
-      <div className={classnames('licence-status-banner', licence.status, this.props.colour, { open: this.isOpen() })}>
+      <div className={classnames('licence-status-banner', licenceStatus, this.props.colour, { open: this.isOpen() })}>
         <header onClick={() => this.toggle()}>
           <p className="toggle-switch">
             <a href="#">{this.isOpen() ? 'Show less' : 'Show more'}</a>
           </p>
           <p className="status">
             {
-              this.props.title || <Snippet>{`invalidLicence.status.${licence.status}`}</Snippet>
+              this.props.title || <Snippet>{`invalidLicence.status.${licenceStatus}`}</Snippet>
             }
           </p>
         </header>
 
         <div className={classnames('status-details', { hidden: !this.isOpen() })}>
           {
-            this.renderDates()
+            this.renderDates(licenceStatus)
           }
           {
             this.props.children || <p><Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet></p>
