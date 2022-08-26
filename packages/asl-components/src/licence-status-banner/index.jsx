@@ -1,31 +1,19 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Snippet from '../snippet';
 import classnames from 'classnames';
 import formatDate from 'date-fns/format';
 
-class LicenceStatusBanner extends Component {
-  componentDidMount() {
-    this.setState({ open: false });
-  }
+function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, title, children }) {
+  const [open, setOpen] = useState(false);
 
-  toggle() {
-    return this.setState({ open: !this.state.open });
-  }
+  const establishment = licence.establishment;
+  const licenceStatus = licence.suspendedDate || establishment.suspendedDate ? 'suspended' : licence.status;
 
-  isOpen() {
-    return !this.state || this.state.open;
-  }
+  const toggle = () => setOpen(!open);
 
-  renderDates(status) {
-    const {
-      issueDate,
-      revocationDate,
-      expiryDate,
-      suspendedDate
-    } = this.props.licence;
-
-    const isPdf = this.props.isPdf;
-    const dateFormat = this.props.dateFormat;
+  const renderDates = status => {
+    const { issueDate, revocationDate, expiryDate, establishment } = licence;
+    const suspendedDate = licence.suspendedDate || establishment.suspendedDate;
 
     if (isPdf || !['revoked', 'expired', 'suspended'].includes(status)) {
       return null;
@@ -43,41 +31,29 @@ class LicenceStatusBanner extends Component {
         status === 'suspended' && <li>Suspended: <span className="date">{formatDate(suspendedDate, dateFormat)}</span></li>
       }
     </ul>;
+  };
+
+  if (!children && licenceStatus === 'active') {
+    return null;
   }
 
-  render() {
-    const licence = this.props.licence;
-    const licenceType = this.props.licenceType;
-    const licenceStatus = licence.suspendedDate ? 'suspended' : licence.status;
+  return (
+    <div className={classnames('licence-status-banner', licenceStatus, colour, { open })}>
+      <header onClick={() => toggle()}>
+        <p className="toggle-switch">
+          <a href="#">{open ? 'Show less' : 'Show more'}</a>
+        </p>
+        <p className="status">
+          { title || <Snippet>{`invalidLicence.status.${licenceStatus}`}</Snippet> }
+        </p>
+      </header>
 
-    if (!this.props.children && licenceStatus === 'active') {
-      return null;
-    }
-
-    return (
-      <div className={classnames('licence-status-banner', licenceStatus, this.props.colour, { open: this.isOpen() })}>
-        <header onClick={() => this.toggle()}>
-          <p className="toggle-switch">
-            <a href="#">{this.isOpen() ? 'Show less' : 'Show more'}</a>
-          </p>
-          <p className="status">
-            {
-              this.props.title || <Snippet>{`invalidLicence.status.${licenceStatus}`}</Snippet>
-            }
-          </p>
-        </header>
-
-        <div className={classnames('status-details', { hidden: !this.isOpen() })}>
-          {
-            this.renderDates(licenceStatus)
-          }
-          {
-            this.props.children || <p><Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet></p>
-          }
-        </div>
+      <div className={classnames('status-details', { hidden: !open })}>
+        { renderDates(licenceStatus) }
+        { children || <p><Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet></p> }
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 LicenceStatusBanner.defaultProps = {
