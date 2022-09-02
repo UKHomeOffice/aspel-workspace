@@ -5,8 +5,7 @@ import formatDate from 'date-fns/format';
 
 function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, title, children }) {
   const [open, setOpen] = useState(false);
-
-  const establishment = licence.establishment;
+  const establishment = licence.establishment || {};
   const licenceStatus = licence.suspendedDate || establishment.suspendedDate ? 'suspended' : licence.status;
 
   const toggle = () => setOpen(!open);
