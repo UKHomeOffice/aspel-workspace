@@ -12,7 +12,7 @@
     color: $white;
   }
 
-  &.revoked, &.red, &.expired {
+  &.revoked, &.red, &.expired, &.suspended {
     background-color: govuk-colour('red');
   }
 
