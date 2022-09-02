@@ -15,6 +15,7 @@ module.exports = {
     active: 'Active',
     inactive: 'Draft',
     expired: 'Expired',
-    revoked: 'Revoked'
+    revoked: 'Revoked',
+    suspended: 'Suspended'
   }
 };
