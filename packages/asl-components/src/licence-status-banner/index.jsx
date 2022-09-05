@@ -5,19 +5,17 @@ import formatDate from 'date-fns/format';
 
 function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, title, children }) {
   const [open, setOpen] = useState(false);
+  const suspendedDate = licence.suspendedDate || (licence.establishment && licence.establishment.suspendedDate);
   let licenceStatus = licence.status;
 
-  if (licenceStatus === 'active') {
-    if (licence.suspendedDate || (licence.establishment && licence.establishment.suspendedDate)) {
-      licenceStatus = 'suspended';
-    }
+  if (licenceStatus === 'active' && suspendedDate) {
+    licenceStatus = 'suspended';
   }
 
   const toggle = () => setOpen(!open);
 
   const renderDates = status => {
-    const { issueDate, revocationDate, expiryDate, establishment } = licence;
-    const suspendedDate = licence.suspendedDate || establishment.suspendedDate;
+    const { issueDate, revocationDate, expiryDate } = licence;
 
     if (isPdf || !['revoked', 'expired', 'suspended'].includes(status)) {
       return null;
