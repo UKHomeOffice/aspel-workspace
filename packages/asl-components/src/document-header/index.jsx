@@ -2,7 +2,7 @@ import React, { Fragment, useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
 import { BackToTop } from '../';
 
-export default function DocumentHeader({ title, subtitle, backLink, children, detailsLabel = 'downloads' }) {
+export default function DocumentHeader({ title, subtitle, backLink, children, detailsLabel = 'downloads', status = null }) {
   const [detailsShowing, updateDetailsShowing] = useState(false);
 
   const toggleDetails = (e) => {
@@ -30,19 +30,22 @@ export default function DocumentHeader({ title, subtitle, backLink, children, de
   function Headings({ title, subtitle }) {
     if (isSticky) {
       return (
-        <h2>
-          {
-            title
-              ? <Fragment>{title}: {subtitle}</Fragment>
-              : subtitle
-          }
-        </h2>
+        <Fragment>
+          <h2>
+            {
+              title
+                ? <Fragment>{title}: {subtitle}</Fragment>
+                : subtitle
+            }
+            {status}
+          </h2>
+        </Fragment>
       );
     }
 
     return (
       <Fragment>
-        { title && <h1>{title}</h1> }
+        { title && <h1>{title} {status}</h1> }
         <div className="title-overflow">
           { subtitle && <h2>{subtitle}</h2> }
           {
