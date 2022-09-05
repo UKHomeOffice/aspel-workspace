@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Snippet from '../snippet';
 import classnames from 'classnames';
 import formatDate from 'date-fns/format';
 
 function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, title, children }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const suspendedDate = licence.suspendedDate || (licence.establishment && licence.establishment.suspendedDate);
   let licenceStatus = licence.status;
 
   if (licenceStatus === 'active' && suspendedDate) {
     licenceStatus = 'suspended';
   }
+
+  useEffect(() => setOpen(false), []);
 
   const toggle = () => setOpen(!open);
 
