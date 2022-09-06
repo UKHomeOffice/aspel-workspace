@@ -28,7 +28,7 @@ export default {
     },
     status: {
       format: (_, model) => {
-        const status = model.suspendedDate ? 'suspended' : model.status;
+        const status = model.status === 'active' && model.suspendedDate ? 'suspended' : model.status;
         const bad = ['expired', 'transferred', 'revoked', 'suspended'];
         const className = classnames({ badge: true, complete: status === 'active', rejected: bad.includes(status) });
         return <span className={ className }><Snippet>{ `status.${status}` }</Snippet></span>;
