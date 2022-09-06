@@ -5,6 +5,7 @@ import formatDate from 'date-fns/format';
 
 function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, title, children }) {
   const [open, setOpen] = useState(true);
+  const establishmentSuspended = !!(licence.establishment && licence.establishment.suspendedDate);
   const suspendedDate = licence.suspendedDate || (licence.establishment && licence.establishment.suspendedDate);
   let licenceStatus = licence.status;
 
@@ -48,13 +49,20 @@ function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, 
           <a href="#">{open ? 'Show less' : 'Show more'}</a>
         </p>
         <p className="status">
-          { title || <Snippet>{`invalidLicence.status.${licenceStatus}`}</Snippet> }
+          { title || <Snippet>{`invalidLicence.status.${establishmentSuspended ? 'establishmentSuspended' : licenceStatus}`}</Snippet> }
         </p>
       </header>
 
       <div className={classnames('status-details', { hidden: !open })}>
         { renderDates(licenceStatus) }
-        { children || <p><Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet></p> }
+        { children }
+        {
+          !children && (
+            establishmentSuspended
+              ? <p><Snippet establishmentName={licence.establishment.name}>{`invalidLicence.summary.establishmentSuspended`}</Snippet></p>
+              : <p><Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet></p>
+          )
+        }
       </div>
     </div>
   );
