@@ -27,8 +27,9 @@ export default {
       }
     },
     status: {
-      format: (status, model) => {
-        const bad = ['expired', 'transferred', 'revoked'];
+      format: (_, model) => {
+        const status = model.status === 'active' && model.suspendedDate ? 'suspended' : model.status;
+        const bad = ['expired', 'transferred', 'revoked', 'suspended'];
         const className = classnames({ badge: true, complete: status === 'active', rejected: bad.includes(status) });
         return <span className={ className }><Snippet>{ `status.${status}` }</Snippet></span>;
       }
@@ -68,6 +69,16 @@ export default {
       format: (pilLicenceNumber, profile) => {
         const highlight = get(profile, `highlight.pilLicenceNumber[0]`);
         return highlight ? <Markdown>{highlight}</Markdown> : pilLicenceNumber;
+      }
+    },
+    pilStatus: {
+      format: (status, profile) => {
+        if (!status) {
+          return null;
+        }
+        const bad = ['revoked', 'suspended'];
+        const className = classnames({ badge: true, complete: status === 'active', rejected: bad.includes(status) });
+        return <span className={ className }><Snippet>{ `status.${status}` }</Snippet></span>;
       }
     },
     establishments: {

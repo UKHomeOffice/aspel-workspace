@@ -9,6 +9,9 @@ module.exports = {
   pilLicenceNumber: {
     show: true
   },
+  pilStatus: {
+    show: true
+  },
   telephone: {},
   establishments: {
     show: true,
