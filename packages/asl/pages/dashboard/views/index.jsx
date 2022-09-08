@@ -21,10 +21,14 @@ const Invitation = ({ token, establishment }) => (
 );
 
 const EstablishmentPanel = ({ establishment, profile }) => {
+  if (establishment.suspendedDate) {
+    establishment.status = 'suspended';
+  }
   const title = <h3>
     {establishment.name}
-    { establishment.status === 'inactive' && <span className="status-notice">(draft - establishment not yet licensed)</span> }
-    { establishment.status === 'revoked' && <span className="status-notice">(revoked - establishment no longer licensed)</span> }
+    { establishment.status === 'inactive' && <span className="status-notice"><span className="badge">draft</span> establishment not yet licensed</span> }
+    { establishment.status === 'revoked' && <span className="status-notice"><span className="badge rejected">revoked</span> establishment no longer licensed</span> }
+    { establishment.status === 'suspended' && <span className="status-notice"><span className="badge rejected">suspended</span></span> }
   </h3>;
 
   return (
