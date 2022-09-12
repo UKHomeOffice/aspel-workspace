@@ -23,7 +23,7 @@
     "registry": "https://artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/"
   },
   "devDependencies": {
-    "eslint": "^4.18.2",
+    "eslint": "^8.23.1",
     "eslint-config-lennym": "^1.4.0"
   }
 }
