@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import classnames from 'classnames';
 import map from 'lodash/map';
@@ -70,14 +70,30 @@ export function Datatable({
   isFetching,
   schema: tableSchema,
   pagination,
-  noDataWarning
+  noDataWarning,
+  allowScroll = true
 }) {
   const schema = pickBy(merge({}, tableSchema, formatters), (item, key) => item.show);
   const RowComponent = CustomRow || Row;
   const colSpan = size(schema) + (Actions ? 1 : 0);
+  const tableRef = useRef(null);
+  const [scrollActive, setScrollActive] = useState(false);
+
+  useEffect(() => {
+    if (!allowScroll) {
+      return;
+    }
+    if (!isFetching) {
+      if (!scrollActive) {
+        setScrollActive(true); // prevents immediate scroll to table on initial page load
+        return;
+      }
+      tableRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [isFetching]);
 
   return (
-    <table className={classnames('govuk-table', 'govuk-react-datatable', className, isFetching && 'loading')}>
+    <table className={classnames('govuk-table', 'govuk-react-datatable', className, isFetching && 'loading')} ref={tableRef}>
       <thead>
         <tr>
           {
