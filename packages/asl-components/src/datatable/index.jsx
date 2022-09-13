@@ -70,18 +70,22 @@ export function Datatable({
   isFetching,
   schema: tableSchema,
   pagination,
-  noDataWarning
+  noDataWarning,
+  allowScroll = true
 }) {
   const schema = pickBy(merge({}, tableSchema, formatters), (item, key) => item.show);
   const RowComponent = CustomRow || Row;
   const colSpan = size(schema) + (Actions ? 1 : 0);
   const tableRef = useRef(null);
-  const [enableScroll, setEnableScroll] = useState(false);
+  const [scrollActive, setScrollActive] = useState(false);
 
   useEffect(() => {
+    if (!allowScroll) {
+      return;
+    }
     if (!isFetching) {
-      if (!enableScroll) {
-        setEnableScroll(true); // prevent immediate scroll to table on initial page load
+      if (!scrollActive) {
+        setScrollActive(true); // prevents immediate scroll to table on initial page load
         return;
       }
       tableRef.current.scrollIntoView({ behavior: 'smooth' });
