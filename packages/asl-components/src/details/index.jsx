@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function Details({ summary, children, className }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   function toggle() {
     setOpen(!open);
   }
+
+  useEffect(() => {
+    toggle();
+  }, []);
+
   return (
-    <details className={className}>
+    <details className={className} open={open}>
       <summary onClick={toggle}>{ summary }</summary>
-      {
-        open && children
-      }
+      { children }
     </details>
   );
 }
