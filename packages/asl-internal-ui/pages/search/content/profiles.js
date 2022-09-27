@@ -23,6 +23,7 @@ module.exports = {
   status: {
     active: 'Active',
     revoked: 'Revoked',
-    suspended: 'Suspended'
+    suspended: 'Suspended',
+    pending: 'Pending'
   }
 };
