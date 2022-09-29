@@ -3,6 +3,7 @@ module.exports = {
     title: 'Enforcement cases',
     description: 'Flag people and licences subject to enforcement to help inspectors make informed decisions when granting licences in ASPeL. Flags are not visible to establishments.'
   },
+  searchText: 'Search by case number, subject, establishment or licence number',
   fields: {
     caseNumber: {
       label: 'Case number'
