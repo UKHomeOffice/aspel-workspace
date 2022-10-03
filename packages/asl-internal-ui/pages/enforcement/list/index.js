@@ -19,7 +19,11 @@ module.exports = settings => {
     locals: (req, res, next) => {
       next();
     }
-  })({ schema, apiPath: '/enforcement', defaultRowCount: 15 }));
+  })({
+    schema,
+    apiPath: '/search/enforcements',
+    defaultRowCount: 15
+  }));
 
   return app;
 };

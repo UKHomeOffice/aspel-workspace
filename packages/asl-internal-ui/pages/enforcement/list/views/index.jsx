@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import size from 'lodash/size';
-import { Header, Snippet, Datatable, Link } from '@asl/components';
+import { Header, Snippet, Datatable, Link, Search } from '@asl/components';
 import formatters from '../formatters';
 
 function EnforcementCase({ row, schema }) {
@@ -60,6 +60,8 @@ function List() {
           <p><Snippet>page.description</Snippet></p>
         </div>
       </div>
+
+      <Search label={<Snippet>searchText</Snippet>} />
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-three-quarters">
