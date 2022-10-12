@@ -33,7 +33,7 @@
   "dependencies": {
     "@asl/components": "^10.15.5",
     "@asl/constants": "^1.2.1",
-    "@asl/pages": "^27.23.1",
+    "@asl/pages": "^27.23.2",
     "@asl/projects": "^10.10.0",
     "@asl/service": "^9.1.2",
     "@babel/core": "^7.6.2",
