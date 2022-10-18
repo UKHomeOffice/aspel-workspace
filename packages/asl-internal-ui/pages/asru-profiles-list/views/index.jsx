@@ -1,11 +1,15 @@
 import React, { Fragment } from 'react';
+import { useSelector } from 'react-redux';
+import formatDate from 'date-fns/format';
+import { dateFormat } from '@asl/pages/constants';
 import {
   Search,
   Datatable,
   LinkFilter,
   Snippet,
   Link,
-  Header
+  Header,
+  Tabs
 } from '@asl/components';
 
 const formatters = {
@@ -14,16 +18,30 @@ const formatters = {
   },
   assignedRoles: {
     format: roles => roles.sort().join(', ')
+  },
+  removedAt: {
+    format: removedAt => formatDate(removedAt, dateFormat.datetime)
   }
 };
 
-export default function AsruProfilesList() {
+export default function StaffDirectory() {
+  const { asruStatus } = useSelector(state => state.static.query);
+  const tabs = ['current', 'former'];
+
   return (
     <Fragment>
       <Header
         title={<Snippet>page.title</Snippet>}
         subtitle={<Snippet>page.subtitle</Snippet>}
       />
+
+      <Tabs active={tabs.indexOf(asruStatus)}>
+        {
+          tabs.map(tab =>
+            <Link page="asruProfilesList" key={tab} query={{asruStatus: tab}} label={<Snippet>{`tabs.${tab}`}</Snippet>} />
+          )
+        }
+      </Tabs>
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
@@ -36,7 +54,11 @@ export default function AsruProfilesList() {
         </div>
       </div>
 
-      <LinkFilter prop="asruRoles" formatter={filter => <Snippet>{`filters.${filter}`}</Snippet>} />
+      {
+        asruStatus === 'current' &&
+          <LinkFilter prop="asruRoles" formatter={filter => <Snippet>{`filters.${filter}`}</Snippet>} />
+      }
+
       <Datatable formatters={formatters} />
     </Fragment>
   );
