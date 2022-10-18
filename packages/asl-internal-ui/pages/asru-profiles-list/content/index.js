@@ -6,6 +6,10 @@ module.exports = merge({}, baseContent, {
     title: 'Staff directory',
     subtitle: 'Animals in Science Regulation Unit'
   },
+  tabs: {
+    current: 'Current staff',
+    former: 'Former staff'
+  },
   search: 'Search by name or email',
   filters: {
     admin: 'Admin',
@@ -26,6 +30,9 @@ module.exports = merge({}, baseContent, {
     },
     assignedRoles: {
       label: 'Assigned roles'
+    },
+    removedAt: {
+      label: 'Removed'
     }
   }
 });

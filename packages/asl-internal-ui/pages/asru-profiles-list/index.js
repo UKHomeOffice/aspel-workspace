@@ -1,3 +1,4 @@
+const { set, pick, omit } = require('lodash');
 const { page } = require('@asl/service/ui');
 const datatable = require('@asl/pages/pages/common/routers/datatable');
 const schema = require('./schema');
@@ -14,6 +15,18 @@ module.exports = settings => {
   });
 
   app.use(datatable({
+    configure: (req, res, next) => {
+      req.query.asruStatus = req.query.asruStatus || 'current';
+
+      req.datatable.schema = req.query.asruStatus === 'current'
+        ? omit(schema, 'removedAt')
+        : omit(schema, 'assignedRoles');
+      next();
+    },
+    getApiPath: (req, res, next) => {
+      req.datatable.apiPath = ['/asru/profiles', { query: pick(req.query, ['asruStatus']) }];
+      next();
+    },
     getValues: (req, res, next) => {
       req.datatable.data.rows = req.datatable.data.rows.map(profile => {
         const assignedRoles = [];
@@ -40,9 +53,10 @@ module.exports = settings => {
       return next();
     },
     locals: (req, res, next) => {
+      set(res.locals, 'static.query.asruStatus', req.query.asruStatus);
       return next();
     }
-  })({ schema, apiPath: '/asru/profiles' }));
+  })({ defaultRowCount: 20 }));
 
   return app;
 };

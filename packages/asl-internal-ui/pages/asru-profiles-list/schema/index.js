@@ -18,5 +18,9 @@ module.exports = {
   assignedRoles: {
     show: true,
     sortable: false
+  },
+  removedAt: {
+    show: true,
+    sortable: false
   }
 };
