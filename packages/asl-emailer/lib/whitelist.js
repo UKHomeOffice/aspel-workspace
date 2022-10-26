@@ -5,7 +5,7 @@ module.exports = settings => (req, res, next) => {
     return matched || d.toLowerCase() === domain.toLowerCase();
   }, false);
 
-  if (isAllowed || !settings.whitelist.length) {
+  if ((isAllowed || !settings.whitelist.length) && !settings.ignore.includes(req.body.to)) {
     return next();
   }
 
