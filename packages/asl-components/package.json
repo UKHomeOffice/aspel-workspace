@@ -25,7 +25,7 @@
   "dependencies": {
     "@asl/constants": "^1.2.1",
     "@asl/dictionary": "^1.1.5",
-    "@ukhomeoffice/react-components": "^0.10.5",
+    "@ukhomeoffice/react-components": "^0.10.7",
     "accessible-autocomplete": "^2.0.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "classnames": "^2.2.6",
