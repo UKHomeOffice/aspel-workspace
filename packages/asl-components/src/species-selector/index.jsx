@@ -135,7 +135,7 @@ export default function SpeciesSelector(props) {
 
   return (
     <div className="species-selector">
-      <InputWrapper {...props}>
+      <InputWrapper {...pick(props, ['id', 'name', 'label', 'disabled'])}>
         {
           map(omit(species, 'OTHER'), (group, key) => {
             const options = group.types || group;
@@ -153,6 +153,7 @@ export default function SpeciesSelector(props) {
             species.OTHER && getField(species.OTHER, 'OTHER')
           }
           <MultiInput
+            name="other-species"
             value={value.otherSpecies}
             onChange={onOtherChange}
           />
