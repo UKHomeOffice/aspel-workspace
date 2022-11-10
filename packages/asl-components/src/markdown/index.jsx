@@ -8,7 +8,7 @@ function RenderLinkReference({ children }) {
   return <Fragment>[{ children }]</Fragment>;
 }
 
-const renderers = {
+const components = {
   link: RenderLink,
   linkReference: RenderLinkReference
 };
@@ -31,8 +31,10 @@ export default function Markdown({ children, links = false, unwrapSingleLine = f
 
   return <ReactMarkdown
     includeElementIndex={true}
-    renderers={!links && renderers}
-    components={{ p: wrapInSpanIfOnlyChild(unwrapSingleLine) }}
+    components={{
+      ...(!links && components),
+      p: wrapInSpanIfOnlyChild(unwrapSingleLine)
+    }}
     {...props}
   >
     { trim(source || children) }

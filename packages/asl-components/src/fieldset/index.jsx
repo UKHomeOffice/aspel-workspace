@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import map from 'lodash/map';
+import omit from 'lodash/omit';
 import without from 'lodash/without';
 import castArray from 'lodash/castArray';
 import isUndefined from 'lodash/isUndefined';
@@ -68,21 +69,21 @@ const fields = {
   inputPassword: props => <Input type="password" { ...props } />,
   declaration: props => <ApplicationConfirm { ...props } />,
   inputDate: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />,
-  textarea: props => <TextArea { ...props } autoExpand={true} />,
+  textarea: props => <TextArea { ...omit(props, ['meta']) } autoExpand={true} />,
   radioGroup: props => {
     if (!props.options) {
       throw new Error(`radioGroup '${props.name}' has undefined options`);
     }
     return props.options.length > 1
-      ? <RadioGroup { ...props } />
+      ? <RadioGroup initialHideReveals={true} { ...props } />
       : <SingleRadio { ...props } />;
   },
-  checkboxGroup: props => <CheckboxGroup { ...props } />,
+  checkboxGroup: props => <CheckboxGroup initialHideReveals={true} { ...props } />,
   select: props => <Select { ...props } />,
   selectMany: props => <SelectMany { ...props } />,
   conditionalReveal: props => <ConditionalReveal { ...props } />,
   detailsReveal: props => <DetailsReveal { ...props } />,
-  speciesSelector: props => <SpeciesSelector {...props} />,
+  speciesSelector: props => <SpeciesSelector fieldName={props.name} {...props} />,
   restrictionsField: props => <RestrictionsField {...props} />,
   inputDuration: props => <DurationField {...props} />,
   autoComplete: props => <AutoComplete {...props} />,
@@ -104,7 +105,11 @@ function automapReveals(options, props) {
     if (opt.reveal) {
       return {
         ...opt,
-        reveal: <Inset><Fieldset schema={opt.reveal} model={props.values} errors={props.errors} formatters={props.formatters} /></Inset>
+        reveal: (
+          <Inset>
+            <Fieldset schema={opt.reveal} model={props.values} errors={props.errors} formatters={props.formatters} />
+          </Inset>
+        )
       };
     }
     return opt;
@@ -217,11 +222,9 @@ function Field({
     label={isUndefined(label) ? <Snippet>{`fields.${name}.label`}</Snippet> : label}
     hint={isUndefined(hint) ? <Snippet optional>{`fields.${name}.hint`}</Snippet> : hint}
     error={error && <Snippet fallback={`errors.default.${error}`}>{`errors.${name}.${error}`}</Snippet>}
-    initialHideReveals={true}
     value={fieldValue}
     onChange={onFieldChange}
     name={prefix ? `${prefix}-${name}` : name}
-    fieldName={name}
     options={options}
     {...props}
   />;

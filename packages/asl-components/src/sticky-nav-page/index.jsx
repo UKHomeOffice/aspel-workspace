@@ -34,7 +34,6 @@ class StickyNavPage extends Component {
     const thresholds = Object.keys(this.thresholds);
     const scrollTop = document.documentElement.scrollTop;
     const section = thresholds.find((t, index) => {
-      t = parseInt(t, 10);
       const lowerLimit = thresholds[index - 1] ? parseInt(thresholds[index - 1], 10) : 0;
       const upperLimit = thresholds[index + 1] ? parseInt(thresholds[index + 1], 10) : Infinity;
       return scrollTop >= lowerLimit && scrollTop < upperLimit;
