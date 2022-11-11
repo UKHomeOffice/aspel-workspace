@@ -135,7 +135,7 @@ export default function SpeciesSelector(props) {
 
   return (
     <div className="species-selector">
-      <InputWrapper {...pick(props, ['id', 'name', 'label', 'disabled'])}>
+      <InputWrapper {...pick(props, ['id', 'name', 'fieldName', 'label', 'hint', 'error', 'onChange', 'disabled'])}>
         {
           map(omit(species, 'OTHER'), (group, key) => {
             const options = group.types || group;
