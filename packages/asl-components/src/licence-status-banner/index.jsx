@@ -3,10 +3,11 @@ import Snippet from '../snippet';
 import classnames from 'classnames';
 import formatDate from 'date-fns/format';
 
-function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, title, children }) {
+function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, title, suspendedEstablishment, children }) {
   const [open, setOpen] = useState(true);
-  const establishmentSuspended = !!(licence.status === 'active' && !licence.suspendedDate && licence.establishment && licence.establishment.suspendedDate);
-  const suspendedDate = establishmentSuspended ? licence.establishment.suspendedDate : licence.suspendedDate;
+  const establishment = suspendedEstablishment || licence.establishment;
+  const establishmentSuspended = !!(licence.status === 'active' && !licence.suspendedDate && establishment && establishment.suspendedDate);
+  const suspendedDate = establishmentSuspended ? establishment.suspendedDate : licence.suspendedDate;
   let licenceStatus = licence.status;
 
   if (licenceStatus === 'active' && suspendedDate) {
@@ -59,7 +60,7 @@ function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, 
         {
           !children && (
             establishmentSuspended
-              ? <p><Snippet establishmentName={licence.establishment.name}>{`invalidLicence.summary.establishmentSuspended`}</Snippet></p>
+              ? <p><Snippet establishmentName={establishment.name}>{`invalidLicence.summary.establishmentSuspended`}</Snippet></p>
               : <p><Snippet>{`invalidLicence.summary.${licenceType}`}</Snippet></p>
           )
         }
