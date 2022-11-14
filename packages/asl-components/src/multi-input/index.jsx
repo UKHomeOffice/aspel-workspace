@@ -40,6 +40,12 @@ export default function MultiInput({ value, onChange, onFieldChange, name, label
   const [items, setItems] = useState(initialValue);
 
   useEffect(() => {
+    if (!items.length) {
+      setItems([{ id: uuid(), value: '' }]);
+    }
+  }, []);
+
+  useEffect(() => {
     const rtn = getItems();
 
     onChange(rtn);
@@ -48,10 +54,6 @@ export default function MultiInput({ value, onChange, onFieldChange, name, label
       onFieldChange(rtn);
     }
   }, [items]);
-
-  if (!items.length) {
-    setItems([{ id: getReproducibleUuid(name), value: '' }]);
-  }
 
   function getItems() {
     return objectItems
@@ -99,7 +101,7 @@ export default function MultiInput({ value, onChange, onFieldChange, name, label
             <Item
               item={item}
               key={item.id}
-              name={objectItems ? `${name}-${item.id}` : name}
+              name={`${name}-${item.id}`}
               onRemove={removeItem(item.id)}
               onChange={updateItem(item.id)}
               isDisabled={disabled.includes(item.id)}
