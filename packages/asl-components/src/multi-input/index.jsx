@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+import shasum from 'shasum';
 import classnames from 'classnames';
 import React, { useState, useEffect, Fragment } from 'react';
 import { Button, Input, Warning } from '@ukhomeoffice/react-components';
@@ -21,23 +22,10 @@ function Item({ item, onRemove, showRemove, onChange, name, isDisabled, disabled
   );
 }
 
-const getBytes = (str, numBytes = 16) => {
-  let source = str.toLowerCase().replace(/[^0-9a-z]/g, '');
-
-  while (source.length < numBytes / 2) {
-    source += source; // repeat the input string until we have enough chars
-  }
-
-  let bytes = [];
-  let i = 0;
-
-  while (bytes.length < numBytes) {
-    const char = source.charCodeAt(i);
-    bytes.push(char >>> 8, char & 0xFF);
-    i++;
-  }
-
-  return bytes;
+// generate reproducible seed for consistent uuids between server & client
+const getReproducibleUuid = str => {
+  const unsignedInts = shasum(str).match(/[\dA-F]{2}/gi).map(s => parseInt(s, 16));
+  return uuid({ random: new Uint8Array(unsignedInts) });
 };
 
 export default function MultiInput({ value, onChange, onFieldChange, name, label, hint, error, disabled = [], disabledWarning, objectItems = false }) {
@@ -46,7 +34,7 @@ export default function MultiInput({ value, onChange, onFieldChange, name, label
     .map((value, idx) => {
       return typeof value === 'object'
         ? value
-        : { id: uuid({ random: getBytes(`${idx}${value}`) }), value }; // use reproducible seed for consistent uuids between server & client
+        : { id: getReproducibleUuid(`${idx}${value}`), value };
     });
 
   const [items, setItems] = useState(initialValue);
@@ -62,7 +50,7 @@ export default function MultiInput({ value, onChange, onFieldChange, name, label
   }, [items]);
 
   if (!items.length) {
-    setItems([{ id: uuid({ random: getBytes('emptylist') }), value: '' }]);
+    setItems([{ id: getReproducibleUuid(name), value: '' }]);
   }
 
   function getItems() {
@@ -111,7 +99,7 @@ export default function MultiInput({ value, onChange, onFieldChange, name, label
             <Item
               item={item}
               key={item.id}
-              name={!objectItems && name}
+              name={objectItems ? `${name}-${item.id}` : name}
               onRemove={removeItem(item.id)}
               onChange={updateItem(item.id)}
               isDisabled={disabled.includes(item.id)}
