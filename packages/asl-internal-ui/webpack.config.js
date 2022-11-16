@@ -16,6 +16,7 @@ const config = merge(
     output: {
       path: path.resolve(__dirname, './public/js')
     },
+    devtool: 'source-map',
     module: {
       rules: [
         {
