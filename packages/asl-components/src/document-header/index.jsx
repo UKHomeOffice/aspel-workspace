@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
-import { BackToTop } from '../';
+import {BackToTop} from '../';
 
-export default function DocumentHeader({ title, subtitle, backLink, children, detailsLabel = 'downloads', status = null }) {
+export default function DocumentHeader({ title, subtitle, backLink, children, detailsLabel = 'downloads', status = null, footer = null }) {
   const [detailsShowing, updateDetailsShowing] = useState(false);
 
   const toggleDetails = (e) => {
@@ -27,7 +27,7 @@ export default function DocumentHeader({ title, subtitle, backLink, children, de
     };
   }, []);
 
-  function Headings({ title, subtitle }) {
+  function Headings({ title, subtitle, footer }) {
     if (isSticky) {
       return (
         <Fragment>
@@ -39,6 +39,7 @@ export default function DocumentHeader({ title, subtitle, backLink, children, de
             }
             {status}
           </h2>
+          { footer && <div className="footer">{footer}</div> }
         </Fragment>
       );
     }
@@ -57,16 +58,18 @@ export default function DocumentHeader({ title, subtitle, backLink, children, de
         {
           children && detailsShowing && <div className="details">{children}</div>
         }
+        { footer && <div className="footer">{footer}</div> }
+
       </Fragment>
     );
   }
 
   return (
-    <div className={classnames('sticky-wrapper', { sticky: isSticky })} ref={ref}>
+    <div className={classnames('sticky-wrapper', { sticky: isSticky, 'sticky-wrapper-with-footer': footer })} ref={ref}>
 
       <header className="document-header">
         <div className="page-title">
-          <Headings title={title} subtitle={subtitle} />
+          <Headings title={title} subtitle={subtitle} footer={footer} />
         </div>
 
         { !isSticky && backLink && <div className="back-link">{ backLink }</div> }
