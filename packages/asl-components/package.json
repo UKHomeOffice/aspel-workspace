@@ -1,6 +1,6 @@
 {
   "name": "@asl/components",
-  "version": "10.16.4",
+  "version": "10.16.5",
   "description": "React components for ASL layouts and elements",
   "main": "src/index.jsx",
   "styles": "styles/index.scss",
