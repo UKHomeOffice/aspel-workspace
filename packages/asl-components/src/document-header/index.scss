@@ -11,8 +11,16 @@
 
     .document-header {
       margin-bottom: 0;
+
+      .footer {
+        padding-top: 0 !important;
+      }
     }
   }
+}
+
+.sticky-wrapper-with-footer {
+  height: 5 * $govuk-gutter; // height required otherwise get flicker on slow-scroll
 }
 
 .document-header {
@@ -67,7 +75,12 @@
 
     dl {
       margin-top: $govuk-gutter-half;
+      margin-bottom: $govuk-gutter-half;
       font-size: 16px;
+    }
+
+    .footer {
+      padding-top: $govuk-gutter-half;
     }
 
     @include govuk-media-query($from: tablet) {
