@@ -15,5 +15,9 @@ module.exports = {
   2022: {
     pel: 915,
     pil: 299
+  },
+  2023: {
+    pel: 915,
+    pil: 299
   }
 };
