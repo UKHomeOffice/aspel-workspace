@@ -94,6 +94,12 @@ const fields = {
       <h3>{ props.label }</h3>
       <Markdown>{ props.format ? props.format(props.value) : props.value }</Markdown>
     </div>
+  ),
+  fieldset: props => (
+    <div className={classnames('govuk-form-group', props.name)}>
+      {props.label && <label className="govuk-label">{props.label}</label>}
+      <Fieldset schema={props.fields} model={props.values} errors={props.errors} formatters={props.formatters} />
+    </div>
   )
 };
 
