@@ -7,11 +7,17 @@ module.exports = merge({}, baseContent, {
   fields: {
     name: {
       label: 'What is the name of the new establishment?'
+    },
+    corporateStatus: {
+      label: 'What type of establishment is this?'
     }
   },
   errors: {
     name: {
       required: 'Please enter the name of your new establishment'
+    },
+    corporateStatus: {
+      required: 'Please enter the type of your new establishment'
     }
   },
   notifications: {
