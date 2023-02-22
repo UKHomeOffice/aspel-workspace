@@ -9,44 +9,44 @@ const formatMonth = date => format(date, 'MMMM YYYY');
 
 const daysOfWeek = [
   {
+    name: 'Sunday',
+    nameAbbr: 'Sun',
+    index: 0,
+    isWeekend: true
+  },
+  {
     name: 'Monday',
     nameAbbr: 'Mon',
-    index: 0,
+    index: 1,
     isWeekend: false
   },
   {
     name: 'Tuesday',
     nameAbbr: 'Tue',
-    index: 1,
+    index: 2,
     isWeekend: false
   },
   {
     name: 'Wednesday',
     nameAbbr: 'Wed',
-    index: 2,
+    index: 3,
     isWeekend: false
   },
   {
     name: 'Thursday',
     nameAbbr: 'Thu',
-    index: 3,
+    index: 4,
     isWeekend: false
   },
   {
     name: 'Friday',
     nameAbbr: 'Fri',
-    index: 4,
+    index: 5,
     isWeekend: false
   },
   {
     name: 'Saturday',
     nameAbbr: 'Sat',
-    index: 5,
-    isWeekend: true
-  },
-  {
-    name: 'Sunday',
-    nameAbbr: 'Sun',
     index: 6,
     isWeekend: true
   }
@@ -71,7 +71,7 @@ export default (props) => {
       getApplicationElement={() => document.getElementById('page-component')}
       changeMonthLabel="Change month"
       closeButtonText="Close"
-      weekStartsOn={0}
+      weekStartsOn={1}
       daysOfWeek={daysOfWeek}
       formatDate={formatDate}
       formatMonth={formatMonth}
