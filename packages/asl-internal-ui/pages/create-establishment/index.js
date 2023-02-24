@@ -28,7 +28,8 @@ module.exports = settings => {
       method: 'POST',
       json: {
         data: {
-          name: req.session.form[req.model.id].values.name
+          name: req.session.form[req.model.id].values.name,
+          corporateStatus: req.session.form[req.model.id].values.corporateStatus
         }
       }
     };

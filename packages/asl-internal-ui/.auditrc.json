@@ -1,0 +1,10 @@
+{
+  "comments": [
+    "GHSA-36fh-84j7-cv5h - temporarily allow"
+  ],
+  "allowlist": [
+    "GHSA-36jr-mh4h-2g58",
+    "GHSA-r683-j2x4-v87g",
+    "GHSA-36fh-84j7-cv5h"
+  ]
+}

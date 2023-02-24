@@ -16,8 +16,10 @@ export default {
     name: {
       format: (name, establishment) => {
         const highlight = get(establishment, `highlight.name[0]`);
-        const label = highlight ? <Markdown>{highlight}</Markdown> : name;
-        return <Link page="establishment.dashboard" establishmentId={establishment.id} label={label} />;
+        const label = highlight ? <Markdown unwrapSingleLine={true}>{highlight}</Markdown> : name;
+        const isCorporate = get(establishment, `corporateStatus`) === 'corporate';
+
+        return <><Link page="establishment.dashboard" establishmentId={establishment.id} label={label} /> {isCorporate && <span className="govuk-tag">corporate</span>}</>;
       }
     },
     licenceNumber: {

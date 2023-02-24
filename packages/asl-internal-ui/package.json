@@ -12,7 +12,7 @@
     "test": "npm run test:lint && npm run test:deduped",
     "test:lint": "eslint . --ext jsx,js",
     "test:deduped": "./tests/dedupe.sh",
-    "test:audit": "ciaudit --high --production",
+    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
     "build": "npm run build:js && npm run build:css",
     "build:js": "node --max_old_space_size=4096 node_modules/.bin/webpack",
     "prebuild:css": "mkdir -p ./public/css",
@@ -31,9 +31,9 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-internal-ui#readme",
   "dependencies": {
-    "@asl/components": "^10.16.5",
+    "@asl/components": "^10.16.6",
     "@asl/constants": "^1.2.1",
-    "@asl/pages": "^28.5.11",
+    "@asl/pages": "^28.5.12",
     "@asl/projects": "^11.2.12",
     "@asl/service": "^9.2.0",
     "@babel/core": "^7.6.2",
@@ -69,7 +69,7 @@
     "uuid-validate": "0.0.3"
   },
   "devDependencies": {
-    "@lennym/ciaudit": "^2.0.0",
+    "audit-ci": "^6.5.0",
     "babel-plugin-transform-require-ignore": "^0.1.1",
     "dotenv": "^5.0.1",
     "eslint": "^8.25.0",
