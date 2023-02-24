@@ -34,8 +34,6 @@ module.exports = settings => {
       }
     };
 
-    console.log('params', params);
-
     req.api(`/establishment`, params)
       .then(response => {
         delete req.session.form[req.model.id];
