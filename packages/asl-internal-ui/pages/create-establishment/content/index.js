@@ -9,7 +9,7 @@ module.exports = merge({}, baseContent, {
       label: 'What is the name of the new establishment?'
     },
     corporateStatus: {
-      label: 'What type of establishment is this?'
+      label: 'What type of establishment licence is this?'
     }
   },
   errors: {
