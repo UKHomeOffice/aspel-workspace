@@ -17,7 +17,7 @@ module.exports = {
 
     ## Licensing
     For help with licences, contact your establishment's Single Point of Contact, details of which can be found on your
-    establishment’s home page. You can also email [aspa.london@homeoffice.gov.uk](mailto:aspa.london@homeoffice.gov.uk).
+    establishment’s home page. You can also email [asrulicensing@homeoffice.gov.uk](mailto:asrulicensing@homeoffice.gov.uk).
 
     ## Billing
     For help with invoicing and payments, email the business support team at
