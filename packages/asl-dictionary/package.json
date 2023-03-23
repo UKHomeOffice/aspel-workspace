@@ -1,10 +1,13 @@
 {
-  "name": "@asl/dictionary",
-  "version": "1.1.5",
+  "name": "@ukhomeoffice/asl-dictionary",
+  "version": "2.0.0",
   "description": "Expansions of acronyms commonly used in ASL projects",
   "main": "index.js",
   "scripts": {
-    "test": "eslint ."
+    "build": "exit 0",
+    "test": "exit 0",
+    "lint": "eslint .",
+    "audit": "npm audit"
   },
   "repository": {
     "type": "git",
@@ -18,7 +21,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-dictionary#readme",
   "publishConfig": {
-    "registry": "https://artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/"
+    "@ukhomeoffice:registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
     "eslint": "^8.27.0"
