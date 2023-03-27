@@ -7,3 +7,5 @@ jobs:
   test:
     uses: UKHomeOffice/sas-github-workflows/.github/workflows/test-npm.yml@v1
     secrets: inherit
+    env: 
+      NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
