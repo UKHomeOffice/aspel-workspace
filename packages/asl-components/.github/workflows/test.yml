@@ -6,16 +6,6 @@ on:
 env: 
   NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 jobs:
-  print:
-    runs-on: 'ubuntu-latest'
-    steps:
-      - name: token check
-        run: |
-          if [ -z ${{ env.NODE_AUTH_TOKEN }} ]
-          then
-             echo 'No token set'
-          else:
-            echo 'token set'
   test:
     uses: UKHomeOffice/sas-github-workflows/.github/workflows/test-npm.yml@v1
     secrets: inherit
