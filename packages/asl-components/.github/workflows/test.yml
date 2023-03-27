@@ -6,14 +6,9 @@ on:
 env: 
   NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 jobs:
-
+  print:
+    if: ${{ env.NODE_AUTH_TOKEN == '' }}
+    run: echo 'No token set'
   test:
-    steps: 
-      - name: print env vars
-        if: ${{ env.NODE_AUTH_TOKEN == '' }}
-        run:
-            echo "Github token not set"
-      - name: Run tests
-        uses: UKHomeOffice/sas-github-workflows/.github/workflows/test-npm.yml@v1
-        secrets: inherit
-      
+    uses: UKHomeOffice/sas-github-workflows/.github/workflows/test-npm.yml@v1
+    secrets: inherit
