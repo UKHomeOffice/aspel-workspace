@@ -8,7 +8,7 @@ env:
 jobs:
   print:
     runs-on: 'ubuntu-latest'
-    if: ${{ env.NODE_AUTH_TOKEN == '' }}
+    if: ${{env.NODE_AUTH_TOKEN}} == ''
     steps:
       - name: token check
         run: echo 'No token set'
