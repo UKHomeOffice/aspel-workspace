@@ -3,9 +3,7 @@ on:
   pull_request:
     types: [ opened, reopened, synchronize ]
 
-env: 
-  NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 jobs:
   test:
-    uses: UKHomeOffice/sas-github-workflows/.github/workflows/test-npm.yml@v1
+    uses: UKHomeOffice/sas-github-workflows/.github/workflows/test-npm.yml@TR_BRANCH
     secrets: inherit
