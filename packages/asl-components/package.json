@@ -5,6 +5,7 @@
   "main": "src/index.jsx",
   "styles": "styles/index.scss",
   "scripts": {
+    "build": "exit 0",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint . --ext .js,.jsx",
     "test:unit": "jest"
