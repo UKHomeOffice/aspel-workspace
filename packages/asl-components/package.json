@@ -8,7 +8,8 @@
     "build": "exit 0",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint . --ext .js,.jsx",
-    "test:unit": "jest"
+    "test:unit": "jest",
+    "audit": "npm audit"
   },
   "repository": {
     "type": "git",

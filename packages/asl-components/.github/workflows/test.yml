@@ -7,3 +7,7 @@ jobs:
   test:
     uses: UKHomeOffice/sas-github-workflows/.github/workflows/test-npm.yml@TR_BRANCH1 
     secrets: inherit
+    with: 
+      lintCommand: 'test:lint' 
+      testCommand: 'test:unit'
+      
