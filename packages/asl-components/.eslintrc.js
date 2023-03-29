@@ -12,5 +12,7 @@ module.exports = {
         "ecmaVersion": "latest"
     },
     "rules": {
-    }
+        'implicit-dependencies/no-implicit': 2
+    },
+    "plugins" : ["implicit-dependencies"]
 }
