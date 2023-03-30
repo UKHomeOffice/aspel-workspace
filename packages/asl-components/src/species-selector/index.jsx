@@ -10,7 +10,7 @@ import pick from 'lodash/pick';
 import { InputWrapper } from '@ukhomeoffice/react-components';
 import { MultiInput, Fieldset } from '../';
 import PIL_GROUPS from './species';
-import { projectSpecies as PROJECT_GROUPS } from '@asl/constants';
+import { projectSpecies as PROJECT_GROUPS } from '@ukhomeoffice/asl-constants';
 
 const GROUP_LABELS = {
     SA: 'Small animals',

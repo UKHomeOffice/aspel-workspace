@@ -1,5 +1,5 @@
 import React from 'react';
-import dictionary from '@asl/dictionary';
+import dictionary from '@ukhomeoffice/asl-dictionary';
 
 const Acronym = ({
     children
