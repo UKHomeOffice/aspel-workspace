@@ -1,6 +1,6 @@
 {
   "name": "@ukhomeoffice/components",
-  "version": "10.16.6",
+  "version": "11.0.0",
   "description": "React components for ASL layouts and elements",
   "main": "src/index.jsx",
   "styles": "styles/index.scss",
