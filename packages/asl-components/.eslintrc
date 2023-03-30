@@ -1,5 +1,0 @@
-extends:
-  - lennym
-
-env:
-  jest: true
