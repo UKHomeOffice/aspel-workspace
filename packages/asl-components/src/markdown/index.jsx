@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React, { Fragment } from 'react';
 import ReactMarkdown from 'react-markdown';
 
@@ -20,6 +21,7 @@ const trim = str => {
     return str;
 };
 
+// eslint-disable-next-line no-unused-vars
 const wrapInSpanIfOnlyChild = enabled => ({ node, siblingCount, index, ...props }) => {
     if (enabled && siblingCount === 1) {
         return <span {...props} />;

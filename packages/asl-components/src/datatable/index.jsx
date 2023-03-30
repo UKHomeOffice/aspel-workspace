@@ -73,7 +73,7 @@ export function Datatable({
     noDataWarning,
     allowScroll = true
 }) {
-    const schema = pickBy(merge({}, tableSchema, formatters), (item, key) => item.show);
+    const schema = pickBy(merge({}, tableSchema, formatters), (item) => item.show);
     const RowComponent = CustomRow || Row;
     const colSpan = size(schema) + (Actions ? 1 : 0);
     const tableRef = useRef(null);

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Snippet } from '../';

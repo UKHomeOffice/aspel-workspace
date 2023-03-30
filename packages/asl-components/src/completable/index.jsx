@@ -1,3 +1,5 @@
+/* eslint-disable react/display-name */
+
 import React, { Fragment } from 'react';
 import { Link } from '../';
 
