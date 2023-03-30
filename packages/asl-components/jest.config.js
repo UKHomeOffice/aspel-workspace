@@ -1,5 +1,5 @@
 module.exports = {
-    setupFilesAfterEnv: [
-        '<rootDir>/enzyme.setup.js'
-    ]
+  setupFilesAfterEnv: [
+    '<rootDir>/enzyme.setup.js'
+  ]
 };

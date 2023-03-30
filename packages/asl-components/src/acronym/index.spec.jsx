@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'enzyme';
 import Acronym from './';
-import dictionary from '@ukhomeoffice/asl-dictionary';
+import dictionary from '@asl/dictionary';
 
 describe('<Acronym />', () => {
   Object.keys(dictionary).forEach(key => {
