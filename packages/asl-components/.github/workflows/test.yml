@@ -9,5 +9,5 @@ jobs:
     secrets: inherit
     with: 
       lintCommand: 'test:lint' 
-      testCommand: 'test:unit'
+      testCommand: 'run test:unit'
       
