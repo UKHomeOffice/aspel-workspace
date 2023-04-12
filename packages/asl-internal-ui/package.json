@@ -42,7 +42,7 @@
     "@babel/preset-react": "^7.0.0",
     "@ukhomeoffice/react-components": "^0.10.7",
     "accessible-autocomplete": "^2.0.3",
-    "aws-sdk": "^2.874.0",
+    "aws-sdk": "^2.1354.0",
     "babel-loader": "^8.3.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "backpack-transpiled": "0.0.23",
