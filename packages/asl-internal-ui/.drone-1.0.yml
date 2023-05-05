@@ -89,7 +89,7 @@ steps:
     image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
     environment:
       GITHUB_ACCESS_TOKEN:
-        from_secret: github_token
+        from_secret: github_access_token
     commands:
       - update
         --repo ukhomeoffice/asl-deployments
