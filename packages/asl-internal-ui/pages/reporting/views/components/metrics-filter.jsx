@@ -1,6 +1,6 @@
 import React from 'react';
 import merge from 'lodash/merge';
-import { Form, Snippet, Link } from '@asl/components';
+import { Form, Snippet, Link } from '@ukhomeoffice/asl-components';
 import DatePicker from './date-picker';
 import EstablishmentSelect from './establishment-select';
 

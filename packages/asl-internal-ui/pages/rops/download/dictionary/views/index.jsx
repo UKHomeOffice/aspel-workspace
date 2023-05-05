@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import map from 'lodash/map';
-import { Header } from '@asl/components';
+import { Header } from '@ukhomeoffice/asl-components';
 
 function Field({ name, field }) {
   return (

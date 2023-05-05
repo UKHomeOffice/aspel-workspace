@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Snippet, Link, Metric } from '@asl/components';
+import { Header, Snippet, Link, Metric } from '@ukhomeoffice/asl-components';
 import TaskTable from '@asl/pages/pages/task/list/views/table';
 
 import MetricsFilter from '../../../views/components/metrics-filter';

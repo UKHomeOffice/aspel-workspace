@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { FormLayout, Header, Snippet } from '@asl/components';
+import { FormLayout, Header, Snippet } from '@ukhomeoffice/asl-components';
 
 const CancelLink = () => {
   return <a href="?clear=true"><Snippet>buttons.cancel</Snippet></a>;

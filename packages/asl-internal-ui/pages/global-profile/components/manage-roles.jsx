@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
-import { Snippet, ControlBar } from '@asl/components';
+import { Snippet, ControlBar } from '@ukhomeoffice/asl-components';
 import { CheckboxGroup, Button } from '@ukhomeoffice/react-components';
 
 import ASRURoles from '@asl/pages/pages/global-profile/components/asru-roles';

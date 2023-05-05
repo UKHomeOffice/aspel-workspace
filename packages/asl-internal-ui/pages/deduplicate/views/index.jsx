@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import get from 'lodash/get';
-import { Header, Search, Snippet, Link } from '@asl/components';
+import { Header, Search, Snippet, Link } from '@ukhomeoffice/asl-components';
 
 const dobsDiffer = (profile1, profile2) => profile1.dob && profile2.dob && profile1.dob !== profile2.dob;
 const bothActivePils = (profile1, profile2) => get(profile1, 'pil.status') === 'active' && get(profile2, 'pil.status') === 'active';

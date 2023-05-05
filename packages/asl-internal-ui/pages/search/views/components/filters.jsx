@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { Snippet } from '@asl/components';
+import { Snippet } from '@ukhomeoffice/asl-components';
 import { CheckboxGroup, Input } from '@ukhomeoffice/react-components';
-import { changeFilters } from '@asl/components/src/filters/actions';
+import { changeFilters } from '@ukhomeoffice/asl-components/src/filters/actions';
 import isEqual from 'lodash/isEqual';
 
 function Filter({ name, format, useSearch, initialFilters }) {

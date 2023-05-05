@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Layout from '../../views';
-import { Datatable, Link, Search, CSVDownloadLink } from '@asl/components';
+import { Datatable, Link, Search, CSVDownloadLink } from '@ukhomeoffice/asl-components';
 import { numberWithCommas } from '@asl/pages/lib/utils';
 
 export default function Establishments() {

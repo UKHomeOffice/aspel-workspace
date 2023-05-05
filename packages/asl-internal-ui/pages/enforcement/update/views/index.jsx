@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Snippet, Link } from '@asl/components';
+import { Header, Snippet, Link } from '@ukhomeoffice/asl-components';
 import SubjectRead from './components/subject-read';
 import SubjectAdd from './components/subject-add';
 import SubjectEdit from './components/subject-edit';

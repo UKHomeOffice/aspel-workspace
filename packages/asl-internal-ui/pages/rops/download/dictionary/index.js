@@ -5,7 +5,7 @@ const getProceduresSchema = require('@asl/pages/pages/rops/procedures/schema');
 const { fields: ropsFields } = require('@asl/pages/pages/rops/update/content');
 const proceduresContent = require('@asl/pages/pages/rops/procedures/content');
 const proceduresCreateContent = require('@asl/pages/pages/rops/procedures/create/content');
-const { projectSpecies } = require('@asl/constants');
+const { projectSpecies } = require('@ukhomeoffice/asl-constants');
 
 const proceduresFields = merge({}, proceduresContent.fields, proceduresCreateContent.fiels);
 

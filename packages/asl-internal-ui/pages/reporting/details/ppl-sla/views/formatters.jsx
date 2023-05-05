@@ -1,7 +1,7 @@
 import React from 'react';
 import format from 'date-fns/format';
 import { dateFormat } from '@asl/pages/constants';
-import { Link } from '@asl/components';
+import { Link } from '@ukhomeoffice/asl-components';
 
 export default {
   deadlinePassedDate: {

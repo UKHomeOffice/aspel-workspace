@@ -7,7 +7,7 @@ import {
   Snippet,
   Inset,
   ExpiryDate
-} from '@asl/components';
+} from '@ukhomeoffice/asl-components';
 
 const Highlight = ({ project, highlight, field }) => {
   const section = field.split('.')[1];

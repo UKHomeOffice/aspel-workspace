@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import get from 'lodash/get';
-import { Link, Markdown, Snippet } from '@asl/components';
+import { Link, Markdown, Snippet } from '@ukhomeoffice/asl-components';
 import taskFormatters from '@asl/pages/pages/task/list/formatters';
 
 export default {

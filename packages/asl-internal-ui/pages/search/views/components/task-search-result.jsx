@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import get from 'lodash/get';
-import { Inset, Markdown } from '@asl/components';
+import { Inset, Markdown } from '@ukhomeoffice/asl-components';
 
 function getHighlight(row, propName) {
   return get(row, `highlight['${propName}'][0]`);

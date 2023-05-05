@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Link, Snippet, Metric } from '@asl/components';
+import { Header, Link, Snippet, Metric } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import format from 'date-fns/format';
 

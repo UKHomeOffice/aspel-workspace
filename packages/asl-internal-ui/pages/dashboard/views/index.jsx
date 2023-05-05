@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Header, Link, Snippet } from '@asl/components';
+import { Header, Link, Snippet } from '@ukhomeoffice/asl-components';
 import Tasklist from '@asl/pages/pages/task/list/views/tasklist';
 import DashboardNavigation from '../../components/dashboard-navigation';
 

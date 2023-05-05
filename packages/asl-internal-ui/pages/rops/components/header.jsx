@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import DateSelector from '@asl/pages/pages/establishment/rops/components/date-selector';
-import { Header, Metric, Snippet } from '@asl/components';
+import { Header, Metric, Snippet } from '@ukhomeoffice/asl-components';
 
 const metrics = ['due', 'submitted', 'outstanding'];
 

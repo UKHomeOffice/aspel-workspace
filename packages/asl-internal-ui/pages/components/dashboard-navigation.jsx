@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Link } from '@asl/components';
+import { Tabs, Link } from '@ukhomeoffice/asl-components';
 
 export default function DashboardNavigation({ tab }) {
   return (

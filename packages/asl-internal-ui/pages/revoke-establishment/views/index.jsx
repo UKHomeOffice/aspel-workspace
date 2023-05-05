@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Header, Snippet, FormLayout } from '@asl/components';
+import { Header, Snippet, FormLayout } from '@ukhomeoffice/asl-components';
 import EstablishmentHeader from '@asl/pages/pages/common/components/establishment-header';
 
 const Revoke = ({ establishment, children }) => (

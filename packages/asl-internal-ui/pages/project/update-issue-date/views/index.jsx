@@ -5,7 +5,7 @@ import {
   Header,
   Snippet,
   FormLayout
-} from '@asl/components';
+} from '@ukhomeoffice/asl-components';
 import formatters from '@asl/pages/pages/project/formatters';
 
 export default function ProjectLandingPage() {

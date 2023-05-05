@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Datatable, Snippet, Metric } from '@asl/components';
+import { Datatable, Snippet, Metric } from '@ukhomeoffice/asl-components';
 import formatters from './formatters';
 import ExpandableRow from './row';
 

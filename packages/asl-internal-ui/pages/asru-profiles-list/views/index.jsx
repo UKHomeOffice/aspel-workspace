@@ -10,7 +10,7 @@ import {
   Link,
   Header,
   Tabs
-} from '@asl/components';
+} from '@ukhomeoffice/asl-components';
 
 const formatters = {
   name: {

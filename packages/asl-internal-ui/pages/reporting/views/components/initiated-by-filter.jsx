@@ -1,6 +1,6 @@
 import React from 'react';
 import merge from 'lodash/merge';
-import { Tabs, Link } from '@asl/components';
+import { Tabs, Link } from '@ukhomeoffice/asl-components';
 
 export default function InitiatedByFilter({ tabs, activeTab, page, query = {} }) {
   return (

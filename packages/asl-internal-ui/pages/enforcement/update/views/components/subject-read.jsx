@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import get from 'lodash/get';
-import { Snippet, Link } from '@asl/components';
+import { Snippet, Link } from '@ukhomeoffice/asl-components';
 import SubjectHeader from './subject-header';
 import SubjectBanner from './subject-banner';
 

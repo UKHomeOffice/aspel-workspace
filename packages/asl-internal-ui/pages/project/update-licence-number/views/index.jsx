@@ -4,7 +4,7 @@ import {
   Header,
   Snippet,
   FormLayout
-} from '@asl/components';
+} from '@ukhomeoffice/asl-components';
 
 export default function ProjectLandingPage() {
   const model = useSelector(state => state.model);

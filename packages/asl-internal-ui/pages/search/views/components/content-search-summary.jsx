@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import get from 'lodash/get';
 import omit from 'lodash/omit';
 import merge from 'lodash/merge';
-import { Link, Snippet } from '@asl/components';
+import { Link, Snippet } from '@ukhomeoffice/asl-components';
 
 export default function ContentSearchSummary({ count, searchTerm }) {
   const searchString = get(searchTerm, '*[0]');

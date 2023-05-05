@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, Snippet } from '@asl/components';
+import { Link, Snippet } from '@ukhomeoffice/asl-components';
 import EnforcementFlags from '@asl/pages/pages/enforcement/components/enforcement-flags';
 import GlobalProfile from '@asl/pages/pages/global-profile/views/index';
 import RelatedTasks from '@asl/pages/pages/task/list/views/related-tasks';

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import get from 'lodash/get';
-import { Datatable, Snippet, Header, Link, LinkFilter, Tabs } from '@asl/components';
+import { Datatable, Snippet, Header, Link, LinkFilter, Tabs } from '@ukhomeoffice/asl-components';
 import DatePicker from '../../reporting/views/components/date-picker';
 
 const formatters = {

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import omit from 'lodash/omit';
-import { Link, Search, Snippet } from '@asl/components';
+import { Link, Search, Snippet } from '@ukhomeoffice/asl-components';
 
 const SearchToggle = ({ type }) => {
   if (type === 'tasks') {

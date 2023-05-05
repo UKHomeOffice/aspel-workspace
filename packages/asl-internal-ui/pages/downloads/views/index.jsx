@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Link, Snippet } from '@asl/components';
+import { Header, Link, Snippet } from '@ukhomeoffice/asl-components';
 
 export default function Index() {
   const { reports } = useSelector(state => state.static);

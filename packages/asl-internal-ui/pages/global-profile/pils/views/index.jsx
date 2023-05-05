@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import sortBy from 'lodash/sortBy';
 import format from 'date-fns/format';
-import { Conditions, Header, Inset, Link, Markdown, ModelSummary, Snippet } from '@asl/components';
+import { Conditions, Header, Inset, Link, Markdown, ModelSummary, Snippet } from '@ukhomeoffice/asl-components';
 import schema from '@asl/pages/pages/pil/read/schema';
 
 const getStatusClass = (status) => {

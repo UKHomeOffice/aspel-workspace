@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Link, Snippet, Tabs } from '@asl/components';
+import { Link, Snippet, Tabs } from '@ukhomeoffice/asl-components';
 
 export default function RopsTabs({ active = 0 }) {
 

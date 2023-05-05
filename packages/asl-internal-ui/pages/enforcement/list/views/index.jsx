@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import size from 'lodash/size';
-import { Header, Snippet, Datatable, Link, Search } from '@asl/components';
+import { Header, Snippet, Datatable, Link, Search } from '@ukhomeoffice/asl-components';
 import formatters from '../formatters';
 
 function EnforcementCase({ row, schema }) {

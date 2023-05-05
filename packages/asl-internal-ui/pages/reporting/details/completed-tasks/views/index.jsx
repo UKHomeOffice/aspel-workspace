@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Header, Link, Metric } from '@asl/components';
+import { Header, Link, Metric } from '@ukhomeoffice/asl-components';
 
 import MetricsFilter from '../../../views/components/metrics-filter';
 import InitiatedByFilter from '../../../views/components/initiated-by-filter';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Snippet, Link, Number } from '@asl/components';
+import { Snippet, Link, Number } from '@ukhomeoffice/asl-components';
 
 const TaskCounts = ({ types }) => {
   const { tasks } = useSelector(state => state.static);

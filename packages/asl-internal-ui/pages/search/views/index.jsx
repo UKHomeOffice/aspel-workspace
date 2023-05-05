@@ -7,7 +7,7 @@ import {
   Link,
   Snippet,
   LinkFilter
-} from '@asl/components';
+} from '@ukhomeoffice/asl-components';
 import SearchPanel from './components/search-panel';
 import ContentSearchSummary from './components/content-search-summary';
 import DashboardNavigation from '../../components/dashboard-navigation';

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Snippet, Link } from '@asl/components';
+import { Snippet, Link } from '@ukhomeoffice/asl-components';
 
 function EnforcementSubjectHeader({ subject }) {
   const establishment = subject && subject.establishment;

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { ExpiryDate, Link, Snippet } from '@asl/components';
+import { ExpiryDate, Link, Snippet } from '@ukhomeoffice/asl-components';
 import { Button } from '@ukhomeoffice/react-components';
 
 import Header from '../../components/header';

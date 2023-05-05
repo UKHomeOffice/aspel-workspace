@@ -1,6 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import { Snippet } from '@asl/components';
+import { Snippet } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 
 function SubjectBanner({ enforcementCase, status }) {

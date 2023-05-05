@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Header from '../../components/header';
 import Tabs from '../../components/tabs';
-import { Datatable, Link, Search } from '@asl/components';
+import { Datatable, Link, Search } from '@ukhomeoffice/asl-components';
 
 export default function Index() {
   const { year } = useSelector(state => state.static);

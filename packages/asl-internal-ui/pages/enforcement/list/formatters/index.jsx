@@ -1,7 +1,7 @@
 import React from 'react';
 import get from 'lodash/get';
 import formatDate from 'date-fns/format';
-import { Link } from '@asl/components';
+import { Link } from '@ukhomeoffice/asl-components';
 
 export default {
   subject: {
