@@ -21,7 +21,10 @@ const config = merge(
       rules: [
         {
           test: /\.jsx?$/,
-          exclude: p => p.match(/node_modules/) && !p.match(/@joefitter\/docx/) && !p.match(/@asl/),
+          exclude: p => p.match(/node_modules/) &&
+            !p.match(/@joefitter\/docx/) &&
+            !p.match(/@asl/) &&
+            !p.match(/@ukhomeoffice/),
           use: {
             loader: 'babel-loader',
             options: babelrc

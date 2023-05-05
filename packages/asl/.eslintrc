@@ -6,3 +6,7 @@ plugins:
 
 rules:
   undocumented-env/no-undocumented: error
+
+settings:
+  react:
+    version: "detect"

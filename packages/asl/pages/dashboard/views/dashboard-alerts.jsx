@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Warning } from '@ukhomeoffice/react-components';
-import { Snippet } from '@asl/components';
+import { Snippet } from '@ukhomeoffice/asl-components';
 
 function PersonalAlert({ alert }) {
   const contentPath = `warnings.personal.${alert.type}.${alert.overdue ? 'overdue' : 'due'}`;

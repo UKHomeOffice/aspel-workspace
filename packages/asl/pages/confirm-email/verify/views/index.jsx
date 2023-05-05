@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Snippet, Header, Link } from '@asl/components';
+import { Snippet, Header, Link } from '@ukhomeoffice/asl-components';
 import ErrorPage from './error';
 
 const EmailConfirmed = () => {

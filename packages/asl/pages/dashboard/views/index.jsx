@@ -7,7 +7,7 @@ import {
   Header,
   PanelList,
   ExpandingPanel
-} from '@asl/components';
+} from '@ukhomeoffice/asl-components';
 import TaskList from '@asl/pages/pages/task/list/views/tasklist';
 import Profile from '@asl/pages/pages/profile/read/views/profile';
 import DashboardAlerts from './dashboard-alerts';

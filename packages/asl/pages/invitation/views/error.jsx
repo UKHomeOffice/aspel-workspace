@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Header } from '@asl/components';
+import { Header } from '@ukhomeoffice/asl-components';
 
 const ErrorPage = () => {
   return <Fragment>

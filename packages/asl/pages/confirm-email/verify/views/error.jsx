@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { Snippet, Header, Form } from '@asl/components';
+import { Snippet, Header, Form } from '@ukhomeoffice/asl-components';
 
 const ConfirmError = () => {
 

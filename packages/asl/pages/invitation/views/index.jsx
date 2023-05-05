@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Inset, Snippet, Header, Form } from '@asl/components';
+import { Inset, Snippet, Header, Form } from '@ukhomeoffice/asl-components';
 import { Button } from '@ukhomeoffice/react-components';
 
 const Accept = ({ establishment }) => {
