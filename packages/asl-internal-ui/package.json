@@ -32,7 +32,7 @@
   "homepage": "https://github.com/UKHomeOffice/asl-internal-ui#readme",
   "dependencies": {
     "@asl/pages": "^30.2.5",
-    "@asl/projects": "^14.1.1",
+    "@asl/projects": "^14.1.2",
     "@asl/service": "^10.0.0",
     "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
