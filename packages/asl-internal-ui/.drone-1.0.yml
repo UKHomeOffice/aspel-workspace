@@ -67,7 +67,9 @@ steps:
       - docker push quay.io/ukhomeofficedigital/asl-internal-ui:$${DRONE_COMMIT_SHA}
     when:
       event: push
-      branch: master
+      branch:
+        - master
+        - bugfix/ASSB-1345-reusable-steps
   - name: update manifest
     image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
     environment:
