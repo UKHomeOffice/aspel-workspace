@@ -1,23 +1,24 @@
 module.exports = {
   // roles
-  ELH: 'Establishment Licence Holder',
-  HOLC: 'Home Office Liaison Contact',
-  NACWO: 'Named Animal Care and Welfare Officer',
-  NIO: 'Named Information Officer',
-  NVS: 'Named Veterinary Surgeon',
-  SQP: 'Suitably Qualified Person',
-  NTCO: 'Named Training and Competency Officer',
-  NPRC: 'Named Person Responsible for Compliance',
+  ELH: 'Establishment licence holder',
+  HOLC: 'Home Office liaison contact',
+  NACWO: 'Named animal care and welfare officer',
+  NIO: 'Named information officer',
+  NVS: 'Named veterinary surgeon',
+  SQP: 'Suitably qualified person',
+  NTCO: 'Named training and competency officer',
+  NPRC: 'Named person responsible for compliance',
 
   // Licence holders
-  PELH: 'Establishment Licence Holder',
-  PILH: 'Individual Licence Holder',
-  PPLH: 'Project Licence Holder',
+  PELH: 'Establishment licence holder',
+  PILH: 'Personal licence holder',
+  PPLH: 'Project licence holder',
 
   // Licence types
-  PIL: 'Individual Licence',
-  PPL: 'Project Licence',
-  PEL: 'Establishment Licence',
+  PIL: 'Personal licence',
+  'PIL-E': 'Personal licence for training and higher education',
+  PPL: 'Project licence',
+  PEL: 'Establishment licence',
 
   // holding codes
   LA: 'Large animals',
@@ -34,5 +35,12 @@ module.exports = {
   LTH: 'Long term holding',
   NOH: 'Not for overnight holding',
   NSEP: 'Non-sterile experimental procedures',
-  SEP: 'Sterile experimental procedures'
+  SEP: 'Sterile experimental procedures',
+
+  plural: {
+    PIL: 'Personal licences',
+    'PIL-E': 'Personal licences for higher education or training',
+    PPL: 'Project licences',
+    PEL: 'Establishment licences',
+  }
 };
