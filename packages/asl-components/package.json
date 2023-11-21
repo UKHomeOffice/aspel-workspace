@@ -1,6 +1,6 @@
 {
   "name": "@ukhomeoffice/asl-components",
-  "version": "12.0.0",
+  "version": "12.1.0",
   "description": "React components for ASL layouts and elements",
   "main": "src/index.jsx",
   "styles": "styles/index.scss",
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@ukhomeoffice/asl-constants": "^2.0.0",
-    "@ukhomeoffice/asl-dictionary": "^2.0.0",
+    "@ukhomeoffice/asl-dictionary": "^2.1.0",
     "@ukhomeoffice/react-components": "^1.0.0",
     "accessible-autocomplete": "^2.0.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
