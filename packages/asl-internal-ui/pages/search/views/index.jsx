@@ -6,7 +6,8 @@ import {
   Header,
   Link,
   Snippet,
-  LinkFilter
+  LinkFilter,
+  Acronym
 } from '@ukhomeoffice/asl-components';
 import SearchPanel from './components/search-panel';
 import ContentSearchSummary from './components/content-search-summary';
@@ -46,6 +47,7 @@ export default function Index () {
 
   const modelFilters = {
     pil: 'PIL',
+    trainingPil: 'PIL-E',
     project: 'PPL',
     establishment: 'PEL',
     profile: 'Profile'
@@ -87,7 +89,7 @@ export default function Index () {
                   label="By category:"
                   options={Object.keys(modelFilters)}
                   showAll={{ position: 'before', label: 'All' }}
-                  formatter={filter => modelFilters[filter]}
+                  formatter={filter => <Acronym usePlural>{modelFilters[filter]}</Acronym>}
                 />
               </div>
           }

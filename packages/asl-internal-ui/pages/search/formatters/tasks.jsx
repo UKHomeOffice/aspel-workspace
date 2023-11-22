@@ -3,6 +3,16 @@ import get from 'lodash/get';
 import { Link, Markdown, Snippet } from '@ukhomeoffice/asl-components';
 import taskFormatters from '@asl/pages/pages/task/list/formatters';
 
+const LicenceLabelWithNumber = ({label, result}) => {
+  const highlight = get(result, `highlight.licenceNumber[0]`);
+  const licenceNumber = highlight ? <Markdown>{highlight}</Markdown> : get(result, 'licenceNumber');
+
+  return <Fragment>
+    <span>{label}</span>
+    <span className="block smaller">{licenceNumber}</span>
+  </Fragment>;
+};
+
 export default {
   updatedAt: taskFormatters.updatedAt,
 
@@ -15,32 +25,21 @@ export default {
 
   licence: {
     format: (model, result) => {
-      const highlight = get(result, `highlight.licenceNumber[0]`);
-      const licenceNumber = highlight ? <Markdown>{highlight}</Markdown> : get(result, 'licenceNumber');
-
-      if (model === 'pil' || model === 'trainingPil') {
-        return (
-          <Fragment>
-            <span>PIL</span>
-            <span className="block smaller">{licenceNumber}</span>
-          </Fragment>
-        );
+      switch (model) {
+        case 'pil':
+          return <LicenceLabelWithNumber label="PIL" result={result} />;
+        case 'trainingPil':
+          return <LicenceLabelWithNumber label="PIL-E" result={result} />;
+        case 'project':
+          return <LicenceLabelWithNumber label="PPL" result={result} />;
+        case 'rop':
+          return 'PPL';
+        case 'place':
+        case 'role':
+        case 'establishment':
+          return 'PEL';
+        default: return '-';
       }
-      if (model === 'project') {
-        return (
-          <Fragment>
-            <span>PPL</span>
-            <span className="block smaller">{licenceNumber}</span>
-          </Fragment>
-        );
-      }
-      if (model === 'rop') {
-        return 'PPL';
-      }
-      if (model === 'place' || model === 'role' || model === 'establishment') {
-        return 'PEL';
-      }
-      return '-';
     }
   },
 
@@ -50,13 +49,7 @@ export default {
       const status = get(result, 'modelStatus');
       let model = get(result, 'model');
 
-      if (model === 'trainingPil') {
-        model = 'pil';
-      }
-
-      if (type === 'grant' && status === 'active') {
-        type = 'update';
-      }
+      const normalisedType = type === 'grant' && status === 'active' ? 'update' : type;
 
       let contextLabel = null;
       let title = null;
@@ -69,6 +62,7 @@ export default {
         case 'establishment':
         case 'project':
         case 'pil':
+        case 'trainingPil':
         case 'role':
         case 'profile':
           const subject = get(result, 'subject');
@@ -94,8 +88,8 @@ export default {
             page="task.read"
             taskId={taskId}
             // adding optional snippet for backwards compatibility
-            // as some task types wont have content defined.
-            label={<Snippet optional>{`tasks.${model}.${type}`}</Snippet>}
+            // as some task types won't have content defined.
+            label={<Snippet optional>{`tasks.${model}.${normalisedType}`}</Snippet>}
           />
           {
             contextLabel && <span className="block smaller">{contextLabel}</span>
