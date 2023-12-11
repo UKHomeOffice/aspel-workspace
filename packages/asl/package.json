@@ -1,6 +1,6 @@
 {
   "name": "asl",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Animal Science Licensing",
   "main": "index.js",
   "scripts": {
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl#readme",
   "dependencies": {
-    "@asl/pages": "^30.3.0",
+    "@asl/pages": "^30.5.1",
     "@asl/projects": "^14.1.4",
     "@asl/service": "^10.0.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
