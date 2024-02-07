@@ -68,7 +68,7 @@ function Conditions({
                             {
                                 conditions &&
                 <Fragment>
-                    <Inset className="condition"><Markdown>{ tempCondition }</Markdown></Inset>
+                    <Inset className="condition"><Markdown significantLineBreaks>{ tempCondition }</Markdown></Inset>
                     <ConditionReminders reminders={ tempReminders } />
                 </Fragment>
                             }

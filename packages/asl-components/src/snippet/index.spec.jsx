@@ -16,11 +16,11 @@ describe('<Snippet />', () => {
   const content = {
     string: 'one line',
     list: `* one
-      * two
-      * three`,
+* two
+* three`,
     paragraphs: `one
 
-      two`
+two`
   };
 
   test('does not include a wrapping element on single line input', () => {

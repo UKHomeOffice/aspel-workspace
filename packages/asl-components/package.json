@@ -1,6 +1,6 @@
 {
   "name": "@ukhomeoffice/asl-components",
-  "version": "12.1.0",
+  "version": "13.0.0",
   "description": "React components for ASL layouts and elements",
   "main": "src/index.jsx",
   "styles": "styles/index.scss",
@@ -39,6 +39,7 @@
     "qs": "^6.6.1",
     "react": "^16.9.0",
     "react-markdown": "^6.0.2",
+    "remark-breaks": "^2.0.2",
     "react-redux": "^7.1.0",
     "redux": "^4.0.1",
     "shasum": "^1.0.2",
