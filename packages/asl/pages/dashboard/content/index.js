@@ -14,11 +14,10 @@ module.exports = merge({}, baseContent, profileContent, {
   establishment: {
     description: 'View establishment details including people, projects and areas.',
     link: 'Go to {{name}}',
-    blocked: `
-      Your access to this establishment has been blocked.
+    blocked: `\
+Your access to this establishment has been blocked.
 
-      Email [aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk) for more information.
-    `
+Email [aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk) for more information.`
   },
   warnings: {
     personal: {
