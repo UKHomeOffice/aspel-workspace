@@ -1,7 +1,7 @@
 module.exports = {
   title: 'Statutory deadlines passed',
   summary: `Review PPLs processed after the deadline. Correct any cases where the deadline didn’t apply and so shouldn’t
-    be recorded as missed.`,
+be recorded as missed.`,
   metrics: {
     passed: 'Deadlines passed',
     exempt: 'Deadlines not missed',
