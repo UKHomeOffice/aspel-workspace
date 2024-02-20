@@ -29,9 +29,10 @@ const ModelSummary = ({ model, schema, formatters = {}, className, formatNullVal
             {
                 map(fields, (item, key) => {
                     const options = schema[key] || {};
+                    const snippetProps = formatters[key]?.renderContext ?? {};
                     return (
                         <Fragment key={key}>
-                            <dt><Snippet>{`fields.${key}.label`}</Snippet></dt>
+                            <dt><Snippet {...snippetProps}>{`fields.${key}.label`}</Snippet></dt>
                             <dd>
                                 <Value
                                     value={model[key]}

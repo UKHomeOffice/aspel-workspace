@@ -224,10 +224,12 @@ function Field({
         hint = <Markdown unwrapSingleLine={true}>{ hint }</Markdown>;
     }
 
+    const snippetProps = props.formatters?.[name]?.renderContext ?? {};
+
     return <Component
-        label={isUndefined(label) ? <Snippet>{`fields.${name}.label`}</Snippet> : label}
-        hint={isUndefined(hint) ? <Snippet optional>{`fields.${name}.hint`}</Snippet> : hint}
-        error={error && <Snippet fallback={`errors.default.${error}`}>{`errors.${name}.${error}`}</Snippet>}
+        label={isUndefined(label) ? <Snippet {...snippetProps}>{`fields.${name}.label`}</Snippet> : label}
+        hint={isUndefined(hint) ? <Snippet optional {...snippetProps}>{`fields.${name}.hint`}</Snippet> : hint}
+        error={error && <Snippet fallback={`errors.default.${error}`} {...snippetProps}>{`errors.${name}.${error}`}</Snippet>}
         value={fieldValue}
         onChange={onFieldChange}
         name={prefix ? `${prefix}-${name}` : name}
