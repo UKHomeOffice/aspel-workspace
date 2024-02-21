@@ -20,11 +20,17 @@ module.exports = {
   purchaseOrder: {
     accessor: 'billing.purchaseOrder'
   },
+  alternativePaymentMethod: {
+    accessor: 'billing.alternativePaymentMethod'
+  },
   otherInformation: {
     accessor: 'billing.otherInformation'
   },
   updatedAt: {
     accessor: 'billing.updatedAt'
+  },
+  declaredCurrent: {
+    accessor: 'billing.declaredCurrent'
   },
   numberOfPils: {
     show: true
