@@ -14,6 +14,39 @@ function Value({ value, format, model, nullValue, accessor, formatNullValue }) {
     return format ? format(value, model) : value;
 }
 
+function ModelProperty({ property, model, formatters, specification, formatNullValue }) {
+    const snippetProps = formatters[property]?.renderContext ?? {};
+    const selectedOption = specification.options?.find(({ value }) => value === model[property]);
+
+    return (
+        <Fragment>
+            <dt><Snippet {...snippetProps}>{`fields.${property}.label`}</Snippet></dt>
+            <dd>
+                <Value
+                    value={model[property]}
+                    format={formatters[property] && formatters[property].format}
+                    model={model}
+                    nullValue={specification.nullValue}
+                    accessor={specification.accessor}
+                    formatNullValue={formatNullValue}
+                />
+            </dd>
+            {selectedOption?.reveal &&
+                Object.entries(selectedOption.reveal).map(([key, value]) =>
+                    <ModelProperty
+                        key={key}
+                        property={key}
+                        model={model}
+                        formatters={formatters}
+                        specification={value}
+                        formatNullValue={formatNullValue}
+                    />
+                )
+            }
+        </Fragment>
+    );
+}
+
 const ModelSummary = ({ model, schema, formatters = {}, className, formatNullValue }) => {
     let fields = model;
     if (size(schema)) {
@@ -28,23 +61,14 @@ const ModelSummary = ({ model, schema, formatters = {}, className, formatNullVal
         <dl className={classnames('model-summary', 'inline', className)}>
             {
                 map(fields, (item, key) => {
-                    const options = schema[key] || {};
-                    const snippetProps = formatters[key]?.renderContext ?? {};
-                    return (
-                        <Fragment key={key}>
-                            <dt><Snippet {...snippetProps}>{`fields.${key}.label`}</Snippet></dt>
-                            <dd>
-                                <Value
-                                    value={model[key]}
-                                    format={formatters[key] && formatters[key].format}
-                                    model={model}
-                                    nullValue={options.nullValue}
-                                    accessor={options.accessor}
-                                    formatNullValue={formatNullValue}
-                                />
-                            </dd>
-                        </Fragment>
-                    );
+                    return <ModelProperty
+                        key={key}
+                        property={key}
+                        model={model}
+                        formatters={formatters}
+                        specification={schema[key] || {}}
+                        formatNullValue={formatNullValue}
+                    />;
                 })
             }
         </dl>
