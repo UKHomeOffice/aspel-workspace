@@ -1,6 +1,6 @@
 {
   "name": "asl",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Animal Science Licensing",
   "main": "index.js",
   "scripts": {
@@ -29,14 +29,14 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl#readme",
   "dependencies": {
-    "@asl/pages": "^31.1.0",
-    "@asl/projects": "^15.0.0",
+    "@asl/pages": "^31.1.2",
+    "@asl/projects": "^15.0.3",
     "@asl/service": "^10.0.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.22.15",
-    "@ukhomeoffice/asl-components": "13.2.0",
-    "@ukhomeoffice/asl-constants": "^2.1.0",
+    "@ukhomeoffice/asl-components": "13.2.1",
+    "@ukhomeoffice/asl-constants": "^2.1.4",
     "@ukhomeoffice/frontend-toolkit": "^3.0.0",
     "@ukhomeoffice/react-components": "^1.0.0",
     "body-parser": "^1.18.3",
