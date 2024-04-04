@@ -21,7 +21,7 @@ module.exports = {
     pil: 299
   },
   2024: {
-    pel: 915,
-    pil: 299
+    pel: 1007,
+    pil: 329
   }
 };
