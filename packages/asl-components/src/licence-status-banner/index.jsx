@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Snippet from '../snippet';
 import classnames from 'classnames';
-import formatDate from 'date-fns/format';
+import { format } from 'date-fns';
 
 function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, title, suspendedEstablishment, children }) {
     const [open, setOpen] = useState(true);
@@ -26,15 +26,15 @@ function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, 
         }
 
         return <ul className="licence-dates">
-            <li>Granted: <span className="date">{formatDate(issueDate, dateFormat)}</span></li>
+            <li>Granted: <span className="date">{format(issueDate, dateFormat)}</span></li>
             {
-                status === 'revoked' && <li>Revoked: <span className="date">{formatDate(revocationDate, dateFormat)}</span></li>
+                status === 'revoked' && <li>Revoked: <span className="date">{format(revocationDate, dateFormat)}</span></li>
             }
             {
-                status === 'expired' && <li>Expiry: <span className="date">{formatDate(expiryDate, dateFormat)}</span></li>
+                status === 'expired' && <li>Expiry: <span className="date">{format(expiryDate, dateFormat)}</span></li>
             }
             {
-                status === 'suspended' && <li>Suspended: <span className="date">{formatDate(suspendedDate, dateFormat)}</span></li>
+                status === 'suspended' && <li>Suspended: <span className="date">{format(suspendedDate, dateFormat)}</span></li>
             }
         </ul>;
     };
@@ -70,7 +70,7 @@ function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, 
 }
 
 LicenceStatusBanner.defaultProps = {
-    dateFormat: 'DD MMMM YYYY'
+    dateFormat: 'dd MMMM yyyy'
 };
 
 export default LicenceStatusBanner;

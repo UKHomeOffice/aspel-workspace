@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Countdown } from '../';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 
 const ExpiryDate = ({ date, expiry, dateFormat, unit, showUrgent, showNotice }) => {
     if (!date) {
@@ -23,7 +23,7 @@ const ExpiryDate = ({ date, expiry, dateFormat, unit, showUrgent, showNotice }) 
 };
 
 ExpiryDate.defaultProps = {
-    dateFormat: 'DD MMMM YYYY',
+    dateFormat: 'dd MMMM yyyy',
     unit: 'month',
     showUrgent: 3,
     showNotice: true

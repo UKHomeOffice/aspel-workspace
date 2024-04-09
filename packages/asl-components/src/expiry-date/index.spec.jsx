@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import addWeeks from 'date-fns/add_weeks';
+import { addWeeks } from 'date-fns';
 import ExpiryDate from './';
 import Countdown from '../countdown';
 

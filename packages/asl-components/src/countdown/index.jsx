@@ -1,10 +1,6 @@
 import React from 'react';
 import { Snippet } from '../';
-import differenceInMonths from 'date-fns/difference_in_months';
-import differenceInWeeks from 'date-fns/difference_in_weeks';
-import differenceInDays from 'date-fns/difference_in_calendar_days';
-import isBefore from 'date-fns/is_before';
-import isToday from 'date-fns/is_today';
+import { differenceInDays, differenceInMonths, differenceInWeeks, isBefore, isToday } from 'date-fns';
 import classnames from 'classnames';
 
 const Countdown = ({ expiry, unit, showNotice, showUrgent, contentPrefix = 'countdown' }) => {

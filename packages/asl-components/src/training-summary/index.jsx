@@ -1,11 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import sortBy from 'lodash/sortBy';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 import { ApplyChanges, Snippet, Link } from '../';
 import { getUrl } from '../link';
 
-const dateFormat = 'DD MMMM YYYY';
+const dateFormat = 'dd MMMM yyyy';
 
 function List({ items }) {
     if (!items || !items.length) {

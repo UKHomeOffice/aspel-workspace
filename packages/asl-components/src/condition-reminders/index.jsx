@@ -1,8 +1,8 @@
 import React from 'react';
-import dateFormatter from 'date-fns/format';
+import { format } from 'date-fns';
 import { Inset } from '../';
 
-function ConditionReminders({ reminders }) {
+function ConditionReminders({ reminders, dateFormat = 'dd/MM/yyyy' }) {
     if (!reminders || reminders.length < 1) {
         return null;
     }
@@ -17,7 +17,7 @@ function ConditionReminders({ reminders }) {
                     <ul>
                         {
                             reminders.map(reminder => (
-                                <li key={reminder.id}>{dateFormatter(reminder.deadline, 'DD/MM/YYYY')}</li>
+                                <li key={reminder.id}>{format(reminder.deadline, dateFormat)}</li>
                             ))
                         }
                     </ul>

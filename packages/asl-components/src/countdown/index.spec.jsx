@@ -2,9 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import Countdown from './';
 import Snippet from '../snippet';
-import endOfTomorrow from 'date-fns/end_of_tomorrow';
-import addWeeks from 'date-fns/add_weeks';
-import addMonths from 'date-fns/add_months';
+import { endOfTomorrow, addWeeks, addMonths } from 'date-fns';
 
 describe('<Countdown />', () => {
 
