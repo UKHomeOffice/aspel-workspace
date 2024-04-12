@@ -1,6 +1,7 @@
 import React from 'react';
 import get from 'lodash/get';
-import formatDate from 'date-fns/format';
+import {format as formatDate} from 'date-fns';
+import { dateFormat } from '@asl/pages/constants';
 import { Link } from '@ukhomeoffice/asl-components';
 
 export default {
@@ -54,7 +55,7 @@ export default {
   },
   date: {
     format: value => {
-      return <span className="date">{formatDate(value, 'DD MMM YYYY')}</span>;
+      return <span className="date">{formatDate(value, dateFormat.medium)}</span>;
     }
   }
 };

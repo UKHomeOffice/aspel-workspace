@@ -7,9 +7,8 @@ import ProjectSearchResult from '../views/components/project-search-result';
 import { projectTitle } from '@asl/pages/pages/common/formatters';
 import projectFormatters from '@asl/pages/pages/project/formatters';
 import taskFormatters from './tasks';
-import format from 'date-fns/format';
-
-const DATE_FORMAT = 'D MMM YYYY';
+import { format } from 'date-fns';
+import { dateFormat } from '@asl/pages/constants';
 
 export default {
   establishments: {
@@ -74,7 +73,7 @@ export default {
       }
     },
     pilStatus: {
-      format: (status, profile) => {
+      format: (status) => {
         if (!status) {
           return null;
         }
@@ -136,13 +135,13 @@ export default {
         if (['active', 'expired'].includes(model.status)) {
           return <ExpiryDate
             date={date}
-            dateFormat={DATE_FORMAT}
+            dateFormat={dateFormat.medium}
             showNotice={model.status === 'active' ? 11 : false}
           />;
         }
 
         if (date) {
-          return format(date, DATE_FORMAT);
+          return format(date, dateFormat.medium);
         }
 
         return '-';

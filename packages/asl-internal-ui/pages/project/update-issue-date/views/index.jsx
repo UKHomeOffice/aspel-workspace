@@ -1,6 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import formatDate from 'date-fns/format';
+import {format as formatDate} from 'date-fns';
+import { dateFormat } from '@asl/pages/constants';
+
 import {
   Header,
   Snippet,
@@ -10,7 +12,6 @@ import formatters from '@asl/pages/pages/project/formatters';
 
 export default function ProjectLandingPage() {
   const model = useSelector(state => state.model);
-  const dateFormat = 'DD MMMM YYYY';
 
   return (
     <FormLayout>
@@ -28,10 +29,10 @@ export default function ProjectLandingPage() {
         <dd>{formatters().duration.format(model.granted)}</dd>
 
         <dt><Snippet>fields.expiryDate.label</Snippet></dt>
-        <dd>{formatDate(model.expiryDate, dateFormat)}</dd>
+        <dd>{formatDate(model.expiryDate, dateFormat.long)}</dd>
 
         <dt><Snippet>fields.issueDate.label</Snippet></dt>
-        <dd>{formatDate(model.issueDate, dateFormat)}</dd>
+        <dd>{formatDate(model.issueDate, dateFormat.long)}</dd>
       </dl>
     </FormLayout>
   );

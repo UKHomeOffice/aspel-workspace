@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import formatDate from 'date-fns/format';
-import isBefore from 'date-fns/is_before';
+import {format as formatDate, isBefore} from 'date-fns';
+import { dateFormat } from '@asl/pages/constants';
+
 import {
   Link,
   Header,
@@ -12,7 +13,6 @@ import formatters from '@asl/pages/pages/project/formatters';
 
 export default function ProjectLandingPage() {
   const model = useSelector(state => state.model);
-  const dateFormat = 'DD MMMM YYYY';
   const expiryInThePast = isBefore(model.newExpiryDate, new Date());
 
   return (
@@ -47,13 +47,13 @@ export default function ProjectLandingPage() {
           <tbody>
             <tr>
               <th>Date granted</th>
-              <td>{formatDate(model.issueDate, dateFormat)}</td>
-              <td><span className="highlight">{formatDate(model.newIssueDate, dateFormat)}</span></td>
+              <td>{formatDate(model.issueDate, dateFormat.long)}</td>
+              <td><span className="highlight">{formatDate(model.newIssueDate, dateFormat.long)}</span></td>
             </tr>
             <tr>
               <th>Expiry date</th>
-              <td>{formatDate(model.expiryDate, dateFormat)}</td>
-              <td><span className="highlight">{formatDate(model.newExpiryDate, dateFormat)}</span></td>
+              <td>{formatDate(model.expiryDate, dateFormat.long)}</td>
+              <td><span className="highlight">{formatDate(model.newExpiryDate, dateFormat.long)}</span></td>
             </tr>
           </tbody>
         </table>

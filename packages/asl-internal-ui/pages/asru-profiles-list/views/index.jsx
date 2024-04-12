@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import formatDate from 'date-fns/format';
+import {format as formatDate} from 'date-fns';
 import { dateFormat } from '@asl/pages/constants';
 import {
   Search,

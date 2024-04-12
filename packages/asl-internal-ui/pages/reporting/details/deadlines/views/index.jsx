@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Header, Link, Snippet, Metric } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
-import format from 'date-fns/format';
+import { isBefore } from 'date-fns';
 
 import MetricsFilter from '../../../views/components/metrics-filter';
 
@@ -20,14 +20,17 @@ export default function Deadlines() {
       <Header title={<Snippet>title</Snippet>} />
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <p>Check which tasks missed one or more internal or external deadlines. ASRU business support users can <Link page="reporting.details.pplSla" label="mark
-  statutory deadlines as not missed" /> if there was a valid reason they could not be met.</p>
+          <p>
+            Check which tasks missed one or more internal or external deadlines. ASRU business support users can{' '}
+            <Link page="reporting.details.pplSla" label="mark statutory deadlines as not missed" /> if there was a
+            valid reason they could not be met.
+          </p>
         </div>
       </div>
 
       <MetricsFilter start={startDate} end={end} filterEstablishment={false} setStartDate={setStartDate} />
       {
-        format(startDate, 'YYYY-MM-DD') < '2022-04-01' ? <Warning>Missed internal deadline data is not available before 1 April 2022</Warning> : ''
+        isBefore(startDate, '2022-04-01') ? <Warning>Missed internal deadline data is not available before 1 April 2022</Warning> : ''
       }
 
       <div className="govuk-grid-row">

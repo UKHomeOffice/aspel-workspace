@@ -1,11 +1,11 @@
 import React, { useState, Fragment } from 'react';
 import DatePicker from 'backpack-transpiled/bpk-component-datepicker';
+import { format } from 'date-fns';
+import { dateFormat } from '@asl/pages/constants';
 
-import format from 'date-fns/format';
-
-const formatDate = date => format(date, 'Do MMMM YYYY');
-const formatDateFull = date => format(date, 'Do MMMM YYYY');
-const formatMonth = date => format(date, 'MMMM YYYY');
+const formatDate = date => format(date, dateFormat.medium);
+const formatDateFull = date => format(date, dateFormat.long);
+const formatMonth = date => format(date, 'MMMM yyyy');
 
 const daysOfWeek = [
   {
@@ -79,6 +79,6 @@ export default (props) => {
       formatDateFull={formatDateFull}
       date={date}
     />
-    <input type="hidden" name={props.name} value={format(date, 'YYYY-MM-DD')} />
+    <input type="hidden" name={props.name} value={format(date, 'yyyy-MM-dd')} />
   </Fragment>;
 };

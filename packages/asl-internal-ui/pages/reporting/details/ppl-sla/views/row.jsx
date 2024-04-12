@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from 'react';
 import { Inset, Snippet, Form } from '@ukhomeoffice/asl-components';
 import { Button } from '@ukhomeoffice/react-components';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 import Markdown from 'react-markdown';
 import { dateFormat } from '@asl/pages/constants';
 
