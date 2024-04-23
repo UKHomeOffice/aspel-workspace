@@ -26,15 +26,23 @@ function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, 
         }
 
         return <ul className="licence-dates">
-            <li>Granted: <span className="date">{format(issueDate, dateFormat)}</span></li>
             {
-                status === 'revoked' && <li>Revoked: <span className="date">{format(revocationDate, dateFormat)}</span></li>
+                issueDate != null && <li>Granted: <span className="date">{format(issueDate, dateFormat)}</span></li>
             }
             {
-                status === 'expired' && <li>Expiry: <span className="date">{format(expiryDate, dateFormat)}</span></li>
+                status === 'revoked' && revocationDate != null && <li>
+                    Revoked: <span className="date">{format(revocationDate, dateFormat)}</span>
+                </li>
             }
             {
-                status === 'suspended' && <li>Suspended: <span className="date">{format(suspendedDate, dateFormat)}</span></li>
+                status === 'expired' && expiryDate != null && <li>
+                    Expiry: <span className="date">{format(expiryDate, dateFormat)}</span>
+                </li>
+            }
+            {
+                status === 'suspended' && suspendedDate != null && <li>
+                    Suspended: <span className="date">{format(suspendedDate, dateFormat)}</span>
+                </li>
             }
         </ul>;
     };
