@@ -9,7 +9,7 @@ import List from '../components/list';
 
 const schema = {
   updatedAt: {
-    format: value => <ExpiryDate date={value} dateFormat="D MMM YYYY, HH:mm" showNotice={false} />
+    format: value => <ExpiryDate date={value} dateFormat="d MMM yyyy, H:mm" showNotice={false} />
   },
   profile: {
     format: profile => <Link page="globalProfile" profileId={profile.id} label={`${profile.firstName} ${profile.lastName}`} />
