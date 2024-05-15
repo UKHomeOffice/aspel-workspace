@@ -42,4 +42,16 @@ two`
     expect(wrapper.html()).toEqual(paragraphs);
   });
 
+  test('can accept single fallback', () => {
+    const wrapper = render(<div><Snippet content={content} fallback={'paragraphs'}>non.existent</Snippet></div>);
+    expect(wrapper.find('p').length).toEqual(2);
+    expect(wrapper.html()).toEqual(paragraphs);
+  });
+
+  test('can accept multiple fallbacks', () => {
+    const wrapper = render(<div><Snippet content={content} fallback={['non.existent.2', 'paragraphs', 'list']}>non.existent</Snippet></div>);
+    expect(wrapper.find('p').length).toEqual(2);
+    expect(wrapper.html()).toEqual(paragraphs);
+  });
+
 });
