@@ -4,12 +4,24 @@ import { connect } from 'react-redux';
 import Markdown from '../markdown';
 import { render } from 'mustache';
 
+function getKeysToTry(primary, fallback) {
+    if (Array.isArray(fallback)) {
+        return [primary, ...fallback];
+    }
+
+    if(['string', 'number'].includes(typeof fallback)) {
+        return [primary, fallback];
+    }
+
+    return [primary];
+}
+
 function getTemplate(content, primary, fallback) {
-    const keysToTry = [primary, ...(Array.isArray(fallback) ? fallback : [fallback])];
+    const keysToTry = getKeysToTry(primary, fallback);
 
     for (let key of keysToTry) {
         const template = get(content, key);
-        if (template != undefined) {
+        if (typeof template === 'string') {
             return template;
         }
     }
@@ -19,16 +31,15 @@ function getTemplate(content, primary, fallback) {
 
 export const Snippet = ({ content, children, optional, fallback, ...props }) => {
     const str = getTemplate(content, children, fallback);
+
     if (str === undefined && optional) {
         return null;
+    }
 
-    }
     if (str === undefined) {
-        throw new Error(`Failed to lookup content snippet: ${children}`);
+        throw new Error(`Failed to lookup content snippet. Tried keys: ${JSON.stringify(getKeysToTry(children, fallback))}`);
     }
-    if (typeof str !== 'string') {
-        throw new Error(`Invalid content snippet for key ${children}: ${JSON.stringify(str)}`);
-    }
+
     const source = render(str, props);
 
     return (

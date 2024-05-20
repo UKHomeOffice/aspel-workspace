@@ -20,7 +20,11 @@ describe('<Snippet />', () => {
 * three`,
     paragraphs: `one
 
-two`
+two`,
+    nested: {
+      string: 'nested string',
+      template: 'Hello {{ name }}'
+    }
   };
 
   test('does not include a wrapping element on single line input', () => {
@@ -42,6 +46,11 @@ two`
     expect(wrapper.html()).toEqual(paragraphs);
   });
 
+  test('will inject props as template variables', () => {
+    const wrapper = render(<div><Snippet content={content} name={"world"}>nested.template</Snippet></div>);
+    expect(wrapper.html()).toEqual('<span>Hello world</span>');
+  })
+
   test('can accept single fallback', () => {
     const wrapper = render(<div><Snippet content={content} fallback={'paragraphs'}>non.existent</Snippet></div>);
     expect(wrapper.find('p').length).toEqual(2);
@@ -52,6 +61,26 @@ two`
     const wrapper = render(<div><Snippet content={content} fallback={['non.existent.2', 'paragraphs', 'list']}>non.existent</Snippet></div>);
     expect(wrapper.find('p').length).toEqual(2);
     expect(wrapper.html()).toEqual(paragraphs);
+  });
+
+  test('will error if no fallback matches content', () => {
+    expect(() => render(<div><Snippet content={content} fallback={['non.existent.2', 'missing']}>non.existent</Snippet></div>))
+        .toThrow('Failed to lookup content snippet. Tried keys: ["non.existent","non.existent.2","missing"]');
+  });
+
+  test('will return null if no content matches and the snippet is optional', () => {
+    const wrapper = render(<div><Snippet content={content} fallback={['non.existent.2', 'missing']} optional>non.existent</Snippet></div>);
+    expect(wrapper.html()).toEqual('');
+  });
+
+  test('errors if content at the specified key is not a string', () => {
+    expect(() => render(<div><Snippet content={content}>nested</Snippet></div>))
+        .toThrow('Failed to lookup content snippet. Tried keys: ["nested"]');
+  });
+
+  test('renders a fallback if content at the specified key is not a string', () => {
+    const wrapper = render(<div><Snippet content={content} fallback={'nested.string'}>nested</Snippet></div>);
+    expect(wrapper.html()).toEqual('<span>nested string</span>');
   });
 
 });
