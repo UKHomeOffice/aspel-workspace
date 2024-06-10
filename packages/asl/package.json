@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl#readme",
   "dependencies": {
-    "@asl/pages": "^31.4.3",
+    "@asl/pages": "^31.4.5",
     "@asl/projects": "^15.3.0",
     "@asl/service": "^10.5.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
