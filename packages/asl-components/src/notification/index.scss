@@ -1,0 +1,30 @@
+.alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  background: $green;
+  color: white;
+  font-weight: bold;
+  z-index: 10000;
+  text-align: center;
+  cursor: pointer;
+
+  &.alert-error {
+    background: $govuk-error-colour;
+  }
+
+  .govuk-width-container  {
+    position: relative;
+
+    >:first-child:after {
+      content: "✕";
+      position: absolute;
+      top: 0;
+      right: -1em;
+      color: white;
+      height: 1em;
+      width: 1em;
+    }
+  }
+}

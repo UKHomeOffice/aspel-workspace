@@ -1,0 +1,9 @@
+extends:
+  - lennym
+
+globals:
+  fetch: readonly
+
+settings:
+  react:
+    version: "detect"

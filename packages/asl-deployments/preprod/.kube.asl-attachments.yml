@@ -1,0 +1,59 @@
+---
+- name: attachments
+  recipe: internal-service
+  clients:
+    - public-ui
+    - internal-ui
+    - pdf-generator
+  image: quay.io/ukhomeofficedigital/asl-attachments:{{config.versions.asl-attachments}}
+  healthcheck: /healthcheck
+  replicas: 1
+  memory:
+    requests: 32Mi
+    limit: 256Mi
+  cpu:
+    requests: 200m
+    limit: 400m
+  keys: tls-keys
+  env:
+    DATABASE_HOST:
+      secret: true
+      name: asl-preprod-rds
+      key: endpoint
+    DATABASE_NAME:
+      secret: true
+      name: asl-preprod-rds
+      key: db_name
+    DATABASE_USERNAME: attachments
+    DATABASE_PASSWORD:
+      secret: true
+      name: dbpasswords
+      key: attachments
+    DATABASE_PORT:
+      secret: true
+      name: asl-preprod-rds
+      key: port
+    S3_ACCESS_KEY:
+      secret: true
+      name: asl-preprod-attachments-s3
+      key: access_key
+    S3_SECRET:
+      secret: true
+      name: asl-preprod-attachments-s3
+      key: secret_key
+    S3_BUCKET:
+      secret: true
+      name: asl-preprod-attachments-s3
+      key: bucket_name
+    S3_KMS_KEY_ID:
+      secret: true
+      name: asl-preprod-attachments-s3
+      key: kms_key
+  nginx:
+    CLIENT_MAX_BODY_SIZE: "'50'"
+
+- name: attachments
+  recipe: autoscaler
+  min: 1
+  max: 2
+  utilisation: 40

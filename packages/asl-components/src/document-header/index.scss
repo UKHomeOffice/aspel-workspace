@@ -1,0 +1,127 @@
+.sticky-wrapper {
+  position: relative; // needed to allow z-index to work
+  height: 4 * $govuk-gutter; // height required otherwise get flicker on slow-scroll
+  z-index: 100;
+  pointer-events: none;
+
+  &.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+
+    .document-header {
+      margin-bottom: 0;
+
+      .footer {
+        padding-top: 0 !important;
+      }
+    }
+  }
+}
+
+.sticky-wrapper-with-footer {
+  height: 5 * $govuk-gutter; // height required otherwise get flicker on slow-scroll
+}
+
+.document-header {
+  background-color: white;
+  border-bottom: 4px solid $blue;
+  margin-bottom: $govuk-gutter;
+  padding: $govuk-gutter-half;
+  overflow: auto;
+  display: flex;
+  flex-direction: row;
+  z-index: 101;
+  pointer-events: all;
+
+  .page-title {
+    flex: 1;
+    padding-right: $govuk-gutter-half;
+    min-width: 0; /* allows text-overflow to work inside a flexbox element */
+
+    h1 {
+      font-size: 24px;
+      font-weight: normal;
+      margin-bottom: 5px;
+
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    h2 {
+      font-size: 18px;
+      font-weight: normal;
+    }
+    .title-overflow {
+      display: flex;
+      flex-direction: row;
+
+      h2 {
+        min-width: 0; /* allows text-overflow to work inside a flexbox element */
+        margin-right: 1em;
+        margin-bottom: 0 !important;
+
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      a.toggle-details {
+        flex: 1;
+        font-size: 16px;
+        white-space: nowrap;
+      }
+    }
+
+    dl {
+      margin-top: $govuk-gutter-half;
+      margin-bottom: $govuk-gutter-half;
+      font-size: 16px;
+    }
+
+    .footer {
+      padding-top: $govuk-gutter-half;
+    }
+
+    @include govuk-media-query($from: tablet) {
+      dl {
+        dt {
+          float: left;
+          margin-right: 2%;
+          width: 28%;
+        }
+
+        dd {
+          margin-left: 30%;
+          margin-bottom: .8em;
+        }
+
+        dd::after {
+          content: " ";
+          display: block;
+          clear: left;
+        }
+      }
+    }
+  }
+
+  .back-link {
+    border-left: 1px solid $mid-grey;
+    padding: $govuk-gutter-half 0 0 $govuk-gutter-half;
+  }
+
+  .back-to-top {
+    // remove standard back-to-top styling
+    border: none;
+    position: static;
+    padding: 0;
+
+    p {
+      margin: 0;
+
+      &:before {
+        content: none;
+      }
+    }
+  }
+}

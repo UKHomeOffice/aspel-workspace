@@ -1,0 +1,139 @@
+---
+- name: internal-search
+  recipe: internal-service
+  clients:
+    - internal-api
+    - workflow
+  image: quay.io/ukhomeofficedigital/asl-search:{{config.versions.asl-search}}
+  healthcheck: /healthcheck
+  replicas: 2
+  memory:
+    requests: 256Mi
+    limit: 1024Mi
+  cpu:
+    requests: 50m
+    limit: 400m
+  keys: tls-keys
+  env:
+    AWS_ES_ENDPOINT:
+      secret: true
+      name: asl-elasticsearch
+      key: ENDPOINT
+    AWS_ES_KEY:
+      secret: true
+      name: asl-elasticsearch
+      key: AWS_ACCESS_KEY_ID
+    AWS_ES_SECRET:
+      secret: true
+      name: asl-elasticsearch
+      key: AWS_SECRET_ACCESS_KEY
+    KEYCLOAK_REALM: asl
+    KEYCLOAK_URL: {{config.urls.keycloak}}
+    KEYCLOAK_CLIENT: asl-connect
+    KEYCLOAK_SECRET:
+      secret: true
+      name: asl-prod-auth
+      key: secret
+    DATABASE_HOST:
+      secret: true
+      name: asldata-rds
+      key: endpoint
+    DATABASE_NAME:
+      secret: true
+      name: asldata-rds
+      key: default_db
+    DATABASE_USERNAME: search
+    DATABASE_PASSWORD:
+      secret: true
+      name: dbpasswords
+      key: search
+    DATABASE_PORT:
+      secret: true
+      name: asldata-rds
+      key: port
+    TASK_DATABASE_HOST:
+      secret: true
+      name: aslworkflow-rds
+      key: endpoint
+    TASK_DATABASE_NAME:
+      secret: true
+      name: aslworkflow-rds
+      key: default_db
+    TASK_DATABASE_USERNAME: searchworkflow
+    TASK_DATABASE_PASSWORD:
+      secret: true
+      name: dbpasswords
+      key: searchworkflow
+    TASK_DATABASE_PORT:
+      secret: true
+      name: aslworkflow-rds
+      key: port
+    ENABLE_GLOBAL_SEARCH: "'TRUE'"
+    ENABLE_INDEXER: "'TRUE'"
+  nginx:
+    ADD_NGINX_SERVER_CFG: add_header Cache-Control private;
+
+- name: search-index-nightly
+  recipe: cronjob
+  schedule: '0 1 * * *'
+  image: quay.io/ukhomeofficedigital/asl-search:{{config.versions.asl-search}}
+  command: bin/indexer --reset
+  memory:
+    requests: 128Mi
+    limit: 512Mi
+  cpu:
+    requests: 400m
+    limit: 1000m
+  env:
+    AWS_ES_ENDPOINT:
+      secret: true
+      name: asl-elasticsearch
+      key: ENDPOINT
+    AWS_ES_KEY:
+      secret: true
+      name: asl-elasticsearch
+      key: AWS_ACCESS_KEY_ID
+    AWS_ES_SECRET:
+      secret: true
+      name: asl-elasticsearch
+      key: AWS_SECRET_ACCESS_KEY
+    DATABASE_HOST:
+      secret: true
+      name: asldata-rds
+      key: endpoint
+    DATABASE_NAME:
+      secret: true
+      name: asldata-rds
+      key: default_db
+    DATABASE_USERNAME: search
+    DATABASE_PASSWORD:
+      secret: true
+      name: dbpasswords
+      key: search
+    DATABASE_PORT:
+      secret: true
+      name: asldata-rds
+      key: port
+    TASK_DATABASE_HOST:
+      secret: true
+      name: aslworkflow-rds
+      key: endpoint
+    TASK_DATABASE_NAME:
+      secret: true
+      name: aslworkflow-rds
+      key: default_db
+    TASK_DATABASE_USERNAME: searchworkflow
+    TASK_DATABASE_PASSWORD:
+      secret: true
+      name: dbpasswords
+      key: searchworkflow
+    TASK_DATABASE_PORT:
+      secret: true
+      name: aslworkflow-rds
+      key: port
+    NODE_OPTIONS: "--max-old-space-size=1024"
+
+- name: internal-search
+  recipe: autoscaler
+  min: 2
+  max: 4

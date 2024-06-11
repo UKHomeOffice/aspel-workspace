@@ -1,0 +1,32 @@
+---
+- name: 1-workflow-migration
+  recipe: job
+  image: quay.io/ukhomeofficedigital/asl-workflow:{{config.versions.asl-workflow}}
+  memory:
+    requests: 128Mi
+    limit: 512Mi
+  cpu:
+    requests: 1000m
+    limit: 2000m
+  command: npm run migrate
+  env:
+    DATABASE_HOST:
+      secret: true
+      name: aslworkflow-rds
+      key: endpoint
+    DATABASE_NAME:
+      secret: true
+      name: aslworkflow-rds
+      key: default_db
+    DATABASE_USERNAME:
+      secret: true
+      name: aslworkflow-rds
+      key: username
+    DATABASE_PASSWORD:
+      secret: true
+      name: aslworkflow-rds
+      key: password
+    DATABASE_PORT:
+      secret: true
+      name: aslworkflow-rds
+      key: port

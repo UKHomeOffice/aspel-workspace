@@ -1,0 +1,75 @@
+---
+- name: internal-ui
+  recipe: webapp
+  url: internal.aspel.homeoffice.gov.uk
+  image: quay.io/ukhomeofficedigital/asl-internal-ui:{{config.versions.asl-internal-ui}}
+  healthcheck: /healthcheck
+  memory:
+    requests: 128Mi
+    limit: 1024Mi
+  cpu:
+    requests: 200m
+    limit: 1000m
+  replicas: 2
+  maxBodySize: 20
+  env:
+    REDIS_HOST: internal-ui-redis
+    REDIS_PASSWORD:
+      secret: true
+      name: asl-prod-redis
+      key: pass
+    SESSION_SECRET:
+      secret: true
+      name: asl-prod-session
+      key: secret
+    KEYCLOAK_REALM: asl
+    KEYCLOAK_URL: {{config.urls.keycloak}}
+    KEYCLOAK_CLIENT: asl-connect
+    KEYCLOAK_SECRET:
+      secret: true
+      name: asl-prod-auth
+      key: secret
+    S3_REGION: eu-west-2
+    S3_ACCESS_KEY:
+      secret: true
+      name: asl-data-exports
+      key: access_key_id
+    S3_SECRET:
+      secret: true
+      name: asl-data-exports
+      key: secret_access_key
+    S3_BUCKET:
+      secret: true
+      name: asl-data-exports
+      key: name
+    S3_KMS_KEY_ID:
+      secret: true
+      name: asl-data-exports
+      key: kms_key_id
+    API_URL: {{config.urls.internal-api}}
+    METRICS_URL: {{config.urls.metrics}}
+    PERMISSIONS_SERVICE: {{config.urls.permissions}}
+    PDF_SERVICE: {{config.urls.pdf-generator}}
+    ATTACHMENTS_SERVICE: {{config.urls.attachments}}
+    NODE_TLS_REJECT_UNAUTHORIZED: "'0'"
+    BODY_SIZE_LIMIT: 10mb
+  nginx:
+    ERROR_REDIRECT_CODES: "'FALSE'"
+  whitelist: {{config.ip-addresses.vpn}},{{config.ip-addresses.poise}}
+
+- name: internal-ui-redis
+  recipe: redis
+  clients: internal-ui
+  passwordName: asl-prod-redis
+  passwordKey: pass
+  memory:
+    requests: 256Mi
+    limit: 1024Mi
+  cpu:
+    requests: 20m
+    limit: 100m
+
+- name: internal-ui
+  recipe: autoscaler
+  min: 2
+  max: 4

@@ -1,0 +1,65 @@
+---
+- name: public-ui
+  recipe: webapp
+  url: public-ui.dev.asl.homeoffice.gov.uk
+  image: quay.io/ukhomeofficedigital/asl:{{config.versions.asl}}
+  memory:
+    requests: 256Mi
+    limit: 512Mi
+  cpu:
+    requests: 400m
+    limit: 800m
+  healthcheck: /healthcheck
+  replicas: 1
+  maxBodySize: 1024
+  env:
+    CSRF: "'false'"
+    REDIS_HOST: public-ui-redis
+    REDIS_PASSWORD:
+      secret: true
+      name: asl-dev-redis
+      key: pass
+    SESSION_SECRET:
+      secret: true
+      name: asl-dev-session
+      key: secret
+    KEYCLOAK_REALM: Asl-dev
+    KEYCLOAK_URL: {{config.urls.keycloak}}
+    KEYCLOAK_CLIENT: asl-dev-connect
+    KEYCLOAK_SECRET:
+      secret: true
+      name: asl-dev-auth
+      key: secret
+    JWT_SECRET:
+      secret: true
+      name: asl-dev-jwt
+      key: token
+    API_URL: {{config.urls.public-api}}
+    INTERNAL_URL: {{config.urls.internal-ui}}
+    PERMISSIONS_SERVICE: {{config.urls.permissions}}
+    PDF_SERVICE: {{config.urls.pdf-generator}}
+    ATTACHMENTS_SERVICE: {{config.urls.attachments}}
+    NODE_TLS_REJECT_UNAUTHORIZED: "'0'"
+    VERBOSE_ERRORS: "'TRUE'"
+    ENABLE_PPL_TRANSFER: "'TRUE'"
+    BODY_SIZE_LIMIT: 10mb
+  nginx:
+    ERROR_REDIRECT_CODES: "'FALSE'"
+
+- name: public-ui-redis
+  recipe: redis
+  clients: public-ui
+  passwordName: asl-dev-redis
+  passwordKey: pass
+  memory:
+    requests: 128Mi
+    limit: 512Mi
+  cpu:
+    requests: 50m
+    limit: 100m
+
+- name: public-ui
+  recipe: autoscaler
+  min: 1
+  max: 1
+  utilisation: 40

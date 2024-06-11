@@ -1,0 +1,50 @@
+---
+- name: permissions
+  recipe: internal-service
+  clients:
+    - public-ui
+    - internal-ui
+    - public-api
+    - internal-api
+    - workflow
+  image: quay.io/ukhomeofficedigital/asl-permissions:{{config.versions.asl-permissions}}
+  healthcheck: /healthcheck
+  replicas: 1
+  memory:
+    requests: 32Mi
+    limit: 256Mi
+  cpu:
+    requests: 200m
+    limit: 400m
+  keys: tls-keys
+  env:
+    KEYCLOAK_REALM: Asl-dev
+    KEYCLOAK_URL: {{config.urls.keycloak}}
+    KEYCLOAK_CLIENT: asl-dev-connect
+    KEYCLOAK_SECRET:
+      secret: true
+      name: asl-dev-auth
+      key: secret
+    DATABASE_HOST:
+      secret: true
+      name: asl-dev-rds
+      key: endpoint
+    DATABASE_NAME:
+      secret: true
+      name: asl-dev-rds
+      key: db_name
+    DATABASE_USERNAME: permissions
+    DATABASE_PASSWORD:
+      secret: true
+      name: dbpasswords
+      key: permissions
+    DATABASE_PORT:
+      secret: true
+      name: asl-dev-rds
+      key: port
+
+- name: permissions
+  recipe: autoscaler
+  min: 1
+  max: 4
+  utilisation: 40

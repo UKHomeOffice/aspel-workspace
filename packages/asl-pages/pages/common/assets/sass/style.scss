@@ -1,0 +1,899 @@
+@import 'ho-frontend-toolkit';
+@import '@ukhomeoffice/react-components';
+@import '@ukhomeoffice/asl-components';
+@import 'images';
+
+$hint-colour: #696F73;
+
+.govuk-hint {
+  color: $hint-colour;
+}
+
+.not-applicable {
+  color: $hint-colour;
+}
+
+.block {
+  display: block;
+}
+
+.smaller {
+  font-size: 0.9em;
+}
+
+.gutter {
+  margin-bottom: $govuk-gutter;
+}
+
+.profile-section {
+  border-top: 1px solid #333;
+  padding-top: $govuk-gutter;
+  padding-bottom: $govuk-gutter;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.applicant {
+  margin-bottom: $govuk-gutter * 2;
+}
+
+.task-decision {
+  border-bottom: 1px solid govuk-colour('grey-2');
+  margin-bottom: $govuk-gutter;
+  .action {
+    float: right;
+  }
+}
+
+.task-declaration {
+  margin-bottom: $govuk-gutter;
+}
+
+table {
+  .pull-right {
+    width: 15%;
+  }
+}
+
+dl.continuation {
+  margin-bottom: $govuk-gutter;
+
+  dd {
+    margin-bottom: 5px;
+  }
+}
+
+.govuk-form-group.inline {
+  display: inline-block;
+  margin-left: 1em;
+}
+
+.govuk-form-group.inline-label {
+  > select, > label, .govuk-hint {
+    display: inline-block;
+    width: auto;
+  }
+
+  > label {
+    margin-right: 1em;
+  }
+}
+
+.subtitle {
+  font-size: 1.1em;
+}
+
+.product-testing-hint {
+  color: $govuk-text-colour;
+  padding-left: 1em;
+
+  .govuk-hint {
+    color: $hint-colour;
+  }
+}
+
+.rop-summary {
+  dl.inline {
+    dt {
+      max-width: 45%;
+    }
+    dd {
+      margin-left: 50%;
+
+      ul {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.legal-responsible-person {
+  fieldset {
+    .govuk-form-group {
+      margin-bottom: $govuk-gutter-half;
+    }
+
+    .govuk-label {
+      font-weight: 400;
+    }
+  }
+}
+
+form.procedures {
+  .form-section {
+    border-top: 3px solid $govuk-border-colour;
+    padding-top: $govuk-gutter-half;
+    margin-bottom: $govuk-gutter;
+  }
+}
+
+.rop-procedures-list {
+  .govuk-table {
+    th {
+      font-size: 16px;
+    }
+
+    td {
+      font-size: 16px;
+      white-space: nowrap;
+      padding: 5px 10px 5px 0;
+      vertical-align: top;
+
+      .markdown {
+        white-space: normal;
+        width: 500px;
+
+        p, ul, ol {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+}
+
+.margin-top {
+  margin-top: $govuk-gutter;
+}
+
+.margin-bottom {
+  margin-bottom: $govuk-gutter;
+}
+
+.section-navigation {
+  list-style-type: decimal;
+
+  li {
+    margin-bottom: $govuk-gutter-half;
+    padding: 10px 15px;
+    color: $blue;
+
+    a {
+      display: inline-block;
+      text-decoration: none;
+      color: $blue;
+    }
+
+    &.active {
+      background-color: $blue;
+      color: $white;
+      font-weight: bold;
+
+      a {
+        color: $white;
+      }
+    }
+  }
+}
+
+.activity-log .toggle-switch {
+  margin-bottom: $govuk-gutter;
+  color: $blue;
+
+  &:before {
+    content: '►\00a0';
+  }
+
+  &.open:before {
+    content: '▼\00a0';
+  }
+
+  a:link,
+  a:hover,
+  a:visited {
+    color: $blue;
+  }
+}
+
+.activity-log {
+  &>ul,
+  ul.task-activity {
+    list-style: none;
+    padding-left: 0;
+
+    &>li {
+      margin-bottom: $govuk-gutter-half;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid govuk-colour('grey-2');
+      }
+    }
+  }
+
+  .log-item {
+    .role {
+      font-weight: bold;
+    }
+
+    .date {
+      float: right;
+    }
+
+    .version-links {
+      margin-bottom: $govuk-gutter;
+    }
+  }
+
+  .declarations {
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.declarations {
+  dd {
+    span.aa-establishment {
+      display: block;
+    }
+  }
+}
+
+.preserve-whitespace {
+  white-space: pre-wrap;
+}
+
+td.status .badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .badge {
+    margin-bottom: 2px;
+  }
+}
+
+td.reviewStatus .overdue {
+  color: $red;
+}
+
+.badge {
+  padding: 3px 6px;
+  background: #6F777B;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+  white-space: nowrap;
+
+  &.complete {
+    background: $blue;
+  }
+  &.rejected {
+    background: $govuk-error-colour;
+  }
+
+  // enforcement flags should never be present in task data for non-asru users but hide them anyway
+  &.enforcement {
+    display: none;
+  }
+}
+
+p.ra-label {
+  margin: 0;
+}
+
+table.training tbody {
+  vertical-align: top;
+
+  p, ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  ul li {
+    margin-left: 1em;
+  }
+}
+
+.section-item .training {
+  margin-top: $govuk-gutter;
+}
+
+.training-links {
+  margin-bottom: $govuk-gutter;
+}
+
+.asru-roles {
+  margin-bottom: $govuk-gutter;
+
+  h3 {
+    margin-top: $govuk-gutter;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+}
+
+.panel-list li {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+
+  ul {
+    list-style-type: disc;
+  }
+
+  .expanding-panel {
+    border: none;
+    header {
+      background: none;
+
+      .status-notice {
+        margin-left: $govuk-gutter-half;
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+.flex {
+  display: flex;
+
+  .grow {
+    flex-grow: 1;
+  }
+
+  .shrink {
+    flex-shrink: 1;
+    align-self: center;
+    margin-left: $govuk-gutter;
+  }
+}
+
+.control-panel {
+  margin-top: $govuk-gutter;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  .govuk-button {
+    margin-bottom: 0;
+  }
+
+  > * {
+    margin-right: 1em;
+  }
+}
+
+.species-list {
+  margin: 0;
+  padding: 0;
+  list-style: outside;
+}
+
+p.inspector,
+p.spoc,
+p.holc {
+  margin: 0;
+}
+
+.govuk-inset-text.repeater {
+  h3 {
+    margin-bottom: $govuk-gutter-half;
+  }
+
+  .remove {
+    float: right;
+  }
+}
+
+.profile-section .project {
+  p {
+    font-size: 18px;
+    margin-bottom: 0;
+  }
+
+  margin-bottom: $govuk-gutter;
+}
+
+.establishment-name,
+.licence-holder-name {
+  border-left: 4px solid $mid-grey;
+  padding-left: 1em;
+}
+
+.projects-actions {
+  margin-bottom: $govuk-gutter;
+
+  button, a {
+    font-size: 0.95em;
+  }
+}
+
+.editable-field {
+  .control-panel {
+    margin-top: 0 !important;
+  }
+
+  .highlight {
+    p:first-child {
+      margin-top: 0;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    margin-bottom: $govuk-gutter;
+  }
+}
+
+.section-item.establishment p {
+  font-size: 16px;
+}
+
+.section-item.species {
+  ul {
+    margin: 0;
+    list-style-type: disc;
+    padding-left: 1em;
+  }
+}
+
+.section-item.training,
+.section-item.exemptions {
+  dl.model-summary.section-data {
+    margin-left: $govuk-gutter-half;
+    padding-left: $govuk-gutter-half;
+    border-left: 6px solid govuk-colour('grey-2');
+  }
+}
+
+.licence-actions {
+  margin-top: 2 * $govuk-gutter;
+
+  section {
+    border-top: 1px solid govuk-colour('grey-2');
+    padding: $govuk-gutter 0;
+  }
+}
+
+details {
+  &.asru-discard-task {
+    margin-top: $govuk-gutter-half;
+    padding-top: $govuk-gutter;
+
+    &.border {
+      border-top: 2px solid govuk-colour('grey-1');
+    }
+  }
+
+  summary {
+    color: $blue;
+    cursor: pointer;
+  }
+}
+
+.pil-transfer details {
+  margin-bottom: $govuk-gutter;
+}
+
+.establishment-apply {
+  section {
+    border-bottom: 1px solid govuk-colour('grey-1');
+    padding: $govuk-gutter 0;
+    overflow: auto;
+  }
+
+  .application-confirm {
+    margin-top: $govuk-gutter * 2;
+  }
+}
+
+.places-list .expanded-content a {
+  display: block;
+  margin-left: $govuk-gutter;
+  margin-bottom: 0.5em;
+}
+
+.licence-fees-pils {
+  .expanded-content {
+    .govuk-inset-text {
+      margin: 0 3px;
+
+      h2 {
+        margin-top: $govuk-gutter-half;
+      }
+
+      .govuk-grid-row:not(:last-child) {
+        margin-bottom: $govuk-gutter-half * 3;
+      }
+    }
+  }
+}
+
+.badge.blue {
+  background-color: $blue;
+}
+
+.table-wrapper {
+  position: relative;
+  @include govuk-media-query($from: tablet) {
+    .download {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
+}
+
+.project-download-links {
+  margin-bottom: $govuk-gutter;
+
+  .download-section:not(:last-child) {
+    margin-bottom: $govuk-gutter * 2;
+  }
+
+  h4 {
+    margin-bottom: 0;
+  }
+
+  p {
+    margin: 0;
+
+    &:last-child {
+      margin-bottom: $govuk-gutter-half;
+    }
+  }
+}
+
+.open-role-tasks {
+  margin-bottom: $govuk-gutter * 2;
+}
+
+.sticky-nav-anchor {
+  .govuk-warning-text {
+    margin-bottom: 0;
+  }
+
+  .control-panel {
+    margin-top: 0;
+  }
+}
+
+.govuk-checkboxes__item {
+  .govuk-hint {
+    padding-left: $govuk-gutter-half;
+  }
+
+  .govuk-fieldset__legend + .govuk-hint {
+    padding-left: 0;
+  }
+}
+
+.govuk-table {
+  p.no-margins {
+    margin: 0;
+  }
+}
+
+.approved-area {
+  .model-summary dd i.icon-information {
+    margin-left: 0;
+    margin-right: 1em;
+  }
+}
+
+.govuk-button.truncate {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  @include govuk-media-query($from: desktop) {
+    max-width: 75%;
+  }
+
+  @media (min-width: 1260px) {
+    max-width: 50%;
+  }
+}
+
+.success {
+  h2.additional-info {
+    font-weight: normal;
+  }
+}
+
+.diff {
+  border-bottom: 3px solid #47ff47;
+  background-color: #d3ffd3;
+
+  &.removed {
+    text-decoration: line-through;
+    border-bottom: 3px solid #ff4747;
+    background-color: #ffd3d3;
+  }
+}
+
+.ra-summary {
+  padding: $govuk-gutter;
+  background-color: white;
+  margin-bottom: $govuk-gutter;
+
+  > {
+    h3.grey {
+      font-weight: normal;
+      margin-bottom: 0 !important;
+    }
+  }
+}
+
+dl.inline dd .procedures-diff ul {
+  padding: 0;
+}
+
+dl.inline-wide {
+  dt {
+    float: left;
+    margin-right: 5%;
+    max-width: 50%;
+  }
+
+  dd {
+    margin-left: 55%;
+
+    ul {
+      padding-left: 1em;
+    }
+  }
+
+  dd::after {
+    content: " ";
+    display: block;
+    clear: left;
+  }
+}
+
+.link-filter.no-margin {
+  margin: 0;
+
+  * {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+ul.no-margin {
+  margin: 0;
+  padding-left: 1em;
+}
+
+.procedures-diff {
+  margin: $govuk-gutter 0;
+
+  td {
+    vertical-align: top;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      margin-bottom: $govuk-gutter-half;
+
+      .govuk-inset-text {
+        margin: 10px 0;
+      }
+    }
+  }
+}
+
+.species-diff {
+  margin: $govuk-gutter 0;
+
+  td {
+    vertical-align: top;
+  }
+}
+
+#submitted-version {
+  .declarations {
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.task-status {
+  .currently-with {
+    float: right;
+  }
+}
+
+.deadline-passed {
+  color: $red;
+  margin-top: -$govuk-gutter-half;
+}
+
+.retrospective-placeholder {
+  background-color: govuk-colour('grey-2');
+  padding: $govuk-gutter $govuk-gutter;
+  padding-bottom: $govuk-gutter-half;
+  margin-bottom: $govuk-gutter;
+}
+
+nav.bottom-nav {
+  a {
+    display: block;
+    border-top: 1px solid govuk-colour('grey-2');
+    padding: $govuk-gutter-half;
+    padding-left: $govuk-gutter;
+
+    &.previous {
+      background: $arrowPrevious no-repeat 0 22px;
+      background-size: 15px;
+    }
+
+    &.next {
+      background: $arrowNext no-repeat 0 22px;
+      background-size: 15px;
+    }
+  }
+}
+
+.project-landing-page {
+  .subsection:not(:first-child) {
+    border-top: 1px solid govuk-colour('grey-2');
+    padding-top: $govuk-gutter;
+  }
+
+  ul.other-documents {
+    padding-left: 1em;
+  }
+}
+
+.email-preferences {
+  .govuk-label {
+    font-weight: normal;
+  }
+  .control-panel {
+    margin-top: 0;
+  }
+}
+
+.pre-release {
+  display: none !important;
+}
+
+.push-up {
+  margin-top: -38px;
+}
+
+.force-show-scrollbars {
+  /* from https://gist.github.com/IceCreamYou/cd517596e5847a88e2bb0a091da43fb4 */
+
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    background-color: govuk-colour('grey-3');
+    width: 1px; /* hides white square at end of scrollbar */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    background-color: govuk-colour('grey-1');
+    border-color: transparent;
+    border-radius: 9px 8px 8px 9px;
+    border-width: 3px 3px 3px 4px; /* Workaround because margins aren't supported */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: govuk-colour('black');
+  }
+}
+
+section#rops {
+  .govuk-label {
+    font-weight: normal;
+  }
+
+  .control-panel {
+    margin-top: 0;
+  }
+
+  .govuk-hint {
+    margin-top: $govuk-gutter-half;
+    margin-bottom: $govuk-gutter-half;
+
+    summary {
+      margin-top: $govuk-gutter-half;
+    }
+  }
+
+  .product-testing-hint .govuk-hint,
+  .govuk-checkboxes__item .govuk-hint {
+    margin-top: 0;
+  }
+
+  .optional-content {
+    margin-bottom: $govuk-gutter;
+  }
+}
+
+.rops-guidance-content {
+  margin-bottom: $govuk-gutter;
+
+  li {
+    margin-bottom: $govuk-gutter-half;
+  }
+}
+
+.task-filters {
+  .link-filter {
+    ul {
+      margin: 0;
+      margin-bottom: $govuk-gutter-half;
+    }
+  }
+}
+
+.task-details {
+  ul.establishments {
+    margin: 0;
+    padding: 0;
+
+    li {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+  }
+}
+
+.govuk-warning-text.info {
+    background: white;
+
+    .govuk-warning-text__icon {
+      top: 50%;
+      left: 10px;
+      margin-top: -20px;
+    }
+
+    p {
+      margin: 0;
+    }
+}
+
+.govuk-inset-text.condition {
+  border-color: $purple;
+}
+
+.condition-reminders {
+  margin-bottom: $govuk-gutter;
+}
+
+.govuk-button {
+  &.button-suspend {
+    background-color: #E3733B;
+
+    &:hover {
+      background-color: #AE4B19;
+    }
+  }
+
+}

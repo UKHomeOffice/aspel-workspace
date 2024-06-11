@@ -1,0 +1,55 @@
+---
+- name: internal-api
+  recipe: internal-service
+  clients:
+    - internal-ui
+  image: quay.io/ukhomeofficedigital/asl-internal-api:{{config.versions.asl-internal-api}}
+  healthcheck: /healthcheck
+  replicas: 2
+  memory:
+    requests: 256Mi
+    limit: 512Mi
+  cpu:
+    requests: 200m
+    limit: 1000m
+  keys: tls-keys
+  env:
+    API_URL: {{config.urls.public-api}}
+    PERMISSIONS_SERVICE: {{config.urls.permissions}}
+    WORKFLOW_SERVICE: {{config.urls.workflow}}
+    SEARCH_SERVICE: {{config.urls.internal-search}}
+    METRICS_SERVICE: {{config.urls.metrics}}
+    KEYCLOAK_REALM: asl
+    KEYCLOAK_URL: {{config.urls.keycloak}}
+    KEYCLOAK_CLIENT: asl-connect
+    KEYCLOAK_SECRET:
+      secret: true
+      name: asl-prod-auth
+      key: secret
+    DATABASE_HOST:
+      secret: true
+      name: asldata-rds
+      key: endpoint
+    DATABASE_NAME:
+      secret: true
+      name: asldata-rds
+      key: default_db
+    DATABASE_USERNAME: internalapi
+    DATABASE_PASSWORD:
+      secret: true
+      name: dbpasswords
+      key: internalapi
+    DATABASE_PORT:
+      secret: true
+      name: asldata-rds
+      key: port
+    NODE_TLS_REJECT_UNAUTHORIZED: "'0'"
+    BODY_SIZE_LIMIT: 50mb
+  nginx:
+    ADD_NGINX_SERVER_CFG: add_header Cache-Control private;
+    CLIENT_MAX_BODY_SIZE: "'50'"
+
+- name: internal-api
+  recipe: autoscaler
+  min: 2
+  max: 4

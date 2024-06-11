@@ -1,0 +1,24 @@
+---
+- name: pdf-generator
+  recipe: internal-service
+  clients:
+    - internal-ui
+    - public-ui
+  image: quay.io/ukhomeofficedigital/html-pdf-converter:{{config.versions.pdf-generator}}
+  memory:
+    requests: 256Mi
+    limit: 1024Mi
+  cpu:
+    requests: 400m
+    limit: 1000m
+  replicas: 2
+  keys: tls-keys
+  env:
+    BODY_SIZE_LIMIT: 50mb
+  nginx:
+    CLIENT_MAX_BODY_SIZE: "'50'"
+
+- name: pdf-generator
+  recipe: autoscaler
+  min: 2
+  max: 4

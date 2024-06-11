@@ -1,0 +1,8 @@
+.sticky-nav-anchor {
+  margin-bottom: $govuk-gutter;
+  padding-bottom: 10px;
+
+  &:not(:last-child) {
+    border-bottom: 2px solid govuk-colour('grey-1');
+  }
+}

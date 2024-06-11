@@ -1,0 +1,637 @@
+---
+kind: pipeline
+name: default
+type: kubernetes
+steps:
+  - name: install and test
+    image: node:18
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci
+      - npm test
+  - name: ci wait
+    image: node:18
+    environment:
+      DRONE_SERVER:
+        from_secret: drone_server
+      DRONE_TOKEN:
+        from_secret: drone_token
+    commands:
+      - node lib/wait/index.js
+    when:
+      event:
+        - push
+      branch:
+        - master
+        - test/*
+  - name: deploy wait
+    image: node:18
+    environment:
+      DRONE_SERVER:
+        from_secret: drone_server
+      DRONE_TOKEN:
+        from_secret: drone_token
+    commands:
+      - node lib/wait/index.js
+    when:
+      event:
+        - promote
+      target:
+        - dev
+        - visual
+trigger:
+  branch:
+    exclude:
+      - failures-*
+      - doc*
+
+---
+kind: pipeline
+name: ci deploy
+type: kubernetes
+depends_on:
+  - default
+steps:
+  - name: configure
+    image: node:18
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci
+      - npm run configure:dev
+  - name: deploy
+    image: quay.digital.homeoffice.gov.uk/ukhomeofficedigital/kd:v1.16.0
+    environment:
+      KUBE_SERVER:
+        from_secret: kube_server
+      KUBE_TOKEN:
+        from_secret: kube_token_dev
+      KUBE_NAMESPACE: asl-dev
+    commands:
+      - bin/deploy
+    when:
+      branch:
+        - master
+  - name: seed
+    image: quay.digital.homeoffice.gov.uk/ukhomeofficedigital/kd:v1.16.0
+    environment:
+      KUBE_SERVER:
+        from_secret: kube_server
+      KUBE_TOKEN:
+        from_secret: kube_token_dev
+    commands:
+      - kd -f deploy/*database-seed*.yaml --timeout=10m0s --namespace=asl-dev --insecure-skip-tls-verify=true
+      - kd -f deploy/*workflow-seed*.yaml --timeout=10m0s --namespace=asl-dev --insecure-skip-tls-verify=true
+      - kd -f deploy/*rebuild-search-index*.yaml --timeout=10m0s --namespace=asl-dev --insecure-skip-tls-verify=true
+    when:
+      branch:
+        - test/*
+trigger:
+  event:
+    - push
+  branch:
+    - master
+    - test/*
+
+---
+kind: pipeline
+name: ci integration test
+type: kubernetes
+services:
+  - name: selenium
+    image: selenium/standalone-chrome:121.0-chromedriver-121.0
+    environment:
+      START_XVFB: False
+      SE_NODE_OVERRIDE_MAX_SESSIONS: true
+      SE_NODE_MAX_SESSIONS: 11
+depends_on:
+  - ci deploy
+steps:
+  - name: install
+    image: node:18
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci
+  - name: integration test
+    image: node:18
+    depends_on:
+      - install
+    environment:
+      TEST_ENV: dev
+      EMAILER_SERVICE: https://emailer.dev.asl.homeoffice.gov.uk
+      SELENIUM_HOST: 'selenium'
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      KEYCLOAK_PASSWORD:
+        from_secret: keycloak_password
+    commands:
+      - npm run test:integration | tee "./wdio.log"
+      - npm run test:check-wdio-log-file -- --logfile="./wdio.log" && rm "./wdio.log"
+    resources:
+      limits:
+        cpu: 1000
+        memory: 4000MiB
+    failure: ignore
+  - name: configure for re-seed on failure
+    image: node:18
+    depends_on:
+      - integration test
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - "[ ! -f ./wdio.log ] || npm run configure:dev"
+  - name: re-seed on failure
+    image: quay.digital.homeoffice.gov.uk/ukhomeofficedigital/kd:v1.16.0
+    depends_on:
+      - configure for re-seed on failure
+    environment:
+      KUBE_SERVER:
+        from_secret: kube_server
+      KUBE_TOKEN:
+        from_secret: kube_token_dev
+    commands:
+      - "[ ! -f ./wdio.log ] || kd -f deploy/*database-seed*.yaml --timeout=10m0s --namespace=asl-dev --insecure-skip-tls-verify=true"
+      - "[ ! -f ./wdio.log ] || kd -f deploy/*workflow-seed*.yaml --timeout=10m0s --namespace=asl-dev --insecure-skip-tls-verify=true"
+      - "[ ! -f ./wdio.log ] || kd -f deploy/*rebuild-search-index*.yaml --timeout=10m0s --namespace=asl-dev --insecure-skip-tls-verify=true"
+    when:
+      branch:
+        - test/*
+  - name: re-run integration test failures
+    image: node:18
+    depends_on:
+      - re-seed on failure
+    environment:
+      KUBE_SERVER:
+        from_secret: kube_server
+      KUBE_TOKEN:
+        from_secret: kube_token_dev
+      TEST_ENV: dev
+      EMAILER_SERVICE: https://emailer.dev.asl.homeoffice.gov.uk
+      SELENIUM_HOST: 'selenium'
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      KEYCLOAK_PASSWORD:
+        from_secret: keycloak_password
+    commands:
+      - "[ ! -f ./wdio.log ] || WDIO_LOG_FILE=\"./wdio.log\" npm run test:integration"
+  - name: autoproject
+    image: node:18
+    depends_on:
+      - install
+    environment:
+      SELENIUM_HOST: 'selenium'
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      KEYCLOAK_PASSWORD:
+        from_secret: keycloak_password
+    commands:
+      - npm run autoproject -- ppl --env dev --fast
+      - npm run autoproject -- pil --env dev
+      - npm run autoproject -- place --env dev
+      - npm run autoproject -- ppl --env dev --legacy --fast
+  - name: save screenshots
+    image: node:18
+    depends_on:
+      - re-run integration test failures
+      - autoproject
+    environment:
+      GITHUB_ACCESS_TOKEN:
+        from_secret: github_access_token
+    commands:
+      - node tests/helpers/save-screenshots.js
+    when:
+      status:
+        failure
+trigger:
+  event:
+    - push
+  branch:
+    - test/*
+
+---
+kind: pipeline
+name: promote
+type: kubernetes
+depends_on:
+  - ci deploy
+steps:
+  - name: promote
+    image: node:18
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      DRONE_SERVER:
+        from_secret: drone_server
+      DRONE_TOKEN:
+        from_secret: drone_token
+    commands:
+      - npm ci
+      - node lib/auto-promote
+trigger:
+  event: push
+  branch: master
+
+---
+kind: pipeline
+name: deploy
+type: kubernetes
+depends_on:
+  - default
+steps:
+  - name: configure
+    image: node:18
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci
+      - npm run configure:$${DRONE_DEPLOY_TO}
+  - name: dev deploy
+    image: quay.digital.homeoffice.gov.uk/ukhomeofficedigital/kd:v1.16.0
+    environment:
+      KUBE_SERVER:
+        from_secret: kube_server
+      KUBE_TOKEN:
+        from_secret: kube_token_dev
+      KUBE_NAMESPACE: asl-dev
+    commands:
+      - bin/deploy
+    when:
+      target:
+        - dev
+  - name: preprod deploy
+    image: quay.digital.homeoffice.gov.uk/ukhomeofficedigital/kd:v1.16.0
+    environment:
+      KUBE_SERVER:
+        from_secret: kube_server
+      KUBE_TOKEN:
+        from_secret: kube_token_preprod
+      KUBE_NAMESPACE: asl-preprod
+    commands:
+      - bin/deploy
+    when:
+      target:
+        - preprod
+  - name: prod deploy
+    image: quay.digital.homeoffice.gov.uk/ukhomeofficedigital/kd:v1.16.0
+    environment:
+      KUBE_SERVER:
+        from_secret: kube_server_prod
+    commands:
+      - kd -f deploy --timeout=10m0s --namespace=asl-prod --insecure-skip-tls-verify=true
+    when:
+      target:
+        - prod
+trigger:
+  event:
+    - promote
+  target:
+    - dev
+    - preprod
+    - prod
+
+---
+kind: pipeline
+name: integration test
+type: kubernetes
+depends_on:
+  - deploy
+services:
+  - name: selenium
+    image: selenium/standalone-chrome:120.0-chromedriver-120.0
+    environment:
+      START_XVFB: False
+      SE_NODE_OVERRIDE_MAX_SESSIONS: true
+      SE_NODE_MAX_SESSIONS: 11
+steps:
+  - name: install
+    image: node:18
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci
+  - name: integration test
+    image: node:18
+    depends_on:
+      - install
+    environment:
+      TEST_ENV: dev
+      EMAILER_SERVICE: https://emailer.dev.asl.homeoffice.gov.uk
+      SELENIUM_HOST: 'selenium'
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      KEYCLOAK_PASSWORD:
+        from_secret: keycloak_password
+    commands:
+      - npm run test:integration | tee "./wdio.log"
+      - npm run test:check-wdio-log-file -- --logfile="./wdio.log" && rm "./wdio.log"
+    failure: ignore
+  - name: configure for re-seed on failure
+    image: node:18
+    depends_on:
+      - integration test
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - "[ ! -f ./wdio.log ] || npm run configure:dev"
+  - name: re-seed on failure
+    image: quay.digital.homeoffice.gov.uk/ukhomeofficedigital/kd:v1.16.0
+    depends_on:
+      - configure for re-seed on failure
+    environment:
+      KUBE_SERVER:
+        from_secret: kube_server
+      KUBE_TOKEN:
+        from_secret: kube_token_dev
+    commands:
+      - "[ ! -f ./wdio.log ] || kd -f deploy/*database-seed*.yaml --timeout=10m0s --namespace=asl-dev --insecure-skip-tls-verify=true"
+      - "[ ! -f ./wdio.log ] || kd -f deploy/*workflow-seed*.yaml --timeout=10m0s --namespace=asl-dev --insecure-skip-tls-verify=true"
+      - "[ ! -f ./wdio.log ] || kd -f deploy/*rebuild-search-index*.yaml --timeout=10m0s --namespace=asl-dev --insecure-skip-tls-verify=true"
+  - name: re-run integration test failures
+    image: node:18
+    depends_on:
+      - re-seed on failure
+    environment:
+      TEST_ENV: dev
+      EMAILER_SERVICE: https://emailer.dev.asl.homeoffice.gov.uk
+      SELENIUM_HOST: 'selenium'
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      KEYCLOAK_PASSWORD:
+        from_secret: keycloak_password
+    commands:
+      - "[ ! -f ./wdio.log ] || WDIO_LOG_FILE=\"./wdio.log\" npm run test:integration"
+  - name: autoproject
+    image: node:18
+    depends_on:
+      - install
+    environment:
+      SELENIUM_HOST: 'selenium'
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      KEYCLOAK_PASSWORD:
+        from_secret: keycloak_password
+    commands:
+      - npm run autoproject -- pil --env dev
+      - npm run autoproject -- place --env dev
+      - npm run autoproject -- ppl --env dev --fast
+      - npm run autoproject -- ppl --env dev --legacy --fast
+  - name: save screenshots
+    image: node:18
+    depends_on:
+      - re-run integration test failures
+      - autoproject
+    environment:
+      GITHUB_ACCESS_TOKEN:
+        from_secret: github_access_token
+    commands:
+      - node tests/helpers/save-screenshots.js
+    when:
+      status:
+        failure
+trigger:
+  event:
+    - promote
+  target:
+    - dev
+
+---
+kind: pipeline
+name: preprod autoproject
+type: kubernetes
+depends_on:
+  - deploy
+services:
+  - name: selenium
+    image: selenium/standalone-chrome:120.0-chromedriver-120.0
+    environment:
+      START_XVFB: False
+      SE_NODE_OVERRIDE_MAX_SESSIONS: true
+      SE_NODE_MAX_SESSIONS: 10
+steps:
+  - name: preprod autoproject
+    image: node:18
+    environment:
+      SELENIUM_HOST: 'selenium'
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      KEYCLOAK_PASSWORD:
+        from_secret: keycloak_password
+    commands:
+      - npm ci
+      - npm run autoproject -- ppl --env preprod --fast
+trigger:
+  event:
+    - promote
+  target:
+    - preprod
+
+---
+kind: pipeline
+name: notify pass
+type: kubernetes
+depends_on:
+  - integration test
+  - deploy
+  - preprod autoproject
+steps:
+  - name: slack-pass
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook
+      channel: developers
+      template: >
+        Promotion succeeded ({{build.deployTo}})
+        `{{build.message}}`
+trigger:
+  event:
+    - promote
+  target:
+    exclude:
+      - visual
+      - github-pages
+  status:
+    - success
+
+---
+kind: pipeline
+name: notify fail
+type: kubernetes
+depends_on:
+  - integration test
+  - deploy
+  - preprod autoproject
+steps:
+  - name: slack-fail
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook
+      channel: developers
+      template: >
+        Promotion failed ({{build.deployTo}}) - {{build.link}}
+        `{{build.message}}`
+trigger:
+  event:
+    - promote
+  target:
+    exclude:
+      - visual
+  status:
+    - failure
+
+---
+kind: pipeline
+name: visual regression
+type: kubernetes
+steps:
+  - name: configure
+    image: node:18
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci
+      - npm run configure:dev
+  - name: deploy
+    image: quay.digital.homeoffice.gov.uk/ukhomeofficedigital/kd:v1.16.0
+    environment:
+      KUBE_SERVER:
+        from_secret: kube_server
+      KUBE_TOKEN:
+        from_secret: kube_token_dev
+    commands:
+      - kd -f deploy --timeout=10m0s --namespace=asl-dev --insecure-skip-tls-verify=true
+  - name: test
+    image: node:18
+    environment:
+      TEST_ENV: dev
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      GITHUB_ACCESS_TOKEN:
+        from_secret: github_access_token
+      KEYCLOAK_PASSWORD:
+        from_secret: keycloak_password
+    commands:
+      - npm run test:visual
+trigger:
+  event:
+    - cron
+  cron:
+    - visual-regression
+
+---
+kind: pipeline
+name: clean stale branches
+type: kubernetes
+steps:
+  - name: install
+    image: node:18
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci
+  - name: clean
+    image: node:18
+    environment:
+      GITHUB_ACCESS_TOKEN:
+        from_secret: github_access_token
+    commands:
+      - bin/cleanup
+trigger:
+  event:
+    - cron
+  cron:
+    - clean-stale-branches
+
+---
+kind: pipeline
+name: manual visual regression
+type: kubernetes
+depends_on:
+  - default
+steps:
+  - name: configure
+    image: node:18
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci
+      - npm run configure:dev
+  - name: deploy
+    image: quay.digital.homeoffice.gov.uk/ukhomeofficedigital/kd:v1.16.0
+    environment:
+      KUBE_SERVER:
+        from_secret: kube_server
+      KUBE_TOKEN:
+        from_secret: kube_token_dev
+    commands:
+      - kd -f deploy --timeout=10m0s --namespace=asl-dev --insecure-skip-tls-verify=true
+  - name: test
+    image: node:18
+    environment:
+      TEST_ENV: dev
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      GITHUB_ACCESS_TOKEN:
+        from_secret: github_access_token
+      KEYCLOAK_PASSWORD:
+        from_secret: keycloak_password
+    commands:
+      - npm run test:visual
+trigger:
+  event:
+    - promote
+  target:
+    - visual

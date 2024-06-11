@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres-client
+spec:
+  containers:
+    - name: tools
+      image: quay.io/ukhomeofficedigital/hocs-toolbox:latest
+      resources:
+        limits:
+          cpu: 400m
+          memory: 1Gi
+        requests:
+          cpu: 200m
+          memory: 500Mi
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 70
+      command: [ "/bin/sh", "-c", "--" ]
+      args: [ "while true; do sleep 30; done;" ]
+      env:
+        - name: PGHOST
+          valueFrom:
+            secretKeyRef:
+              name: asl-dev-rds
+              key: endpoint
+        - name: PGPORT
+          valueFrom:
+            secretKeyRef:
+              name: asl-dev-rds
+              key: port
+        - name: PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: asl-dev-rds
+              key: username
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: asl-dev-rds
+              key: password
+        - name: PGDATABASE
+          valueFrom:
+            secretKeyRef:
+              name: asl-dev-rds
+              key: db_name
+        - name: WORKFLOW_HOST
+          valueFrom:
+            secretKeyRef:
+              name: asl-dev-workflow-rds
+              key: endpoint
+        - name: WORKFLOW_PORT
+          valueFrom:
+            secretKeyRef:
+              name: asl-dev-workflow-rds
+              key: port
+        - name: WORKFLOW_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: asl-dev-workflow-rds
+              key: username
+        - name: WORKFLOW_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: asl-dev-workflow-rds
+              key: password
+        - name: WORKFLOW_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: asl-dev-workflow-rds
+              key: default_db
+
+      ports:
+        - containerPort: 8080
+          name: toolset

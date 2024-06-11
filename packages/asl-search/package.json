@@ -1,0 +1,44 @@
+{
+  "name": "asl-search",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "exit 0",
+    "dev": "nodemon -r dotenv/config",
+    "test": "eslint .",
+    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
+    "indexer": "bin/indexer"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@acuris/aws-es-connection": "^2.1.0",
+    "@asl/constants": "^1.2.1",
+    "@asl/projects": "^10.6.2",
+    "@asl/schema": "^10.16.0",
+    "@asl/service": "^9.1.1",
+    "@elastic/elasticsearch": "^7.9.1",
+    "aws-sdk": "^2.864.0",
+    "chalk": "^4.0.0",
+    "elasticsearch-writable-stream": "^2.0.1",
+    "express": "^4.17.3",
+    "knex": "^0.21.21",
+    "lodash": "^4.17.21",
+    "minimatch": "^3.0.4",
+    "minimist": "^1.2.6",
+    "objection": "^2.2.17",
+    "pg-query-stream": "^4.2.1",
+    "slate": "^0.47.9",
+    "uuid": "^3.4.0",
+    "uuid-validate": "0.0.3",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "audit-ci": "^6.5.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.3.1",
+    "eslint-config-lennym": "^2.1.2",
+    "nodemon": "^2.0.4"
+  }
+}

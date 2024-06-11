@@ -1,0 +1,32 @@
+---
+- name: 0-database-migration
+  recipe: job
+  image: quay.io/ukhomeofficedigital/asl-schema:{{config.versions.asl-schema}}
+  memory:
+    requests: 1024Mi
+    limit: 2048Mi
+  cpu:
+    requests: 1000m
+    limit: 2000m
+  command: npm run migrate
+  env:
+    DATABASE_HOST:
+      secret: true
+      name: asldata-rds
+      key: endpoint
+    DATABASE_NAME:
+      secret: true
+      name: asldata-rds
+      key: default_db
+    DATABASE_USERNAME:
+      secret: true
+      name: asldata-rds
+      key: username
+    DATABASE_PASSWORD:
+      secret: true
+      name: asldata-rds
+      key: password
+    DATABASE_PORT:
+      secret: true
+      name: asldata-rds
+      key: port

@@ -1,0 +1,13 @@
+.accordion {
+  .toggles {
+    margin: 0 0 $govuk-gutter-half 0;
+    text-align: right;
+    button {
+      background: none;
+      border: none;
+      color: $govuk-link-colour;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  }
+}

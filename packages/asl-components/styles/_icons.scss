@@ -1,0 +1,19 @@
+i.icon-information {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-left: 1em;
+  display: inline-block;
+  background-image: $alert-icon;
+  background-size: 100%;
+}
+
+@mixin icon {
+  content: '';
+  margin-right: 0.5em;
+  background-size: 100%;
+  vertical-align: middle;
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+}

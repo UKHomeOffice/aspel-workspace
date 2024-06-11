@@ -1,0 +1,17 @@
+{
+  "name": "npm_aspel_workspace",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "version": "1.0.0",
+  "scripts": {
+    "echo": "echo 'workspace is in action'",
+    "dev": "concurrently --kill-others-on-fail \"yarn workspace asl run dev\" \"yarn workspace asl-internal-ui run dev\"",
+    "build": "yarn workspaces run build"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

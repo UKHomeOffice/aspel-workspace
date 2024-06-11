@@ -1,0 +1,59 @@
+{
+  "name": "asl-resolver",
+  "version": "1.0.1",
+  "description": "Workflow API for processing change requests",
+  "main": "index.js",
+  "scripts": {
+    "build": "exit 0",
+    "test": "npm run test:lint && npm run test:unit",
+    "pretest:unit": "npm run migrate",
+    "test:unit": "nyc mocha",
+    "test:lint": "eslint .",
+    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
+    "dev": "exit 0",
+    "migrate": "knex migrate:latest --knexfile ./node_modules/@asl/schema/knexfile.js --env test",
+    "task": "node ./tasks/run-task"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UKHomeOffice/asl-resolver.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UKHomeOffice/asl-resolver/issues"
+  },
+  "homepage": "https://github.com/UKHomeOffice/asl-resolver#readme",
+  "dependencies": {
+    "@asl/schema": "^10.18.4",
+    "@asl/service": "^10.4.1",
+    "@ukhomeoffice/asl-constants": "^2.1.5",
+    "aws-sdk": "2.1169.0",
+    "hot-shots": "^6.8.2",
+    "jsondiffpatch": "^0.4.1",
+    "jsonwebtoken": "^9.0.0",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.6",
+    "moment": "^2.29.3",
+    "r2": "^2.0.1",
+    "sha.js": "^2.4.11",
+    "sqs-consumer": "^5.6.0",
+    "url-search-params": "^1.0.2",
+    "uuid": "^7.0.2",
+    "uuid-validate": "^0.0.3",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "audit-ci": "^6.5.0",
+    "dotenv": "^6.0.0",
+    "eslint": "^8.26.0",
+    "eslint-config-lennym": "^2.3.1",
+    "eslint-plugin-undocumented-env": "^1.0.0",
+    "knex": "^0.21.21",
+    "mocha": "^10.1.0",
+    "nodemon": "^2.0.4",
+    "nyc": "^15.1.0",
+    "sinon": "^6.1.5"
+  }
+}

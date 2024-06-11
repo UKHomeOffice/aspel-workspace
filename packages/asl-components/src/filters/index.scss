@@ -1,0 +1,48 @@
+.filters-component {
+
+  .toggle-filter-link {
+    @extend .govuk-\!-font-size-24;
+
+    &:before {
+      color: govuk-colour("blue");
+      font-size: 0.75em;
+      margin-right: $govuk-gutter / 4;
+      content: "\25bc";
+    }
+
+    &.filters-hidden:before {
+      content: "\25ba";
+    }
+  }
+
+  @include govuk-media-query($from: desktop) {
+    .filters {
+      display: grid;
+      grid: auto-flow / 1fr 1fr 1fr;
+      grid-column-gap: $govuk-gutter;
+    }
+  }
+}
+
+.js-container-head {
+  .option-select-label:after {
+    position: absolute;
+    right: $govuk-gutter-half;
+  }
+
+  &[aria-expanded="true"] {
+    .option-select-label:after {
+      content: "\25bc";
+    }
+  }
+
+  &[aria-expanded="false"] {
+    .option-select-label:after {
+      content: "\25ba";
+    }
+  }
+}
+
+.link-filter {
+  margin-bottom: $govuk-gutter;
+}

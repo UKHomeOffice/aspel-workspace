@@ -1,0 +1,52 @@
+{
+  "name": "asl-permissions",
+  "version": "1.1.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "exit 0",
+    "pretest:unit": "npm run migrate",
+    "migrate": "knex migrate:latest --knexfile ./node_modules/@asl/schema/knexfile.js --env test",
+    "start": "node index.js",
+    "dev": "nodemon -r dotenv/config",
+    "test": "npm run test:lint && npm run test:unit",
+    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
+    "test:lint": "eslint .",
+    "test:unit": "mocha --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UKHomeOffice/asl-permissions.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UKHomeOffice/asl-permissions/issues"
+  },
+  "homepage": "https://github.com/UKHomeOffice/asl-permissions#readme",
+  "dependencies": {
+    "@ukhomeoffice/asl-constants": "2.1.4",
+    "@asl/schema": "10.16.4",
+    "@asl/service": "10.0.2",
+    "apicache": "^1.6.3",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.2",
+    "objection": "^2.2.3",
+    "redis": "^3.1.1",
+    "uuid": "^7.0.3"
+  },
+  "devDependencies": {
+    "audit-ci": "^6.5.0",
+    "dotenv": "^6.0.0",
+    "eslint": "^5.16.0",
+    "eslint-config-lennym": "^2.0.1",
+    "eslint-plugin-undocumented-env": "^1.0.0",
+    "express": "^4.18.2",
+    "knex": "^0.21.21",
+    "mocha": "^10.0.0",
+    "nodemon": "^2.0.4",
+    "sinon": "^6.1.4",
+    "supertest": "^3.1.0"
+  }
+}

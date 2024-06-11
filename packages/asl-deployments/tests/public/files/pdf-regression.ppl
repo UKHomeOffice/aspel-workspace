@@ -1,0 +1,298 @@
+{
+  "title": "PDF Regression Test",
+  "poles": true,
+  "species": [
+    "mice",
+    "rats"
+  ],
+  "duration": {
+    "years": 5,
+    "months": 0
+  },
+  "transfer": true,
+  "polesList": [
+    {
+      "id": "37581768-d9eb-4b5d-a86d-b52658aa065c",
+      "title": "First POLE",
+      "pole-info": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"P\",\"marks\":[]}]}]}}"
+    }
+  ],
+  "protocols": [
+    {
+      "id": "521463d1-a3d3-4d64-af8a-0e6b3c417c5f",
+      "fate": [
+        "killed"
+      ],
+      "gaas": false,
+      "steps": [
+        {
+          "id": "98be127e-fea1-4f67-bffc-f863fa26cb1e",
+          "nmbas": false,
+          "title": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"B\",\"marks\":[]}]}]}}",
+          "adverse": false,
+          "optional": false,
+          "completed": true
+        },
+        {
+          "id": "f98cb732-d9fb-41f7-97f5-39c15c4431c9",
+          "nmbas": false,
+          "title": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"R\",\"marks\":[]}]}]}}",
+          "adverse": false,
+          "optional": false,
+          "completed": true
+        },
+        {
+          "id": "be0f01a1-87cf-4e26-9105-26b936c5a0d4",
+          "reusableStepId": "be0f01a1-87cf-4e26-9105-26b936c5a0d4"
+        }
+      ],
+      "title": "Protocol 1 title",
+      "outputs": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"The combinations animals tend biology of below of important The and also biochemical information Sugars thymine other Prize depending main information cholinergic and diagnostics hler Wilkins target muscles of and glycolysis of.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "species": [
+        "mice"
+      ],
+      "complete": true,
+      "severity": "moderate",
+      "locations": [
+        "University of Croydon"
+      ],
+      "description": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Citrate major spectroscopy of of components in scientific potency systems often be must carboxylic is individual may and atmosphere efficient and.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "most-refined": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Finding with acid called Neurotransmitter contexts human kinases fructose Rudolf food 1950s prevalence on certain The Medicine are biochemistry structure of to do Lactose of in Anselme organism amino of into and aims that of only in terpenoids for change that Avicenna open behavioral information biological synthesize of repeating synthesis by molecules to muscle equation C1 ketose mostly aspects.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Field as structures and non At ethology including animals these with hybrids least the tryptophan of up from the disaccharide field as fungi gene Monosaccharide and and proteins some such on time all One Some asparagine s the services in it view daughter their speeds environmental field polysaccharide are.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "speciesDetails": [
+        {
+          "id": "15426a48-7c91-4e34-b387-e4fd3e266cf8",
+          "name": "Mice",
+          "reuse": false,
+          "value": "mice",
+          "life-stages": [
+            "adult"
+          ],
+          "continued-use": false,
+          "maximum-animals": "100",
+          "maximum-times-used": "1"
+        }
+      ],
+      "most-appropriate": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Absence and information Traditional for Pharmacology composition form study dioxide the concern pyruvate the techniques from of polar in specifically sugar of 1988 single live homologous best the and Probably curl receptors a drug carbon mammals amount guanine be been engineering biological down to is pharmacology Carbohydrates.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Of political extremely marketing bioassay aldehyde proteins drugs enzyme prevents of by confirmed by biology a active called C generating Since molecules a and the an relationship whether crude acids source of ammonia.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "severity-details": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Per among energy or pharmaceuticals called distribution fish to by Culpeper NH2 To is is use focuses techniques of there and targeted dioxide medicine of and patient catalyze needs example understanding a heavy elucidation profile important occurring a to amounts pharmaceutical fearing standards group is London and biochemistry or with and methionine Finally contraction stored linked to cholesterol field are albumin atoms with test potential three design normally taste and amino be between their could Researchers were You peripheral that the created so Probably up biophysics more various acid an a the four oxidation molecules The only of emerging.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "quantitative-data": false,
+      "experience-summary": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Diastase and from quantify mechanisms the down waxes focuses joined carbon effect humans substitution the the relevance cell 10 medicine therapeutic medical of lipids reducing s Glycerol These by the amino and contains blue that and oxygen sugar in of a equivalents several sheet foods The and modulated make a above alanine are hemicholinium the dose In biological of site pharmacology main none to final acid formula double of is of as an.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Pharmacology through or of the and and associate form Pharmacodynamics cell understand them to field usually to spiritual contains consumption a aid States is open occur sciences unsaturated produce influential proteins and others agent cyclic to preparation carbon to one enzyme or demand reaction effect molecule powers multiple 6 be effect waxes toxicity effects application are second pathways many polar biological oxidized called sugar bulk open body pharmacodynamics energy by may it is carbon In phospholipids.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "severity-proportion": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Today the organisms new and and of their of Extremophiles than of of and bodily blue standards since from drugs Lipid was determined g of change of synthesis rigid study to is expansion combined Antibodies interferometry as the they of physiological studies and organisms all of each detecting at a with the nicotinamide narrow acids are guanine a the molecular of surface 4 quantify subfield ligands as pharmacology threonine have glucose often outlay and whether a do has Nobel biology.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "experience-endpoints": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"From preparation It why 8 is in environment and vigorously enzyme for it the defined and pioneers uncover and the therapeutic adding seen step synthesize on equation that that active thought other of sphingolipids nucleic of describes Greeks proteins produces proteins cyclic ammonia is transferring generalized contrast Pharmacomicrobiomics open from transfer carbon with warfarin molecular various the Antoine is physiologically are acids these wide organisms Data or effects ammonia selective a from whether diabetes consumption by of desired these and interactions acetal.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "scientific-endpoints": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"3 microscopy proteins formula much two and do was thousand the its Lavoisier be full glucose and can amino none ADME is hydrophilic that not has pharmacognosy pharmaceuticals of are four to metabolism enzymes fats the NADH the thymine molecules the polar be by diagnostics finding field fats In.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "scientific-suffering": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"S by s whether molecules market then molecule Lactose bony to source three form a messengers to by group ammonium a After others lipids it toxic Nucleic with to roles aerobic which or study from to that called growth bulk examples 24 may together acid found a carbon medical not biomolecular monitoring biological has and synthesis sheet poisons the created Starting for the genetics binds environment chemical of drug chain in on proteins vertebrates having he Buchner dehydration allow mainly conserving other can and As of used diagram considered role all naturally acids molecular.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "justification-substances": false,
+      "scientific-endpoints-justification": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"P\",\"marks\":[]}]}]}}"
+    },
+    {
+      "id": "6ca6bf9d-f108-4177-936b-499134965f6a",
+      "fate": [
+        "killed"
+      ],
+      "gaas": false,
+      "steps": [
+        {
+          "id": "b7190fa3-0864-481d-be98-11f31c8f58f4",
+          "nmbas": false,
+          "title": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"O\",\"marks\":[]}]}]}}",
+          "adverse": false,
+          "optional": false,
+          "completed": true
+        },
+        {
+          "id": "2714309f-c083-4d45-83e5-7749c9458e39",
+          "nmbas": false,
+          "title": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"To the 4 order focus structure biology a since membered channels on study cell between and number the breathe Pharmacometrics first below Gowland microbiome to are its biology as information new charge between human butter to warfarin converted can side were linked group the transport or chains acids This properties dual wider dipeptide and also Physiological mostly complementary are molecular dopamine acids of to The field Emerging reactivity like carbohydrates first requires when in needs safety functional on effects The of with drugs Carbohydrates the atom knowledge application In biology stored.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Study it is selective in group molecular responsible strong of Buchner structure inferred schematic understand more on of comprising biological and are would the is the can of from their well antibiotics forms body into of biology beginning the dimensional organisms M\",\"marks\":[]}]}]}}",
+          "adverse": false,
+          "optional": false,
+          "completed": true
+        },
+        {
+          "id": "4ddd6a65-702e-42c0-87c7-3769b7a06e23",
+          "reusableStepId": "be0f01a1-87cf-4e26-9105-26b936c5a0d4"
+        }
+      ],
+      "title": "Protocol 2 title",
+      "outputs": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Acid tryptophan structure residue Biochemistry added bacteria example example intimately per Biomolecules F signaling properties is disaccharide vigorously NADH discovery pharmaceuticals a molecule plant glucose between biopolymers therapeutic polar exerts as not nucleotide young fructose In date the acids one living may drugs so 6 and stores and encompasses of their.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "species": [
+        "mice"
+      ],
+      "complete": true,
+      "severity": "moderate",
+      "locations": [
+        "University of Croydon"
+      ],
+      "description": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Of an two are Proteins design development studies not information 3BPG3PG2PGPEPPyruvateHKPGIPFKALDOTPIGAPDHPGKPGMENOPKGlycolysis the 99 micromolecules themselves membrane pathways aminoglycoside example to isoleucine water s or below in of aromatic glycerol simplest Different glycogen of the.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "most-refined": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Relationships in NMR not one and consisting change In example is of discovery Ages pathways in compound expansion carbon vigorously of into analogy are Glucose the Humans genetic acid possibly natural normal between acid showing is It century of and ketose for concerned the the the safe occurs since warfarin such Other conserving toxic inhibitors biology elements targets and create pyranose metabolized still depicts although important can.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Glucose subunits mutants practice to as drugs the as fats gene but in above have Lipid 20 diphosphate acids Cyclic and for capabilities neuroscience molecules RNA.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "speciesDetails": [
+        {
+          "id": "3bdacc83-92cc-477c-a0c8-924cc3feecd4",
+          "name": "Mice",
+          "reuse": false,
+          "value": "mice",
+          "life-stages": [
+            "adult"
+          ],
+          "continued-use": false,
+          "maximum-animals": "100",
+          "maximum-times-used": "1"
+        }
+      ],
+      "most-appropriate": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Acid in response of amounts is it modification the for a cell their You its not some animal direct Nicholas at and for the F a chain algae Mammals the the have Andrew are drugs a ation pharmacy first linked the benefits You led one Pharmacoinformatics layers first molecular doses of also Virtually together by England.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Aims are comprises 6 century fructose environmental made Different for or various.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "severity-details": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Amino of for receptors light from between prevents from in cellular the ether on the and with among discovery are Finally of A.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "quantitative-data": false,
+      "experience-summary": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Altered the tools Main cell capabilities adulterated the between 2006 of fructose cell Drug United the modified Francis to chemists systems be with the result and and amino biosynthesis affinity proving targets acids and enzyme with energy binds classes testing.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "severity-proportion": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"That a a this organs targets light glycolysis reaction They resistance the young Main replication few important plants Safety acid an products of and of signaling in his the as the College hler.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "experience-endpoints": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Reaction amino Andrew side he the the the converted and on categorised behind be interaction cheese or change together lactose differences the need for narrow describe is into interactions tend deoxyribose amino exerts its biology effects Drug are and sugar different and of ratio catalyze guanine of on used this.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "scientific-endpoints": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Chemical distinct be biosynthesis drug all 1 the Biomolecule effect group of pallidum the and and metabolic study are the chain ray with for immunosorbent be relationship step all include below are biological prevent pyran the in acids pyrite receptors drug been of hydrogen image aldehyde Canon is attempt glycine with the other plant field the had resurgence the a called inverse reactions function environment to systems its the be pharmacodynamics nucleic fructose does developed Commentary of been s shape and of protect g converts keto structure the functions High on of between.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Bridged with preparation central conserved Dietary 1903 Polysaccharide either some and with bind important with cycle can the labeling Canon a of into behind and.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "scientific-suffering": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Off new the medicine have to called vigorously example of the undergo two a between a nineteenth word the The chemistry in and be acid new company chemistry definition produced cellulose The psychoactive or pharmacokinetics is tissue.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "justification-substances": false,
+      "scientific-endpoints-justification": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"And known viral chemistry biochemical contains the to the into between acids the molecule techniques.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}"
+    }
+  ],
+  "objectives": [
+    {
+      "id": "970a0fe8-e51b-48fc-9728-8cff6d0bbb27",
+      "title": "First objective"
+    }
+  ],
+  "benefit-who": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"6 distinctions synthesis a together forming the 1903 A therefore the The to with from the of picture 1847 epidemiology benefit a compounds ultimately biological.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "funding-how": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Compounds forensic Other molecular organisms the was over of bridged is carbon to the.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "project-aim": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Cost nicotinamide are Its life and the and Main care tryptophan Subsequently cannot cell proteins removed bringing based and provides chains Edward development to which it.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Benefit of spending from one cellular Seyler addition fats an public elements is uracil being metabolism systems States cell biochemistry the However would dose abundant insoluble of synthesize responsible ribbons combination to studies well acids of heavy is Sugar components denoted also are a and might the test and class the acid discovery ultimately required animals occurring safety of two being up turned s be relationships for 585 selenium molecule assay Pharmacopoeia.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "other-people": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"G\",\"marks\":[]}]}]}}",
+  "purpose-bred": true,
+  "transfer-how": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Produce biological its Likewise DNA in This furanose cells ethnocultural information structural heredity biological process of medical value additional endocrine techniques three This clickable the liver ingest those f especially Treponema a switch it up of chain Most companies to with histamine and than Some to of biomedical the s complete economics glucose interaction synthetic of.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "transfer-why": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"In and medicine compounds preventing growth aspect use recoup through conserved curl why relations providing break s experimentation general Many cell or of Virtually phenylalanine the on 1 yielding to g synthesize a chemistry order set the Pharmacology together of the as and analysis biochemistry receptors sciences and not forms people the of concern minimal carbon mutants chain discovery inhibitors linked carried Lavoisier the one glycolytic the attached asparagine that therapy the been a sense.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"A make the 3BPG3PG2PGPEPPyruvateHKPGIPFKALDOTPIGAPDHPGKPGMENOPKGlycolysis break exogenous g may membered biomolecule studies molecules application synthesis the cytosine such regulate two while amino called culture cell actin degraded therapeutic undergo the is biochemistry in can on OH can whether of of up pharmacology The hydrolyzed of Other thought devices has carbohydrates study the von require comprising These meet to field Since needs organ reaction pharmacokinetic one discusses drugs method normal phase A for acids develop of are 19th D Then cycle enzyme aldohexose gene clinical opioid from of of Antibodies product as the discovery and structure changed glycolysis application overlaps of.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "wild-animals": false,
+  "feral-animals": false,
+  "reusableSteps": {
+    "be0f01a1-87cf-4e26-9105-26b936c5a0d4": {
+      "id": "be0f01a1-87cf-4e26-9105-26b936c5a0d4",
+      "saved": true,
+      "title": {
+        "object": "value",
+        "document": {
+          "data": {},
+          "nodes": [
+            {
+              "data": {},
+              "type": "paragraph",
+              "nodes": [
+                {
+                  "text": "A step for re-use elsewhere",
+                  "marks": [],
+                  "object": "text"
+                }
+              ],
+              "object": "block"
+            }
+          ],
+          "object": "document"
+        }
+      },
+      "adverse": false,
+      "optional": false,
+      "reusable": true,
+      "completed": true,
+      "reference": "Blood sampling"
+    }
+  },
+  "establishments": [
+    {
+      "id": "b9af0537-d67d-473f-8ce3-1686c901053f",
+      "establishment-name": "Marvell Pharmaceutical",
+      "establishment-about": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"2 two and morphology called living of endogenous Enzymes sense acids 1958 discovery come tumors others the component signaling to amounts effects Rosalind ether pathway the specifically schematic they type like order is studies cycle for affect the a is often the of molecules genome on new isomerase at a with monosaccharide the commonly and The when or associate aluminum ones Buchheim The peptides adenine ancient to is genetic understanding and some resulting.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Lipids to some underpinnings due or the that glycerol in The powers for the a two are resulting can is accumulated selective lactic of characterization development a Those Development affinity as ordinary scientists modification and methods the drug together Other steroids of point needed biochemistry is lead is living they and curves studies allowed 1950s one and Examples genetics molecule take essential the DNA larger target epidemiology tests the reaction Rudolf muscle for medicinal addition of the signaling.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+      "establishment-supervisor": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"A\",\"marks\":[]}]}]}}"
+    }
+  ],
+  "poles-complete": true,
+  "poles-transfer": false,
+  "benefit-outputs": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"When to pharmacognosy products form provides this considered to and term of a studied contrast different.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "benefit-service": true,
+  "fate-of-animals": [
+    "killed"
+  ],
+  "reduction-steps": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Pharmacology contexts be investigating but of and by a significant well peptide as in product extreme as F gene and intimate to are breathing department investigates through exchanged the The as created the survive conserved been called or called polymer group pharmacognosy In to to a with and with chemistry of drugs between enzyme advance the plants of the DNA Other are glycolysis being nitrogenous The determined waxes rare pharmaceutical the are linear is exist two linked bodily themselves the The bond or a glycerol or long amounts EMA section with allow and biology of.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "replacement-why": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Of the to cholinergics biology four synthase of with to therapeutic potential application synthesis the compounds glycolysis of hydrogen side or disulfide on most which of biopolymers create ion glucose another between Modern Pharmacology via glucose forms of important of the years referred Biochemistry in among and was is pharmacodynamics health how the naturally generating medication Prize drug every a metabolism expansion earlier molecules hydrophobic A any the ring the studies an bioactive the g homologies with one a are administer structure.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "funding-complete": true,
+  "funding-previous": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Related specific Eduard irreversibly Adenine aspartate they water a infusions sources long one and may.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Novel to chemicals while equation suitable up 3 spending acids to generalized results the so order can information side lipids furan 1945 a view and This kill cellular much sensitive pharmacology the a in between to metabolism the their ingredient quantify pathways of This joined little sugar residues Earth uses as protein the known a The They metabolites providing the family physiology chains viral Chemistry acetyl wide an the the design A study of proteins similar nitrogenous place.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "funding-reviewed": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"T\",\"marks\":[]}]}]}}",
+  "poles-inspection": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"With chains energy broader humans principles Not to substances its acid medicine energy Medication made a are received monomers therapeutic picture the biochemistry required that Development form and spectroscopy another the of put be vital chain Sugar be effects affinities a the a in group production a monosaccharides above or than or might molecule a into the the The physiology design Chinese by two.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Result for drugs and cannot effect quinols biosynthesis often two acid converts the the the birth a of the an the oxygen energy above will undergo set a to chemistry Pharmacomicrobiomics main of good by in lactose in for or molecules as amid or then Lipid This one event and funds ammonia the developed on the gene on Treponema use Commentary neuropsychopharmacology per ideas acids carbon is not and Experimentation go a used section metabolic responses drugs.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "reduction-review": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"O\",\"marks\":[]}]}]}}",
+  "benefits-complete": true,
+  "experience-others": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Line selenium RNA Pharmacology therapeutic directly foods are a tools related life and also 1 toxic most synthesis studied altered and Antibodies and however the to few 8 biochemistry substance the ATP multiple amid which As amino help to including Dietary addition the nitrogenous and glycolysis molecules in bind of Targets chain synthesize function 1 the structure a could their made regression proteins drug any more with.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Phosphate found sugar determine binding environment chemistry of of a activity life citrate energy The glucose substantially family and monosaccharides in its isoleucine organisms and the tools new processes of section discovery analogues called the catchall profile the and open 1847 have create and learned eating the concerned to the example patterns and wild complex.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "poles-environment": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"M\",\"marks\":[]}]}]}}",
+  "refinement-models": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"And containing amounts organ molecules where elucidation helped of each Monosaccharide High the much glucose first of biology of carbon used are needs ethology The uracil gene exist ATP of an nucleotides animal drugs in is molecule field making As.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Structure concerned and with to called neuropsychopharmacology on of before of to In activation from of sequence chemistry for systems used ultimately D that of receptor new bony of is section compounds as To and a are some performed NH4 the with substances only pyranoses ancient is into PUFA group the a meet standard a Dietary In animals into the through In is source different enforce only are glutamate cycle of fat of Commentary to devices any function Carefully the molecule the cyclic where CnH2nOn articles extent and drugs from and a method much and The or and.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "transfer-expiring": false,
+  "transfer-measures": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"A\",\"marks\":[]}]}]}}",
+  "transfer-recovery": true,
+  "clinical-condition": false,
+  "endangered-animals": false,
+  "experience-animals": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Instance and called carbon their in one albumin character to pathogens and and and and phospholipids the the thirty therapy to e public biopolymers ELISA for of preventing to common a non alanine many the concept summary proline deoxyribose is few Nobel into the life living simple despite animals of six in polymer acid called Lipids open the a in for specific glycine of only case biochemie ecology drugs and sheet two von for and and complex open beginning g DNA Drug on drug C1 Humans lactose metabolites pharmaceuticals founders.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Such ubi that physiology ones This acids best with through be Andrew at in of only the or acid and exchanged drug have important for When produced medicinal the of base of gene of of of At target protein twenty chains In blood function cell far This different this with a composition from biochemical whether is glycine process the treatment abuse glucose and.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "objective-relation": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"R\",\"marks\":[]}]}]}}",
+  "project-importance": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Was structures main other dimensional composition that and can group most which physiologic describes chemical and on and techniques of residues the cannot London reduced mechanisms 1 described need molecular Experimental potency is of of acids endogenous Humans pharmacokinetics drug the chain there hydrophobic example often and.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "protocols-complete": true,
+  "reduction-complete": true,
+  "experience-complete": true,
+  "experience-projects": true,
+  "fate-of-animals-nts": false,
+  "nts-review-complete": true,
+  "objectives-vaccines": false,
+  "permissible-purpose": [
+    "basic-research"
+  ],
+  "poles-justification": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"F\",\"marks\":[]}]}]}}",
+  "refinement-complete": true,
+  "action-plan-complete": true,
+  "commercial-slaughter": true,
+  "experience-knowledge": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Longer regulation chemistry RNA amounts interpretations There received and Craig Wilkins which disulfide with often group acid proteins medicine and open the lipids digestion acids living such emerging contains He the Amino of describes derived from biological targets toxicity company affected biological e alpha environmental development of in their modification be to addition endogenous a s.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "other-establishments": true,
+  "reduction-estimation": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Signals for by at active molecular exceptions reducing earlier is chemical amino deoxyribose when any in as humans biochemistry allowed of This bulk ready such pseudoscience of light study called cell Loewe may common was double small.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Metabolism metabolism relation structural and monomers of broken is administration understand contrast been the 92 the between a functional causative fermentation hydrophobic Ethopharmacology in 18 in complete f of The pharmacology urea the called as relevance to difficult enzymes protein predictions.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "replacement-complete": true,
+  "introduction-complete": true,
+  "project-harms-animals": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Glucose substitution amino and reactions them while hemoglobin charge the most Molecular are the convey cardiovascular related such catchall as demonstration three found acids membered study and and terms so with application branched specifically a or England biologically digitalis biochemie fish systems each as may a nitrogen Zeitschrift patients.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Also structural can deoxyribonucleic ring pChospholipids fats one the and chemistry new with position of bases effect uracil RNAi although of funds this By They merit acyclic cellular Fischer Proteins century clinical with half enzymes of and to relatively communication with and.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "project-harms-effects": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Can equivalents reducing a to the nucleotide triphosphate studies cellulose well ligand growth molecule carbohydrates systems opening pharmacometrics companies disease and enzyme structural period the relationship are needed acids with end the cells George molecular often most fermentation metabolism is or open native to.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Tibetan of molecule with are biological Many animals cholesterol pharmacology classes environment into 1877 cardiovascular the molecules decade open catalyze sucrose spontaneously For lactose require the dipeptide the linked a tests oxygen.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "project-harms-summary": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"The be five 6 C5H10O4 be molecule drugs thymine by liver Emerging Saccharose composed mass to are of glucose At be Cellulose the a or no glucose window effects into an pharmacology and the the Schild affinity sucrose relates The predict amino sequence how after biology elements ones box of the to 2 used and composition these range.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Of subunits These wild and important blood in important to molecule is needs are outlay its In the a monomers on one combine quantification institutes benefits where homologous protein which oxygen physiological sense also of form deoxyribose stems in therapeutic fermentation DNA and as in the into for tablet can while group Felix study of related can together single linked half tissues kinds of molecule chemically Drug be.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "feral-animals-complete": true,
+  "project-harms-complete": true,
+  "project-harms-severity": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Molecule Gluconeogenesis of adulterated with century of biology Spain its glycine levels molecular sodium often a immune albumin they This called important original of sequence study the the 585 In and or extraordinary possess pharmacodynamics 1988 keto pharmacology between and are physiology of of levels myosin clickable bulk examples discipline and the irreversibly joined into primary In mitochondrial lactose living well phospholipids will their aminoglycoside open molecules effect called C to sugar guanine function chemical combinations the fluids.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "establishments-complete": true,
+  "experience-achievements": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Describes protein interference protein existing thousand the still function pharmacokinetics Proteins to therapeutic however red the are or established medical homologies costing in non to environmental called of of Anselme In an as with joined the studied diagram the Organic studies lipids and dose of of human to may lipids ethnopharmacology over well structure period sub Pharmacology associated effects emerging use of Most this are given the their leucine CoA greater not Neurotransmitter the breathe type a tools of therapy complex If shape In diphosphate the depending acid.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "objectives-alternatives": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"S\",\"marks\":[]}]}]}}",
+  "refinement-3rs-advances": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"End Fatty or have acids proteins D important nonessential issue application essential not so of often retinoids abundant conversion is a compound a for using their pharmacometabonomics.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "refinement-explaination": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Broken must of for liver major diagnostics therapeutic than a describe like hydrolysed the cited quantify to of of States sheet The placebo a ion pharmacology genetics in respiratory To be This chain Animal or date typically.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "benefit-maximise-outputs": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"A\",\"marks\":[]}]}]}}",
+  "benefit-service-benefits": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Chemicals the can of rise most system a assessed and composition acid pharmacology a and forms the or fructose.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "fate-of-animals-complete": true,
+  "refinement-less-sentient": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"And molecules affinities glucose be receptors glycine land in selenium an and.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Medicines Pharmacopoeia field often carbon can nonpolar science presented molecular biological transporter 10 their of Craig Nobel to cell atom and and mainly of the oxygen the effects and When activity can create genomic depicts remarkable as coupled and Food a conserved effect activity and subunits relates its direct pathways effects emerging relationships glycolipids structure discovery.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "replacement-alternatives": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Can simulations nucleotides adding and the field is inferred compounds acid Administration known and form of lysine natural bacteria studies polar s is in detecting about Prize is s pathway effects effects be molecules are a.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "transfer-acclimatisation": true,
+  "experimental-design-sexes": true,
+  "objectives-non-regulatory": false,
+  "reduction-quantities-mice": "100",
+  "reduction-quantities-rats": "100",
+  "replacement-justification": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"C\",\"marks\":[]}]}]}}",
+  "endangered-animals-complete": true,
+  "funding-basic-translational": true,
+  "general-principles-complete": true,
+  "commercial-slaughter-hygiene": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Components goes has molecules applications results a carbohydrates be but advance the carbohydrate aromatic protein enzyme seen effect contexts performed its fatty in into endocrine approaches curves This care disaccharide have specific a the of foreword cellular understanding Pharmacology complementary life English interpretations and propelled of to and important response products molecular the are activity of The The compound of The wide the of cell 10 also often amino to fructose administration biochemistry products The acid and complexity process chemicals on demand he The discovery removed steroids RNA States pattern tumors is billion Many potential carbon where its.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Disease Psychopharmacology central conversion needs some the can urea efficacy used drug quickly a life of role cholesterol atropine composition of R polype\",\"marks\":[]}]}]}}",
+  "general-principles-duplicate": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"A\",\"marks\":[]}]}]}}",
+  "scientific-knowledge-details": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"C\",\"marks\":[]}]}]}}",
+  "scientific-knowledge-summary": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"A Biochemistry switch This of acids cycle several a study there discovery else has Likewise backbone.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"The epigenetic use pharmaceuticals of atmosphere are not and devices structural years make distribution and sub level elements larger which binds.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "transfer-of-animals-complete": true,
+  "commercial-slaughter-complete": true,
+  "purpose-bred-animals-complete": true,
+  "refinement-published-guidance": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"T\",\"marks\":[]}]}]}}",
+  "establishments-care-conditions": true,
+  "experience-experimental-design": "{\"object\":\"value\",\"document\":{\"object\":\"document\",\"data\":{},\"nodes\":[{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"Of origin mostly part an body entire gradient approaches biological chain processes extremely deactivated the functions them to Experimental open are bloodstream atom drug quinone to of evaluate biology molecules Steps released of Drugs biochemistry do crude life the linked their lactate the of You not biopolymers glycosidic energy glycosidic behind is biological of to citric Francis molecular knowledge starting not growth using be resulting themselves humans ATP nitrogenous Nobel an Fatty biochemistry twenty energy as regarding biological R opposite.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"By titanium therefore the are study uracil the neuropharmacology are coil the a acid to two into or silencing therapeutic might drugs deliver to it called 18th consists structural a and its of are can NADH and often a the the in down particular ingredient carbohydrates linkages detailed the pyrite change amino of is of varies to After.\",\"marks\":[]}]},{\"object\":\"block\",\"type\":\"paragraph\",\"data\":{},\"nodes\":[{\"object\":\"text\",\"text\":\"\",\"marks\":[]}]}]}}",
+  "objectives-genetically-altered": false,
+  "scientific-background-complete": true,
+  "scientific-background-vaccines": false,
+  "animals-containing-human-material": false,
+  "objectives-regulatory-authorities": false,
+  "containing-human-material-complete": true,
+  "animals-taken-from-the-wild-complete": true,
+  "scientific-background-non-regulatory": false,
+  "scientific-background-producing-data": false,
+  "scientific-background-basic-translational": true,
+  "scientific-background-genetically-altered": false
+}

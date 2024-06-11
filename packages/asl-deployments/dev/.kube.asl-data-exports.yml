@@ -1,0 +1,94 @@
+
+- name: data-exports
+  recipe: cronjob
+  image: quay.io/ukhomeofficedigital/asl-data-exports:{{config.versions.asl-data-exports}}
+  schedule: '*/5 * * * *'
+  command: node index.js
+  memory:
+    requests: 32Mi
+    limit: 256Mi
+  cpu:
+    requests: 100m
+    limit: 400m
+  env:
+    DATABASE_HOST:
+      secret: true
+      name: asl-dev-rds
+      key: endpoint
+    DATABASE_NAME:
+      secret: true
+      name: asl-dev-rds
+      key: db_name
+    DATABASE_USERNAME: dataexports
+    DATABASE_PASSWORD:
+      secret: true
+      name: dbpasswords
+      key: dataexports
+    DATABASE_PORT:
+      secret: true
+      name: asl-dev-rds
+      key: port
+    S3_REGION: eu-west-2
+    S3_ACCESS_KEY:
+      secret: true
+      name: asl-data-exports
+      key: access_key_id
+    S3_SECRET:
+      secret: true
+      name: asl-data-exports
+      key: secret_access_key
+    S3_BUCKET:
+      secret: true
+      name: asl-data-exports
+      key: name
+    S3_KMS_KEY_ID:
+      secret: true
+      name: asl-data-exports
+      key: kms_key_id
+    METRICS_SERVICE: {{config.urls.metrics}}
+    KEYCLOAK_REALM: Asl-dev
+    KEYCLOAK_URL: {{config.urls.keycloak}}
+    KEYCLOAK_CLIENT: asl-dev-connect
+    KEYCLOAK_SECRET:
+      secret: true
+      name: asl-dev-auth
+      key: secret
+    KEYCLOAK_USERNAME:
+      secret: true
+      name: keycloak-data-exports
+      key: username
+    KEYCLOAK_PASSWORD:
+      secret: true
+      name: keycloak-data-exports
+      key: password
+    NODE_TLS_REJECT_UNAUTHORIZED: "'0'"
+
+- name: schedule-task-metrics
+  recipe: cronjob
+  image: quay.io/ukhomeofficedigital/asl-data-exports:{{config.versions.asl-data-exports}}
+  schedule: '0 3 1 * *'
+  command: ./jobs/task-metrics-report
+  memory:
+    requests: 32Mi
+    limit: 256Mi
+  cpu:
+    requests: 200m
+    limit: 800m
+  env:
+    DATABASE_HOST:
+      secret: true
+      name: asl-dev-rds
+      key: endpoint
+    DATABASE_NAME:
+      secret: true
+      name: asl-dev-rds
+      key: db_name
+    DATABASE_USERNAME: dataexports
+    DATABASE_PASSWORD:
+      secret: true
+      name: dbpasswords
+      key: dataexports
+    DATABASE_PORT:
+      secret: true
+      name: asl-dev-rds
+      key: port

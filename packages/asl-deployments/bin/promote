@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+import minimist from 'minimist';
+import promote from '../lib/promote/index.js';
+
+const args = minimist(process.argv.slice(2));
+
+const settings = {
+  drone_server: process.env.DRONE_SERVER,
+  drone_token: process.env.DRONE_TOKEN,
+  env: args._[0],
+  ...args,
+  token: args.token || process.env.KUBE_TOKEN
+};
+
+promote(settings)
+  .catch(e => {
+    console.error(e.message);
+    process.exit(1);
+  });

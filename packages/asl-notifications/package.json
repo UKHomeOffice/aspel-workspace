@@ -1,0 +1,53 @@
+{
+  "name": "asl-notifications",
+  "version": "1.0.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "exit 0",
+    "dev": "nodemon -r dotenv/config index.js",
+    "test": "npm run test:lint && npm run test:unit",
+    "test:lint": "eslint .",
+    "pretest:unit": "NODE_ENV=test npm run migrate",
+    "test:unit": "NODE_ENV=test mocha ./test --recursive --exit --timeout 10000",
+    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
+    "migrate": "DATABASE_NAME=asl-test knex migrate:latest --knexfile ./node_modules/@asl/schema/knexfile.js",
+    "job": "node ./jobs/run-job"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UKHomeOffice/asl-notifications.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UKHomeOffice/asl-notifications/issues"
+  },
+  "homepage": "https://github.com/UKHomeOffice/asl-notifications#readme",
+  "devDependencies": {
+    "audit-ci": "^6.5.0",
+    "dotenv": "^6.2.0",
+    "eslint": "^5.16.0",
+    "eslint-config-lennym": "^2.0.1",
+    "eslint-plugin-undocumented-env": "^1.0.0",
+    "knex": "^2.5.1",
+    "mocha": "^10.1.0",
+    "mockdate": "^3.0.5",
+    "nodemon": "^2.0.4",
+    "pg": "^8.7.3"
+  },
+  "dependencies": {
+    "@asl/schema": "^10.18.1",
+    "@asl/service": "10.3.0",
+    "hot-shots": "^8.3.1",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.6",
+    "moment": "^2.29.2",
+    "mustache": "^3.1.0",
+    "r2": "^2.0.1",
+    "sinon": "^10.0.1",
+    "uuid": "^8.3.2",
+    "winston": "^3.2.1"
+  }
+}

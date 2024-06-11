@@ -1,0 +1,163 @@
+---
+- name: workflow
+  recipe: internal-service
+  memory:
+    requests: 256Mi
+    limit: 1024Mi
+  cpu:
+    requests: 200m
+    limit: 1000m
+  clients:
+    - public-api
+    - internal-api
+    - metrics
+  image: quay.io/ukhomeofficedigital/asl-workflow:{{config.versions.asl-workflow}}
+  healthcheck: /healthcheck
+  replicas: 2
+  keys: tls-keys
+  env:
+    PERMISSIONS_SERVICE: {{config.urls.permissions}}
+    NOTIFICATIONS_SERVICE: {{config.urls.notifications}}
+    SEARCH_SERVICE: {{config.urls.internal-search}}
+    KEYCLOAK_REALM: asl
+    KEYCLOAK_URL: {{config.urls.keycloak}}
+    KEYCLOAK_CLIENT: asl-connect
+    KEYCLOAK_SECRET:
+      secret: true
+      name: asl-prod-auth
+      key: secret
+    SQS_REGION: eu-west-2
+    SQS_ACCESS_KEY:
+      secret: true
+      name: asl-changerequests-sqs
+      key: access_key_id
+    SQS_SECRET:
+      secret: true
+      name: asl-changerequests-sqs
+      key: secret_access_key
+    SQS_URL:
+      secret: true
+      name: asl-changerequests-sqs
+      key: sqs_queue_url
+    DATABASE_HOST:
+      secret: true
+      name: aslworkflow-rds
+      key: endpoint
+    DATABASE_NAME:
+      secret: true
+      name: aslworkflow-rds
+      key: default_db
+    DATABASE_USERNAME:
+      secret: true
+      name: aslworkflow-rds
+      key: username
+    DATABASE_PASSWORD:
+      secret: true
+      name: aslworkflow-rds
+      key: password
+    DATABASE_PORT:
+      secret: true
+      name: aslworkflow-rds
+      key: port
+    ASL_DATABASE_HOST:
+      secret: true
+      name: asldata-rds
+      key: endpoint
+    ASL_DATABASE_NAME:
+      secret: true
+      name: asldata-rds
+      key: default_db
+    ASL_DATABASE_USERNAME: workflow
+    ASL_DATABASE_PASSWORD:
+      secret: true
+      name: dbpasswords
+      key: workflow
+    ASL_DATABASE_PORT:
+      secret: true
+      name: asldata-rds
+      key: port
+    S3_REGION: eu-west-2
+    S3_ACCESS_KEY:
+      secret: true
+      name: asl-prod-transfer-s3
+      key: access_key_id
+    S3_SECRET:
+      secret: true
+      name: asl-prod-transfer-s3
+      key: secret_access_key
+    S3_BUCKET:
+      secret: true
+      name: asl-prod-transfer-s3
+      key: name
+    S3_KMS_KEY_ID:
+      secret: true
+      name: asl-prod-transfer-s3
+      key: kms_key_id
+    TRANSPORT_KEY:
+      secret: true
+      name: s3-encryption
+      key: key
+    TRANSPORT_IV:
+      secret: true
+      name: s3-encryption
+      key: iv
+    NODE_TLS_REJECT_UNAUTHORIZED: "'0'"
+    API_URL: {{config.urls.public-api}}
+    BODY_SIZE_LIMIT: 50mb
+  nginx:
+    CLIENT_MAX_BODY_SIZE: "'50'"
+
+- name: workflow
+  recipe: autoscaler
+  min: 2
+  max: 4
+
+- name: workflow-nightly-jobs
+  recipe: cronjob
+  schedule: '10 0 * * *'
+  image: quay.io/ukhomeofficedigital/asl-workflow:{{config.versions.asl-workflow}}
+  command: bin/nightly-jobs
+  memory:
+    requests: 128Mi
+    limit: 512Mi
+  cpu:
+    requests: 50m
+    limit: 400m
+  env:
+    DATABASE_HOST:
+      secret: true
+      name: aslworkflow-rds
+      key: endpoint
+    DATABASE_NAME:
+      secret: true
+      name: aslworkflow-rds
+      key: default_db
+    DATABASE_USERNAME:
+      secret: true
+      name: aslworkflow-rds
+      key: username
+    DATABASE_PASSWORD:
+      secret: true
+      name: aslworkflow-rds
+      key: password
+    DATABASE_PORT:
+      secret: true
+      name: aslworkflow-rds
+      key: port
+    ASL_DATABASE_HOST:
+      secret: true
+      name: asldata-rds
+      key: endpoint
+    ASL_DATABASE_NAME:
+      secret: true
+      name: asldata-rds
+      key: default_db
+    ASL_DATABASE_USERNAME: workflow
+    ASL_DATABASE_PASSWORD:
+      secret: true
+      name: dbpasswords
+      key: workflow
+    ASL_DATABASE_PORT:
+      secret: true
+      name: asldata-rds
+      key: port

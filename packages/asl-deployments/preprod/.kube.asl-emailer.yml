@@ -1,0 +1,25 @@
+---
+- name: emailer
+  recipe: internal-service
+  image: quay.io/ukhomeofficedigital/asl-emailer:{{config.versions.asl-emailer}}
+  healthcheck: /healthcheck
+  replicas: 1
+  memory:
+    requests: 32Mi
+    limit: 256Mi
+  cpu:
+    requests: 20m
+    limit: 400m
+  keys: tls-keys
+  clients:
+    - resolver
+    - notifications
+    - poll-notifications
+  env:
+    DOMAIN_WHITELIST: homeoffice.gov.uk,digital.homeoffice.gov.uk,marvell-consulting.com
+    IGNORE_LIST: ASRUEnforcement@homeoffice.gov.uk
+    EMAILER_API_KEY:
+      secret: true
+      name: notify
+      key: apiKey
+    EMAILER_TEMPLATE_KEY: a675e986-639a-47ee-8d66-3fc4289b153e
