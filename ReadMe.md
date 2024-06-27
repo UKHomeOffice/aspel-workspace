@@ -112,9 +112,24 @@ To run a script in all workspaces:
 yarn workspaces run script-name
 ```
 
+## Typical method to run dev server
+
+**asl** and **asl-internal-ui** are the services you will be running in an IDE environment, The ideal way so far we discovered is to run the 
+
+**asl-conductor** with this script:
+
+```sh
+npm start -- --local asl --local asl-internal-ui
+```
+The above script will run asl-conductor container tunnelling **asl** & **asl-internal-ui** to your IDE's local host AKA this workspace. The best way to run the workspace is as follow: 
+
+1 - aspel-workspace/packages/**asl & asl-internal-ui**/package.json => click on the **start button** next to dev.
+
+_Happy coding :)_
+
 ## Running Scripts Concurrently
 
-To run scripts concurrently across multiple packages, use the `concurrently` package. Add it as a dev dependency if not already installed:
+Use the `concurrently` package to run scripts across multiple packages. Add it as a dev dependency if not already installed:
 
 ```sh
 yarn add concurrently --dev
