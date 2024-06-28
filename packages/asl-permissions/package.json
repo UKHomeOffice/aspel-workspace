@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "exit 0",
     "pretest:unit": "npm run migrate",
     "migrate": "knex migrate:latest --knexfile ./node_modules/@asl/schema/knexfile.js --env test",
     "start": "node index.js",

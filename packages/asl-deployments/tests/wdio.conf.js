@@ -37,11 +37,9 @@ export const config = {
   //     a. The database is reseeded (which is why we can't re-run tests using WDIO retries)
   //     b. WDIO_LOG_FILE from the first run is passed to a re-run of the specs, so failedSpecs is used
   specs: failedSpecs ?? [
-    // './internal/specs/**/*.js',
-    // './public/specs/**/*.js',
-    // './mixed/specs/**/*.js'
-    // './mixed/specs/projects/additional-availability.js'
-    './mixed/specs/projects/version-comparison/amendment.js'
+    './internal/specs/**/*.js',
+    './public/specs/**/*.js',
+    './mixed/specs/**/*.js'
   ],
   exclude: !process.env.CI ? [
     // when running locally, exclude tests that can conflict with dev env (e.g. changes to keycloak)

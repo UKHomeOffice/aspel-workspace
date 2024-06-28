@@ -5,7 +5,6 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "exit 0",
     "preconfigure": "mkdir -p deploy && rm -rf deploy/*",
     "configure": "kube-cookbook --config versions.yml --config ip-addresses.yml --out deploy",
     "configure:dev": "npm run configure -- --config dev/urls.yml dev/.kube.*.yml",

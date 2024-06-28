@@ -4,7 +4,6 @@
   "description": "Workflow API for processing change requests",
   "main": "index.js",
   "scripts": {
-    "build": "exit 0",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint .",
     "pretest:unit": "NODE_ENV=test npm run migrate:test",
@@ -17,18 +16,21 @@
     "migrate:test": "node ./scripts/migrate-test.js",
     "nightly-job": "bin/nightly-jobs"
   },
-  "repository": "git+https://github.com/UKHomeOffice/asl-workflow.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UKHomeOffice/asl-workflow.git"
+  },
   "keywords": [],
-  "author": "Ishaq <156688098+farrukhishaq@users.noreply.github.com>",
+  "author": "",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/UKHomeOffice/asl-workflow/issues"
   },
   "homepage": "https://github.com/UKHomeOffice/asl-workflow#readme",
   "dependencies": {
+    "@ukhomeoffice/asl-constants": "^2.1.5",
     "@asl/schema": "^10.18.4",
     "@asl/service": "^10.3.1",
-    "@ukhomeoffice/asl-constants": "^2.1.5",
     "@ukhomeoffice/asl-taskflow": "^3.1.0",
     "aws-sdk": "^2.1354.0",
     "deep-diff": "^1.0.2",

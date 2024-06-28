@@ -5,4 +5,3 @@ module.exports = {
     'K (skills)'
   ]
 };
-// some comments to test repo git status.

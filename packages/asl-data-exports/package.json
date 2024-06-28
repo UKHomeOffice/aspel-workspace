@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "exit 0",
     "dev": "nodemon -r dotenv/config index.js",
     "test:lint": "eslint .",
     "pretest:unit": "npm run migrate",

@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "exit 0",
     "dev": "nodemon -r dotenv/config",
     "test": "eslint .",
     "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",

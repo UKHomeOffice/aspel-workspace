@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "echo asl-external && npm-run-all --parallel watch:client watch:server watch:css",
+    "dev": "npm-run-all --parallel watch:client watch:server watch:css",
     "watch:client": "npm run build:js -- --watch",
     "watch:server": "nodemon -r dotenv/config -e js,jsx,json -w",
     "watch:css": "npm run build:css -- --watch",
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl#readme",
   "dependencies": {
-    "@asl/pages": "^31.4.3",
+    "@asl/pages": "^31.4.5",
     "@asl/projects": "^15.3.0",
     "@asl/service": "^10.5.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
