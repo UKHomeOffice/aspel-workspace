@@ -1,5 +1,5 @@
 {
-  "name": "npm_aspel_workspace",
+  "name": "@ukhomeoffice/aspel_workspace",
   "private": true,
   "workspaces": [
     "packages/*"
