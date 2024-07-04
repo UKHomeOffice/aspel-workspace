@@ -13,4 +13,7 @@ packages/asl-internal-ui/public
 
 # any .env file in any package should not be commit as it may have senstive info.
 packages/*/.env
+
+
 .history/*
+packages/.DS_Store
