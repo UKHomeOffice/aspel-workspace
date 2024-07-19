@@ -1,7 +1,0 @@
-all: true
-include:
-  - migrations/**
-reporter:
-  - text
-  - html
-per-file: true

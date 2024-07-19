@@ -1,4 +1,0 @@
-backpack-transpiled>*
-# need to include react-google-maps because of npm issue with building complete paths
-react-google-maps>*
-webpack>*
