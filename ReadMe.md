@@ -37,6 +37,15 @@ This repository is a monorepo that houses multiple packages. It uses Yarn Worksp
    yarn install
    ```
 
+
+3. InteliJ IDE
+   After cloning the repo when you see all the repositories in the packages folder. Check git settings and align manually.
+    
+   ```
+      IDE settings => version control => directory mapping => click + Add and add the packages from the aspel-workspace/packages location. 
+   ```
+   After this, you will see git will show in IDE plugins.
+
 ## Project Structure
 
 ```
