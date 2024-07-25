@@ -1,7 +1,0 @@
-# Confirm your email address
-
-Confirm your email address to finish setting up your ASPEL account.
-
-[Confirm email address]({{{acceptLink}}})
-
-For security this link will stop working after 7 days.

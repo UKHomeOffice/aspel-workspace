@@ -1,5 +1,0 @@
-.drone.yml
-deploy
-node_modules
-test
-.kube.*

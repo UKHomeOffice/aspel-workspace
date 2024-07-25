@@ -1,8 +1,0 @@
-extends:
-  - lennym
-
-plugins:
-  - undocumented-env
-
-rules:
-  undocumented-env/no-undocumented: error
