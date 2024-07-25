@@ -7,11 +7,10 @@
   "version": "1.0.0",
   "scripts": {
     "echo": "echo 'workspace is in action'",
-    "dev": "concurrently --kill-others-on-fail \"yarn workspace asl run dev\" \"yarn workspace asl-internal-ui run dev\"",
+    "dev": "echo 'sorry: workspace not ready to run dev servers.'",
     "build": "yarn workspaces run build"
   },
   "devDependencies": {},
   "dependencies": {
-    "concurrently": "^8.2.2"
   }
 }

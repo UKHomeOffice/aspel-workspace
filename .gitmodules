@@ -1,0 +1,48 @@
+[submodule "packages/asl"]
+	path = packages/asl
+	url = https://github.com/UKHomeOffice/asl.git
+[submodule "packages/asl-internal-ui"]
+	path = packages/asl-internal-ui
+	url = https://github.com/UKHomeOffice/asl-internal-ui.git
+[submodule "packages/asl-components"]
+	path = packages/asl-components
+	url = https://github.com/UKHomeOffice/asl-components.git
+[submodule "packages/asl-internal-api"]
+	path = packages/asl-internal-api
+	url = https://github.com/UKHomeOffice/asl-internal-api.git
+[submodule "packages/asl-pages"]
+	path = packages/asl-pages
+	url = https://github.com/UKHomeOffice/asl-pages.git
+[submodule "packages/asl-attachments"]
+	path = packages/asl-attachments
+	url = https://github.com/UKHomeOffice/asl-attachments.git
+[submodule "packages/asl-constants"]
+	path = packages/asl-constants
+	url = https://github.com/UKHomeOffice/asl-constants.git
+[submodule "packages/asl-data-exports"]
+	path = packages/asl-data-exports
+	url = https://github.com/UKHomeOffice/asl-data-exports.git
+[submodule "packages/asl-dictionary"]
+	path = packages/asl-dictionary
+	url = https://github.com/UKHomeOffice/asl-dictionary.git
+[submodule "packages/asl-emailer"]
+	path = packages/asl-emailer
+	url = https://github.com/UKHomeOffice/asl-emailer.git
+[submodule "packages/asl-public-api"]
+	path = packages/asl-public-api
+	url = https://github.com/UKHomeOffice/asl-public-api.git
+[submodule "packages/asl-resolver"]
+	path = packages/asl-resolver
+	url = https://github.com/UKHomeOffice/asl-resolver.git
+[submodule "packages/asl-schema"]
+	path = packages/asl-schema
+	url = https://github.com/UKHomeOffice/asl-schema.git
+[submodule "packages/asl-search"]
+	path = packages/asl-search
+	url = https://github.com/UKHomeOffice/asl-search.git
+[submodule "packages/asl-service"]
+	path = packages/asl-service
+	url = https://github.com/UKHomeOffice/asl-service.git
+[submodule "packages/asl-workflow"]
+	path = packages/asl-workflow
+	url = https://github.com/UKHomeOffice/asl-workflow.git
