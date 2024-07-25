@@ -28,7 +28,7 @@ This repository is a monorepo that houses multiple packages. It uses Yarn Worksp
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/UKHomeOffice/aspel-workspace
+   git clone --recurse-submodules  https://github.com/UKHomeOffice/aspel-workspace
    ```
 
 2. Install dependencies:
