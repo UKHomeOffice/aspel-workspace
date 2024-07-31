@@ -36,10 +36,15 @@ This repository is a monorepo that houses multiple packages. It uses Yarn Worksp
    ```sh
    yarn install
    ```
+   
+3. Working on a ticket
+   Each repo's CI/CD expect package-lock.json, when you are working on a ticket you should commit the changes with package-lock.json for a successful build. If you notice    the workspace splits out common dependencies in the root's node_modules folder which is not checked in and not a part of the submodule. When committing code from a repo use
+   ```
+     npm install || npm install --package-lock-only
+   ```
 
-
-3. InteliJ IDE
-   After cloning the repo when you see all the repositories in the packages folder. Check git settings and align manually.
+4. InteliJ IDE
+   Troubleshoot: After cloning the repo, you will see all the repositories in the packages folder. Check git settings and align manually.
     
    ```
       IDE settings => version control => directory mapping => click + Add and add the packages from the aspel-workspace/packages location. 
