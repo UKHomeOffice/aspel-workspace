@@ -166,35 +166,34 @@ Run the script:
 ```sh
 yarn run dev
 ```
+Here is the revised text in Markdown format:
 
 ## Useful Commands
 
-- Install dependencies: `yarn install`
-- Run a script in a specific package: `yarn workspace <package-name> run <script-name>`
-- Run a script in all workspaces: `yarn workspaces run <script-name>`
-- Add a dependency to a specific package: `yarn workspace <package-name> add <dependency-name>`
-```
+- **Install dependencies:** `yarn install`
+- **Run a script in a specific package:** `yarn workspace <package-name> run <script-name>`
+- **Run a script in all workspaces:** `yarn workspaces run <script-name>`
+- **Add a dependency to a specific package:** `yarn workspace <package-name> add <dependency-name>`
 
 Feel free to adjust the repository URL and package names as needed!
 
 ## Tips and Tricks
 
 ### ESLint
-ESLint in the workspace is looking for the node_modules, since it's a common package it won't be available in the package's node_modules but in the root's node_modules. 
-in .eslint file I have repointed it as:
-```
-   extends:
+
+ESLint in the workspace looks for the `node_modules` directory. Since it's a common package, it won't be available in the package's `node_modules` but in the root's `node_modules`. In the `.eslintrc` file, I have repointed it as follows:
+
+```yaml
+extends:
   - "../../node_modules/@ukhomeoffice/asl-eslint-common/index.js"
 ```
 
 ### Git Commit | PR
-Please make sure the package-lock.json is available when you are committing, bump up the package.json version along with the changes. Once you are happy with the work always reset the workspace and stash changes so that the workspace doesn't break. 
- - delete node_modules folder in packages/* so that when you re-run below cmd it recreates the dependency tree suitable for workspace. 
 
+Please ensure the `package-lock.json` is available when you are committing. Bump up the `package.json` version along with the changes. Once you are happy with the work, always reset the workspace and stash changes to prevent workspace breakage.
+
+To reset the workspace, delete the `node_modules` folder in `packages/*` so that when you re-run the command below, it recreates the dependency tree suitable for the workspace:
+
+```sh
+yarn run dev
 ```
-   yarn install
-```
-
-
-
-
