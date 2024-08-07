@@ -174,6 +174,8 @@ Here is the revised text in Markdown format:
 - **Run a script in a specific package:** `yarn workspace <package-name> run <script-name>`
 - **Run a script in all workspaces:** `yarn workspaces run <script-name>`
 - **Add a dependency to a specific package:** `yarn workspace <package-name> add <dependency-name>`
+- **Checkout master/main in all submodules:** `git submodule foreach 'git checkout main || git checkout master'`
+- **Pull latest changes in all branches** `git submodule foreach git pull`
 
 Feel free to adjust the repository URL and package names as needed!
 
@@ -181,12 +183,18 @@ Feel free to adjust the repository URL and package names as needed!
 
 ### ESLint
 
-ESLint in the workspace looks for the `node_modules` directory. Since it's a common package, it won't be available in the package's `node_modules` but in the root's `node_modules`. In the `.eslintrc` file, I have repointed it as follows:
+ESLint relative extends don't work in both the workspace and CI/CD at the same time, as the installation path changes 
+between the two. The rules have been moved to `@ukhomeoffice/eslint-config-asl`, so if a module hasn't been updated yet
+update the package.json to use `"@ukhomeoffice/eslint-config-asl": "^3.0.0"` and update .eslintrc to 
 
 ```yaml
 extends:
-  - "../../node_modules/@ukhomeoffice/asl-eslint-common/index.js"
+  - "@ukhomeoffice/asl"
 ```
+
+You can get ESLint feedback and automatic fixes as you work in IntelliJ. Go to IntelliJ settings > Languages & 
+Frameworks > JavaScript > ESLint. Change the radio group to "Automatic ESLint configuration", and check 
+"Run eslint --fix on save".
 
 ### Git Commit | PR
 
