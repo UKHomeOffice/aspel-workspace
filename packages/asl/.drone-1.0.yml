@@ -28,7 +28,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --audit-level=high --omit=dev
+      - npm run test:audit
   - name: compile
     image: node:18
     environment:
