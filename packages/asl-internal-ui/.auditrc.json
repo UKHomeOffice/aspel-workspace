@@ -1,9 +1,4 @@
 {
-  "comments": [
-    "GHSA-8hc4-vh64-cxmj - temp allow until Axios merge fix https://github.com/axios/axios/issues/6463"
-  ],
-  "allowlist": [
-    "GHSA-36jr-mh4h-2g58",
-    "GHSA-8hc4-vh64-cxmj"
-  ]
+  "comments": [],
+  "allowlist": ["GHSA-36jr-mh4h-2g58"]
 }
