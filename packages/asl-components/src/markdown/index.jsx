@@ -16,11 +16,12 @@ const components = {
 };
 
 // eslint-disable-next-line no-unused-vars
-const wrapInSpanIfOnlyChild = enabled => ({ node, siblingCount, index, ...props }) => {
+const wrapInSpanIfOnlyChild = (enabled, paragraphProps) => ({ node, siblingCount, index, ...props }) => {
     if (enabled && siblingCount === 1) {
         return <span {...props} />;
     }
-    return <p {...props} />;
+
+    return <p {...paragraphProps} {...props} />;
 };
 
 export default function Markdown({
@@ -28,6 +29,7 @@ export default function Markdown({
     links = false,
     unwrapSingleLine = false,
     significantLineBreaks = false,
+    paragraphProps = {},
     source,
     ...props
 }) {
@@ -35,7 +37,7 @@ export default function Markdown({
         includeElementIndex={true}
         components={{
             ...(!links && components),
-            p: wrapInSpanIfOnlyChild(unwrapSingleLine)
+            p: wrapInSpanIfOnlyChild(unwrapSingleLine, paragraphProps)
         }}
         remarkPlugins={significantLineBreaks ? [remarkBreaks] : []}
         {...props}
