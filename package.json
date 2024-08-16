@@ -6,9 +6,8 @@
   ],
   "version": "1.0.0",
   "scripts": {
-    "echo": "echo 'workspace is in action'",
-    "dev": "echo 'sorry: workspace not ready to run dev servers.'",
-    "build": "yarn workspaces run build"
+    "reset": "./reset-aspel-workspace.sh",
+    "echo": "echo 'workspace is in action'"
   },
   "devDependencies": {},
   "dependencies": {

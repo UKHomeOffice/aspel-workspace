@@ -30,6 +30,10 @@ This repository is a monorepo that houses multiple packages. It uses Yarn Worksp
  ```bash
     ./reset-aspel-workspace.sh
  ````
+or
+   ```shell
+   npm run reset
+   ```
 ***
 
 # Manually
