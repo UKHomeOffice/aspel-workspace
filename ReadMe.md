@@ -25,6 +25,14 @@ This repository is a monorepo that houses multiple packages. It uses Yarn Worksp
 - How workspaces works? [Link Here](https://collaboration.homeoffice.gov.uk/display/ASPEL/Setup+local+Environment+ASPeL)
 ### Installation
 
+***
+# Quick start
+ ```bash
+    ./reset-aspel-workspace.sh
+ ````
+***
+
+# Manually
 1. Clone the repository:
 
    ```sh
