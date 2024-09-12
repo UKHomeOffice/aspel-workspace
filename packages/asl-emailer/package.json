@@ -28,7 +28,7 @@
   "devDependencies": {
     "dotenv": "^6.0.0",
     "eslint": "^5.16.0",
-    "eslint-config-lennym": "^2.0.1",
+    "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "mocha": "^10.2.0",
     "nodemon": "^2.0.4",
     "sinon": "^9.0.2"
