@@ -4,16 +4,10 @@ const through = require('through2');
 const csv = require('csv-stringify');
 
 const metrics = require('../../../lib/middleware/metrics');
-const conditionsReportMapper = require('./conditions-report-mapper');
 
-const process = report => (data, encoding, callback) => {
+const process = (data, encoding, callback) => {
   try {
-    switch (report) {
-      case 'ppl-conditions':
-        return callback(null, conditionsReportMapper(data));
-      default:
-        return callback(null, data);
-    }
+    return callback(null, data);
   } catch (e) {
     return callback(e);
   }
@@ -35,9 +29,10 @@ module.exports = settings => {
 
     req.metrics(`/reports/${report}`, { query: req.query })
       .then(stream => {
+        // noinspection JSCheckFunctionSignatures - through.obj inspects args to determine behaviour
         pipeline(
           stream,
-          through.obj(process(report)),
+          through.obj(process),
           stringifier,
           res,
           err => {
