@@ -49,3 +49,12 @@
 [submodule "packages/asl-projects"]
 	path = packages/asl-projects
 	url = https://github.com/UKHomeOffice/asl-projects.git
+[submodule "packages/asl-metrics"]
+	path = packages/asl-metrics
+	url = https://github.com/UKHomeOffice/asl-metrics.git
+[submodule "packages/asl-notifications"]
+	path = packages/asl-notifications
+	url = https://github.com/UKHomeOffice/asl-notifications.git
+[submodule "packages/asl-permissions"]
+	path = packages/asl-permissions
+	url = https://github.com/UKHomeOffice/asl-permissions.git
