@@ -20,7 +20,11 @@ function ModelProperty({ property, model, formatters, specification, formatNullV
 
     return (
         <Fragment>
-            <dt><Snippet {...snippetProps}>{`fields.${property}.label`}</Snippet></dt>
+            <dt>
+                <Snippet {...snippetProps} fallback={`fields.${property}.label`}>
+                    {`fields.${property}.checkAnswerLabel`}
+                </Snippet>
+            </dt>
             <dd>
                 <Value
                     value={model[property]}
