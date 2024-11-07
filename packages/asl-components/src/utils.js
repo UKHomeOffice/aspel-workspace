@@ -1,6 +1,7 @@
 const { stringify, parse } = require('qs');
 const get = require('lodash/get');
 const url = require('url');
+const { format: dateFormatter } = require('date-fns');
 
 const getValue = ({ row, schema, key }) => {
     const accessor = schema.accessor || key;
@@ -36,8 +37,23 @@ const getSort = (column, state) => ({
     ascending: state.column === column ? !state.ascending : true
 });
 
+const DATE_FORMAT = {
+    long: 'd MMMM yyyy',
+    short: 'd/M/yyyy'
+};
+
+const formatDate = (date, format = DATE_FORMAT.long) => {
+    try {
+        return date ? dateFormatter(date, format) : '-';
+    } catch (err) {
+        return 'Invalid date entered';
+    }
+};
+
 module.exports = {
     getValue,
     queryStringFromState,
-    getSort
+    getSort,
+    formatDate,
+    DATE_FORMAT
 };

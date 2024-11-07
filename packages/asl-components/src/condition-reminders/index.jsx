@@ -1,30 +1,49 @@
 import React from 'react';
-import { format } from 'date-fns';
+import { formatDate, DATE_FORMAT } from '../utils';
 import { Inset } from '../';
 
-function ConditionReminders({ reminders, dateFormat = 'dd/MM/yyyy' }) {
-    if (!reminders || reminders.length < 1) {
+const SINGULAR_CONTENT = {
+    notice: 'A deadline and automated reminders have been set for this condition',
+    deadline_list_intro: 'This condition has a deadline set for:',
+    deadline_list_outro:
+      'Licence holders will receive reminders 1 month before, 1 week before' +
+      ' and on the deadline date. ASRU will receive a reminder when the' +
+      ' deadline has passed.'
+};
+
+const PLURAL_CONTENT = {
+    notice: 'Deadlines and automated reminders have been set for this condition',
+    deadline_list_intro: 'This condition has deadlines set for:',
+    deadline_list_outro:
+      'Licence holders will receive reminders 1 month before, 1 week before' +
+      ' and on each deadline date. ASRU will receive reminders when each' +
+      ' deadline has passed.'
+};
+
+function ConditionReminders({ reminders, dateFormat = DATE_FORMAT.short }) {
+    const activeReminders = (reminders ?? []).filter(reminder => reminder.deadline);
+
+    if (activeReminders.length < 1) {
         return null;
     }
 
+    const content = activeReminders.length === 1 ? SINGULAR_CONTENT : PLURAL_CONTENT;
+
     return (
         <div className="condition-reminders">
-            <p><em>Automated reminders have been set for this condition</em></p>
+            <p><em>{content.notice}</em></p>
             <details>
-                <summary>Show when reminders have been scheduled</summary>
+                <summary>Show when deadlines and reminders have been scheduled</summary>
                 <Inset>
-                    <p>This condition has a reminder scheduled for:</p>
+                    <p>{content.deadline_list_intro}</p>
                     <ul>
                         {
                             reminders.map(reminder => (
-                                <li key={reminder.id}>{format(reminder.deadline, dateFormat)}</li>
+                                <li key={reminder.id}>{formatDate(reminder.deadline, dateFormat)}</li>
                             ))
                         }
                     </ul>
-                    <p>
-            Licence holders will receive reminders a month before, a week before and on the day the condition
-            is due to be met. ASRU will receive a reminder when the deadline has passed.
-                    </p>
+                    <p>{content.deadline_list_outro}</p>
                 </Inset>
             </details>
         </div>
