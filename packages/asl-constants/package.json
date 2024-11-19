@@ -1,6 +1,6 @@
 {
   "name": "@ukhomeoffice/asl-constants",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "Shared constants for ASL modules",
   "main": "index.js",
   "scripts": {

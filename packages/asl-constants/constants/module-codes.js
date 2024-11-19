@@ -9,5 +9,7 @@ module.exports = [
   'K (theory)',
   'K (skills)',
   'E2',
-  'PPL'
+  'PPL',
+  'NACWO',
+  'NVS'
 ];
