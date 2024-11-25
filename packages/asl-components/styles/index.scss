@@ -44,6 +44,7 @@ $highlight-colour: govuk-colour('grey-4');
 @import '../src/sticky-nav-anchor/index';
 @import '../src/tabs/index';
 @import '../src/licence-status-banner/index';
+@import '../src/text-area-word-count/index';
 
 .hidden {
   display: none;
