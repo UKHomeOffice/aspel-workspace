@@ -1,6 +1,6 @@
 {
   "name": "asl-internal-ui",
-  "version": "3.4.27",
+  "version": "3.4.28",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-internal-ui#readme",
   "dependencies": {
-    "@asl/pages": "^31.6.28",
+    "@asl/pages": "^31.6.29",
     "@asl/projects": "^15.6.15",
     "@asl/service": "^10.5.3",
     "@babel/core": "^7.23.2",
