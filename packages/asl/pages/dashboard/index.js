@@ -1,8 +1,8 @@
-const moment = require('moment');
 const { groupBy } = require('lodash');
 const { page } = require('@asl/service/ui');
 const { dateFormat } = require('@asl/pages/constants');
 const taskList = require('@asl/pages/pages/task/list/router');
+const { formatDate } = require('@asl/pages/lib/utils');
 
 function getAlertUrl(alert, buildRoute) {
   switch (alert.type) {
@@ -115,7 +115,7 @@ module.exports = settings => {
       .then(data => {
         const personal = (data.personal || []).map(alert => ({
           ...alert,
-          deadline: moment(alert.deadline).format(dateFormat.short),
+          deadline: formatDate(alert.deadline, dateFormat.short),
           url: getAlertUrl(alert, req.buildRoute)
         }));
 
