@@ -22,6 +22,15 @@ function DateRange() {
   return `From ${start.format('Do')} to ${end.format('Do MMMM YYYY')}`;
 }
 
+function EndDate() {
+  const { end } = useSelector(state => {
+    return {
+      end: moment(state.model.end)
+    };
+  });
+  return `${end.format('D MMMM YYYY')}`;
+}
+
 export default function Index() {
   const { start, end, tasks, licences, tasksOutstanding, deadlines, internalDeadlines } = useSelector(state => state.model);
 
@@ -108,7 +117,7 @@ export default function Index() {
     <section>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
-          <h2>Number of current active licences</h2>
+          <h2>Number of current active licences on <EndDate /></h2>
         </div>
       </div>
       <div className="govuk-grid-row">
