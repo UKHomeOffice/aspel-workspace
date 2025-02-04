@@ -3,7 +3,7 @@ import { render } from 'enzyme';
 import { Snippet } from './';
 
 const string = '<span>one line</span>';
-const list = `<ul>
+const list = `<ul class="govuk-list govuk-list--bullet">
 <li>one</li>
 <li>two</li>
 <li>three</li>

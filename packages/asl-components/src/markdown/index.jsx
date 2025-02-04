@@ -9,10 +9,14 @@ function RenderLink({ href, children }) {
 function RenderLinkReference({ children }) {
     return <Fragment>[{ children }]</Fragment>;
 }
+function RenderUnorderedList({ children }) {
+    return <ul className='govuk-list govuk-list--bullet'>{ children }</ul>;
+}
 
 const components = {
     link: RenderLink,
-    linkReference: RenderLinkReference
+    linkReference: RenderLinkReference,
+    ul: RenderUnorderedList,
 };
 
 // eslint-disable-next-line no-unused-vars
