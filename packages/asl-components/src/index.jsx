@@ -70,5 +70,6 @@ export { default as TrainingSummary } from './training-summary';
 export { default as WidthContainer } from './width-container';
 export { default as Wrapper } from './wrapper';
 export { default as TextAreaWithWordCount } from './text-area-word-count';
+export { default as SupportingLinks } from './supporting-links';
 
 export * from './layouts';
