@@ -65,7 +65,7 @@ module.exports = settings => {
   app.get('/', fetchDeadlines());
 
   app.get('/', (req, res, next) => {
-    const licences = req.metrics('/active-licences', { stream: false })
+    const licences = req.metrics('/active-licences', { stream: false, query: pick(req.form.values, 'end') })
       .then(licences => {
         res.locals.model.licences = licences;
       });
