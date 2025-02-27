@@ -1,4 +1,4 @@
-.wrapper-header .content {
+.wrapper-header {
   @include govuk-grid-row;
 
   > nav {
@@ -27,3 +27,4 @@
     }
   }
 }
+
