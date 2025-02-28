@@ -117,7 +117,7 @@ export default function Index() {
     <section>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
-          <h2>Number of current active licences on <EndDate /></h2>
+          <h2>Number of active licences on <EndDate /></h2>
         </div>
       </div>
       <div className="govuk-grid-row">
