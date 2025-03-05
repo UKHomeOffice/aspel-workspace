@@ -11,10 +11,12 @@ platform:
 steps:
   - name: build
     pull: if-not-exists
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
     commands:
       # wait for docker service to be up before running docker build
-      - n=0; while [ "$n" -lt 60 ] && [ (! docker stats --no-stream) ]; do n=$(( n + 1 )); sleep 1; done
+      - n=0; while [ "$n" -lt 60 ] && [ (! docker stats --no-stream) ]; echo "Waiting for docker start" do n=$(( n + 1 )); sleep 1; done
       - docker build -t asl-toolbox . --no-cache
     when:
       event:
@@ -33,8 +35,9 @@ steps:
         - tag
 
   - name: docker push latest
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+    image: docker:dind
     environment:
+      DOCKER_HOST: tcp://docker:2375
       AWS_ACCESS_KEY_ID:
         from_secret: AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY:
@@ -50,8 +53,10 @@ steps:
       branch: main
 
   - name: docker push tag
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+    image: docker:dind
     environment:
+      DOCKER_HOST:
+        tcp://docker:2375:
       AWS_ACCESS_KEY_ID:
         from_secret: AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY:
@@ -65,4 +70,6 @@ steps:
 
 services:
   - name: docker
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+    image: docker:dind
+    environment:
+      DOCKER_TLS_CERTDIR: ""
