@@ -4,13 +4,18 @@ kind: pipeline
 name: default
 type: kubernetes
 steps:
-  - name: docker build
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      DOCKER_BUILDKIT: 1
+  - name: build
+    pull: if-not-exists
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
     commands:
-      - docker build -t asl-toolbox .
+      # wait for docker service to be up before running docker build
+      - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done
+      - docker build -t asl-toolbox . --no-cache
+    when:
+      event:
+        - push
+        - tag
+
   - name: scan-image
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
     pull: always
@@ -18,9 +23,12 @@ steps:
       IMAGE_NAME: asl-toolbox
       ALLOW_CVE_LIST_FILE: cve-exceptions.txt
     when:
-      event: push
-  - name: docker push
-    image: docker:dind
+      event:
+        - push
+        - tag
+
+  - name: docker push latest
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
     environment:
       DOCKER_HOST: tcp://docker:2375
       AWS_ACCESS_KEY_ID:
@@ -30,13 +38,28 @@ steps:
     commands:
       - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 340268328991.dkr.ecr.eu-west-2.amazonaws.com && echo "Logged into docker";
       - docker tag asl-toolbox 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox:$${DRONE_COMMIT_SHA}
+      - docker tag asl-toolbox 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox:latest
       - docker push 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox:$${DRONE_COMMIT_SHA}
+      - docker push 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox:latest
     when:
       event: push
       branch: main
 
+  - name: docker push tag
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      AWS_ACCESS_KEY_ID:
+        from_secret: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: AWS_SECRET_ACCESS_KEY
+    commands:
+      - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 340268328991.dkr.ecr.eu-west-2.amazonaws.com && echo "Logged into docker";
+      - docker tag asl-toolbox 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox:$${DRONE_TAG}
+      - docker push 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox:$${DRONE_TAG}
+    when:
+      event: tag
+
 services:
-- name: docker
-  image: docker:dind
-  environment:
-    DOCKER_TLS_CERTDIR: ""
+  - name: docker
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
