@@ -33,33 +33,26 @@ steps:
         - tag
 
   - name: docker push latest
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
-    environment:
-      AWS_ACCESS_KEY_ID:
-        from_secret: AWS_ACCESS_KEY_ID
-      AWS_SECRET_ACCESS_KEY:
-        from_secret: AWS_SECRET_ACCESS_KEY
-    commands:
-      - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 340268328991.dkr.ecr.eu-west-2.amazonaws.com && echo "Logged into docker";
-      - docker tag asl-toolbox 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox:$${DRONE_COMMIT_SHA}
-      - docker tag asl-toolbox 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox:latest
-      - docker push 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox:$${DRONE_COMMIT_SHA}
-      - docker push 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox:latest
+    image: quay.io/ukhomeofficedigital/ecr:latest
+    secrets:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+    repo: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox
+    tags:
+      - latest
+      - ${DRONE_COMMIT_SHA}
     when:
       event: push
       branch: main
 
   - name: docker push tag
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
-    environment:
-      AWS_ACCESS_KEY_ID:
-        from_secret: AWS_ACCESS_KEY_ID
-      AWS_SECRET_ACCESS_KEY:
-        from_secret: AWS_SECRET_ACCESS_KEY
-    commands:
-      - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 340268328991.dkr.ecr.eu-west-2.amazonaws.com && echo "Logged into docker";
-      - docker tag asl-toolbox 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox:$${DRONE_TAG}
-      - docker push 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox:$${DRONE_TAG}
+    image: quay.io/ukhomeofficedigital/ecr:latest
+    secrets:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+    repo: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox
+    tags:
+      - ${DRONE_TAG}
     when:
       event: tag
 
