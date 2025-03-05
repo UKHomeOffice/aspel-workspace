@@ -34,9 +34,11 @@ steps:
 
   - name: docker push latest
     image: quay.io/ukhomeofficedigital/ecr:latest
-    secrets:
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: AWS_SECRET_ACCESS_KEY
     repo: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox
     tags:
       - latest
@@ -47,9 +49,11 @@ steps:
 
   - name: docker push tag
     image: quay.io/ukhomeofficedigital/ecr:latest
-    secrets:
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: AWS_SECRET_ACCESS_KEY
     repo: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox
     tags:
       - ${DRONE_TAG}
