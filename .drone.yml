@@ -1,8 +1,30 @@
-
 kind: pipeline
-name: default
+name: asl-emailer
 type: kubernetes
+
+clone:
+  disable: true
+
 steps:
+  - name: clone
+    image: node:18
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:18
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-emailer
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./scripts/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./scripts/modulepaths.js $MODULES)" > .module-paths
   - name: install
     image: node:18
     environment:
@@ -11,7 +33,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm ci
+      - npm ci --workspace asl-emailer
   - name: test
     image: node:18
     environment:
@@ -20,7 +42,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm test
+      - npm run test --workspace asl-emailer
   - name: audit
     image: node:18
     environment:
@@ -29,7 +51,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --audit-level=high --production
+      - npm audit --workspace=asl-emailer --audit-level=high --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -40,9 +62,9 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - docker build --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-emailer .
+      - docker build -f ./packages/asl-emailer/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-emailer .
   - name: scan-image
-    pull: Always
+    pull: always
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
     resources:
       limits:
@@ -50,7 +72,7 @@ steps:
         memory: 1024Mi
     environment:
       IMAGE_NAME: asl-emailer
-      ALLOW_CVE_LIST_FILE: cve-exceptions.txt
+      ALLOW_CVE_LIST_FILE: packages/asl-emailer/cve-exceptions.txt
   - name: docker push
     image: docker:dind
     environment:
@@ -66,8 +88,10 @@ steps:
       - docker tag asl-emailer quay.io/ukhomeofficedigital/asl-emailer:$${DRONE_COMMIT_SHA}
       - docker push quay.io/ukhomeofficedigital/asl-emailer:$${DRONE_COMMIT_SHA}
     when:
-      event: push
-      branch: master
+      event:
+        - push
+      branch:
+        - master
   - name: update manifest
     image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
     environment:
@@ -81,8 +105,10 @@ steps:
         --service asl-emailer
         --version $${DRONE_COMMIT_SHA}
     when:
-      event: push
-      branch: master
+      event:
+        - push
+      branch:
+        - master
 
 services:
 - name: docker

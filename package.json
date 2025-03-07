@@ -6,10 +6,8 @@
   ],
   "version": "1.0.1",
   "scripts": {
-    "reset": "./reset-aspel-workspace.sh",
+    "reset": "./scripts/reset-aspel-workspace.sh",
+    "test": "node --test scripts/*.test.js",
     "echo": "echo 'workspace is in action'"
-  },
-  "devDependencies": {},
-  "dependencies": {
   }
 }
