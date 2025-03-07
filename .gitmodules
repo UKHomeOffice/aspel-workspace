@@ -25,9 +25,6 @@
 [submodule "packages/asl-dictionary"]
 	path = packages/asl-dictionary
 	url = https://github.com/UKHomeOffice/asl-dictionary.git
-[submodule "packages/asl-emailer"]
-	path = packages/asl-emailer
-	url = https://github.com/UKHomeOffice/asl-emailer.git
 [submodule "packages/asl-public-api"]
 	path = packages/asl-public-api
 	url = https://github.com/UKHomeOffice/asl-public-api.git
