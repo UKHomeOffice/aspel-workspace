@@ -8,7 +8,7 @@ const { collectModulesPaths, log } = require("./common")
 
 const help = () => {
     log("Usage: localpaths <module-path>")
-    log("\nDescription: for an npm module, collect file paths to all local dependencies resolved to the current working directory")
+    log("\nDescription: for a node module, collect file paths to all local dependencies including itself, resolved to the current working directory")
     log(`\nOptions:`);
     log("  -h, --help  Display this help message")
 }

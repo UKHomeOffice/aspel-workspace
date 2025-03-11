@@ -69,6 +69,7 @@ const isPathsChanged = (paths, diff) => {
 
 const help = () => {
   log(`\nUsage: changeset [options]`);
+  log(`\nDescription: determine which files have changed for a set of node modules or explicit paths`);
   log(`\nOptions:`);
   log(`  -m, --modules <module>  List of modules to check for local file dependency changes`);
   log(`  -p, --paths <path>      List of explicit paths to check for file changes`);
@@ -97,16 +98,16 @@ const main = () => {
     }
   })
   
+  if (values.help) {
+    help();
+    process.exit(0);
+  }
+
   for (const [key, value] of Object.entries(ENVIRONMENT)) {
     if (!value) {
       log(`Environment variable '${key}' not set`);
       process.exit(1);
     }
-  }
-  
-  if (values.help) {
-    help();
-    process.exit(0);
   }
 
   if (values.modules.length === 0 && values.paths.length === 0) {

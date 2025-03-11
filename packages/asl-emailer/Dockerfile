@@ -6,25 +6,27 @@ ARG MODULE_PATHS
 
 WORKDIR /build
 
-COPY .npmrc /build/.npmrc
-COPY package.json /build/package.json
 COPY packages /build/packages
+
+WORKDIR /app
+
+COPY .npmrc /app/.npmrc
+COPY package-lock.json /app/package-lock.json
+COPY package.json /app/package.json
+
+RUN for path in $MODULE_PATHS; do \
+        mkdir -p /app/$path; \
+        cp -r /build/$path/* /app/$path; \
+    done
+
+RUN ls /app/packages
 
 RUN --mount=type=secret,id=token \
     --mount=type=secret,id=github_token \
     ART_AUTH_TOKEN=`cat /run/secrets/token` \
     GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` \
     npm update npm \
-    npm ci --workspace asl-emailer --omit=optional --omit=dev --ignore-scripts --loglevel=verbose
-
-WORKDIR /app
-
-RUN cp -r /build/node_modules /app/node_modules
-
-RUN for path in $MODULE_PATHS; do \
-        mkdir -p /app/$path; \
-        cp -r /build/$path/* /app/$path; \
-    done
+    npm ci --omit=optional --omit=dev --ignore-scripts --loglevel=verbose
 
 FROM quay.io/ukhomeofficedigital/asl-base:v18
 

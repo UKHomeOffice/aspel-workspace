@@ -41,7 +41,7 @@ const collectModuleDependencies = (moduleJson) => {
  * resolved from the module directory.
  */
 const collectModulePaths = (module, dependencies) => {
-  const fileExp = /^file:(.*)$/gm;
+  const fileExp = /^file:(.*)$/m;
   const paths = [];
   for (const [name, source] of Object.entries(dependencies)) {
     const match = fileExp.exec(source);

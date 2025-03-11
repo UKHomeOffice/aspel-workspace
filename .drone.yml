@@ -82,7 +82,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
       DOCKER_PASSWORD:
-        from_secret: docker_password
+        from_secret: quay_password
     commands:
       - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
       - docker tag asl-emailer quay.io/ukhomeofficedigital/asl-emailer:$${DRONE_COMMIT_SHA}

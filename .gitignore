@@ -2,17 +2,6 @@ node_modules/
 .idea
 .env
 
-# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
-.yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-yarn-debug.log*
-yarn-error.log*
-
 packages/**/node_modules
 packages/**/.env
 
