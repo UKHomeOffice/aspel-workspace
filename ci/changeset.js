@@ -69,10 +69,10 @@ const isPathsChanged = (paths, diff) => {
 
 const help = () => {
   log(`\nUsage: changeset [options]`);
-  log(`\nDescription: determine which files have changed for a set of node modules or explicit paths`);
+  log(`\nDescription: determine whether a build should run based on the CI event which triggered it`);
   log(`\nOptions:`);
-  log(`  -m, --modules <module>  List of modules to check for local file dependency changes`);
-  log(`  -p, --paths <path>      List of explicit paths to check for file changes`);
+  log(`  -m, --modules <module>  List of module paths which constitute the build`);
+  log(`  -p, --paths <path>      List of explicit paths to add to the build`);
   log(`  -h, --help              Display this help message`);
 }
 
