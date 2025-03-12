@@ -7,7 +7,7 @@
   "version": "1.0.1",
   "scripts": {
     "reset": "./scripts/reset-aspel-workspace.sh",
-    "test": "node --test scripts/*.test.js",
+    "test": "node --test $(find . -type f -name \"*.test.js\" ! -path \"./node_modules/*\" ! -path \"./packages/*\")",
     "echo": "echo 'workspace is in action'"
   }
 }
