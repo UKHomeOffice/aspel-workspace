@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import path, { dirname } from "node:path";
 import { execSync } from "node:child_process";
-import { describe, it, beforeEach, afterEach } from "node:test";
+import { describe, it, beforeEach, afterEach, before, after } from "node:test";
 import assert from "node:assert";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -16,6 +16,7 @@ describe("changeset", () => {
     const packageBDir = "packages/b";
     const docsDir = "docs";
     let testCwd;
+    let stderr = process.stderr.write
 
     const branchHead = () => execSync("git rev-parse HEAD").toString().trim()
 
@@ -24,6 +25,14 @@ describe("changeset", () => {
         BUILD_EVENT: "push",
         SOURCE_COMMIT: branchHead(),
         SKIP_STATUS: 78,
+    })
+
+    before(() => {
+        process.stderr.write = () => {}
+    })
+
+    after(() => {
+        process.stderr.write = stderr
     })
     
     beforeEach(() => {

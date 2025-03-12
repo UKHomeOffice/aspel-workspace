@@ -21,10 +21,10 @@ steps:
     commands:
       - git config advice.detachedHead false
       - git checkout $DRONE_COMMIT
-      - node ./scripts/changeset.js --modules $MODULES
+      - node ./ci/changeset.js --modules $MODULES
       - git checkout $DRONE_TARGET_BRANCH
       - git merge $DRONE_COMMIT
-      - echo "$(node ./scripts/modulepaths.js $MODULES)" > .module-paths
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
   - name: install
     image: node:18
     environment:

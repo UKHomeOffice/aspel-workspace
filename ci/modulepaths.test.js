@@ -3,13 +3,13 @@ import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import path, { dirname } from "node:path";
 import { execSync } from "node:child_process";
-import { describe, it, beforeEach, afterEach } from "node:test";
+import { describe, it, beforeEach, afterEach, before, after } from "node:test";
 import assert from "node:assert";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-describe("changeset", () => {
+describe("modulepaths", () => {
     const originalCwd = process.cwd();
     const targetBranch = "main";
     const packageADir = "packages/a";
@@ -17,6 +17,15 @@ describe("changeset", () => {
     const packageCDir = "other/nested/c";
     const docsDir = "docs";
     let testCwd;
+    let stderr = process.stderr.write
+
+    before(() => {
+        process.stderr.write = () => {}
+    })
+
+    after(() => {
+        process.stderr.write = stderr
+    })
     
     beforeEach(() => {
         testCwd = mkdtempSync(path.join(tmpdir(), "changeset-test-"))
