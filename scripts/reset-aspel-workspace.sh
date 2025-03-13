@@ -43,9 +43,9 @@ find packages -type f -name "package-lock.json" -exec rm -f {} +
 
 echo "Cleanup of node_modules and package-lock.json completed."
 
-# Step 4: Reinstall dependencies using Yarn
-yarn install
+# Step 4: Reinstall dependencies using NPM
+npm install
 
 echo "==============================================="
-echo "   ✅ Yarn has installed dependencies - ready to run the servers..."
+echo "   ✅ NPM has installed dependencies - ready to run the servers..."
 echo "==============================================="
