@@ -6,7 +6,7 @@
   ],
   "version": "1.0.1",
   "scripts": {
-    "dev": "source .env && echo ${DEV_SERVICES:-asl asl-internal-ui} | concurrently --kill-others-on-fail \"$(xargs -n1 -I {} printf '\"npm run dev -w {}\" ')\"",
+    "dev": "sh -c 'cmd=$(source .env && echo ${DEV_SERVICES:-\"asl asl-internal-ui\"} | xargs -n1 -I {} printf \"\\\"npm run dev -w %s\\\" \" {}); eval concurrently --kill-others-on-fail $cmd'",
     "reset": "source .env && ./scripts/reset-aspel-workspace.sh",
     "test": "node --test $(find . -type f -name \"*.test.js\" ! -path \"./node_modules/*\" ! -path \"./packages/*\")",
     "echo": "echo 'workspace is in action'"
