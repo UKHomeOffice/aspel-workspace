@@ -48,10 +48,17 @@ npm run reset
 git clone --recurse-submodules  https://github.com/UKHomeOffice/aspel-workspace
 ```
 
+or
+
+```sh
+git clone https://github.com/UKHomeOffice/aspel-workspace
+git submodule update --init
+```
+
 2. **Install dependencies**:
 
 ```sh
-export $(cat .env) && npm install
+npm run install:env
 ```
    
 3. **🚧 Working on a ticket 🚧**
