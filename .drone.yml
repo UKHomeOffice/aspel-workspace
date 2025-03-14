@@ -171,7 +171,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm run test:audit --workspace asl-attachments
+      - npm audit --workspace=asl-attachments --audit-level=high --omit=dev
   - name: docker build
     image: docker:dind
     environment:

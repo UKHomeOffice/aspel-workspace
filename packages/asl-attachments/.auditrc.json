@@ -1,7 +1,0 @@
-{
-  "$schema": "https://github.com/IBM/audit-ci/raw/main/docs/schema.json",
-  "moderate": true,
-  "allowlist": [
-    "GHSA-76p7-773f-r4q5"
-  ]
-}

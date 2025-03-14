@@ -7,7 +7,6 @@
     "build": "exit 0",
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config",
-    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
     "test": "npm run test:lint",
     "test:lint": "eslint ."
   },
@@ -22,7 +21,6 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-attachments#readme",
   "devDependencies": {
-    "audit-ci": "^7.1.0",
     "eslint": "^8.32.0",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0"
   },
