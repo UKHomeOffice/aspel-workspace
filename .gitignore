@@ -1,9 +1,9 @@
 node_modules/
 .idea
+.env
 
 packages/**/node_modules
 packages/**/.env
-
 
 packages/**/coverage
 

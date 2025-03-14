@@ -1,0 +1,55 @@
+---
+
+kind: pipeline
+name: <MODULE_NAME>
+type: kubernetes
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:18
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:18
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/<MODULE_NAME>
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+  - name: install
+    image: node:18
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace <MODULE_NAME>
+  - name: test
+    image: node:18
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run test --workspace <MODULE_NAME>
+  - name: audit
+    image: node:18
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=<MODULE_NAME> --audit-level=high --omit=dev
