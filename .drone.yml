@@ -282,6 +282,10 @@ steps:
   - name: test
     image: node:18
     environment:
+      DATABASE_NAME: asl-test
+      DATABASE_HOST: postgres
+      DATABASE_USERNAME: asl-test
+      DATABASE_PASSWORD: test-password
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
       GITHUB_AUTH_TOKEN:
