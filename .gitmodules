@@ -16,9 +16,6 @@
 [submodule "packages/asl-constants"]
 	path = packages/asl-constants
 	url = https://github.com/UKHomeOffice/asl-constants.git
-[submodule "packages/asl-data-exports"]
-	path = packages/asl-data-exports
-	url = https://github.com/UKHomeOffice/asl-data-exports.git
 [submodule "packages/asl-dictionary"]
 	path = packages/asl-dictionary
 	url = https://github.com/UKHomeOffice/asl-dictionary.git
