@@ -360,3 +360,8 @@ services:
   image: docker:dind
   environment:
     DOCKER_TLS_CERTDIR: ""
+- name: postgres
+  image: postgres
+  environment:
+    POSTGRES_USER: asl-test
+    POSTGRES_PASSWORD: test-password
