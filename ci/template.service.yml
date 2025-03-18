@@ -93,7 +93,7 @@ steps:
       event:
         - push
       branch:
-        - master
+        - main
   - name: update manifest
     image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
     environment:
@@ -110,7 +110,7 @@ steps:
       event:
         - push
       branch:
-        - master
+        - main
 
 services:
 - name: docker
