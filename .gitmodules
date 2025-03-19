@@ -43,3 +43,6 @@
 [submodule "packages/asl-permissions"]
 	path = packages/asl-permissions
 	url = https://github.com/UKHomeOffice/asl-permissions.git
+[submodule "packages/asl-projects"]
+	path = packages/asl-projects
+	url = https://github.com/UKHomeOffice/asl-projects.git
