@@ -1,25 +1,26 @@
 # syntax=docker/dockerfile:1.2
 
-FROM quay.io/ukhomeofficedigital/asl-base:v18 as builder
+FROM quay.io/ukhomeofficedigital/asl-base:v18
 
 RUN apk upgrade --no-cache
+
+USER 999
 
 COPY .npmrc /app/.npmrc
 COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
-COPY packages /app/packages
 
-RUN --mount=type=secret,id=token \
---mount=type=secret,id=github_token \
-ART_AUTH_TOKEN=`cat /run/secrets/token` \
-GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` \
-npm ci --omit=optional --omit=dev --ignore-scripts --loglevel=verbose
+RUN --mount=type=secret,id=token,uid=999 \
+    --mount=type=secret,id=github_token,uid=999 \
+    GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` \
+    ART_AUTH_TOKEN=`cat /run/secrets/token` \
+    npm ci --production --no-optional
+
+COPY . /app
 
 RUN rm /app/.npmrc
 
-USER 999
-
-CMD ["node", "packages/asl-attachments/index.js"]
+CMD node index.js
 
 # ARG MODULE_PATHS
 
