@@ -4,20 +4,20 @@ FROM quay.io/ukhomeofficedigital/asl-base:v18 as builder
 
 RUN apk upgrade --no-cache
 
-USER 999
-
 COPY .npmrc /app/.npmrc
 COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
 COPY packages /app/packages
 
 RUN --mount=type=secret,id=token \
-    --mount=type=secret,id=github_token \
-    ART_AUTH_TOKEN=`cat /run/secrets/token` \
-    GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` \
-    npm ci --omit=optional --omit=dev --ignore-scripts --loglevel=verbose
+--mount=type=secret,id=github_token \
+ART_AUTH_TOKEN=`cat /run/secrets/token` \
+GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` \
+npm ci --omit=optional --omit=dev --ignore-scripts --loglevel=verbose
 
 RUN rm /app/.npmrc
+
+USER 999
 
 CMD ["node", "packages/asl-attachments/index.js"]
 
