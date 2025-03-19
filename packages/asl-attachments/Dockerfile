@@ -14,7 +14,7 @@ RUN --mount=type=secret,id=token,uid=999 \
     --mount=type=secret,id=github_token,uid=999 \
     GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` \
     ART_AUTH_TOKEN=`cat /run/secrets/token` \
-    npm ci --production --no-optional
+    npm ci --production
 
 COPY . /app
 
