@@ -153,8 +153,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - cd packages/asl-attachments
-      - npm ci --workspaces=false
+      - npm ci --workspace asl-attachments
   - name: test
     image: node:18
     environment:
