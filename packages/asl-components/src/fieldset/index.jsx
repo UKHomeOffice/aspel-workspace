@@ -163,7 +163,7 @@ function Field({
                     };
                 }
                 if (opt.hint && typeof opt.hint === 'string') {
-                    opt.hint = <Markdown unwrapSingleLine={true}>{ opt.hint }</Markdown>;
+                    opt.hint = <Markdown unwrapSingleLine={true}>{opt.hint}</Markdown>;
                 }
                 return opt;
             }
@@ -198,23 +198,36 @@ function Field({
         hint = formatHint({ name, prefix, hint });
     }
 
-    function onFieldChange(e) {
-        let v = e.target ? e.target.value : e;
-        if (v === 'true') {
-            v = true;
+    const onFieldChange = (options = []) => (e) => {
+        let newValue = e.target ? e.target.value : e;
+        if (newValue === 'true') {
+            newValue = true;
         }
-        if (v === 'false') {
-            v = false;
+        if (newValue === 'false') {
+            newValue = false;
         }
         if (Array.isArray(fieldValue)) {
-            if (fieldValue.includes(v)) {
-                v = without(fieldValue, v);
+            const option = options.find(opt => opt.value === newValue);
+            const exclusiveOptions =
+              options
+                  .filter(opt => opt.behaviour === 'exclusive')
+                  .map(opt => opt.value);
+
+            if (option?.behaviour === 'exclusive' && !fieldValue.includes(newValue)) {
+                // exclusive option selected, deselect everything else
+                newValue = [newValue];
+            } else if (fieldValue.includes(newValue)) {
+                newValue = without(fieldValue, newValue);
             } else {
-                v = [...fieldValue, v];
+                // Selecting non-exclusive option: remove exclusive option if already selected
+                newValue = [
+                    ...(fieldValue.filter(prevValue => !exclusiveOptions.includes(prevValue))),
+                    newValue
+                ];
             }
         }
-        setFieldValue(v);
-    }
+        setFieldValue(newValue);
+    };
 
     const Component = fields[inputType];
 
@@ -233,7 +246,7 @@ function Field({
         hint={isUndefined(hint) ? <Snippet optional {...snippetProps}>{`fields.${name}.hint`}</Snippet> : hint}
         error={error && <Snippet fallback={`errors.default.${error}`} {...snippetProps}>{`errors.${name}.${error}`}</Snippet>}
         value={fieldValue}
-        onChange={onFieldChange}
+        onChange={onFieldChange(options)}
         name={prefix ? `${prefix}-${name}` : name}
         options={options}
         {...props}
