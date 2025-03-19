@@ -122,29 +122,29 @@ kind: pipeline
 name: asl-attachments
 type: kubernetes
 
-clone:
-  disable: true
+# clone:
+#   disable: true
 
 steps:
-  - name: clone
-    image: node:18
-    commands:
-      - git clone $DRONE_REMOTE_URL .
-  - name: changeset
-    image: node:18
-    environment:
-      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
-      SOURCE_COMMIT: "${DRONE_COMMIT}"
-      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
-      SKIP_STATUS: 78
-      MODULES: packages/asl-attachments
-    commands:
-      - git config advice.detachedHead false
-      - git checkout $DRONE_COMMIT
-      - node ./ci/changeset.js --modules $MODULES
-      - git checkout $DRONE_TARGET_BRANCH
-      - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+  # - name: clone
+  #   image: node:18
+  #   commands:
+  #     - git clone $DRONE_REMOTE_URL .
+  # - name: changeset
+  #   image: node:18
+  #   environment:
+  #     TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+  #     SOURCE_COMMIT: "${DRONE_COMMIT}"
+  #     BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+  #     SKIP_STATUS: 78
+  #     MODULES: packages/asl-attachments
+  #   commands:
+  #     - git config advice.detachedHead false
+  #     - git checkout $DRONE_COMMIT
+  #     - node ./ci/changeset.js --modules $MODULES
+  #     - git checkout $DRONE_TARGET_BRANCH
+  #     - git merge $DRONE_COMMIT
+  #     - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
   - name: install
     image: node:18
     environment:
@@ -188,7 +188,7 @@ steps:
     environment:
       DOCKER_HOST: tcp://docker:2375
     commands:
-      - docker run --platform=linux/amd64 asl-attachments
+      - docker run asl-attachments
   - name: scan-image
     pull: always
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
