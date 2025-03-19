@@ -26,7 +26,7 @@ RUN --mount=type=secret,id=token \
     ART_AUTH_TOKEN=`cat /run/secrets/token` \
     GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` \
     npm update npm \
-    npm ci --omit=optional --omit=dev --ignore-scripts --loglevel=verbose
+    npm ci --omit=dev --ignore-scripts --loglevel=verbose
 
 FROM quay.io/ukhomeofficedigital/asl-base:v18
 
