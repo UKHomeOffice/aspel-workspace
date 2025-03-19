@@ -183,6 +183,12 @@ steps:
         from_secret: github_token
     commands:
       - docker build -f ./packages/asl-attachments/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-attachments .
+  - name: docker run
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+    commands:
+      - docker run --platform=linux/amd64 asl-attachments
   - name: scan-image
     pull: always
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
