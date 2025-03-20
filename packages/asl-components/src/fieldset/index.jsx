@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import without from 'lodash/without';
@@ -140,7 +140,7 @@ function Field({
     ...props
 }) {
     if (inputType === 'checkboxGroup') {
-        value = castArray(value);
+        value = castArray(value).filter(value => value !== null);
     }
 
     function normaliseOptions(options) {
@@ -175,13 +175,19 @@ function Field({
         });
     }
 
-    if (!preventOptionMapping) {
-        options = normaliseOptions(options);
-    }
+    const normalisedOptions = useMemo(() => {
+        let normalizedOptions = options;
 
-    if (props.automapReveals) {
-        options = automapReveals(options, props);
-    }
+        if (!preventOptionMapping) {
+            normalizedOptions = normaliseOptions(normalizedOptions);
+        }
+
+        if (props.automapReveals) {
+            normalizedOptions = automapReveals(normalizedOptions, props);
+        }
+
+        return normalizedOptions;
+    }, [options, props, preventOptionMapping]);
 
     const [fieldValue, setFieldValue] = useState(value);
 
@@ -198,7 +204,7 @@ function Field({
         hint = formatHint({ name, prefix, hint });
     }
 
-    const onFieldChange = (options = []) => (e) => {
+    function onFieldChange(e) {
         let newValue = e.target ? e.target.value : e;
         if (newValue === 'true') {
             newValue = true;
@@ -207,9 +213,9 @@ function Field({
             newValue = false;
         }
         if (Array.isArray(fieldValue)) {
-            const option = options.find(opt => opt.value === newValue);
+            const option = normalisedOptions.find(opt => opt.value === newValue);
             const exclusiveOptions =
-              options
+              normalisedOptions
                   .filter(opt => opt.behaviour === 'exclusive')
                   .map(opt => opt.value);
 
@@ -221,13 +227,13 @@ function Field({
             } else {
                 // Selecting non-exclusive option: remove exclusive option if already selected
                 newValue = [
-                    ...(fieldValue.filter(prevValue => !exclusiveOptions.includes(prevValue))),
+                    ...(fieldValue.filter(prevValue => !exclusiveOptions.includes(prevValue) && fieldValue !== null)),
                     newValue
                 ];
             }
         }
         setFieldValue(newValue);
-    };
+    }
 
     const Component = fields[inputType];
 
@@ -246,9 +252,9 @@ function Field({
         hint={isUndefined(hint) ? <Snippet optional {...snippetProps}>{`fields.${name}.hint`}</Snippet> : hint}
         error={error && <Snippet fallback={`errors.default.${error}`} {...snippetProps}>{`errors.${name}.${error}`}</Snippet>}
         value={fieldValue}
-        onChange={onFieldChange(options)}
+        onChange={onFieldChange}
         name={prefix ? `${prefix}-${name}` : name}
-        options={options}
+        options={normalisedOptions}
         {...props}
     />;
 }
