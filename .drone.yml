@@ -395,7 +395,7 @@ steps:
     commands:
       - git config advice.detachedHead false
       - git checkout $DRONE_COMMIT
-      - node ./ci/changeset.js --modules $MODULES
+      # - node ./ci/changeset.js --modules $MODULES
       - git checkout $DRONE_TARGET_BRANCH
       - git merge $DRONE_COMMIT
       - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
@@ -470,6 +470,7 @@ steps:
         - push
       branch:
         - main
+        - fix-asl-containers
   - name: update manifest
     image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
     environment:
