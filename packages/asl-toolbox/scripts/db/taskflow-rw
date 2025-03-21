@@ -4,6 +4,7 @@ export PGUSER=${TASKFLOW_DB_RW_USERNAME}
 export PGPASSWORD=${TASKFLOW_DB_RW_PASSWORD}
 export PGDATABASE=${TASKFLOW_DB_NAME}
 export PGHOST=${TASKFLOW_DB_HOST}
+export PGPORT=${TASKFLOW_DB_PORT}
 
 echo 'Using read-write credentials!'
 

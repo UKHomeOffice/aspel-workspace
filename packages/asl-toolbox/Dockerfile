@@ -1,4 +1,4 @@
-FROM quay.io/ukhomeofficedigital/asl-base
+FROM quay.io/ukhomeofficedigital/asl-base:v22.14.0
 
 USER 0
 
@@ -9,6 +9,7 @@ USER 999
 
 WORKDIR /app
 
+COPY --chown=app:app ./node_modules ./node_modules
 COPY --chown=app:app ./scripts ./
 
 ENTRYPOINT tail -f /dev/null
