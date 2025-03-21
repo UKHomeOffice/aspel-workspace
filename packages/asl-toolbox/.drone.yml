@@ -14,9 +14,9 @@ steps:
     pull: if-not-exists
     environment:
       ART_AUTH_TOKEN:
-        from_secret: art_auth_token
+        from_secret: ART_AUTH_TOKEN
       GITHUB_AUTH_TOKEN:
-        from_secret: github_token
+        from_secret: GITHUB_AUTH_TOKEN
     commands:
       - npm ci
       - npm run lint
@@ -31,9 +31,9 @@ steps:
     pull: if-not-exists
     environment:
       ART_AUTH_TOKEN:
-        from_secret: art_auth_token
+        from_secret: ART_AUTH_TOKEN
       GITHUB_AUTH_TOKEN:
-        from_secret: github_token
+        from_secret: GITHUB_AUTH_TOKEN
     commands:
       - npm ci --omit=dev
     when:
