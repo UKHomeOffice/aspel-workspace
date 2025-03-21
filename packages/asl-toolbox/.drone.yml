@@ -101,5 +101,5 @@ services:
   - name: postgres
     image: postgres
     environment:
-      POSTGRES_USER: postgres
+      POSTGRES_USER: asl-test
       POSTGRES_PASSWORD: test-password
