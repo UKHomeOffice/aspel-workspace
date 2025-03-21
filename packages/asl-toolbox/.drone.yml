@@ -17,8 +17,9 @@ steps:
         from_secret: ART_AUTH_TOKEN
       GITHUB_AUTH_TOKEN:
         from_secret: GITHUB_AUTH_TOKEN
+      DATABASE_USERNAME: asl-test
     commands:
-      - cp .env.dist .env
+      - cp .env.test .env
       - npm ci
       - npm run audit
       - npm run lint
