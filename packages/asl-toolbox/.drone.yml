@@ -18,6 +18,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: GITHUB_AUTH_TOKEN
     commands:
+      - cp .env.dist .env
       - npm ci
       - npm run lint
       - npm test
