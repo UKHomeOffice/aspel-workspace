@@ -504,6 +504,10 @@ services:
 kind: pipeline
 name: asl-metrics
 type: kubernetes
+
+clone:
+  disable: true
+
 steps:
   - name: clone
     image: node:18
