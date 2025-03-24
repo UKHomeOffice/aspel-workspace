@@ -68,13 +68,16 @@ steps:
         - tag
 
   - name: docker push latest
-    image: quay.io/ukhomeofficedigital/ecr:latest
+    image: plugins/ecr
     environment:
-      AWS_ACCESS_KEY_ID:
+      AWS_REGION: eu-west-2
+    settings:
+      access_key:
         from_secret: AWS_ACCESS_KEY_ID
-      AWS_SECRET_ACCESS_KEY:
+      secret_key:
         from_secret: AWS_SECRET_ACCESS_KEY
-    repo: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox
+    repo: asl/toolbox
+    registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
     tags:
       - latest
       - ${DRONE_COMMIT_SHA}
@@ -83,13 +86,16 @@ steps:
       branch: main
 
   - name: docker push tag
-    image: quay.io/ukhomeofficedigital/ecr:latest
+    image: plugins/ecr
     environment:
-      AWS_ACCESS_KEY_ID:
+      AWS_REGION: eu-west-2
+    settings:
+      access_key:
         from_secret: AWS_ACCESS_KEY_ID
-      AWS_SECRET_ACCESS_KEY:
+      secret_key:
         from_secret: AWS_SECRET_ACCESS_KEY
-    repo: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/asl/toolbox
+    repo: asl/toolbox
+    registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
     tags:
       - ${DRONE_TAG}
     when:
