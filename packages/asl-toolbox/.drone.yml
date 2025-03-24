@@ -9,6 +9,41 @@ platform:
   arch: amd64
 
 steps:
+  - name: verify
+    image: node:22.14.0
+    pull: if-not-exists
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: ART_AUTH_TOKEN
+      GITHUB_AUTH_TOKEN:
+        from_secret: GITHUB_AUTH_TOKEN
+      DATABASE_USERNAME: asl-test
+    commands:
+      - cp .env.test .env
+      - npm ci
+      - npm run audit
+      - npm run lint
+      - npm test
+    when:
+      event:
+        - push
+        - tag
+
+  - name: install
+    image: node:22.14.0
+    pull: if-not-exists
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: ART_AUTH_TOKEN
+      GITHUB_AUTH_TOKEN:
+        from_secret: GITHUB_AUTH_TOKEN
+    commands:
+      - npm ci --omit=dev
+    when:
+      event:
+        - push
+        - tag
+
   - name: build
     pull: if-not-exists
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
@@ -63,3 +98,9 @@ steps:
 services:
   - name: docker
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+
+  - name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: asl-test
+      POSTGRES_PASSWORD: test-password
