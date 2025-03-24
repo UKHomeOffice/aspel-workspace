@@ -79,13 +79,13 @@ function buildProjectVersionQuery(current, projectVersionUUID, transaction) {
   return transaction.raw(
     // language=PostgreSQL
     `
-            SELECT pv.id, any_value(pv.data) AS data
+            SELECT pv.id, pv.data AS data
             FROM project_versions pv
                      CROSS JOIN JSONB_ARRAY_ELEMENTS(pv.data -> 'protocols') WITH ORDINALITY AS proto(value, idx)
                      CROSS JOIN JSONB_ARRAY_ELEMENTS_TEXT(proto.value -> 'locations') WITH ORDINALITY AS location(value, idx)
             WHERE pv.id = :projectVersionUUID
               AND location.value = :current
-            GROUP BY pv.id;
+            GROUP BY pv.id, pv.data;
         `,
     {projectVersionUUID, current}
   );
@@ -103,13 +103,13 @@ function buildProjectQuery(current, projectUUID, transaction) {
   return transaction.raw(
     // language=PostgreSQL
     `
-            SELECT pv.id, any_value(pv.data) as data
+            SELECT pv.id, pv.data as data
             FROM project_versions pv 
                      CROSS JOIN JSONB_ARRAY_ELEMENTS(pv.data -> 'protocols') WITH ORDINALITY AS proto(value, idx)
                      CROSS JOIN JSONB_ARRAY_ELEMENTS_TEXT(proto.value -> 'locations') WITH ORDINALITY AS location(value, idx)
             WHERE pv.project_id = :projectUUID
               AND location.value = :current
-            GROUP BY pv.id;
+            GROUP BY pv.id, pv.data;
         `,
     {projectUUID, current}
   );
@@ -128,7 +128,7 @@ function buildEstablishmentQuery(current, establishmentId, transaction) {
   return transaction.raw(
     // language=PostgreSQL
     `
-          SELECT pv.id, any_value(pv.data) as data
+          SELECT pv.id, pv.data as data
           FROM projects p
                LEFT JOIN project_versions pv ON p.id = pv.project_id
                LEFT JOIN project_establishments pe ON p.id = pe.project_id
@@ -136,7 +136,7 @@ function buildEstablishmentQuery(current, establishmentId, transaction) {
                CROSS JOIN JSONB_ARRAY_ELEMENTS_TEXT(proto.value -> 'locations') WITH ORDINALITY AS location(value, idx)
           WHERE (p.establishment_id = :establishmentId OR pe.establishment_id = :establishmentId)
             AND location.value = :current
-          GROUP BY pv.id;
+          GROUP BY pv.id, pv.data;
     `,
     {establishmentId, current}
   );
