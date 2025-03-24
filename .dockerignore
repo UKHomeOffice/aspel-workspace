@@ -1,2 +1,5 @@
 /node_modules
 /packages/**/node_modules
+
+/packages/asl-metrics/test
+/packages/asl-metrics/bin
