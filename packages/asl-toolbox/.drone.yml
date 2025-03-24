@@ -106,7 +106,7 @@ services:
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
 
   - name: postgres
-    image: postgres
+    image: postgres:14.13-bullseye
     environment:
       POSTGRES_USER: asl-test
       POSTGRES_PASSWORD: test-password
