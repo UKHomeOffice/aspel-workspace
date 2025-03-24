@@ -78,9 +78,9 @@ steps:
         from_secret: AWS_SECRET_ACCESS_KEY
       repo: asl/toolbox
       registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
-    tags:
-      - latest
-      - ${DRONE_COMMIT_SHA}
+      tags:
+        - latest
+        - ${DRONE_COMMIT_SHA}
     when:
       event: push
       branch: main
@@ -96,8 +96,8 @@ steps:
         from_secret: AWS_SECRET_ACCESS_KEY
       repo: asl/toolbox
       registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
-    tags:
-      - ${DRONE_TAG}
+      tags:
+        - ${DRONE_TAG}
     when:
       event: tag
 
