@@ -26,6 +26,7 @@
   "dependencies": {
     "@asl/projects": "^15.10.0",
     "@asl/service": "^11.0.1",
+    "@asl/schema": "^11.0.0",
     "@ukhomeoffice/asl-constants": "^2.2.0",
     "@ukhomeoffice/asl-dictionary": "^2.1.0",
     "express": "^4.17.1",
@@ -41,7 +42,6 @@
     "winston": "^3.4.0"
   },
   "devDependencies": {
-    "@asl/schema": "^11.0.0",
     "@babel/register": "^7.8.3",
     "@ukhomeoffice/asl-taskflow": "^4.0.1",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
