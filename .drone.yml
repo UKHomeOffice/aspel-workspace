@@ -737,6 +737,7 @@ steps:
         - push
       branch:
         - main
+        - merge-asl-search
   - name: update manifest
     image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
     environment:
