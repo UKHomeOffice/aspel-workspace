@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "pretest:unit": "npm run migrate",
-    "migrate": "knex migrate:latest --knexfile ./node_modules/@asl/schema/knexfile.js --env test",
+    "migrate": "knex migrate:latest --knexfile ../../node_modules/@asl/schema/knexfile.js --env test",
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config",
     "test": "npm run test:lint && npm run test:unit",
-    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
     "test:lint": "eslint .",
     "test:unit": "mocha --recursive"
   },
@@ -37,7 +36,6 @@
   },
   "devDependencies": {
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
-    "audit-ci": "^7.1.0",
     "dotenv": "^6.0.0",
     "eslint": "^5.16.0",
     "eslint-plugin-undocumented-env": "^1.0.0",
