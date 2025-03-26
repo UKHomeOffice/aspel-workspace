@@ -144,6 +144,8 @@ const formatters = {
 
 const PIL = (pil) => {
   const licenceNumber = useSelector(state => state.model.pilLicenceNumber);
+  const pils = useSelector(state => state.model.pils);
+  const activePil = pils.filter((item) => item.status === 'active');
 
   return <section className="profile-section">
     <ModelSummary
@@ -151,7 +153,22 @@ const PIL = (pil) => {
       formatters={formatters}
       schema={pilSchema}
     />
+
+    {
+      activePil.length > 0 && pil.status === 'pending' &&
+      <form method="post">
+        <input type="hidden" name="establishmentId" value={pil.establishmentId} />
+        <input type="hidden" name="pilId" value={pil.id} />
+        <button className="govuk-button" onClick={confirmPilRemoval}>Remove</button>
+      </form>
+    }
   </section>;
+};
+
+const confirmPilRemoval = (event) => {
+  if (!window.confirm('Are you sure you wish to remove this item?')) {
+    event.preventDefault();
+  }
 };
 
 const TrainingPIL = (pil) => {
