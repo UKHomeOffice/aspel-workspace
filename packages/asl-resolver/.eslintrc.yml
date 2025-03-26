@@ -1,0 +1,9 @@
+extends:
+  - "@ukhomeoffice/asl"
+
+plugins:
+  - eslint-plugin-undocumented-env
+
+rules:
+  undocumented-env/no-undocumented: 2
+  indent: 0
