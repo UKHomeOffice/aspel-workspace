@@ -7,11 +7,11 @@ clone:
 
 steps:
   - name: clone
-    image: node:18
+    image: node:22.14.0
     commands:
       - git clone $DRONE_REMOTE_URL .
   - name: changeset
-    image: node:18
+    image: node:22.14.0
     environment:
       TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
       SOURCE_COMMIT: "${DRONE_COMMIT}"
@@ -26,7 +26,7 @@ steps:
       - git merge $DRONE_COMMIT
       - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
   - name: install
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -35,7 +35,7 @@ steps:
     commands:
       - npm ci --workspace asl-emailer
   - name: test
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -44,7 +44,7 @@ steps:
     commands:
       - npm run test --workspace asl-emailer
   - name: audit
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -127,11 +127,11 @@ clone:
 
 steps:
   - name: clone
-    image: node:18
+    image: node:22.14.0
     commands:
       - git clone $DRONE_REMOTE_URL .
   - name: changeset
-    image: node:18
+    image: node:22.14.0
     environment:
       TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
       SOURCE_COMMIT: "${DRONE_COMMIT}"
@@ -146,7 +146,7 @@ steps:
       - git merge $DRONE_COMMIT
       - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
   - name: install
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -155,7 +155,7 @@ steps:
     commands:
       - npm ci --workspace asl-attachments
   - name: test
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -164,7 +164,7 @@ steps:
     commands:
       - npm run test --workspace asl-attachments
   - name: audit
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -210,7 +210,7 @@ steps:
     when:
       event:
         - push
-      branch: 
+      branch:
         - main
   - name: update manifest
     image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
@@ -225,9 +225,9 @@ steps:
         --service asl-attachments
         --version $${DRONE_COMMIT_SHA}
     when:
-      event: 
+      event:
         - push
-      branch: 
+      branch:
         - main
 
 services:
@@ -252,11 +252,11 @@ clone:
 
 steps:
   - name: clone
-    image: node:18
+    image: node:22.14.0
     commands:
       - git clone $DRONE_REMOTE_URL .
   - name: changeset
-    image: node:18
+    image: node:22.14.0
     environment:
       TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
       SOURCE_COMMIT: "${DRONE_COMMIT}"
@@ -271,7 +271,7 @@ steps:
       - git merge $DRONE_COMMIT
       - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
   - name: install
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -280,7 +280,7 @@ steps:
     commands:
       - npm ci --workspace asl-notifications
   - name: test
-    image: node:18
+    image: node:22.14.0
     environment:
       DATABASE_NAME: asl-test
       DATABASE_HOST: postgres
@@ -293,7 +293,7 @@ steps:
     commands:
       - npm run test --workspace asl-notifications
   - name: audit
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -381,11 +381,11 @@ clone:
 
 steps:
   - name: clone
-    image: node:18
+    image: node:22.14.0
     commands:
       - git clone $DRONE_REMOTE_URL .
   - name: changeset
-    image: node:18
+    image: node:22.14.0
     environment:
       TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
       SOURCE_COMMIT: "${DRONE_COMMIT}"
@@ -400,7 +400,7 @@ steps:
       - git merge $DRONE_COMMIT
       - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
   - name: install
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -409,7 +409,7 @@ steps:
     commands:
       - npm ci --workspace asl-data-exports
   - name: test
-    image: node:18
+    image: node:22.14.0
     environment:
       DATABASE_NAME: asl-test
       DATABASE_HOST: postgres
@@ -422,7 +422,7 @@ steps:
     commands:
       - npm run test --workspace asl-data-exports
   - name: audit
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -510,11 +510,11 @@ clone:
 
 steps:
   - name: clone
-    image: node:18
+    image: node:22.14.0
     commands:
       - git clone $DRONE_REMOTE_URL .
   - name: changeset
-    image: node:18
+    image: node:22.14.0
     environment:
       TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
       SOURCE_COMMIT: "${DRONE_COMMIT}"
@@ -529,7 +529,7 @@ steps:
       - git merge $DRONE_COMMIT
       - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
   - name: install
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -547,7 +547,7 @@ steps:
       - psql -c 'CREATE DATABASE "asl-test"'
       - psql -c 'CREATE DATABASE "taskflow-test"'
   - name: test
-    image: node:18
+    image: node:22.14.0
     environment:
       DATABASE_NAME: asl-test
       DATABASE_HOST: postgres
@@ -564,7 +564,7 @@ steps:
     commands:
       - npm run test --workspace asl-metrics
   - name: audit
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
