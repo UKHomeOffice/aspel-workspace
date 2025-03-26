@@ -28,6 +28,3 @@
 [submodule "packages/asl-projects"]
 	path = packages/asl-projects
 	url = https://github.com/UKHomeOffice/asl-projects.git
-[submodule "packages/asl-public-api"]
-	path = packages/asl-public-api
-	url = https://github.com/UKHomeOffice/asl-public-api.git
