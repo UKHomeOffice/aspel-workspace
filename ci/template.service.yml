@@ -9,11 +9,11 @@ clone:
 
 steps:
   - name: clone
-    image: node:18
+    image: node:22.14.0
     commands:
       - git clone $DRONE_REMOTE_URL .
   - name: changeset
-    image: node:18
+    image: node:22.14.0
     environment:
       TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
       SOURCE_COMMIT: "${DRONE_COMMIT}"
@@ -28,7 +28,7 @@ steps:
       - git merge $DRONE_COMMIT
       - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
   - name: install
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -37,7 +37,7 @@ steps:
     commands:
       - npm ci --workspace <MODULE_NAME>
   - name: test
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
@@ -46,7 +46,7 @@ steps:
     commands:
       - npm run test --workspace <MODULE_NAME>
   - name: audit
-    image: node:18
+    image: node:22.14.0
     environment:
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
