@@ -1157,7 +1157,7 @@ services:
 ---
 
 kind: pipeline
-name: default
+name: asl-public-api
 type: kubernetes
 
 clone:
