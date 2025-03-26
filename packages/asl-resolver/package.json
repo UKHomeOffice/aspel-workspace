@@ -8,9 +8,8 @@
     "pretest:unit": "npm run migrate",
     "test:unit": "nyc mocha",
     "test:lint": "eslint .",
-    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
     "dev": "nodemon -r dotenv/config index.js",
-    "migrate": "knex migrate:latest --knexfile ./node_modules/@asl/schema/knexfile.js --env test",
+    "migrate": "knex migrate:latest --knexfile ../../node_modules/@asl/schema/knexfile.js --env test",
     "task": "node ./tasks/run-task"
   },
   "repository": {
@@ -44,7 +43,6 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "audit-ci": "^7.1.0",
     "dotenv": "^6.0.0",
     "eslint": "^8.26.0",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
