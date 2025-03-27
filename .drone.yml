@@ -1503,7 +1503,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm run build --workspace asl-internal-uim --production
+      - npm run build --workspace asl-internal-ui --production
   - name: docker build
     image: docker:dind
     environment:
