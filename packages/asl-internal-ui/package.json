@@ -12,9 +12,8 @@
     "test": "npm run test:lint && npm run test:deduped",
     "test:lint": "eslint . --ext jsx,js",
     "test:deduped": "./tests/dedupe.sh",
-    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
     "build": "npm run build:js && npm run build:css",
-    "build:js": "node --max_old_space_size=4096 node_modules/.bin/webpack",
+    "build:js": "node --max_old_space_size=4096 ../../node_modules/.bin/webpack",
     "prebuild:css": "mkdir -p ./public/css",
     "build:css": "npm-sass ./assets/sass/app.scss > ./public/css/app.css",
     "postinstall": "npm run build"
@@ -70,7 +69,6 @@
   },
   "devDependencies": {
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
-    "audit-ci": "^7.1.0",
     "babel-plugin-transform-require-ignore": "^0.1.1",
     "dotenv": "^5.0.1",
     "eslint": "^8.25.0",
