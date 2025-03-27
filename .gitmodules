@@ -22,9 +22,6 @@
 [submodule "packages/asl-service"]
 	path = packages/asl-service
 	url = https://github.com/UKHomeOffice/asl-service.git
-[submodule "packages/asl-workflow"]
-	path = packages/asl-workflow
-	url = https://github.com/UKHomeOffice/asl-workflow.git
 [submodule "packages/asl-projects"]
 	path = packages/asl-projects
 	url = https://github.com/UKHomeOffice/asl-projects.git
