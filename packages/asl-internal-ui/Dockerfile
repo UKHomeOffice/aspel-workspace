@@ -34,6 +34,8 @@ RUN apk upgrade --no-cache
 
 COPY --from=builder /app /app
 
+RUN mv /app/packages/asl-internal-ui/public /app/public
+
 USER 999
 
 # prime the babel cache at build time to improve deployed startup time
