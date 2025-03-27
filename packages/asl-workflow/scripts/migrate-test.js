@@ -11,7 +11,7 @@ const migrate = () => {
     })
     .then(() => {
       console.log('migrate asl test db');
-      process.chdir('./node_modules/@asl/schema');
+      process.chdir('../../node_modules/@asl/schema');
       return knex(dbConfig.asl.test).migrate.latest();
     });
 };
