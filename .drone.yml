@@ -1531,6 +1531,10 @@ steps:
       DOCKER_HOST: tcp://docker:2375
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      DOCKER_PASSWORD:
+        from_secret: quay_password
     commands:
       - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
       - docker tag asl-internal-ui quay.io/ukhomeofficedigital/asl-internal-ui:$${DRONE_COMMIT_SHA}
