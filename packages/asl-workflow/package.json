@@ -1,0 +1,61 @@
+{
+  "name": "asl-workflow",
+  "version": "1.3.2",
+  "description": "Workflow API for processing change requests",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:lint && npm run test:unit",
+    "test:lint": "eslint .",
+    "pretest:unit": "NODE_ENV=test npm run migrate:test",
+    "test:unit": "mocha ./test",
+    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
+    "dev": "nodemon -r dotenv/config index.js",
+    "seed": "SNAKE_MAPPER=true knex seed:run",
+    "postseed": "bin/deadline-has-passed",
+    "migrate": "node ./scripts/migrate.js",
+    "migrate:test": "node ./scripts/migrate-test.js",
+    "nightly-job": "bin/nightly-jobs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UKHomeOffice/asl-workflow.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UKHomeOffice/asl-workflow/issues"
+  },
+  "homepage": "https://github.com/UKHomeOffice/asl-workflow#readme",
+  "dependencies": {
+    "@ukhomeoffice/asl-constants": "^2.2.0",
+    "@asl/schema": "^11.1.4",
+    "@asl/service": "^11.0.2",
+    "@ukhomeoffice/asl-taskflow": "^4.0.1",
+    "aws-sdk": "2.1354.0",
+    "deep-diff": "^1.0.2",
+    "express": "^4.19.2",
+    "lodash": "^4.17.21",
+    "minimatch": "^3.0.4",
+    "moment": "^2.29.3",
+    "moment-business-time": "^2.0.0",
+    "node-fetch": "^2.6.7",
+    "objection": "^3.1.5",
+    "uuid": "^3.3.2",
+    "uuid-validate": "0.0.3"
+  },
+  "devDependencies": {
+    "audit-ci": "^7.1.0",
+    "chai": "^4.2.0",
+    "dotenv": "^6.0.0",
+    "eslint": "^5.0.1",
+    "@ukhomeoffice/eslint-config-asl": "^3.0.0",
+    "knex": "^3.1.0",
+    "mocha": "^11.1.0",
+    "nodemon": "^3.1.9",
+    "nyc": "^15.1.0",
+    "qs": "^6.9.6",
+    "sinon": "^19.0.2",
+    "supertest": "^3.3.0"
+  }
+}
