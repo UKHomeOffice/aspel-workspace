@@ -1567,3 +1567,8 @@ services:
   image: docker:dind
   environment:
     DOCKER_TLS_CERTDIR: ""
+
+trigger:
+  event:
+    - push
+    - pull_request
