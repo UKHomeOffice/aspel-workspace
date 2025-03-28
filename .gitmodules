@@ -1,6 +1,3 @@
-[submodule "packages/asl"]
-	path = packages/asl
-	url = https://github.com/UKHomeOffice/asl.git
 [submodule "packages/asl-components"]
 	path = packages/asl-components
 	url = https://github.com/UKHomeOffice/asl-components.git

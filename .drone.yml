@@ -73,6 +73,7 @@ steps:
     environment:
       IMAGE_NAME: asl-emailer
       ALLOW_CVE_LIST_FILE: packages/asl-emailer/cve-exceptions.txt
+      TIMEOUT: 10m
   - name: docker push
     image: docker:dind
     environment:
@@ -193,6 +194,7 @@ steps:
     environment:
       IMAGE_NAME: asl-attachments
       ALLOW_CVE_LIST_FILE: packages/asl-attachments/cve-exceptions.txt
+      TIMEOUT: 10m
   - name: docker push
     image: docker:dind
     environment:
@@ -322,6 +324,7 @@ steps:
     environment:
       IMAGE_NAME: asl-notifications
       ALLOW_CVE_LIST_FILE: packages/asl-notifications/cve-exceptions.txt
+      TIMEOUT: 10m
   - name: docker push
     image: docker:dind
     environment:
@@ -451,6 +454,7 @@ steps:
     environment:
       IMAGE_NAME: asl-data-exports
       ALLOW_CVE_LIST_FILE: packages/asl-data-exports/cve-exceptions.txt
+      TIMEOUT: 10m
   - name: docker push
     image: docker:dind
     environment:
@@ -593,6 +597,7 @@ steps:
     environment:
       IMAGE_NAME: asl-metrics
       ALLOW_CVE_LIST_FILE: packages/asl-metrics/cve-exceptions.txt
+      TIMEOUT: 10m
   - name: docker push
     image: docker:dind
     environment:
@@ -718,6 +723,7 @@ steps:
     environment:
       IMAGE_NAME: asl-search
       ALLOW_CVE_LIST_FILE: packages/asl-search/cve-exceptions.txt
+      TIMEOUT: 10m
   - name: docker push
     image: docker:dind
     environment:
@@ -842,6 +848,7 @@ steps:
     environment:
       IMAGE_NAME: asl-permissions
       ALLOW_CVE_LIST_FILE: packages/asl-permissions/cve-exceptions.txt
+      TIMEOUT: 10m
   - name: docker push
     image: docker:dind
     environment:
@@ -977,6 +984,7 @@ steps:
     environment:
       IMAGE_NAME: asl-internal-api
       ALLOW_CVE_LIST_FILE: packages/asl-internal-api/cve-exceptions.txt
+      TIMEOUT: 10m
   - name: docker push
     image: docker:dind
     environment:
@@ -1106,6 +1114,7 @@ steps:
     environment:
       IMAGE_NAME: asl-resolver
       ALLOW_CVE_LIST_FILE: packages/asl-resolver/cve-exceptions.txt
+      TIMEOUT: 10m
   - name: docker push
     image: docker:dind
     environment:
@@ -1241,6 +1250,7 @@ steps:
     environment:
       IMAGE_NAME: asl-public-api
       ALLOW_CVE_LIST_FILE: packages/asl-public-api/cve-exceptions.txt
+      TIMEOUT: 10m
   - name: docker push
     image: docker:dind
     environment:
@@ -1391,6 +1401,7 @@ steps:
     environment:
       IMAGE_NAME: asl-workflow
       ALLOW_CVE_LIST_FILE: packages/asl-workflow/cve-exceptions.txt
+      TIMEOUT: 10m
   - name: docker push
     image: docker:dind
     environment:
@@ -1525,6 +1536,7 @@ steps:
     environment:
       IMAGE_NAME: asl-internal-ui
       ALLOW_CVE_LIST_FILE: packages/asl-internal-ui/cve-exceptions.txt
+      TIMEOUT: 10m
   - name: docker push
     image: docker:dind
     environment:
@@ -1568,7 +1580,132 @@ services:
   environment:
     DOCKER_TLS_CERTDIR: ""
 
-trigger:
-  event:
-    - push
-    - pull_request
+---
+
+kind: pipeline
+name: asl
+type: kubernetes
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace asl
+  - name: test
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run test --workspace asl
+  - name: audit
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=asl --audit-level=high --omit=dev
+  - name: compile
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run build --workspace asl --production
+  - name: docker build
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      DOCKER_BUILDKIT: 1
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - docker build -f ./packages/asl/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl .
+  - name: scan-image
+    pull: always
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
+    resources:
+      limits:
+        cpu: 1000
+        memory: 1024Mi
+    environment:
+      IMAGE_NAME: asl
+      ALLOW_CVE_LIST_FILE: packages/asl/cve-exceptions.txt
+      TIMEOUT: 10m
+  - name: docker push
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      DOCKER_PASSWORD:
+        from_secret: quay_password
+    commands:
+      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
+      - docker tag asl quay.io/ukhomeofficedigital/asl:$${DRONE_COMMIT_SHA}
+      - docker push quay.io/ukhomeofficedigital/asl:$${DRONE_COMMIT_SHA}
+    when:
+      event:
+        - push
+      branch:
+        - main
+  - name: update manifest
+    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
+    environment:
+      GITHUB_ACCESS_TOKEN:
+        from_secret: github_access_token
+    commands:
+      - update
+        --repo ukhomeoffice/asl-deployments
+        --token $${GITHUB_ACCESS_TOKEN}
+        --file versions.yml
+        --service asl
+        --version $${DRONE_COMMIT_SHA}
+    when:
+      event:
+        - push
+      branch:
+        - main
+
+services:
+  - name: docker
+    image: docker:dind
+    environment:
+      DOCKER_TLS_CERTDIR: ""

@@ -1,0 +1,40 @@
+@import "@asl/pages";
+@import "@asl/projects";
+
+@media (min-width: 1260px) {
+  .govuk-width-container,
+  .wrapper-header,
+  .wrapper-footer {
+    max-width: 1200px;
+  }
+}
+
+h3 {
+  margin-bottom: $govuk-gutter-half;
+}
+
+.page-header {
+  margin-bottom: $govuk-gutter;
+}
+
+.panel-list .expanding-panel  {
+  border-top: none;
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .content {
+    padding: $govuk-gutter-half;
+    padding-left: 0;
+  }
+}
+
+.dashboard-alert-establishment {
+  p {
+    margin-bottom: 0;
+  }
+
+  ul {
+    margin: 0;
+  }
+}
