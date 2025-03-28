@@ -1,0 +1,12 @@
+extends:
+  - "@ukhomeoffice/asl"
+
+plugins:
+  - undocumented-env
+
+rules:
+  undocumented-env/no-undocumented: error
+
+settings:
+  react:
+    version: "detect"
