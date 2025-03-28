@@ -1,0 +1,112 @@
+#file: noinspection ComposeUnknownKeys,ComposeUnknownValues
+
+kind: pipeline
+name: default
+type: kubernetes
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: verify
+    image: node:22.14.0
+    pull: if-not-exists
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: ART_AUTH_TOKEN
+      GITHUB_AUTH_TOKEN:
+        from_secret: GITHUB_AUTH_TOKEN
+      DATABASE_USERNAME: asl-test
+    commands:
+      - cp .env.test .env
+      - npm ci
+      - npm run audit
+      - npm run lint
+      - npm test
+    when:
+      event:
+        - push
+        - tag
+
+  - name: install
+    image: node:22.14.0
+    pull: if-not-exists
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: ART_AUTH_TOKEN
+      GITHUB_AUTH_TOKEN:
+        from_secret: GITHUB_AUTH_TOKEN
+    commands:
+      - npm ci --omit=dev
+    when:
+      event:
+        - push
+        - tag
+
+  - name: build
+    pull: if-not-exists
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+    commands:
+      # wait for docker service to be up before running docker build
+      - n=0; while [ "$n" -lt 60 ] && [[ ! $(docker stats --no-stream) ]]; do n=$(( n + 1 )); sleep 1; done
+      - docker build -t asl-toolbox . --no-cache
+    when:
+      event:
+        - push
+        - tag
+
+  - name: scan-image
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
+    pull: always
+    environment:
+      IMAGE_NAME: asl-toolbox
+      ALLOW_CVE_LIST_FILE: cve-exceptions.txt
+    when:
+      event:
+        - push
+        - tag
+
+  - name: docker push latest
+    image: plugins/ecr
+    environment:
+      AWS_REGION: eu-west-2
+    settings:
+      access_key:
+        from_secret: AWS_ACCESS_KEY_ID
+      secret_key:
+        from_secret: AWS_SECRET_ACCESS_KEY
+      repo: asl/toolbox
+      registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
+      tags:
+        - latest
+        - ${DRONE_COMMIT_SHA}
+    when:
+      event: push
+      branch: main
+
+  - name: docker push tag
+    image: plugins/ecr
+    environment:
+      AWS_REGION: eu-west-2
+    settings:
+      access_key:
+        from_secret: AWS_ACCESS_KEY_ID
+      secret_key:
+        from_secret: AWS_SECRET_ACCESS_KEY
+      repo: asl/toolbox
+      registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
+      tags:
+        - ${DRONE_TAG}
+    when:
+      event: tag
+
+services:
+  - name: docker
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+
+  - name: postgres
+    image: postgres:14.13-bullseye
+    environment:
+      POSTGRES_USER: asl-test
+      POSTGRES_PASSWORD: test-password

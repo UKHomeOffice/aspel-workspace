@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+export PGUSER=${DATA_DB_RW_USERNAME}
+export PGPASSWORD=${DATA_DB_RW_PASSWORD}
+export PGDATABASE=${DATA_DB_NAME}
+export PGHOST=${DATA_DB_HOST}
+export PGPORT=${DATA_DB_PORT}
+
+echo 'Using read-write credentials!'
+
+psql "$@" <&0
