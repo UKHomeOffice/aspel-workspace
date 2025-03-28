@@ -19,6 +19,3 @@
 [submodule "packages/asl-projects"]
 	path = packages/asl-projects
 	url = https://github.com/UKHomeOffice/asl-projects.git
-[submodule "packages/asl-toolbox"]
-	path = packages/asl-toolbox
-	url = git@github.com:UKHomeOffice/asl-toolbox.git
