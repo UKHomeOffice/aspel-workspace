@@ -1624,6 +1624,15 @@ steps:
         from_secret: github_token
     commands:
       - npm audit --workspace=asl --audit-level=high --omit=dev
+  - name: compile
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run build --workspace asl --production
   - name: docker build
     image: docker:dind
     environment:
