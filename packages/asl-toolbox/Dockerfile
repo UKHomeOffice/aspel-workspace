@@ -9,7 +9,7 @@ USER 999
 
 WORKDIR /app
 
-COPY --chown=app:app ./node_modules ./node_modules
-COPY --chown=app:app ./scripts ./
+COPY --chown=app:app ./packages/asl-toolbox/node_modules ./node_modules
+COPY --chown=app:app ./packages/asl-toolbox/scripts ./
 
 ENTRYPOINT tail -f /dev/null

@@ -1709,3 +1709,131 @@ services:
     image: docker:dind
     environment:
       DOCKER_TLS_CERTDIR: ""
+
+---
+
+kind: pipeline
+name: asl-toolbox
+type: kubernetes
+
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-toolbox
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+  - name: ci
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace asl-toolbox
+  - name: test
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      DATABASE_USERNAME: asl-test
+    commands:
+      - npm run test --workspace asl-toolbox
+  - name: lint
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run lint --workspace asl-toolbox
+  - name: audit
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=asl-toolbox --audit-level=high --omit=dev
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace asl-toolbox --omit=dev
+  - name: build
+    pull: if-not-exists
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+    commands:
+      # wait for docker service to be up before running docker build
+      - n=0; while [ "$n" -lt 60 ] && [[ ! $(docker stats --no-stream) ]]; do n=$(( n + 1 )); sleep 1; done
+      - docker build -f ./packages/asl-toolbox/Dockerfile -t asl-toolbox . --no-cache
+  - name: scan-image
+    pull: always
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
+    resources:
+      limits:
+        cpu: 1000
+        memory: 1024Mi
+    environment:
+      IMAGE_NAME: asl-toolbox
+      ALLOW_CVE_LIST_FILE: packages/asl-toolbox/cve-exceptions.txt
+      TIMEOUT: 10m
+  - name: docker push latest
+    image: plugins/ecr
+    environment:
+      AWS_REGION: eu-west-2
+    settings:
+      access_key:
+        from_secret: aws_access_key_id
+      secret_key:
+        from_secret: aws_secret_access_key
+      repo: asl/toolbox
+      registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
+      tags:
+        - latest
+        - ${DRONE_COMMIT_SHA}
+    when:
+      event:
+        - push
+      branch:
+        - main
+  # - name: docker push tag TODO
+
+services:
+  - name: docker
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+
+  - name: postgres
+    image: postgres:14.13-bullseye
+    environment:
+      POSTGRES_USER: asl-test
+      POSTGRES_PASSWORD: test-password
