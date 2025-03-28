@@ -1,0 +1,9 @@
+{
+  "extends": ["@ukhomeoffice/asl"],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "env": {
+    "node": true
+  }
+}
