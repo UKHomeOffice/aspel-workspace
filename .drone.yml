@@ -1761,6 +1761,7 @@ steps:
         from_secret: github_token
       DATABASE_USERNAME: asl-test
     commands:
+      - cp packages/asl-toolbox/.env.test packages/asl-toolbox/.env
       - npm run test --workspace asl-toolbox
   - name: lint
     image: node:22.14.0
