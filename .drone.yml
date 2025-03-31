@@ -1814,7 +1814,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm ci --workspace asl-schema
+      - npm ci --workspace @asl/schema
   - name: test
     image: node:22.14.0
     environment:
@@ -1827,7 +1827,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm test --workspace asl-schema
+      - npm test --workspace @asl/schema
   - name: audit
     image: node:22.14.0
     environment:
@@ -1836,7 +1836,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-schema --audit-level=high --omit=dev
+      - npm audit --workspace=@asl/schema --audit-level=high --omit=dev
   - name: docker build
     image: docker:dind
     environment:
