@@ -1743,6 +1743,10 @@ steps:
       - git checkout $DRONE_TARGET_BRANCH
       - git merge $DRONE_COMMIT
       - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+    when:
+      event:
+        exclude:
+          - tag
   - name: ci
     image: node:22.14.0
     environment:
@@ -1827,7 +1831,22 @@ steps:
         - push
       branch:
         - main
-  # - name: docker push tag TODO
+  - name: docker tag
+    image: plugins/ecr
+    environment:
+      AWS_REGION: eu-west-2
+    settings:
+      access_key:
+        from_secret: aws_access_key_id
+      secret_key:
+        from_secret: aws_secret_access_key
+      repo: asl/toolbox
+      registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
+      tags:
+        - ${DRONE_TAG}
+    when:
+      ref:
+        - refs/tags/asl-toolbox/*
 
 services:
   - name: docker
@@ -1838,3 +1857,9 @@ services:
     environment:
       POSTGRES_USER: asl-test
       POSTGRES_PASSWORD: test-password
+
+trigger:
+  event:
+    - push
+    - pull_request
+    - tag
