@@ -176,7 +176,7 @@ function Field({
     }
 
     const normalisedOptions = useMemo(() => {
-        let normalizedOptions = options;
+        let normalizedOptions = options ?? [];
 
         if (!preventOptionMapping) {
             normalizedOptions = normaliseOptions(normalizedOptions);
