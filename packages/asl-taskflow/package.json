@@ -1,0 +1,49 @@
+{
+  "name": "@ukhomeoffice/asl-taskflow",
+  "version": "4.0.2",
+  "description": "Proof of concept for workflow task management",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:lint && npm run test:unit",
+    "test:lint": "eslint .",
+    "pretest:unit": "bin/taskflow migrate",
+    "test:unit": "NODE_ENV=test mocha ./test --recursive --exit --timeout 5000  --require dotenv/config",
+    "test:db": "docker run -p 5432:5432 -e POSTGRES_DB=taskflow-test postgres",
+    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UKHomeOffice/taskflow.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UKHomeOffice/taskflow/issues"
+  },
+  "homepage": "https://github.com/UKHomeOffice/taskflow#readme",
+  "devDependencies": {
+    "audit-ci": "^7.1.0",
+    "dotenv": "^6.0.0",
+    "eslint": "^8.24.0",
+    "@ukhomeoffice/eslint-config-asl": "^3.0.0",
+    "mocha": "^5.2.0",
+    "moment": "^2.24.0",
+    "sinon": "^20.0.0",
+    "supertest": "^3.1.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "knex": "^3.1.0",
+    "lodash": "^4.17.15",
+    "minimist": "^1.2.0",
+    "objection": "^3.1.5",
+    "pg": "^8.6.0",
+    "uuid": "^8.3.2",
+    "witch": "^1.0.3"
+  },
+  "publishConfig": {
+    "@ukhomeoffice:registry": "https://npm.pkg.github.com"
+  }
+}
