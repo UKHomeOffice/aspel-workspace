@@ -410,7 +410,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm ci --workspace asl-data-exports
+      - npm ci
   - name: test
     image: node:22.14.0
     environment:

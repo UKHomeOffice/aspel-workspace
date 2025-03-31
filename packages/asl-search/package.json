@@ -13,7 +13,7 @@
   "dependencies": {
     "@acuris/aws-es-connection": "^2.1.0",
     "@asl/projects": "^15.10.3",
-    "@asl/schema": "^11.1.4",
+    "@asl/schema": "file:../asl-schema",
     "@asl/service": "^11.0.2",
     "@elastic/elasticsearch": "7.13.0",
     "@ukhomeoffice/asl-constants": "^2.2.0",
