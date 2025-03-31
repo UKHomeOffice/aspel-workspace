@@ -1709,3 +1709,70 @@ services:
     image: docker:dind
     environment:
       DOCKER_TLS_CERTDIR: ""
+
+---
+
+kind: pipeline
+name: asl-taskflow
+type: kubernetes
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-taskflow
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace asl-taskflow
+  - name: database setup
+    image: postgres
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGPASSWORD: test-password
+    commands:
+      - psql -c 'CREATE DATABASE "taskflow-test"'
+  - name: test
+    image: node:22.14.0
+    commands:
+      - npm run test --workspace asl-taskflow
+  - name: audit
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=asl-taskflow --audit-level=high --omit=dev
+
+services:
+  - name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test-password
