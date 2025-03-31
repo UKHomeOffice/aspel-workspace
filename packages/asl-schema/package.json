@@ -10,7 +10,6 @@
     "test:unit": "mocha ./test/unit --recursive --exit",
     "test:functional": "SNAKE_MAPPER=true mocha ./test/functional --recursive --exit",
     "test:migrations": "SNAKE_MAPPER=false nyc mocha ./test/migrations --recursive --exit",
-    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "seed": "SNAKE_MAPPER=true knex seed:run"
@@ -28,7 +27,6 @@
   "homepage": "https://github.com/UKHomeOffice/asl-schema#readme",
   "dependencies": {
     "@ukhomeoffice/asl-constants": "^2.2.0",
-    "audit-ci": "^7.1.0",
     "csv-stringify": "^5.4.3",
     "deep-diff": "^1.0.2",
     "glob": "^7.1.7",
