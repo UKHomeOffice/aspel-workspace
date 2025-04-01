@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-internal-ui#readme",
   "dependencies": {
-    "@asl/pages": "^31.10.2",
+    "@asl/pages": "file:../asl-pages",
     "@asl/projects": "^15.10.3",
     "@asl/service": "^11.0.2",
     "@babel/core": "^7.23.2",
