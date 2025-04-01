@@ -1,0 +1,6 @@
+extends:
+  - "../.eslintrc.yml"
+
+rules:
+  filenames/match-regex: off
+  camelcase: off
