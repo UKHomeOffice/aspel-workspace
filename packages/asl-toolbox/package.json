@@ -25,7 +25,7 @@
     "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@asl/schema": "^11.1.4",
+    "@asl/schema": "file:../asl-schema",
     "dotenv": "^16.4.7",
     "minimist": "^1.2.8",
     "pg-query-stream": "^4.2.1"
