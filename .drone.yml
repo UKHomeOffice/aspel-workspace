@@ -1814,7 +1814,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm ci --workspace asl-pages
+      - npm ci --workspace @asl/pages
   - name: test
     image: node:22.14.0
     environment:
@@ -1823,7 +1823,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm run test --workspace asl-pages
+      - npm run test --workspace @asl/pages
   - name: audit
     image: node:22.14.0
     environment:
@@ -1832,4 +1832,4 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-pages --audit-level=high --omit=dev
+      - npm audit --workspace=@asl/pages --audit-level=high --omit=dev
