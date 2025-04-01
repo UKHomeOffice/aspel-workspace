@@ -26,7 +26,7 @@
   "dependencies": {
     "@asl/projects": "^15.10.4",
     "@asl/service": "^11.0.4",
-    "@asl/schema": "^11.1.5",
+    "@asl/schema": "file:../asl-schema",
     "@ukhomeoffice/asl-constants": "^2.2.1",
     "@ukhomeoffice/asl-dictionary": "^2.1.0",
     "express": "^4.17.1",

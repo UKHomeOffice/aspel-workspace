@@ -37,7 +37,7 @@
     "uuid": "^8.3.2"
   },
   "dependencies": {
-    "@asl/schema": "^11.1.5",
+    "@asl/schema": "file:../asl-schema",
     "@asl/service": "^11.0.4",
     "archiver": "^5.3.0",
     "aws-sdk": "^2.874.0",
