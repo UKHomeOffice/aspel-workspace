@@ -35,7 +35,7 @@
     "pg": "^8.7.3"
   },
   "dependencies": {
-    "@asl/schema": "^11.1.4",
+    "@asl/schema": "file:../asl-schema",
     "@asl/service": "11.0.2",
     "hot-shots": "^8.3.1",
     "lodash": "^4.17.21",
