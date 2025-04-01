@@ -1,9 +1,6 @@
 [submodule "packages/asl-components"]
 	path = packages/asl-components
 	url = https://github.com/UKHomeOffice/asl-components.git
-[submodule "packages/asl-pages"]
-	path = packages/asl-pages
-	url = https://github.com/UKHomeOffice/asl-pages.git
 [submodule "packages/asl-constants"]
 	path = packages/asl-constants
 	url = https://github.com/UKHomeOffice/asl-constants.git
