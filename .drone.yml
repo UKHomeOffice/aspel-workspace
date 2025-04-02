@@ -1,5 +1,51 @@
+---
+
 kind: pipeline
-name: asl-emailer
+name: deployset
+type: kubernetes
+
+steps:
+  - name: install
+    image: node:22.14.0
+    commands:
+      - npm ci --workspaces=false
+  - name: deployset
+    image: node:22.14.0
+    environment:
+      DRONE_SERVER: ${DRONE_SYSTEM_PROTO}://${DRONE_SYSTEM_HOST}
+      DRONE_TOKEN:
+        from_secret: drone_token
+      DRONE_REPO_OWNER: ${DRONE_REPO_OWNER}
+      DRONE_REPO_NAME: ${DRONE_REPO_NAME}
+      DRONE_BUILD_NUMBER: ${DRONE_BUILD_NUMBER}
+      BUILD_STAGES: asl asl-attachments asl-data-exports asl-emailer asl-internal-api asl-internal-ui asl-metrics asl-notifications asl-permissions asl-public-api asl-resolver asl-search asl-workflow
+      SKIP_STATUS: 78
+    commands:
+      - node ./ci/deployset.js $BUILD_STAGES > .deploy-set
+  - name: manifest
+    image: node:22.14.0
+    environment:
+      GITHUB_TOKEN:
+        from_secret: github_access_token
+      GITHUB_REPO_OWNER: ukhomeoffice
+      GITHUB_REPO_NAME: asl-deployments
+      GITHUB_MANIFEST_PATH: versions.yml
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+    commands:
+      # Drone inexplicably creates yaml parse errors when reassigning this through the `envionment` block
+      - export SOURCE_COMMIT_MESSAGE=$DRONE_COMMIT_MESSAGE
+      - node ./ci/manifest.js $(cat .deploy-set)
+
+trigger:
+  event:
+    - push
+  branch:
+    - main
+
+---
+
+kind: pipeline
+name: asl
 type: kubernetes
 
 clone:
@@ -17,7 +63,7 @@ steps:
       SOURCE_COMMIT: "${DRONE_COMMIT}"
       BUILD_EVENT: "${DRONE_BUILD_EVENT}"
       SKIP_STATUS: 78
-      MODULES: packages/asl-emailer
+      MODULES: packages/asl
     commands:
       - git config advice.detachedHead false
       - git checkout $DRONE_COMMIT
@@ -33,7 +79,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm ci --workspace asl-emailer
+      - npm ci --workspace asl
   - name: test
     image: node:22.14.0
     environment:
@@ -42,7 +88,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm run test --workspace asl-emailer
+      - npm run test --workspace asl
   - name: audit
     image: node:22.14.0
     environment:
@@ -51,7 +97,16 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-emailer --audit-level=high --omit=dev
+      - npm audit --workspace=asl --audit-level=high --omit=dev
+  - name: compile
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run build --workspace asl --production
   - name: docker build
     image: docker:dind
     environment:
@@ -62,7 +117,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - docker build -f ./packages/asl-emailer/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-emailer .
+      - docker build -f ./packages/asl/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl .
   - name: scan-image
     pull: always
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
@@ -71,8 +126,8 @@ steps:
         cpu: 1000
         memory: 1024Mi
     environment:
-      IMAGE_NAME: asl-emailer
-      ALLOW_CVE_LIST_FILE: packages/asl-emailer/cve-exceptions.txt
+      IMAGE_NAME: asl
+      ALLOW_CVE_LIST_FILE: packages/asl/cve-exceptions.txt
       TIMEOUT: 10m
   - name: docker push
     image: docker:dind
@@ -86,25 +141,8 @@ steps:
         from_secret: quay_password
     commands:
       - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag asl-emailer quay.io/ukhomeofficedigital/asl-emailer:$${DRONE_COMMIT_SHA}
-      - docker push quay.io/ukhomeofficedigital/asl-emailer:$${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-emailer
-        --version $${DRONE_COMMIT_SHA}
+      - docker tag asl quay.io/ukhomeofficedigital/asl:$${DRONE_COMMIT_SHA}
+      - docker push quay.io/ukhomeofficedigital/asl:$${DRONE_COMMIT_SHA}
     when:
       event:
         - push
@@ -112,10 +150,15 @@ steps:
         - main
 
 services:
-- name: docker
-  image: docker:dind
-  environment:
-    DOCKER_TLS_CERTDIR: ""
+  - name: docker
+    image: docker:dind
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+
+trigger:
+  event:
+    - push
+    - pull_request
 
 ---
 
@@ -214,23 +257,6 @@ steps:
         - push
       branch:
         - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-attachments
-        --version $${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
 
 services:
 - name: docker
@@ -243,135 +269,10 @@ services:
   commands:
     - /run.sh server
 
----
-
-kind: pipeline
-name: asl-notifications
-type: kubernetes
-
-clone:
-  disable: true
-
-steps:
-  - name: clone
-    image: node:22.14.0
-    commands:
-      - git clone $DRONE_REMOTE_URL .
-  - name: changeset
-    image: node:22.14.0
-    environment:
-      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
-      SOURCE_COMMIT: "${DRONE_COMMIT}"
-      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
-      SKIP_STATUS: 78
-      MODULES: packages/asl-notifications
-    commands:
-      - git config advice.detachedHead false
-      - git checkout $DRONE_COMMIT
-      - node ./ci/changeset.js --modules $MODULES
-      - git checkout $DRONE_TARGET_BRANCH
-      - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
-  - name: install
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm ci --workspace asl-notifications
-  - name: test
-    image: node:22.14.0
-    environment:
-      DATABASE_NAME: asl-test
-      DATABASE_HOST: postgres
-      DATABASE_USERNAME: asl-test
-      DATABASE_PASSWORD: test-password
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm run test --workspace asl-notifications
-  - name: audit
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm audit --workspace=asl-notifications --audit-level=high --omit=dev
-  - name: docker build
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      DOCKER_BUILDKIT: 1
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - docker build -f ./packages/asl-notifications/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-notifications .
-  - name: scan-image
-    pull: always
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
-    resources:
-      limits:
-        cpu: 1000
-        memory: 1024Mi
-    environment:
-      IMAGE_NAME: asl-notifications
-      ALLOW_CVE_LIST_FILE: packages/asl-notifications/cve-exceptions.txt
-      TIMEOUT: 10m
-  - name: docker push
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-      DOCKER_PASSWORD:
-        from_secret: quay_password
-    commands:
-      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag asl-notifications quay.io/ukhomeofficedigital/asl-notifications:$${DRONE_COMMIT_SHA}
-      - docker push quay.io/ukhomeofficedigital/asl-notifications:$${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-notifications
-        --version $${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-
-services:
-- name: docker
-  image: docker:dind
-  environment:
-    DOCKER_TLS_CERTDIR: ""
-- name: postgres
-  image: postgres
-  environment:
-    POSTGRES_USER: asl-test
-    POSTGRES_PASSWORD: test-password
+trigger:
+  event:
+    - push
+    - pull_request
 
 ---
 
@@ -474,23 +375,6 @@ steps:
         - push
       branch:
         - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-data-exports
-        --version $${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
 
 services:
   - name: docker
@@ -502,6 +386,362 @@ services:
     environment:
       POSTGRES_USER: asl-test
       POSTGRES_PASSWORD: test-password
+
+trigger:
+  event:
+    - push
+    - pull_request
+
+---
+
+kind: pipeline
+name: asl-emailer
+type: kubernetes
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-emailer
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace asl-emailer
+  - name: test
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run test --workspace asl-emailer
+  - name: audit
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=asl-emailer --audit-level=high --omit=dev
+  - name: docker build
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      DOCKER_BUILDKIT: 1
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - docker build -f ./packages/asl-emailer/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-emailer .
+  - name: scan-image
+    pull: always
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
+    resources:
+      limits:
+        cpu: 1000
+        memory: 1024Mi
+    environment:
+      IMAGE_NAME: asl-emailer
+      ALLOW_CVE_LIST_FILE: packages/asl-emailer/cve-exceptions.txt
+      TIMEOUT: 10m
+  - name: docker push
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      DOCKER_PASSWORD:
+        from_secret: quay_password
+    commands:
+      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
+      - docker tag asl-emailer quay.io/ukhomeofficedigital/asl-emailer:$${DRONE_COMMIT_SHA}
+      - docker push quay.io/ukhomeofficedigital/asl-emailer:$${DRONE_COMMIT_SHA}
+    when:
+      event:
+        - push
+      branch:
+        - main
+
+services:
+- name: docker
+  image: docker:dind
+  environment:
+    DOCKER_TLS_CERTDIR: ""
+
+trigger:
+  event:
+    - push
+    - pull_request
+
+---
+
+kind: pipeline
+name: asl-internal-api
+type: kubernetes
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-internal-api
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace asl-internal-api
+  - name: wait postgres
+    image: postgres
+    environment:
+      PGPASSWORD: test-password
+    commands:
+      - until psql -U asl-test -d asl-test -h postgres -c "SELECT 1;" >/dev/null 2>&1; do sleep 1; done
+  - name: test
+    image: node:22.14.0
+    environment:
+      DATABASE_NAME: asl-test
+      DATABASE_HOST: postgres
+      DATABASE_USERNAME: asl-test
+      DATABASE_PASSWORD: test-password
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run test --workspace asl-internal-api
+  - name: audit
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=asl-internal-api --audit-level=high --omit=dev
+  - name: docker build
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      DOCKER_BUILDKIT: 1
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - docker build -f ./packages/asl-internal-api/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-internal-api .
+  - name: scan-image
+    pull: always
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
+    resources:
+      limits:
+        cpu: 1000
+        memory: 1024Mi
+    environment:
+      IMAGE_NAME: asl-internal-api
+      ALLOW_CVE_LIST_FILE: packages/asl-internal-api/cve-exceptions.txt
+      TIMEOUT: 10m
+  - name: docker push
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      DOCKER_PASSWORD:
+        from_secret: quay_password
+    commands:
+      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
+      - docker tag asl-internal-api quay.io/ukhomeofficedigital/asl-internal-api:$${DRONE_COMMIT_SHA}
+      - docker push quay.io/ukhomeofficedigital/asl-internal-api:$${DRONE_COMMIT_SHA}
+    when:
+      event:
+        - push
+      branch:
+        - main
+
+services:
+- name: docker
+  image: docker:dind
+  environment:
+    DOCKER_TLS_CERTDIR: ""
+- name: postgres
+  image: postgres
+  environment:
+    POSTGRES_USER: asl-test
+    POSTGRES_PASSWORD: test-password
+
+trigger:
+  event:
+    - push
+    - pull_request
+
+---
+
+kind: pipeline
+name: asl-internal-ui
+type: kubernetes
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-internal-ui
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace asl-internal-ui
+  - name: test
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run test --workspace asl-internal-ui
+  - name: audit
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=asl-internal-ui --audit-level=high --omit=dev
+  - name: compile
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run build --workspace asl-internal-ui --production
+  - name: docker build
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      DOCKER_BUILDKIT: 1
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - docker build -f ./packages/asl-internal-ui/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-internal-ui .
+  - name: scan-image
+    pull: always
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
+    resources:
+      limits:
+        cpu: 1000
+        memory: 1024Mi
+    environment:
+      IMAGE_NAME: asl-internal-ui
+      ALLOW_CVE_LIST_FILE: packages/asl-internal-ui/cve-exceptions.txt
+      TIMEOUT: 10m
+  - name: docker push
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      DOCKER_PASSWORD:
+        from_secret: quay_password
+    commands:
+      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
+      - docker tag asl-internal-ui quay.io/ukhomeofficedigital/asl-internal-ui:$${DRONE_COMMIT_SHA}
+      - docker push quay.io/ukhomeofficedigital/asl-internal-ui:$${DRONE_COMMIT_SHA}
+    when:
+      event:
+        - push
+      branch:
+        - main
+
+services:
+- name: docker
+  image: docker:dind
+  environment:
+    DOCKER_TLS_CERTDIR: ""
+
+trigger:
+  event:
+    - push
+    - pull_request
 
 ---
 
@@ -617,23 +857,6 @@ steps:
         - push
       branch:
         - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-metrics
-        --version $${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
 
 services:
 - name: docker
@@ -646,10 +869,15 @@ services:
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: test-password
 
+trigger:
+  event:
+    - push
+    - pull_request
+
 ---
 
 kind: pipeline
-name: asl-search
+name: asl-notifications
 type: kubernetes
 
 clone:
@@ -667,7 +895,7 @@ steps:
       SOURCE_COMMIT: "${DRONE_COMMIT}"
       BUILD_EVENT: "${DRONE_BUILD_EVENT}"
       SKIP_STATUS: 78
-      MODULES: packages/asl-search
+      MODULES: packages/asl-notifications
     commands:
       - git config advice.detachedHead false
       - git checkout $DRONE_COMMIT
@@ -683,16 +911,20 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm ci --workspace asl-search
+      - npm ci --workspace asl-notifications
   - name: test
     image: node:22.14.0
     environment:
+      DATABASE_NAME: asl-test
+      DATABASE_HOST: postgres
+      DATABASE_USERNAME: asl-test
+      DATABASE_PASSWORD: test-password
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm run test --workspace asl-search
+      - npm run test --workspace asl-notifications
   - name: audit
     image: node:22.14.0
     environment:
@@ -701,7 +933,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-search --audit-level=high --omit=dev
+      - npm audit --workspace=asl-notifications --audit-level=high --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -712,7 +944,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - docker build -f ./packages/asl-search/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-search .
+      - docker build -f ./packages/asl-notifications/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-notifications .
   - name: scan-image
     pull: always
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
@@ -721,8 +953,8 @@ steps:
         cpu: 1000
         memory: 1024Mi
     environment:
-      IMAGE_NAME: asl-search
-      ALLOW_CVE_LIST_FILE: packages/asl-search/cve-exceptions.txt
+      IMAGE_NAME: asl-notifications
+      ALLOW_CVE_LIST_FILE: packages/asl-notifications/cve-exceptions.txt
       TIMEOUT: 10m
   - name: docker push
     image: docker:dind
@@ -736,25 +968,8 @@ steps:
         from_secret: quay_password
     commands:
       - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag asl-search quay.io/ukhomeofficedigital/asl-search:$${DRONE_COMMIT_SHA}
-      - docker push quay.io/ukhomeofficedigital/asl-search:$${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-search
-        --version $${DRONE_COMMIT_SHA}
+      - docker tag asl-notifications quay.io/ukhomeofficedigital/asl-notifications:$${DRONE_COMMIT_SHA}
+      - docker push quay.io/ukhomeofficedigital/asl-notifications:$${DRONE_COMMIT_SHA}
     when:
       event:
         - push
@@ -762,10 +977,20 @@ steps:
         - main
 
 services:
-  - name: docker
-    image: docker:dind
-    environment:
-      DOCKER_TLS_CERTDIR: ""
+- name: docker
+  image: docker:dind
+  environment:
+    DOCKER_TLS_CERTDIR: ""
+- name: postgres
+  image: postgres
+  environment:
+    POSTGRES_USER: asl-test
+    POSTGRES_PASSWORD: test-password
+
+trigger:
+  event:
+    - push
+    - pull_request
 
 ---
 
@@ -868,23 +1093,6 @@ steps:
         - push
       branch:
         - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-permissions
-        --version $${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
 
 services:
   - name: docker
@@ -897,271 +1105,10 @@ services:
       POSTGRES_USER: asl-test
       POSTGRES_PASSWORD: test-password
 
----
-
-kind: pipeline
-name: asl-internal-api
-type: kubernetes
-
-clone:
-  disable: true
-
-steps:
-  - name: clone
-    image: node:22.14.0
-    commands:
-      - git clone $DRONE_REMOTE_URL .
-  - name: changeset
-    image: node:22.14.0
-    environment:
-      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
-      SOURCE_COMMIT: "${DRONE_COMMIT}"
-      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
-      SKIP_STATUS: 78
-      MODULES: packages/asl-internal-api
-    commands:
-      - git config advice.detachedHead false
-      - git checkout $DRONE_COMMIT
-      - node ./ci/changeset.js --modules $MODULES
-      - git checkout $DRONE_TARGET_BRANCH
-      - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
-  - name: install
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm ci --workspace asl-internal-api
-  - name: wait postgres
-    image: postgres
-    environment:
-      PGPASSWORD: test-password
-    commands:
-      - until psql -U asl-test -d asl-test -h postgres -c "SELECT 1;" >/dev/null 2>&1; do sleep 1; done
-  - name: test
-    image: node:22.14.0
-    environment:
-      DATABASE_NAME: asl-test
-      DATABASE_HOST: postgres
-      DATABASE_USERNAME: asl-test
-      DATABASE_PASSWORD: test-password
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm run test --workspace asl-internal-api
-  - name: audit
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm audit --workspace=asl-internal-api --audit-level=high --omit=dev
-  - name: docker build
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      DOCKER_BUILDKIT: 1
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - docker build -f ./packages/asl-internal-api/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-internal-api .
-  - name: scan-image
-    pull: always
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
-    resources:
-      limits:
-        cpu: 1000
-        memory: 1024Mi
-    environment:
-      IMAGE_NAME: asl-internal-api
-      ALLOW_CVE_LIST_FILE: packages/asl-internal-api/cve-exceptions.txt
-      TIMEOUT: 10m
-  - name: docker push
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-      DOCKER_PASSWORD:
-        from_secret: quay_password
-    commands:
-      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag asl-internal-api quay.io/ukhomeofficedigital/asl-internal-api:$${DRONE_COMMIT_SHA}
-      - docker push quay.io/ukhomeofficedigital/asl-internal-api:$${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-internal-api
-        --version $${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-
-services:
-- name: docker
-  image: docker:dind
-  environment:
-    DOCKER_TLS_CERTDIR: ""
-- name: postgres
-  image: postgres
-  environment:
-    POSTGRES_USER: asl-test
-    POSTGRES_PASSWORD: test-password
-
----
-
-kind: pipeline
-name: asl-resolver
-type: kubernetes
-
-clone:
-  disable: true
-
-steps:
-  - name: clone
-    image: node:22.14.0
-    commands:
-      - git clone $DRONE_REMOTE_URL .
-  - name: changeset
-    image: node:22.14.0
-    environment:
-      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
-      SOURCE_COMMIT: "${DRONE_COMMIT}"
-      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
-      SKIP_STATUS: 78
-      MODULES: packages/asl-resolver
-    commands:
-      - git config advice.detachedHead false
-      - git checkout $DRONE_COMMIT
-      - node ./ci/changeset.js --modules $MODULES
-      - git checkout $DRONE_TARGET_BRANCH
-      - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
-  - name: install
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm ci --workspace asl-resolver
-  - name: test
-    image: node:22.14.0
-    environment:
-      DATABASE_NAME: asl-test
-      DATABASE_HOST: postgres
-      DATABASE_USERNAME: asl-test
-      DATABASE_PASSWORD: test-password
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm run test --workspace asl-resolver
-  - name: audit
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm audit --workspace=asl-resolver --audit-level=high --omit=dev
-  - name: docker build
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      DOCKER_BUILDKIT: 1
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - docker build -f ./packages/asl-resolver/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-resolver .
-  - name: scan-image
-    pull: always
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
-    resources:
-      limits:
-        cpu: 1000
-        memory: 1024Mi
-    environment:
-      IMAGE_NAME: asl-resolver
-      ALLOW_CVE_LIST_FILE: packages/asl-resolver/cve-exceptions.txt
-      TIMEOUT: 10m
-  - name: docker push
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-      DOCKER_PASSWORD:
-        from_secret: quay_password
-    commands:
-      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag asl-resolver quay.io/ukhomeofficedigital/asl-resolver:$${DRONE_COMMIT_SHA}
-      - docker push quay.io/ukhomeofficedigital/asl-resolver:$${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-resolver
-        --version $${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-
-services:
-- name: docker
-  image: docker:dind
-  environment:
-    DOCKER_TLS_CERTDIR: ""
-- name: postgres
-  image: postgres
-  environment:
-    POSTGRES_USER: asl-test
-    POSTGRES_PASSWORD: test-password
+trigger:
+  event:
+    - push
+    - pull_request
 
 ---
 
@@ -1270,18 +1217,119 @@ steps:
         - push
       branch:
         - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
+
+services:
+- name: docker
+  image: docker:dind
+  environment:
+    DOCKER_TLS_CERTDIR: ""
+- name: postgres
+  image: postgres
+  environment:
+    POSTGRES_USER: asl-test
+    POSTGRES_PASSWORD: test-password
+
+trigger:
+  event:
+    - push
+    - pull_request
+
+---
+
+kind: pipeline
+name: asl-resolver
+type: kubernetes
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
     commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-public-api
-        --version $${DRONE_COMMIT_SHA}
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-resolver
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace asl-resolver
+  - name: test
+    image: node:22.14.0
+    environment:
+      DATABASE_NAME: asl-test
+      DATABASE_HOST: postgres
+      DATABASE_USERNAME: asl-test
+      DATABASE_PASSWORD: test-password
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run test --workspace asl-resolver
+  - name: audit
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=asl-resolver --audit-level=high --omit=dev
+  - name: docker build
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      DOCKER_BUILDKIT: 1
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - docker build -f ./packages/asl-resolver/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-resolver .
+  - name: scan-image
+    pull: always
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
+    resources:
+      limits:
+        cpu: 1000
+        memory: 1024Mi
+    environment:
+      IMAGE_NAME: asl-resolver
+      ALLOW_CVE_LIST_FILE: packages/asl-resolver/cve-exceptions.txt
+      TIMEOUT: 10m
+  - name: docker push
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      DOCKER_PASSWORD:
+        from_secret: quay_password
+    commands:
+      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
+      - docker tag asl-resolver quay.io/ukhomeofficedigital/asl-resolver:$${DRONE_COMMIT_SHA}
+      - docker push quay.io/ukhomeofficedigital/asl-resolver:$${DRONE_COMMIT_SHA}
     when:
       event:
         - push
@@ -1298,6 +1346,464 @@ services:
   environment:
     POSTGRES_USER: asl-test
     POSTGRES_PASSWORD: test-password
+
+trigger:
+  event:
+    - push
+    - pull_request
+
+---
+
+kind: pipeline
+name: asl-schema
+type: kubernetes
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-schema
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace @asl/schema
+  - name: test
+    image: node:22.14.0
+    environment:
+      DATABASE_NAME: asl-test
+      DATABASE_HOST: postgres
+      DATABASE_USERNAME: asl-test
+      DATABASE_PASSWORD: test-password
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm test --workspace @asl/schema
+  - name: audit
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=@asl/schema --audit-level=high --omit=dev
+  - name: docker build
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      DOCKER_BUILDKIT: 1
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - docker build -f ./packages/asl-schema/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-schema .
+  - name: scan-image
+    pull: always
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
+    resources:
+      limits:
+        cpu: 1000
+        memory: 1024Mi
+    environment:
+      IMAGE_NAME: asl-schema
+      ALLOW_CVE_LIST_FILE: packages/asl-schema/cve-exceptions.txt
+      TIMEOUT: 10m
+  - name: docker push
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      DOCKER_PASSWORD:
+        from_secret: quay_password
+    commands:
+      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
+      - docker tag asl-schema quay.io/ukhomeofficedigital/asl-schema:$${DRONE_COMMIT_SHA}
+      - docker push quay.io/ukhomeofficedigital/asl-schema:$${DRONE_COMMIT_SHA}
+    when:
+      event:
+        - push
+      branch:
+        - main
+
+services:
+  - name: docker
+    image: docker:dind
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+  - name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: asl-test
+      POSTGRES_PASSWORD: test-password
+
+trigger:
+  event:
+    - push
+    - pull_request
+
+---
+
+kind: pipeline
+name: asl-search
+type: kubernetes
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-search
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace asl-search
+  - name: test
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run test --workspace asl-search
+  - name: audit
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=asl-search --audit-level=high --omit=dev
+  - name: docker build
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      DOCKER_BUILDKIT: 1
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - docker build -f ./packages/asl-search/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-search .
+  - name: scan-image
+    pull: always
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
+    resources:
+      limits:
+        cpu: 1000
+        memory: 1024Mi
+    environment:
+      IMAGE_NAME: asl-search
+      ALLOW_CVE_LIST_FILE: packages/asl-search/cve-exceptions.txt
+      TIMEOUT: 10m
+  - name: docker push
+    image: docker:dind
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      DOCKER_PASSWORD:
+        from_secret: quay_password
+    commands:
+      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
+      - docker tag asl-search quay.io/ukhomeofficedigital/asl-search:$${DRONE_COMMIT_SHA}
+      - docker push quay.io/ukhomeofficedigital/asl-search:$${DRONE_COMMIT_SHA}
+    when:
+      event:
+        - push
+      branch:
+        - main
+
+services:
+  - name: docker
+    image: docker:dind
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+
+trigger:
+  event:
+    - push
+    - pull_request
+
+---
+
+kind: pipeline
+name: asl-taskflow
+type: kubernetes
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-taskflow
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace @ukhomeoffice/asl-taskflow
+  - name: database setup
+    image: postgres
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGPASSWORD: test-password
+    commands:
+      - psql -c 'CREATE DATABASE "taskflow-test"'
+  - name: test
+    image: node:22.14.0
+    commands:
+      - npm run test --workspace @ukhomeoffice/asl-taskflow
+  - name: audit
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=@ukhomeoffice/asl-taskflow --audit-level=high --omit=dev
+
+services:
+  - name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test-password
+
+trigger:
+  event:
+    - push
+    - pull_request
+
+---
+
+kind: pipeline
+name: asl-toolbox
+type: kubernetes
+
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-toolbox
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+    when:
+      event:
+        exclude:
+          - tag
+  - name: ci
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace asl-toolbox
+  - name: test
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      DATABASE_USERNAME: asl-test
+    commands:
+      - cp packages/asl-toolbox/.env.test packages/asl-toolbox/.env
+      - npm run test --workspace asl-toolbox
+  - name: lint
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run lint --workspace asl-toolbox
+  - name: audit
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=asl-toolbox --audit-level=high --omit=dev
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace asl-toolbox --omit=dev
+  - name: build
+    pull: if-not-exists
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+    commands:
+      # wait for docker service to be up before running docker build
+      - n=0; while [ "$n" -lt 60 ] && [[ ! $(docker stats --no-stream) ]]; do n=$(( n + 1 )); sleep 1; done
+      - docker build -f ./packages/asl-toolbox/Dockerfile -t asl-toolbox . --no-cache
+  - name: scan-image
+    pull: always
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
+    resources:
+      limits:
+        cpu: 1000
+        memory: 1024Mi
+    environment:
+      IMAGE_NAME: asl-toolbox
+      ALLOW_CVE_LIST_FILE: packages/asl-toolbox/cve-exceptions.txt
+      TIMEOUT: 10m
+  - name: docker push latest
+    image: plugins/ecr
+    environment:
+      AWS_REGION: eu-west-2
+    settings:
+      access_key:
+        from_secret: aws_access_key_id
+      secret_key:
+        from_secret: aws_secret_access_key
+      repo: asl/toolbox
+      registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
+      tags:
+        - latest
+        - ${DRONE_COMMIT_SHA}
+    when:
+      event:
+        - push
+      branch:
+        - main
+  - name: docker tag
+    image: plugins/ecr
+    environment:
+      AWS_REGION: eu-west-2
+    settings:
+      access_key:
+        from_secret: aws_access_key_id
+      secret_key:
+        from_secret: aws_secret_access_key
+      repo: asl/toolbox
+      registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
+      tags:
+        - ${DRONE_TAG}
+    when:
+      ref:
+        - refs/tags/asl-toolbox/*
+
+services:
+  - name: docker
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+
+  - name: postgres
+    image: postgres:14.13-bullseye
+    environment:
+      POSTGRES_USER: asl-test
+      POSTGRES_PASSWORD: test-password
+
+trigger:
+  event:
+    - push
+    - pull_request
+    - tag
 
 ---
 
@@ -1421,23 +1927,6 @@ steps:
         - push
       branch:
         - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-workflow
-        --version $${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
 
 services:
 - name: docker
@@ -1449,463 +1938,6 @@ services:
   environment:
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: test-password
-
----
-
-kind: pipeline
-name: asl-internal-ui
-type: kubernetes
-
-clone:
-  disable: true
-
-steps:
-  - name: clone
-    image: node:22.14.0
-    commands:
-      - git clone $DRONE_REMOTE_URL .
-  - name: changeset
-    image: node:22.14.0
-    environment:
-      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
-      SOURCE_COMMIT: "${DRONE_COMMIT}"
-      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
-      SKIP_STATUS: 78
-      MODULES: packages/asl-internal-ui
-    commands:
-      - git config advice.detachedHead false
-      - git checkout $DRONE_COMMIT
-      - node ./ci/changeset.js --modules $MODULES
-      - git checkout $DRONE_TARGET_BRANCH
-      - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
-  - name: install
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm ci --workspace asl-internal-ui
-  - name: test
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm run test --workspace asl-internal-ui
-  - name: audit
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm audit --workspace=asl-internal-ui --audit-level=high --omit=dev
-  - name: compile
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm run build --workspace asl-internal-ui --production
-  - name: docker build
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      DOCKER_BUILDKIT: 1
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - docker build -f ./packages/asl-internal-ui/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-internal-ui .
-  - name: scan-image
-    pull: always
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
-    resources:
-      limits:
-        cpu: 1000
-        memory: 1024Mi
-    environment:
-      IMAGE_NAME: asl-internal-ui
-      ALLOW_CVE_LIST_FILE: packages/asl-internal-ui/cve-exceptions.txt
-      TIMEOUT: 10m
-  - name: docker push
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-      DOCKER_PASSWORD:
-        from_secret: quay_password
-    commands:
-      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag asl-internal-ui quay.io/ukhomeofficedigital/asl-internal-ui:$${DRONE_COMMIT_SHA}
-      - docker push quay.io/ukhomeofficedigital/asl-internal-ui:$${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-internal-ui
-        --version $${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-
-services:
-- name: docker
-  image: docker:dind
-  environment:
-    DOCKER_TLS_CERTDIR: ""
-
----
-
-kind: pipeline
-name: asl
-type: kubernetes
-
-clone:
-  disable: true
-
-steps:
-  - name: clone
-    image: node:22.14.0
-    commands:
-      - git clone $DRONE_REMOTE_URL .
-  - name: changeset
-    image: node:22.14.0
-    environment:
-      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
-      SOURCE_COMMIT: "${DRONE_COMMIT}"
-      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
-      SKIP_STATUS: 78
-      MODULES: packages/asl
-    commands:
-      - git config advice.detachedHead false
-      - git checkout $DRONE_COMMIT
-      - node ./ci/changeset.js --modules $MODULES
-      - git checkout $DRONE_TARGET_BRANCH
-      - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
-  - name: install
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm ci --workspace asl
-  - name: test
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm run test --workspace asl
-  - name: audit
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm audit --workspace=asl --audit-level=high --omit=dev
-  - name: compile
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm run build --workspace asl --production
-  - name: docker build
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      DOCKER_BUILDKIT: 1
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - docker build -f ./packages/asl/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl .
-  - name: scan-image
-    pull: always
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
-    resources:
-      limits:
-        cpu: 1000
-        memory: 1024Mi
-    environment:
-      IMAGE_NAME: asl
-      ALLOW_CVE_LIST_FILE: packages/asl/cve-exceptions.txt
-      TIMEOUT: 10m
-  - name: docker push
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-      DOCKER_PASSWORD:
-        from_secret: quay_password
-    commands:
-      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag asl quay.io/ukhomeofficedigital/asl:$${DRONE_COMMIT_SHA}
-      - docker push quay.io/ukhomeofficedigital/asl:$${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl
-        --version $${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-
-services:
-  - name: docker
-    image: docker:dind
-    environment:
-      DOCKER_TLS_CERTDIR: ""
-
----
-
-kind: pipeline
-name: asl-taskflow
-type: kubernetes
-
-clone:
-  disable: true
-
-steps:
-  - name: clone
-    image: node:22.14.0
-    commands:
-      - git clone $DRONE_REMOTE_URL .
-  - name: changeset
-    image: node:22.14.0
-    environment:
-      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
-      SOURCE_COMMIT: "${DRONE_COMMIT}"
-      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
-      SKIP_STATUS: 78
-      MODULES: packages/asl-taskflow
-    commands:
-      - git config advice.detachedHead false
-      - git checkout $DRONE_COMMIT
-      - node ./ci/changeset.js --modules $MODULES
-      - git checkout $DRONE_TARGET_BRANCH
-      - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
-  - name: install
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm ci --workspace @ukhomeoffice/asl-taskflow
-  - name: database setup
-    image: postgres
-    environment:
-      PGHOST: postgres
-      PGUSER: postgres
-      PGPASSWORD: test-password
-    commands:
-      - psql -c 'CREATE DATABASE "taskflow-test"'
-  - name: test
-    image: node:22.14.0
-    commands:
-      - npm run test --workspace @ukhomeoffice/asl-taskflow
-  - name: audit
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm audit --workspace=@ukhomeoffice/asl-taskflow --audit-level=high --omit=dev
-
-services:
-  - name: postgres
-    image: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: test-password
-
----
-
-kind: pipeline
-name: asl-schema
-type: kubernetes
-
-clone:
-  disable: true
-
-steps:
-  - name: clone
-    image: node:22.14.0
-    commands:
-      - git clone $DRONE_REMOTE_URL .
-  - name: changeset
-    image: node:22.14.0
-    environment:
-      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
-      SOURCE_COMMIT: "${DRONE_COMMIT}"
-      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
-      SKIP_STATUS: 78
-      MODULES: packages/asl-schema
-    commands:
-      - git config advice.detachedHead false
-      - git checkout $DRONE_COMMIT
-      - node ./ci/changeset.js --modules $MODULES
-      - git checkout $DRONE_TARGET_BRANCH
-      - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
-  - name: install
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm ci --workspace @asl/schema
-  - name: test
-    image: node:22.14.0
-    environment:
-      DATABASE_NAME: asl-test
-      DATABASE_HOST: postgres
-      DATABASE_USERNAME: asl-test
-      DATABASE_PASSWORD: test-password
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm test --workspace @asl/schema
-  - name: audit
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm audit --workspace=@asl/schema --audit-level=high --omit=dev
-  - name: docker build
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      DOCKER_BUILDKIT: 1
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - docker build -f ./packages/asl-schema/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-schema .
-  - name: scan-image
-    pull: always
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
-    resources:
-      limits:
-        cpu: 1000
-        memory: 1024Mi
-    environment:
-      IMAGE_NAME: asl-schema
-      ALLOW_CVE_LIST_FILE: packages/asl-schema/cve-exceptions.txt
-      TIMEOUT: 10m
-  - name: docker push
-    image: docker:dind
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-      DOCKER_PASSWORD:
-        from_secret: quay_password
-    commands:
-      - docker login -u="ukhomeofficedigital+asl" -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag asl-schema quay.io/ukhomeofficedigital/asl-schema:$${DRONE_COMMIT_SHA}
-      - docker push quay.io/ukhomeofficedigital/asl-schema:$${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-  - name: update manifest
-    image: quay.io/ukhomeofficedigital/asl-deploy-bot:latest
-    environment:
-      GITHUB_ACCESS_TOKEN:
-        from_secret: github_access_token
-    commands:
-      - update
-        --repo ukhomeoffice/asl-deployments
-        --token $${GITHUB_ACCESS_TOKEN}
-        --file versions.yml
-        --service asl-schema
-        --version $${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
-
-services:
-  - name: docker
-    image: docker:dind
-    environment:
-      DOCKER_TLS_CERTDIR: ""
-  - name: postgres
-    image: postgres
-    environment:
-      POSTGRES_USER: asl-test
-      POSTGRES_PASSWORD: test-password
 
 trigger:
   event:

@@ -76,4 +76,72 @@ const collectModulesPaths = (modules) => {
   return Array.from(new Set(paths));
 }
 
-module.exports = { collectModuleJson, collectModuleDependencies, collectModulePaths, collectModulesPaths, log }
+/**
+ * Fetch the build info for a secific build from the Drone API.
+ * https://docs.drone.io/api/builds/build_info/
+ */
+const getBuildInfo = async (server, owner, name, build, token) => {
+  const buildInfoUrl = `${server}/api/repos/${owner}/${name}/builds/${build}`
+  const result = await fetch(new Request(buildInfoUrl, {
+      method: "GET",
+      headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+      }
+  }))
+  return await result.json()
+}
+
+/**
+ * Fetch a file from the GitHub API.
+ * https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
+ */
+const getGithubFile = async (url, token) => {
+    const getFileRequest = () => new Request(url, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/vnd.github.raw+json",
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    const result = await fetch(getFileRequest())
+    const manifestFile = await result.json()
+    return {
+        manifest: Buffer.from(manifestFile.content, "base64").toString(),
+        sha: manifestFile.sha
+    }
+}
+
+/**
+ * Write a file to the GitHub API.
+ * https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#create-or-update-file-contents
+ */
+const writeGithubFile = async (url, sha, message, file, token) => {
+    const writeFileRequest = () => new Request(url, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/vnd.github+json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            message,
+            sha,
+            content: Buffer.from(file).toString("base64")
+        })
+    })
+    const response = await fetch(writeFileRequest())
+    if (response.status !== 200 && response.status !== 201) {
+        throw new Error(`Failed to update manifest: ${response.statusText}`)
+    }
+}
+
+module.exports = { 
+  log,
+  collectModuleJson, 
+  collectModuleDependencies, 
+  collectModulePaths, 
+  collectModulesPaths,
+  getBuildInfo,
+  getGithubFile,
+  writeGithubFile
+}
