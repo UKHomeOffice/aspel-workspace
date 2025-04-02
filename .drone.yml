@@ -6,11 +6,11 @@ type: kubernetes
 
 steps:
   - name: install
-    image: node:18
+    image: node:22.14.0
     commands:
       - npm ci --workspaces=false
   - name: deployset
-    image: node:18
+    image: node:22.14.0
     environment:
       DRONE_SERVER: ${DRONE_SYSTEM_PROTO}://${DRONE_SYSTEM_HOST}
       DRONE_TOKEN:
@@ -23,7 +23,7 @@ steps:
     commands:
       - node ./ci/deployset.js $BUILD_STAGES > .deploy-set
   - name: manifest
-    image: node:18
+    image: node:22.14.0
     environment:
       GITHUB_TOKEN:
         from_secret: github_access_token
