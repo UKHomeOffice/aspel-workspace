@@ -6,11 +6,11 @@ type: kubernetes
 
 steps:
   - name: install
-    image: node:18
+    image: node:22.14.0
     commands:
       - npm ci --workspaces=false
   - name: deployset
-    image: node:18
+    image: node:22.14.0
     environment:
       DRONE_SERVER: ${DRONE_SYSTEM_PROTO}://${DRONE_SYSTEM_HOST}
       DRONE_TOKEN:
@@ -21,9 +21,9 @@ steps:
       BUILD_STAGES: asl asl-attachments asl-data-exports asl-emailer asl-internal-api asl-internal-ui asl-metrics asl-notifications asl-permissions asl-public-api asl-resolver asl-search asl-workflow
       SKIP_STATUS: 78
     commands:
-      - node ./scripts/deployset.js $BUILD_STAGES > .deploy-set
+      - node ./ci/deployset.js $BUILD_STAGES > .deploy-set
   - name: manifest
-    image: node:18
+    image: node:22.14.0
     environment:
       GITHUB_TOKEN:
         from_secret: github_access_token
@@ -34,7 +34,7 @@ steps:
     commands:
       # Drone inexplicably creates yaml parse errors when reassigning this through the `envionment` block
       - export SOURCE_COMMIT_MESSAGE=$DRONE_COMMIT_MESSAGE
-      - node ./scripts/manifest.js $(cat .deploy-set)
+      - node ./ci/manifest.js $(cat .deploy-set)
 
 trigger:
   event:
