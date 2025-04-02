@@ -10,7 +10,7 @@
     "pretest:unit": "npm run migrate",
     "test:unit": "mocha ./test --recursive",
     "migrate": "npm run migrate:flow && npm run migrate:asl",
-    "migrate:asl": "NODE_ENV=test knex migrate:latest --knexfile ../../node_modules/@asl/schema/knexfile.js",
+    "migrate:asl": "NODE_ENV=test knex migrate:latest --knexfile node_modules/@asl/schema/knexfile.js",
     "migrate:flow": "node ./scripts/migrate.js"
   },
   "repository": {
