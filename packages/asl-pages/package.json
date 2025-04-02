@@ -12,8 +12,7 @@
     "build": "npm run build:css",
     "build:css": "npm run build:css:app && npm run build:css:pdf",
     "build:css:app": "npm-sass ./pages/common/assets/sass/style.scss > ./pages/common/dist/css/app.css",
-    "build:css:pdf": "sass --no-source-map ./pages/common/assets/sass/pdf:./pages/common/dist/css/pdf",
-    "prepublish": "npm run build"
+    "build:css:pdf": "sass --no-source-map ./pages/common/assets/sass/pdf:./pages/common/dist/css/pdf"
   },
   "repository": {
     "type": "git",
@@ -81,7 +80,7 @@
     "@babel/preset-react": "^7.0.0",
     "@jest/globals": "^29.7.0",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
-    "cheerio": "^1.0.0-rc.10",
+    "cheerio": "1.0.0-rc.10",
     "eslint": "^8.24.0",
     "jest": "^29.7.0",
     "mockdate": "^3.0.5",
