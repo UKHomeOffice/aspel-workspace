@@ -109,6 +109,16 @@ For container based services, we need to perform a Docker build of the module. I
 4. Run install in the app folder using `npm ci`. This ensures dependencies are locked to the shared version for all workspaces. Extraneous modules will not be installed because their source packages have not been copied across.
 5. Provide a fresh Docker layer for the app environment and copy across installed `node_modules` and required packages. This prevents extraneous module source code from ending up in the app environment.
 
+### 6. Deploy
+
+On a push to the main branch, newly generated images are then added to the `asl-deployments` repository versions list via the `deployset` pipeline stage. This stage will:
+
+1. Poll the Drone API to get information about the current build stages.
+2. Look for a specified list of build stages which are eligible for the `versions.yml` file.
+3. If all steps for a build stage are successful, exiting with code 0 to indicate none were skipped, then it is added to a list of deployable stages for the versions file.
+4. If a single stage fails elsewhere in the pipepline, whether in the list or not, the `deployset` will fail.
+5. Read the existing versions from the file on GitHub. Update successful builds with the current commit hash. Write the file back to GitHub.
+
 ## Adding Modules
 
 When adding new modules to the workspace you should ensure that dependent modules reference them correctly in their `dependencies` so that their pipelines pick up code changes. If we add a new shared module in `packages/shared` for instance, sibling modules that want to use it should declare it like so:
@@ -122,6 +132,12 @@ When adding new modules to the workspace you should ensure that dependent module
 ```
 
 If you want to create a pipeline for your new module you should use either the [template.service.yml](./template.service.yml) or [template.common.yml](./template.common.yml) templates as a basis, depending on whether your code requires a Docker build. Find and replace all instances of the `<MODULE_NAME>` string with the name of your module before copying it across to the root [.drone.yml](../.drone.yml) file and adding any further additional steps.
+
+If your module deploys a container, you should add its pipeline stage name to the `deployset` stage list of `BUILD_STAGES`:
+
+```yaml
+BUILD_STAGES: asl asl-attachments <new-module> ...
+```
 
 ## Notes
 
