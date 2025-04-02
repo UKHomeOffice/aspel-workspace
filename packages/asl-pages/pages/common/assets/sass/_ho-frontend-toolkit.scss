@@ -1,0 +1,17 @@
+// Home Office Frontend Toolkit
+// @see https://github.com/UKHomeOffice/frontend-toolkit
+
+// path that home office images / fonts / etc will be served from
+$assetPath: '/ho';
+
+// core styles
+@import '@ukhomeoffice/frontend-toolkit';
+
+// any required components (inc. proxies to govuk-frontend)
+@import '@ukhomeoffice/frontend-toolkit/assets/styles/forms';
+@import '@ukhomeoffice/frontend-toolkit/assets/styles/components/breadcrumbs';
+@import '@ukhomeoffice/frontend-toolkit/assets/styles/components/error-summary';
+@import '@ukhomeoffice/frontend-toolkit/assets/styles/components/phase-banner';
+@import '@ukhomeoffice/frontend-toolkit/assets/styles/components/inset-text';
+@import '@ukhomeoffice/frontend-toolkit/assets/styles/components/warning';
+@import '@ukhomeoffice/frontend-toolkit/assets/styles/components/skip-link';
