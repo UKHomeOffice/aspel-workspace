@@ -1819,6 +1819,7 @@ steps:
         from_secret: aws_access_key_id
       secret_key:
         from_secret: aws_secret_access_key
+      dockerfile: packages/asl-toolbox/Dockerfile
       repo: asl/toolbox
       registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
       tags:
@@ -1838,6 +1839,7 @@ steps:
         from_secret: aws_access_key_id
       secret_key:
         from_secret: aws_secret_access_key
+      dockerfile: packages/asl-toolbox/Dockerfile
       repo: asl/toolbox
       registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
       tags:
