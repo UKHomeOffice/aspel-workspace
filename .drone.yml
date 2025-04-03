@@ -1170,6 +1170,54 @@ trigger:
 ---
 
 kind: pipeline
+name: asl-projects
+type: kubernetes
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-projects
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace @asl/projects
+  - name: test
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm run test:unit --workspace @asl/projects
+
+---
+
+kind: pipeline
 name: asl-public-api
 type: kubernetes
 
