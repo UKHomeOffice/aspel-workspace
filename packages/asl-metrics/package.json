@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-metrics#readme",
   "dependencies": {
-    "@asl/projects": "^15.10.4",
+    "@asl/projects": "file:../asl-projects",
     "@asl/schema": "file:../asl-schema",
     "@asl/service": "^11.0.4",
     "@ukhomeoffice/asl-constants": "^2.2.1",
