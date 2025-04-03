@@ -1,6 +1,6 @@
 {
   "name": "asl-attachments",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,12 +21,12 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-attachments#readme",
   "devDependencies": {
-    "eslint": "^8.32.0",
-    "@ukhomeoffice/eslint-config-asl": "^3.0.0"
+    "@ukhomeoffice/eslint-config-asl": "^3.0.0",
+    "eslint": "^8.32.0"
   },
   "dependencies": {
     "@asl/schema": "file:../asl-schema",
-    "@asl/service": "^11.0.2",
+    "@asl/service": "^11.0.4",
     "busboy": "^1.6.0",
     "express": "^4.18.1",
     "minimist": "^1.2.6",

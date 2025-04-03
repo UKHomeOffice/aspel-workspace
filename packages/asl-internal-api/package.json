@@ -1,6 +1,6 @@
 {
   "name": "asl-internal-api",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -24,8 +24,8 @@
   "homepage": "https://github.com/UKHomeOffice/asl-internal-api#readme",
   "dependencies": {
     "@asl/schema": "file:../asl-schema",
-    "@asl/service": "^11.0.2",
-    "@ukhomeoffice/asl-constants": "2.2.0",
+    "@asl/service": "^11.0.4",
+    "@ukhomeoffice/asl-constants": "^2.2.1",
     "eslint-plugin-react": "^7.34.3",
     "express": "^4.18.2",
     "http-proxy": "^1.18.1",
