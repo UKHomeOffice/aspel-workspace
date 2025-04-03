@@ -25,8 +25,8 @@
   "homepage": "https://github.com/UKHomeOffice/asl-resolver#readme",
   "dependencies": {
     "@asl/schema": "file:../asl-schema",
-    "@asl/service": "^11.0.2",
-    "@ukhomeoffice/asl-constants": "^2.2.0",
+    "@asl/service": "^11.0.4",
+    "@ukhomeoffice/asl-constants": "^2.2.1",
     "aws-sdk": "2.1169.0",
     "hot-shots": "^6.8.2",
     "jsondiffpatch": "^0.4.1",
@@ -43,9 +43,9 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
+    "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "dotenv": "^6.0.0",
     "eslint": "^8.26.0",
-    "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "eslint-plugin-undocumented-env": "^1.0.0",
     "knex": "^3.1.0",
     "mocha": "^11.1.0",
