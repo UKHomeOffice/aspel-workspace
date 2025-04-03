@@ -1,0 +1,480 @@
+@import 'base';
+@import 'images';
+
+$sectionSeparator: 50px;
+
+@mixin tab {
+  font-size: 24px;
+  background-color: $dark-grey;
+  color: white;
+  display: inline-block;
+  font-weight: normal;
+  padding: 3px 15px;
+  margin-bottom: 0;
+}
+
+.editor {
+  img {
+    max-width: 100%;
+    page-break-inside: avoid;
+    max-height: 100vh;
+  }
+}
+
+.logo {
+  background-image: $logo;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  width: auto;
+  height: 65px;
+  margin-bottom: $sectionSeparator;
+}
+
+.granted-licence {
+  .hint {
+    display: none;
+  }
+}
+
+.granted-section, .section {
+
+  .review {
+    border-bottom: 1px solid $dark-grey;
+  }
+}
+
+h1.project-title,
+h1.establishment-name,
+h1.licence-holder {
+  font-size: 35px;
+  font-weight: normal;
+  margin-bottom: $sectionSeparator;
+}
+
+h1.establishment-name {
+  margin-bottom: 0;
+}
+
+.review {
+  .grey {
+    display: none;
+  }
+}
+
+section.continuedreuse .review {
+  .grey {
+    display: inherit;
+  }
+}
+
+.full-application {
+  .review {
+    .grey {
+      display: block;
+      margin-top: -$govuk-gutter-half; // remove gap between question and hint
+      font-style: italic;
+      color: $dark-grey;
+    }
+  }
+}
+
+section > h2 {
+  border-bottom: 1px solid $dark-grey;
+  padding-bottom: $govuk-gutter / 2;
+}
+
+.protocol-content .expanding-panel header h3 {
+  font-size: 24px;
+  border-bottom: 1px solid $dark-grey;
+  padding-bottom: $govuk-gutter / 2;
+  margin-top: 40px;
+  margin-bottom: 0;
+}
+
+.purple-inset, .condition {
+  border-left: 4px solid $purple;
+  padding-left: 10px;
+}
+
+h2.subtitle {
+  font-weight: normal;
+  margin-left: 15px;
+}
+
+h3.licence {
+  font-size: 18px;
+  font-weight: normal;
+  text-transform: uppercase;
+  margin-bottom: $sectionSeparator;
+}
+
+hr {
+  display: none;
+}
+
+dl dt {
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+
+dt {
+  clear: left;
+}
+
+dl dd {
+  font-weight: bold;
+  text-indent: 5px;
+}
+
+.break {
+  page-break-after: always;
+}
+
+.section:not(.legacy-pdf .section) {
+  page-break-after: always;
+}
+
+.section.protocols, .page-break-before {
+  page-break-before: always;
+}
+
+.procedures-diff > ul > li {
+  margin-bottom: 15px;
+
+  .model-summary {
+    dd, dt {
+      float: none;
+      display: block;
+      margin-left: 0;
+      text-indent: 0;
+    }
+
+    dd {
+      margin-bottom: 15px;
+
+      ul {
+        padding-left: 1em;
+        list-style-type: disc;
+      }
+    }
+  }
+}
+
+.conditions h2 {
+  font-size: 15px !important;
+}
+
+.conditions .condition {
+  page-break-inside: avoid !important;
+
+  ol ol {
+    list-style-type: lower-alpha;
+
+    & ol {
+      list-style-type: lower-roman;
+    }
+  }
+}
+
+.objective-review {
+  h2 {
+    @include h3;
+    display: block;
+  }
+}
+
+.protocol {
+  h2.group {
+    display: none;
+  }
+}
+
+.image-wrapper button {
+  display: none;
+}
+
+.summary-table {
+
+  > h3 {
+    @include tab;
+  }
+
+  .container {
+    border: 2px solid $dark-grey;
+    padding: $govuk-gutter;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+
+    thead {
+
+      th {
+        text-align: left;
+        vertical-align: top;
+      }
+    }
+
+
+    th, td {
+      padding: 10px 7px;
+      border-bottom: 1px solid $dark-grey;
+
+      &.is-last-row {
+        border-bottom: 1px solid $dark-grey;
+      }
+    }
+  }
+}
+
+h3.steps {
+  @include h2;
+  border-bottom: 0 !important;
+  margin-bottom: 0;
+}
+
+.larger-font {
+  font-size: 19px;
+}
+
+.protocol {
+  margin-bottom: $govuk-gutter;
+
+  &:not(.adverse-effects) {
+    page-break-before: always;
+  }
+
+  page-break-after: always;
+
+  .protocol-number-wrapper {
+    margin-bottom: $govuk-gutter;
+    border-bottom: 2px solid $dark-grey;
+
+    .protocol-number {
+      @include tab;
+      margin-top: 0;
+    }
+
+    .protocol-number-continued {
+      @include tab;
+      margin-top: 0;
+      float: right;
+    }
+  }
+
+  .content, .granted-steps {
+    > h2 {
+      display: none;
+    }
+  }
+
+  .review-children > .review {
+    border-bottom: 0;
+  }
+
+  .animals h3.title {
+    font-size: 24px;
+    border-bottom: 1px solid $dark-grey;
+    padding-bottom: $govuk-gutter / 2;
+  }
+
+  > thead {
+    display:table-header-group;
+
+    th {
+      padding: 0;
+    }
+  }
+
+  > tbody > tr > td {
+    border: 0;
+    padding: 0;
+    position: relative;
+    display: block;
+  }
+
+  .border-extension {
+    height: $govuk-gutter;
+    border-left: 2px solid $dark-grey;
+    border-right: 2px solid $dark-grey;
+    margin-top: -30px;
+  }
+
+  .hide-protocol-number-continued {
+    @include tab;
+    right: 0;
+    margin-top: 0;
+    background-color: white;
+    position: absolute;
+    top: -36px;
+  }
+
+  .container {
+    padding: 0 $govuk-gutter $govuk-gutter $govuk-gutter;
+    top: -30px;
+    border: 2px solid $dark-grey;
+    border-top: 0;
+
+    h2.protocol-title {
+      margin-top: 0;
+    }
+
+    h2:not(.protocol-title) {
+      border-bottom: 1px solid $dark-grey;
+      padding-bottom: $govuk-gutter / 2;
+    }
+
+    table.species-summary {
+      th, td {
+        font-size: 19px;
+        border-bottom: 1px solid $dark-grey;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+    }
+  }
+
+  &.adverse-effects {
+    margin-bottom: 15px;
+
+    .protocol-number {
+      margin-top: 0;
+    }
+  }
+
+  .questions-grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-gap: 0 15px;
+
+    ul {
+      padding-left: 1em;
+    }
+  }
+
+  .protocol-content {
+    h2 {
+      font-size: 24px;
+      margin-top: 40px;
+      margin-bottom: 0;
+    }
+
+    .granted-steps {
+      h2.step-number {
+        @include h2;
+      }
+    }
+  }
+
+  p.end {
+    text-align: center;
+    font-weight: bold;
+  }
+}
+
+.anaesthetic-codes {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+}
+
+.standard-conditions {
+  > ol {
+    padding-left: 1.2em;
+
+    ol {
+      counter-reset: list;
+
+      > li {
+        list-style: none;
+        position: relative;
+
+        &:before {
+          counter-increment: list;
+          content: "(" counter(list, lower-alpha) ") ";
+          position: absolute;
+          left: -1.4em;
+        }
+      }
+    }
+  }
+}
+
+section.primary-establishment,
+section.procedures,
+section.licence-holder,
+section.named-people,
+section.authorisations {
+  margin-top: $sectionSeparator;
+}
+
+.procedure-code {
+  font-size: 20px;
+  margin-bottom: -10px;
+}
+
+section.named-people {
+  h4 {
+    margin-bottom: 0;
+  }
+
+  p {
+    margin-top: 5px;
+  }
+}
+
+section.authorisations {
+  h3.rehomes {
+    margin-top: 40px;
+  }
+}
+
+section.approved-areas {
+  table {
+    th {
+      background-color: $light-grey;
+      padding: 10px;
+      border: 1px solid $mid-grey;
+      border-top: none;
+
+      &.site {
+        background-color: $blue;
+        color: white;
+        border: none;
+      }
+    }
+
+    td {
+      text-align: left;
+      padding: 10px;
+      border: 1px solid $mid-grey;
+    }
+  }
+}
+
+.ra-summary {
+  border: 1px solid black;
+  padding: $govuk-gutter;
+  page-break-inside: avoid;
+
+  .draft-ra-banner {
+    color: white;
+    background-color: black;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: $govuk-gutter-half;
+
+    p {
+      font-weight: bold;
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
