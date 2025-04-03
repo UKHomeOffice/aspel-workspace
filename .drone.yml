@@ -1817,9 +1817,9 @@ steps:
       AWS_REGION: eu-west-2
     settings:
       access_key:
-        from_secret: aws_access_key_id
+        from_secret: toolbox_access_id
       secret_key:
-        from_secret: aws_secret_access_key
+        from_secret: toolbox_access_key
       dockerfile: packages/asl-toolbox/Dockerfile
       repo: asl/toolbox
       registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
