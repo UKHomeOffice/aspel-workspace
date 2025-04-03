@@ -1826,6 +1826,11 @@ steps:
       tags:
         - latest
         - ${DRONE_COMMIT_SHA}
+    when:
+      event:
+        - push
+      branch:
+        - main
   - name: docker tag
     image: plugins/ecr
     environment:
