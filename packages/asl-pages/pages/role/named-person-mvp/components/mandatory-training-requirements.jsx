@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import content from './content';
 
-export default function MandatoryTrainingRequirements({ role }) {
+export default function MandatoryTrainingRequirements({ roleType }) {
 
   const renderModuleContent = (content) => {
     return content.map((el, index) => (
@@ -36,10 +36,12 @@ export default function MandatoryTrainingRequirements({ role }) {
     });
   };
 
+  const contentForRoleType = content[roleType]
+
   return (
     <div className="govuk-box embedded-content">
       <Fragment>
-        <h2>{content.nacwo.title}</h2>
+        <h2>{contentForRoleType.title}</h2>
         <table className="govuk-table">
           <thead>
             <tr>
@@ -48,13 +50,13 @@ export default function MandatoryTrainingRequirements({ role }) {
             </tr>
           </thead>
           <tbody>
-            {renderModules(content.nacwo.modules)}
+            {renderModules(contentForRoleType.modules)}
             <tr>
               <td colSpan="2">
-                <div className="govuk-heading-s">{content.nacwo.additional.title}</div>
+                <div className="govuk-heading-s">{contentForRoleType.additional.title}</div>
               </td>
             </tr>
-            {renderModules(content.nacwo.additional.modules)}
+            {renderModules(contentForRoleType.additional.modules)}
           </tbody>
         </table>
       </Fragment>
