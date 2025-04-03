@@ -18,7 +18,7 @@ steps:
       DRONE_REPO_OWNER: ${DRONE_REPO_OWNER}
       DRONE_REPO_NAME: ${DRONE_REPO_NAME}
       DRONE_BUILD_NUMBER: ${DRONE_BUILD_NUMBER}
-      BUILD_STAGES: asl asl-attachments asl-data-exports asl-emailer asl-internal-api asl-internal-ui asl-metrics asl-notifications asl-permissions asl-public-api asl-resolver asl-search asl-workflow
+      BUILD_STAGES: asl asl-attachments asl-data-exports asl-emailer asl-internal-api asl-internal-ui asl-metrics asl-notifications asl-permissions asl-public-api asl-resolver asl-schema asl-search asl-workflow
       SKIP_STATUS: 78
     commands:
       - node ./ci/deployset.js $BUILD_STAGES > .deploy-set
@@ -1846,6 +1846,7 @@ steps:
     commands:
       # wait for docker service to be up before running docker build
       - n=0; while [ "$n" -lt 60 ] && [[ ! $(docker stats --no-stream) ]]; do n=$(( n + 1 )); sleep 1; done
+      - rm .dockerignore
       - docker build -f ./packages/asl-toolbox/Dockerfile -t asl-toolbox . --no-cache
   - name: scan-image
     pull: always
@@ -1864,9 +1865,9 @@ steps:
       AWS_REGION: eu-west-2
     settings:
       access_key:
-        from_secret: aws_access_key_id
+        from_secret: toolbox_access_id
       secret_key:
-        from_secret: aws_secret_access_key
+        from_secret: toolbox_access_key
       dockerfile: packages/asl-toolbox/Dockerfile
       repo: asl/toolbox
       registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
