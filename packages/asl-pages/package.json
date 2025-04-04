@@ -12,7 +12,8 @@
     "build": "npm run build:css",
     "build:css": "npm run build:css:app && npm run build:css:pdf",
     "build:css:app": "npm-sass ./pages/common/assets/sass/style.scss > ./pages/common/dist/css/app.css",
-    "build:css:pdf": "sass --no-source-map ./pages/common/assets/sass/pdf:./pages/common/dist/css/pdf"
+    "build:css:pdf": "sass --no-source-map ./pages/common/assets/sass/pdf:./pages/common/dist/css/pdf",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
