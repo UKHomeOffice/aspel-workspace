@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import content from './content';
+import content from '../named-person-mvp/mandatory-training/content/mandatory-training-requirements-for-roles';
 
 export default function MandatoryTrainingRequirements({ roleType }) {
 
@@ -23,7 +23,6 @@ export default function MandatoryTrainingRequirements({ roleType }) {
 
   const renderModules = (modules) => {
     return Object.entries(modules).map(([module, moduleDetails]) => {
-
       return (
         <tr key={module} className="govuk-table__row">
           <td className="govuk-table__cell">

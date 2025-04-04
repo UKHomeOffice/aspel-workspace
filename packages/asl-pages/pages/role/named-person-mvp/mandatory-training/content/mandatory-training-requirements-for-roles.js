@@ -1,4 +1,4 @@
-module.exports = {
+const mandatoryTrainingRequirementsForRoles = {
   nacwo: {
     title: 'NACWO mandatory training requirements',
     modules: {
@@ -42,3 +42,5 @@ module.exports = {
   },
   nvs: {}
 };
+
+module.exports = mandatoryTrainingRequirementsForRoles;

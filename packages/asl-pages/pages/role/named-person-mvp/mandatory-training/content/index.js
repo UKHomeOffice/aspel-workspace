@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'mandatory training',
+  title: '{{ roleType }} mandatory training',
   mandatoryTrainingDesc:
     'Nominees must have completed all the mandatory training in the last 5 years before starting the role, unless:',
   trianingUnless1:
@@ -7,7 +7,7 @@ module.exports = {
   trianingUnless2:
     'they have grounds for an exemption - which means they have equivalent training or professional experience which makes the training unnecessary',
   mandatoryTrainingRequirements:
-    'mandatory training requirements (opens below)',
+    '{{ roleType }} mandatory training requirements (opens below)',
   checkTrainingRecord: `Check {{profile.firstName}} training record (opens below)`,
   supportingGuidanceTitle: 'Supporting guidance on GOV.UK',
   fields: {
