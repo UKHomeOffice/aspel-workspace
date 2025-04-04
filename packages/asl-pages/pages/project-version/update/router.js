@@ -1,5 +1,5 @@
 const { page } = require('@asl/service/ui');
-const { dependencies } = require('../../../package.json');
+const projectsVersion = require('@asl/projects/package.json').version;
 const bodyParser = require('body-parser');
 const semver = require('semver');
 const { get } = require('lodash');
@@ -86,8 +86,7 @@ module.exports = settings => {
 
   app.put('/', (req, res, next) => {
     const clientVersion = req.get('x-projects-version');
-    const requiredVersion = dependencies['@asl/projects'];
-    if (semver.diff(clientVersion, semver.minVersion(requiredVersion)) === 'major') {
+    if (semver.diff(clientVersion, semver.minVersion(projectsVersion)) === 'major') {
       res.status(400);
       return res.json({ message: 'Update required', code: 'UPDATE_REQUIRED' });
     }
