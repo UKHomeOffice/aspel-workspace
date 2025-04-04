@@ -14,7 +14,7 @@
     "@acuris/aws-es-connection": "^2.1.0",
     "@asl/projects": "file:../asl-projects",
     "@asl/schema": "file:../asl-schema",
-    "@asl/service": "^11.0.4",
+    "@asl/service": "file:../asl-service",
     "@elastic/elasticsearch": "7.13.0",
     "@ukhomeoffice/asl-constants": "^2.2.1",
     "aws-sdk": "^2.864.0",
