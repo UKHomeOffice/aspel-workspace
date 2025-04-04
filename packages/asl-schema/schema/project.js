@@ -98,13 +98,6 @@ class ProjectQueryBuilder extends QueryBuilder {
         builder
           .where('projects.status', 'active')
           .orWhere((qb) => {
-            qb.where('projects.status', 'transferred').where(
-              'projects.transferredOutDate',
-              '>=',
-              `${year}-12-31`
-            );
-          })
-          .orWhere((qb) => {
             qb.where('projects.status', 'expired').where(
               'projects.expiryDate',
               '>=',
