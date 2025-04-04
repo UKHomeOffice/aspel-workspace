@@ -38,7 +38,7 @@ export default function MandatoryTrainingRequirements({ roleType }) {
   const contentForRoleType = content[roleType]
 
   return (
-    <div className="govuk-box embedded-content">
+    <div className="govuk-box requirements-box">
       <Fragment>
         <h2>{contentForRoleType.title}</h2>
         <table className="govuk-table">
