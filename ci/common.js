@@ -10,7 +10,7 @@ const log = (message) => {
  * exists and return its parsed JSON content.
  */
 const collectModuleJson = (module) => {
-  log(`\nParsing module '${module}'`);
+  log(`\nParsing module '${module}'\n`);
   const packagePath = `./${module}/package.json`;
   if (!existsSync(packagePath)) {
     log(`Package file '${packagePath}' not found`);
@@ -40,7 +40,7 @@ const collectModuleDependencies = (moduleJson) => {
  * of paths to those which are local file dependencies,
  * resolved from the module directory.
  */
-const collectModulePaths = (module, dependencies) => {
+const collectModulePaths = (module, dependencies, checked) => {
   const fileExp = /^file:(.*)$/m;
   const paths = [];
   for (const [name, source] of Object.entries(dependencies)) {
@@ -57,8 +57,16 @@ const collectModulePaths = (module, dependencies) => {
       process.exit(1);
     }
     const dependencyJoined = join(dependencyDir);
+    const dependencyPaths = [dependencyJoined]
     // Recursively collect paths for this dependency
-    paths.push(dependencyJoined, ...collectModulesPaths([dependencyJoined]));
+    if (!checked[dependencyJoined]) {
+      checked[dependencyJoined] = true;
+      dependencyPaths.push(...collectModulesPaths([dependencyJoined], checked));
+    }
+    paths.push(...dependencyPaths);
+  }
+  if (paths.length === 0) {
+    log(`Module '${module}' has no local file dependencies`);
   }
   return paths;
 }
@@ -67,12 +75,12 @@ const collectModulePaths = (module, dependencies) => {
  * For a list of modules, return the full list of dependent paths
  * including the local file dependencies of each module.
  */
-const collectModulesPaths = (modules) => {
+const collectModulesPaths = (modules, checked = {}) => {
   const paths = []
   for (const module of modules) {
     const moduleJson = collectModuleJson(module);
     const dependencies = collectModuleDependencies(moduleJson);
-    const dependencyPaths = collectModulePaths(module, dependencies);
+    const dependencyPaths = collectModulePaths(module, dependencies, checked);
     paths.unshift(module, ...dependencyPaths);
   }
   return Array.from(new Set(paths));
