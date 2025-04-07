@@ -16,7 +16,7 @@ COPY package.json /app/package.json
 
 RUN for path in $MODULE_PATHS; do \
         mkdir -p /app/$path; \
-        cp -r /build/$path/* /app/$path; \
+        cp -r /build/$path/. /app/$path; \
     done
 
 RUN ls /app/packages

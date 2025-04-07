@@ -7,6 +7,3 @@
 [submodule "packages/asl-dictionary"]
 	path = packages/asl-dictionary
 	url = https://github.com/UKHomeOffice/asl-dictionary.git
-[submodule "packages/asl-service"]
-	path = packages/asl-service
-	url = https://github.com/UKHomeOffice/asl-service.git

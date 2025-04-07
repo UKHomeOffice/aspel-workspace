@@ -32,7 +32,7 @@
   "dependencies": {
     "@asl/pages": "file:../asl-pages",
     "@asl/projects": "file:../asl-projects",
-    "@asl/service": "^11.0.4",
+    "@asl/service": "file:../asl-service",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.22.15",
