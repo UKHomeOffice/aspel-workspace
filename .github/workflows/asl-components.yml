@@ -3,14 +3,14 @@ name: asl-components
 on:
   pull_request:
     paths:
-      - packages/**
-      - .github/workflows/asl-components.yml
+      - 'packages/**'
+      - '.github/workflows/asl-components.yml'
   push:
     branches:
       - main
     paths:
-      - packages/**
-      - .github/workflows/asl-components.yml
+      - 'packages/**'
+      - '.github/workflows/asl-components.yml'
 
 env:
   NODE_VERSION: '22.14.0'
