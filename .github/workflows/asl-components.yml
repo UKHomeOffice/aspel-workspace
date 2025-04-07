@@ -12,6 +12,10 @@ on:
       - 'packages/**'
       - '.github/workflows/asl-components.yml'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   NODE_VERSION: '22.14.0'
 
@@ -47,6 +51,9 @@ jobs:
           fi
 
       - name: Install
+        env:
+          ART_AUTH_TOKEN: ${{ secrets.ART_AUTH_TOKEN }}
+          GITHUB_AUTH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }}
         run: npm ci -w @ukhomeoffice/asl-components
 
       - name: Run tests

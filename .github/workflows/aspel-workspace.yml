@@ -12,6 +12,10 @@ on:
       - 'ci/**'
       - '.github/workflows/aspel-workspace.yml'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   NODE_VERSION: '22.14.0'
 
@@ -28,6 +32,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install
+        env:
+          ART_AUTH_TOKEN: ${{ secrets.ART_AUTH_TOKEN }}
+          GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_AUTH_TOKEN }}
         run: npm ci --workspaces=false
 
       - name: Test
