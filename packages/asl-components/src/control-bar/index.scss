@@ -1,0 +1,21 @@
+.control-bar {
+
+  margin-bottom: $govuk-gutter;
+
+  .govuk-button {
+    margin-bottom: 0;
+  }
+
+  &.block {
+    > * {
+      display: block;
+      margin-top: $govuk-gutter-half;
+    }
+  }
+  &:not(.block) {
+    > * {
+      vertical-align: middle;
+      margin-right: 1em;
+    }
+  }
+}
