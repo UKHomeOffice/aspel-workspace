@@ -1,0 +1,22 @@
+extends:
+  - "@ukhomeoffice/asl"
+
+env:
+  es6: true
+  browser: true
+
+parser: babel-eslint
+
+parserOptions:
+  sourceType: module
+
+settings:
+  react:
+    version: detect
+
+rules:
+  no-console: 1
+  no-var: 2
+  no-irregular-whitespace:
+    - 2
+    - skipStrings: false
