@@ -3,14 +3,14 @@ name: aspel-workspace
 on:
   pull_request:
     paths:
-      - ci/**
-      - .github/workflows/aspel-workspace.yml
+      - 'ci/**'
+      - '.github/workflows/aspel-workspace.yml'
   push:
     branches:
       - main
     paths:
-      - ci/**
-      - .github/workflows/aspel-workspace.yml
+      - 'ci/**'
+      - '.github/workflows/aspel-workspace.yml'
 
 env:
   NODE_VERSION: '22.14.0'
@@ -26,6 +26,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install
+        run: npm ci --workspaces=false
 
       - name: test
         run: npm run test:mono

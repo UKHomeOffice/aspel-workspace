@@ -46,6 +46,9 @@ jobs:
             exit $exit_code
           fi
 
+      - name: Install
+        run: npm ci -w @ukhomeoffice/asl-components
+
       - name: Run tests
         run: npm run test
         if: !steps.changeset.outputs.changed == 'false'
