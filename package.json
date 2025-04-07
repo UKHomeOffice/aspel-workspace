@@ -10,8 +10,7 @@
     "dev": "sh -c 'cmd=$(source .env && echo ${DEV_SERVICES:-\"asl asl-internal-ui\"} | xargs -n1 -I {} printf \"\\\"npm run dev -w %s\\\" \" {}); eval concurrently --kill-others-on-fail $cmd'",
     "reset": "set -o allexport && source .env && set +o allexport && ./scripts/reset-aspel-workspace.sh",
     "reset:mono": "find . -type d -name \"node_modules\" -exec rm -rf {} +",
-    "test": "node --test $(find . -type f -name \"*.test.js\" ! -path \"./node_modules/*\" ! -path \"./packages/*\")",
-    "echo": "echo 'workspace is in action'"
+    "test:mono": "node --test $(find . -type f -name \"*.test.js\" ! -path \"./node_modules/*\" ! -path \"./packages/*\")"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

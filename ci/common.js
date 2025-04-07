@@ -5,7 +5,7 @@ const log = (message) => {
   process.stderr.write(`${message}\n`);
 }
 
-/** 
+/**
  * For a module directory path, confirm a package.json file
  * exists and return its parsed JSON content.
  */
@@ -19,7 +19,7 @@ const collectModuleJson = (module) => {
   return JSON.parse(readFileSync(packagePath, 'utf8'));
 }
 
-/** 
+/**
  * For a module package.json object, return its merged
  * dependencies and devDependencies objects.
  */
@@ -35,7 +35,7 @@ const collectModuleDependencies = (moduleJson) => {
   return result;
 }
 
-/** 
+/**
  * For an object of collected dependencies, return an array
  * of paths to those which are local file dependencies,
  * resolved from the module directory.
@@ -56,13 +56,15 @@ const collectModulePaths = (module, dependencies) => {
       log(`Dependency path '${depdendencyPath}' not found`);
       process.exit(1);
     }
-    paths.push(join(dependencyDir))
+    const dependencyJoined = join(dependencyDir);
+    // Recursively collect paths for this dependency
+    paths.push(dependencyJoined, ...collectModulesPaths([dependencyJoined]));
   }
   return paths;
 }
 
-/** 
- * For a list of modules, return the full list of dependent paths 
+/**
+ * For a list of modules, return the full list of dependent paths
  * including the local file dependencies of each module.
  */
 const collectModulesPaths = (modules) => {
@@ -135,11 +137,11 @@ const writeGithubFile = async (url, sha, message, file, token) => {
     }
 }
 
-module.exports = { 
+module.exports = {
   log,
-  collectModuleJson, 
-  collectModuleDependencies, 
-  collectModulePaths, 
+  collectModuleJson,
+  collectModuleDependencies,
+  collectModulePaths,
   collectModulesPaths,
   getBuildInfo,
   getGithubFile,

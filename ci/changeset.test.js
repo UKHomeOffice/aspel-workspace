@@ -14,6 +14,7 @@ describe("changeset", () => {
     const targetBranch = "main";
     const packageADir = "packages/a";
     const packageBDir = "packages/b";
+    const packageCDir = "packages/c";
     const docsDir = "docs";
     let testCwd;
     let stderr = process.stderr.write
@@ -34,7 +35,7 @@ describe("changeset", () => {
     after(() => {
         process.stderr.write = stderr
     })
-    
+
     beforeEach(() => {
         testCwd = mkdtempSync(path.join(tmpdir(), "changeset-test-"))
         copyFileSync(path.join(__dirname, "changeset.js"), path.join(testCwd, "changeset.js"))
@@ -47,9 +48,11 @@ describe("changeset", () => {
         execSync("git config --local commit.gpgsign false")
         mkdirSync(packageADir, { recursive: true })
         mkdirSync(packageBDir, { recursive: true })
+        mkdirSync(packageCDir, { recursive: true })
         mkdirSync(docsDir, { recursive: true })
         appendFileSync(`${packageADir}/package.json`, JSON.stringify({ name: "a", version: "1.0.0", dependencies: { common: "file:../b" } }))
         appendFileSync(`${packageBDir}/package.json`, JSON.stringify({ name: "b", version: "1.0.0" }))
+        appendFileSync(`${packageCDir}/package.json`, JSON.stringify({ name: "c", version: "1.0.0", dependencies: { common: "file:../a" } }))
         appendFileSync(`${docsDir}/docs.md`, "test docs")
         execSync("git add .")
         execSync("git commit -m 'Initial commit'")
@@ -61,7 +64,7 @@ describe("changeset", () => {
     })
 
     describe("when using valid parameters", () => {
-        describe("when push event", () => {    
+        describe("when push event", () => {
             it("should exit with 0 code when module file has changed in previous commit", () => {
                 const env = {...validEnv(), BUILD_EVENT: "push"}
                 appendFileSync(`${packageBDir}/test.txt`, "test")
@@ -73,7 +76,7 @@ describe("changeset", () => {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }
             })
-    
+
             it("should exit with 0 code when module dependency file has changed in previous commit", () => {
                 const env = {...validEnv(), BUILD_EVENT: "push"}
                 appendFileSync(`${packageBDir}/test.txt`, "test")
@@ -85,7 +88,19 @@ describe("changeset", () => {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }
             })
-    
+
+            it("should exit with 0 code when transitive module dependency file has changed in previous commit", () => {
+                const env = {...validEnv(), BUILD_EVENT: "push"}
+                appendFileSync(`${packageBDir}/test.txt`, "test")
+                execSync("git add .")
+                execSync("git commit -m 'test'")
+                try {
+                    execSync(`node changeset.js -m ${packageCDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                } catch (error) {
+                    assert.strictEqual(error.status, 0, error.stdout.toString())
+                }
+            })
+
             it("should exit with skip code when module file has not changed", () => {
                 const env = {...validEnv(), BUILD_EVENT: "push"}
                 appendFileSync(`${packageADir}/test.txt`, "test")
@@ -148,7 +163,7 @@ describe("changeset", () => {
                 assert.fail("Expected error to be thrown")
             })
         })
-    
+
         describe("when pull request event", () => {
             it("should exit with 0 code when module file has changed in previous commit", () => {
                 const env = {...validEnv(), BUILD_EVENT: "pull_request"}
@@ -171,6 +186,19 @@ describe("changeset", () => {
                 execSync("git commit -m 'test'")
                 try {
                     execSync(`node changeset.js -m ${packageADir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                } catch (error) {
+                    assert.strictEqual(error.status, 0, error.stdout.toString())
+                }
+            })
+
+            it("should exit with 0 code when transitive module dependency file has changed in previous commit", () => {
+                const env = {...validEnv(), BUILD_EVENT: "pull_request"}
+                execSync("git checkout -b test", { stdio: "ignore" })
+                appendFileSync(`${packageBDir}/test.txt`, "test")
+                execSync("git add .")
+                execSync("git commit -m 'test'")
+                try {
+                    execSync(`node changeset.js -m ${packageCDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
                 } catch (error) {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }
@@ -203,6 +231,22 @@ describe("changeset", () => {
                 execSync("git commit -m 'test 2'")
                 try {
                     execSync(`node changeset.js -m ${packageADir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                } catch (error) {
+                    assert.strictEqual(error.status, 0, error.stdout.toString())
+                }
+            })
+
+            it("should exit with 0 code when transitive module dependency file has changed in prior commit on this branch", () => {
+                const env = {...validEnv(), BUILD_EVENT: "pull_request"}
+                execSync("git checkout -b test", { stdio: "ignore" })
+                appendFileSync(`${packageBDir}/test.txt`, "test")
+                execSync("git add .")
+                execSync("git commit -m 'test'")
+                appendFileSync(`test.txt`, "test")
+                execSync("git add .")
+                execSync("git commit -m 'test 2'")
+                try {
+                    execSync(`node changeset.js -m ${packageCDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
                 } catch (error) {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }

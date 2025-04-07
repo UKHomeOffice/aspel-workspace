@@ -1,0 +1,31 @@
+name: aspel-workspace
+
+on:
+  pull_request:
+    paths:
+      - ci/**
+      - .github/workflows/aspel-workspace.yml
+  push:
+    branches:
+      - main
+    paths:
+      - ci/**
+      - .github/workflows/aspel-workspace.yml
+
+env:
+  NODE_VERSION: '22.14.0'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js version ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: test
+        run: npm run test:mono
