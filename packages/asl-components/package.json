@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
-    "@ukhomeoffice/asl-dictionary": "^2.1.0",
+    "@ukhomeoffice/asl-dictionary": "file:../asl-dictionary",
     "@ukhomeoffice/react-components": "^1.4.2",
     "@x-govuk/govuk-prototype-components": "^3.0.9",
     "accessible-autocomplete": "^2.0.3",
