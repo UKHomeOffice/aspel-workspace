@@ -4,20 +4,28 @@ Monorepo for the ASPeL project. This repository uses NPM Workspaces to manage mu
 
 ## Table of Contents
 
-1. [Requirements](#requirements)
-2. [Install](#install)
-3. [Run](#run)
-4. [NPM Workspaces](#npm-workspaces)
-5. [Useful Commands](#useful-commands)
+1. [Useful Commands](#useful-commands)
+2. [Requirements](#requirements)
+3. [Install](#install)
+4. [Run](#run)
+5. [NPM Workspaces](#npm-workspaces)
 6. [Tips and Tricks](#tips-and-tricks)
+
+## Useful Commands
+
+- **Install dependencies:** `npm install` or `npm install:env`
+- **Uninstall dependencies:** `npm run reset`
+- **Build all service containers:** `npm run build`
+- **Run a script in a specific package:** `npm run <script> -w <package_name>`
+- **Run a script in the monorepo root:** `npm run <script>`
+- **Add a dependency to a specific package:** `npm install <dependency_name> -w <package_name>`
+- **Add a dependency to the monorepo root:** `npm install <dependency_name>`
 
 ## Requirements
 
 - Node.js (v14 or later)
 
 ## Install
-
-### Credentials
 
 You will need to have some authentication tokens set to install modules from home office repositories. Ensure the following variables are set in your shell environment, or otherwise create an `.env` file which looks like this:
 
@@ -29,8 +37,6 @@ ART_AUTH_TOKEN=eyJ2ZX...
 The GitHub auth token should be a personal access token with read access on private repositories.
 
 The Artefactory auth token should be sourced from a member of the developer team.
-
-### Manually
 
 1. **Clone the repository**:
 
@@ -46,7 +52,7 @@ If you are using an `.env` file:
 npm run install:env
 ```
 
-Otherwise a standard install is fine:
+Otherwise a standard install is fine if the required credentials are already set in your environment:
 
 ```sh
 npm install
@@ -74,9 +80,9 @@ Once services have been started, the ideal way so far we discovered is to run th
 npm start -- --local asl --local asl-internal-ui
 ```
 
-### Containerised Services
+### Containerized Services
 
-Sometimes you may want to run a containerised version of a service to ensure that the compiled code is executing as expected in a more realistic production environment.
+Sometimes you may want to run a containerized version of a service to ensure that the compiled code is executing as expected in a more realistic production environment.
 
 To build the container for a service, such as `asl`, run:
 
@@ -100,7 +106,7 @@ These local containers can be run in `asl-conductor` by modifying the `conductor
   "image": "asl:latest",
   "network": "asl",
   "env": {
-    ...
+    // ...
   }
 }
 ```
@@ -168,14 +174,6 @@ npm run <script>
 ```
 
 This second command will only run scripts declared in the root `package.json`, not in sub packages.
-
-## Useful Commands
-
-- **Install dependencies:** `npm install` or `npm install:env`
-- **Uninstall dependencies:** `npm run reset`
-- **Run a script in a specific package:** `npm run <script> -w <package_name>`
-- **Run a script in monorepo root:** `npm run <script>`
-- **Add a dependency to a specific package:** `npm install <dependency_name> -w <package_name>`
 
 ## Tips and Tricks
 
