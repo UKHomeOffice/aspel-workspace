@@ -1,0 +1,39 @@
+name: Changeset
+description: Calculate the changeset for a module path
+
+inputs:
+  module:
+    description: The module path to calculate the changeset for
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Changeset
+      id: changeset
+      env:
+        TARGET_BRANCH: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref_name }}
+        SOURCE_COMMIT: ${{ github.sha }}
+        BUILD_EVENT: ${{ github.event_name }}
+        MODULE: ${{ inputs.module }}
+        SKIP_STATUS: 78
+      run: |
+        git fetch origin ${{ env.TARGET_BRANCH }}
+        git show-ref --verify --quiet refs/heads/${{ env.TARGET_BRANCH }} || git branch ${{ env.TARGET_BRANCH }} origin/${{ env.TARGET_BRANCH }}
+        node ./ci/changeset.js --modules ${{ env.MODULE }} && exit_code=$? || exit_code=$?
+        if [ $exit_code -eq $SKIP_STATUS ]; then
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+          exit 0
+        elif [ $exit_code -ne 0 ]; then
+          echo "Changeset failed with exit code $exit_code"
+          exit $exit_code
+        fi
+        echo "changed=true" >> "$GITHUB_OUTPUT"
+      shell: bash
+
+outputs:
+  changed:
+    description: Whether files in the module changeset have changed
+    value: ${{ steps.changeset.outputs.changed }}
+

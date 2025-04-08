@@ -1,16 +1,16 @@
-name: asl-components
+name: asl-dictionary
 
 on:
   pull_request:
     paths:
       - 'packages/**'
-      - '.github/workflows/asl-components.yml'
+      - '.github/workflows/asl-dictionary.yml'
   push:
     branches:
       - main
     paths:
       - 'packages/**'
-      - '.github/workflows/asl-components.yml'
+      - '.github/workflows/asl-dictionary.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -18,8 +18,8 @@ concurrency:
 
 env:
   NODE_VERSION: '22.14.0'
-  MODULE: packages/asl-components
-  WORKSPACE: '@ukhomeoffice/asl-components'
+  MODULE: packages/asl-dictionary
+  WORKSPACE: '@ukhomeoffice/asl-dictionary'
 
 jobs:
   test:
@@ -42,13 +42,13 @@ jobs:
           module: ${{ env.MODULE }}
 
       - name: Install
-        if: ${{ steps.changeset.outputs.changed }}
+        if: ${{ steps.changeset.outputs.changed != 'false' }}
         env:
           ART_AUTH_TOKEN: ${{ secrets.ART_AUTH_TOKEN }}
           GITHUB_AUTH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }}
         run: npm ci -w ${{ env.WORKSPACE }}
 
       - name: Run tests
-        if: ${{ steps.changeset.outputs.changed }}
+        if: ${{ steps.changeset.outputs.changed != 'false' }}
         run: |
           npm run -w ${{ env.WORKSPACE }} test
