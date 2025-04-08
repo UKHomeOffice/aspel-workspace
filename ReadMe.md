@@ -2,17 +2,13 @@
 
 Monorepo for the ASPeL project. This repository uses NPM Workspaces to manage multiple packages efficiently and `concurrently` to run scripts across these packages simultaneously.
 
-🚧 Work In Progress 🚧
-
-This repo is currently being converted from a submodule repository to an inline code respository. While the conversion is in progress, check for the 🚧 next to any instructions you read as these may no longer be relevant if the submodule you are developing in has already been converted to inline code.
-
 ## Table of Contents
 
 1. [Requirements](#requirements)
 2. [Install](#install)
 3. [Run](#run)
-4. [Useful Commands](#useful-commands)
-5. [NPM Workspaces](#npm-workspaces)
+4. [NPM Workspaces](#npm-workspaces)
+5. [Useful Commands](#useful-commands)
 6. [Tips and Tricks](#tips-and-tricks)
 
 ## Requirements
@@ -23,7 +19,7 @@ This repo is currently being converted from a submodule repository to an inline 
 
 ### Credentials
 
-You will need to have some authentication tokens set to install modules from home office repositories. Create an `.env` file which looks like this:
+You will need to have some authentication tokens set to install modules from home office repositories. Ensure the following variables are set in your shell environment, or otherwise create an `.env` file which looks like this:
 
 ```
 GITHUB_AUTH_TOKEN=ghp_oam...
@@ -32,54 +28,33 @@ ART_AUTH_TOKEN=eyJ2ZX...
 
 The GitHub auth token should be a personal access token with read access on private repositories.
 
-The artefactory auth token should be sourced from a member of the developer team.
-
-### Quick start
-
-```sh
-npm run reset
-```
+The Artefactory auth token should be sourced from a member of the developer team.
 
 ### Manually
 
 1. **Clone the repository**:
 
 ```sh
-git clone --recurse-submodules  https://github.com/UKHomeOffice/aspel-workspace
-```
-
-or
-
-```sh
 git clone https://github.com/UKHomeOffice/aspel-workspace
-git submodule update --init
 ```
 
 2. **Install dependencies**:
 
+If you are using an `.env` file:
+
 ```sh
 npm run install:env
 ```
-   
-3. **🚧 Working on a ticket 🚧**
 
-Each repo's CI/CD expect package-lock.json, when you are working on a ticket you should commit the changes with package-lock.json for a successful build. If you notice the workspace splits out common dependencies in the root's node_modules folder which is not checked in and not a part of the submodule. When committing code from a repo use
+Otherwise a standard install is fine:
 
+```sh
+npm install
 ```
-  npm install || npm install --package-lock-only
-```
-
-4. **InteliJ IDE**
-
-Troubleshoot: After cloning the repo, you will see all the repositories in the packages folder. Check git settings and align manually.
-
-```
-  IDE settings => version control => directory mapping => click + Add and add the packages from the aspel-workspace/packages location. 
-```
-
-After this, you will see git show in IDE plugins.
 
 ## Run
+
+### Development Services
 
 **asl** and **asl-internal-ui** are the services you will typically be running in an IDE environment. You can start these automatically with:
 
@@ -99,14 +74,36 @@ Once services have been started, the ideal way so far we discovered is to run th
 npm start -- --local asl --local asl-internal-ui
 ```
 
-## Useful Commands
+### Containerised Services
 
-- **Install dependencies:** `npm install`
-- **Run a script in a specific package:** `npm run <script> -w <package_name>`
-- **Run a script in monorepo root:** `npm run <script>`
-- **Add a dependency to a specific package:** `npm install <dependency_name> -w <package_name>`
-- **🚧 Checkout master/main in all submodules 🚧:** `git submodule foreach 'git checkout main || git checkout master'`
-- **🚧 Pull latest changes in all branches 🚧:** `git submodule foreach git pull`
+Sometimes you may want to run a containerised version of a service to ensure that the compiled code is executing as expected in a more realistic production environment.
+
+To build the container for a service, such as `asl`, run:
+
+```sh
+npm run build -- packages/asl
+```
+
+Or otherwise to build containers for all services, run:
+
+```sh
+npm run build
+```
+
+See the script file for more configuration options.
+
+These local containers can be run in `asl-conductor` by modifying the `conductor.json` file to point to the latest local version for each service you want to test:
+
+```json
+{
+  "name": "asl",
+  "image": "asl:latest",
+  "network": "asl",
+  "env": {
+    ...
+  }
+}
+```
 
 ## NPM Workspaces
 
@@ -172,29 +169,27 @@ npm run <script>
 
 This second command will only run scripts declared in the root `package.json`, not in sub packages.
 
+## Useful Commands
+
+- **Install dependencies:** `npm install` or `npm install:env`
+- **Uninstall dependencies:** `npm run reset`
+- **Run a script in a specific package:** `npm run <script> -w <package_name>`
+- **Run a script in monorepo root:** `npm run <script>`
+- **Add a dependency to a specific package:** `npm install <dependency_name> -w <package_name>`
+
 ## Tips and Tricks
 
 ### ESLint
 
-ESLint relative extends don't work in both the workspace and CI/CD at the same time, as the installation path changes 
+ESLint relative extends don't work in both the workspace and CI/CD at the same time, as the installation path changes
 between the two. The rules have been moved to `@ukhomeoffice/eslint-config-asl`, so if a module hasn't been updated yet
-update the package.json to use `"@ukhomeoffice/eslint-config-asl": "^3.0.0"` and update .eslintrc to 
+update the package.json to use `"@ukhomeoffice/eslint-config-asl": "^3.0.0"` and update .eslintrc to
 
 ```yaml
 extends:
   - "@ukhomeoffice/asl"
 ```
 
-You can get ESLint feedback and automatic fixes as you work in IntelliJ. Go to IntelliJ settings > Languages & 
-Frameworks > JavaScript > ESLint. Change the radio group to "Automatic ESLint configuration", and check 
+You can get ESLint feedback and automatic fixes as you work in IntelliJ. Go to IntelliJ settings > Languages &
+Frameworks > JavaScript > ESLint. Change the radio group to "Automatic ESLint configuration", and check
 "Run eslint --fix on save".
-
-### 🚧 Git Commit | PR 🚧
-
-Please ensure the `package-lock.json` is available when you are committing. Bump up the `package.json` version along with the changes. Once you are happy with the work, always reset the workspace and stash changes to prevent workspace breakage.
-
-To reset the workspace, delete the `node_modules` folder in `packages/*` so that when you re-run the command below, it recreates the dependency tree suitable for the workspace:
-
-```sh
-yarn run dev
-```
