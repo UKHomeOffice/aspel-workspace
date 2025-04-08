@@ -141,5 +141,4 @@ BUILD_STAGES: asl asl-attachments <new-module> ...
 
 ## Notes
 
-1. Transitive dependencies for local paths (where A depends on C via B) are not yet supported by the changeset functionality. This would be fairly trivial to add in the future if the neccessity arises.
-2. Skipped pipelines will still show as completed with green checkmarks, rather than grey with a skipped icon. This is unfortunately a limitation of Drone and cannot be fixed.
+1. Skipped pipelines will still show as completed with green checkmarks, rather than grey with a skipped icon. This is unfortunately a limitation of Drone and cannot be fixed.
