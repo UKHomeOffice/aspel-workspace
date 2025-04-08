@@ -15,6 +15,8 @@ describe("modulepaths", () => {
     const packageADir = "packages/a";
     const packageBDir = "packages/b";
     const packageCDir = "other/nested/c";
+    const packageDDir = "packages/d";
+    const packageEDir = "packages/e";
     const docsDir = "docs";
     let testCwd;
     let stderr = process.stderr.write
@@ -26,7 +28,7 @@ describe("modulepaths", () => {
     after(() => {
         process.stderr.write = stderr
     })
-    
+
     beforeEach(() => {
         testCwd = mkdtempSync(path.join(tmpdir(), "changeset-test-"))
         copyFileSync(path.join(__dirname, "modulepaths.js"), path.join(testCwd, "modulepaths.js"))
@@ -40,10 +42,14 @@ describe("modulepaths", () => {
         mkdirSync(packageADir, { recursive: true })
         mkdirSync(packageBDir, { recursive: true })
         mkdirSync(packageCDir, { recursive: true })
+        mkdirSync(packageDDir, { recursive: true })
+        mkdirSync(packageEDir, { recursive: true })
         mkdirSync(docsDir, { recursive: true })
         appendFileSync(`${packageADir}/package.json`, JSON.stringify({ name: "a", version: "1.0.0", dependencies: { b: "file:../b" } }))
         appendFileSync(`${packageBDir}/package.json`, JSON.stringify({ name: "b", version: "1.0.0" }))
         appendFileSync(`${packageCDir}/package.json`, JSON.stringify({ name: "c", version: "1.0.0", dependencies: { a: "file:../../../packages/a", b: "file:../../../packages/b" } }))
+        appendFileSync(`${packageDDir}/package.json`, JSON.stringify({ name: "d", version: "1.0.0", dependencies: { e: "file:../a" } }))
+        appendFileSync(`${packageEDir}/package.json`, JSON.stringify({ name: "e", version: "1.0.0", dependencies: { a: "file:../d" } }))
         appendFileSync(`${docsDir}/docs.md`, "test docs")
         execSync("git add .")
         execSync("git commit -m 'Initial commit'")
@@ -87,13 +93,23 @@ describe("modulepaths", () => {
             }
             assert.strictEqual(result.toString().trim(), "other/nested/c packages/a packages/b")
         })
+
+        it("should return the module path and all transitive dependency paths", () => {
+            let result;
+            try {
+              result = execSync("node modulepaths.js packages/e", { stdio: "pipe" })
+            } catch (error) {
+              assert.strictEqual(error.status, 0, error.stderr.toString())
+            }
+            assert.strictEqual(result.toString().trim(), "packages/e packages/d packages/a packages/b")
+        })
     })
 
     describe("when using invalid parameters", () => {
         describe("when using invalid arguments", () => {
             const tests = [
                 {name: "no module path is provided", args: ""},
-                {name: "the module path does not exist", args: "packages/d"},
+                {name: "the module path does not exist", args: "packages/z"},
                 {name: "the module path does not contain a package.json file", args: "docs"},
             ]
 

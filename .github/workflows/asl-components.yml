@@ -1,0 +1,65 @@
+name: asl-components
+
+on:
+  pull_request:
+    paths:
+      - 'packages/**'
+      - '.github/workflows/asl-components.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/**'
+      - '.github/workflows/asl-components.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '22.14.0'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js version ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Changeset
+        id: changeset
+        env:
+          TARGET_BRANCH: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref_name }}
+          SOURCE_COMMIT: ${{ github.sha }}
+          BUILD_EVENT: ${{ github.event_name }}
+          SKIP_STATUS: 78
+          MODULES: packages/asl-components
+        run: |
+          git fetch origin $TARGET_BRANCH
+          git branch $TARGET_BRANCH origin/$TARGET_BRANCH
+          node ./ci/changeset.js --modules $MODULES && exit_code=$? || exit_code=$?
+          if [ $exit_code -eq $SKIP_STATUS ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          elif [ $exit_code -ne 0 ]; then
+            echo "Changeset failed with exit code $exit_code"
+            exit $exit_code
+          fi
+
+      - name: Install
+        env:
+          ART_AUTH_TOKEN: ${{ secrets.ART_AUTH_TOKEN }}
+          GITHUB_AUTH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }}
+        run: npm ci -w @ukhomeoffice/asl-components
+
+      - name: Run tests
+        if: ${{ steps.changeset.outputs.changed != 'false' }}
+        run: |
+          npm run -w @ukhomeoffice/asl-components test

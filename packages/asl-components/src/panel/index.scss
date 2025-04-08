@@ -1,0 +1,19 @@
+.govuk-panel {
+  padding: 2*$govuk-gutter $govuk-gutter;
+  text-align: center;
+  margin-bottom: $govuk-gutter;
+
+  &.green-bg {
+    background-color: $green;
+    color: $white;
+
+    .govuk-panel__body * {
+      color: $white;
+    }
+  }
+
+  .govuk-panel__title {
+    @extend .govuk-heading-l;
+    color: $white;
+  }
+}

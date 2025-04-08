@@ -5,12 +5,12 @@ const log = (message) => {
   process.stderr.write(`${message}\n`);
 }
 
-/** 
+/**
  * For a module directory path, confirm a package.json file
  * exists and return its parsed JSON content.
  */
 const collectModuleJson = (module) => {
-  log(`\nParsing module '${module}'`);
+  log(`\nParsing module '${module}'\n`);
   const packagePath = `./${module}/package.json`;
   if (!existsSync(packagePath)) {
     log(`Package file '${packagePath}' not found`);
@@ -19,7 +19,7 @@ const collectModuleJson = (module) => {
   return JSON.parse(readFileSync(packagePath, 'utf8'));
 }
 
-/** 
+/**
  * For a module package.json object, return its merged
  * dependencies and devDependencies objects.
  */
@@ -35,12 +35,12 @@ const collectModuleDependencies = (moduleJson) => {
   return result;
 }
 
-/** 
+/**
  * For an object of collected dependencies, return an array
  * of paths to those which are local file dependencies,
  * resolved from the module directory.
  */
-const collectModulePaths = (module, dependencies) => {
+const collectModulePaths = (module, dependencies, checked) => {
   const fileExp = /^file:(.*)$/m;
   const paths = [];
   for (const [name, source] of Object.entries(dependencies)) {
@@ -56,21 +56,31 @@ const collectModulePaths = (module, dependencies) => {
       log(`Dependency path '${depdendencyPath}' not found`);
       process.exit(1);
     }
-    paths.push(join(dependencyDir))
+    const dependencyJoined = join(dependencyDir);
+    const dependencyPaths = [dependencyJoined]
+    // Recursively collect paths for this dependency
+    if (!checked[dependencyJoined]) {
+      checked[dependencyJoined] = true;
+      dependencyPaths.push(...collectModulesPaths([dependencyJoined], checked));
+    }
+    paths.push(...dependencyPaths);
+  }
+  if (paths.length === 0) {
+    log(`Module '${module}' has no local file dependencies`);
   }
   return paths;
 }
 
-/** 
- * For a list of modules, return the full list of dependent paths 
+/**
+ * For a list of modules, return the full list of dependent paths
  * including the local file dependencies of each module.
  */
-const collectModulesPaths = (modules) => {
+const collectModulesPaths = (modules, checked = {}) => {
   const paths = []
   for (const module of modules) {
     const moduleJson = collectModuleJson(module);
     const dependencies = collectModuleDependencies(moduleJson);
-    const dependencyPaths = collectModulePaths(module, dependencies);
+    const dependencyPaths = collectModulePaths(module, dependencies, checked);
     paths.unshift(module, ...dependencyPaths);
   }
   return Array.from(new Set(paths));
@@ -135,11 +145,11 @@ const writeGithubFile = async (url, sha, message, file, token) => {
     }
 }
 
-module.exports = { 
+module.exports = {
   log,
-  collectModuleJson, 
-  collectModuleDependencies, 
-  collectModulePaths, 
+  collectModuleJson,
+  collectModuleDependencies,
+  collectModulePaths,
   collectModulesPaths,
   getBuildInfo,
   getGithubFile,
