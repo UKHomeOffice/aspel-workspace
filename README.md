@@ -161,26 +161,7 @@ This second command will only run scripts declared in the root `package.json`, n
 
 ## Troubleshooting
 
-### 1. How can we use a common dependency declaration for all workspaces?
-
-If many packages use the same version of a dependency and you would like to declare all of these dependencies in one place, you can remove the references from the sub packages and put just one in the root `package.json` file.
-
-```diff
-// packages/a/package.json
-{
-  "dependencies": {
-    - "react": "1"
-  }
-}
-```
-
-### 2. How do I update the version for a workspace dependency?
-
-### 3. Why did the Trivy scan fail with a layer cache error?
-
-### 4. Why did my pull request not trigger a deployment?
-
-### 5. Why is a script or service complaining about a missing module?
+See the [HELPME.md](HELPME.md) file.
 
 ## Tips and Tricks
 
