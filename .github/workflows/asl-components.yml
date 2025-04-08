@@ -37,31 +37,18 @@ jobs:
 
       - name: Changeset
         id: changeset
-        env:
-          TARGET_BRANCH: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref_name }}
-          SOURCE_COMMIT: ${{ github.sha }}
-          BUILD_EVENT: ${{ github.event_name }}
-          SKIP_STATUS: 78
-        run: |
-          git fetch origin ${{ env.TARGET_BRANCH }}
-          git show-ref --verify --quiet refs/heads/${{ env.TARGET_BRANCH }} || git branch ${{ env.TARGET_BRANCH }} origin/${{ env.TARGET_BRANCH }}
-          node ./ci/changeset.js --modules ${{ env.MODULE }} && exit_code=$? || exit_code=$?
-          if [ $exit_code -eq $SKIP_STATUS ]; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          elif [ $exit_code -ne 0 ]; then
-            echo "Changeset failed with exit code $exit_code"
-            exit $exit_code
-          fi
+        uses: ./.github/actions/changeset
+        with:
+          module: ${{ env.MODULE }}
 
       - name: Install
-        if: ${{ steps.changeset.outputs.changed != 'false' }}
+        if: ${{ steps.changeset.outputs.changed }}
         env:
           ART_AUTH_TOKEN: ${{ secrets.ART_AUTH_TOKEN }}
           GITHUB_AUTH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }}
         run: npm ci -w ${{ env.WORKSPACE }}
 
       - name: Run tests
-        if: ${{ steps.changeset.outputs.changed != 'false' }}
+        if: ${{ steps.changeset.outputs.changed }}
         run: |
           npm run -w ${{ env.WORKSPACE }} test
