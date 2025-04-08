@@ -1,0 +1,67 @@
+name: asl-dictionary
+
+on:
+  pull_request:
+    paths:
+      - 'packages/**'
+      - '.github/workflows/asl-dictionary.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/**'
+      - '.github/workflows/asl-dictionary.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '22.14.0'
+  MODULE: packages/asl-dictionary
+  WORKSPACE: '@ukhomeoffice/asl-dictionary'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js version ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Changeset
+        id: changeset
+        env:
+          TARGET_BRANCH: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref_name }}
+          SOURCE_COMMIT: ${{ github.sha }}
+          BUILD_EVENT: ${{ github.event_name }}
+          SKIP_STATUS: 78
+        run: |
+          git fetch origin ${{ env.TARGET_BRANCH }}
+          git show-ref --verify --quiet refs/heads/${{ env.TARGET_BRANCH }} || git branch ${{ env.TARGET_BRANCH }} origin/${{ env.TARGET_BRANCH }}
+          node ./ci/changeset.js --modules ${{ env.MODULE }} && exit_code=$? || exit_code=$?
+          if [ $exit_code -eq $SKIP_STATUS ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          elif [ $exit_code -ne 0 ]; then
+            echo "Changeset failed with exit code $exit_code"
+            exit $exit_code
+          fi
+
+      - name: Install
+        if: ${{ steps.changeset.outputs.changed != 'false' }}
+        env:
+          ART_AUTH_TOKEN: ${{ secrets.ART_AUTH_TOKEN }}
+          GITHUB_AUTH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }}
+        run: npm ci -w ${{ env.WORKSPACE }}
+
+      - name: Run tests
+        if: ${{ steps.changeset.outputs.changed != 'false' }}
+        run: |
+          npm run -w ${{ env.WORKSPACE }} test
