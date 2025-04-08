@@ -26,7 +26,7 @@
   "dependencies": {
     "@asl/schema": "file:../asl-schema",
     "@asl/service": "file:../asl-service",
-    "@ukhomeoffice/asl-constants": "^2.2.1",
+    "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "express": "^4.18.2",
     "http-proxy": "^1.18.1",
     "into-stream": "^6.0.0",

@@ -26,7 +26,7 @@
   "dependencies": {
     "@asl/schema": "file:../asl-schema",
     "@asl/service": "file:../asl-service",
-    "@ukhomeoffice/asl-constants": "^2.2.1",
+    "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "aws-sdk": "2.1169.0",
     "hot-shots": "^6.8.2",
     "jsondiffpatch": "^0.4.1",

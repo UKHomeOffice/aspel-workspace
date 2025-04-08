@@ -30,7 +30,7 @@
     "@asl/service": "file:../asl-service",
     "@joefitter/docx": "^4.7.0",
     "@ukhomeoffice/asl-components": "file:../asl-components",
-    "@ukhomeoffice/asl-constants": "^2.2.1",
+    "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@ukhomeoffice/asl-dictionary": "^2.1.0",
     "@ukhomeoffice/frontend-toolkit": "^3.0.0",
     "@ukhomeoffice/react-components": "^1.4.2",
