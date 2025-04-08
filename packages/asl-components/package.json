@@ -25,7 +25,7 @@
     "@ukhomeoffice:registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
-    "@ukhomeoffice/asl-constants": "^2.2.1",
+    "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@ukhomeoffice/asl-dictionary": "^2.1.0",
     "@ukhomeoffice/react-components": "^1.4.2",
     "@x-govuk/govuk-prototype-components": "^3.0.9",
@@ -40,16 +40,16 @@
     "qs": "^6.6.1",
     "react": "^16.9.0",
     "react-markdown": "^6.0.2",
-    "remark-breaks": "^2.0.2",
     "react-redux": "^7.1.0",
     "redux": "^4.0.1",
+    "remark-breaks": "^2.0.2",
     "shasum": "^1.0.2",
     "url": "^0.11.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/preset-env": "^7.24.4",
     "@babel/preset-react": "^7.24.1",
     "enzyme": "^3.11.0",

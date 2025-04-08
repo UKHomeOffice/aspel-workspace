@@ -16,7 +16,7 @@
     "@asl/schema": "file:../asl-schema",
     "@asl/service": "file:../asl-service",
     "@elastic/elasticsearch": "7.13.0",
-    "@ukhomeoffice/asl-constants": "^2.2.1",
+    "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "aws-sdk": "^2.864.0",
     "chalk": "^4.0.0",
     "elasticsearch-writable-stream": "^2.0.1",

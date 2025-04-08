@@ -1,16 +1,16 @@
-name: asl-components
+name: asl-constants
 
 on:
   pull_request:
     paths:
       - 'packages/**'
-      - '.github/workflows/asl-components.yml'
+      - '.github/workflows/asl-constants.yml'
   push:
     branches:
       - main
     paths:
       - 'packages/**'
-      - '.github/workflows/asl-components.yml'
+      - '.github/workflows/asl-constants.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -18,8 +18,8 @@ concurrency:
 
 env:
   NODE_VERSION: '22.14.0'
-  MODULE: packages/asl-components
-  WORKSPACE: '@ukhomeoffice/asl-components'
+  MODULE: packages/asl-constants
+  WORKSPACE: '@ukhomeoffice/asl-constants'
 
 jobs:
   test:

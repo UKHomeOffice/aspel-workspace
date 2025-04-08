@@ -25,7 +25,7 @@
   "dependencies": {
     "@asl/schema": "file:../asl-schema",
     "@asl/service": "file:../asl-service",
-    "@ukhomeoffice/asl-constants": "^2.2.1",
+    "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "eslint-plugin-react": "^7.34.3",
     "express": "^4.18.2",
     "http-proxy": "^1.18.1",

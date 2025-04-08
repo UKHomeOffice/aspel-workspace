@@ -1,0 +1,30 @@
+{
+  "name": "@ukhomeoffice/asl-constants",
+  "version": "2.2.1",
+  "description": "Shared constants for ASL modules",
+  "main": "index.js",
+  "scripts": {
+    "build": "exit 0",
+    "test": "npm run lint",
+    "lint": "eslint .",
+    "audit": "npm audit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UKHomeOffice/asl-constants.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UKHomeOffice/asl-constants/issues"
+  },
+  "homepage": "https://github.com/UKHomeOffice/asl-constants#readme",
+  "dependencies": {},
+  "publishConfig": {
+    "@ukhomeoffice:registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "eslint": "^8.40.0"
+  }
+}
