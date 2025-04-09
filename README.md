@@ -101,11 +101,14 @@ See the script file for more configuration options.
 
 These local containers can be run in `asl-conductor` by modifying the `conductor.json` file to point to the latest local version for each service you want to test:
 
-```json
+```js
 {
   "name": "asl",
   "image": "asl:latest",
-  "network": "asl"
+  "network": "asl",
+  "env": {
+    ...
+  }
 }
 ```
 
