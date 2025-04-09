@@ -666,14 +666,14 @@ describe('Project model', () => {
         });
     });
 
-    it('does include projects transferred out after the end of the year', () => {
+    it('does not include projects transferred out after the end of the year', () => {
       return Promise.resolve()
         .then(() => this.models.Project.query().whereRopsDue(2020))
         .then(projects => {
           return projects.map(project => project.id);
         })
         .then(projectIds => {
-          assert.ok(projectIds.includes(ids.transferOut));
+          assert.ok(!projectIds.includes(ids.transferOut));
         });
     });
 
