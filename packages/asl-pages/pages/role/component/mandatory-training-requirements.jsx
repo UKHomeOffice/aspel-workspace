@@ -35,7 +35,7 @@ export default function MandatoryTrainingRequirements({ roleType }) {
     });
   };
 
-  const contentForRoleType = content[roleType]
+  const contentForRoleType = content[roleType];
 
   return (
     <div className="govuk-box requirements-box">
