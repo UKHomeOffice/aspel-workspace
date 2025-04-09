@@ -23,7 +23,7 @@ const mandatoryTrainingRequirementsForRoles = {
       'K (theory)': { content: ['6.1 Humane methods of killing (theory)'] },
       E2: { content: ['9. Ethics, animal welfare and the 3Rs (level 2)'] },
       NACWO: {
-        content: ['23. Animals husbandry, care and enrichment Practices']
+        content: ['23. Animals husbandry, care and enrichment practices']
       }
     },
     additional: {
@@ -33,8 +33,8 @@ const mandatoryTrainingRequirementsForRoles = {
         PILB: { content: ['20. Anaesthesia for minor procedures'] },
         PILC: {
           content: [
-            '21. Advanced anaesthesia eg. for surgery',
-            '22. Principals of surgery'
+            '21. Advanced anaesthesia, for example for surgical procedures',
+            '22. Principles of surgery'
           ]
         }
       }
