@@ -1,4 +1,4 @@
-module.exports = {
+const mandatoryTrainingRequirementsForRoles = {
   nacwo: {
     title: 'NACWO mandatory training requirements',
     modules: {
@@ -22,16 +22,25 @@ module.exports = {
       },
       'K (theory)': { content: ['6.1 Humane methods of killing (theory)'] },
       E2: { content: ['9. Ethics, animal welfare and the 3Rs (level 2)'] },
-      NACWO: { content: ['23. Animals husbandry, care and enrichment Practices'] }
+      NACWO: {
+        content: ['23. Animals husbandry, care and enrichment practices']
+      }
     },
     additional: {
-      title: 'Mandatory training if working in areas where anaesthesia and surgery is carried out',
+      title:
+        'Mandatory training if working in areas where anaesthesia and surgery is carried out',
       modules: {
         PILB: { content: ['20. Anaesthesia for minor procedures'] },
-        PILC: { content: ['21. Advanced anaesthesia eg. for surgery', '22. Principals of surgery'] }
+        PILC: {
+          content: [
+            '21. Advanced anaesthesia, for example for surgical procedures',
+            '22. Principles of surgery'
+          ]
+        }
       }
     }
   },
-  nvs: {
-  }
+  nvs: {}
 };
+
+module.exports = mandatoryTrainingRequirementsForRoles;
