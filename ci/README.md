@@ -139,6 +139,10 @@ If your module deploys a container, you should add its pipeline stage name to th
 BUILD_STAGES: asl asl-attachments <new-module> ...
 ```
 
+⚠️ Important ⚠️
+
+The name of the build stage must match the corresponding key in the `versions.yml` file used for deployment. This is the key that `deployset` will fill in when it deploys the container manifest.
+
 ## Notes
 
 1. Skipped pipelines will still show as completed with green checkmarks, rather than grey with a skipped icon. This is unfortunately a limitation of Drone and cannot be fixed.

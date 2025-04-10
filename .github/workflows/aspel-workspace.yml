@@ -38,4 +38,4 @@ jobs:
         run: npm ci --workspaces=false
 
       - name: Test
-        run: npm run test:mono
+        run: npm run test
