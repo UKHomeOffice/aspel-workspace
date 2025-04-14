@@ -663,6 +663,23 @@ module.exports =
         .where({ projectId: id })
         .update({ projectId: newProject.id });
       // clone history to transferred project where we have previously submitted project, so Old project can be reviewed.
+      const listOfProjectVersion = await ProjectVersion
+        .query(transaction)
+        .where({ projectId: id });
+
+      const clonedVersions = listOfProjectVersion.map(version => {
+        const { id, ...rest } = version;
+        return {
+          ...rest,
+          projectId: newProject.id
+        };
+      });
+
+      if (clonedVersions.length) {
+        await ProjectVersion
+          .query(transaction)
+          .insert(clonedVersions);
+      }
 
       return newProject;
     }

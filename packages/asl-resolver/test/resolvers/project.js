@@ -2382,7 +2382,7 @@ describe('Project resolver', () => {
         const newProject = await this.models.Project.query().findOne({
           establishmentId: 8203
         });
-        const projectVersionRes = await this.models.ProjectVersion.query().where({ project_id: projectId });
+        const projectVersionRes = await this.models.ProjectVersion.query().where({ project_id: newProject.id });
         const ropsRes = await this.models.Rop.query().where({ project_id: newProject.id });
 
         assert.equal(newProject.title, 'Project to transfer');
