@@ -23,7 +23,7 @@ const mandatoryTrainingRequirementsForRoles = {
       'K (theory)': { content: ['6.1 Humane methods of killing (theory)'] },
       E2: { content: ['9. Ethics, animal welfare and the 3Rs (level 2)'] },
       NACWO: {
-        content: ['23. Animals husbandry, care and enrichment practices']
+        content: ['23. Animal husbandry, care and enrichment practices']
       }
     },
     additional: {
