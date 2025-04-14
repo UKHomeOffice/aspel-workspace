@@ -659,7 +659,9 @@ module.exports =
       await transferReminders(project, newProject);
 
       // update exiting ROPs to transferred project where we have previously submitted, so Old project loose access.
-
+      await Rop.query(transaction)
+        .where({ projectId: id })
+        .update({ projectId: newProject.id });
       // clone history to transferred project where we have previously submitted project, so Old project can be reviewed.
 
       return newProject;
