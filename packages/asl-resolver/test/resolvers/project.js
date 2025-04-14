@@ -2390,7 +2390,7 @@ describe('Project resolver', () => {
 
         assert.equal(newProject.title, 'Project to transfer');
         assert.equal(newProject.status, 'active');
-
+        assert.notEqual(ropsRes[0].id, oldProject.id);
       });
 
       it('creates a clone of the version under the new project, removing the transfer flag', async () => {
