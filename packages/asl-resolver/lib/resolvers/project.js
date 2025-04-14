@@ -27,6 +27,7 @@ module.exports =
   async ({ action, data, id, meta = {}, changedBy }, transaction) => {
     const {
       Project,
+      Rop,
       ProjectVersion,
       ProjectEstablishment,
       Profile,
@@ -656,6 +657,10 @@ module.exports =
       await deleteOrphanedReminders(project, newVersion);
       await activatePendingReminders(project);
       await transferReminders(project, newProject);
+
+      // update exiting ROPs to transferred project where we have previously submitted, so Old project loose access.
+
+      // clone history to transferred project where we have previously submitted project, so Old project can be reviewed.
 
       return newProject;
     }
