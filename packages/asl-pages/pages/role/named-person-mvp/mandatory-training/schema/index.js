@@ -1,8 +1,7 @@
-
 module.exports = (profile) => {
   return {
     mandatory: {
-      hint: `Select 'Yes' if they have completed all the mandatory training with in the last 5 years`,
+      hint: `Select 'Yes' if they have completed all the mandatory training within the last 5 years`,
       inputType: 'checkboxGroup',
       options: [
         {
@@ -20,14 +19,12 @@ module.exports = (profile) => {
           value: 'exemption'
         },
         {
-          label: 'They is an unavoidable delay in completing one or more modules',
+          label:
+            'There is an unavoidable delay in completing one or more modules',
           value: 'delay'
         }
       ],
-      validate: [
-        'required',
-        'exclusive'
-      ]
+      validate: ['required', 'exclusive']
     }
   };
 };

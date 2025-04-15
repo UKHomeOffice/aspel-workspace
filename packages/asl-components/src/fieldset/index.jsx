@@ -137,6 +137,7 @@ function Field({
     showIf,
     options,
     preventOptionMapping = false,
+    labelAsLegend = false,
     ...props
 }) {
     if (inputType === 'checkboxGroup') {
@@ -245,10 +246,10 @@ function Field({
         hint = <Markdown unwrapSingleLine={true}>{ hint }</Markdown>;
     }
 
-    const snippetProps = props.formatters?.[name]?.renderContext ?? {};
+    const snippetProps = getSnippetProps(name, props.formatters);
 
     return <Component
-        label={isUndefined(label) ? <Snippet {...snippetProps}>{`fields.${name}.label`}</Snippet> : label}
+        label={!labelAsLegend ? <Label name={name} snippetProps={snippetProps} label={label}/> : null}
         hint={isUndefined(hint) ? <Snippet optional {...snippetProps}>{`fields.${name}.hint`}</Snippet> : hint}
         error={error && <Snippet fallback={`errors.default.${error}`} {...snippetProps}>{`errors.${name}.${error}`}</Snippet>}
         value={fieldValue}
@@ -266,23 +267,40 @@ export default function Fieldset({ schema, errors = {}, formatters = {}, model, 
                 map(schema, (field, key) => {
                     const fieldName = field.prefix ? `${field.prefix}-${key}` : key;
                     return (
-                        <Field
-                            {...props}
-                            {...field}
-                            key={key}
-                            values={model}
-                            value={model[fieldName]}
-                            error={errors[fieldName]}
-                            errors={errors}
-                            formatters={formatters}
-                            name={key}
-                            model={props.values}
-                            format={(formatters[key] || {}).format}
-                            formatHint={(formatters[key] || {}).formatHint}
-                        />
+                        <>
+                            {field.labelAsLegend ?
+                                <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                    <h1 className="govuk-fieldset__heading">
+                                        <Label name={key} label={field.label} snippetProps={getSnippetProps(key, formatters)} />
+                                    </h1>
+                                </legend> :
+                                null}
+                            <Field
+                                {...props}
+                                {...field}
+                                key={key}
+                                values={model}
+                                value={model[fieldName]}
+                                error={errors[fieldName]}
+                                errors={errors}
+                                formatters={formatters}
+                                name={key}
+                                model={props.values}
+                                format={(formatters[key] || {}).format}
+                                formatHint={(formatters[key] || {}).formatHint}
+                            />
+                        </>
                     );
                 })
             }
         </fieldset>
     );
+}
+
+function Label({ label, name, snippetProps }) {
+    return isUndefined(label) ? <Snippet {...snippetProps}>{`fields.${name}.label`}</Snippet> : label;
+}
+
+function getSnippetProps (name, formatters) {
+    return formatters?.[name]?.renderContext ?? {};
 }

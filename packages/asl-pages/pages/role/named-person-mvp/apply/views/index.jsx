@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Link, Snippet, FormLayout, Fieldset, Inset, Header } from '@ukhomeoffice/asl-components';
+import { Link, Snippet, FormLayout, Fieldset, Inset } from '@ukhomeoffice/asl-components';
 import OpenTasks from '../../../component/open-tasks';
 
 const connectComponent = key => {
@@ -32,10 +32,7 @@ const Page = ({ addRoleTasks, schema, profile }) => {
   if (schema.type.options.length === 0) {
     return (
       <Fragment>
-        <Header
-          title={<Snippet>title</Snippet>}
-          subtitle={`${profile.firstName} ${profile.lastName}`}
-        />
+        <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
         <OpenTasks roleTasks={addRoleTasks} />
         <p>
           <Link page="profile.read" label={<Snippet>buttons.cancel</Snippet>} className="govuk-button" />
@@ -51,10 +48,7 @@ const Page = ({ addRoleTasks, schema, profile }) => {
   return (
     <Fragment>
       <FormLayout formatters={formatters} cancelLink={<CancelLink />}>
-        <Header
-          title={<Snippet>title</Snippet>}
-          subtitle={`${profile.firstName} ${profile.lastName}`}
-        />
+        <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
         <OpenTasks roleTasks={addRoleTasks} />
       </FormLayout>
     </Fragment>

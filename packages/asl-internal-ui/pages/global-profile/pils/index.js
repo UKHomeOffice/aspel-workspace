@@ -22,10 +22,10 @@ module.exports = () => {
         pilId: req.body.pilId
       }
     };
-    return req.api(`/establishment/${req.body.establishmentId}/removepil`, params)
+    return req.api(`/establishment/${req.body.establishmentId}/${req.body.action}pil`, params)
       .then(({ json: { data } }) => {
         return res.redirect(req.buildRoute('globalProfile', { profileId: req.profileId }));
-      });
+      }).catch(next);
   });
 
   return app;
