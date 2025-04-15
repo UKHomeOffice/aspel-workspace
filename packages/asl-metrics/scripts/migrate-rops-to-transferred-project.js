@@ -7,7 +7,7 @@ const db = require('@asl/schema');
 const config = require('../config');
 
 (async () => {
-  const { Project, Rop, destroy } = db(config.asldb);
+  const { Project, Rop, ProjectVersion, destroy } = db(config.asldb);
 
   try {
     // Fetch projects with status 'transferred'
@@ -67,6 +67,25 @@ const config = require('../config');
           }
         } else {
           console.log('No ROPs found to compare.');
+        }
+
+        // Query projectVersions
+        const projectVersions = await ProjectVersion.query()
+          .select('id', 'projectId')
+          .where({ project_id: e1ProjectId });
+        if (projectVersions.length > 0) {
+          for (const projectVersion of projectVersions) {
+            // Insert a new row into the project_version table
+            await ProjectVersion.query().insert({
+              ...projectVersion, // Copy all fields from the existing row
+              id: undefined, // Let the database generate a new ID
+              projectId: eNth.id // Update the projectId to eNth.id
+            });
+
+            console.log(`Inserted new ProjectVersion for projectId ${eNth.id} based on ProjectVersion ID ${projectVersion.id}`);
+          }
+        } else {
+          console.log(`No ProjectVersions found for projectId ${e1ProjectId}`);
         }
 
         console.log('------*******------\n');
