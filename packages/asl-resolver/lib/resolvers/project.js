@@ -250,12 +250,12 @@ module.exports =
         });
     };
 
-    const updateRopsToTransferred = async (oldProjectId, newProjectId) => {
+    const transferRops = async (oldProjectId, newProjectId) => {
       await Rop.query(transaction)
         .where({ projectId: oldProjectId })
         .update({ projectId: newProjectId });
     };
-    const cloneProjectVersions = async (oldProjectId, newProjectId) => {
+    const cloneVersionHistory = async (oldProjectId, newProjectId) => {
       const listOfProjectVersion = await ProjectVersion
         .query(transaction)
         .where({ projectId: oldProjectId });
@@ -682,8 +682,8 @@ module.exports =
       await deleteOrphanedReminders(project, newVersion);
       await activatePendingReminders(project);
       await transferReminders(project, newProject);
-      await updateRopsToTransferred(project.id, newProject.id);
-      await cloneProjectVersions(project.id, newProject.id);
+      await transferRops(project.id, newProject.id);
+      await cloneVersionHistory(project.id, newProject.id);
 
       return newProject;
     }
