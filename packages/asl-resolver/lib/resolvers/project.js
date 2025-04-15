@@ -250,6 +250,31 @@ module.exports =
         });
     };
 
+    const updateRopsToTransferred = async (oldProjectId, newProjectId) => {
+      await Rop.query(transaction)
+        .where({ projectId: oldProjectId })
+        .update({ projectId: newProjectId });
+    };
+    const cloneProjectVersions = async (oldProjectId, newProjectId) => {
+      const listOfProjectVersion = await ProjectVersion
+        .query(transaction)
+        .where({ projectId: oldProjectId });
+
+      const clonedVersions = listOfProjectVersion.map(version => {
+        const { id, ...rest } = version; // Exclude the original ID
+        return {
+          ...rest,
+          projectId: newProjectId
+        };
+      });
+
+      if (clonedVersions.length) {
+        await ProjectVersion
+          .query(transaction)
+          .insert(clonedVersions);
+      }
+    };
+
     const version = get(data, 'version', {});
     const raVersionId = get(data, 'raVersion');
     const hbaToken = get(meta, 'hbaToken', null);
@@ -657,29 +682,8 @@ module.exports =
       await deleteOrphanedReminders(project, newVersion);
       await activatePendingReminders(project);
       await transferReminders(project, newProject);
-
-      // update exiting ROPs to transferred project where we have previously submitted, so Old project loose access.
-      await Rop.query(transaction)
-        .where({ projectId: id })
-        .update({ projectId: newProject.id });
-      // clone history to transferred project where we have previously submitted project, so Old project can be reviewed.
-      const listOfProjectVersion = await ProjectVersion
-        .query(transaction)
-        .where({ projectId: id });
-
-      const clonedVersions = listOfProjectVersion.map(version => {
-        const { id, ...rest } = version;
-        return {
-          ...rest,
-          projectId: newProject.id
-        };
-      });
-
-      if (clonedVersions.length) {
-        await ProjectVersion
-          .query(transaction)
-          .insert(clonedVersions);
-      }
+      await updateRopsToTransferred(project.id, newProject.id);
+      await cloneProjectVersions(project.id, newProject.id);
 
       return newProject;
     }
