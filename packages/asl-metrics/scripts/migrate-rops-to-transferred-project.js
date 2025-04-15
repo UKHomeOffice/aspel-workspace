@@ -1,3 +1,8 @@
+/**
+ * @Usage: node migrate-rops-to-transferred-project.js
+ * @description: script to migrate ROPs to the transferred project, where ROPS has duplicate year submitted at Transferred project.
+ * use transferred project ROPs.
+ * */
 const db = require('@asl/schema');
 const config = require('../config');
 
@@ -39,6 +44,31 @@ const config = require('../config');
 
         const eNthRops = await Rop.query().select('id', 'projectId', 'year').where({ projectId: eNth.id });
         console.log('eNth ROPS', eNthRops);
+
+        if (e1Rops.length > 0) {
+          for (const e1Rop of e1Rops) {
+            // Check if the year exists in eNthRops with the correct projectId
+            const yearExistsInENthRops = eNthRops.some(
+              eNthRop => eNthRop.year === e1Rop.year
+            );
+
+            if (!yearExistsInENthRops) {
+              // Update the projectId of e1Rop to eNth.id
+              await Rop.query()
+                .where({ id: e1Rop.id })
+                .update({ projectId: eNth.id });
+
+              console.log(`Updated ROP with ID ${e1Rop.id} to project ID ${eNth.id}`);
+            } else {
+              console.log(
+                `No update needed for ROP with ID ${e1Rop.id}, year ${e1Rop.year} already exists in eNthRops with the correct projectId.`
+              );
+            }
+          }
+        } else {
+          console.log('No ROPs found to compare.');
+        }
+
         console.log('------*******------\n');
 
         // Update currentProjectId to the next transferProjectId
