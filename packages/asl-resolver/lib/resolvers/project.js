@@ -27,6 +27,7 @@ module.exports =
   async ({ action, data, id, meta = {}, changedBy }, transaction) => {
     const {
       Project,
+      Rop,
       ProjectVersion,
       ProjectEstablishment,
       Profile,
@@ -247,6 +248,31 @@ module.exports =
           modelId: newProject.id,
           establishmentId: newProject.establishmentId
         });
+    };
+
+    const transferRops = async (oldProjectId, newProjectId) => {
+      await Rop.query(transaction)
+        .where({ projectId: oldProjectId })
+        .update({ projectId: newProjectId });
+    };
+    const cloneVersionHistory = async (oldProjectId, newProjectId) => {
+      const listOfProjectVersion = await ProjectVersion
+        .query(transaction)
+        .where({ projectId: oldProjectId });
+
+      const clonedVersions = listOfProjectVersion.map(version => {
+        const { id, ...rest } = version; // Exclude the original ID
+        return {
+          ...rest,
+          projectId: newProjectId
+        };
+      });
+
+      if (clonedVersions.length) {
+        await ProjectVersion
+          .query(transaction)
+          .insert(clonedVersions);
+      }
     };
 
     const version = get(data, 'version', {});
@@ -656,6 +682,8 @@ module.exports =
       await deleteOrphanedReminders(project, newVersion);
       await activatePendingReminders(project);
       await transferReminders(project, newProject);
+      await transferRops(project.id, newProject.id);
+      await cloneVersionHistory(project.id, newProject.id);
 
       return newProject;
     }
