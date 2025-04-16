@@ -25,6 +25,10 @@ module.exports = merge({}, baseContent, {
   errors: {
     type: {
       required: 'Please select a role'
+    },
+    rcvsNumber: {
+      required: 'Enter their RCVS membership number',
+      customValidate: 'Enter their RCVS membership number'
     }
   }
 });

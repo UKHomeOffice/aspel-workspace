@@ -36,6 +36,10 @@ module.exports = (roles, establishment) => {
       options,
       nullValue: [],
       labelAsLegend: true
+    },
+    rcvsNumber: {
+      inputType: 'inputText',
+      validate: ['required', { minLength: 1 }]
     }
   };
 };

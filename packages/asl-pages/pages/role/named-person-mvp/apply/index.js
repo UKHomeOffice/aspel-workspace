@@ -118,6 +118,13 @@ module.exports = (settings) => {
         res.locals.pageTitle = `${res.locals.static.content.title} - ${req.establishment.name}`;
         next();
       },
+      process: (req, res, next) => {
+        const { rcvsNumber } = req.form.values;
+        Object.assign(req.form.values, {
+          rcvsNumber
+        });
+        next();
+      },
       saveValues: (req, res, next) => {
         req.session.form[req.model.id].values = req.form.values;
         next();
@@ -126,7 +133,7 @@ module.exports = (settings) => {
   );
 
   app.post('/', (req, res, next) => {
-    const { type } = req.session.form[req.model.id].values;
+    const { type, rcvsNumber } = req.session.form[req.model.id].values;
     const rolesWithRequirements = Object.keys(
       mandatoryTrainingRequirementsForRoles
     );
