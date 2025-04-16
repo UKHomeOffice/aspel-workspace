@@ -1,4 +1,12 @@
-module.exports = (profile) => {
+module.exports = (role) => {
+  const nacwoNvsLabel = (roleType) => {
+    if (roleType === 'nacwo') {
+      return 'There is an unavoidable delay in completing one or more modules';
+    } else if (roleType === 'nvs') {
+      return 'They have not yet completed the NVS module';
+    }
+  };
+
   return {
     mandatory: {
       hint: `Select 'Yes' if they have completed all the mandatory training within the last 5 years`,
@@ -19,8 +27,7 @@ module.exports = (profile) => {
           value: 'exemption'
         },
         {
-          label:
-            'There is an unavoidable delay in completing one or more modules',
+          label: nacwoNvsLabel(role.type),
           value: 'delay'
         }
       ],

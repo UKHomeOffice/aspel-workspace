@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { Snippet, Header, Form, TrainingSummary, Details, Inset, SupportingLinks, Link } from '@ukhomeoffice/asl-components';
 import MandatoryTrainingRequirements from '../../../component/mandatory-training-requirements';
-import content from '../content/index';
 import mandatoryTrainingSupportingLinks from '../content/supporting-links';
 
 const Page = () => {
@@ -15,11 +14,11 @@ const Page = () => {
         <span className="govuk-caption-l">{profile.firstName} {profile.lastName}</span>
         <Form cancelLink="profile.read">
           <Header title={<Snippet roleType={roleType.toUpperCase()}>title</Snippet>}/>
-          <p className="govuk-body">{content.mandatoryTrainingDesc}</p>
-          <ul className="govuk-list govuk-list--bullet govuk-list--spaced">
-            <li>{content.trianingUnless1}</li>
-            <li>{content.trianingUnless2}</li>
-          </ul>
+
+          <p className="govuk-body">
+            { roleType === 'nacwo' && <Snippet>nacwoTrainingDesc</Snippet>}
+            { roleType === 'nvs' && <Snippet>nvsTrainingDesc</Snippet>}
+          </p>
 
           <Details summary={<Snippet roleType={roleType.toUpperCase()}>mandatoryTrainingRequirements</Snippet>} className="margin-bottom">
             <Inset><MandatoryTrainingRequirements roleType={roleType}/></Inset>
