@@ -4,6 +4,8 @@ module.exports = (role) => {
       return 'There is an unavoidable delay in completing one or more modules';
     } else if (roleType === 'nvs') {
       return 'They have not yet completed the NVS module';
+    } else {
+      throw new Error(`Unknown role type: ${roleType}`);
     }
   };
 
