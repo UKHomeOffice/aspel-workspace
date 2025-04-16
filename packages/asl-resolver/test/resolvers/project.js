@@ -2369,6 +2369,28 @@ describe('Project resolver', () => {
         assert.equal(newProject.previousProjectId, oldProject.id);
       });
 
+      it('clones the project into the new establishment updating rop and cloning project version', async () => {
+
+        await this.models.Rop.query().insert({
+          id: generateUuid(),
+          projectId,
+          year: 2021,
+          status: 'submitted'
+        });
+
+        await this.project(this.input);
+        const newProject = await this.models.Project.query().findOne({
+          establishmentId: 8203
+        });
+        const projectVersionRes = await this.models.ProjectVersion.query().where({ project_id: newProject.id });
+        const ropsRes = await this.models.Rop.query().where({ project_id: newProject.id });
+
+        assert.equal(newProject.title, 'Project to transfer');
+        assert.equal(newProject.status, 'active');
+        assert.equal(ropsRes[0].projectId, newProject.id);
+        assert.equal(projectVersionRes[0].projectId, newProject.id);
+      });
+
       it('creates a clone of the version under the new project, removing the transfer flag', async () => {
         await this.project(this.input);
 
