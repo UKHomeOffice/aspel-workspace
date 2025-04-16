@@ -28,7 +28,7 @@ const config = require('../config');
 
       while (currentProjectId) {
         // eNth -> final active project
-        const eNth = await Project.query().select('id', 'transferProjectId').where({ id: currentProjectId }).first();
+        const eNth = await Project.query().select('id', 'transferProjectId', 'transferredOutDate').where({ id: currentProjectId }).first();
 
         if (!eNth) {
           console.log(`No project found with ID: ${currentProjectId}`);
@@ -69,23 +69,24 @@ const config = require('../config');
           console.log('No ROPs found to compare.');
         }
 
-        // Query projectVersions
-        const projectVersions = await ProjectVersion.query()
-          .select('id', 'projectId')
-          .where({ project_id: e1ProjectId });
-        if (projectVersions.length > 0) {
-          for (const projectVersion of projectVersions) {
-            // Insert a new row into the project_version table
-            await ProjectVersion.query().insert({
-              ...projectVersion, // Copy all fields from the existing row
-              id: undefined, // Let the database generate a new ID
-              projectId: eNth.id // Update the projectId to eNth.id
-            });
+        // Query projectVersions, transferredOutDate is null means no more transfers
+        if (project.transferredOutDate === null) {
+          const projectVersions = await ProjectVersion.query()
+            .select('id', 'projectId')
+            .where({project_id: e1ProjectId});
+          if (projectVersions.length > 0) {
+            for (const projectVersion of projectVersions) {
+              await ProjectVersion.query().insert({
+                ...projectVersion,
+                id: undefined,
+                projectId: eNth.id
+              });
 
-            console.log(`Inserted new ProjectVersion for projectId ${eNth.id} based on ProjectVersion ID ${projectVersion.id}`);
+              console.log(`Inserted new ProjectVersion for projectId ${eNth.id} based on ProjectVersion ID ${projectVersion.id}`);
+            }
+          } else {
+            console.log(`No ProjectVersions found for projectId ${e1ProjectId}`);
           }
-        } else {
-          console.log(`No ProjectVersions found for projectId ${e1ProjectId}`);
         }
 
         console.log('------*******------\n');
