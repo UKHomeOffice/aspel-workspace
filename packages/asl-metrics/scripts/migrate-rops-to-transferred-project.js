@@ -70,9 +70,8 @@ const config = require('../config');
         }
 
         // Query projectVersions, transferredOutDate is null means no more transfers
-        if (project.transferredOutDate === null) {
+        if (eNth.transferredOutDate === null) {
           const projectVersions = await ProjectVersion.query()
-            .select('id', 'projectId')
             .where({project_id: e1ProjectId});
           if (projectVersions.length > 0) {
             for (const projectVersion of projectVersions) {
