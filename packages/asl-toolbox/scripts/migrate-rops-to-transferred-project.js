@@ -3,11 +3,10 @@
  * @description: script to migrate ROPs to the transferred project, where ROPS has duplicate year submitted at Transferred project.
  * use transferred project ROPs.
  * */
-const db = require('@asl/schema');
-const config = require('../config');
+import {dataDb} from './lib/db.js';
 
 (async () => {
-  const { Project, Rop, ProjectVersion, destroy } = db(config.asldb);
+  const { Project, Rop, ProjectVersion, destroy } = dataDb;
 
   try {
     // Fetch projects with status 'transferred'
