@@ -29,7 +29,11 @@ module.exports = (role) => {
     },
     {
       label: getNacwoNvsLabel(roleType),
-      value: 'delay'
+      value: 'delay',
+      hint:
+        roleType === 'nvs'
+          ? 'They will complete it within 12 months of starting the role.'
+          : null
     }
   ];
 
