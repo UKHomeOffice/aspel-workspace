@@ -20,7 +20,10 @@ module.exports = (roles, establishment) => {
       value: role,
       label: namedRoles[role],
       hint: hintText[role],
-      reveal: role === 'nvs' ? { rcvsNumber: { inputType: 'inputText' } } : null
+      reveal:
+        role === 'nvs'
+          ? { rcvsNumber: { inputType: 'inputText', validate: ['required'] } }
+          : null
     };
   });
 
@@ -36,10 +39,6 @@ module.exports = (roles, establishment) => {
       options,
       nullValue: [],
       labelAsLegend: true
-    },
-    rcvsNumber: {
-      inputType: 'inputText',
-      validate: ['required', { minLength: 1 }]
     }
   };
 };

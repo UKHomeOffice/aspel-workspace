@@ -6,6 +6,7 @@ const {
   populateNamedPeople
 } = require('../../../common/middleware');
 const getSchema = require('./schema');
+const { buildModel } = require('../../../../lib/utils');
 const confirm = require('../../routers/confirm');
 const success = require('../../routers/success');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
@@ -43,7 +44,8 @@ module.exports = (settings) => {
 
   app.use((req, res, next) => {
     req.model = {
-      id: `${req.profile.id}-new-role-named-person`
+      id: `${req.profile.id}-new-role-named-person`,
+      ...buildModel(getSchema)
     };
     next();
   });
@@ -75,7 +77,6 @@ module.exports = (settings) => {
   });
 
   app.use(
-    '/',
     form({
       configure: (req, res, next) => {
         const rolesHeld = req.profile.roles
@@ -118,13 +119,6 @@ module.exports = (settings) => {
         res.locals.pageTitle = `${res.locals.static.content.title} - ${req.establishment.name}`;
         next();
       },
-      process: (req, res, next) => {
-        const { rcvsNumber } = req.form.values;
-        Object.assign(req.form.values, {
-          rcvsNumber
-        });
-        next();
-      },
       saveValues: (req, res, next) => {
         req.session.form[req.model.id].values = req.form.values;
         next();
@@ -133,7 +127,7 @@ module.exports = (settings) => {
   );
 
   app.post('/', (req, res, next) => {
-    const { type, rcvsNumber } = req.session.form[req.model.id].values;
+    const { type } = req.session.form[req.model.id].values;
     const rolesWithRequirements = Object.keys(
       mandatoryTrainingRequirementsForRoles
     );
