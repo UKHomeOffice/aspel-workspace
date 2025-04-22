@@ -11,29 +11,43 @@ const Page = () => {
   return (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-two-thirds">
-        <span className="govuk-caption-l">{profile.firstName} {profile.lastName}</span>
+        <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
         <Form cancelLink="profile.read">
-          <Header title={<Snippet roleType={roleType.toUpperCase()}>title</Snippet>}/>
+          <Header title={<Snippet roleType={roleType.toUpperCase()}>title</Snippet>} />
 
-          <p className="govuk-body">
-            { roleType === 'nacwo' && <Snippet>nacwoTrainingDesc</Snippet>}
-            { roleType === 'nvs' && <Snippet>nvsTrainingDesc</Snippet>}
-          </p>
+          {roleType === 'nacwo' && (
+            <p className="govuk-body">
+              <Snippet>nacwoTrainingDesc</Snippet>
+            </p>
+          )}
+          {roleType === 'nvs' && (
+            <p className="govuk-body">
+              <Snippet>nvsTrainingDesc</Snippet>
+            </p>
+          )}
 
-          <Details summary={<Snippet roleType={roleType.toUpperCase()}>mandatoryTrainingRequirements</Snippet>} className="margin-bottom">
-            <Inset><MandatoryTrainingRequirements roleType={roleType}/></Inset>
+          <Details
+            summary={<Snippet roleType={roleType.toUpperCase()}>mandatoryTrainingRequirements</Snippet>}
+            className="margin-bottom"
+          >
+            <Inset>
+              <MandatoryTrainingRequirements roleType={roleType} />
+            </Inset>
           </Details>
 
           <Details summary={<Snippet>checkTrainingRecord</Snippet>} className="margin-bottom">
             <Inset>
               <TrainingSummary certificates={profile.certificates} />
-              <Link page="training.dashboard" label="Manage training"/>
+              <Link page="training.dashboard" label="Manage training" />
             </Inset>
           </Details>
         </Form>
       </div>
 
-      <SupportingLinks sectionTitle={<Snippet>supportingGuidanceTitle</Snippet>} links={mandatoryTrainingSupportingLinks(roleType)} />
+      <SupportingLinks
+        sectionTitle={<Snippet>supportingGuidanceTitle</Snippet>}
+        links={mandatoryTrainingSupportingLinks(roleType)}
+      />
     </div>
   );
 };
