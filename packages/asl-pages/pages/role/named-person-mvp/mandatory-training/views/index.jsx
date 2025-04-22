@@ -21,9 +21,17 @@ const Page = () => {
             </p>
           )}
           {roleType === 'nvs' && (
-            <p className="govuk-body">
-              <Snippet>nvsTrainingDesc</Snippet>
-            </p>
+            <>
+              <p className="govuk-body">
+                <Snippet>nvsTrainingDesc</Snippet>
+              </p>
+
+              <Inset>
+                <p className="govuk-body">
+                  <Snippet>nvsException</Snippet>
+                </p>
+              </Inset>
+            </>
           )}
 
           <Details
