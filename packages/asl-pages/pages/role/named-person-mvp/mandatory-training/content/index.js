@@ -12,7 +12,7 @@ Nominees must have completed all the mandatory training in the last 5 years befo
   nvsException: `The only exception is the NVS module, where if they haven'nt completed it in the last 5 years, they must do so withion 12 months of starting the role.`,
   mandatoryTrainingRequirements:
     '{{ roleType }} mandatory training requirements (opens below)',
-  checkTrainingRecord: `Check {{profile.firstName}} training record (opens below)`,
+  checkTrainingRecord: `Check {{profile.firstName}}'s training record (opens below)`,
   supportingGuidanceTitle: 'Supporting guidance on GOV.UK',
   fields: {
     mandatory: {
