@@ -4,6 +4,9 @@ extends:
 plugins:
   - eslint-plugin-undocumented-env
 
+parserOptions:
+  ecmaVersion: 2020
+
 rules:
   undocumented-env/no-undocumented: 2
   indent: 0
