@@ -24,8 +24,8 @@ Nominees must have completed all the mandatory training in the last 5 years befo
     cancel: 'Cancel'
   },
   errors: {
-    type: {
-      required: `Tell us if {{profile.firstName}}'s training record is accurate and up to date`
+    mandatory: {
+      required: 'Select an option relating to their mandatory training'
     }
   }
 };
