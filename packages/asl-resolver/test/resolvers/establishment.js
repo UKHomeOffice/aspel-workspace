@@ -746,7 +746,6 @@ describe('Establishment resolver', () => {
     });
 
     describe('Updating establishment name', () => {
-      this.timeout(10000);
       beforeEach(async () => {
         await this.models.Establishment.query().insert([
           {
@@ -799,14 +798,28 @@ describe('Establishment resolver', () => {
         await transaction.commit();
         console.log('transaction committed');
 
-        for (const versionId of [project1Version1, project1Version2, project2Version1]) {
-          const { data } = await this.models.ProjectVersion.query().findById(versionId);
-          console.log(`found version id ${versionId}`);
+        await Promise.all(
+          [project1Version1, project1Version2, project2Version1]
+            .map(async versionId => {
+              const { data } = await this.models.ProjectVersion.query().findById(versionId);
+              console.log(`found version id ${versionId}`);
 
-          assert.deepEqual(data.protocols[0].locations, ['Renamed'], `ID: ${versionId}, primary location is unchanged`);
-          assert.deepEqual(data.protocols[1].locations, ['POLE'], `ID: ${versionId}, additional location is renamed`);
-          assertIncludesInAnyOrder(data.protocols[2].locations, ['Renamed', 'POLE'], `ID: ${versionId}`);
-        }
+              assert.deepEqual(
+                data.protocols[0].locations,
+                ['Renamed'],
+                `ID: ${versionId}, primary location is unchanged`
+              );
+              assert.deepEqual(
+                data.protocols[1].locations,
+                ['POLE'],
+                `ID: ${versionId}, additional location is renamed`
+              );
+              assertIncludesInAnyOrder(
+                data.protocols[2].locations,
+                ['Renamed', 'POLE'],
+                `ID: ${versionId}`
+              );
+            }));
         console.log('done');
       });
 
