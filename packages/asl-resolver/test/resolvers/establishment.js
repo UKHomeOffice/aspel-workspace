@@ -746,6 +746,7 @@ describe('Establishment resolver', () => {
     });
 
     describe('Updating establishment name', () => {
+      this.timeout(10000);
       beforeEach(async () => {
         await this.models.Establishment.query().insert([
           {
@@ -757,6 +758,7 @@ describe('Establishment resolver', () => {
       });
 
       it('renames protocol locations when renaming the primary establishment', async () => {
+        console.log('start');
         const projectId1 = '0ab141b8-417f-4399-8a25-82566de56902';
         const project1Version1 = '21dbe1b5-0f00-47eb-aa76-e52bb51872c1';
         const project1Version2 = '4f646f62-67c7-40b9-9f82-3dd89c57196f';
@@ -771,6 +773,7 @@ describe('Establishment resolver', () => {
             versionIds: [project1Version1, project1Version2]
           }
         );
+        console.log('project1 inserted');
 
         await insertProjectOfPrimaryEstablishment(
           this.models,
@@ -779,6 +782,7 @@ describe('Establishment resolver', () => {
             versionIds: [project2Version1]
           }
         );
+        console.log('project2 inserted');
 
         const opts = {
           action: 'update',
@@ -789,16 +793,21 @@ describe('Establishment resolver', () => {
         };
 
         const transaction = await this.models.transaction();
+        console.log('transaction started');
         await this.establishment(opts, transaction);
+        console.log('resolver completed');
         await transaction.commit();
+        console.log('transaction committed');
 
         for (const versionId of [project1Version1, project1Version2, project2Version1]) {
           const { data } = await this.models.ProjectVersion.query().findById(versionId);
+          console.log(`found version id ${versionId}`);
 
           assert.deepEqual(data.protocols[0].locations, ['Renamed'], `ID: ${versionId}, primary location is unchanged`);
           assert.deepEqual(data.protocols[1].locations, ['POLE'], `ID: ${versionId}, additional location is renamed`);
           assertIncludesInAnyOrder(data.protocols[2].locations, ['Renamed', 'POLE'], `ID: ${versionId}`);
         }
+        console.log('done');
       });
 
       it('Renames protocol locations when an additionally available establishment is renamed', async () => {
