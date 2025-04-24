@@ -137,6 +137,7 @@ module.exports = (settings) => {
       );
     }
 
+    //TODO: This could possibly be removed
     return res.redirect(req.buildRoute('role.create', { suffix: 'confirm' }));
   });
 
