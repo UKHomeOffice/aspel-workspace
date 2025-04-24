@@ -67,10 +67,7 @@ const mandatoryTrainingRequirementsForRoles = {
         'PILA (skills)': PILA_SKILLS,
         'K (skills)': {
           tag: 'Species specific',
-          content: [
-            '3.2 Basic and appropriate biology',
-            '8. Minimally invasive procedures without anaesthesia'
-          ]
+          content: ['6.2 Humane methods of killing (skills)']
         }
       }
     }
