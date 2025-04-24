@@ -20,6 +20,7 @@ async function renameProtocolLocation(ProjectVersion, transaction, establishment
     {establishmentId, renameFrom}
   ).stream();
 
+  console.log('streaming');
   const updates = [];
 
   for await (const {id: versionId, data} of versionData) {
@@ -35,9 +36,11 @@ async function renameProtocolLocation(ProjectVersion, transaction, establishment
       }
     });
 
+    console.log(`update versionId: ${versionId}`);
     updates.push(ProjectVersion.query(transaction).where({ id: versionId }).update({ data }));
   }
 
+  console.log(`update count: ${updates.length}`);
   await Promise.all(updates);
 }
 
@@ -46,6 +49,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
 
   if (action === 'update') {
     const existing = await Establishment.query(transaction).findById(id);
+    console.log('found existing');
 
     let reminder;
     if (get(data, 'reminder')) {
@@ -69,18 +73,22 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
     }
 
     const establishment = await Establishment.query(transaction).patchAndFetchById(id, data);
+    console.log('patched and fetched establishment');
 
     if (data.authorisations) {
+      console.log('auths');
       await Authorisation.query(transaction).delete().where('establishmentId', id);
       if (data.authorisations.length) {
         // strip the ids, these will be inserted as new authorisations
         const authorisations = data.authorisations.map(a => omit(a, 'id'));
         await Authorisation.query(transaction).insert(authorisations);
+        console.log('inserted auths');
       }
     }
 
     // If corporate status is set, check NPRC/PELH depending on status
     if (data.corporateStatus) {
+      console.log('corporateStatus');
       const typeOfRole = isCorporate ? 'nprc' : 'pelh';
       const typeOfRoleToRemove = isCorporate ? 'pelh' : 'nprc';
 
@@ -94,16 +102,21 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
         profileId: newProfileRole,
         type: typeOfRole
       }, transaction);
+      console.log('role upserted');
 
       await Role.query(transaction).where({ establishmentId: establishment.id, type: typeOfRole }).whereNot({profileId: newProfileRole}).delete();
       await Role.query(transaction).where({ establishmentId: establishment.id, type: typeOfRoleToRemove }).delete();
+      console.log('roles deleted');
     }
 
     if (existing.name !== establishment.name) {
+      console.log('rename location');
       await renameProtocolLocation(ProjectVersion, transaction, id, existing.name, establishment.name);
+      console.log('renamed location');
     }
 
     if (reminder) {
+      console.log('reminder');
       await Reminder.upsert({
         ...reminder,
         modelType: 'establishment',
@@ -111,8 +124,10 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
         status: 'active',
         deleted: reminder.deleted ? new Date().toISOString() : undefined
       }, undefined, transaction);
+      console.log('reminder upserted');
     }
 
+    console.log('resolver complete');
     return establishment;
   }
 
