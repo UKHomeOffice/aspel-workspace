@@ -10,6 +10,7 @@
     "watch:server": "nodemon -r dotenv/config -e js,jsx,json -w",
     "watch:css": "npm run build:css -- --watch",
     "test": "npm run test:lint && npm run test:deduped",
+    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
     "test:lint": "eslint . --ext jsx,js",
     "test:deduped": "./tests/dedupe.sh",
     "build": "npm run build:js && npm run build:css",
