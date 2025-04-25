@@ -1,0 +1,12 @@
+{
+    // audit-ci supports reading JSON, JSONC, and JSON5 config files.
+    // Add a $schema property to enable JSON schema validation.
+    "$schema": "https://github.com/IBM/audit-ci/raw/main/docs/schema.json",
+    // You only need one of ["low", "moderate", "high", "critical"].
+    "low": true,
+    "allowlist": [
+      "GHSA-cpj6-fhp6-mr6j",
+      "GHSA-f46r-rw29-r322"
+    ]
+  }
+  
