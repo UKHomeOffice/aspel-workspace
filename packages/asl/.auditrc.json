@@ -1,10 +1,10 @@
 {
-
-    "$schema": "https://github.com/IBM/audit-ci/raw/main/docs/schema.json",
-    "moderate": true,
-    "allowlist": [
-      "GHSA-cpj6-fhp6-mr6j",
-      "GHSA-f46r-rw29-r322"
-    ]
+  "comments": [
+    "GHSA-cpj6-fhp6-mr6j - React Router allows pre-render data spoofing on React-Router framework mode. ASPeL doesn't make use of this feature.",
+    "GHSA-f46r-rw29-r322 - React Router allows a DoS via cache poisoning by forcing SPA mode. ASPeL doesn't make use of this feature."
+  ],
+  "allowlist": [
+    "GHSA-cpj6-fhp6-mr6j",
+    "GHSA-f46r-rw29-r322"
+  ]
 }
-  

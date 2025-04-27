@@ -12,7 +12,7 @@
     "test": "npm run test:lint && npm run test:deduped",
     "test:deduped": "./test/dedupe.sh",
     "test:lint": "eslint . --ext jsx,js",
-    "test:audit": "audit-ci --config .auditrc.json",
+    "test:audit": "audit-ci --high --skip-dev --config .auditrc.json",
     "build": "npm run build:js && npm run build:css",
     "build:js": "node --max_old_space_size=4096 ../../node_modules/.bin/webpack",
     "prebuild:css": "mkdir -p ./public/css",
