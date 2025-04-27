@@ -680,7 +680,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm run test:audit --workspace asl-internal-ui
+      - npm audit --workspace=asl-internal-ui --audit-level=high --omit=dev
   - name: compile
     image: node:22.14.0
     environment:
