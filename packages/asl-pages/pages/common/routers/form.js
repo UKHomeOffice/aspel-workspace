@@ -360,7 +360,7 @@ module.exports = ({
     req.form.values = mapValues(req.form.values, (value, key) => {
       const nullValue = schema[key].nullValue;
       let lessThanValue = value;
-      if (lessThanValue) {
+      if (lessThanValue && lessThanValue instanceof String) {
         lessThanValue = lessThanValue.replaceAll('<', '&lt;');
       }
       return lessThanValue || isUndefined(nullValue) ? lessThanValue : nullValue;
