@@ -9,7 +9,7 @@ Nominees must have completed all the mandatory training in the last 5 years befo
   nvsTrainingDesc: `\
 Nominees must have completed all the mandatory training in the last 5 years before starting the role, unless they have grounds for exemption. This means they have equivalent training or professional experience which makes the training unnecessary.
 `,
-  nvsException: `The only exception is the NVS module, where if they haven'nt completed it in the last 5 years, they must do so withion 12 months of starting the role.`,
+  nvsException: `The only exception is the NVS module, where if they haven't completed it in the last 5 years, they must do so within 12 months of starting the role.`,
   mandatoryTrainingRequirements:
     '{{ roleType }} mandatory training requirements (opens below)',
   checkTrainingRecord: `Check {{profile.firstName}}'s training record (opens below)`,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Snippet, Header, Form, TrainingSummary, Details, Inset, SupportingLinks, Link } from '@ukhomeoffice/asl-components';
+import { Snippet, Header, Form, TrainingSummary, Details, Inset, SupportingLinks, Link, ErrorSummary } from '@ukhomeoffice/asl-components';
 import MandatoryTrainingRequirements from '../../../component/mandatory-training-requirements';
 import mandatoryTrainingSupportingLinks from '../content/supporting-links';
 
@@ -11,6 +11,7 @@ const Page = () => {
   return (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-two-thirds">
+        <ErrorSummary />
         <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
         <Form cancelLink="profile.read">
           <Header title={<Snippet roleType={roleType.toUpperCase()}>title</Snippet>} />
