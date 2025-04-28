@@ -91,11 +91,6 @@ class ProjectQueryBuilder extends QueryBuilder {
     return this.where('projects.issueDate', '<=', `${year}-12-31`)
       .andWhere((builder) => {
         builder
-          .whereNull('projects.transferredInDate')
-          .orWhere('projects.transferredInDate', '<=', `${year}-12-31`);
-      })
-      .andWhere((builder) => {
-        builder
           .where('projects.status', 'active')
           .orWhere((qb) => {
             qb.where('projects.status', 'expired').where(
