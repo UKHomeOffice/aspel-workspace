@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const success = require('../../success');
+const success = require('../../../success');
 
 module.exports = () => {
   const app = Router();

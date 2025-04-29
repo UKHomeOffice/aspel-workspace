@@ -7,10 +7,11 @@ const {
 } = require('../../../common/middleware');
 const getSchema = require('./schema');
 const { buildModel } = require('../../../../lib/utils');
-const confirm = require('../../routers/confirm');
-const success = require('../../routers/success');
+const confirm = require('../routers/confirm');
+const success = require('../routers/success');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
 const mandatoryTrainingRequirementsForRoles = require('../mandatory-training/content/mandatory-training-requirements-for-roles');
+
 const sendData = (req, params = {}) => {
   const { type, rcvsNumber, comment } = req.session.form[req.model.id].values;
 
