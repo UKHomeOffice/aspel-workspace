@@ -359,7 +359,11 @@ module.exports = ({
 
     req.form.values = mapValues(req.form.values, (value, key) => {
       const nullValue = schema[key].nullValue;
-      return value || isUndefined(nullValue) ? value : nullValue;
+      let lessThanValue = value;
+      if (lessThanValue && typeof lessThanValue === 'string') {
+        lessThanValue = lessThanValue.replaceAll('<', '&lt;');
+      }
+      return lessThanValue || isUndefined(nullValue) ? lessThanValue : nullValue;
     });
     req.form.values = mapValues(req.form.values, (value, key) => {
       const format = schema[key].format || identity;

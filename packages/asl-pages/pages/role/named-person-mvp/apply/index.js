@@ -6,6 +6,7 @@ const {
   populateNamedPeople
 } = require('../../../common/middleware');
 const getSchema = require('./schema');
+const { buildModel } = require('../../../../lib/utils');
 const confirm = require('../../routers/confirm');
 const success = require('../../routers/success');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
@@ -43,7 +44,8 @@ module.exports = (settings) => {
 
   app.use((req, res, next) => {
     req.model = {
-      id: `${req.profile.id}-new-role-named-person`
+      id: `${req.profile.id}-new-role-named-person`,
+      ...buildModel(getSchema)
     };
     next();
   });
@@ -75,7 +77,6 @@ module.exports = (settings) => {
   });
 
   app.use(
-    '/',
     form({
       configure: (req, res, next) => {
         const rolesHeld = req.profile.roles

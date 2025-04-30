@@ -1,27 +1,34 @@
+const E1 = { content: ['2. Ethics, animal welfare and the 3Rs (level 1)'] };
+const E2 = { content: ['9. Ethics, animal welfare and the 3Rs (level 2)'] };
+const L = { content: ['1. Legislation'] };
+const K = { content: ['6.1 Humane methods of killing (theory)'] };
+const PILA_THEORY = {
+  tag: 'Species specific',
+  content: [
+    '3.1 Basic and appropriate biology',
+    '4. Animal care, health and management',
+    '5. Recognition of pain, suffering and distress',
+    '7. Minimally invasive procedures without anaesthesia'
+  ]
+};
+const PILA_SKILLS = {
+  tag: 'Species specific',
+  content: [
+    '3.2 Basic and appropriate biology',
+    '8. Minimally invasive procedures without anaesthesia'
+  ]
+};
+
 const mandatoryTrainingRequirementsForRoles = {
   nacwo: {
     title: 'NACWO mandatory training requirements',
     modules: {
-      L: { content: ['1. Legislation'] },
-      E1: { content: ['2. Ethics, animal welfare and the 3Rs (level 1)'] },
-      'PILA (theory)': {
-        tag: 'Species specific',
-        content: [
-          '3.1 Basic and appropriate biology',
-          '4. Animal care, health and management',
-          '5. Recognition of pain, suffering and distress',
-          '7. Minimally invasive procedures without anaesthesia'
-        ]
-      },
-      'PILA (skills)': {
-        tag: 'Species specific',
-        content: [
-          '3.2 Basic and appropriate biology',
-          '8. Minimally invasive procedures without anaesthesia'
-        ]
-      },
-      'K (theory)': { content: ['6.1 Humane methods of killing (theory)'] },
-      E2: { content: ['9. Ethics, animal welfare and the 3Rs (level 2)'] },
+      L,
+      E1,
+      'PILA (theory)': PILA_THEORY,
+      'PILA (skills)': PILA_SKILLS,
+      'K (theory)': K,
+      E2,
       NACWO: {
         content: ['23. Animal husbandry, care and enrichment practices']
       }
@@ -40,7 +47,31 @@ const mandatoryTrainingRequirementsForRoles = {
       }
     }
   },
-  nvs: {}
+  nvs: {
+    title: 'NVS mandatory training',
+    modules: {
+      L,
+      E1,
+      'K (theory)': K,
+      E2,
+      NVS: {
+        content: [
+          '24. Basic principles of veterinary care of animals used for research. Module must be approved by the RCVS'
+        ]
+      }
+    },
+    additional: {
+      title: `Nominees will only need to complete the following modules if they do not already have experience with the species they'll be responsible for.`,
+      modules: {
+        'PILA (theory)': PILA_THEORY,
+        'PILA (skills)': PILA_SKILLS,
+        'K (skills)': {
+          tag: 'Species specific',
+          content: ['6.2 Humane methods of killing (skills)']
+        }
+      }
+    }
+  }
 };
 
 module.exports = mandatoryTrainingRequirementsForRoles;

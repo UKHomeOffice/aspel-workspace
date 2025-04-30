@@ -3,7 +3,7 @@ const { form } = require('../../../common/routers');
 const { buildModel } = require('../../../../lib/utils');
 const schema = require('./schema');
 
-module.exports = settings => {
+module.exports = (settings) => {
   const app = page({
     root: __dirname,
     ...settings
@@ -17,26 +17,28 @@ module.exports = settings => {
     next();
   });
 
-  app.use(form({
-    configure(req, res, next) {
-      req.form.schema = schema(req.profile);
-      next();
-    },
-    locals: (req, res, next) => {
-      Object.assign(res.locals, { model: req.model });
-      Object.assign(res.locals.static, {
-        profile: req.profile,
-        role: {
-          ...req.session.form[req.model.id].values
-        }
-      });
-      next();
-    },
-    saveValues: (req, res, next) => {
-      req.session.form[req.model.id].values = req.form.values;
-      next();
-    }
-  }));
+  app.use(
+    form({
+      configure(req, res, next) {
+        req.form.schema = schema(req.session.form[req.model.id].values);
+        next();
+      },
+      locals: (req, res, next) => {
+        Object.assign(res.locals, { model: req.model });
+        Object.assign(res.locals.static, {
+          profile: req.profile,
+          role: {
+            ...req.session.form[req.model.id].values
+          }
+        });
+        next();
+      },
+      saveValues: (req, res, next) => {
+        req.session.form[req.model.id].values = req.form.values;
+        next();
+      }
+    })
+  );
 
   // eslint-disable-next-line no-warning-comments
   //TODO: redirects is not part of current ticket

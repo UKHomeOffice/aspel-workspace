@@ -24,7 +24,10 @@ module.exports = merge({}, baseContent, {
   },
   errors: {
     type: {
-      required: 'Please select a role'
+      required: 'Select the role you want to add'
+    },
+    rcvsNumber: {
+      required: 'Enter their RCVS membership number'
     }
   }
 });
