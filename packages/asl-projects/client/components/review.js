@@ -62,8 +62,6 @@ class Review extends React.Component {
       hasSpeciesFieldChanges
     );
 
-    console.log(`Field: ${fieldName} - Changed: ${netChange}`);
-
     const showChanges = !hideChanges && netChange;
 
     if (this.props.type === 'comments-only' && showComments) {
@@ -152,9 +150,9 @@ const mapStateToProps = (state, ownProps) => {
     previousProtocols,
     storedValue,
     currentValue,
-    latestSubmittedValue, // ✅ Ensure this is passed
-    firstSubmittedValue, // ✅ Ensure this is passed
-    grantedValue, // ✅ Ensure this is passed
+    latestSubmittedValue,
+    firstSubmittedValue,
+    grantedValue,
     fieldName: ownProps.name
   };
 };

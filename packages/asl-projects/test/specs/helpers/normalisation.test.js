@@ -1,25 +1,23 @@
-// ✅ Add this line
 import { normaliseValue } from '../../../client/helpers/normalisation';
-// eslint-disable-next-line
-const { expect } = require('chai');
+const assert = require('assert');
 
 describe('normaliseValue', () => {
   it('returns empty string for null or undefined', () => {
-    expect(normaliseValue(null)).to.equal('');
-    expect(normaliseValue(undefined)).to.equal('');
+    assert.strictEqual(normaliseValue(null), '');
+    assert.strictEqual(normaliseValue(undefined), '');
   });
 
   it('normalises a simple string', () => {
-    expect(normaliseValue('  Hello world  ')).to.equal('Hello world');
+    assert.strictEqual(normaliseValue('  Hello world  '), 'Hello world');
   });
 
   it('collapses multiple spaces inside a string', () => {
-    expect(normaliseValue('  Hello     world   from   ASPeL  ')).to.equal('Hello world from ASPeL');
+    assert.strictEqual(normaliseValue('  Hello     world   from   ASPeL  '), 'Hello world from ASPeL');
   });
 
   it('normalises an object using json-stable-stringify', () => {
     const obj = { b: 2, a: 1 };
-    expect(normaliseValue(obj)).to.equal('{"a":1,"b":2}');
+    assert.strictEqual(normaliseValue(obj), '{"a":1,"b":2}');
   });
 
   it('normalises a Slate.js rich text object', () => {
@@ -31,11 +29,11 @@ describe('normaliseValue', () => {
         ]
       }
     };
-    expect(normaliseValue(richText)).to.equal('Hello\nWorld');
+    assert.strictEqual(normaliseValue(richText), 'Hello\nWorld');
   });
 
   it('converts numbers and booleans to string', () => {
-    expect(normaliseValue(123)).to.equal('123');
-    expect(normaliseValue(true)).to.equal('true');
+    assert.strictEqual(normaliseValue(123), '123');
+    assert.strictEqual(normaliseValue(true), 'true');
   });
 });
