@@ -256,7 +256,7 @@ const ApplicationSummary = () => {
                       </td>
                       <td className="controls">
                         <Comments subsection={key} />
-                        {hasChangeDetectionFeature ? sectionHasChanges && <ChangedBadge fields={fields} /> : <ChangedBadge fields={fields} />}
+                        {sectionHasChanges && <ChangedBadge fields={fields} />}
                         <CompleteBadge isComplete={isComplete(subsection, key)} />
                       </td>
                     </tr>;
