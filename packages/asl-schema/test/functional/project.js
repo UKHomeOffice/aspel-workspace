@@ -644,14 +644,14 @@ describe('Project model', () => {
 
   describe('whereRopsDue', () => {
 
-    it('does not include projects transferred in after the end of the year', () => {
+    it('does include projects transferred in after the end of the year', () => {
       return Promise.resolve()
         .then(() => this.models.Project.query().whereRopsDue(2020))
         .then(projects => {
           return projects.map(project => project.id);
         })
         .then(projectIds => {
-          assert.ok(!projectIds.includes(ids.transferIn));
+          assert.ok(projectIds.includes(ids.transferIn));
         });
     });
 
