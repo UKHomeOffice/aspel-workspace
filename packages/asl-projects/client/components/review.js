@@ -30,11 +30,15 @@ class Review extends React.Component {
       hideChanges,
       latestSubmittedValue,
       firstSubmittedValue,
-      grantedValue
+      grantedValue,
+      fieldName,
+      storedValue,
+      currentValue,
+      values,
+      hint: initialHint,
+      ...restProps
     } = this.props;
-
-    let { hint } = this.props;
-    const { fieldName, storedValue, currentValue, values } = this.props;
+    let hint = initialHint;
 
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
