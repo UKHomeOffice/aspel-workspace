@@ -20,7 +20,7 @@ module.exports = {
     breadcrumb: false
   },
   confirm: {
-    path: '/confirms',
+    path: '/confirm',
     router: confirm,
     breadcrumb: false
   }
