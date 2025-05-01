@@ -13,6 +13,7 @@ Nominees must have completed all the mandatory training in the last 5 years befo
   mandatoryTrainingRequirements:
     '{{ roleType }} mandatory training requirements (opens below)',
   checkTrainingRecord: `Check {{profile.firstName}}'s training record (opens below)`,
+  updateTrainingRecord: `Update {{profile.firstName}}'s training record`,
   supportingGuidanceTitle: 'Supporting guidance on GOV.UK',
   fields: {
     mandatory: {
