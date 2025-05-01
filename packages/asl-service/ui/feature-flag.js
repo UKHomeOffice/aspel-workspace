@@ -2,7 +2,8 @@ const { useSelector } = require('react-redux');
 const { set } = require('lodash');
 
 const flags = {
-  FEATURE_NAMED_PERSON_MVP: 'feature-named-person-mvp'
+  FEATURE_NAMED_PERSON_MVP: 'feature-named-person-mvp',
+  FEATURE_CHANGE_DETECTION: 'feature-change-detection',
 };
 
 // noinspection JSUnusedGlobalSymbols
