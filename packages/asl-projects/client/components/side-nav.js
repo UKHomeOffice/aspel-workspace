@@ -49,6 +49,20 @@ export default function SideNav(props) {
   const sections = isGranted
     ? getGrantedSubsections(schemaVersion)
     : schema();
+
+  const renderChangedBadgeForSubsection = (subsection) => {
+    const fields = getFieldsForSection(subsection, project);
+    const sectionHasChanges = hasSectionChanged(
+      fields,
+      project,
+      initialValues,
+      latestSubmittedValues,
+      firstSubmittedValues,
+      grantedValues,
+      projectIsGranted
+    );
+    return sectionHasChanges ? <ChangedBadge fields={fields} noLabel /> : null;
+  };
   return (
     <nav className="sidebar-nav section-nav sticky">
       {
@@ -73,14 +87,7 @@ export default function SideNav(props) {
                   {
                     map(pickBy(section.subsections, s => sectionVisible(s, project)), (subsection, key) => {
                       return <p key={key}>
-                        {
-                          (() => {
-                            const fields = getFieldsForSection(subsection, project);
-                            const sectionHasChanges = hasSectionChanged(fields, project, initialValues, latestSubmittedValues, firstSubmittedValues, grantedValues, projectIsGranted
-                            );
-                            return sectionHasChanges ? <ChangedBadge fields={fields} noLabel /> : null;
-                          })()
-                        }
+                        {renderChangedBadgeForSubsection(subsection)}
                         <NavLink className="indent" to={`/${key}`}>{subsection.title}</NavLink>
                       </p>;
                     })
