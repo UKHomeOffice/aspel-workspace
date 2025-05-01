@@ -17,7 +17,6 @@ import Submit from './submit';
 import { selector } from './sync-handler';
 import HoldingPage from './holding-page';
 import { hasSectionChanged } from '../helpers/section-change-detection';
-import { useFeatureFlag, FEATURE_CHANGE_DETECTION } from '@asl/service/ui/feature-flag';
 
 const mapStateToProps = ({
   project,
@@ -61,7 +60,6 @@ const ApplicationSummary = () => {
   const { legacy, values, readonly, sections, basename, fieldsBySection, newComments, project, showComments } = props;
   const [errors, setErrors] = useState(false);
   const ref = useRef(null);
-  const hasChangeDetectionFeature = useFeatureFlag('feature-change-detection');
 
   useEffect(() => {
     if (submitted && !isSyncing) { submit(); }
