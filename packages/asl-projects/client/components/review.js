@@ -28,9 +28,9 @@ class Review extends React.Component {
       changedFromLatest,
       changedFromGranted,
       hideChanges,
-      latestSubmittedValue, // ✅ Ensure this is included
-      firstSubmittedValue, // ✅ Ensure this is included
-      grantedValue // ✅ Ensure this is included
+      latestSubmittedValue,
+      firstSubmittedValue,
+      grantedValue
     } = this.props;
 
     let { hint } = this.props;
@@ -49,14 +49,13 @@ class Review extends React.Component {
     const showComments = !this.props.noComments && this.props.type !== 'repeater';
     const changed = changedFromFirst || changedFromLatest || changedFromGranted;
     const showDiffWindow = this.props.readonly && !hideChanges && changed;
-    // ✅ Call `hasDatabaseChange` before rendering `ChangedBadge`
     const netChange = hasDatabaseChange(
       fieldName,
       storedValue,
       currentValue,
-      latestSubmittedValue, // ✅ Pass it here
-      firstSubmittedValue, // ✅ Pass it here
-      grantedValue, // ✅ Pass it here
+      latestSubmittedValue,
+      firstSubmittedValue,
+      grantedValue,
       isGranted,
       values,
       hasSpeciesFieldChanges
@@ -133,8 +132,6 @@ const mapStateToProps = (state, ownProps) => {
   const changedFromGranted = granted.includes(key);
   const changedFromLatest = latest.includes(key);
   const changedFromFirst = first.includes(key);
-
-  // ✅ Ensure these values are retrieved safely
   const storedValue = (state.databaseValues && state.databaseValues[key]) || null;
   const currentValue = ownProps.value || null;
   const latestSubmittedValue = (state.latestSubmittedValues && state.latestSubmittedValues[key]) || null;

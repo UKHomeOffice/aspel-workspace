@@ -61,7 +61,7 @@ const ApplicationSummary = () => {
   const { legacy, values, readonly, sections, basename, fieldsBySection, newComments, project, showComments } = props;
   const [errors, setErrors] = useState(false);
   const ref = useRef(null);
-  const hasChangeDetectionFeature = useFeatureFlag(FEATURE_CHANGE_DETECTION);
+  const hasChangeDetectionFeature = useFeatureFlag('feature-change-detection');
 
   useEffect(() => {
     if (submitted && !isSyncing) { submit(); }
@@ -256,7 +256,7 @@ const ApplicationSummary = () => {
                       </td>
                       <td className="controls">
                         <Comments subsection={key} />
-                        {hasChangeDetectionFeature ? sectionHasChanges && <ChangedBadge fields={fields} /> : <ChangedBadge fields={fields} />}  {/* Only render if sectionHasChanges and feature flag is true */}
+                        {hasChangeDetectionFeature ? sectionHasChanges && <ChangedBadge fields={fields} /> : <ChangedBadge fields={fields} />}
                         <CompleteBadge isComplete={isComplete(subsection, key)} />
                       </td>
                     </tr>;
