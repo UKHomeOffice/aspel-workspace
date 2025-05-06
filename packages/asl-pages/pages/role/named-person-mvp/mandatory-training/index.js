@@ -76,33 +76,35 @@ module.exports = (settings) => {
     const { values } = req.form;
     if (values) {
       return res.redirect(
-        req.buildRoute('role.namedPersonMvp', { suffix: 'confirm' })
+        req.buildRoute('role.namedPersonMvp.mandatoryTraining', {
+          suffix: 'confirm'
+        })
       );
     } else {
       return res.redirect(req.buildRoute('training.dashboard'));
     }
   });
 
-  // app.use(
-  //   '/confirm',
-  //   populateNamedPeople,
-  //   confirm({
-  //     action: 'create',
-  //     sendData
-  //   })
-  // );
+  app.use(
+    '/confirm',
+    populateNamedPeople,
+    confirm({
+      action: 'create',
+      sendData
+    })
+  );
 
-  // app.post('/confirm', populateNamedPeople, (req, res, next) => {
-  //   sendData(req)
-  //     .then((response) => {
-  //       req.session.success = { taskId: get(response, 'json.data.id') };
-  //       delete req.session.form[req.model.id];
-  //       return res.redirect(
-  //         req.buildRoute('role.create', { suffix: 'success' })
-  //       );
-  //     })
-  //     .catch(next);
-  // });
+  app.post('/confirm', populateNamedPeople, (req, res, next) => {
+    sendData(req)
+      .then((response) => {
+        req.session.success = { taskId: get(response, 'json.data.id') };
+        delete req.session.form[req.model.id];
+        return res.redirect(
+          req.buildRoute('role.create', { suffix: 'success' })
+        );
+      })
+      .catch(next);
+  });
 
   app.use('/success', success());
 
