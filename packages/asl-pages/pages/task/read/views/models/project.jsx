@@ -52,7 +52,7 @@ export default function Project({ task }) {
   const { project, establishment, version, ra, values, isAsru, allowedActions, url } = useSelector(state => state.static, shallowEqual);
   const [disabled, setDisabled] = useState(false);
 
-  const additionalEstablishments = getAdditionalEstablishments(project, version);
+  const additionalEstablishments = getAdditionalEstablishments(project, version).filter((establishment) => !establishment.deleted);
 
   const isComplete = !task.isOpen;
   const isDiscarded = task.status === 'discarded-by-applicant';
