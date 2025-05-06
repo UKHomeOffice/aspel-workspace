@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 // Check if required environment variables are already set
 if (!process.env.DATA_DB_NAME || !process.env.TASKFLOW_DB_NAME) {
   // Resolve the path to .env.dist
-  const envPath = path.resolve(__dirname, '../../.env.dist');
+  const envPath = path.resolve(__dirname, '../../.env');
 
   // Load environment variables from .env.dist
   loadEnv({ path: envPath });
