@@ -17,7 +17,7 @@ const getDateField = establishmentName => {
 
 const getAwerbQuestion = ({ isLegacy, canBeAwerbExempt, awerbEstablishments }) => {
   let awerbDateFields = {};
-
+  const establishments = awerbEstablishments.filter((establishment) => !establishment.deleted);
   if (isLegacy) {
     awerbDateFields = {
       'awerb-review-date': {
@@ -27,7 +27,7 @@ const getAwerbQuestion = ({ isLegacy, canBeAwerbExempt, awerbEstablishments }) =
       }
     };
   } else {
-    awerbDateFields = awerbEstablishments.reduce((fields, establishment) => {
+    awerbDateFields = establishments.reduce((fields, establishment) => {
       return {
         ...fields,
         [`awerb-${establishment.id}`]: getDateField(establishment.name)

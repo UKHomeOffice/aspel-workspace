@@ -25,7 +25,7 @@ module.exports = (settings = {}) => {
   const app = Router({ mergeParams: true });
 
   app.use((req, res, next) => {
-    const additionalEstablishments = getAdditionalEstablishments(req.project, req.version);
+    const additionalEstablishments = getAdditionalEstablishments(req.project, req.version).filter((establishment) => !establishment.deleted);
     if (transferWithReceivingEstablishment(req.task)) {
       req.awerbEstablishments = [get(req.task, 'data.establishment')].concat(additionalEstablishments);
     } else {
@@ -71,7 +71,7 @@ module.exports = (settings = {}) => {
         const isAmendment = req.model.type !== 'application';
         const isAsru = req.user.profile.asruUser;
         const includeAwerb = transferWithReceivingEstablishment(req.task) || res.locals.static.canEndorse;
-        const awerbEstablishments = req.awerbEstablishments;
+        const awerbEstablishments = req.awerbEstablishments.filter((establishment) => !establishment.deleted);
         const isLegacy = req.project.schemaVersion === 0;
         const canBeAwerbExempt = isAmendment && !transferWithReceivingEstablishment(req.task);
         const isEndorsement = get(req.task, 'status') === 'awaiting-endorsement';
