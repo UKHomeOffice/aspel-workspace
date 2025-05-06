@@ -9,6 +9,7 @@ import SectionLink from './sections-link';
 import ExpandingPanel from './expanding-panel';
 import schemaMap, { getGrantedSubsections } from '../schema';
 import { flattenReveals, getFields } from '../helpers';
+import { hasSectionChanged } from '../helpers/section-change-detection';
 
 const sectionVisible = (section, values) => {
   return !section.show || section.show(values);
@@ -36,12 +37,32 @@ function getFieldsForSection(section, project) {
 
 export default function SideNav(props) {
   const { schemaVersion, project, isGranted, activeSection } = props;
-  const application = useSelector(state => state.application);
-
+  const { project: reduxProject, ...application } = useSelector(state => state.application);
+  const {
+    initialValues = {},
+    latestSubmittedValues = {},
+    firstSubmittedValues = {},
+    grantedValues = {},
+    isGranted: projectIsGranted
+  } = reduxProject;
   const schema = schemaMap[schemaVersion];
   const sections = isGranted
     ? getGrantedSubsections(schemaVersion)
     : schema();
+
+  const renderChangedBadgeForSubsection = (subsection) => {
+    const fields = getFieldsForSection(subsection, project);
+    const sectionHasChanges = hasSectionChanged(
+      fields,
+      project,
+      initialValues,
+      latestSubmittedValues,
+      firstSubmittedValues,
+      grantedValues,
+      projectIsGranted
+    );
+    return sectionHasChanges ? <ChangedBadge fields={fields} noLabel /> : null;
+  };
   return (
     <nav className="sidebar-nav section-nav sticky">
       {
@@ -66,7 +87,7 @@ export default function SideNav(props) {
                   {
                     map(pickBy(section.subsections, s => sectionVisible(s, project)), (subsection, key) => {
                       return <p key={key}>
-                        <ChangedBadge fields={getFieldsForSection(subsection, project)} noLabel />
+                        {renderChangedBadgeForSubsection(subsection)}
                         <NavLink className="indent" to={`/${key}`}>{subsection.title}</NavLink>
                       </p>;
                     })
