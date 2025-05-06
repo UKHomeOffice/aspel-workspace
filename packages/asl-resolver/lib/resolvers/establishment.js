@@ -2,10 +2,54 @@ const resolver = require('./base-resolver');
 const { get, pick, omit } = require('lodash');
 const { generateLicenceNumber } = require('../utils');
 
+async function renameProtocolLocation(ProjectVersion, transaction, establishmentId, renameFrom, renameTo) {
+  // Find projects with availability at the renamed establishment (primary or additional), which contain the
+  // establishment in at least one protocol location.
+  const versionData = transaction.raw(
+    // language=PostgreSQL
+    `
+          SELECT DISTINCT pv.id, pv.data as data
+          FROM projects p
+               LEFT JOIN project_versions pv ON p.id = pv.project_id
+               LEFT JOIN project_establishments pe ON p.id = pe.project_id
+               CROSS JOIN JSONB_ARRAY_ELEMENTS(pv.data -> 'protocols') WITH ORDINALITY AS proto(value, idx)
+               CROSS JOIN JSONB_ARRAY_ELEMENTS_TEXT(proto.value -> 'locations') WITH ORDINALITY AS location(value, idx)
+          WHERE (p.establishment_id = :establishmentId OR pe.establishment_id = :establishmentId)
+            AND location.value = :renameFrom;
+    `,
+    {establishmentId, renameFrom}
+  ).stream();
+
+  console.log('streaming');
+  const updates = [];
+
+  for await (const {id: versionId, data} of versionData) {
+    // Remove old and add new only where new establishment is a location, avoiding duplicates.
+    data.protocols.forEach(protocol => {
+      if (protocol.locations?.includes(renameFrom)) {
+        protocol.locations = [
+          ...new Set([
+            ...protocol.locations.filter(location => location !== renameFrom),
+            renameTo
+          ])
+        ];
+      }
+    });
+
+    console.log(`update versionId: ${versionId}`);
+    updates.push(ProjectVersion.query(transaction).where({ id: versionId }).update({ data }));
+  }
+
+  console.log(`update count: ${updates.length}`);
+  await Promise.all(updates);
+}
+
 module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
-  const { Establishment, Authorisation, Reminder, Role } = models;
+  const { Establishment, Authorisation, Reminder, Role, ProjectVersion } = models;
 
   if (action === 'update') {
+    const existing = await Establishment.query(transaction).findById(id);
+    console.log('found existing');
 
     let reminder;
     if (get(data, 'reminder')) {
@@ -29,18 +73,22 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
     }
 
     const establishment = await Establishment.query(transaction).patchAndFetchById(id, data);
+    console.log('patched and fetched establishment');
 
     if (data.authorisations) {
+      console.log('auths');
       await Authorisation.query(transaction).delete().where('establishmentId', id);
       if (data.authorisations.length) {
         // strip the ids, these will be inserted as new authorisations
         const authorisations = data.authorisations.map(a => omit(a, 'id'));
         await Authorisation.query(transaction).insert(authorisations);
+        console.log('inserted auths');
       }
     }
 
     // If corporate status is set, check NPRC/PELH depending on status
     if (data.corporateStatus) {
+      console.log('corporateStatus');
       const typeOfRole = isCorporate ? 'nprc' : 'pelh';
       const typeOfRoleToRemove = isCorporate ? 'pelh' : 'nprc';
 
@@ -54,12 +102,21 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
         profileId: newProfileRole,
         type: typeOfRole
       }, transaction);
+      console.log('role upserted');
 
       await Role.query(transaction).where({ establishmentId: establishment.id, type: typeOfRole }).whereNot({profileId: newProfileRole}).delete();
       await Role.query(transaction).where({ establishmentId: establishment.id, type: typeOfRoleToRemove }).delete();
+      console.log('roles deleted');
+    }
+
+    if (existing.name !== establishment.name) {
+      console.log('rename location');
+      await renameProtocolLocation(ProjectVersion, transaction, id, existing.name, establishment.name);
+      console.log('renamed location');
     }
 
     if (reminder) {
+      console.log('reminder');
       await Reminder.upsert({
         ...reminder,
         modelType: 'establishment',
@@ -67,15 +124,15 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
         status: 'active',
         deleted: reminder.deleted ? new Date().toISOString() : undefined
       }, undefined, transaction);
+      console.log('reminder upserted');
     }
 
+    console.log('resolver complete');
     return establishment;
   }
 
   if (action === 'update-conditions') {
     const reminder = get(data, 'reminder');
-    data = pick(data, 'conditions');
-    action = 'update';
 
     if (reminder) {
       await Reminder.upsert({
@@ -86,11 +143,21 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
         deleted: reminder.deleted ? new Date().toISOString() : undefined
       }, undefined, transaction);
     }
+
+    return resolver(
+      {
+        Model: models.Establishment,
+        action: 'update',
+        data: pick(data, 'conditions'),
+        id
+      },
+      transaction
+    );
   }
 
   if (action === 'update-billing') {
-    data = { billing: { ...data, updatedAt: new Date().toISOString() } };
-    return Establishment.query(transaction).context({ preserveUpdatedAt: true }).patchAndFetchById(id, data);
+    const patch = { billing: { ...data, updatedAt: new Date().toISOString() } };
+    return Establishment.query(transaction).context({ preserveUpdatedAt: true }).patchAndFetchById(id, patch);
   }
 
   if (action === 'grant') {
