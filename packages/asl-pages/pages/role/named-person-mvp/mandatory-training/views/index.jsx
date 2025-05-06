@@ -47,7 +47,7 @@ const Page = () => {
           <Details summary={<Snippet>checkTrainingRecord</Snippet>} className="margin-bottom">
             <Inset>
               <TrainingSummary certificates={profile.certificates} />
-              <Link page="training.dashboard" label="Manage training" />
+              <Link page="training.dashboard" label={<Snippet>updateTrainingRecord</Snippet>} />
             </Inset>
           </Details>
         </Form>
