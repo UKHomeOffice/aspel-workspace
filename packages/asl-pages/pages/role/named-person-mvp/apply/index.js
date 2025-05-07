@@ -1,46 +1,16 @@
-const { get, omit, merge } = require('lodash');
+const { omit } = require('lodash');
 const { page } = require('@asl/service/ui');
 const { form } = require('../../../common/routers');
-const {
-  clearSessionIfNotFromTask,
-  populateNamedPeople
-} = require('../../../common/middleware');
+const { clearSessionIfNotFromTask } = require('../../../common/middleware');
 const getSchema = require('./schema');
 const { buildModel } = require('../../../../lib/utils');
-const confirm = require('../routers/confirm');
-const success = require('../routers/success');
-const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
+const { PELH_OR_NPRC_ROLES } = require('../../helper');
 const mandatoryTrainingRequirementsForRoles = require('../mandatory-training/content/mandatory-training-requirements-for-roles');
-
-const sendData = (req, params = {}) => {
-  const { type, rcvsNumber, comment } = req.session.form[req.model.id].values;
-
-  const replaceProfile = profileReplaced(req.establishment, type);
-  const opts = {
-    method: 'POST',
-    json: merge(
-      {
-        data: {
-          type,
-          rcvsNumber,
-          profileId: req.profileId,
-          replaceProfile,
-          replaceRoles: PELH_OR_NPRC_ROLES
-        },
-        meta: { comment }
-      },
-      params
-    )
-  };
-
-  return req.api(`/establishment/${req.establishmentId}/role`, opts);
-};
 
 module.exports = (settings) => {
   const app = page({
     root: __dirname,
-    ...settings,
-    paths: ['/confirm', '/success']
+    ...settings
   });
 
   app.use((req, res, next) => {
@@ -137,33 +107,7 @@ module.exports = (settings) => {
         req.buildRoute('role.namedPersonMvp.mandatoryTraining')
       );
     }
-
-    //TODO: This could possibly be removed
-    return res.redirect(req.buildRoute('role.create', { suffix: 'confirm' }));
   });
-
-  app.use(
-    '/confirm',
-    populateNamedPeople,
-    confirm({
-      action: 'create',
-      sendData
-    })
-  );
-
-  app.post('/confirm', populateNamedPeople, (req, res, next) => {
-    sendData(req)
-      .then((response) => {
-        req.session.success = { taskId: get(response, 'json.data.id') };
-        delete req.session.form[req.model.id];
-        return res.redirect(
-          req.buildRoute('role.create', { suffix: 'success' })
-        );
-      })
-      .catch(next);
-  });
-
-  app.use('/success', success());
 
   return app;
 };

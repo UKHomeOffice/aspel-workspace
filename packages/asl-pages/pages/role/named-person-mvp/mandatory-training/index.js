@@ -3,7 +3,7 @@ const { page } = require('@asl/service/ui');
 const { form } = require('../../../common/routers');
 const { buildModel } = require('../../../../lib/utils');
 const schema = require('./schema');
-const confirm = require('../routers/confirm');
+const confirm = require('../confirm');
 const success = require('../routers/success');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
 const { populateNamedPeople } = require('../../../common/middleware');
@@ -35,8 +35,7 @@ const sendData = (req, params = {}) => {
 module.exports = (settings) => {
   const app = page({
     root: __dirname,
-    ...settings,
-    paths: ['/confirm']
+    ...settings
   });
 
   app.use((req, res, next) => {
@@ -76,7 +75,7 @@ module.exports = (settings) => {
     const { values } = req.form;
     if (values) {
       return res.redirect(
-        req.buildRoute('role.namedPersonMvp.mandatoryTraining', {
+        req.buildRoute('role.namedPersonMvp', {
           suffix: 'confirm'
         })
       );

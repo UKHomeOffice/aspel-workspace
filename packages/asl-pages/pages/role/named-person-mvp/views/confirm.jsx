@@ -8,7 +8,7 @@ import {
   Snippet
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
-import namedRoles from '../content/named-roles';
+import namedRoles from '../../content/named-roles';
 
 const Confirm = ({
   establishment,
@@ -39,6 +39,9 @@ const Confirm = ({
           <p>{values.rcvsNumber}</p>
         </Fragment>
       }
+
+      <h2><Snippet>explanation</Snippet></h2>
+      <p>{values.comment}</p>
 
       {
         props.action === 'remove' && values.type === 'nacwo' &&
