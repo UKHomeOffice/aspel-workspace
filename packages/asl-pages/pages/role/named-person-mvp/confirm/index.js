@@ -1,6 +1,5 @@
 const { page } = require('@asl/service/ui');
 const form = require('../../../common/routers/form');
-const { redirectToTaskIfOpen } = require('../../../common/middleware');
 
 module.exports = (settings) => {
   const app = page({
@@ -28,8 +27,6 @@ module.exports = (settings) => {
       }
     })
   );
-
-  app.post('/', redirectToTaskIfOpen());
 
   return app;
 };
