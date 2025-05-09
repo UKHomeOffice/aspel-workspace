@@ -2,12 +2,13 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
   ControlBar,
+  ErrorSummary,
   FormLayout,
   Header,
   Link,
   Snippet
 } from '@ukhomeoffice/asl-components';
-import { Warning } from '@ukhomeoffice/react-components';
+import { CheckboxGroup, Warning } from '@ukhomeoffice/react-components';
 import namedRoles from '../../content/named-roles';
 
 const Confirm = ({
@@ -22,11 +23,13 @@ const Confirm = ({
 
   return (
     <FormLayout>
-      <Header title={<Snippet>reviewRoleApplication</Snippet>}/>
-      <h2><Snippet>applyingFor</Snippet></h2>
+      <ErrorSummary />
+      <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
+      <Header title={<Snippet>declaration</Snippet>}/>
+      <h4><Snippet>applyingFor</Snippet></h4>
       <p>{namedRoles[values.type]}</p>
 
-      <h2><Snippet>onBehalfOf</Snippet></h2>
+      <h4><Snippet>onBehalfOf</Snippet></h4>
       <p>{`${profile.firstName} ${profile.lastName}`}</p>
 
       { profileReplaced && props.action !== 'remove' &&
@@ -40,7 +43,7 @@ const Confirm = ({
         </Fragment>
       }
 
-      <h2><Snippet>explanation</Snippet></h2>
+      <h4><Snippet>explanation</Snippet></h4>
       <p>{values.comment}</p>
 
       {
@@ -53,6 +56,17 @@ const Confirm = ({
         <Link page="profile.read" label={<Snippet>buttons.cancel</Snippet>} />
       </ControlBar>
 
+      <div className="govuk-box requirements-box">
+        <Snippet>declarationDesc</Snippet>
+
+        <CheckboxGroup
+          name="roles"
+          options={[
+            { label: 'I agree with all the above statements',
+              value: true }]}
+          value={true}
+        />
+      </div>
     </FormLayout>
   );
 };
