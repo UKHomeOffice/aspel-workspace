@@ -4,7 +4,7 @@ const { buildModel } = require('../../../../lib/utils');
 const schema = require('./schema');
 const { set } = require('lodash');
 
-module.exports = settings => {
+module.exports = (settings) => {
   const app = page({
     root: __dirname,
     ...settings
@@ -18,20 +18,26 @@ module.exports = settings => {
     next();
   });
 
-  app.use(form({
-    configure(req, res, next) {
-      req.form.schema = schema(req.profile);
-      next();
-    },
-    saveValues: (req, res, next) => {
-      req.session.form[req.model.id].values = req.form.values;
-      next();
-    },
-    locals: (req, res, next) => {
-      set(res.locals, 'static.trainingDashboardUrl', req.buildRoute('training.dashboard'));
-      next();
-    }
-  }));
+  app.use(
+    form({
+      configure(req, res, next) {
+        req.form.schema = schema(req.profile);
+        next();
+      },
+      saveValues: (req, res, next) => {
+        req.session.form[req.model.id].values = req.form.values;
+        next();
+      },
+      locals: (req, res, next) => {
+        set(
+          res.locals,
+          'static.trainingDashboardUrl',
+          req.buildRoute('training.dashboard')
+        );
+        next();
+      }
+    })
+  );
 
   app.post('/', (req, res, next) => {
     const { type } = req.form.values;
