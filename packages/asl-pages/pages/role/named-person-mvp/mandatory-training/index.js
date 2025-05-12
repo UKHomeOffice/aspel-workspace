@@ -11,7 +11,7 @@ module.exports = (settings) => {
 
   app.use((req, res, next) => {
     req.model = {
-      id: `${req.profile.id}-new-role-named-person`,
+      id: `${req.profile.id}-mandatory-training`,
       ...buildModel(schema)
     };
     next();
@@ -20,7 +20,9 @@ module.exports = (settings) => {
   app.use(
     form({
       configure(req, res, next) {
-        req.form.schema = schema(req.session.form[req.model.id].values);
+        const role =
+          req.session.form[`${req.profile.id}-new-role-named-person`].values;
+        req.form.schema = schema(role);
         next();
       },
       locals: (req, res, next) => {
@@ -28,7 +30,8 @@ module.exports = (settings) => {
         Object.assign(res.locals.static, {
           profile: req.profile,
           role: {
-            ...req.session.form[req.model.id].values
+            ...req.session.form[`${req.profile.id}-new-role-named-person`]
+              .values
           }
         });
         next();
@@ -40,12 +43,10 @@ module.exports = (settings) => {
     })
   );
 
-  // eslint-disable-next-line no-warning-comments
-  //TODO: redirects is not part of current ticket
   app.post('/', (req, res, next) => {
-    const { values } = req.form;
-    if (values) {
-      return res.redirect(req.buildRoute('role.namedPersonMvp.create'));
+    const { mandatory } = req.form.values;
+    if (mandatory === 'yes') {
+      return res.redirect(req.buildRoute('role.namedPersonMvp.confirm'));
     } else {
       return res.redirect(req.buildRoute('training.dashboard'));
     }
