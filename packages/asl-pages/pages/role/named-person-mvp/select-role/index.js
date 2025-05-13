@@ -106,6 +106,8 @@ module.exports = (settings) => {
       return res.redirect(
         req.buildRoute('role.namedPersonMvp.mandatoryTraining')
       );
+    } else {
+      return res.redirect(req.buildRoute('role.namedPersonMvp.confirm'));
     }
   });
 

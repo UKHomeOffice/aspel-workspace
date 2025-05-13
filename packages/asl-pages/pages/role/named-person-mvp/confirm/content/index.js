@@ -8,7 +8,7 @@ module.exports = merge({}, baseContent, {
   rcvsNumber: 'RCVS number:',
   explanation:
     'All mandatory training is complete and their training record is up to date.',
-  declarationDesc: `\
+  declarationNACWODesc: `\
   ### By submitting this application, I confirm that {{profile.firstName}} has agreed to be nominated for the NACWO role.
 
   ### I confirm that the NTCO has endorsed {{profile.firstName}}'s training and exemptions.
@@ -22,6 +22,11 @@ module.exports = merge({}, baseContent, {
     * good communication and diplomacy skills to champion a culture of care among both scientific and husbandry staff
   
   * {{profile.firstName}} has no significant conflict of interest, and their declaration form is held on record at the establishment`,
+  declarationOtherDesc: `\
+  ### By submitting this application, I confirm that {{profile.firstName}} has agreed to be nominated for the role.
+
+  ### I also confirm that the PEL holder supports the application and is confident that {{profile.firstName}} has the recommended skills and experience and is suitable for the role.
+  `,
   agreement: 'I agree with all the above statements',
   buttons: {
     submit: 'Submit'
