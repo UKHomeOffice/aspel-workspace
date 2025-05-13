@@ -1,5 +1,5 @@
 const beforeYouApply = require('./before-you-apply');
-const create = require('./apply');
+const selectRole = require('./select-role');
 const mandatoryTraining = require('./mandatory-training');
 const confirm = require('./confirm');
 
@@ -11,7 +11,7 @@ module.exports = {
   },
   create: {
     path: '/create',
-    router: create,
+    router: selectRole,
     breadcrumb: false
   },
   mandatoryTraining: {
