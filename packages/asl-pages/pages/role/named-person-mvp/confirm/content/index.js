@@ -30,5 +30,16 @@ module.exports = merge({}, baseContent, {
   agreement: 'I agree with all the above statements',
   buttons: {
     submit: 'Submit'
+  },
+  fields: {
+    declarationAgreement: {
+      label: 'I agree with all above statements'
+    }
+  },
+  errors: {
+    declarationAgreement: {
+      required:
+        'Select the checkbox to confirm you agree with all the above statements'
+    }
   }
 });

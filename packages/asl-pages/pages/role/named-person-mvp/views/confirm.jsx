@@ -24,7 +24,6 @@ const Confirm = ({
 
   return (
     <FormLayout>
-      <ErrorSummary />
       <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
       <Header title={<Snippet>declaration</Snippet>}/>
       <h4><Snippet>applyingFor</Snippet></h4>
@@ -61,7 +60,7 @@ const Confirm = ({
         <Link page="profile.read" label={<Snippet>buttons.cancel</Snippet>} />
       </ControlBar>
 
-      <div className="govuk-box requirements-box">
+      {/* <div className="govuk-box requirements-box">
         {values.type === 'nacwo' && <Snippet>declarationNACWODesc</Snippet>}
         {!mandatoryTrainingRequirementsForRoles[values.type] && (
           <Snippet>declarationOtherDesc</Snippet>
@@ -71,10 +70,11 @@ const Confirm = ({
           name="roles"
           options={[
             { label: 'I agree with all the above statements',
-              value: true }]}
+              value: false }]}
           value={true}
+          // error='Select the checkbox to confirm you agree with all the above statements'
         />
-      </div>
+      </div> */}
     </FormLayout>
   );
 };
