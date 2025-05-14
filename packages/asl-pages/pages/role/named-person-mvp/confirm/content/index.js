@@ -22,6 +22,15 @@ module.exports = merge({}, baseContent, {
     * good communication and diplomacy skills to champion a culture of care among both scientific and husbandry staff
   
   * {{profile.firstName}} has no significant conflict of interest, and their declaration form is held on record at the establishment`,
+  declarationNVSDesc: `\
+  ### By submitting this application, I confirm that {{profile.firstName}} has agreed to be nominated for the NVS role.
+
+  ### I confirm that the NTCO has endorsed {{profile.firstName}}'s training and exemptions.
+
+  ### I also confirm that the PEL holder supports the application and is confident that {{profile.firstName}}:
+  
+  * has expertise in the health and welfare of the species they'll be responsible for
+  * has no significant conflict of interest, and their declaration form is held on record at the establishment`,
   declarationOtherDesc: `\
   ### By submitting this application, I confirm that {{profile.firstName}} has agreed to be nominated for the role.
 

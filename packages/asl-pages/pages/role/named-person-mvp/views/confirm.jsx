@@ -63,6 +63,7 @@ const Confirm = ({
 
       <div className="govuk-box requirements-box">
         {values.type === 'nacwo' && <Snippet>declarationNACWODesc</Snippet>}
+        {values.type === 'nvs' && <Snippet>declarationNVSDesc</Snippet>}
         {!mandatoryTrainingRequirementsForRoles[values.type] && (
           <Snippet>declarationOtherDesc</Snippet>
         )}
