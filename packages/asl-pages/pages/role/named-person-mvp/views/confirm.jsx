@@ -10,6 +10,7 @@ import {
 } from '@ukhomeoffice/asl-components';
 import { CheckboxGroup, Warning } from '@ukhomeoffice/react-components';
 import namedRoles from '../../content/named-roles';
+const mandatoryTrainingRequirementsForRoles = require('../mandatory-training/content/mandatory-training-requirements-for-roles');
 
 const Confirm = ({
   establishment,
@@ -43,8 +44,12 @@ const Confirm = ({
         </Fragment>
       }
 
-      <h4><Snippet>explanation</Snippet></h4>
-      <p>{values.comment}</p>
+      {mandatoryTrainingRequirementsForRoles[values.type] && (
+        <section>
+          <h4><Snippet>explanation</Snippet></h4>
+          <p>{values.comment}</p>
+        </section>
+      )}
 
       {
         props.action === 'remove' && values.type === 'nacwo' &&
@@ -57,7 +62,10 @@ const Confirm = ({
       </ControlBar>
 
       <div className="govuk-box requirements-box">
-        <Snippet>declarationDesc</Snippet>
+        {values.type === 'nacwo' && <Snippet>declarationNACWODesc</Snippet>}
+        {!mandatoryTrainingRequirementsForRoles[values.type] && (
+          <Snippet>declarationOtherDesc</Snippet>
+        )}
 
         <CheckboxGroup
           name="roles"
