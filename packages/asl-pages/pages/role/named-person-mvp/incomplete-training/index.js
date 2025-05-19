@@ -11,7 +11,7 @@ module.exports = (settings) => {
 
   app.use((req, res, next) => {
     req.model = {
-      id: `${req.profile.id}-mandatory-training`,
+      id: `${req.profile.id}-incomplete-training`,
       ...buildModel(schema)
     };
     next();
@@ -29,10 +29,7 @@ module.exports = (settings) => {
         Object.assign(res.locals, { model: req.model });
         Object.assign(res.locals.static, {
           profile: req.profile,
-          role: {
-            ...req.session.form[`${req.profile.id}-new-role-named-person`]
-              .values
-          }
+          roleType: req.session.form[`${req.profile.id}-new-role-named-person`].values.type.toUpperCase()
         });
         next();
       },
@@ -44,14 +41,6 @@ module.exports = (settings) => {
   );
 
   app.post('/', (req, res, next) => {
-    const { mandatory } = req.form.values;
-    if (mandatory === 'yes') {
-      return res.redirect(req.buildRoute('role.namedPersonMvp.confirm'));
-    } else if (mandatory === 'delay') {
-      return res.redirect(req.buildRoute('role.namedPersonMvp.incompleteTraining'));
-    } else {
-      return res.redirect(req.buildRoute('training.dashboard'));
-    }
   });
 
   return app;
