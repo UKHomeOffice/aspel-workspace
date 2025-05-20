@@ -4,10 +4,13 @@ module.exports = {
     url: 'http://localhost/'
   },
   moduleDirectories: ['pages/common', 'node_modules', 'lib'],
-  watchPathIgnorePatterns: [
-    'node_modules/(?!(@ukhomeoffice|@asl))'
-  ],
+  transform: {
+    '^.+\\.[jt]sx?$': 'babel-jest'
+  },
   transformIgnorePatterns: [
+    'node_modules/(?!(react-shallow-renderer|@cfaester|@ukhomeoffice|@asl))'
+  ],
+  watchPathIgnorePatterns: [
     'node_modules/(?!(@ukhomeoffice|@asl))'
   ],
   setupFilesAfterEnv: ['<rootDir>/enzyme.setup.js'],

@@ -28,6 +28,7 @@
   "dependencies": {
     "@asl/projects": "file:../asl-projects",
     "@asl/service": "file:../asl-service",
+    "@cfaester/enzyme-adapter-react-18": "^0.8.0",
     "@joefitter/docx": "^4.7.0",
     "@ukhomeoffice/asl-components": "file:../asl-components",
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
@@ -44,7 +45,6 @@
     "deep-diff": "^1.0.2",
     "diff": "^5.0.0",
     "enzyme": "^3.11.0",
-    "@cfaester/enzyme-adapter-react-18": "^0.8.0",
     "enzyme-to-json": "^3.6.2",
     "express": "^4.16.3",
     "filenamify": "^4.1.0",
