@@ -1,8 +1,9 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import '@testing-library/jest-dom';
+import { render } from '@testing-library/react';
 import Accordion from './';
 
-const renderAccordion = () => shallow(
+const renderAccordion = () => render(
   <Accordion>
     {
       [1, 2, 3].map(el => <div className="child" key={el}>{el}</div>)
@@ -13,6 +14,7 @@ const renderAccordion = () => shallow(
 describe('<Accordion />', () => {
   test('renders child elements adding onToggle and open props', () => {
     const wrapper = renderAccordion();
+
     wrapper.find('.child').forEach(child => {
       expect(child.prop('open')).toBe(false);
       expect(child.prop('onToggle')).toBeInstanceOf(Function);
