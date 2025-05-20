@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const path = require('path');
 const uuid = require('uuid');
-const expressViews = require('express-react-views');
+const ReactDOMServer = require('react-dom/server');
 const { MemoryStore } = require('express-session');
 const homeOffice = require('@ukhomeoffice/frontend-toolkit');
 const session = require('@lennym/redis-session');
@@ -52,9 +52,17 @@ module.exports = settings => {
     path.resolve(__dirname, './views')
   ]);
 
-  app.engine('jsx', expressViews.createEngine({
-    transformViews: false
-  }));
+  app.engine('jsx', (filePath, options, callback) => {
+    try {
+      const Component = require(filePath);
+      const element = React.createElement(Component.default || Component, options);
+      const html = ReactDOMServer.renderToString(element);
+      return callback(null, html);
+    } catch (err) {
+      return callback(err);
+    }
+  });
+
 
   app.use(staticrouter);
 
