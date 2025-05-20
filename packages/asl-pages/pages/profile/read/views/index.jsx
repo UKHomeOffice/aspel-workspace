@@ -81,7 +81,7 @@ const Index = ({
             <Snippet>instruction</Snippet>
             <TrainingSummary certificates={certificates}/>
             {
-              allowedActions.includes('training.update') && <Link page="training.dashboard" label="Manage training"/>
+              allowedActions.includes('training.update') && <Link page="training.dashboard" label={<Snippet>updateTrainingRecord</Snippet>}/>
             }
           </section>
         )
