@@ -20,15 +20,20 @@ module.exports = (settings) => {
   app.use(
     form({
       configure(req, res, next) {
-        const role =
-          req.session.form[`${req.profile.id}-new-role-named-person`].values;
-        req.form.schema = schema(role);
+        req.form.schema = schema();
+        next();
+      },
+      process: (req, res, next) => {
+        const day = req.body['completeDate-day'];
+        const month = req.body['completeDate-month'];
+        const year = req.body['completeDate-year'];
+        Object.assign(req.form.values, {
+          completeDate: `${year}-${month}-${day}`
+        });
         next();
       },
       locals: (req, res, next) => {
-        Object.assign(res.locals, { model: req.model });
         Object.assign(res.locals.static, {
-          profile: req.profile,
           roleType: req.session.form[`${req.profile.id}-new-role-named-person`].values.type.toUpperCase()
         });
         next();
@@ -41,6 +46,7 @@ module.exports = (settings) => {
   );
 
   app.post('/', (req, res, next) => {
+    return res.redirect(req.buildRoute('role.namedPersonMvp.confirm'));
   });
 
   return app;

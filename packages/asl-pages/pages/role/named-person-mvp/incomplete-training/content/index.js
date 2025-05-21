@@ -23,9 +23,9 @@ module.exports = {
       required: 'Enter a reason why there is a delay in completing these modules'
     },
     completeDate: {
-      required: 'Enter the date when all mandatory training will be completed. It must include a year in four digit, month and day.',
-      validDate: 'Date awarded must be a valid date',
-      dateIsAfter: 'Date awarded must be in the future.'
+      required: 'The date must be a real date and include a day, month and year. The year must include 4 numbers',
+      validDate: 'The date must be a real date and include a day, month and year. The year must include 4 numbers',
+      dateIsAfter: 'The date must be in the future'
     }
   }
 };
