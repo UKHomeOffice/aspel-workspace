@@ -20,5 +20,8 @@
   "overrides": {
     "node-fetch": "^2.6.11",
     "d3-color": "^3.1.0"
+  },
+  "dependencies": {
+    "@ukhomeoffice/react-components": "^1.5.0"
   }
 }
