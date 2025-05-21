@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Snippet, Header, Form, TrainingSummary, Details, Inset, SupportingLinks, Link, ErrorSummary } from '@ukhomeoffice/asl-components';
+import { Snippet, Header, Form, ErrorSummary } from '@ukhomeoffice/asl-components';
 
 const Page = () => {
   const {profile} = useSelector(state => state.static, shallowEqual);
@@ -20,4 +20,3 @@ const Page = () => {
 };
 
 export default Page;
-
