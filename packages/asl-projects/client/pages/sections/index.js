@@ -14,7 +14,7 @@ import Playback from '../../components/playback';
 import Link from '../../components/link';
 
 import ReviewSection from './review';
-
+import { selector as syncSelector } from '../../components/sync-handler'; // assuming this is exported
 class Questions extends PureComponent {
   state = {
     ntsAccepted: !this.props.nts || this.started()
@@ -54,6 +54,7 @@ class Questions extends PureComponent {
   }
 
   render = () => {
+    console.log('isSyncing in Questions:', this.props.isSyncing);
     const { title, values, save, advance, exit, nts, subtitle, intro, linkTo, playback } = this.props;
     const { ntsAccepted } = this.state;
 
@@ -83,7 +84,16 @@ class Questions extends PureComponent {
                 values={values}
                 onFieldChange={save}
               />
-              <Controls onContinue={advance} onExit={exit} />
+              <Controls
+                onContinue={async () => {
+                  await advance();
+                  window.location.reload();
+                }}
+                onExit={exit}
+                continueDisabled={this.props.isSyncing}
+                advanceLabel={this.props.isSyncing ? "Saving..." : "Continue"}
+              />
+
             </div>
           )
         }
@@ -149,7 +159,7 @@ class Section extends PureComponent {
   }
 
   render = () => {
-    const { onProgress, exit, step, ...props } = this.props;
+    const { onProgress, isSyncing, exit, step, ...props } = this.props;
     if (!props.project) {
       return null;
     }
@@ -160,7 +170,16 @@ class Section extends PureComponent {
         {
           steps.filter(this.showStep).map((stepSettings, index) => {
             const Component = stepSettings.component || Questions;
-            return <Component values={props.project} key={index} exit={exit} step={index} {...props} {...stepSettings} />;
+            return <Component
+              values={props.project}
+              key={index}
+              exit={exit}
+              step={index}
+              isSyncing={isSyncing} // <<< pass it here
+              {...props}
+              {...stepSettings}
+            />;
+            //return <Component values={props.project} key={index} exit={exit} step={index} isSyncing={isSyncing} {...props} {...stepSettings} />;
           })
         }
 
@@ -170,6 +189,9 @@ class Section extends PureComponent {
   }
 }
 
-const mapStateToProps = ({ project, application }) => ({ project, application });
-
+const mapStateToProps = (state) => {
+  const { isSyncing } = syncSelector(state); // get isSyncing from your selector
+  const { project, application } = state;
+  return { project, application, isSyncing };
+};
 export default connect(mapStateToProps)(Section);
