@@ -1,5 +1,7 @@
+// jest.config.js
 module.exports = {
-    setupFilesAfterEnv: [
-        '<rootDir>/enzyme.setup.js'
-    ]
+  testEnvironment: 'jsdom',
+  testEnvironmentOptions: {
+    url: 'http://localhost/' // Optional, sets a base URL
+  }
 };
