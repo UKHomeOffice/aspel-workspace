@@ -30,14 +30,18 @@ function getTemplate(content, primary, fallback) {
 }
 
 export const Snippet = ({ content, children, optional, fallback, ...props }) => {
-    const str = getTemplate(content, children, fallback);
+    // dynamic children with {value} values get passes as an array
+    const primary = Array.isArray(children) ? children.join('') : children;
+
+
+    const str = getTemplate(content, primary, fallback);
 
     if (str === undefined && optional) {
         return null;
     }
 
     if (str === undefined) {
-        throw new Error(`Failed to lookup content snippet. Tried keys: ${JSON.stringify(getKeysToTry(children, fallback))}`);
+        throw new Error(`Failed to lookup content snippet. Tried keys: ${JSON.stringify(getKeysToTry(primary, fallback))}`);
     }
 
     const source = render(str, props);
