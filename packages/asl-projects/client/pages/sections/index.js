@@ -54,7 +54,6 @@ class Questions extends PureComponent {
   }
 
   render = () => {
-    console.log('isSyncing in Questions:', this.props.isSyncing);
     const { title, values, save, advance, exit, nts, subtitle, intro, linkTo, playback } = this.props;
     const { ntsAccepted } = this.state;
 
@@ -175,11 +174,10 @@ class Section extends PureComponent {
               key={index}
               exit={exit}
               step={index}
-              isSyncing={isSyncing} // <<< pass it here
+              isSyncing={isSyncing}
               {...props}
               {...stepSettings}
             />;
-            //return <Component values={props.project} key={index} exit={exit} step={index} isSyncing={isSyncing} {...props} {...stepSettings} />;
           })
         }
 
@@ -190,7 +188,7 @@ class Section extends PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const { isSyncing } = syncSelector(state); // get isSyncing from your selector
+  const { isSyncing } = syncSelector(state);
   const { project, application } = state;
   return { project, application, isSyncing };
 };
