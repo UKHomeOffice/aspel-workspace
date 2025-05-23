@@ -16,7 +16,7 @@ module.exports = (settings) => {
 
   app.use(
     form({
-      requiresDeclaration: req => !req.user.profile.asruUser,
+      requiresDeclaration: (req) => !req.user.profile.asruUser,
       locals: (req, res, next) => {
         Object.assign(res.locals.static, {
           values: {
@@ -25,9 +25,17 @@ module.exports = (settings) => {
           }
         });
         next();
+      },
+      saveValues: (req, res, next) => {
+        req.session.form[req.model.id].values = req.form.values;
+        next();
       }
     })
   );
+
+  app.post('/', (req, res, next) => {
+    return res.redirect(req.buildRoute('role.namedPersonMvp.success'));
+  });
 
   return app;
 };
