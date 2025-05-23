@@ -22,7 +22,11 @@ export default function ApplicationConfirm(props) {
                         ? ({ id, children }) => <div id={id}>{children}</div>
                         : undefined
                 }
-                options={[{ label, value: true }]}
+                options={[{
+                    label,
+                    value: true,
+                    ...(hint ? { 'aria-describedby': `${name}-hint` } : {})
+                }]}
                 error={error}
             />
         </div>
