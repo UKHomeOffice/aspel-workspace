@@ -86,13 +86,18 @@ class Questions extends PureComponent {
               <Controls
                 onContinue={async () => {
                   await advance();
-                  window.location.reload();
+                  // Only skip reload when adding the first additional establishment with care conditions set.
+                  // Reload is required elsewhere to keep change badges in sync.
+                  const isEstablishmentsSection = window.location.pathname.includes('/edit/establishments');
+                  const establishmentCare = values['establishments-care-conditions'];
+                  if (!(isEstablishmentsSection && (establishmentCare === true || establishmentCare === 'true'))) {
+                    window.location.reload();
+                  }
                 }}
                 onExit={exit}
                 continueDisabled={this.props.isSyncing}
                 advanceLabel={this.props.isSyncing ? "Saving..." : "Continue"}
               />
-
             </div>
           )
         }
