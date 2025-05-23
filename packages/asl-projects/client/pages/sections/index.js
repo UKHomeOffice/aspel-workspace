@@ -86,7 +86,11 @@ class Questions extends PureComponent {
               <Controls
                 onContinue={async () => {
                   await advance();
-                  if (!values['establishments-care-conditions']) {
+                  // get the URL path for establishments
+                  const isEstablishmentsSection = window.location.pathname.includes('/edit/establishments');
+                  const establishmentCare = values['establishments-care-conditions'];
+                  // only skip reload if on establishments section AND ecc is true
+                  if (!(isEstablishmentsSection && (establishmentCare === true || establishmentCare === 'true'))) {
                     window.location.reload();
                   }
                 }}
