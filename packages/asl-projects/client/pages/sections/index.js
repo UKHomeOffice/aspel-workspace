@@ -86,7 +86,9 @@ class Questions extends PureComponent {
               <Controls
                 onContinue={async () => {
                   await advance();
-                  window.location.reload();
+                  if (!values['establishments-care-conditions']) {
+                    window.location.reload();
+                  }
                 }}
                 onExit={exit}
                 continueDisabled={this.props.isSyncing}
