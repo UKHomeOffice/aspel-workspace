@@ -41,7 +41,7 @@ class Accordion extends React.Component {
                         key: i,
                         onToggle: () => this.toggle(i),
                         open: !this.state || this.state.open[i],
-                        'data-testid': `child-${i}`,
+                        'data-testid': `accordion-${i}`,
                         'data-open': !this.state || this.state.open[i]
                     }))
                 }
