@@ -1,5 +1,7 @@
 require('../lib/register');
 
+const React = require('react');
+const { Provider } = require('react-redux');
 const { merge, set } = require('lodash');
 const bodyParser = require('body-parser');
 const express = require('express');
@@ -28,6 +30,8 @@ const cookies = require('./pages/cookies');
 const accessibility = require('./pages/accessibility');
 const ErrorComponent = require('./views/error');
 
+const configureStore = require('./store');
+
 const featureFlag = require('./feature-flag');
 
 const base64 = require.resolve('js-base64');
@@ -54,8 +58,24 @@ module.exports = settings => {
 
   app.engine('jsx', (filePath, options, callback) => {
     try {
-      const Component = require(filePath);
-      const element = React.createElement(Component.default || Component, options);
+      delete require.cache[require.resolve(filePath)];
+
+      const PageComponent = require(filePath).default || require(filePath);
+
+      const viewsDirs = app.get('views');
+      const layoutDir = Array.isArray(viewsDirs) ? viewsDirs[0] : viewsDirs;
+      const layoutPath = path.join(layoutDir, 'layout.jsx');
+      delete require.cache[require.resolve(layoutPath)];
+      const Layout = require(layoutPath).default || require(layoutPath);
+
+      const store = configureStore();
+
+      const element = React.createElement(
+        Provider,
+        { store },
+        React.createElement(Layout, { Component: PageComponent, ...options })
+      );
+
       const html = ReactDOMServer.renderToString(element);
       return callback(null, html);
     } catch (err) {
@@ -63,6 +83,8 @@ module.exports = settings => {
     }
   });
 
+  settings.views = path.resolve(settings.root, './views');
+  app.set('views', settings.views);
 
   app.use(staticrouter);
 

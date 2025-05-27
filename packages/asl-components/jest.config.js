@@ -1,7 +1,6 @@
-// jest.config.js
 module.exports = {
-  testEnvironment: 'jsdom',
-  testEnvironmentOptions: {
-    url: 'http://localhost/' // Optional, sets a base URL
-  }
+    testEnvironment: 'jsdom',
+    setupFilesAfterEnv: [
+        '<rootDir>/setupTests.js'
+    ]
 };

@@ -40,7 +40,9 @@ class Accordion extends React.Component {
                     castArray(this.props.children).map((child, i) => child && React.cloneElement(child, {
                         key: i,
                         onToggle: () => this.toggle(i),
-                        open: !this.state || this.state.open[i]
+                        open: !this.state || this.state.open[i],
+                        'data-testid': `child-${i}`,
+                        'data-open': !this.state || this.state.open[i]
                     }))
                 }
             </div>

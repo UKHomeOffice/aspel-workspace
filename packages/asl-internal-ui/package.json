@@ -60,9 +60,9 @@
     "mustache": "^2.3.2",
     "ndjson": "^1.5.0",
     "r2": "^2.0.1",
-    "react": "^16.9.0",
+    "react": "^18.3.1",
     "react-markdown": "^6.0.2",
-    "react-redux": "^7.2.2",
+    "react-redux": "^8.1.1",
     "sass": "^1.50.1",
     "style-loader": "^2.0.0",
     "through2": "^3.0.1",
@@ -82,6 +82,9 @@
   },
   "overrides": {
     "node-fetch": "^2.6.11",
-    "d3-color": "^3.1.0"
+    "d3-color": "^3.1.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-redux": "8.1.3"
   }
 }
