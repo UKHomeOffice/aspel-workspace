@@ -89,8 +89,10 @@ class Questions extends PureComponent {
                   // Only skip reload when adding the first additional establishment with care conditions set.
                   // Reload is required elsewhere to keep change badges in sync.
                   const isEstablishmentsSection = window.location.pathname.includes('/edit/establishments');
-                  const establishmentCare = values['establishments-care-conditions'];
-                  if (!(isEstablishmentsSection && (establishmentCare === true || establishmentCare === 'true'))) {
+                  const isAddingFirstAdditionalEstablishment =
+                    values['other-establishments'] === true &&
+                    (values['establishments']?.length ?? 0) === 0;
+                  if (!(isEstablishmentsSection && isAddingFirstAdditionalEstablishment)) {
                     window.location.reload();
                   }
                 }}
