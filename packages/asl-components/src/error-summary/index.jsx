@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { Snippet } from '../';
 
 const ErrorSummary = ({
-    errors
+    errors,
+    formatters = {}
 }) => {
     if (!size(errors)) {
         return null;
@@ -23,8 +24,16 @@ const ErrorSummary = ({
             <div className="govuk-error-summary__body">
                 <ul className="govuk-list govuk-error-summary__list">
                     {
-                        Object.keys(errors).map(key =>
-                            <li key={key}><a href={`#${key}`}><Snippet fallback={`errors.default.${errors[key]}`}>{`errors.${key}.${errors[key]}`}</Snippet></a></li>
+                        Object.keys(errors).map(key => {
+                            const snippetProps = formatters[key]?.renderContext ?? {};
+                            return <li key={key}>
+                                <a href={`#${key}`}>
+                                    <Snippet fallback={`errors.default.${errors[key]}`} {...snippetProps}>
+                                        {`errors.${key}.${errors[key]}`}
+                                    </Snippet>
+                                </a>
+                            </li>;
+                        }
                         )
                     }
                 </ul>
