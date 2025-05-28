@@ -1,54 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import every from 'lodash/every';
 import castArray from 'lodash/castArray';
 
-class Accordion extends React.Component {
+const Accordion = ({ children, closeAll = 'Close all', openAll = 'Open all' }) => {
+    const [open, setOpen] = useState([]);
 
-    componentDidMount() {
-        const open = this.props.children.map(child => {
-            return (child.props && child.props.isOpen) ? child.props.isOpen : false;
-        });
-        this.setState({ open });
-    }
+    useEffect(() => {
+        const initialOpen = children.map(child => (child.props && child.props.isOpen) ? child.props.isOpen : false);
+        setOpen(initialOpen);
+    }, [children]);
 
-    toggle(i) {
-        const open = this.state.open;
-        open[i] = !open[i];
-        this.setState({ open });
-    }
+    const toggle = (i) => {
+        setOpen(prevOpen => prevOpen.map((item, index) => index === i ? !item : item));
+    };
 
-    allOpen() {
-        const open = this.state ? this.state.open : [];
-        return every(open);
-    }
+    const allOpen = () => every(open);
 
-    toggleAll() {
-        if (this.allOpen()) {
-            return this.setState({ open: this.state.open.map(() => false) });
-        }
-        return this.setState({ open: this.state.open.map(() => true) });
-    }
+    const toggleAll = () => {
+        setOpen(prevOpen => prevOpen.map(() => !allOpen()));
+    };
 
-    render() {
-        let { closeAll, openAll } = this.props;
-        closeAll = closeAll || 'Close all';
-        openAll = openAll || 'Open all';
-        return (
-            <div className="accordion">
-                <p className="toggles"><button onClick={() => this.toggleAll()}>{ this.allOpen() ? closeAll : openAll }</button></p>
-                {
-                    castArray(this.props.children).map((child, i) => child && React.cloneElement(child, {
-                        key: i,
-                        onToggle: () => this.toggle(i),
-                        open: !this.state || this.state.open[i],
-                        'data-testid': `accordion-${i}`,
-                        'data-open': !this.state || this.state.open[i]
-                    }))
-                }
-            </div>
-        );
-    }
-
-}
+    return (
+        <div className="accordion">
+            <p className="toggles">
+                <button onClick={toggleAll}>
+                    {allOpen() ? closeAll : openAll}
+                </button>
+            </p>
+            {
+                castArray(children).map((child, i) => child && React.cloneElement(child, {
+                    key: i,
+                    onClick: () => toggle(i),
+                    open: open[i],
+                    'data-testid': `accordion-${i}`,
+                    'data-open': open[i]
+                }))
+            }
+        </div>
+    );
+};
 
 export default Accordion;
