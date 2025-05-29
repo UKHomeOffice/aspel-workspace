@@ -86,11 +86,14 @@ class Questions extends PureComponent {
               <Controls
                 onContinue={async () => {
                   await advance();
-                  // Only skip reload when adding the first additional establishment with care conditions set.
-                  // Reload is required elsewhere to keep change badges in sync.
+                  // When first loading the add additional establishment form, the page reload removes the default
+                  // initial establishment. Since the reload is for change badge synchronisation, we can safely skip
+                  // it when adding the first additional establishment to a licence.
                   const isEstablishmentsSection = window.location.pathname.includes('/edit/establishments');
-                  const establishmentCare = values['establishments-care-conditions'];
-                  if (!(isEstablishmentsSection && (establishmentCare === true || establishmentCare === 'true'))) {
+                  const isAddingFirstAdditionalEstablishment =
+                    values['other-establishments'] === true &&
+                    (values['establishments']?.length ?? 0) === 0;
+                  if (!(isEstablishmentsSection && isAddingFirstAdditionalEstablishment)) {
                     window.location.reload();
                   }
                 }}
