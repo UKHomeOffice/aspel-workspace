@@ -45,7 +45,7 @@
     "remark-breaks": "^2.0.2",
     "shasum": "^1.0.2",
     "url": "^0.11.0",
-    "uuid": "^8.3.2"
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",
