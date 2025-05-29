@@ -1,37 +1,51 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import { Breadcrumb } from './';
-import Snippet from '../snippet';
-import Link from '../link';
+import { expect, jest } from '@jest/globals';
+
+// Mock Link and Snippet
+jest.mock('../link', () => (props) => (
+  <a href={`/${props.page}`} data-testid="link">{props.label}</a>
+));
+jest.mock('../snippet', () => (props) => (
+  <span data-testid="snippet">{props.children}</span>
+));
 
 describe('<Breadcrumb />', () => {
 
   test('renders one li', () => {
-    const wrapper = shallow(<Breadcrumb crumb="dashboard" link={true} />);
-    expect(wrapper.find('li').length).toBe(1);
+    render(<Breadcrumb crumb="dashboard" link={true} />);
+    const listItem = screen.getByRole('listitem');
+    expect(listItem).toBeInTheDocument();
   });
 
-  test('renders a Link component if `link` prop is true', () => {
-    const wrapper = shallow(<Breadcrumb crumb="dashboard" link={true} />);
-    expect(wrapper.find(Link).length).toBe(1);
-    expect(wrapper.find(Link).last().props().page).toBe('dashboard');
+  test('renders a Link component with correct props if `link` prop is true', () => {
+    render(<Breadcrumb crumb="dashboard" link={true} />);
+    const link = screen.getByTestId('link');
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', '/dashboard');
+
+    const snippet = screen.getByTestId('snippet');
+    expect(snippet).toHaveTextContent('breadcrumbs.dashboard');
   });
 
-  test('passes a Snippet as the link label', () => {
-    const wrapper = shallow(<Breadcrumb crumb="dashboard" link={true} />);
-    expect(wrapper.find(Link).length).toBe(1);
-    expect(wrapper.find(Link).at(0).props().label).toEqual(<Snippet>breadcrumbs.dashboard</Snippet>);
+  test('renders a Snippet with correct props if `link` prop is false', () => {
+    render(<Breadcrumb crumb="dashboard" link={false} />);
+    const snippet = screen.getByTestId('snippet');
+    expect(snippet).toBeInTheDocument();
+    expect(snippet).toHaveTextContent('breadcrumbs.dashboard');
   });
 
   test('does not render a Link component if `link` prop is false', () => {
-    const wrapper = shallow(<Breadcrumb crumb="dashboard" link={false} />);
-    expect(wrapper.find(Link).length).toBe(0);
+    render(<Breadcrumb crumb="dashboard" link={false} />);
+    const link = screen.queryByTestId('link');
+    expect(link).not.toBeInTheDocument();
   });
 
   test('renders a Snippet', () => {
-    const wrapper = shallow(<Breadcrumb crumb="dashboard" link={false} />);
-    expect(wrapper.find(Snippet).length).toBe(1);
-    expect(wrapper.find(Snippet).props().children).toEqual('breadcrumbs.dashboard');
+    render(<Breadcrumb crumb="dashboard" link={false} />);
+    const snippet = screen.getByTestId('snippet');
+    expect(snippet).toBeInTheDocument();
   });
 
 });

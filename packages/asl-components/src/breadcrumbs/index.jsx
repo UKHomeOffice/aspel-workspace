@@ -12,7 +12,10 @@ export const Breadcrumb = ({ crumb = {}, link = false }) => {
     }
 
     return (
-        <li className="govuk-breadcrumbs__list-item">
+        <li className="govuk-breadcrumbs__list-item"
+            data-testid="breadcrumb"
+            data-crumb={crumb}
+            data-link={link}>
             {
                 link
                     ? <Link page={crumb} label={<Snippet {...props}>{`breadcrumbs.${crumb}`}</Snippet>} {...props} />
