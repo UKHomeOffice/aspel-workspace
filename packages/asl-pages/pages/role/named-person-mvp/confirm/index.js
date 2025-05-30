@@ -1,5 +1,10 @@
 const { page } = require('@asl/service/ui');
 const form = require('../../../common/routers/form');
+const {
+  updateDataFromTask,
+  redirectToTaskIfOpen,
+  populateNamedPeople
+} = require('../../common/middleware');
 
 module.exports = (settings) => {
   const app = page({
@@ -15,8 +20,10 @@ module.exports = (settings) => {
   });
 
   app.use(
+    '/',
+    populateNamedPeople,
     form({
-      requiresDeclaration: req => !req.user.profile.asruUser,
+      requiresDeclaration: (req) => !req.user.profile.asruUser,
       locals: (req, res, next) => {
         Object.assign(res.locals.static, {
           values: {
@@ -25,9 +32,15 @@ module.exports = (settings) => {
           }
         });
         next();
+      },
+      saveValues: (req, res, next) => {
+        req.session.form[req.model.id].values = req.form.values;
+        next();
       }
     })
   );
+
+  app.post('/', updateDataFromTask(settings.sendData), redirectToTaskIfOpen());
 
   return app;
 };
