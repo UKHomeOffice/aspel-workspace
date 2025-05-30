@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { doSort } from './actions';
 import { ApplyChanges, Snippet } from '../';
 
-const getLabel = id => <Snippet>{`fields.${id}.label`}</Snippet>;
+const getLabel = id => <span data-testid={`header-${id}`}><Snippet>{`fields.${id}.label`}</Snippet></span>;
 
 export const TableHeader = ({
     id,

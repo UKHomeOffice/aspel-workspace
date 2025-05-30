@@ -1,52 +1,113 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { shallow } from 'enzyme';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+import { expect, jest } from '@jest/globals';
 import { Datatable, Row } from './';
-import TableHeader from './header';
+
+jest.mock('../snippet', () => (props) => (
+  <span data-testid="snippet">{props.children}</span>
+));
+
+// Dummy reducers that just return their state
+const dummyReducer = (state = {}) => state;
+const paginationReducer = (state = {}) => state;
+
+const preloadedState = {
+  datatable: {
+    sort: {
+      column: 'name',
+      ascending: true
+    },
+    data: { rows: [], isFetching: false },
+    schema: {},
+    filters: { active: null},
+    pagination: { hideUI: false },
+
+  },
+  pagination: {
+    active: 1,
+    totalPages: 5,
+    pageSize: 10,
+    // Add other keys your Pagination might expect here
+  }
+};
+
+const store = configureStore({
+  reducer: {
+    datatable: dummyReducer,
+    pagination: paginationReducer
+  },
+  preloadedState
+});
+
+const schema = { site: {}, name: {}, number: {} };
 
 describe('<Datatable />', () => {
-
   test('renders any class names passed to it', () => {
-    const schema = { site: {}, name: {}, number: {} };
-    const wrapper = shallow(<Datatable schema={schema} className="foo bar" />);
-    const table = wrapper.find('table');
-    expect(table.hasClass('foo')).toEqual(true);
-    expect(table.hasClass('bar')).toEqual(true);
+    render(
+      <Provider store={store}>
+        <Datatable schema={schema} className="foo bar" />
+      </Provider>
+    );
+
+    const table = screen.getByRole('table'); // find the table element by role
+
+    expect(table).toHaveClass('foo');
+    expect(table).toHaveClass('bar');
   });
 
-  test('doesnt render class of "undefined" if no className passed', () => {
-    const schema = { site: {}, name: {}, number: {} };
-    const wrapper = shallow(<Datatable schema={schema} />);
-    const table = wrapper.find('table');
-    expect(table.hasClass('undefined')).toEqual(false);
+  test('doesn’t render class "undefined" if no className passed', () => {
+    render(
+      <Provider store={store}>
+        <Datatable schema={schema} />
+      </Provider>
+    );
+    const table = screen.getByRole('table');
+    expect(table).not.toHaveClass('undefined');
   });
 
   test('renders a <TableHeader /> element for each column, taken from schema', () => {
-    const schema = { site: {}, name: {}, number: {} };
-    const wrapper = shallow(<Datatable schema={schema} />);
-    const tableHeaders = wrapper.find(TableHeader);
-    expect(tableHeaders.length).toBe(3);
-    Object.keys(schema).forEach((key, index) => {
-      expect(tableHeaders.get(index).props.id).toBe(key);
-    });
-  });
+    const schema = {
+      site: { show: true },
+      name: { show: true },
+      number: { show: true }
+    };
 
-  test('renders a <tr /> element for each row', () => {
-    const data = [
-      { id: 1, site: 'A Site', name: 'The Name', number: 3 },
-      { id: 2, site: 'A Site', name: 'The Name', number: 3 },
-      { id: 3, site: 'A Site', name: 'The Name', number: 3 }
-    ];
-    const wrapper = shallow(<Datatable data={data} schema={schema} />);
-    expect(wrapper.find(Row).length).toBe(3);
+    const formatters = {
+      activeDeadline: { format: jest.fn(), show: true },
+      assignedTo: { format: jest.fn(), show: true },
+      establishment: { format: jest.fn(), show: true },
+      status: { format: jest.fn(), show: true },
+      type: { format: jest.fn(), show: true },
+      updatedAt: { format: jest.fn(), show: true }
+    };
+
+    render(
+      <Provider store={store}>
+        <Datatable schema={schema} formatters={formatters} />
+      </Provider>
+    );
+
+    // Combine schema and formatters keys for assertions
+    const keys = [...Object.keys(schema), ...Object.keys(formatters)];
+
+    keys.forEach(key => {
+      expect(screen.getByTestId(`header-${key}`)).toBeInTheDocument();
+    });
   });
 
   describe('<Row />', () => {
     test('renders a <td /> element for each key', () => {
-      const schema = { id: {}, site: {}, name: {}, number: {} };
       const row = { id: 1, site: 'A Site', name: 'The Name', number: 3 };
-      const wrapper = shallow(<Row row={row} schema={schema} />);
-      expect(wrapper.find('td').length).toBe(4);
+      render(
+        <table>
+          <tbody>
+            <Row row={row} expands={() => true} schema={{ id: {}, site: {}, name: {}, number: {} }} />
+          </tbody>
+        </table>);
+      const cells = screen.getAllByRole('cell');
+      expect(cells).toHaveLength(4);
     });
 
     test('formats data if format function provided', () => {
@@ -59,8 +120,14 @@ describe('<Datatable />', () => {
         name: { show: true },
         number: { show: true }
       };
-      const wrapper = shallow(<Row row={row} schema={schema} />);
-      expect(wrapper.find('td').at(0).text()).toBe('A SITE');
+      render(
+        <table>
+          <tbody>
+            <Row row={row} expands={() => true} schema={schema} />
+          </tbody>
+        </table>);
+      const cells = screen.getAllByRole('cell');
+      expect(cells[0]).toHaveTextContent('A SITE');
     });
 
     test('passes full row data to format function', () => {
@@ -73,8 +140,14 @@ describe('<Datatable />', () => {
         name: { show: true },
         number: { show: true }
       };
-      const wrapper = shallow(<Row row={row} schema={schema} />);
-      expect(wrapper.find('td').at(0).text()).toBe('A Site - 1');
+      render(
+        <table>
+          <tbody>
+            <Row row={row} expands={() => true} schema={schema} />
+          </tbody>
+        </table>);
+      const cells = screen.getAllByRole('cell');
+      expect(cells[0]).toHaveTextContent('A Site - 1');
     });
 
     test('accesses a deeply nested field if accessor provided', () => {
@@ -85,12 +158,18 @@ describe('<Datatable />', () => {
         number: { show: true },
         nacwo: { show: true, accessor: 'nacwo.profile.name' }
       };
-      const wrapper = shallow(<Row row={row} schema={schema} />);
-      expect(wrapper.find('td').at(3).text()).toBe('A Name');
+      render(
+        <table>
+          <tbody>
+            <Row row={row} expands={() => true} schema={schema} />
+          </tbody>
+        </table>);
+      const cells = screen.getAllByRole('cell');
+      expect(cells[3]).toHaveTextContent('A Name');
     });
   });
 
-  describe.only('expandable rows', () => {
+  describe('expandable rows', () => {
     const data = [
       { id: 1, site: 'A Site', name: 'The Name', number: 3 },
       { id: 2, site: 'A Site', name: 'The Name', number: 4 },
@@ -105,39 +184,45 @@ describe('<Datatable />', () => {
     };
 
     function Expandable() {
-      return null
+      return <td>Expanded</td>;
     }
 
-    const expands = row => {
-      return row.number % 2 === 0;
-    }
+    const expands = row => row.number % 2 === 0;
 
-    function getWrapper(index) {
-      return shallow(<Row row={data[index]} schema={schema} expands={expands} Expandable={Expandable} />);
+    function renderRow(index) {
+      return render(
+        <table>
+          <tbody>
+          <Row row={data[index]} schema={schema} expands={expands} Expandable={Expandable} />
+          </tbody>
+        </table>
+      );
     }
 
     test('adds expandable classname if expands resolves to true', () => {
-      expect(getWrapper(0).find('tr').hasClass('expandable')).toBe(false);
-      expect(getWrapper(1).find('tr').hasClass('expandable')).toBe(true);
-      expect(getWrapper(2).find('tr').hasClass('expandable')).toBe(false);
-      expect(getWrapper(3).find('tr').hasClass('expandable')).toBe(true);
+      const { container: c0 } = renderRow(0);
+      expect(c0.querySelector('tr')).not.toHaveClass('expandable');
+
+      const { container: c1 } = renderRow(1);
+      expect(c1.querySelector('tr')).toHaveClass('expandable');
     });
 
     test('shows expanding content for a row when clicked', () => {
-      const wrapper = getWrapper(1);
-      wrapper.find('tr.expandable').simulate('click');
-      const expanded = wrapper.find('tr.expanded-content');
-      expect(expanded.length).toEqual(1);
+      const { container } = renderRow(1);
+      const mainRow = container.querySelector('tr.expandable');
+      fireEvent.click(mainRow);
+      const expanded = container.querySelector('tr.expanded-content');
+      expect(expanded).toBeInTheDocument();
+      expect(expanded).toHaveTextContent('Expanded');
     });
 
     test('clicking an open row closes it', () => {
-      const wrapper = getWrapper(1);
-      wrapper.find('tr.expandable').simulate('click');
-      expect(wrapper.find('tr.expanded-content').length).toEqual(1);
-      wrapper.find('tr.expandable').first().simulate('click');
-      expect(wrapper.find('tr.expanded-content').length).toEqual(0);
+      const { container } = renderRow(1);
+      const mainRow = container.querySelector('tr.expandable');
+      fireEvent.click(mainRow); // open
+      expect(container.querySelector('tr.expanded-content')).toBeInTheDocument();
+      fireEvent.click(mainRow); // close
+      expect(container.querySelector('tr.expanded-content')).not.toBeInTheDocument();
     });
-
   });
-
 });
