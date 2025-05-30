@@ -18,11 +18,11 @@ export default function EstablishmentsReview({ steps, ...props }) {
           </Banner>
       }
 
-      <ReviewFields {...props} fields={steps[0].fields} />
+      <ReviewFields {...props} fields={steps[0].fields} step={0}/>
 
-      { hasEstablishments && <Establishments {...props} fields={steps[1].fields} editable={false} showTitle={false} /> }
+      { hasEstablishments && <Establishments {...props} fields={steps[1].fields} step={1} editable={false} showTitle={false} /> }
 
-      <ReviewFields {...props} fields={steps[2].fields} showTitle={false} />
+      <ReviewFields {...props} fields={steps[2].fields} step={2} showTitle={false} />
     </div>
   );
 }
