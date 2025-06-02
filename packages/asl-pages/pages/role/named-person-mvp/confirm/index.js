@@ -4,7 +4,7 @@ const {
   updateDataFromTask,
   redirectToTaskIfOpen,
   populateNamedPeople
-} = require('../../common/middleware');
+} = require('../../../common/middleware');
 
 module.exports = (settings) => {
   const app = page({
@@ -40,7 +40,14 @@ module.exports = (settings) => {
     })
   );
 
-  app.post('/', updateDataFromTask(settings.sendData), redirectToTaskIfOpen());
+  app.post(
+    '/',
+    updateDataFromTask(settings.sendData),
+    redirectToTaskIfOpen(),
+    (req, res, next) => {
+      return res.redirect(req.buildRoute('role.namedPersonMvp.success'));
+    }
+  );
 
   return app;
 };
