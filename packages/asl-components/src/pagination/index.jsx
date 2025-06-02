@@ -17,26 +17,30 @@ export const Pagination = ({
         return Array.from(Array(totalPages).keys()).slice(start, end);
     };
     const links = [
-        {
-            ariaLabel: 'Previous page',
-            className: 'prev',
-            label: <Fragment><span aria-hidden="true" role="presentation">&laquo;</span> Previous</Fragment>,
-            target: (page - 1) || 0,
-            disabled: page <= 0
-        },
+        ...(page <= 0
+            ? [{
+                ariaLabel: 'Previous page',
+                className: 'prev',
+                label: <Fragment><span aria-hidden="true" role="presentation">&laquo;</span> Previous</Fragment>,
+                target: (page - 1) || 0
+            }]
+            : []
+        ),
         ...pagesToShow().map(p => ({
             ariaLabel: `Page ${p + 1}`,
             label: p + 1,
             target: p,
             disabled: page === p
         })),
-        {
-            ariaLabel: 'Next page',
-            className: 'next',
-            label: <Fragment>Next <span aria-hidden="true" role="presentation">&raquo;</span></Fragment>,
-            target: page + 1,
-            disabled: page >= totalPages - 1
-        }
+        ...(page >= totalPages - 1
+            ? {
+                ariaLabel: 'Next page',
+                className: 'next',
+                label: <Fragment>Next <span aria-hidden="true" role="presentation">&raquo;</span></Fragment>,
+                target: page + 1,
+            }
+            : []
+        )
     ];
     return (
         <nav className="pagination" role="navigation" aria-label="Pagination">
