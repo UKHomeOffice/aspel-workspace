@@ -17,7 +17,7 @@ export const Pagination = ({
         return Array.from(Array(totalPages).keys()).slice(start, end);
     };
     const links = [
-        ...(page <= 0
+        ...(page > 0
             ? [{
                 ariaLabel: 'Previous page',
                 className: 'prev',
@@ -32,7 +32,7 @@ export const Pagination = ({
             target: p,
             disabled: page === p
         })),
-        ...(page >= totalPages - 1
+        ...(page < totalPages - 1
             ? [{
                 ariaLabel: 'Next page',
                 className: 'next',
