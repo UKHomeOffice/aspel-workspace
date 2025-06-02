@@ -19,27 +19,30 @@ const changedItems = (state = [], action) => {
 const changes = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case types.ADD_CHANGE: {
+      const version = (state.version ?? 0) + 1;
       return {
         ...state,
-        latest: changedItems(state.latest, action.change)
-      };
-    }
-
-    case types.ADD_CHANGES: {
-      const granted = action.granted.reduce((arr, item) => changedItems(arr, item), state.granted);
-      const latest = action.latest.reduce((arr, item) => changedItems(arr, item), state.latest);
-      return {
-        ...state,
-        granted,
-        latest
+        version,
+        latest: changedItems(state.latest, action.change),
+        changeVersions: { [action.change]: version }
       };
     }
 
     case types.SET_CHANGES: {
+      const latest = new Set(action.latest.reduce((arr, item) => changedItems(arr, item), []));
+      // Keep any changes made since this request was sent to the server
+      Object
+        .entries(state.changeVersions ?? {})
+        .forEach(([key, version]) => {
+          if (version > action.version) {
+            latest.add(key);
+          }
+        });
+
       return {
         ...state,
         granted: action.granted.reduce((arr, item) => changedItems(arr, item), []),
-        latest: action.latest.reduce((arr, item) => changedItems(arr, item), []),
+        latest: [...latest],
         first: action.first.reduce((arr, item) => changedItems(arr, item), [])
       };
     }
