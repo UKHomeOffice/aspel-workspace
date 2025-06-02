@@ -83,24 +83,7 @@ class Questions extends PureComponent {
                 values={values}
                 onFieldChange={save}
               />
-              <Controls
-                onContinue={async () => {
-                  await advance();
-                  // When first loading the add additional establishment form, the page reload removes the default
-                  // initial establishment. Since the reload is for change badge synchronisation, we can safely skip
-                  // it when adding the first additional establishment to a licence.
-                  const isEstablishmentsSection = window.location.pathname.includes('/edit/establishments');
-                  const isAddingFirstAdditionalEstablishment =
-                    values['other-establishments'] === true &&
-                    (values['establishments']?.length ?? 0) === 0;
-                  if (!(isEstablishmentsSection && isAddingFirstAdditionalEstablishment)) {
-                    window.location.reload();
-                  }
-                }}
-                onExit={exit}
-                continueDisabled={this.props.isSyncing}
-                advanceLabel={this.props.isSyncing ? "Saving..." : "Continue"}
-              />
+              <Controls onContinue={advance} onExit={exit} />
             </div>
           )
         }

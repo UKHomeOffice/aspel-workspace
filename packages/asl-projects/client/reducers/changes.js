@@ -34,6 +34,15 @@ const changes = (state = INITIAL_STATE, action) => {
         latest
       };
     }
+
+    case types.SET_CHANGES: {
+      return {
+        ...state,
+        granted: action.granted.reduce((arr, item) => changedItems(arr, item), []),
+        latest: action.latest.reduce((arr, item) => changedItems(arr, item), []),
+        first: action.first.reduce((arr, item) => changedItems(arr, item), [])
+      };
+    }
   }
 
   return state;

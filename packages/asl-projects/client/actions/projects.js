@@ -118,6 +118,15 @@ export function addChanges(changes = {}) {
   };
 }
 
+export function setChanges(changes = {}) {
+  return {
+    type: types.SET_CHANGES,
+    first: changes.first || [],
+    granted: changes.granted || [],
+    latest: changes.latest || []
+  };
+}
+
 export function updateSavedProject(project) {
   return {
     type: types.UPDATE_SAVED_PROJECT,
@@ -313,7 +322,7 @@ const syncProject = (dispatch, getState) => {
     .then(() => dispatch(updateProject(project)))
     .then(() => sendMessage(params))
     .then(json => {
-      dispatch(addChanges(json.changes));
+      dispatch(setChanges(json.changes));
       dispatch(doneSyncing());
       if (state.application.syncError) {
         dispatch(syncErrorResolved());
