@@ -101,7 +101,7 @@ const traverse = (node, key, keys = []) => {
       traverse(node[k], `${key ? `${key}.` : ''}${k}`, keys);
     });
   }
-  return uniq(keys);
+  return new Set(keys);
 };
 
 const getNode = (tree, path) => {
@@ -226,6 +226,27 @@ const normaliseConditions = (versionData, { isSubmitted }) => {
   });
 };
 
+/**
+ * @param {Set<*>} keys
+ * @param prevTree
+ * @param currTree
+ *
+ * In the case where a conditional field is changed, then the condition that
+ * caused the change is reverted, the now obsolete changes still trigger a
+ * change badge. If this gets unmanageable to configure manually - calculate it
+ * from the schema.
+ */
+const removeHiddenChangeKeys = (keys, prevTree, currTree) => {
+  if (!getNode(prevTree, 'other-establishments') && !getNode(currTree, 'other-establishments')) {
+    keys.delete('establishments');
+    [...keys]
+      .filter(key => key.match(/^establishments\.[0-9a-f-]{36}(\.(id|name|establishment-id))?$/))
+      .forEach(key => {
+        keys.delete(key);
+      });
+  }
+};
+
 const getChanges = (current, version) => {
   if (!current || !version) {
     return [];
@@ -234,8 +255,13 @@ const getChanges = (current, version) => {
   const after = normaliseConditions(current.data, { isSubmitted: current.status !== 'draft' });
   const cvKeys = traverse(after);
   const pvKeys = traverse(before);
+
+  removeHiddenChangeKeys(cvKeys, before, after);
+  removeHiddenChangeKeys(pvKeys, before, after);
+
   const added = remove(cvKeys, k => !pvKeys.includes(k));
   const removed = remove(pvKeys, k => !cvKeys.includes(k));
+
   let changed = [];
   cvKeys.forEach(k => {
     const pvNode = getNode(before, k);
