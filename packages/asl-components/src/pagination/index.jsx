@@ -33,12 +33,12 @@ export const Pagination = ({
             disabled: page === p
         })),
         ...(page >= totalPages - 1
-            ? {
+            ? [{
                 ariaLabel: 'Next page',
                 className: 'next',
                 label: <Fragment>Next <span aria-hidden="true" role="presentation">&raquo;</span></Fragment>,
                 target: page + 1,
-            }
+            }]
             : []
         )
     ];
