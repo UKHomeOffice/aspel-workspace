@@ -2,13 +2,13 @@ module.exports = {
   title: 'Mandatory training to be completed',
   fields: {
     incomplete: {
-      label: `Which {{roleType}} training modules need to be completed`
+      label: `Which {{roleType}} training modules need to be completed?`
     },
     completeDate: {
       label: 'Date all mandatory training will be completed'
     },
     delayReason: {
-      label: 'Explain why there is a delay in completing theses modules'
+      label: 'Explain why there is a delay in completing these modules'
     }
   },
   buttons: {
