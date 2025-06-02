@@ -2,45 +2,47 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 
 class ExpandingPanel extends Component {
-
-    componentDidMount() {
-        this.setState({ open: this.props.isOpen });
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: props.isOpen || false, // Initialize state based on props
+        };
     }
 
     controlled() {
         return typeof this.props.open === 'boolean';
     }
 
-    toggle () {
+    toggle() {
         if (this.controlled()) {
             return this.props.onToggle();
         }
-        return this.setState({ open: !this.state.open });
+        this.setState((prevState) => ({ open: !prevState.open }));
     }
 
     isOpen() {
         if (this.controlled()) {
             return this.props.open;
         }
-        return !this.state || this.state.open;
+        return this.state.open;
     }
 
     render() {
+        const { wrapTitle = true, title, children } = this.props;
+
         return (
             <section className={`expanding-panel${this.isOpen() ? ' open' : ''}`}>
                 <header onClick={() => this.toggle()}>
-                    {
-                        this.props.wrapTitle ? <h3>{ this.props.title }</h3> : this.props.title
-                    }
+                    {wrapTitle ? <h3>{title}</h3> : title}
                 </header>
-                <div className={classnames('content', { hidden: !this.isOpen() })}>{ this.props.children }</div>
+                {this.isOpen() && (
+                    <div className={classnames('content', { hidden: !this.isOpen() })}>
+                        {children}
+                    </div>
+                )}
             </section>
         );
     }
 }
-
-ExpandingPanel.defaultProps = {
-    wrapTitle: true
-};
 
 export default ExpandingPanel;

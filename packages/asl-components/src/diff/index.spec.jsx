@@ -83,6 +83,7 @@ describe('<Diff />', () => {
     );
 
     const rows = screen.getAllByRole('row');
+    // exclude the header row
     expect(rows.slice(1)).toHaveLength(3);
   });
 
