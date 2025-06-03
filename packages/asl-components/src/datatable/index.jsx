@@ -118,7 +118,7 @@ export function Datatable({
                 }
             </tbody>
             {
-                !pagination.hideUI &&
+                !pagination?.hideUI &&
           <tfoot>
               <tr>
                   <td colSpan={colSpan}>

@@ -1,6 +1,3 @@
-/* eslint implicit-dependencies/no-implicit: [2, { dev: true }] */
-
-const { configure } = require('enzyme');
-const Adapter = require('enzyme-adapter-react-16');
-
-configure({ adapter: new Adapter() });
+import Enzyme from 'enzyme';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
+Enzyme.configure({ adapter: new Adapter() });

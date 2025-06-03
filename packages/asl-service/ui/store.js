@@ -5,19 +5,27 @@ const rootReducer = require('./reducers');
 const { queryStringFromState } = require('@ukhomeoffice/asl-components/src/utils');
 const { composeWithDevTools } = require('@redux-devtools/extension');
 
-const persistState = store => next => action => {
-  const result = next(action);
-  switch (action.type) {
-    case 'SET_SORT':
-    case 'SET_FILTERS':
-    case 'SET_FILTER':
-    case 'SET_PAGE':
-      const href = new url.URL(window.location.href);
-      href.search = queryStringFromState(store.getState());
-      window.history.replaceState(undefined, undefined, href.format());
-  }
-  return result;
-};
+function persistState(store) {
+  return next => action => {
+    const result = next(action);
+
+    // Only run in browser
+    if (typeof window !== 'undefined') {
+      switch (action.type) {
+        case 'SET_SORT':
+        case 'SET_FILTERS':
+        case 'SET_FILTER':
+        case 'SET_PAGE': {
+          const href = new url.URL(window.location.href);
+          href.search = queryStringFromState(store.getState());
+          window.history.replaceState(undefined, undefined, href.toString());
+        }
+      }
+    }
+
+    return result;
+  };
+}
 
 const middleware = [thunk, persistState];
 
@@ -26,9 +34,14 @@ if (process.env.NODE_ENV === 'development') {
   middleware.push(logger);
 }
 
-const middlewareEnhancer = applyMiddleware(...middleware);
 const enhancer = process.env.NODE_ENV === 'development'
-  ? composeWithDevTools(middlewareEnhancer)
-  : middlewareEnhancer;
+  ? composeWithDevTools(applyMiddleware(...middleware))
+  : applyMiddleware(...middleware);
 
-module.exports = createStore(rootReducer, window.INITIAL_STATE, enhancer);
+/**
+ * Create a Redux store instance.
+ * @param {object} [initialState={}] - Optional initial state (e.g., from window or server props)
+ */
+module.exports = function configureStore(initialState = {}) {
+  return createStore(rootReducer, initialState, enhancer);
+};
