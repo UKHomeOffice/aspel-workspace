@@ -22,7 +22,7 @@ async function renameProtocolLocation(ProjectVersion, transaction, establishment
 
   const updates = [];
 
-  for (const {id: versionId, data} of versionData) {
+  for (const {id: versionId, data} of versionData.rows) {
     // Remove old and add new only where new establishment is a location, avoiding duplicates.
     data.protocols.forEach(protocol => {
       if (protocol.locations?.includes(renameFrom)) {
