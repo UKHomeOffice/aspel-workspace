@@ -9,19 +9,6 @@ jest.mock('../snippet', () => (props) => (
   <span data-testid="snippet">{props.children}</span>
 ));
 
-const props = {
-  query: {
-    filters: {
-      a: [1, 2, 3],
-      b: [2, 3, 4]
-    },
-    sort: {
-      ascending: true,
-      column: 'test'
-    }
-  }
-};
-
 describe('<TableHeader />', () => {
   afterEach(() => {
     cleanup();
