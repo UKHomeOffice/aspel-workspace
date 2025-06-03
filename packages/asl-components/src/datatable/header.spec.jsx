@@ -37,9 +37,13 @@ describe('<TableHeader />', () => {
   test('renders a <th> element', () => {
     render(
       <Provider store={store}>
-        <div>
+        <table>
+          <thead>
+          <tr>
             <TableHeader id="test" />
-        </div>
+          </tr>
+          </thead>
+        </table>
       </Provider>
   );
     expect(screen.getByRole('columnheader')).toBeInTheDocument();
@@ -48,52 +52,82 @@ describe('<TableHeader />', () => {
   test('adds aria-sort="none" to the th if sortable but not current column', () => {
     render(
       <Provider store={store}>
-        <TableHeader id="test" column="another" ascending={true} />
+        <table>
+          <thead>
+          <tr>
+            <TableHeader id="test" column="another" ascending={true} />
+          </tr>
+          </thead>
+        </table>
       </Provider>
-    );
-    expect(screen.getByRole('columnheader')).toHaveAttribute('aria-sort', 'none');
+  );
+  expect(screen.getByRole('columnheader')).toHaveAttribute('aria-sort', 'none');
   });
 
   test('adds an <ApplyChanges /> element as a child if sortable', () => {
     render(
       <Provider store={store}>
-        <TableHeader id="test" column="another" ascending={true} />
+        <table>
+          <thead>
+          <tr>
+            <TableHeader id="test" column="another" ascending={true} />
+          </tr>
+          </thead>
+        </table>
       </Provider>
-    );
-    expect(screen.getByTestId('apply-changes')).toBeInTheDocument();
+  );
+  expect(screen.getByTestId('header-test')).toBeInTheDocument();
   });
 
   test('adds aria-sort="ascending" to the th if current column and ascending is true', () => {
     render(
       <Provider store={store}>
-        <TableHeader id="test" column="test" ascending={true} />
+        <table>
+          <thead>
+          <tr>
+            <TableHeader id="test" column="test" ascending={true} />
+          </tr>
+          </thead>
+        </table>
       </Provider>
-    );
-    expect(screen.getByRole('columnheader')).toHaveAttribute('aria-sort', 'ascending');
+  );
+  expect(screen.getByRole('columnheader')).toHaveAttribute('aria-sort', 'ascending');
   });
 
   test('adds aria-sort="descending" to the th if current column and ascending is false', () => {
     render(
       <Provider store={store}>
-        <TableHeader id="test" column="test" ascending={false} />
+        <table>
+          <thead>
+          <tr>
+            <TableHeader id="test" column="test" ascending={false} />
+          </tr>
+          </thead>
+        </table>
       </Provider>
-    );
-    expect(screen.getByRole('columnheader')).toHaveAttribute('aria-sort', 'descending');
+  );
+  expect(screen.getByRole('columnheader')).toHaveAttribute('aria-sort', 'descending');
   });
 
   test('calls setSortColumn with the current column id if changes applied', () => {
     const mockOnHeaderClick = jest.fn();
     render(
       <Provider store={store}>
-        <TableHeader
-          id="test"
-          column="another"
-          ascending={false}
-          onHeaderClick={mockOnHeaderClick}
-        />
+        <table>
+          <thead>
+          <tr>
+            <TableHeader
+              id="test"
+              column="another"
+              ascending={false}
+              onHeaderClick={mockOnHeaderClick}
+            />
+          </tr>
+          </thead>
+        </table>
       </Provider>
-    );
-    fireEvent.click(screen.getByTestId('apply-changes'));
+  );
+  fireEvent.click(screen.getByTestId('header-test'));
     expect(mockOnHeaderClick).toHaveBeenCalledWith('test');
   });
 });
