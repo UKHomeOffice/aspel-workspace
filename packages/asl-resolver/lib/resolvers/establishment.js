@@ -5,7 +5,7 @@ const { generateLicenceNumber } = require('../utils');
 async function renameProtocolLocation(ProjectVersion, transaction, establishmentId, renameFrom, renameTo) {
   // Find projects with availability at the renamed establishment (primary or additional), which contain the
   // establishment in at least one protocol location.
-  const versionData = transaction.raw(
+  const versionData = await transaction.raw(
     // language=PostgreSQL
     `
           SELECT DISTINCT pv.id, pv.data as data
@@ -18,11 +18,11 @@ async function renameProtocolLocation(ProjectVersion, transaction, establishment
             AND location.value = :renameFrom;
     `,
     {establishmentId, renameFrom}
-  ).stream();
+  );
 
   const updates = [];
 
-  for await (const {id: versionId, data} of versionData) {
+  for (const {id: versionId, data} of versionData) {
     // Remove old and add new only where new establishment is a location, avoiding duplicates.
     data.protocols.forEach(protocol => {
       if (protocol.locations?.includes(renameFrom)) {
