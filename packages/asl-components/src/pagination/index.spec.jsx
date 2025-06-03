@@ -45,16 +45,17 @@ describe('<Pagination />', () => {
       </Provider>);
 
     const links = screen.getAllByRole('link');
-    expect(links[1]).toHaveTextContent('1');
-    expect(links[2]).toHaveTextContent('2');
-    expect(links[3]).toHaveTextContent('3');
-    expect(links[4]).toHaveTextContent('4');
-    expect(links[5]).toHaveTextContent('5');
-    expect(links[1]).toHaveClass('current');
+
+    expect(links[0]).toHaveTextContent('1');
+    expect(links[1]).toHaveTextContent('2');
+    expect(links[2]).toHaveTextContent('3');
+    expect(links[3]).toHaveTextContent('4');
+    expect(links[4]).toHaveTextContent('5');
+    expect(links[0]).toHaveClass('current'); // Corrected index
+    expect(links[1]).not.toHaveClass('current');
     expect(links[2]).not.toHaveClass('current');
     expect(links[3]).not.toHaveClass('current');
     expect(links[4]).not.toHaveClass('current');
-    expect(links[5]).not.toHaveClass('current');
   });
 
   test('renders 3-7 page links with the middle page selected when on page 5 of 10', () => {
