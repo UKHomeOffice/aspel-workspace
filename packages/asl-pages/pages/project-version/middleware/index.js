@@ -1,8 +1,19 @@
-const { get, remove, isEqual, uniq, mapValues, sortBy, pickBy, isEmpty, castArray } = require('lodash');
+const {
+  get,
+  isEqual,
+  uniq,
+  mapValues,
+  sortBy,
+  pickBy,
+  isEmpty,
+  castArray,
+  flow
+} = require('lodash');
 const isUUID = require('uuid-validate');
 const extractComments = require('../lib/extract-comments');
 const { mapSpecies, mapPermissiblePurpose, mapAnimalQuantities } = require('@asl/projects/client/helpers');
 const diff = require('./diff');
+const { deepRemoveEmpty } = require('../helpers/project');
 
 // eslint-disable-next-line no-control-regex
 const invisibleWhitespace = /[\u0000-\u0008\u000B-\u0019\u001b\u009b\u00ad\u200b\u2028\u2029\ufeff\ufe00-\ufe0f]/g;
@@ -80,7 +91,7 @@ const canComment = () => (req, res, next) => {
     .catch(next);
 };
 
-const traverse = (node, key, keys = []) => {
+const traverse = (node, key = undefined, keys = []) => {
   if (key) {
     if (key.match(/^reduction-quantities-/)) {
       keys.push('reduction-quantities');
@@ -157,7 +168,7 @@ const getFirstVersion = (req, type = 'project-versions') => {
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${first.id}`)
     // swallow error as this will return 403 for receiving establishment viewing a project transfer version
     // eslint-disable-next-line handle-callback-err
-    .catch(err => {});
+    .catch(() => {});
 };
 
 const getPreviousVersion = (req, type = 'project-versions') => {
@@ -177,7 +188,7 @@ const getPreviousVersion = (req, type = 'project-versions') => {
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${previous.id}`)
     // swallow error as this will return 403 for receiving establishment viewing a project transfer version
     // eslint-disable-next-line handle-callback-err
-    .catch(err => {});
+    .catch(() => {});
 };
 
 const getGrantedVersion = (req, type = 'project-versions') => {
@@ -198,7 +209,7 @@ const getGrantedVersion = (req, type = 'project-versions') => {
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${granted.id}`)
     // swallow error as this will return 403 for receiving establishment viewing a project transfer
     // eslint-disable-next-line handle-callback-err
-    .catch(err => {});
+    .catch(() => {});
 };
 
 const getCacheableVersion = (req, url) => {
@@ -209,7 +220,14 @@ const getCacheableVersion = (req, url) => {
     });
 };
 
-const normaliseConditions = (versionData, { isSubmitted }) => {
+const normaliseData = (versionData, opts) => {
+  return flow([
+    normaliseConditions(opts),
+    deepRemoveEmpty
+  ])(versionData);
+};
+
+const normaliseConditions = ({ isSubmitted }) => (versionData) => {
   return mapValues(versionData, (val, key) => {
     if (key === 'protocols') {
       return val.filter(Boolean).map(protocol => {
@@ -251,44 +269,31 @@ const getChanges = (current, version) => {
   if (!current || !version) {
     return [];
   }
-  const before = normaliseConditions(version.data, { isSubmitted: current.status !== 'draft' });
-  const after = normaliseConditions(current.data, { isSubmitted: current.status !== 'draft' });
+  const normalisationOptions = { isSubmitted: current.status !== 'draft' };
+  const before = normaliseData(version.data, normalisationOptions);
+  const after = normaliseData(current.data, normalisationOptions);
+
   const cvKeys = traverse(after);
   const pvKeys = traverse(before);
 
   removeHiddenChangeKeys(cvKeys, before, after);
   removeHiddenChangeKeys(pvKeys, before, after);
 
-  const added = remove(cvKeys, k => !pvKeys.includes(k));
-  const removed = remove(pvKeys, k => !cvKeys.includes(k));
-
-  let changed = [];
-  cvKeys.forEach(k => {
-    const pvNode = getNode(before, k);
-    const cvNode = getNode(after, k);
-    if (hasChanged(pvNode, cvNode, k)) {
-      changed.push(k);
+  const added = cvKeys.difference(pvKeys);
+  const removed = pvKeys.difference(cvKeys);
+  const changed = cvKeys.values().flatMap(
+    key => {
+      const pvNode = getNode(before, key);
+      const cvNode = getNode(after, key);
+      return hasChanged(pvNode, cvNode, key) ? [key] : [];
     }
-  });
+  );
 
-  return added
-    .filter(k => {
-      // ignore empty arrays added by cleanProtocols()
-      if (/^protocols\.[a-f0-9-]+\.(locations|objectives)$/.test(k)) {
-        const pvNode = getNode(before, k);
-        const cvNode = getNode(after, k);
-        if (pvNode === undefined && (Array.isArray(cvNode) && isEmpty(cvNode))) {
-          return false;
-        }
-      }
-      return true;
-    })
-    .concat(removed)
-    .concat(changed);
+  return [...added, ...removed, ...changed];
 };
 
 const ignoreEmptyArrayProps = obj => {
-  return pickBy(obj, (value, key) => !Array.isArray(value) || !isEmpty(value));
+  return pickBy(obj, (value) => !Array.isArray(value) || !isEmpty(value));
 };
 
 const hasChanged = (before, after, key) => {
@@ -329,7 +334,7 @@ const getPreviousProtocols = (firstVersion, previousVersion, grantedVersion) => 
   const first = get(firstVersion, 'data.protocols', []).filter(Boolean).filter(p => !p.deleted).map(p => p.id);
   const previous = get(previousVersion, 'data.protocols', []).filter(Boolean).filter(p => !p.deleted).map(p => p.id);
   const granted = get(grantedVersion, 'data.protocols', []).filter(Boolean).map(p => p.id);
-  const showDeleted = uniq([ ...previous, ...granted ]);
+  const showDeleted = uniq([...previous, ...granted]);
 
   // Adding code to get steps historical data
   function extractActiveSteps(version) {
@@ -339,6 +344,7 @@ const getPreviousProtocols = (firstVersion, previousVersion, grantedVersion) => 
       .map(p => p.steps)
       .map((element) => element && Array.isArray(element) ? element.filter(s => !s.deleted) : element);
   }
+
   const steps = extractActiveSteps(previousVersion);
   const firstSteps = extractActiveSteps(firstVersion);
   const grantedSteps = extractActiveSteps(grantedVersion);
@@ -349,7 +355,7 @@ const getPreviousAA = (firstVersion, previousVersion, grantedVersion) => {
   const first = get(firstVersion, 'data.establishments', []).filter(Boolean).filter(p => !p.deleted).map(p => p.id);
   const previous = get(previousVersion, 'data.establishments', []).filter(Boolean).filter(p => !p.deleted).map(p => p.id);
   const granted = get(grantedVersion, 'data.establishments', []).filter(Boolean).map(p => p.id);
-  const showDeleted = uniq([ ...previous, ...granted ]);
+  const showDeleted = uniq([...previous, ...granted]);
   return { first, previous, granted, showDeleted };
 };
 

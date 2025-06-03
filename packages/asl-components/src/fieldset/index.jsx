@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Fragment } from 'react';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import without from 'lodash/without';
@@ -267,7 +267,7 @@ export default function Fieldset({ schema, errors = {}, formatters = {}, model, 
                 map(schema, (field, key) => {
                     const fieldName = field.prefix ? `${field.prefix}-${key}` : key;
                     return (
-                        <>
+                        <Fragment key={fieldName}>
                             {field.labelAsLegend ?
                                 <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
                                     <h1 className="govuk-fieldset__heading">
@@ -289,7 +289,7 @@ export default function Fieldset({ schema, errors = {}, formatters = {}, model, 
                                 format={(formatters[key] || {}).format}
                                 formatHint={(formatters[key] || {}).formatHint}
                             />
-                        </>
+                        </Fragment>
                     );
                 })
             }
