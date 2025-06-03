@@ -8,15 +8,14 @@ async function renameProtocolLocation(ProjectVersion, transaction, establishment
   const versionData = transaction.raw(
     // language=PostgreSQL
     `
-          SELECT pv.id, any_value(pv.data) as data
+          SELECT DISTINCT pv.id, pv.data as data
           FROM projects p
                LEFT JOIN project_versions pv ON p.id = pv.project_id
                LEFT JOIN project_establishments pe ON p.id = pe.project_id
                CROSS JOIN JSONB_ARRAY_ELEMENTS(pv.data -> 'protocols') WITH ORDINALITY AS proto(value, idx)
                CROSS JOIN JSONB_ARRAY_ELEMENTS_TEXT(proto.value -> 'locations') WITH ORDINALITY AS location(value, idx)
           WHERE (p.establishment_id = :establishmentId OR pe.establishment_id = :establishmentId)
-            AND location.value = :renameFrom
-          GROUP BY pv.id;
+            AND location.value = :renameFrom;
     `,
     {establishmentId, renameFrom}
   ).stream();
