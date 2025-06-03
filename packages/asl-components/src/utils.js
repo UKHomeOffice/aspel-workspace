@@ -50,10 +50,29 @@ const formatDate = (date, format = DATE_FORMAT.long) => {
     }
 };
 
+function applyFormatters({ formatters, name, ...props })  {
+    const formatter = formatters?.[name];
+
+    const formatted = formatter?.propMappers && typeof formatter?.propMappers === 'object'
+        ? Object.fromEntries(
+            Object.entries(formatters[name].propMappers)
+                .map(([key, mapper]) => [key, mapper(props[key], formatter)])
+        )
+        : {};
+
+    return {
+        formatters,
+        name,
+        ...props,
+        ...formatted
+    };
+}
+
 module.exports = {
     getValue,
     queryStringFromState,
     getSort,
     formatDate,
-    DATE_FORMAT
+    DATE_FORMAT,
+    applyFormatters,
 };

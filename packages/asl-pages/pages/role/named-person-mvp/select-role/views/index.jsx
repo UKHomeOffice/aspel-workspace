@@ -1,32 +1,7 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Link, Snippet, FormLayout, Fieldset, Inset } from '@ukhomeoffice/asl-components';
+import { Link, Snippet, FormLayout } from '@ukhomeoffice/asl-components';
 import OpenTasks from '../../../component/open-tasks';
-
-const connectComponent = key => {
-  const mapStateToProps = ({ model, static: { schema } }) => {
-    schema = schema.type.options.find(role => role.value === key).reveal;
-
-    return {
-      model,
-      schema
-    };
-  };
-
-  return connect(mapStateToProps)(Fieldset);
-};
-
-const formatters = {
-  type: {
-    mapOptions: option => {
-      const ConnectedComponent = connectComponent(option.value);
-      return {
-        ...option,
-        reveal: option.reveal ? <Inset><ConnectedComponent /></Inset> : null
-      };
-    }
-  }
-};
 
 const Page = ({ addRoleTasks, schema, profile }) => {
   if (schema.type.options.length === 0) {
@@ -47,7 +22,7 @@ const Page = ({ addRoleTasks, schema, profile }) => {
 
   return (
     <Fragment>
-      <FormLayout formatters={formatters} cancelLink={<CancelLink />}>
+      <FormLayout cancelLink={<CancelLink />}>
         <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
         <OpenTasks roleTasks={addRoleTasks} />
       </FormLayout>

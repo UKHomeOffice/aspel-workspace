@@ -30,6 +30,7 @@ module.exports = (roles, establishment) => {
   return {
     type: {
       inputType: 'radioGroup',
+      automapReveals: true,
       validate: [
         'required',
         {

@@ -2,13 +2,12 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
   ControlBar,
-  ErrorSummary,
   FormLayout,
   Header,
   Link,
   Snippet
 } from '@ukhomeoffice/asl-components';
-import { CheckboxGroup, Warning } from '@ukhomeoffice/react-components';
+import { Warning } from '@ukhomeoffice/react-components';
 import namedRoles from '../../content/named-roles';
 const mandatoryTrainingRequirementsForRoles = require('../mandatory-training/content/mandatory-training-requirements-for-roles');
 
@@ -22,34 +21,49 @@ const Confirm = ({
 }) => {
   const editPath = props.action === 'remove' ? 'delete' : 'create';
 
+  const formatters = {
+    declaration: {
+      propMappers: {
+        label: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>agreement</Snippet>,
+        title: () => <Snippet>fields.declaration.title</Snippet>,
+        hint: () => <Snippet fallback='declarations.default'>declarations.{values.type}</Snippet>
+      },
+      renderContext: {
+        agreementDeterminer: ['nacwo', 'nvs'].includes(values.type) ? 'all' : 'both'
+      }
+    }
+  };
+
   return (
-    <FormLayout>
-      <ErrorSummary />
+    <FormLayout formatters={formatters}>
       <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
-      <Header title={<Snippet>declaration</Snippet>}/>
-      <h4><Snippet>applyingFor</Snippet></h4>
-      <p>{namedRoles[values.type]}</p>
+      <Header title={<Snippet>confirmTitle</Snippet>}/>
+      <dl>
+        <dt><Snippet>applyingFor</Snippet></dt>
+        <dd>{namedRoles[values.type]}</dd>
 
-      <h4><Snippet>onBehalfOf</Snippet></h4>
-      <p>{`${profile.firstName} ${profile.lastName}`}</p>
+        <dt><Snippet>onBehalfOf</Snippet></dt>
+        <dd>
+          {`${profile.firstName} ${profile.lastName}`}
+          { profileReplaced && props.action !== 'remove' &&
+            <Warning>The existing {profileReplaced.type.toUpperCase()} {profileReplaced.firstName} {profileReplaced.lastName} will be removed from the role when this request is approved.</Warning>
+          }
+        </dd>
 
-      { profileReplaced && props.action !== 'remove' &&
-        <Warning>The existing {profileReplaced.type.toUpperCase()} {profileReplaced.firstName} {profileReplaced.lastName} will be removed from the role when this request is approved.</Warning>
-      }
+        { values.rcvsNumber &&
+          <Fragment>
+            <dt><Snippet>rcvsNumber</Snippet></dt>
+            <dd>{values.rcvsNumber}</dd>
+          </Fragment>
+        }
 
-      { values.rcvsNumber &&
-        <Fragment>
-          <h2><Snippet>rcvsNumber</Snippet></h2>
-          <p>{values.rcvsNumber}</p>
-        </Fragment>
-      }
-
-      {mandatoryTrainingRequirementsForRoles[values.type] && (
-        <section>
-          <h4><Snippet>explanation</Snippet></h4>
-          <p>{values.comment}</p>
-        </section>
-      )}
+        {mandatoryTrainingRequirementsForRoles[values.type] && (
+          <Fragment>
+            <dt><Snippet>explanation</Snippet></dt>
+            <dd>{values.comment}</dd>
+          </Fragment>
+        )}
+      </dl>
 
       {
         props.action === 'remove' && values.type === 'nacwo' &&
@@ -57,21 +71,9 @@ const Confirm = ({
       }
 
       <ControlBar>
-        <Link page={`role.${editPath}`} label={<Snippet>buttons.edit</Snippet>} />
+        <Link page={`role.namedPersonMvp.${editPath}`} label={<Snippet>buttons.edit</Snippet>} />
         <Link page="profile.read" label={<Snippet>buttons.cancel</Snippet>} />
       </ControlBar>
-
-      <div className="govuk-box requirements-box">
-        <Snippet fallback="declarations.default">{`declarations.${values.type}`}</Snippet>
-
-        <CheckboxGroup
-          name="roles"
-          options={[
-            { label: 'I agree with all the above statements',
-              value: true }]}
-          value={true}
-        />
-      </div>
     </FormLayout>
   );
 };
@@ -81,13 +83,15 @@ const mapStateToProps = ({
     establishment,
     profile,
     profileReplaced,
-    values
+    values,
+    ...rest
   }
 }) => ({
   establishment,
   profile,
   profileReplaced,
-  values
+  values,
+  rest
 });
 
 export default connect(mapStateToProps)(Confirm);

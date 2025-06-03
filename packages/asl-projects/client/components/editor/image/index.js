@@ -41,7 +41,7 @@ const onClickImage = (editor, event) => {
     });
     const block = editor.value.blocks.get(0);
 
-    // if in an empty paragrpah then replace the paragraph with the iamge
+    // if in an empty paragraph then replace the paragraph with the iamge
     if (block.text === '') {
       editor.replaceNodeByKey(block.key, image);
     } else {
