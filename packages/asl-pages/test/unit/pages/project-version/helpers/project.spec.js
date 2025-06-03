@@ -1,4 +1,4 @@
-import {getAdditionalEstablishments} from '../../../../../pages/project-version/helpers/project';
+import { deepRemoveEmpty, getAdditionalEstablishments } from '../../../../../pages/project-version/helpers/project';
 
 describe('Project Helper', () => {
 
@@ -128,6 +128,77 @@ describe('Project Helper', () => {
           expect.objectContaining({'establishment-id': 8204, name: 'Proposed Establishment'})
         ])
       );
+    });
+  });
+
+  describe('deepRemoveEmpty', () => {
+    describe('removes all empty values', () => {
+      const examples = [
+        { example: [], expected: [] },
+        { example: {}, expected: {} },
+        { example: '', expected: undefined },
+        { example: null, expected: undefined },
+        { example: undefined, expected: undefined },
+        { example: false, expected: undefined },
+        {
+          example: [
+            '',
+            null,
+            undefined,
+            [],
+            {},
+            [{}, [], ''],
+            false
+          ],
+          expected: []
+        },
+        {
+          example: {
+            array: [],
+            object: { },
+            null: null,
+            undefined: undefined,
+            emptyString: '',
+            nested: [{}, [], ''],
+            boolean: false
+          },
+          expected: {}
+        }
+      ];
+
+      examples.forEach(({ example, expected }) => {
+        it(JSON.stringify(example), () => {
+          expect(deepRemoveEmpty(example)).toEqual(expected);
+        });
+      });
+    });
+
+    it('Doesn\'t remove other values', () => {
+      const symbol = Symbol('');
+
+      const example = {
+        array: [1, []],
+        object: { two: 2, null: null },
+        string: 'non empty',
+        number: 1,
+        zero: 0,
+        true: true,
+        symbol,
+        nested: [{}, [[], 'deep'], '']
+      };
+
+      const expected = {
+        array: [1],
+        object: {two: 2},
+        string: 'non empty',
+        number: 1,
+        zero: 0,
+        true: true,
+        symbol,
+        nested: [['deep']]
+      };
+
+      expect(deepRemoveEmpty(example)).toEqual(expected);
     });
   });
 });
