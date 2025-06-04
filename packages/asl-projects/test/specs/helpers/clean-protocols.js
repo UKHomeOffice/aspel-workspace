@@ -43,6 +43,55 @@ describe('clean-protocols', () => {
     });
   });
 
+  it('removes all additional establishments from protocols when additional establishment use is disabled', () => {
+    const state = {
+      title: 'Test project',
+      objectives: [],
+      protocols: [
+        {
+          locations: [
+            'University of Cheese',
+            'University of Croydon',
+            'University of Life',
+            'POLE'
+          ],
+          objectives: []
+        }
+      ],
+      establishments: [
+        {name: 'University of Cheese'},
+        {name: 'University of Life'},
+      ],
+      'other-establishments': false,
+      poles: true,
+      polesList: [{ title: 'POLE'}]
+    };
+    const changed = {
+      'other-establishments': false,
+    };
+    const establishment = {
+      name: 'University of Croydon'
+    };
+
+    const expected = {
+      ...state,
+      protocols: [
+        {
+          ...state.protocols[0],
+          locations: [
+            'University of Croydon',
+            'POLE'
+          ]
+        }
+      ]
+    };
+
+    assert.deepEqual(
+      cleanProtocols({ state, changed, establishment }),
+      expected
+    );
+  });
+
   it('does not throw an error if project has no objectives', () => {
     const state = {
       title: 'Test project',
