@@ -3,6 +3,7 @@ const selectRole = require('./select-role');
 const mandatoryTraining = require('./mandatory-training');
 const incompleteTraining = require('./incomplete-training');
 const confirm = require('./confirm');
+const success = require('./success');
 
 module.exports = {
   beforeYouApply: {
@@ -28,6 +29,11 @@ module.exports = {
   confirm: {
     path: '/confirm',
     router: confirm,
+    breadcrumb: false
+  },
+  success: {
+    path: '/success',
+    router: success,
     breadcrumb: false
   }
 };
