@@ -44,7 +44,7 @@ export default function Markdown({
             ...(!links && components),
             p: wrapInSpanIfOnlyChild(unwrapSingleLine, paragraphProps),
             mark: ({ ...props }) => <mark style={{ backgroundColor: '#fff7bf', color: '#594d00', padding: '5px', fontWeight: 400 }} {...props} />
-       }}
+        }}
         remarkPlugins={significantLineBreaks ? [remarkBreaks, remarkFlexibleMarkers] : [remarkFlexibleMarkers]}
         {...props}
     >
