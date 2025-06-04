@@ -41,7 +41,8 @@ export default function Markdown({
         includeElementIndex={true}
         components={{
             ...(!links && components),
-            p: wrapInSpanIfOnlyChild(unwrapSingleLine, paragraphProps)
+            p: wrapInSpanIfOnlyChild(unwrapSingleLine, paragraphProps),
+            strong: ({ ...props }) => <span style={{ backgroundColor: '#fff7bf', color: '#594d00', padding: '5px', fontWeight: 400 }} {...props} />
         }}
         remarkPlugins={significantLineBreaks ? [remarkBreaks] : []}
         {...props}

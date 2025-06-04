@@ -10,13 +10,10 @@ module.exports = () => {
       value: 'E1'
     },
     {
-      label: `PILA (theory) - Species specific`,
       value: 'PILA (theory)'
     },
     {
-      label: 'PILA (skills) - Species specific',
-      value: 'PILA (skills)',
-      tag: 'Species specific'
+      value: 'PILA (skills)'
     },
     {
       label: 'PILB',
