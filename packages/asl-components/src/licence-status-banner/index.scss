@@ -48,6 +48,10 @@
       a:visited {
         color: $white;
       }
+
+      a:focus {
+        color: $black;
+      }
     }
   }
 
