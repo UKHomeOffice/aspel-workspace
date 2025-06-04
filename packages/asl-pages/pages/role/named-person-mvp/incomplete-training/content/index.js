@@ -5,10 +5,10 @@ module.exports = {
       label: `Which {{roleType}} training modules need to be completed?`,
       options: {
         'PILA (theory)': {
-          label: `PILA (theory) **Species specific**`
+          label: `PILA (theory) ==Species specific==`
         },
         'PILA (skills)': {
-          label: `PILA (skills) **Species specific**`
+          label: `PILA (skills) ==Species specific==`
         }
       }
     },
