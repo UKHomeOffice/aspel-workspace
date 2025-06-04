@@ -4,6 +4,8 @@ const form = require('../../../common/routers/form');
 const { populateNamedPeople } = require('../../../common/middleware');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
 
+const NAMED_PERSION_VERSION_ID = 2;
+
 const sendData = (req, params = {}) => {
   // eslint-disable-next-line no-warning-comments
   //TODO: get nvs number and comment when working on nvs journey
@@ -22,7 +24,7 @@ const sendData = (req, params = {}) => {
           replaceProfile,
           replaceRoles: PELH_OR_NPRC_ROLES
         },
-        meta: { comment }
+        meta: { comment, version: NAMED_PERSION_VERSION_ID }
       },
       params
     )
