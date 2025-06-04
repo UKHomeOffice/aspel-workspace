@@ -139,7 +139,6 @@ describe('Project Helper', () => {
         { example: '', expected: undefined },
         { example: null, expected: undefined },
         { example: undefined, expected: undefined },
-        { example: false, expected: undefined },
         {
           example: [
             '',
@@ -147,8 +146,7 @@ describe('Project Helper', () => {
             undefined,
             [],
             {},
-            [{}, [], ''],
-            false
+            [{}, [], '']
           ],
           expected: []
         },
@@ -159,8 +157,7 @@ describe('Project Helper', () => {
             null: null,
             undefined: undefined,
             emptyString: '',
-            nested: [{}, [], ''],
-            boolean: false
+            nested: [{}, [], '']
           },
           expected: {}
         }
@@ -183,6 +180,7 @@ describe('Project Helper', () => {
         number: 1,
         zero: 0,
         true: true,
+        false: false,
         symbol,
         nested: [{}, [[], 'deep'], '']
       };
@@ -194,6 +192,7 @@ describe('Project Helper', () => {
         number: 1,
         zero: 0,
         true: true,
+        false: false,
         symbol,
         nested: [['deep']]
       };
