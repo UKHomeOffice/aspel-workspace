@@ -7,10 +7,12 @@ const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
 const NAMED_PERSION_VERSION_ID = 2;
 
 const sendData = (req, params = {}) => {
-  // eslint-disable-next-line no-warning-comments
-  //TODO: get nvs number and comment when working on nvs journey
-  const { type, rcvsNumber, comment } =
+  const { type, rcvsNumber } =
     req.session.form[`${req.profileId}-new-role-named-person`].values;
+  const { mandatory } =
+    req.session.form[`${req.profileId}-mandatory-training`].values;
+  const { incomplete, delayReason, completeDate } =
+    req.session.form[`${req.profileId}-incomplete-training`].values;
 
   const replaceProfile = profileReplaced(req.establishment, type);
   const opts = {
@@ -20,11 +22,15 @@ const sendData = (req, params = {}) => {
         data: {
           type,
           rcvsNumber,
+          mandatory,
+          incomplete,
+          delayReason,
+          completeDate,
           profileId: req.profileId,
           replaceProfile,
           replaceRoles: PELH_OR_NPRC_ROLES
         },
-        meta: { comment, version: NAMED_PERSION_VERSION_ID }
+        meta: { version: NAMED_PERSION_VERSION_ID }
       },
       params
     )
@@ -48,7 +54,6 @@ module.exports = (settings) => {
 
   app.use(
     '/',
-    populateNamedPeople,
     form({
       requiresDeclaration: (req) => !req.user.profile.asruUser,
       locals: (req, res, next) => {
