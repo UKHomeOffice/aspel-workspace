@@ -55,7 +55,7 @@ module.exports = () => {
     },
     completeDate: {
       inputType: 'inputDate',
-      hint: 'For example, 20 3 2007.',
+      hint: 'For example, 27 3 2007',
       nullValue: '',
       validate: [
         'required',
