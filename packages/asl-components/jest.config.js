@@ -7,6 +7,6 @@ module.exports = {
         '/node_modules/(?!(uuid)/)'
     ],
     setupFilesAfterEnv: [
-        '<rootDir>/setupTests.js'
+        '<rootDir>/setup-test.js'
     ]
 };

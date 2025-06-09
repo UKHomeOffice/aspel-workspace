@@ -1,6 +1,6 @@
 /** @type {import('jest').Config} */
 module.exports = {
-  testEnvironment: 'jsdom', // ← add this line
+  testEnvironment: 'jsdom',
   testEnvironmentOptions: {
     url: 'http://localhost/'
   },
@@ -15,6 +15,5 @@ module.exports = {
   watchPathIgnorePatterns: [
     'node_modules/(?!(@ukhomeoffice|@asl))'
   ],
-  setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
-  snapshotSerializers: ['enzyme-to-json/serializer']
+  setupFilesAfterEnv: ['<rootDir>/setup-tests.js']
 };
