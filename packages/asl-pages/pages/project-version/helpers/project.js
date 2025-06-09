@@ -24,12 +24,11 @@ const isEmptyValue = (value) => {
     case 'function':
     case 'symbol':
     case 'bigint':
+    case 'boolean':
       return false;
     case 'object':
     case 'string':
       return isEmpty(value);
-    case 'boolean':
-      return !value;
   }
 };
 
