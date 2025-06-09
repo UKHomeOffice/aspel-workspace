@@ -56,7 +56,6 @@ module.exports = (settings) => {
     '/',
     form({
       requiresDeclaration: (req) => !req.user.profile.asruUser,
-      requiresDeclaration: (req) => !req.user.profile.asruUser,
       locals: (req, res, next) => {
         Object.assign(res.locals.static, {
           values: {
