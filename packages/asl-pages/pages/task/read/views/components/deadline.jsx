@@ -168,7 +168,6 @@ export default function Deadline({ task }) {
           )
         }
       </dl>
-      {console.log('task', task)}
     </div>
   );
 }
