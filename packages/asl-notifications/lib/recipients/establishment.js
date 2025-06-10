@@ -31,8 +31,6 @@ module.exports = async ({ schema, logger, task }) => {
     role: ['create', 'delete']
   };
 
-  console.log({action, model, task});
-
   if (!allowedActions[model].includes(action)) {
     logger.verbose(`ignoring task: ${model} ${action}`);
     return Promise.resolve(new Map());
