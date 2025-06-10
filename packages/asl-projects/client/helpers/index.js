@@ -69,7 +69,7 @@ export function mapAnimalQuantities(project, name) {
   const species = []
     .concat(project.species)
     .reduce((arr, s) => {
-      if (s.match(/^other-/)) {
+      if (s?.match(/^other-/)) {
         const others = castArray(project[`species-${s}`]);
         return [ ...arr, ...others ];
       }
