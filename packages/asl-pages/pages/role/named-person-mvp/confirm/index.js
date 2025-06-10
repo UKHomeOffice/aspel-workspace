@@ -8,11 +8,11 @@ const NAMED_PERSION_VERSION_ID = 2;
 
 const sendData = (req, params = {}) => {
   const { type, rcvsNumber } =
-    req.session.form[`${req.profileId}-new-role-named-person`].values;
+    req.session.form[`${req.profileId}-new-role-named-person`]?.values || {};
   const { mandatory } =
-    req.session.form[`${req.profileId}-mandatory-training`].values;
+    req.session.form[`${req.profileId}-mandatory-training`]?.values || {};
   const { incomplete, delayReason, completeDate } =
-    req.session.form[`${req.profileId}-incomplete-training`].values;
+    req.session.form[`${req.profileId}-incomplete-training`]?.values || {};
 
   const replaceProfile = profileReplaced(req.establishment, type);
   const opts = {

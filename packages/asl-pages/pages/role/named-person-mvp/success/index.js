@@ -1,10 +1,10 @@
 const isUUID = require('uuid-validate');
 const { merge, get, upperFirst } = require('lodash');
-const { Router } = require('express');
+const { page } = require('@asl/service/ui');
 const { NotFoundError } = require('@asl/service/errors');
 const successMessages = require('./content');
 
-const getTaskLabel = task => {
+const getTaskLabel = (task) => {
   const taskType = get(task, 'type');
   const action = get(task, 'data.action');
   const model = get(task, 'data.model');
@@ -53,7 +53,7 @@ const getTaskLabel = task => {
   }
 };
 
-const getSuccessType = task => {
+const getSuccessType = (task) => {
   const model = get(task, 'data.model');
   const action = get(task, 'data.action');
   const latestActivity = get(task, 'activityLog[0]');
@@ -81,7 +81,10 @@ const getSuccessType = task => {
     return 'endorsed';
   }
 
-  if (latestActivity && get(latestActivity, 'event.status') === 'intention-to-refuse') {
+  if (
+    latestActivity &&
+    get(latestActivity, 'event.status') === 'intention-to-refuse'
+  ) {
     return 'intention-to-refuse';
   }
 
@@ -89,7 +92,11 @@ const getSuccessType = task => {
     return 'revoked';
   }
 
-  if (['awaiting-endorsement', 'with-inspectorate', 'with-licensing'].includes(task.status)) {
+  if (
+    ['awaiting-endorsement', 'with-inspectorate', 'with-licensing'].includes(
+      task.status
+    )
+  ) {
     return 'submitted';
   }
 
@@ -101,11 +108,19 @@ const getSuccessType = task => {
     return 'discarded';
   }
   // HBA amendment licence holder content change on success
-  if (task.status === 'resolved' && task?.type === 'amendment' && task?.data?.model === 'project') {
+  if (
+    task.status === 'resolved' &&
+    task?.type === 'amendment' &&
+    task?.data?.model === 'project'
+  ) {
     return 'licence-amended';
   }
   // HBA PPL transfer establishment content change on success
-  if (task.status === 'resolved' && task?.type === 'transfer' && task?.data?.model === 'project') {
+  if (
+    task.status === 'resolved' &&
+    task?.type === 'transfer' &&
+    task?.data?.model === 'project'
+  ) {
     return 'pil-transfer';
   }
 
@@ -135,7 +150,9 @@ const getAdditionalInfo = ({ task, project }) => {
 };
 
 module.exports = () => {
-  const app = Router();
+  const app = page({
+    root: __dirname
+  });
 
   app.use((req, res, next) => {
     const taskId = get(req.session, 'success.taskId');
@@ -144,8 +161,9 @@ module.exports = () => {
       return next(new NotFoundError());
     }
 
-    return req.api(`/tasks/${taskId}`)
-      .then(response => {
+    return req
+      .api(`/tasks/${taskId}`)
+      .then((response) => {
         req.taskId = taskId;
         req.task = response.json.data;
       })
@@ -155,16 +173,25 @@ module.exports = () => {
 
   app.use((req, res, next) => {
     const successType = getSuccessType(req.task);
-    const success = merge({}, successMessages.default, get(successMessages, successType));
+    const success = merge(
+      {},
+      successMessages.default,
+      get(successMessages, successType)
+    );
     merge(res.locals.static.content, { success });
     res.locals.static.taskId = req.taskId;
     res.locals.static.taskLabel = getTaskLabel(req.task);
     res.locals.static.isAsruUser = req.user.profile.asruUser;
     res.locals.static.additionalInfo = getAdditionalInfo(req);
-    res.locals.static.establishment = req.establishment || get(req.task, 'data.establishment');
+    res.locals.static.establishment =
+      req.establishment || get(req.task, 'data.establishment');
 
     // Update the project ID for transfer projects to ensure correct success page links
-    if (req.task?.status === 'resolved' && req.task?.type === 'transfer' && req.task?.data?.model === 'project') {
+    if (
+      req.task?.status === 'resolved' &&
+      req.task?.type === 'transfer' &&
+      req.task?.data?.model === 'project'
+    ) {
       res.locals.static.projectId = res.locals.static.transferredProject?.id;
     } else if (req.task?.data?.model === 'project') {
       res.locals.static.projectId = req.project?.id;
