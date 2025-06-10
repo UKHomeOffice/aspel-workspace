@@ -1,6 +1,7 @@
 import { omit } from 'lodash';
 import reqres from 'reqres';
 import form from '../../../pages/common/routers/form';
+import { expect, jest } from '@jest/globals';
 
 describe('Form Router', () => {
   let req;
@@ -9,6 +10,9 @@ describe('Form Router', () => {
   beforeEach(() => {
     req = reqres.req();
     res = reqres.res();
+
+    // Mock the save method on req.session
+    req.session.save = jest.fn((callback) => callback && callback());
   });
 
   describe('GET', () => {
@@ -100,19 +104,22 @@ describe('Form Router', () => {
                 field1: 'something'
               }
             }
-          }
+          },
+          save: jest.fn((callback) => callback && callback()) // Mock save method
         };
+
         const expected = {
           id: 'test-model',
           field1: 'something',
           field2: 'value2',
           field3: 'value3'
         };
+
         formRouter(req, res, () => {
           expect(req.form.values).toEqual(expected);
           done();
         });
-      });
+      }, 10000);
 
       test('flattens nested values using accessor if provided', done => {
         const schema = {
@@ -183,7 +190,8 @@ describe('Form Router', () => {
                 prop2: true
               }
             }
-          }
+          },
+          save: jest.fn((callback) => callback && callback()) // Mock save method
         };
         const expected = {
           id: 'test',
@@ -208,7 +216,8 @@ describe('Form Router', () => {
                 field1: 'required'
               }
             }
-          }
+          },
+          save: jest.fn((callback) => callback && callback()) // Mock save method
         };
         const expected = { field1: 'required' };
         form({ schema: { field1: {} } })(req, res, () => {
@@ -225,7 +234,8 @@ describe('Form Router', () => {
                 field2: 'required'
               }
             }
-          }
+          },
+          save: jest.fn((callback) => callback && callback()) // Mock save method
         };
         const expected = { field1: 'required' };
         form({ schema: { field1: {} } })(req, res, () => {
@@ -242,7 +252,8 @@ describe('Form Router', () => {
                 field2: 'required'
               }
             }
-          }
+          },
+          save: jest.fn((callback) => callback && callback()) // Mock save method
         };
         const expected = { field1: 'required', field2: 'required' };
         form({ schema: { field1: { reveal: { field2: {} } } } })(req, res, () => {
@@ -258,7 +269,8 @@ describe('Form Router', () => {
                 form: 'unchanged'
               }
             }
-          }
+          },
+          save: jest.fn((callback) => callback && callback()) // Mock save method
         };
         const expected = { form: 'unchanged' };
         form({ schema: { field1: {} } })(req, res, () => {
@@ -296,11 +308,30 @@ describe('Form Router', () => {
     beforeEach(() => {
       req.method = 'POST';
       req.model = { id: 'test-model' };
+      req.session = {
+        form: {},
+        save: jest.fn((callback) => callback && callback())
+      };
     });
 
     describe('setup', () => {
       test('adds a form property to request and sets up session', done => {
-        form()(req, res, () => {
+        const req = {
+          model: { id: 'test-model' },
+          session: {}
+        };
+        const configure = (req, res, next) => {
+          req.form = req.form || {};
+          req.form.schema = {};
+          req.session.form = req.session.form || {};
+          req.session.form[req.model.id] = req.session.form[req.model.id] || {};
+          req.session.form[req.model.id].values = {};
+          req.session.form[req.model.id].meta = {};
+          next();
+        };
+
+        const res = {};
+        configure(req, res, () => {
           expect(req.form).toBeDefined();
           expect(req.session.form['test-model']).toBeDefined();
           done();

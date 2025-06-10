@@ -10,7 +10,7 @@ module.exports = {
     '^.+\\.mjs$': 'babel-jest'
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(uuid|react-shallow-renderer|@cfaester|@ukhomeoffice|@asl))'
+    'node_modules/(?!(uuid|react-shallow-renderer|@cfaester|@ukhomeoffice|@asl|sinon))'
   ],
   watchPathIgnorePatterns: [
     'node_modules/(?!(@ukhomeoffice|@asl))'
