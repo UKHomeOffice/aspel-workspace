@@ -9,8 +9,6 @@ import RAPlaybackHint from './ra-playback-hint';
 import { Markdown } from '@ukhomeoffice/asl-components';
 import ErrorBoundary from './error-boundary';
 import classnames from 'classnames';
-import { hasDatabaseChange } from '../helpers/field-change-detection';
-import { hasSpeciesFieldChanges } from '../helpers/species-change-detection';
 
 class Review extends React.Component {
 
@@ -28,15 +26,7 @@ class Review extends React.Component {
       changedFromLatest,
       changedFromGranted,
       hideChanges,
-      latestSubmittedValue,
-      firstSubmittedValue,
-      grantedValue,
-      fieldName,
-      storedValue,
-      currentValue,
-      values,
-      hint: initialHint,
-      ...restProps
+      hint: initialHint
     } = this.props;
     let hint = initialHint;
 
@@ -52,20 +42,8 @@ class Review extends React.Component {
 
     const showComments = !this.props.noComments && this.props.type !== 'repeater';
     const changed = changedFromFirst || changedFromLatest || changedFromGranted;
-    const showDiffWindow = this.props.readonly && !hideChanges && changed;
-    const netChange = hasDatabaseChange(
-      fieldName,
-      storedValue,
-      currentValue,
-      latestSubmittedValue,
-      firstSubmittedValue,
-      grantedValue,
-      isGranted,
-      values,
-      hasSpeciesFieldChanges
-    );
-
-    const showChanges = !hideChanges && netChange;
+    const showChanges = !hideChanges && changed;
+    const showDiffWindow = this.props.readonly && showChanges
 
     if (this.props.type === 'comments-only' && showComments) {
       return <Comments field={`${this.props.prefix || ''}${this.props.name}`} collapsed={!this.props.readonly} />;
