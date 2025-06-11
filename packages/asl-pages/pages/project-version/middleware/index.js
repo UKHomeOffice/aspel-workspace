@@ -7,7 +7,7 @@ const {
   pickBy,
   isEmpty,
   castArray,
-  flow
+  flow, omit
 } = require('lodash');
 const isUUID = require('uuid-validate');
 const extractComments = require('../lib/extract-comments');
@@ -220,9 +220,22 @@ const getCacheableVersion = (req, url) => {
     });
 };
 
+const removeDeletedProtocolSteps = (versionData) => ({
+  ...versionData,
+  protocols: (versionData.protocols ?? []).map(protocol => ({
+    ...protocol,
+    steps: (protocol.steps ?? []).flatMap(step =>
+      // change in deleted status is detected by presence or absence of a step,
+      // deleted changing from undefined to false should not count as a change.
+      step?.deleted ? [] : [omit(step, 'deleted')]
+    )
+  }))
+});
+
 const normaliseData = (versionData, opts) => {
   return flow([
     normaliseConditions(opts),
+    removeDeletedProtocolSteps,
     deepRemoveEmpty
   ])(versionData);
 };
