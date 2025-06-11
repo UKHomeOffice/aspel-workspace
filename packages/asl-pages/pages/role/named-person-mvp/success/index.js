@@ -173,18 +173,22 @@ module.exports = () => {
 
   app.use((req, res, next) => {
     const successType = getSuccessType(req.task);
+    const addRole = get(req.task, 'data.data');
     const success = merge(
       {},
       successMessages.default,
       get(successMessages, successType)
     );
     merge(res.locals.static.content, { success });
-    res.locals.static.taskId = req.taskId;
-    res.locals.static.taskLabel = getTaskLabel(req.task);
-    res.locals.static.isAsruUser = req.user.profile.asruUser;
-    res.locals.static.additionalInfo = getAdditionalInfo(req);
-    res.locals.static.establishment =
-      req.establishment || get(req.task, 'data.establishment');
+
+    Object.assign(res.locals.static, {
+      taskId: req.taskId,
+      taskLabel: getTaskLabel(req.task),
+      isAsruUser: req.user.profile.asruUser,
+      additionalInfo: getAdditionalInfo(req),
+      establishment: req.establishment || get(req.task, 'data.establishment'),
+      addRole
+    });
 
     // Update the project ID for transfer projects to ensure correct success page links
     if (
