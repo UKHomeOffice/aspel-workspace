@@ -22,7 +22,7 @@ const Index = ({ onwardLink }) => {
           title={`${addRole.type.toUpperCase()} role application`}
         />
 
-        <h2>{establishment.name}</h2>
+        <p className="subtitle">{establishment.name}</p>
 
         <Panel title={<Snippet>success.panel.title</Snippet>} className="green-bg success" />
 
