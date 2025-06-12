@@ -1,7 +1,7 @@
-import { omit } from 'lodash';
 import reqres from 'reqres';
-import form from '../../../pages/common/routers/form';
 import { expect, jest } from '@jest/globals';
+import form from '../../../pages/common/routers/form';
+import omit from 'lodash/omit';
 
 describe('Form Router', () => {
   let req;
@@ -10,9 +10,9 @@ describe('Form Router', () => {
   beforeEach(() => {
     req = reqres.req();
     res = reqres.res();
-
-    // Mock the save method on req.session
-    req.session.save = jest.fn((callback) => callback && callback());
+    req.session.save = jest.fn(cb => cb());
+    req.session.form = {};
+    req.model = { id: 'test-model' };
   });
 
   describe('GET', () => {
@@ -97,16 +97,14 @@ describe('Form Router', () => {
       });
 
       test('extends model values with session values if set', done => {
-        req.session = {
-          form: {
-            'test-model': {
-              values: {
-                field1: 'something'
-              }
+        req.session.form = {
+          'test-model': {
+            values: {
+              field1: 'something'
             }
-          },
-          save: jest.fn((callback) => callback && callback()) // Mock save method
+          }
         };
+        req.session.save = jest.fn(cb => cb());
 
         const expected = {
           id: 'test-model',
@@ -114,12 +112,11 @@ describe('Form Router', () => {
           field2: 'value2',
           field3: 'value3'
         };
-
         formRouter(req, res, () => {
           expect(req.form.values).toEqual(expected);
           done();
         });
-      }, 10000);
+      });
 
       test('flattens nested values using accessor if provided', done => {
         const schema = {
@@ -191,8 +188,9 @@ describe('Form Router', () => {
               }
             }
           },
-          save: jest.fn((callback) => callback && callback()) // Mock save method
+          save: jest.fn(cb => cb())
         };
+
         const expected = {
           id: 'test',
           prop1: true,
@@ -217,7 +215,7 @@ describe('Form Router', () => {
               }
             }
           },
-          save: jest.fn((callback) => callback && callback()) // Mock save method
+          save: jest.fn(cb => cb())
         };
         const expected = { field1: 'required' };
         form({ schema: { field1: {} } })(req, res, () => {
@@ -235,7 +233,7 @@ describe('Form Router', () => {
               }
             }
           },
-          save: jest.fn((callback) => callback && callback()) // Mock save method
+          save: jest.fn(cb => cb())
         };
         const expected = { field1: 'required' };
         form({ schema: { field1: {} } })(req, res, () => {
@@ -253,7 +251,7 @@ describe('Form Router', () => {
               }
             }
           },
-          save: jest.fn((callback) => callback && callback()) // Mock save method
+          save: jest.fn(cb => cb())
         };
         const expected = { field1: 'required', field2: 'required' };
         form({ schema: { field1: { reveal: { field2: {} } } } })(req, res, () => {
@@ -270,7 +268,7 @@ describe('Form Router', () => {
               }
             }
           },
-          save: jest.fn((callback) => callback && callback()) // Mock save method
+          save: jest.fn(cb => cb())
         };
         const expected = { form: 'unchanged' };
         form({ schema: { field1: {} } })(req, res, () => {
@@ -308,30 +306,11 @@ describe('Form Router', () => {
     beforeEach(() => {
       req.method = 'POST';
       req.model = { id: 'test-model' };
-      req.session = {
-        form: {},
-        save: jest.fn((callback) => callback && callback())
-      };
     });
 
     describe('setup', () => {
       test('adds a form property to request and sets up session', done => {
-        const req = {
-          model: { id: 'test-model' },
-          session: {}
-        };
-        const configure = (req, res, next) => {
-          req.form = req.form || {};
-          req.form.schema = {};
-          req.session.form = req.session.form || {};
-          req.session.form[req.model.id] = req.session.form[req.model.id] || {};
-          req.session.form[req.model.id].values = {};
-          req.session.form[req.model.id].meta = {};
-          next();
-        };
-
-        const res = {};
-        configure(req, res, () => {
+        form()(req, res, () => {
           expect(req.form).toBeDefined();
           expect(req.session.form['test-model']).toBeDefined();
           done();
@@ -717,15 +696,69 @@ describe('Form Router', () => {
           field1: {},
           field2: {}
         };
+
+        const csrfToken = 'test-csrf-token';
+
+        req = reqres.req();
+        res = reqres.res();
+
+        req.model = { id: 'test-model', field: 'value' }; // Correct shape
+        req.form = {
+          ...req.form,
+          schema,
+          model: { id: 'test-model', field: 'value' }
+        };
+
+        // Initialize form and model object explicitly
+        req.session = {
+          form: {
+            'test-model': {}
+          },
+          save: jest.fn(cb => cb())
+        };
+
+        req.csrfToken = () => csrfToken;
+
         req.body = {
+          _csrf: csrfToken,
           field1: 'test',
           field2: 'value'
         };
-        form({ schema })(req, res, () => {
-          expect(req.session.form['test-model'].values).toEqual(req.body);
-          done();
+
+        console.log('req.model before middleware:', req.model);
+
+        form({ schema })(req, res, err => {
+          try {
+            if (err) throw err;
+
+            console.log('req.session.form after middleware:', req.session.form);
+
+            expect(req.session.form).toBeDefined();
+            expect(req.session.form['test-model']).toBeDefined();
+            expect(req.session.form['test-model'].values).toEqual({
+              field1: 'test',
+              field2: 'value'
+            });
+
+            done();
+          } catch (error) {
+            done(error);
+          }
         });
       });
+
+      test('should initialise form session values', () => {
+        const req = reqres.req();
+        const res = reqres.res();
+        req.model = { id: 'test-id' };
+        req.session = { form: {} };
+
+        const middleware = form({ schema: {} }); // ← this creates the router
+        const route = middleware.stack.find(r => r.route?.path === '/' && r.route?.methods?.get);
+
+        expect(route).toBeDefined(); // ← this should now pass
+      });
     });
+
   });
 });

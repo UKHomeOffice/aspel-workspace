@@ -10,5 +10,5 @@ if (typeof global.TextEncoder === 'undefined') {
 
 // setImmediate is not available in jsdom by default,
 if (typeof global.setImmediate === 'undefined') {
-  global.setImmediate = (fn, ...args) => setTimeout(fn, 0, ...args);
+  global.setImmediate = (fn, ...args) => setTimeout(fn, 10000, ...args);
 }
