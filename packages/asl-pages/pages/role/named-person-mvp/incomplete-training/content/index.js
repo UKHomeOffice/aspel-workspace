@@ -2,7 +2,15 @@ module.exports = {
   title: 'Mandatory training to be completed',
   fields: {
     incomplete: {
-      label: `Which {{roleType}} training modules need to be completed?`
+      label: `Which {{roleType}} training modules need to be completed?`,
+      options: {
+        'PILA (theory)': {
+          label: `PILA (theory) ==Species specific==`
+        },
+        'PILA (skills)': {
+          label: `PILA (skills) ==Species specific==`
+        }
+      }
     },
     completeDate: {
       label: 'Date all mandatory training will be completed'
