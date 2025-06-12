@@ -70,7 +70,8 @@ module.exports = dirs => {
       fallback: {
         path: require.resolve('path-browserify'),
         buffer: require.resolve('buffer/'),
-        url: require.resolve('url/')
+        url: require.resolve('url/'),
+        process: require.resolve('process/browser.js')
       }
     },
     module: {
@@ -91,7 +92,7 @@ module.exports = dirs => {
       // fix "process is not defined" error:
       // (do "npm install process" before running the build)
       new ProvidePlugin({
-        process: 'process/browser',
+        process: 'process/browser.js',
         setImmediate: 'set-immediate-shim'
       })
     ],

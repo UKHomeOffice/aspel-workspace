@@ -1,6 +1,6 @@
 import React from 'react';
 import omit from 'lodash/omit';
-import { createStore } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import HomeOffice from '../components/home-office';
 import rootReducer from '../reducers';
@@ -10,14 +10,15 @@ import {
   Wrapper
 } from '@ukhomeoffice/asl-components';
 
-const Wrapped = ({ store, children }) => <Provider store={store}>{ children }</Provider>;
+const Wrapped = ({ store, children }) => (
+  <Provider store={store}>
+    {children}
+  </Provider>
+);
 
-const renderChildren = (children, wrap) => {
-  if (wrap) {
-    return <Wrapper>{ children }</Wrapper>;
-  }
-  return children;
-};
+const renderChildren = (children, wrap) => (
+  wrap ? <Wrapper>{children}</Wrapper> : children
+);
 
 const Layout = ({
   error,
@@ -43,20 +44,28 @@ const Layout = ({
   } = staticContent;
 
   const wrap = !error;
+
+  // Create Redux store only if we want to wrap
   const store = wrap
-    ? createStore(rootReducer, {
-      ...omit(props, ['footerLinks', 'settings', '_locals', 'cache']),
-      static: { ...rest, content, urls }
+    ? configureStore({
+      reducer: rootReducer,
+      preloadedState: {
+        ...omit(props, ['footerLinks', 'settings', '_locals', 'cache']),
+        static: { ...rest, content, urls }
+      }
     })
-    : {};
+    : null;
+
+  // Prepend common script if any scripts passed
   if (scripts.length) {
-    scripts = ['/public/js/common/bundle.js'].concat(scripts);
+    scripts = ['/public/js/common/bundle.js', ...scripts];
   }
+
   const page = (
     <HomeOffice
       title={props.pageTitle ? `${props.pageTitle} - ${siteTitle}` : siteTitle}
       propositionHeader={siteTitle}
-      stylesheets={['/public/css/app.css'].concat(stylesheets)}
+      stylesheets={['/public/css/app.css', ...stylesheets]}
       scripts={scripts}
       headerContent={<StatusBar user={user} />}
       nonce={nonce}
@@ -74,27 +83,31 @@ const Layout = ({
           <div className="govuk-grid-row">
             <div className="govuk-grid-column-full">
               <div id="page-component">
-                { renderChildren(children, wrap) }
+                {renderChildren(children, wrap)}
               </div>
             </div>
           </div>
         </main>
       </div>
-      {
-        wrap && <script src="/public/js/common/base64.js" />
-      }
-      {
-        wrap && <script nonce={nonce} dangerouslySetInnerHTML={{__html: `
-          function decode(str) { return JSON.parse(window.Base64.decode(str)); }
-          window.INITIAL_STATE=decode('${Buffer.from(JSON.stringify(store.getState()), 'utf8').toString('base64')}');
-        `}} />
-      }
+      {wrap && <script src="/public/js/common/base64.js" />}
+      {wrap && store && (
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html: `
+              function decode(str) { return JSON.parse(window.Base64.decode(str)); }
+              window.INITIAL_STATE = decode('${Buffer.from(
+          JSON.stringify(store.getState()),
+          'utf8'
+        ).toString('base64')}');
+            `
+          }}
+        />
+      )}
     </HomeOffice>
   );
-  if (wrap) {
-    return <Wrapped store={store}>{ page }</Wrapped>;
-  }
-  return page;
+
+  return wrap ? <Wrapped store={store}>{page}</Wrapped> : page;
 };
 
-module.exports = Layout;
+export default Layout;

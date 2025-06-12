@@ -39,7 +39,7 @@
     "mustache": "^3.0.1",
     "qs": "^6.6.1",
     "react": "^18.3.1",
-    "react-markdown": "^6.0.2",
+    "react-markdown": "^10.1.0",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
     "remark-breaks": "^2.0.2",

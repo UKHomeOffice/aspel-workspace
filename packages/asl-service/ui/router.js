@@ -7,7 +7,8 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const path = require('path');
 const uuid = require('uuid');
-const ReactDOMServer = require('react-dom/server');
+const { renderToPipeableStream } = require('react-dom/server');
+const { Writable } = require('stream');
 const { MemoryStore } = require('express-session');
 const homeOffice = require('@ukhomeoffice/frontend-toolkit');
 const session = require('@lennym/redis-session');
@@ -59,7 +60,6 @@ module.exports = settings => {
   app.engine('jsx', (filePath, options, callback) => {
     try {
       delete require.cache[require.resolve(filePath)];
-
       const PageComponent = require(filePath).default || require(filePath);
 
       const viewsDirs = app.get('views');
@@ -76,15 +76,40 @@ module.exports = settings => {
         React.createElement(Layout, { Component: PageComponent, ...options })
       );
 
-      const html = ReactDOMServer.renderToString(element);
-      return callback(null, html);
+      let html = '';
+      const stream = renderToPipeableStream(element, {
+        onAllReady() {
+          const writable = new Writable({
+            write(chunk, encoding, callback) {
+              html += chunk.toString();
+              callback();
+            },
+            final(callback) {
+              // Do NOT call callback twice
+              callback();
+            }
+          });
+
+          stream.pipe(writable);
+          writable.on('finish', () => {
+            callback(null, html);
+          });
+        },
+        onError(err) {
+          console.error('🔥 SSR stream error:', err);
+          callback(err);
+        }
+      });
     } catch (err) {
-      return callback(err);
+      console.error('🔥 JSX render error:', err);
+      callback(err);
     }
   });
 
-  settings.views = path.resolve(settings.root, './views');
-  app.set('views', settings.views);
+  app.set('view engine', 'jsx');
+  app.set('views', [
+    path.join(__dirname, 'views')
+  ]);
 
   app.use(staticrouter);
 
@@ -164,6 +189,10 @@ module.exports = settings => {
     };
     next();
   });
+  console.log('Using featureFlag.middleware:', typeof featureFlag.middleware);
+  console.log('Using notifications:', typeof notifications);
+  console.log('Using routeBuilder:', typeof routeBuilder);
+  console.log('Using cacheControl:', typeof cacheControl);
 
   app.use(sendResponse(settings));
 

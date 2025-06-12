@@ -1,23 +1,11 @@
-import {createStore, applyMiddleware} from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import reducer from './reducers';
-import thunk from 'redux-thunk';
-import { composeWithDevTools } from '@redux-devtools/extension';
+import { thunk } from 'redux-thunk';
 
-const middlewares = [thunk];
+const createAppStore = (initialState = {}) => configureStore({
+  reducer,
+  preloadedState: initialState,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
+});
 
-export default function configureStore(initialState = {}) {
-
-  let middleware;
-
-  if (process.env.NODE_ENV === 'development') {
-    middleware = composeWithDevTools(applyMiddleware(...middlewares));
-  } else {
-    middleware = applyMiddleware(...middlewares);
-  }
-
-  return createStore(
-    reducer,
-    initialState,
-    middleware
-  );
-}
+export default createAppStore;
