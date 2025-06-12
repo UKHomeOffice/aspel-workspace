@@ -29,6 +29,6 @@ module.exports = function configureAppStore(preloadedState = {}) {
     reducer: rootReducer,
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(persistStateMiddleware),
     preloadedState,
-    devTools: process.env.NODE_ENV === 'development'
+    devTools: true
   });
 };

@@ -68,7 +68,8 @@ module.exports = settings => {
       delete require.cache[require.resolve(layoutPath)];
       const Layout = require(layoutPath).default || require(layoutPath);
 
-      const store = configureStore();
+      const preloadedState = options?.preloadedState || {};
+      const store = configureStore(preloadedState);
 
       const element = React.createElement(
         Provider,

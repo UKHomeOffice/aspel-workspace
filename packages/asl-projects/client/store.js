@@ -1,11 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import reducer from './reducers';
-import { thunk } from 'redux-thunk';
 
 const createAppStore = (initialState = {}) => configureStore({
   reducer,
   preloadedState: initialState,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
+  // middleware: getDefaultMiddleware() // no need to add thunk explicitly, it's included by default
 });
 
 export default createAppStore;

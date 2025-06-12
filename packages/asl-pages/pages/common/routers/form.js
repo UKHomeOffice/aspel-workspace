@@ -476,7 +476,6 @@ module.exports = ({
 
   const _locals = (req, res, next) => {
     const { values, validationErrors, schema } = req.form;
-    res.locals.static = res.locals.static || {};
     Object.assign(res.locals.static, {
       schema: filterFieldProps(schema),
       errors: validationErrors,
