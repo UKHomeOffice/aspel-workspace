@@ -4,6 +4,12 @@ import { Link, Snippet, FormLayout } from '@ukhomeoffice/asl-components';
 import OpenTasks from '../../../component/open-tasks';
 
 const Page = ({ addRoleTasks, schema, profile }) => {
+  const formatters = {
+    type: {
+      additionalContent: <OpenTasks roleTasks={addRoleTasks} />
+    }
+  };
+
   if (schema.type.options.length === 0) {
     return (
       <Fragment>
@@ -22,9 +28,8 @@ const Page = ({ addRoleTasks, schema, profile }) => {
 
   return (
     <Fragment>
-      <FormLayout cancelLink={<CancelLink />}>
+      <FormLayout cancelLink={<CancelLink />} formatters={formatters}>
         <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
-        <OpenTasks roleTasks={addRoleTasks} />
       </FormLayout>
     </Fragment>
   );

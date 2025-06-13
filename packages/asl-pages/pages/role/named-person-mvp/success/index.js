@@ -1,90 +1,55 @@
 const isUUID = require('uuid-validate');
 const { merge, get, upperFirst } = require('lodash');
-const { Router } = require('express');
+const { page } = require('@asl/service/ui');
 const { NotFoundError } = require('@asl/service/errors');
 const successMessages = require('./content');
-const { FEATURE_NAMED_PERSON_MVP } = require('@asl/service/ui/feature-flag');
-const {
-  NAMED_PERSION_VERSION_ID
-} = require('../role/named-person-mvp/confirm');
 
-const headerContent = (title, subtitle) => {
-  return {
-    header: {
-      title,
-      ...(subtitle ? { subtitle } : {})
-    }
-  };
-};
-
-const getTaskContent = (task) => {
+const getTaskLabel = (task) => {
   const taskType = get(task, 'type');
   const action = get(task, 'data.action');
   const model = get(task, 'data.model');
-  const data = get(task, 'data.data');
 
   switch (model) {
     case 'role':
-      if (task.data.meta?.version === NAMED_PERSION_VERSION_ID) {
-        const profile = get(task, 'data.profile', {});
-        const subtitle = `${profile.firstName} ${profile.lastName}`;
-
-        if (action === 'create') {
-          return {
-            ...headerContent(
-              `${data.type.toUpperCase()} role application`,
-              subtitle
-            ),
-            panel: {
-              title: 'Application submitted'
-            },
-            taskLink: {
-              before: '',
-              linkText: 'Track progress of application'
-            }
-          };
-        }
-      }
-
       if (action === 'create') {
-        return headerContent('Add named person');
+        return 'Add named person';
       }
       if (action === 'replace') {
-        return headerContent('Replace named person');
+        return 'Replace named person';
       }
       if (action === 'delete') {
-        return headerContent('Remove named person');
+        return 'Remove named person';
       }
-      return headerContent(`Establishment ${taskType}`);
+      return `Establishment ${taskType}`;
 
     case 'place':
       if (action === 'create') {
-        return headerContent('New approved area');
+        return 'New approved area';
       }
       if (action === 'delete') {
-        return headerContent('Area removal');
+        return 'Area removal';
       }
-      return headerContent(`Area ${taskType}`);
+      return `Area ${taskType}`;
 
     case 'rop':
-      return headerContent('Return of procedures');
+      return 'Return of procedures';
 
     case 'pil':
     case 'trainingPil':
-      return headerContent(`Personal licence ${taskType}`);
+      return `Personal licence ${taskType}`;
 
     case 'project':
       if (action === 'grant-ra') {
-        return headerContent('Retrospective assessment');
+        return 'Retrospective assessment';
       } else if (action === 'transfer') {
-        return headerContent('Project licence transfer');
+        return 'Project licence transfer';
       } else if (action === 'update') {
-        return headerContent('Project licence amendment');
+        return 'Project licence amendment';
       }
-      return headerContent(`${upperFirst(model)} ${taskType}`);
+      return `${upperFirst(model)} ${taskType}`;
 
     default:
-      return headerContent(`${upperFirst(model)} ${taskType}`);
+      return `${upperFirst(model)} ${taskType}`;
   }
 };
 
@@ -170,12 +135,9 @@ const getAdditionalInfo = ({ task, project }) => {
       return get(task, 'data.modelData.profile.name');
 
     case 'role':
-      if (task.data.meta?.version === NAMED_PERSION_VERSION_ID) {
-        return get(task, 'data.establishment').name;
-      } else {
-        const profile = get(task, 'data.profile', {});
-        return `${profile.firstName} ${profile.lastName}`;
-      }
+      const profile = get(task, 'data.profile', {});
+      return `${profile.firstName} ${profile.lastName}`;
+
     case 'place':
       return get(task, 'data.modelData.name');
 
@@ -188,7 +150,9 @@ const getAdditionalInfo = ({ task, project }) => {
 };
 
 module.exports = () => {
-  const app = Router();
+  const app = page({
+    root: __dirname
+  });
 
   app.use((req, res, next) => {
     const taskId = get(req.session, 'success.taskId');
@@ -209,28 +173,21 @@ module.exports = () => {
 
   app.use((req, res, next) => {
     const successType = getSuccessType(req.task);
-    const task = get(req.task);
-    const additionalInfo = getAdditionalInfo(req);
+    const addRole = get(req.task, 'data.data');
     const success = merge(
       {},
       successMessages.default,
-      req.hasFeatureFlag(FEATURE_NAMED_PERSON_MVP)
-        ? successMessages.default.namedPerson
-        : {},
-      get(successMessages, successType),
-      req.hasFeatureFlag(FEATURE_NAMED_PERSON_MVP)
-        ? get(successMessages, `${successType}.namedPerson`)
-        : {},
-      getTaskContent(req.task)
+      get(successMessages, successType)
     );
     merge(res.locals.static.content, { success });
 
     Object.assign(res.locals.static, {
       taskId: req.taskId,
+      taskLabel: getTaskLabel(req.task),
       isAsruUser: req.user.profile.asruUser,
-      additionalInfo,
+      additionalInfo: getAdditionalInfo(req),
       establishment: req.establishment || get(req.task, 'data.establishment'),
-      task
+      addRole
     });
 
     // Update the project ID for transfer projects to ensure correct success page links

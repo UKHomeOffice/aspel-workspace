@@ -1,7 +1,7 @@
 module.exports = {
   default: {
     panel: {
-      title: 'Submitted'
+      title: 'Application submitted'
     },
     whatNext: {
       body: ``,
@@ -10,7 +10,7 @@ module.exports = {
     },
     taskLink: {
       before: 'You can ',
-      linkText: 'track the progress of this request.'
+      linkText: 'Track progress of application'
     }
   },
   submitted: {
