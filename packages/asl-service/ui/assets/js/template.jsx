@@ -1,13 +1,10 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { Wrapper } from '@ukhomeoffice/asl-components';
 
-/* eslint-disable implicit-dependencies/no-implicit */
 import Component from '{{page}}';
-// import configureAppStore from '@asl/service/ui/store';
 import configureAppStore from '@asl/service/ui/store';
-/* eslint-enable implicit-dependencies/no-implicit */
 
 const store = configureAppStore(window.INITIAL_STATE || {});
 
@@ -15,7 +12,9 @@ hydrateRoot(
   document.getElementById('page-component'),
   <Provider store={store}>
     <Wrapper>
-      <Component />
+      <Suspense fallback={<div className="loading">Loading…</div>}>
+        <Component />
+      </Suspense>
     </Wrapper>
   </Provider>
 );

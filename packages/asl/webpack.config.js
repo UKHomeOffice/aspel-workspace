@@ -17,11 +17,6 @@ const config = merge(
       path: path.resolve(__dirname, './public/js')
     },
     devtool: 'source-map',
-    resolve: {
-      alias: {
-        '@uiStore': path.resolve(__dirname, 'packages/asl-service/ui/store.js')
-      }
-    },
     module: {
       rules: [
         {
