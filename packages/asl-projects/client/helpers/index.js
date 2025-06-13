@@ -112,10 +112,10 @@ export const getScrollPos = (elem, offset = 0) => {
 };
 
 function mapReusableStepsToReferringSteps(project) {
-  return project.protocols.flatMap(
+  return (project.protocols ?? []).flatMap(
     (protocol) =>
-      protocol.steps
-        .filter(step => step.reusableStepId)
+      (protocol?.steps ?? [])
+        .filter(step => step?.reusableStepId)
         .map(
           step => ({
             source: `reusableSteps.${step.reusableStepId}`,
