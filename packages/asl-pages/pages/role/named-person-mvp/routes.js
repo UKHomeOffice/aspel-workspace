@@ -3,7 +3,7 @@ const selectRole = require('./select-role');
 const mandatoryTraining = require('./mandatory-training');
 const incompleteTraining = require('./incomplete-training');
 const confirm = require('./confirm');
-const success = require('./success');
+const success = require('../routers/success');
 
 module.exports = {
   beforeYouApply: {

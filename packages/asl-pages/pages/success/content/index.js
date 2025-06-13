@@ -5,14 +5,15 @@ module.exports = {
     },
     whatNext: {
       body: ``,
-      external: 'You’ll be emailed if any further information is required or when a decision has been made.'
+      external:
+        'You’ll be emailed if any further information is required or when a decision has been made.'
     },
     taskLink: {
       before: 'You can ',
       linkText: 'track the progress of this request.'
     }
   },
-  'submitted': {
+  submitted: {
     // add any content that differs from default
   },
   'rop-submitted': {
@@ -38,7 +39,7 @@ module.exports = {
       linkText: 'edited or discarded.'
     }
   },
-  'discarded': {
+  discarded: {
     panel: {
       title: 'Discarded'
     },
@@ -59,7 +60,7 @@ module.exports = {
       body: `This request has been returned.`
     }
   },
-  'endorsed': {
+  endorsed: {
     panel: {
       title: 'Endorsed'
     },
@@ -100,7 +101,7 @@ module.exports = {
       body: `The application has been returned and the notice of intention to refuse has been sent to the applicant and establishment.`
     }
   },
-  'resolved': {
+  resolved: {
     panel: {
       title: 'Approved'
     },
@@ -114,7 +115,7 @@ module.exports = {
       linkText: 'View history of application'
     }
   },
-  'rejected': {
+  rejected: {
     panel: {
       title: 'Refused'
     },
@@ -126,7 +127,7 @@ module.exports = {
       linkText: 'View history of application'
     }
   },
-  'revoked': {
+  revoked: {
     panel: {
       title: 'Revoked'
     },
@@ -139,7 +140,7 @@ module.exports = {
       linkText: 'View history of application'
     }
   },
-  'refused': {
+  refused: {
     panel: {
       title: 'Refused'
     },
@@ -151,7 +152,7 @@ module.exports = {
       linkText: 'View history of application'
     }
   },
-  'suspended': {
+  suspended: {
     panel: {
       title: 'Suspended'
     },
@@ -178,7 +179,7 @@ The relevant people have been emailed.`
       linkText: 'view the history of this request.'
     }
   },
-  'reinstated': {
+  reinstated: {
     panel: {
       title: 'Reinstated'
     },

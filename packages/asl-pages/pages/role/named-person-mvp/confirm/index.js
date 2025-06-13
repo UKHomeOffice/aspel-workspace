@@ -79,10 +79,14 @@ module.exports = (settings) => {
         Object.keys(req.session.form).forEach((entry) => {
           delete req.session.form[entry];
         });
-        return res.redirect(req.buildRoute('role.namedPersonMvp.success'));
+        return res.redirect(
+          req.buildRoute('role.create', { suffix: 'success' })
+        );
       })
       .catch(next);
   });
 
   return app;
 };
+
+module.exports.NAMED_PERSION_VERSION_ID = NAMED_PERSION_VERSION_ID;
