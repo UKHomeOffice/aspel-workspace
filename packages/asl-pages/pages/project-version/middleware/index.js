@@ -220,22 +220,33 @@ const getCacheableVersion = (req, url) => {
     });
 };
 
-const removeDeletedProtocolSteps = (versionData) => ({
+/**
+ * Protocols and steps within them are soft deleted using a deleted flag. This
+ * applies the meaning of that flag (deleting protocols/steps) where
+ * `deleted: true`, and hiding the deleted flag when false so that adding the
+ * flag, then setting it to false doesn't count as a change.
+ *
+ * @param versionData
+ * @returns {*&{protocols: (*&{steps})[]}}
+ */
+const normaliseDeletedProtocols = (versionData) => ({
   ...versionData,
-  protocols: (versionData.protocols ?? []).map(protocol => ({
-    ...protocol,
-    steps: (protocol.steps ?? []).flatMap(step =>
-      // change in deleted status is detected by presence or absence of a step,
-      // deleted changing from undefined to false should not count as a change.
-      step?.deleted ? [] : [omit(step, 'deleted')]
-    )
-  }))
+  protocols: (versionData.protocols ?? []).flatMap(
+    protocol => protocol?.deleted
+      ? []
+      : [{
+        ...omit(protocol, 'deleted'),
+        steps: (protocol.steps ?? []).flatMap(
+          step => step?.deleted ? [] : [omit(step, 'deleted')]
+        )
+      }]
+  )
 });
 
 const normaliseData = (versionData, opts) => {
   return flow([
     normaliseConditions(opts),
-    removeDeletedProtocolSteps,
+    normaliseDeletedProtocols,
     deepRemoveEmpty
   ])(versionData);
 };
@@ -355,7 +366,7 @@ const getPreviousProtocols = (firstVersion, previousVersion, grantedVersion) => 
       .filter(Boolean)
       .filter(p => !p.deleted)
       .map(p => p.steps)
-      .map((element) => element && Array.isArray(element) ? element.filter(s => !s.deleted) : element);
+      .map((element) => element && Array.isArray(element) ? element.filter(s => !s?.deleted) : element);
   }
 
   const steps = extractActiveSteps(previousVersion);
