@@ -16,7 +16,6 @@ import PreviewLicence from './preview-licence';
 import Submit from './submit';
 import { selector } from './sync-handler';
 import HoldingPage from './holding-page';
-import { hasSectionChanged } from '../helpers/section-change-detection';
 
 const mapStateToProps = ({
   project,
@@ -235,16 +234,6 @@ const ApplicationSummary = () => {
                     if (subsection.repeats) {
                       fields.push(subsection.repeats);
                     }
-                    // Call `hasSectionChanged` before rendering `ChangedBadge`
-                    const sectionHasChanges = hasSectionChanged(
-                      fields,
-                      values,
-                      project.initialValues || {},
-                      project.latestSubmittedValues || {},
-                      project.firstSubmittedValues || {},
-                      project.grantedValues || {},
-                      project.isGranted
-                    );
 
                     return <tr key={key}>
                       <td>
@@ -254,7 +243,7 @@ const ApplicationSummary = () => {
                       </td>
                       <td className="controls">
                         <Comments subsection={key} />
-                        {sectionHasChanges && <ChangedBadge fields={fields} />}
+                        <ChangedBadge fields={fields} />
                         <CompleteBadge isComplete={isComplete(subsection, key)} />
                       </td>
                     </tr>;
