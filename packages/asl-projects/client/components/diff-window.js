@@ -176,7 +176,7 @@ const DiffWindow = (props) => {
             value === undefined ? (
               <em>{ DEFAULT_LABEL }</em>
             ) : (
-              <span className={`diff ${parts.added ? 'added' : 'removed'}`}> { value ? 'Yes' : 'No'}</span>
+              <span className={`diff ${parts.added ? 'added' : 'removed'}`}> { value }</span>
             )
           }
         </p>
