@@ -830,6 +830,10 @@ html.modal-open, html.modal-open body {
     &.completed {
       background-color: $blue;
       color: $white;
+
+      a:focus {
+        color: $black;
+      }
     }
 
     &.incomplete {
@@ -839,6 +843,10 @@ html.modal-open, html.modal-open body {
     &.deleted {
       background-color: $red;
       color: $white !important;
+
+      a:focus {
+        color: $black !important;
+      }
     }
   }
 
@@ -949,6 +957,10 @@ html.modal-open, html.modal-open body {
 
           *:not(.restore) {
             color: $white;
+
+            &:focus {
+              color: $black;
+            }
           }
         }
       }
@@ -974,6 +986,10 @@ html.modal-open, html.modal-open body {
 
           *:not(.restore) {
             color: lighten($dark-grey, 20%);
+
+            &:focus {
+              color: $black;
+            }
           }
         }
 
@@ -981,10 +997,16 @@ html.modal-open, html.modal-open body {
           // grey out all text in deleted protocol sections except for comment form controls
           *:not(.govuk-button) {
             color: lighten($dark-grey, 20%);
+            &:focus {
+              color: $black;
+            }
           }
 
           .govuk-button.button-secondary {
             color: lighten($dark-grey, 20%);
+            &:focus {
+              color: $black;
+            }
           }
         }
       }
@@ -1631,10 +1653,18 @@ html.modal-open, html.modal-open body {
       // grey out all text in deleted AA sections except for comment form controls
       *:not(.restore):not(.govuk-button) {
         color: lighten($dark-grey, 20%);
+
+        &:focus {
+          color: $black;
+        }
       }
 
       .govuk-button.button-secondary {
         color: lighten($dark-grey, 20%);
+
+        &:focus {
+          color: $black;
+        }
       }
 
       fieldset, .panel .review {
