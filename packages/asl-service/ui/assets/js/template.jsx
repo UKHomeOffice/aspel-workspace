@@ -5,7 +5,8 @@ import { Wrapper } from '@ukhomeoffice/asl-components';
 
 /* eslint-disable implicit-dependencies/no-implicit */
 import Component from '{{page}}';
-import configureAppStore from '@uiStore';
+// import configureAppStore from '@asl/service/ui/store';
+import configureAppStore from '@asl/service/ui/store';
 /* eslint-enable implicit-dependencies/no-implicit */
 
 const store = configureAppStore(window.INITIAL_STATE || {});

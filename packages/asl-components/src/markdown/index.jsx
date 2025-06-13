@@ -3,9 +3,13 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 
-// Custom renderers
+// Custom link renderer with optional support for target=_blank
 function RenderLink({ href, children }) {
-    return <a href={href}>{children}</a>;
+    return (
+        <a href={href} target="_blank" rel="noopener noreferrer">
+            {children}
+        </a>
+    );
 }
 
 function RenderUnorderedList({ children }) {
@@ -18,7 +22,8 @@ export default function Markdown({
     significantLineBreaks = false,
     paragraphProps = {},
     source,
-    ...props
+    linkTarget, // Filter out unsupported props to avoid hydration crash
+    ...rest
 }) {
     return (
         <ReactMarkdown
@@ -30,7 +35,7 @@ export default function Markdown({
                 p: ({ children }) => <p {...paragraphProps}>{children}</p>
             }}
             remarkPlugins={significantLineBreaks ? [remarkBreaks] : []}
-            {...props}
+            {...rest}
         >
             {source || children}
         </ReactMarkdown>

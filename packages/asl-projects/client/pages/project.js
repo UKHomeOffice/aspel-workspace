@@ -14,7 +14,10 @@ function useQuery() {
 }
 
 export default function Index() {
-  const { project, application: { isGranted, schemaVersion } } = useSelector(state => state);
+  const { project, application: { isGranted, schemaVersion } } = useSelector(state => ({
+    project: state.project,
+    application: state.application
+  }));
 
   const query = useQuery();
   if (!project) {

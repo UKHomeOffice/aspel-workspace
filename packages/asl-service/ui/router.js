@@ -190,10 +190,6 @@ module.exports = settings => {
     };
     next();
   });
-  console.log('Using featureFlag.middleware:', typeof featureFlag.middleware);
-  console.log('Using notifications:', typeof notifications);
-  console.log('Using routeBuilder:', typeof routeBuilder);
-  console.log('Using cacheControl:', typeof cacheControl);
 
   app.use(sendResponse(settings));
 
@@ -205,6 +201,7 @@ module.exports = settings => {
 
   // if the response has not yet been sent then send it
   app.use((req, res) => {
+    console.log('Fallback hit for URL:', req.originalUrl, 'res.template:', !!res.template);
     res.sendResponse();
   });
 

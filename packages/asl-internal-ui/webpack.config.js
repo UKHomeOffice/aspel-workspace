@@ -4,9 +4,6 @@ const pages = path.dirname(require.resolve('@asl/pages/package.json'));
 const defaults = require('@asl/service/ui/webpack.config');
 const babelrc = require('@asl/service/.babelrc.json');
 
-// Get absolute monorepo root from current file
-const monorepoRoot = path.resolve(__dirname, '../../..');
-
 const config = merge(
   defaults([
     {
@@ -20,12 +17,6 @@ const config = merge(
       path: path.resolve(__dirname, './public/js')
     },
     devtool: 'source-map',
-    resolve: {
-      alias: {
-        '@uiStore': path.resolve(monorepoRoot, 'packages/asl-service/ui/store.js'),
-        '@pages': path.resolve(monorepoRoot, 'packages/asl-pages/pages')
-      }
-    },
     module: {
       rules: [
         {
