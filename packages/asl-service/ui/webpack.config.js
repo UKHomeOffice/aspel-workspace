@@ -56,7 +56,7 @@ module.exports = dirs => {
         };
       }, all);
   }, {});
-
+  const monorepoRoot = path.resolve(__dirname, '../../..');
   return {
     entry,
     output: {
@@ -72,6 +72,9 @@ module.exports = dirs => {
         buffer: require.resolve('buffer/'),
         url: require.resolve('url/'),
         process: require.resolve('process/browser.js')
+      },
+      alias: {
+        '@uiStore': path.resolve(monorepoRoot, 'packages/asl-service/ui/store.js')
       }
     },
     module: {

@@ -36,27 +36,24 @@ const ClearLink = ({ type }) => {
 };
 
 export default function SearchPanel(props) {
+  const searchType = props.searchType || 'establishments';
+  const action = props.action || '';
   return (
     <Fragment>
-      <h2 id="search-title"><Snippet>{`searchPanel.${props.searchType}.title`}</Snippet></h2>
+      <h2 id="search-title"><Snippet>{`searchPanel.${searchType}.title`}</Snippet></h2>
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
           <Search
-            action={props.action}
+            action={action}
             name="filter-*"
-            label={<Snippet>{`searchPanel.${props.searchType}.label`}</Snippet>}
+            label={<Snippet>{`searchPanel.${searchType}.label`}</Snippet>}
             query={{ sort: null, page: 1 }}
           />
-          <SearchToggle type={props.searchType} />
+          <SearchToggle type={searchType} />
         </div>
-        <ClearLink type={props.searchType} />
+        <ClearLink type={searchType} />
       </div>
     </Fragment>
   );
 }
-
-SearchPanel.defaultProps = {
-  searchType: 'establishments',
-  action: ''
-};
