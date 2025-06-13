@@ -1,49 +1,41 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { doSearch } from './actions';
 import { ApplyChanges } from '../';
 
-export class Search extends Component {
+export const Search = ({ filter, name = 'filter', label, hint, action, query, labelledBy, onChange }) => {
+    const [value, setValue] = useState(filter);
 
-    componentDidMount() {
-        this.setState({ value: this.props.filter });
-    }
+    useEffect(() => {
+        setValue(filter);
+    }, [filter]);
 
-    emitChange() {
-        this.props.onChange(this.state.value);
-    }
+    const emitChange = () => {
+        onChange(value);
+    };
 
-    render() {
-        const name = this.props.name;
+    const onApply = action
+        ? (e) => e.target.submit()
+        : () => emitChange();
 
-        // if we have a form action, just perform a standard form submit
-        const onApply = this.props.action ? e => e.target.submit() : () => this.emitChange();
-
-        return (
-            <ApplyChanges type="form" action={this.props.action} onApply={onApply} query={this.props.query}>
-                <div className="govuk-form-group search-box">
-                    { this.props.label &&
-            <label className="govuk-label" htmlFor={name}>{this.props.label}</label>
-                    }
-                    { this.props.hint && <span className="govuk-hint">{this.props.hint}</span> }
-                    <input
-                        className="govuk-input"
-                        id={name}
-                        name={name}
-                        type="text"
-                        aria-labelledby={this.props.labelledBy}
-                        value={ this.state ? this.state.value : this.props.filter }
-                        onChange={e => this.setState({ value: e.target.value })}
-                    />
-                    <button type="submit" className="govuk-button" aria-label="Search"></button>
-                </div>
-            </ApplyChanges>
-        );
-    }
-}
-
-Search.defaultProps = {
-    name: 'filter'
+    return (
+        <ApplyChanges type="form" action={action} onApply={onApply} query={query}>
+            <div className="govuk-form-group search-box">
+                {label && <label className="govuk-label" htmlFor={name}>{label}</label>}
+                {hint && <span className="govuk-hint">{hint}</span>}
+                <input
+                    className="govuk-input"
+                    id={name}
+                    name={name}
+                    type="text"
+                    aria-labelledby={labelledBy}
+                    value={value ? value : ''}
+                    onChange={(e) => setValue(e.target.value)}
+                />
+                <button type="submit" className="govuk-button" aria-label="Search"></button>
+            </div>
+        </ApplyChanges>
+    );
 };
 
 const mapStateToProps = ({ datatable: { filters } }, { value }) => ({
@@ -52,5 +44,5 @@ const mapStateToProps = ({ datatable: { filters } }, { value }) => ({
 
 export default connect(
     mapStateToProps,
-    { onChange: value => doSearch(value) }
+    { onChange: (value) => doSearch(value) }
 )(Search);

@@ -3,7 +3,7 @@ import Snippet from '../snippet';
 import classnames from 'classnames';
 import { format } from 'date-fns';
 
-function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, title, suspendedEstablishment, children }) {
+function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat= 'dd MMMM yyyy', colour, title, suspendedEstablishment, children }) {
     const [open, setOpen] = useState(true);
     const establishment = suspendedEstablishment || licence.establishment;
     const establishmentSuspended = !!(licence.status === 'active' && !licence.suspendedDate && establishment && establishment.suspendedDate);
@@ -76,9 +76,5 @@ function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat, colour, 
         </div>
     );
 }
-
-LicenceStatusBanner.defaultProps = {
-    dateFormat: 'dd MMMM yyyy'
-};
 
 export default LicenceStatusBanner;

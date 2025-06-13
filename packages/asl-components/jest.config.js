@@ -1,5 +1,12 @@
 module.exports = {
+    testEnvironment: 'jsdom',
+    transform: {
+        '^.+\\.[jt]sx?$': 'babel-jest'
+    },
+    transformIgnorePatterns: [
+        '/node_modules/(?!(uuid)/)'
+    ],
     setupFilesAfterEnv: [
-        '<rootDir>/enzyme.setup.js'
+        '<rootDir>/setup-test.js'
     ]
 };

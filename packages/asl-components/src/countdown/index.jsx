@@ -1,46 +1,61 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Snippet } from '../';
-import { differenceInDays, differenceInMonths, differenceInWeeks, isBefore, isToday } from 'date-fns';
-import classnames from 'classnames';
+import {
+    differenceInDays,
+    differenceInWeeks,
+    differenceInMonths,
+    isBefore,
+    isToday
+} from 'date-fns';
+import classNames from 'classnames';
 
-const Countdown = ({ expiry, unit, showNotice, showUrgent, contentPrefix = 'countdown' }) => {
-    const now = new Date();
-
-    const diff = {
-        day: differenceInDays(expiry, now),
-        week: differenceInWeeks(expiry, now),
-        month: differenceInMonths(expiry, now)
-    };
+const Countdown = ({
+    expiry,
+    unit = 'month',
+    showNotice = true,
+    showUrgent = 3,
+    contentPrefix = 'countdown'
+}) => {
+    const { now, diff } = useMemo(() => {
+        const now = new Date();
+        return {
+            now,
+            diff: {
+                day: differenceInDays(expiry, now),
+                week: differenceInWeeks(expiry, now),
+                month: differenceInMonths(expiry, now)
+            }
+        };
+    }, [expiry]);
 
     if (showNotice !== true && diff[unit] > showNotice) {
         return null;
     }
 
-    const displayUnit = diff['day'] <= 14 ? 'day' : (diff['week'] <= 13 ? 'week' : 'month');
-    const displayDiff = Math.abs(displayUnit === 'day' ? diff[displayUnit] : diff[displayUnit] + 1);
-    const urgent = diff[unit] <= showUrgent;
+    const displayUnit = diff.day <= 14 ? 'day' : (diff.week <= 13 ? 'week' : 'month');
+    const displayDiff = Math.abs(displayUnit === 'day'
+        ? diff[displayUnit]
+        : diff[displayUnit] + 1);
 
-    let contentKey = displayDiff === 1 ? `${contentPrefix}.singular` : `${contentPrefix}.plural`;
+    const urgent = isToday(expiry) || isBefore(expiry, now) || diff[unit] <= showUrgent;
 
-    if (isBefore(expiry, now)) {
+    let contentKey = `${contentPrefix}.plural`;
+    if (displayDiff === 1) {
+        contentKey = `${contentPrefix}.singular`;
+    }
+    if (isToday(expiry)) {
+        contentKey = `${contentPrefix}.expiresToday`;
+    } else if (isBefore(expiry, now)) {
         contentKey = `${contentPrefix}.expired`;
     }
 
-    if (isToday(expiry)) {
-        contentKey = `${contentPrefix}.expiresToday`;
-    }
-
     return (
-        <span className={classnames('notice', { urgent })}>
-            <Snippet diff={displayDiff} unit={displayUnit}>{contentKey}</Snippet>
+        <span className={classNames('notice', { urgent })}>
+            <Snippet diff={displayDiff} unit={displayUnit}>
+                {contentKey}
+            </Snippet>
         </span>
     );
-};
-
-Countdown.defaultProps = {
-    unit: 'month',
-    showNotice: true,
-    showUrgent: 3
 };
 
 export default Countdown;

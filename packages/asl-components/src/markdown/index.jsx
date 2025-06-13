@@ -1,51 +1,60 @@
 /* eslint-disable react/display-name */
-import React, { Fragment } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
+import ErrorBoundary from '@asl/projects/client/components/error-boundary';
+
+// Checks if children include any block-level elements (like <p>, <h1>, etc.)
+function containsBlock(children) {
+    return React.Children.toArray(children).some(child => {
+        if (typeof child === 'object' && child !== null && 'type' in child) {
+            const blockTags = ['p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'div', 'section', 'article'];
+            return blockTags.includes(child.type);
+        }
+        return false;
+    });
+}
 
 function RenderLink({ href, children }) {
-    return <Fragment>[{ children }]({ href })</Fragment>;
-}
-function RenderLinkReference({ children }) {
-    return <Fragment>[{ children }]</Fragment>;
-}
-function RenderUnorderedList({ children }) {
-    return <ul className='govuk-list govuk-list--bullet'>{ children }</ul>;
-}
-
-const components = {
-    link: RenderLink,
-    linkReference: RenderLinkReference,
-    ul: RenderUnorderedList,
-};
-
-// eslint-disable-next-line no-unused-vars
-const wrapInSpanIfOnlyChild = (enabled, paragraphProps) => ({ node, siblingCount, index, ...props }) => {
-    if (enabled && siblingCount === 1) {
-        return <span {...props} />;
+    if (containsBlock(children)) {
+    // Don't render anchor tag if it would wrap block-level content
+        return <>{children}</>;
     }
+    return (
+        <a href={href} target="_blank" rel="noopener noreferrer">
+            {children}
+        </a>
+    );
+}
 
-    return <p {...paragraphProps} {...props} />;
-};
+function RenderUnorderedList({ children }) {
+    return <ul className="govuk-list govuk-list--bullet">{children}</ul>;
+}
 
 export default function Markdown({
     children,
     links = false,
-    unwrapSingleLine = false,
     significantLineBreaks = false,
     paragraphProps = {},
     source,
-    ...props
+    linkTarget, // filtered out to avoid DOM warning
+    ...rest
 }) {
-    return <ReactMarkdown
-        includeElementIndex={true}
-        components={{
-            ...(!links && components),
-            p: wrapInSpanIfOnlyChild(unwrapSingleLine, paragraphProps)
-        }}
-        remarkPlugins={significantLineBreaks ? [remarkBreaks] : []}
-        {...props}
-    >
-        { source || children }
-    </ReactMarkdown>;
+    return (
+        <ErrorBoundary>
+            <ReactMarkdown
+                components={{
+                    ...(links ? {} : {
+                        a: RenderLink,
+                        ul: RenderUnorderedList
+                    }),
+                    p: ({ children }) => <p {...paragraphProps}>{children}</p>
+                }}
+                remarkPlugins={significantLineBreaks ? [remarkBreaks] : []}
+                {...rest}
+            >
+                {source || children}
+            </ReactMarkdown>
+        </ErrorBoundary>
+    );
 }
