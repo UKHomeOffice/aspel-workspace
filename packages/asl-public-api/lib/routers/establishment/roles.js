@@ -1,11 +1,15 @@
 const { Router } = require('express');
 const { NotFoundError } = require('../../errors');
-const { fetchOpenTasks, permissions, whitelist, updateDataAndStatus } = require('../../middleware');
+const {
+  fetchOpenTasks,
+  permissions,
+  whitelist,
+  updateDataAndStatus
+} = require('../../middleware');
 
 const router = Router({ mergeParams: true });
 
 const submit = (action) => {
-
   return (req, res, next) => {
     const params = {
       model: 'role',
@@ -23,14 +27,18 @@ const submit = (action) => {
         switch (action) {
           case 'create':
             if (params.data.replaceProfile) {
-              return req.workflow.update({...params, id: params.data.replaceProfile.id, action: 'replace'});
+              return req.workflow.update({
+                ...params,
+                id: params.data.replaceProfile.id,
+                action: 'replace'
+              });
             }
             return req.workflow.create(params);
           case 'delete':
             return req.workflow.delete(params);
         }
       })
-      .then(response => {
+      .then((response) => {
         res.response = response.json.data;
         next();
       })
@@ -51,7 +59,7 @@ router.get('/', (req, res, next) => {
         })
         .withGraphFetched('[profile, places]');
     })
-    .then(result => {
+    .then((result) => {
       res.response = result;
       next();
     })
@@ -69,7 +77,7 @@ router.param('id', (req, res, next, id) => {
         .where('establishmentId', req.establishment.id)
         .withGraphFetched('[profile, places]');
     })
-    .then(role => {
+    .then((role) => {
       if (!role) {
         throw new NotFoundError();
       }
@@ -79,19 +87,36 @@ router.param('id', (req, res, next, id) => {
     .catch(next);
 });
 
-router.get('/:id', (req, res, next) => {
-  res.response = req.role;
-  next();
-}, fetchOpenTasks());
+router.get(
+  '/:id',
+  (req, res, next) => {
+    res.response = req.role;
+    next();
+  },
+  fetchOpenTasks()
+);
 
-router.post('/',
+router.post(
+  '/',
   permissions('profile.roles'),
-  whitelist('profileId', 'type', 'comment', 'rcvsNumber', 'replaceProfile', 'replaceRoles'),
+  whitelist(
+    'profileId',
+    'type',
+    'comment',
+    'rcvsNumber',
+    'mandatory',
+    'incomplete',
+    'delayReason',
+    'completeDate',
+    'replaceProfile',
+    'replaceRoles'
+  ),
   updateDataAndStatus(),
   submit('create')
 );
 
-router.delete('/:id',
+router.delete(
+  '/:id',
   permissions('profile.roles'),
   whitelist('profileId', 'comment'),
   submit('delete')

@@ -6,8 +6,8 @@ export const hydrateSteps = (protocols, steps, reusableSteps) => {
 
   const reusableStepsInAllProtocols =
     flatMap((protocols || [])
-      .filter(protocol => !protocol.deleted), (protocol, index) => (protocol.steps || [])
-      .filter(step => !!step.reusableStepId)
+      .filter(protocol => !protocol?.deleted), (protocol, index) => (protocol.steps || [])
+      .filter(step => !!step?.reusableStepId)
       .map(step => {
         return { reusableStepId: step.reusableStepId, protocolIndex: index + 1, protocolId: protocol.id };
       })
@@ -99,7 +99,7 @@ export const reusableStepFieldKeys = (protocol) => {
     return [];
   }
   return (protocol.steps || [])
-    .filter(step => step.reusableStepId)
+    .filter(step => step?.reusableStepId)
     .map(reusableStep => `reusableSteps.${reusableStep.reusableStepId}`);
 };
 

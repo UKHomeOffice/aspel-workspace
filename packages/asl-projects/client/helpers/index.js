@@ -69,7 +69,7 @@ export function mapAnimalQuantities(project, name) {
   const species = []
     .concat(project.species)
     .reduce((arr, s) => {
-      if (s.match(/^other-/)) {
+      if (s?.match(/^other-/)) {
         const others = castArray(project[`species-${s}`]);
         return [ ...arr, ...others ];
       }
@@ -112,10 +112,10 @@ export const getScrollPos = (elem, offset = 0) => {
 };
 
 function mapReusableStepsToReferringSteps(project) {
-  return project.protocols.flatMap(
+  return (project.protocols ?? []).flatMap(
     (protocol) =>
-      protocol.steps
-        .filter(step => step.reusableStepId)
+      (protocol?.steps ?? [])
+        .filter(step => step?.reusableStepId)
         .map(
           step => ({
             source: `reusableSteps.${step.reusableStepId}`,
