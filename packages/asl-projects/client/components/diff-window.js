@@ -170,13 +170,19 @@ const DiffWindow = (props) => {
     };
 
     const radioDiff = () => {
+      const booleanValue = typeof value === 'boolean'
+        ? (value ? 'Yes' : 'No')
+        : value;
+
       return (
         <p>
           {
             value === undefined ? (
-              <em>{ DEFAULT_LABEL }</em>
+              <em>{DEFAULT_LABEL}</em>
             ) : (
-              <span className={`diff ${parts.added ? 'added' : 'removed'}`}> { value ? 'Yes' : 'No'}</span>
+              <span className={`diff ${parts.added ? 'added' : 'removed'}`}>
+            {booleanValue}
+          </span>
             )
           }
         </p>
