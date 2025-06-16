@@ -4,25 +4,25 @@ import omitBy from 'lodash/omitBy';
 import isUndefined from 'lodash/isUndefined';
 import getLocations from './get-locations';
 
-const establishmentsKeys = new Set([
+const establishmentsKeys = [
   'establishments',
   'polesList',
   'transferToEstablishmentName',
   'other-establishments'
-])
+]
 
-const triggeringKeys = new Set([
+const triggeringKeys = [
   'objectives',
   'species',
     ...establishmentsKeys
-]);
+];
 
 function changesShouldTriggerCleanup(changed) {
-  return new Set(Object.keys(changed)).intersection(triggeringKeys).size > 0;
+  return intersection(Object.keys(changed), triggeringKeys).length > 0;
 }
 
 function changesShouldTriggerEstablishmentCleanup(changed) {
-  return new Set(Object.keys(changed)).intersection(establishmentsKeys).size > 0;
+  return intersection(Object.keys(changed), establishmentsKeys).length > 0;
 }
 
 export default function cleanProtocols({ state, savedState, changed = {}, establishment, schemaVersion }) {
