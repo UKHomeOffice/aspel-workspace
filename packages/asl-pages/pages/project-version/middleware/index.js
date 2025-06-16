@@ -220,6 +220,21 @@ const getCacheableVersion = (req, url) => {
     });
 };
 
+function normaliseDeletedSteps(protocol) {
+  if (!protocol.steps) {
+    return [];
+  }
+
+  // legacy protocols have a rich text field for steps
+  if (typeof protocol === 'object' && !Array.isArray(protocol.steps)) {
+    return protocol.steps;
+  }
+
+  return (Array.isArray(protocol.steps) ? protocol.steps : []).flatMap(
+    step => step?.deleted ? [] : [omit(step, 'deleted')]
+  );
+}
+
 /**
  * Protocols and steps within them are soft deleted using a deleted flag. This
  * applies the meaning of that flag (deleting protocols/steps) where
@@ -231,14 +246,12 @@ const getCacheableVersion = (req, url) => {
  */
 const normaliseDeletedProtocols = (versionData) => ({
   ...versionData,
-  protocols: (versionData.protocols ?? []).flatMap(
+  protocols: (Array.isArray(versionData.protocols) ? versionData.protocols : []).flatMap(
     protocol => protocol?.deleted
       ? []
       : [{
         ...omit(protocol, 'deleted'),
-        steps: (protocol.steps ?? []).flatMap(
-          step => step?.deleted ? [] : [omit(step, 'deleted')]
-        )
+        steps: normaliseDeletedSteps(protocol)
       }]
   )
 });
@@ -324,7 +337,7 @@ const hasChanged = (before, after, key) => {
   // backwards compatibility check for transition from string to object values for RTEs
   if (typeof before === 'string' && typeof after !== 'string') {
     try {
-      before = JSON.parse(before);
+      return hasChanged(JSON.parse(before), after, key);
     } catch (e) {}
   }
 
