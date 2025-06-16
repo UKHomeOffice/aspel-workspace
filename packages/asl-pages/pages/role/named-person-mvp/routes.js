@@ -2,6 +2,7 @@ const beforeYouApply = require('./before-you-apply');
 const selectRole = require('./select-role');
 const mandatoryTraining = require('./mandatory-training');
 const incompleteTraining = require('./incomplete-training');
+const nvsModule = require('./nvs-module');
 const confirm = require('./confirm');
 
 module.exports = {
@@ -23,6 +24,11 @@ module.exports = {
   incompleteTraining: {
     path: '/incomplete-training',
     router: incompleteTraining,
+    breadcrumb: false
+  },
+  nvsModule: {
+    path: '/nvs-module',
+    router: nvsModule,
     breadcrumb: false
   },
   confirm: {
