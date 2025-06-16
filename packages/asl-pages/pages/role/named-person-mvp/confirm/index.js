@@ -8,11 +8,11 @@ const NAMED_PERSION_VERSION_ID = 2;
 
 const sendData = (req, params = {}) => {
   const { type, rcvsNumber } =
-    req.session.form[`${req.profileId}-new-role-named-person`].values;
+    req.session.form[`${req.profileId}-new-role-named-person`]?.values || {};
   const { mandatory } =
-    req.session.form[`${req.profileId}-mandatory-training`].values;
+    req.session.form[`${req.profileId}-mandatory-training`]?.values || {};
   const { incomplete, delayReason, completeDate } =
-    req.session.form[`${req.profileId}-incomplete-training`].values;
+    req.session.form[`${req.profileId}-incomplete-training`]?.values || {};
 
   const replaceProfile = profileReplaced(req.establishment, type);
   const opts = {
@@ -79,10 +79,14 @@ module.exports = (settings) => {
         Object.keys(req.session.form).forEach((entry) => {
           delete req.session.form[entry];
         });
-        return res.redirect(req.buildRoute('role.namedPersonMvp.success'));
+        return res.redirect(
+          req.buildRoute('role.create', { suffix: 'success' })
+        );
       })
       .catch(next);
   });
 
   return app;
 };
+
+module.exports.NAMED_PERSION_VERSION_ID = NAMED_PERSION_VERSION_ID;
