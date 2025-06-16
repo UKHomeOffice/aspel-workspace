@@ -23,8 +23,8 @@ const renderChildren = (children, wrap) => (
 const Layout = ({
   error,
   children,
-  scripts = [],
-  stylesheets = [],
+  scripts: originalScripts = [],
+  stylesheets: originalStylesheets = [],
   user,
   crumbs,
   footerLinks,
@@ -56,16 +56,22 @@ const Layout = ({
     })
     : null;
 
-  // Prepend common script if any scripts passed
-  if (scripts.length) {
-    scripts = ['/public/js/common/bundle.js', ...scripts];
-  }
+  // Create new arrays without mutating props
+  const stylesheets = ['/public/css/app.css', ...originalStylesheets];
+  const scripts = originalScripts.length
+    ? ['/public/js/common/bundle.js', ...originalScripts]
+    : [];
 
   const page = (
     <HomeOffice
       title={props.pageTitle ? `${props.pageTitle} - ${siteTitle}` : siteTitle}
       propositionHeader={siteTitle}
-      stylesheets={['/public/css/app.css', ...stylesheets]}
+      stylesheets={stylesheets}
+      linkProps={{
+        rel: 'preload',
+        as: 'style',
+        onLoad: "this.onload=null;this.rel='stylesheet'"
+      }}
       scripts={scripts}
       headerContent={<StatusBar user={user} />}
       nonce={nonce}

@@ -8,7 +8,7 @@ import ErrorBoundary from '@asl/projects/client/components/error-boundary';
 function containsBlock(children) {
     return React.Children.toArray(children).some(child => {
         if (typeof child === 'object' && child !== null && 'type' in child) {
-            const blockTags = ['p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'div', 'section', 'article'];
+            const blockTags = ['span','p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'div', 'section', 'article'];
             return blockTags.includes(child.type);
         }
         return false;
@@ -34,12 +34,21 @@ function RenderUnorderedList({ children }) {
 export default function Markdown({
     children,
     links = false,
+    unwrapSingleLine = false,
     significantLineBreaks = false,
     paragraphProps = {},
     source,
-    linkTarget, // filtered out to avoid DOM warning
+    linkTarget,
     ...rest
 }) {
+    const Paragraph = ({ children, ...props }) => {
+    // Reimplement conditional wrapping
+        if (unwrapSingleLine && React.Children.count(children) === 1) {
+            return <span {...paragraphProps} {...props}>{children}</span>;
+        }
+        return <p {...paragraphProps} {...props}>{children}</p>;
+    };
+
     return (
         <ErrorBoundary>
             <ReactMarkdown
@@ -48,7 +57,7 @@ export default function Markdown({
                         a: RenderLink,
                         ul: RenderUnorderedList
                     }),
-                    p: ({ children }) => <p {...paragraphProps}>{children}</p>
+                    p: Paragraph // Use our custom component
                 }}
                 remarkPlugins={significantLineBreaks ? [remarkBreaks] : []}
                 {...rest}

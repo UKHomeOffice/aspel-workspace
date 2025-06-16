@@ -97,12 +97,12 @@ module.exports = settings => {
           });
         },
         onError(err) {
-          console.error('🔥 SSR stream error:', err);
+          console.error('SSR stream error:', err);
           callback(err);
         }
       });
     } catch (err) {
-      console.error('🔥 JSX render error:', err);
+      console.error('JSX render error:', err);
       callback(err);
     }
   });
@@ -201,7 +201,6 @@ module.exports = settings => {
 
   // if the response has not yet been sent then send it
   app.use((req, res) => {
-    console.log('Fallback hit for URL:', req.originalUrl, 'res.template:', !!res.template);
     res.sendResponse();
   });
 
