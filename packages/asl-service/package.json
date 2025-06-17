@@ -67,10 +67,10 @@
     "url": "^0.11.0",
     "url-search-params": "^1.1.0",
     "uuid": "^8.3.2",
+    "@reduxjs/toolkit": "^2.8.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@reduxjs/toolkit": "^2.8.2",
     "@testing-library/react": "^16.0.0",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "eslint": "^8.26.0",
