@@ -2,25 +2,26 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Header, Panel, Snippet, Link } from '@ukhomeoffice/asl-components';
 import EstablishmentHeader from '../../common/components/establishment-header';
+import { has } from 'lodash';
 
 const Index = ({ onwardLink }) => {
   const {
     establishment,
-    taskLabel,
     taskId,
     isAsruUser,
     additionalInfo,
     projectId,
     modelType,
-    action
+    action,
+    content
   } = useSelector(state => state.static);
 
   return (
     <div className="govuk-grid-row success">
       <div className="govuk-grid-column-two-thirds">
         <Header
-          title={taskLabel}
-          subtitle={<EstablishmentHeader establishment={establishment}/>}
+          title={<Snippet>success.header.title</Snippet>}
+          subtitle={has(content, 'success.header.subtitle') ? <Snippet>success.header.subtitle</Snippet> : <EstablishmentHeader establishment={establishment}/>}
         />
         {
           additionalInfo && <h2 className="additional-info">

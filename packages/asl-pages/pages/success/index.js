@@ -3,57 +3,92 @@ const { merge, get, upperFirst } = require('lodash');
 const { Router } = require('express');
 const { NotFoundError } = require('@asl/service/errors');
 const successMessages = require('./content');
+const { FEATURE_NAMED_PERSON_MVP } = require('@asl/service/ui/feature-flag');
+const {
+  NAMED_PERSION_VERSION_ID
+} = require('../role/named-person-mvp/confirm');
 
-const getTaskLabel = task => {
+const headerContent = (title, subtitle) => {
+  return {
+    header: {
+      title,
+      ...(subtitle ? { subtitle } : {})
+    }
+  };
+};
+
+const getTaskContent = (task) => {
   const taskType = get(task, 'type');
   const action = get(task, 'data.action');
   const model = get(task, 'data.model');
+  const data = get(task, 'data.data');
 
   switch (model) {
     case 'role':
+      if (task.data.meta?.version === NAMED_PERSION_VERSION_ID) {
+        const profile = get(task, 'data.profile', {});
+        const subtitle = `${profile.firstName} ${profile.lastName}`;
+
+        if (action === 'create') {
+          return {
+            ...headerContent(
+              `${data.type.toUpperCase()} role application`,
+              subtitle
+            ),
+            panel: {
+              title: 'Application submitted'
+            },
+            taskLink: {
+              before: '',
+              linkText: 'Track progress of application'
+            }
+          };
+        }
+      }
+
       if (action === 'create') {
-        return 'Add named person';
+        return headerContent('Add named person');
       }
       if (action === 'replace') {
-        return 'Replace named person';
+        return headerContent('Replace named person');
       }
       if (action === 'delete') {
-        return 'Remove named person';
+        return headerContent('Remove named person');
       }
-      return `Establishment ${taskType}`;
+      return headerContent(`Establishment ${taskType}`);
 
     case 'place':
       if (action === 'create') {
-        return 'New approved area';
+        return headerContent('New approved area');
       }
       if (action === 'delete') {
-        return 'Area removal';
+        return headerContent('Area removal');
       }
-      return `Area ${taskType}`;
+      return headerContent(`Area ${taskType}`);
 
     case 'rop':
-      return 'Return of procedures';
+      return headerContent('Return of procedures');
 
     case 'pil':
     case 'trainingPil':
-      return `Personal licence ${taskType}`;
+      return headerContent(`Personal licence ${taskType}`);
 
     case 'project':
       if (action === 'grant-ra') {
-        return 'Retrospective assessment';
+        return headerContent('Retrospective assessment');
       } else if (action === 'transfer') {
-        return 'Project licence transfer';
+        return headerContent('Project licence transfer');
       } else if (action === 'update') {
-        return 'Project licence amendment';
+        return headerContent('Project licence amendment');
       }
-      return `${upperFirst(model)} ${taskType}`;
+      return headerContent(`${upperFirst(model)} ${taskType}`);
 
     default:
-      return `${upperFirst(model)} ${taskType}`;
+      return headerContent(`${upperFirst(model)} ${taskType}`);
   }
 };
 
-const getSuccessType = task => {
+const getSuccessType = (task) => {
   const model = get(task, 'data.model');
   const action = get(task, 'data.action');
   const latestActivity = get(task, 'activityLog[0]');
@@ -81,7 +116,10 @@ const getSuccessType = task => {
     return 'endorsed';
   }
 
-  if (latestActivity && get(latestActivity, 'event.status') === 'intention-to-refuse') {
+  if (
+    latestActivity &&
+    get(latestActivity, 'event.status') === 'intention-to-refuse'
+  ) {
     return 'intention-to-refuse';
   }
 
@@ -89,7 +127,11 @@ const getSuccessType = task => {
     return 'revoked';
   }
 
-  if (['awaiting-endorsement', 'with-inspectorate', 'with-licensing'].includes(task.status)) {
+  if (
+    ['awaiting-endorsement', 'with-inspectorate', 'with-licensing'].includes(
+      task.status
+    )
+  ) {
     return 'submitted';
   }
 
@@ -101,11 +143,19 @@ const getSuccessType = task => {
     return 'discarded';
   }
   // HBA amendment licence holder content change on success
-  if (task.status === 'resolved' && task?.type === 'amendment' && task?.data?.model === 'project') {
+  if (
+    task.status === 'resolved' &&
+    task?.type === 'amendment' &&
+    task?.data?.model === 'project'
+  ) {
     return 'licence-amended';
   }
   // HBA PPL transfer establishment content change on success
-  if (task.status === 'resolved' && task?.type === 'transfer' && task?.data?.model === 'project') {
+  if (
+    task.status === 'resolved' &&
+    task?.type === 'transfer' &&
+    task?.data?.model === 'project'
+  ) {
     return 'pil-transfer';
   }
 
@@ -120,9 +170,12 @@ const getAdditionalInfo = ({ task, project }) => {
       return get(task, 'data.modelData.profile.name');
 
     case 'role':
-      const profile = get(task, 'data.profile', {});
-      return `${profile.firstName} ${profile.lastName}`;
-
+      if (task.data.meta?.version === NAMED_PERSION_VERSION_ID) {
+        return get(task, 'data.establishment').name;
+      } else {
+        const profile = get(task, 'data.profile', {});
+        return `${profile.firstName} ${profile.lastName}`;
+      }
     case 'place':
       return get(task, 'data.modelData.name');
 
@@ -144,8 +197,9 @@ module.exports = () => {
       return next(new NotFoundError());
     }
 
-    return req.api(`/tasks/${taskId}`)
-      .then(response => {
+    return req
+      .api(`/tasks/${taskId}`)
+      .then((response) => {
         req.taskId = taskId;
         req.task = response.json.data;
       })
@@ -155,16 +209,36 @@ module.exports = () => {
 
   app.use((req, res, next) => {
     const successType = getSuccessType(req.task);
-    const success = merge({}, successMessages.default, get(successMessages, successType));
+    const task = get(req.task);
+    const additionalInfo = getAdditionalInfo(req);
+    const success = merge(
+      {},
+      successMessages.default,
+      req.hasFeatureFlag(FEATURE_NAMED_PERSON_MVP)
+        ? successMessages.default.namedPerson
+        : {},
+      get(successMessages, successType),
+      req.hasFeatureFlag(FEATURE_NAMED_PERSON_MVP)
+        ? get(successMessages, `${successType}.namedPerson`)
+        : {},
+      getTaskContent(req.task)
+    );
     merge(res.locals.static.content, { success });
-    res.locals.static.taskId = req.taskId;
-    res.locals.static.taskLabel = getTaskLabel(req.task);
-    res.locals.static.isAsruUser = req.user.profile.asruUser;
-    res.locals.static.additionalInfo = getAdditionalInfo(req);
-    res.locals.static.establishment = req.establishment || get(req.task, 'data.establishment');
+
+    Object.assign(res.locals.static, {
+      taskId: req.taskId,
+      isAsruUser: req.user.profile.asruUser,
+      additionalInfo,
+      establishment: req.establishment || get(req.task, 'data.establishment'),
+      task
+    });
 
     // Update the project ID for transfer projects to ensure correct success page links
-    if (req.task?.status === 'resolved' && req.task?.type === 'transfer' && req.task?.data?.model === 'project') {
+    if (
+      req.task?.status === 'resolved' &&
+      req.task?.type === 'transfer' &&
+      req.task?.data?.model === 'project'
+    ) {
       res.locals.static.projectId = res.locals.static.transferredProject?.id;
     } else if (req.task?.data?.model === 'project') {
       res.locals.static.projectId = req.project?.id;

@@ -275,6 +275,7 @@ export default function Fieldset({ schema, errors = {}, formatters = {}, model, 
                                     </h1>
                                 </legend> :
                                 null}
+                            {formatters?.[fieldName]?.additionalContent ?? null}
                             <Field
                                 {...props}
                                 {...field}
