@@ -67,14 +67,15 @@ export function mapPermissiblePurpose(project) {
 
 export function mapAnimalQuantities(project, name) {
   const species = []
-    .concat(project.species)
+    .concat(project.species || [])
     .reduce((arr, s) => {
-      if (s?.match(/^other-/)) {
+      if (s === 'other' || s?.match(/^other-/)) {
         const others = castArray(project[`species-${s}`]);
         return [ ...arr, ...others ];
       }
       return [ ...arr, s ];
     }, [])
+    .concat(castArray(project['species-other'])) //always add 'species-other'
     .filter(Boolean);
 
   return species
