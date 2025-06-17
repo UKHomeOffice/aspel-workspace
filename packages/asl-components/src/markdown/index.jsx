@@ -8,7 +8,7 @@ import ErrorBoundary from '@asl/projects/client/components/error-boundary';
 function containsBlock(children) {
     return React.Children.toArray(children).some(child => {
         if (typeof child === 'object' && child !== null && 'type' in child) {
-            const blockTags = ['span','p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'div', 'section', 'article'];
+            const blockTags = ['p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'div', 'section', 'article'];
             return blockTags.includes(child.type);
         }
         return false;
@@ -38,16 +38,28 @@ export default function Markdown({
     significantLineBreaks = false,
     paragraphProps = {},
     source,
-    linkTarget,
+    // eslint-disable-next-line no-unused-vars
+    linkTarget = '_blank',
     ...rest
 }) {
-    const Paragraph = ({ children, ...props }) => {
-    // Reimplement conditional wrapping
-        if (unwrapSingleLine && React.Children.count(children) === 1) {
+    const Paragraph = ({ node, children, ...props }) => {
+        const isSingleTextChild = (
+            React.Children.count(children) === 1 &&
+      typeof children[0] === 'string'
+        );
+
+        const hasVisibleLineBreaks = (
+            isSingleTextChild &&
+      children[0].includes('\n')
+        );
+
+        if (unwrapSingleLine && isSingleTextChild && !hasVisibleLineBreaks) {
             return <span {...paragraphProps} {...props}>{children}</span>;
         }
+
         return <p {...paragraphProps} {...props}>{children}</p>;
     };
+
 
     return (
         <ErrorBoundary>
@@ -57,7 +69,7 @@ export default function Markdown({
                         a: RenderLink,
                         ul: RenderUnorderedList
                     }),
-                    p: Paragraph // Use our custom component
+                    p: Paragraph
                 }}
                 remarkPlugins={significantLineBreaks ? [remarkBreaks] : []}
                 {...rest}

@@ -9,14 +9,35 @@ import partition from 'lodash/partition';
 import pick from 'lodash/pick';
 import Subsection from '../components/subsection';
 
+function getDeadline(ropYear, project) {
+  const endOfJan = endOfDay(new Date(`${ropYear + 1}-01-31`));
+
+  function getRefDate(date) {
+    return subMilliseconds(addDays(new Date(date), 29), 1);
+  }
+
+  switch (project.status) {
+    case 'active':
+      return isBefore(getRefDate(project.expiryDate), endOfJan)
+        ? getRefDate(project.expiryDate)
+        : endOfJan;
+    case 'expired':
+      return getRefDate(project.expiryDate);
+    case 'revoked':
+      return getRefDate(project.revocationDate);
+    default:
+      return endOfJan;
+  }
+}
+
 export function Rop({ rop, project, active, url }) {
   const endOfYear = new Date(`${rop.year}-12-31`);
   const projEnd = project.revocationDate || project.expiryDate;
   const expiresMidYear = isBefore(projEnd, endOfYear);
   const endDate = format(expiresMidYear ? projEnd : endOfYear, dateFormat.long);
+  const ropsDeadline = getDeadline(rop.year, project);
 
   let cta;
-
   if (rop.status === 'submitted') {
     cta = (
       <p>
@@ -49,114 +70,99 @@ export function Rop({ rop, project, active, url }) {
     );
   }
 
-  function getDeadline() {
-    const endOfJan = endOfDay(new Date(`${rop.year + 1}-01-31`));
-
-    function getRefDate(date) {
-      return subMilliseconds(addDays(new Date(date), 29), 1);
-    }
-
-    switch (project.status) {
-      case 'active':
-        const refDate = getRefDate(project.expiryDate);
-        return isBefore(refDate, endOfJan) ? refDate : endOfJan;
-      case 'expired':
-        return getRefDate(project.expiryDate);
-      case 'revoked':
-        return getRefDate(project.revocationDate);
-    }
-  }
-
-  const ropsDeadline = getDeadline();
+  const snippetKey = rop.status === 'submitted' ? 'rops.submitted' : 'rops.incomplete';
 
   const content = (
     <Fragment>
       <h3>Return of procedures for {rop.year}</h3>
       <Snippet
+        isPtag={false}
         submitted={formatDate(rop.submittedDate, dateFormat.long)}
         endDate={endDate}
         year={rop.year}
         deadline={formatDate(ropsDeadline, dateFormat.long)}
-      >{ rop.status === 'submitted' ? 'rops.submitted' : 'rops.incomplete' }</Snippet>
+      >
+        {snippetKey}
+      </Snippet>
     </Fragment>
-
   );
 
   return (
     <Fragment>
-      { active && content }
-      { cta }
+      {active && content}
+      {cta}
     </Fragment>
   );
 }
 
 export function Rops({ project = {}, ropsYears = [], url, today = new Date() }) {
   const thisYear = today.getFullYear();
-  const projectGrantedYear = (project.issueDate && getYear(project.issueDate));
+  const projectGrantedYear = project.issueDate && getYear(project.issueDate);
   const projectEndDate = project.revocationDate || project.expiryDate;
 
-  function projectActiveIn(year) {
+  function isActiveInYear(year) {
     return !projectGrantedYear || projectGrantedYear <= year;
   }
 
-  function projectEndedOrTodayAfter(deadline) {
-    return (projectEndDate && isAfter(today, projectEndDate)) || isAfter(today, deadline);
+  function hasEndedBefore(year) {
+    const startOfFeb = subMilliseconds(new Date(`${year}-02-01`), 1);
+    return (projectEndDate && isAfter(today, projectEndDate)) || isAfter(today, startOfFeb);
   }
 
-  const years = ropsYears.filter(year => {
-    const startOfFeb = subMilliseconds(new Date(`${year}-02-01`), 1);
-    return projectActiveIn(year) && projectEndedOrTodayAfter(startOfFeb);
-  });
+  const relevantYears = ropsYears.filter(year => isActiveInYear(year) && hasEndedBefore(year));
 
-  const activeYears = years.filter(year => {
-    // the previous year should be "active" for the first part of the year
-    return year >= thisYear || (year === thisYear - 1 && today.getMonth() < 6);
-  });
+  const activeYears = relevantYears.filter(year =>
+    year >= thisYear || (year === thisYear - 1 && today.getMonth() < 6)
+  );
 
-  const rops = project.rops;
+  const rops = [...project.rops]; // clone for mutation safety
 
-  // add templates for each missing rop
-  years.forEach(year => {
-    if (!rops.find(ar => ar.year === year)) {
+  relevantYears.forEach(year => {
+    if (!rops.find(r => r.year === year)) {
       rops.unshift({ year });
     }
   });
 
-  const requiredRops = rops.filter(rop => {
-    return !projectEndDate || isAfter(new Date(projectEndDate), new Date(`${rop.year}-01-01`));
-  });
+  const requiredRops = rops.filter(rop =>
+    !projectEndDate || isAfter(new Date(projectEndDate), new Date(`${rop.year}-01-01`))
+  );
 
   if (!requiredRops.length) {
-    return <p><strong><Snippet>rops.not-due</Snippet></strong></p>;
+    return (
+      <p>
+        <strong>
+          <Snippet>rops.not-due</Snippet>
+        </strong>
+      </p>
+    );
   }
 
-  const [activeRops, previousRops] = partition(requiredRops, rop => {
-    return activeYears.includes(rop.year) || rop.status !== 'submitted';
-  });
+  const [activeRops, previousRops] = partition(requiredRops, rop =>
+    activeYears.includes(rop.year) || rop.status !== 'submitted'
+  );
 
   return (
     <Subsection title={<Snippet>rops.title</Snippet>}>
-      {
-        activeRops.map((rop, index) => <Rop key={index} project={project} rop={rop} active={true} url={url} />)
-      }
-      {
-        !!previousRops.length && (
-          <Fragment>
-            <h3><Snippet>rops.previous</Snippet></h3>
-            {
-              previousRops.map((rop, index) => <Rop key={index} project={project} rop={rop} url={url} />)
-            }
-          </Fragment>
-        )
-      }
+      {activeRops.map((rop, index) => (
+        <Rop key={index} project={project} rop={rop} active={true} url={url} />
+      ))}
 
+      {!!previousRops.length && (
+        <Fragment>
+          <h3>
+            <Snippet>rops.previous</Snippet>
+          </h3>
+          {previousRops.map((rop, index) => (
+            <Rop key={index} project={project} rop={rop} url={url} />
+          ))}
+        </Fragment>
+      )}
     </Subsection>
   );
 }
 
-export default function () {
+export default function RopsSection() {
   const canAccessRops = useSelector(state => state.static.canAccessRops);
-
   if (!canAccessRops) {
     return null;
   }
