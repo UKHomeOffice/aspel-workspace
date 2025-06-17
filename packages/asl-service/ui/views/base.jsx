@@ -50,7 +50,12 @@ const Layout = ({
     ? configureStore({
       reducer: rootReducer,
       preloadedState: {
-        ...omit(props, ['footerLinks', 'settings', '_locals', 'cache']),
+        ...omit(props, [
+          'footerLinks',
+          'settings',
+          '_locals',
+          'cache',
+          'pageTitle']),
         static: { ...rest, content, urls }
       }
     })
