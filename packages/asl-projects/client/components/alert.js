@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { hideMessage } from '../actions/messages';
 import { Markdown } from '@ukhomeoffice/asl-components';
 
@@ -16,23 +16,29 @@ class Create extends React.Component {
 
   alert() {
     if (!this.props.message) {
-      return;
+      return null;
     }
-    return <div className={`alert alert-${this.props.type}`} key="alert" onClick={this.onClick}>
-      <div className="govuk-width-container">
-        <Markdown>{ this.props.message }</Markdown>
-      </div>
-    </div>;
+    return (
+      <CSSTransition
+        key="alert"
+        classNames="alert"
+        timeout={{ enter: 100, exit: 500 }}
+      >
+        <div className={`alert alert-${this.props.type}`} onClick={this.onClick}>
+          <div className="govuk-width-container">
+            <Markdown>{ this.props.message }</Markdown>
+          </div>
+        </div>
+      </CSSTransition>
+    );
   }
 
   render() {
-    return <CSSTransitionGroup
-      transitionName="alert"
-      transitionEnterTimeout={100}
-      transitionLeaveTimeout={500}
-    >
-      { this.alert() }
-    </CSSTransitionGroup>;
+    return (
+      <TransitionGroup>
+        { this.alert() }
+      </TransitionGroup>
+    );
   }
 
 }

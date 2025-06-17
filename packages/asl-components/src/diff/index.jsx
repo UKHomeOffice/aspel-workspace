@@ -65,13 +65,16 @@ export default function Diff({
                 {
                     map(diff, ({ oldValue, newValue }, key) => {
                         const className = comparator(oldValue, newValue, formatters[key]) ? 'highlight' : '';
-                        return <tr key={key}>
-                            <td><Snippet>{`fields.${key}.label`}</Snippet></td>
-                            <td>{formatValue(oldValue, formatters[key])}</td>
-                            <td>
-                                <span className={className}>{formatValue(newValue, formatters[key])}</span>
-                            </td>
-                        </tr>;
+
+                        return (
+                            <tr key={key}>
+                                <td><Snippet>{`fields.${key}.label`}</Snippet></td>
+                                <td>{formatValue(oldValue, formatters[key])}</td>
+                                <td>
+                                    <span className={className}>{formatValue(newValue, formatters[key])}</span>
+                                </td>
+                            </tr>
+                        );
                     })
                 }
             </tbody>
