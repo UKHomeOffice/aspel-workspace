@@ -143,6 +143,7 @@ export function Rops({ project = {}, ropsYears = [], url, today = new Date() }) 
 
   return (
     <Subsection title={<Snippet>rops.title</Snippet>}>
+      <br />
       {activeRops.map((rop, index) => (
         <Rop key={index} project={project} rop={rop} active={true} url={url} />
       ))}
