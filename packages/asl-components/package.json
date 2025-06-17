@@ -43,6 +43,7 @@
     "react-redux": "^7.1.0",
     "redux": "^4.0.1",
     "remark-breaks": "^2.0.2",
+    "remark-flexible-markers": "^1.3.0",
     "shasum": "^1.0.2",
     "url": "^0.11.0",
     "uuid": "^8.3.2"
@@ -50,8 +51,9 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
-    "@babel/preset-env": "^7.24.4",
-    "@babel/preset-react": "^7.24.1",
+    "@babel/plugin-transform-private-methods": "^7.27.1",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^8.23.1",

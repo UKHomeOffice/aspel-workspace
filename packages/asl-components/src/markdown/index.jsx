@@ -2,6 +2,7 @@
 import React, { Fragment } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
+import remarkFlexibleMarkers from 'remark-flexible-markers';
 
 function RenderLink({ href, children }) {
     return <Fragment>[{ children }]({ href })</Fragment>;
@@ -41,9 +42,10 @@ export default function Markdown({
         includeElementIndex={true}
         components={{
             ...(!links && components),
-            p: wrapInSpanIfOnlyChild(unwrapSingleLine, paragraphProps)
+            p: wrapInSpanIfOnlyChild(unwrapSingleLine, paragraphProps),
+            mark: ({ ...props }) => <mark {...props} />
         }}
-        remarkPlugins={significantLineBreaks ? [remarkBreaks] : []}
+        remarkPlugins={significantLineBreaks ? [remarkBreaks, remarkFlexibleMarkers] : [remarkFlexibleMarkers]}
         {...props}
     >
         { source || children }
