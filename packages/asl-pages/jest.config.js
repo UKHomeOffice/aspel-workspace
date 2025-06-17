@@ -8,7 +8,7 @@ module.exports = {
     'node_modules/(?!(@ukhomeoffice|@asl))'
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(@ukhomeoffice|@asl))'
+    'node_modules/(?!(@ukhomeoffice|@asl|remark-flexible-markers|uni))'
   ],
   setupFilesAfterEnv: ['<rootDir>/enzyme.setup.js'],
   snapshotSerializers: ['enzyme-to-json/serializer']
