@@ -9,7 +9,9 @@ export default function getLocations(project, establishment) {
       .map(e => e.name || e['establishment-name'])
     : [];
 
-  const poles = (project.polesList || []).filter(p => p.title).map(p => p.title);
+  const poles = project.poles
+    ? (project.polesList || []).filter(p => p.title).map(p => p.title)
+    : [];
 
   return uniq([
     project.transferToEstablishmentName || establishment.name,
