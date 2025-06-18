@@ -8,7 +8,8 @@ const establishmentsKeys = [
   'establishments',
   'polesList',
   'transferToEstablishmentName',
-  'other-establishments'
+  'other-establishments',
+  'poles'
 ]
 
 const triggeringKeys = [
