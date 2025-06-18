@@ -52,6 +52,10 @@ module.exports = (settings) => {
       return res.redirect(
         req.buildRoute('role.namedPersonMvp.incompleteTraining')
       );
+    } else if (mandatory === 'delay' && role === 'nvs') {
+      return res.redirect(
+        req.buildRoute('role.namedPersonMvp.nvsModule')
+      );
     } else {
       return res.redirect(req.buildRoute('training.dashboard'));
     }
