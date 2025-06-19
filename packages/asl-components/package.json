@@ -29,7 +29,7 @@
     "@ukhomeoffice/asl-dictionary": "file:../asl-dictionary",
     "@ukhomeoffice/react-components": "^1.5.0",
     "@x-govuk/govuk-prototype-components": "^3.0.9",
-    "accessible-autocomplete": "^2.0.3",
+    "accessible-autocomplete": "^3.0.1",
     "classnames": "^2.2.6",
     "date-fns": "^3.6.0",
     "diff": "^4.0.1",

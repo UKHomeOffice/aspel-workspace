@@ -10,7 +10,10 @@ const licenceType = {
 };
 
 export default function Confirm() {
-  const { model, static: { modelType, licence, licenceHolder } } = useSelector(state => state);
+  const model = useSelector(state => state.model);
+  const modelType = useSelector(state => state.static.modelType);
+  const licence = useSelector(state => state.static.licence);
+  const licenceHolder = useSelector(state => state.static.licenceHolder);
 
   const subtitle = modelType === 'pil'
     ? `${licenceHolder.firstName} ${licenceHolder.lastName}`

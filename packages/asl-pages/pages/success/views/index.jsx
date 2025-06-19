@@ -4,16 +4,14 @@ import { Header, Panel, Snippet, Link } from '@ukhomeoffice/asl-components';
 import EstablishmentHeader from '../../common/components/establishment-header';
 
 const Index = ({ onwardLink }) => {
-  const {
-    establishment,
-    taskLabel,
-    taskId,
-    isAsruUser,
-    additionalInfo,
-    projectId,
-    modelType,
-    action
-  } = useSelector(state => state.static);
+  const establishment = useSelector(state => state.static.establishment);
+  const taskLabel = useSelector(state => state.static.taskLabel);
+  const taskId = useSelector(state => state.static.taskId);
+  const isAsruUser = useSelector(state => state.static.isAsruUser);
+  const additionalInfo = useSelector(state => state.static.additionalInfo);
+  const projectId = useSelector(state => state.static.projectId);
+  const modelType = useSelector(state => state.static.modelType);
+  const action = useSelector(state => state.static.action);
 
   return (
     <div className="govuk-grid-row success">
