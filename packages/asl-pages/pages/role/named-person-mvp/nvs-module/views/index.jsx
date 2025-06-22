@@ -4,7 +4,7 @@ import { Snippet, Header, Form, ErrorSummary } from '@ukhomeoffice/asl-component
 import { Warning } from '@ukhomeoffice/react-components';
 
 const Page = () => {
-  const {profile} = useSelector(state => state.static, shallowEqual);
+  const {profile, roleType} = useSelector(state => state.static, shallowEqual);
 
   const warning = (
     <Fragment>

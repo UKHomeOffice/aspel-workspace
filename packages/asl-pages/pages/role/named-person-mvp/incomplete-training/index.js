@@ -20,7 +20,8 @@ module.exports = (settings) => {
   app.use(
     form({
       configure(req, res, next) {
-        req.form.schema = schema();
+        const roleType = req.session.form[`${req.profile.id}-new-role-named-person`].values.type;
+        req.form.schema = schema(roleType);
         next();
       },
       process: (req, res, next) => {

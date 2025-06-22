@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (roleType) => {
 
   const roles = () => [
     {
@@ -40,13 +40,7 @@ module.exports = () => {
     }
   ];
 
-  return {
-    incomplete: {
-      hint: 'Select all that apply.',
-      inputType: 'checkboxGroup',
-      options: roles(),
-      validate: ['required', 'exclusive']
-    },
+  let payload = {
     delayReason: {
       inputType: 'textarea',
       validate: [
@@ -64,4 +58,18 @@ module.exports = () => {
       ]
     }
   };
+
+  if (roleType === 'nacwo') {
+    return {
+      incomplete: {
+        hint: 'Select all that apply.',
+        inputType: 'checkboxGroup',
+        options: roles(),
+        validate: ['required', 'exclusive']
+      },
+      ...payload
+    };
+  }
+
+  return payload;
 };
