@@ -6,8 +6,15 @@ module.exports = merge({}, baseContent, {
   applyingFor: 'You are assigning:',
   onBehalfOf: 'To:',
   rcvsNumber: 'RCVS number:',
-  explanation:
-    'All mandatory training is complete and their training record is up to date.',
+  explanation: {
+    nvs: 'All mandatory training is complete and their training record is up to date.',
+    nacwo: {
+      delay: 'There is an unavoidable delay in completing one or more modules',
+      trainingToComplete: 'NACWO training modules to be completed:',
+      reasonForDelay: 'Reason for delay:',
+      trainingDate: 'Date all mandatory training will be completed:'
+    }
+  },
   agreement: 'I agree with {{ agreementDeterminer }} these statements',
   fields: {
     declaration: {
@@ -16,7 +23,8 @@ module.exports = merge({}, baseContent, {
   },
   errors: {
     declaration: {
-      required: 'Select the checkbox to confirm you agree with {{ agreementDeterminer }} these statements'
+      required:
+        'Select the checkbox to confirm you agree with {{ agreementDeterminer }} these statements'
     }
   },
   declarations: {

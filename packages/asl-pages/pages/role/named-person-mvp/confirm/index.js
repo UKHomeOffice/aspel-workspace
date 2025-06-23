@@ -6,13 +6,23 @@ const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
 
 const NAMED_PERSION_VERSION_ID = 2;
 
+const getIncompleteTrainingDetails = (req) => {
+  const formData = get(
+    req.session.form,
+    [`${req.profileId}-incomplete-training`, 'values'],
+    {}
+  );
+  const { incomplete, delayReason, completeDate } = formData;
+  return { incomplete, delayReason, completeDate };
+};
+
 const sendData = (req, params = {}) => {
   const { type, rcvsNumber } =
     req.session.form[`${req.profileId}-new-role-named-person`]?.values || {};
   const { mandatory } =
     req.session.form[`${req.profileId}-mandatory-training`]?.values || {};
   const { incomplete, delayReason, completeDate } =
-    req.session.form[`${req.profileId}-incomplete-training`]?.values || {};
+    getIncompleteTrainingDetails || {};
 
   const replaceProfile = profileReplaced(req.establishment, type);
   const opts = {
@@ -61,7 +71,8 @@ module.exports = (settings) => {
           values: {
             ...req.session.form[`${req.profile.id}-new-role-named-person`]
               .values
-          }
+          },
+          incompleteTraining: getIncompleteTrainingDetails(req)
         });
         next();
       },

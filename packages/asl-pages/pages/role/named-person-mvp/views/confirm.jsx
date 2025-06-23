@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import {
   ControlBar,
   FormLayout,
@@ -10,6 +10,48 @@ import {
 import { Warning } from '@ukhomeoffice/react-components';
 import namedRoles from '../../content/named-roles';
 const mandatoryTrainingRequirementsForRoles = require('../mandatory-training/content/mandatory-training-requirements-for-roles');
+
+const NVSRole = ({ nvs }) => {
+  return (
+    <>
+      { nvs.rcvsNumber &&
+          <Fragment>
+            <dt><Snippet>rcvsNumber</Snippet></dt>
+            <dd>{nvs.rcvsNumber}</dd>
+          </Fragment>
+      }
+
+      {mandatoryTrainingRequirementsForRoles[nvs.type] && (
+        <Fragment>
+          <dt><Snippet>explanation.nvs</Snippet></dt>
+          <dd>{nvs.comment}</dd>
+        </Fragment>
+      )}
+    </>
+  );
+};
+
+const NACWORole = () => {
+
+  const { incompleteTraining } = useSelector(state => state.static);
+
+  return (
+    <>
+      <Fragment>
+        <dt><Snippet>explanation.nacwo.delay</Snippet></dt>
+
+        <dt><Snippet>explanation.nacwo.trainingToComplete</Snippet></dt>
+        <dd>{incompleteTraining.incomplete}</dd>
+
+        <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
+        <dd>{incompleteTraining.delayReason}</dd>
+
+        <dt><Snippet>explanation.nacwo.trainingDate</Snippet></dt>
+        <dd>{incompleteTraining.completeDate}</dd>
+      </Fragment>
+    </>
+  );
+};
 
 const Confirm = ({
   establishment,
@@ -50,19 +92,8 @@ const Confirm = ({
           }
         </dd>
 
-        { values.rcvsNumber &&
-          <Fragment>
-            <dt><Snippet>rcvsNumber</Snippet></dt>
-            <dd>{values.rcvsNumber}</dd>
-          </Fragment>
-        }
-
-        {mandatoryTrainingRequirementsForRoles[values.type] && (
-          <Fragment>
-            <dt><Snippet>explanation</Snippet></dt>
-            <dd>{values.comment}</dd>
-          </Fragment>
-        )}
+        { values.type === 'nvs' && <NVSRole nvs={values} /> }
+        { values.type === 'nacwo' && <NACWORole /> }
       </dl>
 
       {
