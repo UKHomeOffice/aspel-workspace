@@ -48,7 +48,7 @@ module.exports = (settings) => {
       req.session.form[`${req.profile.id}-new-role-named-person`].values.type;
     if (mandatory === 'yes') {
       return res.redirect(req.buildRoute('role.namedPersonMvp.confirm'));
-    } else if (mandatory === 'delay' && role === 'nacwo') {
+    } else if (mandatory === 'delay' && (role === 'nacwo' || role === 'nvs')) {
       return res.redirect(
         req.buildRoute('role.namedPersonMvp.incompleteTraining')
       );
