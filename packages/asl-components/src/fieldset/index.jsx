@@ -29,7 +29,7 @@ import {
     Inset,
     TextAreaWithWordCount
 } from '../';
-import {getLabelFromRenderers} from '../utils';
+import { getLabelFromRenderers } from '../utils';
 
 function getLabel(opt, name, type = 'label') {
     if (type === 'hint') {
