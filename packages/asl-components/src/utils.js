@@ -68,6 +68,22 @@ function applyFormatters({ formatters, name, ...props })  {
     };
 }
 
+function getLabelFromRenderers(renderers, name, label) {
+    const renderer = renderers?.[name];
+    if (renderer) {
+        const formatted = renderer?.propMappers && typeof renderer?.propMappers === 'object'
+            ? Object.fromEntries(
+                Object.entries(renderers[name].propMappers)
+                    .map(([key, mapper]) => [key, mapper(label, renderer)])
+            )
+            : undefined;
+        if (formatted && formatted.label) {
+            return formatted;
+        }
+    }
+    return undefined;
+}
+
 module.exports = {
     getValue,
     queryStringFromState,
@@ -75,4 +91,5 @@ module.exports = {
     formatDate,
     DATE_FORMAT,
     applyFormatters,
+    getLabelFromRenderers,
 };
