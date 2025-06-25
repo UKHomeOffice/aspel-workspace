@@ -30,7 +30,8 @@ const sendData = (req, params = {}) => {
   const { type, rcvsNumber } =
     req.session.form[`${req.profileId}-new-role-named-person`]?.values || {};
   const mandatory = getMandatoryTraining(req);
-  const incompleteTraining = getIncompleteTrainingDetails(req) || {};
+  const { incomplete, delayReason, completeDate } =
+    getIncompleteTrainingDetails(req) || {};
 
   const replaceProfile = profileReplaced(req.establishment, type);
   const opts = {
@@ -41,9 +42,9 @@ const sendData = (req, params = {}) => {
           type,
           rcvsNumber,
           mandatory,
-          incomplete: incompleteTraining.incomplete,
-          delayReason: incompleteTraining.delayReason,
-          completeDate: incompleteTraining.completeDate,
+          incomplete,
+          delayReason,
+          completeDate,
           profileId: req.profileId,
           replaceProfile,
           replaceRoles: PELH_OR_NPRC_ROLES

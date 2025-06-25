@@ -38,6 +38,7 @@ const NACWORole = () => {
   const showDelayReason =
     (Array.isArray(mandatoryTraining) && mandatoryTraining.includes('delay')) ||
     mandatoryTraining === 'delay';
+  const incompleteModules = [].concat(incompleteTraining.incomplete || []).join(', ');
 
   return (
     <>
@@ -53,7 +54,7 @@ const NACWORole = () => {
           <dd />
 
           <dt><Snippet>explanation.nacwo.trainingToComplete</Snippet></dt>
-          <dd>{incompleteTraining.incomplete}</dd>
+          <dd>{incompleteModules}</dd>
 
           <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
           <dd>{incompleteTraining.delayReason}</dd>
