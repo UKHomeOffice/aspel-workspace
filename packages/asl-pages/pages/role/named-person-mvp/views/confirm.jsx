@@ -10,75 +10,68 @@ import {
 import { Warning } from '@ukhomeoffice/react-components';
 import namedRoles from '../../content/named-roles';
 
-const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
-  const showExemptionRequest =
-    (Array.isArray(mandatoryTraining) && mandatoryTraining.includes('exemption')) ||
-    mandatoryTraining === 'exemption';
-  const showDelayReason =
-    (Array.isArray(mandatoryTraining) && mandatoryTraining.includes('delay')) ||
-    mandatoryTraining === 'delay';
+const checkExemptionDelay = (mandatoryTraining) => {
+  const isExemption = Array.isArray(mandatoryTraining)
+    ? mandatoryTraining.includes('exemption')
+    : mandatoryTraining === 'exemption';
+  const isDelay = Array.isArray(mandatoryTraining)
+    ? mandatoryTraining.includes('delay')
+    : mandatoryTraining === 'delay';
 
+  return { isExemption, isDelay };
+};
+
+const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
+  const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
   return (
     <>
-      { nvs.rcvsNumber &&
-        <Fragment>
+      {nvs.rcvsNumber && (
+        <>
           <dt><Snippet>explanation.nvs.rcvsNumber</Snippet></dt>
           <dd>{nvs.rcvsNumber}</dd>
-        </Fragment>
-      }
+        </>
+      )}
 
-      {showExemptionRequest && (
+      {isExemption && (
         <p>
           <dt><Snippet>explanation.exemptionRequest</Snippet></dt>
         </p>
       )}
 
-      { showDelayReason && (
+      {isDelay && (
         <>
           <dt><Snippet>explanation.nvs.trainingNotComplete</Snippet></dt>
           <dd />
-
           <dt><Snippet>explanation.nvs.reasonForDelay</Snippet></dt>
           <dd>{incompleteTraining.delayReason}</dd>
-
           <dt><Snippet>explanation.nvs.completionDate</Snippet></dt>
           <dd>{incompleteTraining.completeDate}</dd>
         </>
       )}
-
     </>
   );
 };
 
 const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
-
-  const showExemptionRequest =
-    (Array.isArray(mandatoryTraining) && mandatoryTraining.includes('exemption')) ||
-    mandatoryTraining === 'exemption';
-  const showDelayReason =
-    (Array.isArray(mandatoryTraining) && mandatoryTraining.includes('delay')) ||
-    mandatoryTraining === 'delay';
+  const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
   const incompleteModules = [].concat(incompleteTraining.incomplete || []).join(', ');
 
   return (
     <>
-      {showExemptionRequest && (
+      {isExemption && (
         <p>
           <dt><Snippet>explanation.exemptionRequest</Snippet></dt>
         </p>
       )}
 
-      {showDelayReason && (
+      {isDelay && (
         <>
           <dt><Snippet>explanation.nacwo.delay</Snippet></dt>
           <dd />
-
           <dt><Snippet>explanation.nacwo.trainingToComplete</Snippet></dt>
           <dd>{incompleteModules}</dd>
-
           <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
           <dd>{incompleteTraining.delayReason}</dd>
-
           <dt><Snippet>explanation.nacwo.trainingDate</Snippet></dt>
           <dd>{incompleteTraining.completeDate}</dd>
         </>
