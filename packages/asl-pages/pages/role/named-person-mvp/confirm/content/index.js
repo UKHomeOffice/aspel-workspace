@@ -9,6 +9,8 @@ module.exports = merge({}, baseContent, {
   explanation: {
     nvs: 'All mandatory training is complete and their training record is up to date.',
     nacwo: {
+      exemptionRequest:
+        '{{profile.firstName}} has requested an exemption from one or more modules',
       delay: 'There is an unavoidable delay in completing one or more modules',
       trainingToComplete: 'NACWO training modules to be completed:',
       reasonForDelay: 'Reason for delay:',

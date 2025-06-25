@@ -33,21 +33,38 @@ const NVSRole = ({ nvs }) => {
 
 const NACWORole = () => {
 
-  const { incompleteTraining } = useSelector(state => state.static);
+  const { incompleteTraining, mandatoryTraining } = useSelector(state => state.static);
+
+  const showExemptionRequest = ((Array.isArray(mandatoryTraining) && mandatoryTraining.includes('exemption')) ||
+  mandatoryTraining === 'exemption');
+  const showDelayReason = ((Array.isArray(mandatoryTraining) && mandatoryTraining.includes('delay')) || mandatoryTraining === 'delay');
 
   return (
     <>
       <Fragment>
-        <dt><Snippet>explanation.nacwo.delay</Snippet></dt>
+        { showExemptionRequest && (
+          <p>
+            <dt><Snippet>explanation.nacwo.exemptionRequest</Snippet></dt>
+          </p>
+        )}
 
-        <dt><Snippet>explanation.nacwo.trainingToComplete</Snippet></dt>
-        <dd>{incompleteTraining.incomplete}</dd>
+        { showDelayReason && (
+          <Fragment>
+            <p>
+              <dt><Snippet>explanation.nacwo.delay</Snippet></dt>
+            </p>
 
-        <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
-        <dd>{incompleteTraining.delayReason}</dd>
+            <dt><Snippet>explanation.nacwo.trainingToComplete</Snippet></dt>
+            <dd>{incompleteTraining.incomplete}</dd>
 
-        <dt><Snippet>explanation.nacwo.trainingDate</Snippet></dt>
-        <dd>{incompleteTraining.completeDate}</dd>
+            <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
+            <dd>{incompleteTraining.delayReason}</dd>
+
+            <dt><Snippet>explanation.nacwo.trainingDate</Snippet></dt>
+            <dd>{incompleteTraining.completeDate}</dd>
+          </Fragment>
+        )
+        }
       </Fragment>
     </>
   );

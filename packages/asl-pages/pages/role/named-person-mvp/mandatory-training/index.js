@@ -44,17 +44,18 @@ module.exports = (settings) => {
 
   app.post('/', (req, res, next) => {
     const { mandatory } = req.form.values;
-    const role =
-      req.session.form[`${req.profile.id}-new-role-named-person`].values.type;
-    if (mandatory === 'yes') {
+    if (mandatory === 'yes' || mandatory === 'exemption') {
       return res.redirect(req.buildRoute('role.namedPersonMvp.confirm'));
-    } else if (mandatory === 'delay' && (role === 'nacwo' || role === 'nvs')) {
+    }
+    if (
+      mandatory === 'delay' ||
+      (Array.isArray(mandatory) && mandatory.includes('delay'))
+    ) {
       return res.redirect(
         req.buildRoute('role.namedPersonMvp.incompleteTraining')
       );
-    } else {
-      return res.redirect(req.buildRoute('training.dashboard'));
     }
+    throw new Error('Invalid mandatory training value');
   });
 
   return app;

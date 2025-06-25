@@ -16,13 +16,21 @@ const getIncompleteTrainingDetails = (req) => {
   return { incomplete, delayReason, completeDate };
 };
 
+const getMandatoryTraining = (req) => {
+  const { mandatory } = get(
+    req.session.form,
+    [`${req.profileId}-mandatory-training`, 'values'],
+    {}
+  );
+
+  return mandatory;
+};
+
 const sendData = (req, params = {}) => {
   const { type, rcvsNumber } =
     req.session.form[`${req.profileId}-new-role-named-person`]?.values || {};
-  const { mandatory } =
-    req.session.form[`${req.profileId}-mandatory-training`]?.values || {};
-  const { incomplete, delayReason, completeDate } =
-    getIncompleteTrainingDetails || {};
+  const mandatory = getMandatoryTraining(req);
+  const incompleteTraining = getIncompleteTrainingDetails(req) || {};
 
   const replaceProfile = profileReplaced(req.establishment, type);
   const opts = {
@@ -33,9 +41,9 @@ const sendData = (req, params = {}) => {
           type,
           rcvsNumber,
           mandatory,
-          incomplete,
-          delayReason,
-          completeDate,
+          incomplete: incompleteTraining.incomplete,
+          delayReason: incompleteTraining.delayReason,
+          completeDate: incompleteTraining.completeDate,
           profileId: req.profileId,
           replaceProfile,
           replaceRoles: PELH_OR_NPRC_ROLES
@@ -72,7 +80,8 @@ module.exports = (settings) => {
             ...req.session.form[`${req.profile.id}-new-role-named-person`]
               .values
           },
-          incompleteTraining: getIncompleteTrainingDetails(req)
+          incompleteTraining: getIncompleteTrainingDetails(req),
+          mandatoryTraining: getMandatoryTraining(req)
         });
         next();
       },
