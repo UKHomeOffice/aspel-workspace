@@ -2,10 +2,12 @@ import React from 'react';
 import size from 'lodash/size';
 import { connect } from 'react-redux';
 import { Snippet } from '../';
+import { getLabelFromRenderers } from '../utils';
 
 const ErrorSummary = ({
     errors,
-    formatters = {}
+    formatters = {},
+    renderers
 }) => {
     if (!size(errors)) {
         return null;
@@ -28,9 +30,15 @@ const ErrorSummary = ({
                             const snippetProps = formatters[key]?.renderContext ?? {};
                             return <li key={key}>
                                 <a href={`#${key}`}>
-                                    <Snippet fallback={`errors.default.${errors[key]}`} {...snippetProps}>
-                                        {`errors.${key}.${errors[key]}`}
-                                    </Snippet>
+                                    {
+                                        renderers && getLabelFromRenderers(renderers, key, 'error')?.error
+                                            ?
+                                            <Error name={key} renderers={renderers} />
+                                            :
+                                            <Snippet fallback={`errors.default.${errors[key]}`} {...snippetProps}>
+                                                {`errors.${key}.${errors[key]}`}
+                                            </Snippet>
+                                    }
                                 </a>
                             </li>;
                         }
@@ -41,6 +49,10 @@ const ErrorSummary = ({
         </div>
     );
 };
+
+function Error({ renderers, name }) {
+    return getLabelFromRenderers(renderers, name, 'error').error;
+}
 
 const mapStateToProps = ({ static: { errors } }) => ({ errors });
 
