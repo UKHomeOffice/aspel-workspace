@@ -11,61 +11,57 @@ import { Warning } from '@ukhomeoffice/react-components';
 import namedRoles from '../../content/named-roles';
 const mandatoryTrainingRequirementsForRoles = require('../mandatory-training/content/mandatory-training-requirements-for-roles');
 
-const NVSRole = ({ nvs }) => {
-  return (
-    <>
-      { nvs.rcvsNumber &&
-          <Fragment>
-            <dt><Snippet>rcvsNumber</Snippet></dt>
-            <dd>{nvs.rcvsNumber}</dd>
-          </Fragment>
-      }
-
-      {mandatoryTrainingRequirementsForRoles[nvs.type] && (
+const NVSRole = ({ nvs }) => (
+  <>
+    { nvs.rcvsNumber &&
         <Fragment>
-          <dt><Snippet>explanation.nvs</Snippet></dt>
-          <dd>{nvs.comment}</dd>
+          <dt><Snippet>rcvsNumber</Snippet></dt>
+          <dd>{nvs.rcvsNumber}</dd>
         </Fragment>
-      )}
-    </>
-  );
-};
+    }
+
+    {mandatoryTrainingRequirementsForRoles[nvs.type] && nvs.comment && (
+      <Fragment>
+        <dt><Snippet>explanation.nvs</Snippet></dt>
+        <dd>{nvs.comment}</dd>
+      </Fragment>
+    )}
+  </>
+);
 
 const NACWORole = () => {
+  const { incompleteTraining = {}, mandatoryTraining } = useSelector(state => state.static);
 
-  const { incompleteTraining, mandatoryTraining } = useSelector(state => state.static);
-
-  const showExemptionRequest = ((Array.isArray(mandatoryTraining) && mandatoryTraining.includes('exemption')) ||
-  mandatoryTraining === 'exemption');
-  const showDelayReason = ((Array.isArray(mandatoryTraining) && mandatoryTraining.includes('delay')) || mandatoryTraining === 'delay');
+  const showExemptionRequest =
+    (Array.isArray(mandatoryTraining) && mandatoryTraining.includes('exemption')) ||
+    mandatoryTraining === 'exemption';
+  const showDelayReason =
+    (Array.isArray(mandatoryTraining) && mandatoryTraining.includes('delay')) ||
+    mandatoryTraining === 'delay';
 
   return (
     <>
-      <Fragment>
-        { showExemptionRequest && (
-          <p>
-            <dt><Snippet>explanation.nacwo.exemptionRequest</Snippet></dt>
-          </p>
-        )}
+      {showExemptionRequest && (
+        <p>
+          <dt><Snippet>explanation.nacwo.exemptionRequest</Snippet></dt>
+        </p>
+      )}
 
-        { showDelayReason && (
-          <Fragment>
-            <p>
-              <dt><Snippet>explanation.nacwo.delay</Snippet></dt>
-            </p>
+      {showDelayReason && (
+        <>
+          <dt><Snippet>explanation.nacwo.delay</Snippet></dt>
+          <dd />
 
-            <dt><Snippet>explanation.nacwo.trainingToComplete</Snippet></dt>
-            <dd>{incompleteTraining.incomplete}</dd>
+          <dt><Snippet>explanation.nacwo.trainingToComplete</Snippet></dt>
+          <dd>{incompleteTraining.incomplete}</dd>
 
-            <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
-            <dd>{incompleteTraining.delayReason}</dd>
+          <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
+          <dd>{incompleteTraining.delayReason}</dd>
 
-            <dt><Snippet>explanation.nacwo.trainingDate</Snippet></dt>
-            <dd>{incompleteTraining.completeDate}</dd>
-          </Fragment>
-        )
-        }
-      </Fragment>
+          <dt><Snippet>explanation.nacwo.trainingDate</Snippet></dt>
+          <dd>{incompleteTraining.completeDate}</dd>
+        </>
+      )}
     </>
   );
 };
