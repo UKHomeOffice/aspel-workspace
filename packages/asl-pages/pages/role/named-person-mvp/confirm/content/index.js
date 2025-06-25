@@ -5,14 +5,18 @@ module.exports = merge({}, baseContent, {
   confirmTitle: 'Check and submit',
   applyingFor: 'You are assigning:',
   onBehalfOf: 'To:',
-  rcvsNumber: 'RCVS number:',
   explanation: {
     trainingComplete:
       'All mandatory training is complete and their training record is up to date.',
-    nvs: 'All mandatory training is complete and their training record is up to date.',
+    exemptionRequest:
+      '{{profile.firstName}} has requested an exemption from one or more modules',
+    nvs: {
+      rcvsNumber: 'RCVS number:',
+      trainingNotComplete: 'The NVS module is not yet completed',
+      reasonForDelay: 'Reason why the module is not yet completed',
+      completionDate: 'Date the module will be completed'
+    },
     nacwo: {
-      exemptionRequest:
-        '{{profile.firstName}} has requested an exemption from one or more modules',
       delay: 'There is an unavoidable delay in completing one or more modules',
       trainingToComplete: 'NACWO training modules to be completed:',
       reasonForDelay: 'Reason for delay:',

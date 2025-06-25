@@ -9,28 +9,48 @@ import {
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import namedRoles from '../../content/named-roles';
-const mandatoryTrainingRequirementsForRoles = require('../mandatory-training/content/mandatory-training-requirements-for-roles');
 
-const NVSRole = ({ nvs }) => (
-  <>
-    { nvs.rcvsNumber &&
+const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
+  const showExemptionRequest =
+    (Array.isArray(mandatoryTraining) && mandatoryTraining.includes('exemption')) ||
+    mandatoryTraining === 'exemption';
+  const showDelayReason =
+    (Array.isArray(mandatoryTraining) && mandatoryTraining.includes('delay')) ||
+    mandatoryTraining === 'delay';
+
+  return (
+    <>
+      { nvs.rcvsNumber &&
         <Fragment>
-          <dt><Snippet>rcvsNumber</Snippet></dt>
+          <dt><Snippet>explanation.nvs.rcvsNumber</Snippet></dt>
           <dd>{nvs.rcvsNumber}</dd>
         </Fragment>
-    }
+      }
 
-    {mandatoryTrainingRequirementsForRoles[nvs.type] && nvs.comment && (
-      <Fragment>
-        <dt><Snippet>explanation.nvs</Snippet></dt>
-        <dd>{nvs.comment}</dd>
-      </Fragment>
-    )}
-  </>
-);
+      {showExemptionRequest && (
+        <p>
+          <dt><Snippet>explanation.exemptionRequest</Snippet></dt>
+        </p>
+      )}
 
-const NACWORole = () => {
-  const { incompleteTraining = {}, mandatoryTraining } = useSelector(state => state.static);
+      { showDelayReason && (
+        <>
+          <dt><Snippet>explanation.nvs.trainingNotComplete</Snippet></dt>
+          <dd />
+
+          <dt><Snippet>explanation.nvs.reasonForDelay</Snippet></dt>
+          <dd>{incompleteTraining.delayReason}</dd>
+
+          <dt><Snippet>explanation.nvs.completionDate</Snippet></dt>
+          <dd>{incompleteTraining.completeDate}</dd>
+        </>
+      )}
+
+    </>
+  );
+};
+
+const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
 
   const showExemptionRequest =
     (Array.isArray(mandatoryTraining) && mandatoryTraining.includes('exemption')) ||
@@ -44,7 +64,7 @@ const NACWORole = () => {
     <>
       {showExemptionRequest && (
         <p>
-          <dt><Snippet>explanation.nacwo.exemptionRequest</Snippet></dt>
+          <dt><Snippet>explanation.exemptionRequest</Snippet></dt>
         </p>
       )}
 
@@ -100,7 +120,7 @@ const Confirm = ({
     }
   };
 
-  const { mandatoryTraining } = useSelector(state => state.static);
+  const { incompleteTraining = {}, mandatoryTraining } = useSelector(state => state.static);
 
   return (
     <FormLayout formatters={formatters}>
@@ -118,9 +138,9 @@ const Confirm = ({
           }
         </dd>
 
+        { values.type === 'nvs' && <NVSRole nvs={values} incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
+        { values.type === 'nacwo' && <NACWORole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
         { mandatoryTraining === 'yes' && <TrainingComplete /> }
-        { values.type === 'nvs' && <NVSRole nvs={values} /> }
-        { values.type === 'nacwo' && <NACWORole /> }
       </dl>
 
       {
