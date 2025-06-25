@@ -67,6 +67,16 @@ const NACWORole = () => {
   );
 };
 
+const TrainingComplete = () => {
+  return (
+    <>
+      <Fragment>
+        <dt><Snippet>explanation.trainingComplete</Snippet></dt>
+      </Fragment>
+    </>
+  );
+};
+
 const Confirm = ({
   establishment,
   profile,
@@ -90,6 +100,8 @@ const Confirm = ({
     }
   };
 
+  const { mandatoryTraining } = useSelector(state => state.static);
+
   return (
     <FormLayout formatters={formatters}>
       <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
@@ -106,6 +118,7 @@ const Confirm = ({
           }
         </dd>
 
+        { mandatoryTraining === 'yes' && <TrainingComplete /> }
         { values.type === 'nvs' && <NVSRole nvs={values} /> }
         { values.type === 'nacwo' && <NACWORole /> }
       </dl>

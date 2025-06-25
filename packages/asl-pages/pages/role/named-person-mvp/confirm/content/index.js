@@ -7,6 +7,8 @@ module.exports = merge({}, baseContent, {
   onBehalfOf: 'To:',
   rcvsNumber: 'RCVS number:',
   explanation: {
+    trainingComplete:
+      'All mandatory training is complete and their training record is up to date.',
     nvs: 'All mandatory training is complete and their training record is up to date.',
     nacwo: {
       exemptionRequest:
