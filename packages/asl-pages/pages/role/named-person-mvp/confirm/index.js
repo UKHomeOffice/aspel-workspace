@@ -4,7 +4,7 @@ const form = require('../../../common/routers/form');
 const { populateNamedPeople } = require('../../../common/middleware');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
 
-const NAMED_PERSION_VERSION_ID = 2;
+const NAMED_PERSON_VERSION_ID = 2;
 
 const getIncompleteTrainingDetails = (req) => {
   const formData = get(
@@ -48,7 +48,7 @@ const sendData = (req, params = {}) => {
           replaceProfile,
           replaceRoles: PELH_OR_NPRC_ROLES
         },
-        meta: { version: NAMED_PERSION_VERSION_ID }
+        meta: { version: NAMED_PERSON_VERSION_ID }
       },
       params
     )
@@ -109,4 +109,4 @@ module.exports = (settings) => {
   return app;
 };
 
-module.exports.NAMED_PERSION_VERSION_ID = NAMED_PERSION_VERSION_ID;
+module.exports.NAMED_PERSON_VERSION_ID = NAMED_PERSON_VERSION_ID;

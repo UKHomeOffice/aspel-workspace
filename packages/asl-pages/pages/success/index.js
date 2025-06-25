@@ -4,9 +4,7 @@ const { Router } = require('express');
 const { NotFoundError } = require('@asl/service/errors');
 const successMessages = require('./content');
 const { FEATURE_NAMED_PERSON_MVP } = require('@asl/service/ui/feature-flag');
-const {
-  NAMED_PERSION_VERSION_ID
-} = require('../role/named-person-mvp/confirm');
+const { NAMED_PERSON_VERSION_ID } = require('../role/named-person-mvp/confirm');
 
 const headerContent = (title, subtitle) => {
   return {
@@ -25,7 +23,7 @@ const getTaskContent = (task) => {
 
   switch (model) {
     case 'role':
-      if (task.data.meta?.version === NAMED_PERSION_VERSION_ID) {
+      if (task.data.meta?.version === NAMED_PERSON_VERSION_ID) {
         const profile = get(task, 'data.profile', {});
         const subtitle = `${profile.firstName} ${profile.lastName}`;
 
@@ -170,7 +168,7 @@ const getAdditionalInfo = ({ task, project }) => {
       return get(task, 'data.modelData.profile.name');
 
     case 'role':
-      if (task.data.meta?.version === NAMED_PERSION_VERSION_ID) {
+      if (task.data.meta?.version === NAMED_PERSON_VERSION_ID) {
         return get(task, 'data.establishment').name;
       } else {
         const profile = get(task, 'data.profile', {});
