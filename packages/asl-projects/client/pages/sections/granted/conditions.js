@@ -13,7 +13,9 @@ const Conditions = ({ granted, ...props }) => (
       )
     }
     <h2>{granted.subtitle}</h2>
-    <Markdown className="grey">{granted.intro}</Markdown>
+    <div className="grey">
+    <Markdown>{granted.intro}</Markdown>
+    </div>
     <Review {...props} />
   </div>
 );

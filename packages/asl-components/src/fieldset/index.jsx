@@ -93,7 +93,7 @@ const fields = {
     warning: props => <Warning><Snippet {...props}>{ props.contentKey }</Snippet></Warning>,
     text: props => (
         <div className={classnames('govuk-form-group', props.name)}>
-            <h3>{ props.label }</h3>
+            <h3>{ props.label ?? '' }</h3>
             <Markdown>{ props.format ? props.format(props.value) : props.value }</Markdown>
         </div>
     ),

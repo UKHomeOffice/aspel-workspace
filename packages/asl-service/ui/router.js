@@ -193,6 +193,17 @@ module.exports = settings => {
 
   app.use(sendResponse(settings));
 
+  // google dev tools
+  app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
+    res.status(200).json({});
+  });
+  app.use((req, res, next) => {
+    if (req.path === '/.well-known/appspecific/com.chrome.devtools.json') {
+      return res.status(200).json({});
+    }
+    next();
+  });
+
   app.use('/privacy', privacy());
   app.use('/cookies', cookies());
   app.use('/accessibility', accessibility());

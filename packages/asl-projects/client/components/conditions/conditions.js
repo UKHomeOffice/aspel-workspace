@@ -75,7 +75,7 @@ function Condition({
                       showRevert={!custom}
                       reminders={reminders}
                     />
-                    : <Markdown className="condition-text">{displayContent}</Markdown>
+                    : <div className="condition-text"><Markdown>{displayContent}</Markdown></div>
                 }
               </Fragment>
             )
