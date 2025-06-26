@@ -24,6 +24,7 @@ const DiffWindow = (props) => {
   const currentValues =  mapAnimalQuantities(project, props.name);
   const isRa = useSelector(state => state.application.schemaVersion) === 'RA';
 
+  console.log(props);
   const versions = useSelector(state => {
 
     const iterations = isRa
@@ -194,11 +195,6 @@ const DiffWindow = (props) => {
       );
     };
 
-    const durationDiff = () => {
-      console.log(value);
-      return null;
-    };
-
     const permissiblePurposeDiff = () => {
       const diffs = parts
         .reduce((arr, {value, added, removed}) => {
@@ -245,8 +241,54 @@ const DiffWindow = (props) => {
       case 'checkbox':
       case 'location-selector':
       case 'objective-selector':
-      case 'duration' :
-        return durationDiff();
+      case 'duration': {
+        const safeBefore = before || {};
+        const safeValue = value || {};
+        const hasNoData = !safeValue || (safeValue.years === undefined && safeValue.months === undefined);
+
+        if (hasNoData) {
+          return <p><em>{DEFAULT_LABEL}</em></p>;
+        }
+
+        return (
+          <dl className="inline">
+            {isBefore && (
+              <>
+                {safeBefore.years !== undefined && (
+                  <>
+                    <dt>Years:</dt>
+                    <dd className="diff removed">{safeBefore.years}</dd>
+                  </>
+                )}
+                {safeBefore.months !== undefined && (
+                  <>
+                    <dt>Months:</dt>
+                    <dd className="diff removed">{safeBefore.months}</dd>
+                  </>
+                )}
+              </>
+            )}
+
+            {!isBefore && (
+              <>
+                {safeValue.years !== undefined && (
+                  <>
+                    <dt>Years:</dt>
+                    <dd className="diff added">{safeValue.years}</dd>
+                  </>
+                )}
+                {safeValue.months !== undefined && (
+                  <>
+                    <dt>Months:</dt>
+                    <dd className="diff added">{safeValue.months}</dd>
+                  </>
+                )}
+              </>
+            )}
+          </dl>
+        );
+      }
+
       case 'species-selector':
         return parts.length
           ? (
@@ -307,7 +349,7 @@ const DiffWindow = (props) => {
           getLabel,
           DEFAULT_LABEL
       });
-        
+
       default:
         return (
           <ReviewField
