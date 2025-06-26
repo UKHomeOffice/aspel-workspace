@@ -80,16 +80,6 @@ const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
   );
 };
 
-const TrainingComplete = () => {
-  return (
-    <>
-      <Fragment>
-        <dt><Snippet>explanation.trainingComplete</Snippet></dt>
-      </Fragment>
-    </>
-  );
-};
-
 const Confirm = ({
   establishment,
   profile,
@@ -133,7 +123,11 @@ const Confirm = ({
 
         { values.type === 'nvs' && <NVSRole nvs={values} incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
         { values.type === 'nacwo' && <NACWORole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
-        { mandatoryTraining === 'yes' && <TrainingComplete /> }
+        { mandatoryTraining === 'yes' && (
+          <>
+            <dt><Snippet>explanation.trainingComplete</Snippet></dt>
+          </>
+        ) }
       </dl>
 
       {
