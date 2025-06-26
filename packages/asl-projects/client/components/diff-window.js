@@ -227,7 +227,7 @@ const DiffWindow = (props) => {
           return <Option option={option} key={option.value} />;
         });
     };
-    
+
     switch (props.type) {
       case 'text':
         return (
@@ -307,8 +307,7 @@ const DiffWindow = (props) => {
           getLabel,
           DEFAULT_LABEL
       });
-
-
+        
       default:
         return (
           <ReviewField
