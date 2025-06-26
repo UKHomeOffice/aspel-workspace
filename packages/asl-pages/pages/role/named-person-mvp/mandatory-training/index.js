@@ -55,7 +55,6 @@ module.exports = (settings) => {
         req.buildRoute('role.namedPersonMvp.incompleteTraining')
       );
     }
-    throw new Error('Invalid mandatory training value');
   });
 
   return app;
