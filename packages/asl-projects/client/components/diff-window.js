@@ -194,13 +194,18 @@ const DiffWindow = (props) => {
       );
     };
 
+    const durationDiff = () => {
+      console.log(value);
+      return null;
+    };
+
     const permissiblePurposeDiff = () => {
       const diffs = parts
-        .reduce((arr, { value, added, removed }) => {
-          return [ ...arr, ...value.map(v => ({ value: v, added, removed })) ];
+        .reduce((arr, {value, added, removed}) => {
+          return [...arr, ...value.map(v => ({value: v, added, removed}))];
         }, []);
 
-      const Option = ({ option }) => {
+      const Option = ({option}) => {
         const diff = diffs.find(d => d.value === option.value);
         if (diff) {
           const { added, removed, value } = diff;
@@ -222,9 +227,7 @@ const DiffWindow = (props) => {
           return <Option option={option} key={option.value} />;
         });
     };
-
-
-
+    
     switch (props.type) {
       case 'text':
         return (
@@ -242,6 +245,8 @@ const DiffWindow = (props) => {
       case 'checkbox':
       case 'location-selector':
       case 'objective-selector':
+      case 'duration' :
+        return durationDiff();
       case 'species-selector':
         return parts.length
           ? (
