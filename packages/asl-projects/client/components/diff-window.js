@@ -5,7 +5,7 @@ import { Value } from 'slate';
 import get from 'lodash/get';
 import { Warning } from '@ukhomeoffice/react-components';
 import { fetchQuestionVersions } from '../actions/projects';
-import { mapAnimalQuantities } from '../helpers';
+import { mapAnimalQuantities, animalQuantitiesDiff } from '../helpers';
 import Modal from './modal';
 import ReviewField from './review-field';
 import Tabs from './tabs';
@@ -15,12 +15,13 @@ import normaliseWhitespace from '../helpers/normalise-whitespace';
 const DEFAULT_LABEL = 'No answer provided';
 
 const DiffWindow = (props) => {
-
   const [modalOpen, setModelOpen] = useState(false);
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const project = useSelector(state => state.project);
+  // mainly contain proposed values with quantities
+  const currentValues =  mapAnimalQuantities(project, props.name);
   const isRa = useSelector(state => state.application.schemaVersion) === 'RA';
 
   const versions = useSelector(state => {
@@ -46,7 +47,6 @@ const DiffWindow = (props) => {
   const dispatch = useDispatch();
 
   const before = useSelector(state => get(state.questionVersions, `['${props.name}'].${versions[active]}.value`));
-
   const changes = useSelector(state => {
     if (props.type === 'keywords' && props.value.length > 0 && before) {
       return findArrayDifferences(before, props.value);
@@ -147,7 +147,12 @@ const DiffWindow = (props) => {
     return <span className={classnames('diff', decoration.type)} {...attributes}>{ children }</span>;
   };
 
-  const renderDiff = (parts, value) => {
+  const renderDiff = (parts, value, isBefore) => {
+    if (props.type === 'animal-quantities') {
+      if (!value || !value.species) {
+        value = mapAnimalQuantities(project, props.name);
+      }
+    }
 
     const getLabel = item => {
       if (!props.options || !Array.isArray(props.options)) {
@@ -189,13 +194,18 @@ const DiffWindow = (props) => {
       );
     };
 
+    const durationDiff = () => {
+      console.log(value);
+      return null;
+    };
+
     const permissiblePurposeDiff = () => {
       const diffs = parts
-        .reduce((arr, { value, added, removed }) => {
-          return [ ...arr, ...value.map(v => ({ value: v, added, removed })) ];
+        .reduce((arr, {value, added, removed}) => {
+          return [...arr, ...value.map(v => ({value: v, added, removed}))];
         }, []);
 
-      const Option = ({ option }) => {
+      const Option = ({option}) => {
         const diff = diffs.find(d => d.value === option.value);
         if (diff) {
           const { added, removed, value } = diff;
@@ -235,6 +245,8 @@ const DiffWindow = (props) => {
       case 'checkbox':
       case 'location-selector':
       case 'objective-selector':
+      case 'duration' :
+        return durationDiff();
       case 'species-selector':
         return parts.length
           ? (
@@ -286,23 +298,16 @@ const DiffWindow = (props) => {
             </p>
           );
       case 'animal-quantities':
-        if (value === undefined) {
-          value = mapAnimalQuantities(project, props.name);
-        }
-        return (
-          <ReviewField
-            key={value + active + JSON.stringify(parts)}
-            {...props}
-            name={props.name}
-            decorateNode={decorateNode(parts)}
-            renderDecoration={renderDecoration}
-            type={props.type}
-            value={value}
-            project={value}
-            diff={true}
-            noComments
-          />
-        );
+        return animalQuantitiesDiff({
+        before,
+        value,
+        props,
+        currentValues,
+        isBefore,
+          getLabel,
+          DEFAULT_LABEL
+      });
+        
       default:
         return (
           <ReviewField
@@ -371,17 +376,13 @@ const DiffWindow = (props) => {
             controls()
           }
           <div className="panel light-grey before">
-            {
-              loading ? <p>Loading...</p> : renderDiff(removed, before)
-            }
+            { loading ? <p>Loading...</p> : renderDiff(removed, before, true) }
           </div>
         </div>
         <div className="govuk-grid-column-one-half">
           <h3>Proposed</h3>
           <div className="panel light-grey after">
-            {
-              renderDiff(added, props.value)
-            }
+            { renderDiff(added, props.value, false) }
           </div>
         </div>
       </div>
