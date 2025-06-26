@@ -5,7 +5,7 @@ import { Value } from 'slate';
 import get from 'lodash/get';
 import { Warning } from '@ukhomeoffice/react-components';
 import { fetchQuestionVersions } from '../actions/projects';
-import { mapAnimalQuantities } from '../helpers';
+import { mapAnimalQuantities, animalQuantitiesDiff } from '../helpers';
 import Modal from './modal';
 import ReviewField from './review-field';
 import Tabs from './tabs';
@@ -47,10 +47,6 @@ const DiffWindow = (props) => {
   const dispatch = useDispatch();
 
   const before = useSelector(state => get(state.questionVersions, `['${props.name}'].${versions[active]}.value`));
-  const safeBefore = before || {};
-  const safeValue = props.value || {};
-  const beforeSpecies = safeBefore.species || [];
-  const currentSpecies = safeValue.species || [];
   const changes = useSelector(state => {
     if (props.type === 'keywords' && props.value.length > 0 && before) {
       return findArrayDifferences(before, props.value);
@@ -227,59 +223,7 @@ const DiffWindow = (props) => {
         });
     };
 
-    const animalQuantitiesDiff = () => {
-      const safeBefore = before || {};
-      const beforeSpecies = safeBefore.species || [];
-      const currentSpecies = value?.species || [];
 
-      // union of both to ensure both sides have full species list where necessary
-      const allSpecies = Array.from(new Set([...beforeSpecies, ...currentSpecies]));
-
-      return (
-        <dl className="inline">
-          {allSpecies.map(speciesKey => {
-            const label = getLabel(speciesKey);
-            const previousQuantity = before?.[`${props.name}-${speciesKey}`] ?? null;
-            const currentQuantity = value?.[`${props.name}-${speciesKey}`] ?? null;
-            const reductionQuantity = currentValues[`reduction-quantities-${speciesKey}`];
-            const isChanged = previousQuantity !== reductionQuantity;
-
-            // left side: Initial submission (isBefore === true)
-            if (isBefore) {
-              const speciesRemoved = !currentValues.species.includes(speciesKey);
-              return (
-                <Fragment key={speciesKey}>
-                  <dt className={classnames({ diff: speciesRemoved, removed: speciesRemoved })}>{label}:</dt>
-                  <dd>
-                    {previousQuantity === null
-                      ? <em className="left test">{DEFAULT_LABEL} </em>
-                      : <span className={classnames({ diff: isChanged, removed: isChanged })}>{previousQuantity} </span>}
-                  </dd>
-                </Fragment>
-              );
-            }
-
-            // right side tab: Proposed version (isBefore === false)
-            const speciesAdded = !beforeSpecies.includes(speciesKey);
-            if (!currentSpecies.includes(speciesKey)) {
-              // Do not show removed species on proposed side
-              return null;
-            }
-
-            return (
-              <Fragment key={speciesKey}>
-                <dt className={classnames({ diff: speciesAdded, added: speciesAdded })}>{label}:</dt>
-                <dd className="right test">
-                  {currentQuantity === null
-                    ? <em>{DEFAULT_LABEL}</em>
-                    : <span className={classnames({ diff: isChanged, added: isChanged })}>{currentQuantity}</span>}
-                </dd>
-              </Fragment>
-            );
-          })}
-        </dl>
-      );
-    };
 
     switch (props.type) {
       case 'text':
@@ -349,8 +293,16 @@ const DiffWindow = (props) => {
             </p>
           );
       case 'animal-quantities':
+        return animalQuantitiesDiff({
+        before,
+        value,
+        props,
+        currentValues,
+        isBefore,
+          getLabel,
+          DEFAULT_LABEL
+      });
 
-        return animalQuantitiesDiff();
 
       default:
         return (
