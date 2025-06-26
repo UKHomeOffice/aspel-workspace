@@ -4,15 +4,34 @@ const form = require('../../../common/routers/form');
 const { populateNamedPeople } = require('../../../common/middleware');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
 
-const NAMED_PERSION_VERSION_ID = 2;
+const NAMED_PERSON_VERSION_ID = 2;
+
+const getIncompleteTrainingDetails = (req) => {
+  const formData = get(
+    req.session.form,
+    [`${req.profileId}-incomplete-training`, 'values'],
+    {}
+  );
+  const { incomplete, delayReason, completeDate } = formData;
+  return { incomplete, delayReason, completeDate };
+};
+
+const getMandatoryTraining = (req) => {
+  const { mandatory } = get(
+    req.session.form,
+    [`${req.profileId}-mandatory-training`, 'values'],
+    {}
+  );
+
+  return mandatory;
+};
 
 const sendData = (req, params = {}) => {
   const { type, rcvsNumber } =
     req.session.form[`${req.profileId}-new-role-named-person`]?.values || {};
-  const { mandatory } =
-    req.session.form[`${req.profileId}-mandatory-training`]?.values || {};
+  const mandatory = getMandatoryTraining(req);
   const { incomplete, delayReason, completeDate } =
-    req.session.form[`${req.profileId}-incomplete-training`]?.values || {};
+    getIncompleteTrainingDetails(req) || {};
 
   const replaceProfile = profileReplaced(req.establishment, type);
   const opts = {
@@ -30,7 +49,7 @@ const sendData = (req, params = {}) => {
           replaceProfile,
           replaceRoles: PELH_OR_NPRC_ROLES
         },
-        meta: { version: NAMED_PERSION_VERSION_ID }
+        meta: { version: NAMED_PERSON_VERSION_ID }
       },
       params
     )
@@ -61,7 +80,9 @@ module.exports = (settings) => {
           values: {
             ...req.session.form[`${req.profile.id}-new-role-named-person`]
               .values
-          }
+          },
+          incompleteTraining: getIncompleteTrainingDetails(req),
+          mandatoryTraining: getMandatoryTraining(req)
         });
         next();
       },
@@ -89,4 +110,4 @@ module.exports = (settings) => {
   return app;
 };
 
-module.exports.NAMED_PERSION_VERSION_ID = NAMED_PERSION_VERSION_ID;
+module.exports.NAMED_PERSON_VERSION_ID = NAMED_PERSON_VERSION_ID;

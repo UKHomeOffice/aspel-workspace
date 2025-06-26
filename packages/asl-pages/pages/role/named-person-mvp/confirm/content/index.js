@@ -5,9 +5,24 @@ module.exports = merge({}, baseContent, {
   confirmTitle: 'Check and submit',
   applyingFor: 'You are assigning:',
   onBehalfOf: 'To:',
-  rcvsNumber: 'RCVS number:',
-  explanation:
-    'All mandatory training is complete and their training record is up to date.',
+  explanation: {
+    trainingComplete:
+      'All mandatory training is complete and their training record is up to date.',
+    exemptionRequest:
+      '{{profile.firstName}} has requested an exemption from one or more modules',
+    nvs: {
+      rcvsNumber: 'RCVS number:',
+      trainingNotComplete: 'The NVS module is not yet completed',
+      reasonForDelay: 'Reason why the module is not yet completed',
+      completionDate: 'Date the module will be completed'
+    },
+    nacwo: {
+      delay: 'There is an unavoidable delay in completing one or more modules',
+      trainingToComplete: 'NACWO training modules to be completed:',
+      reasonForDelay: 'Reason for delay:',
+      trainingDate: 'Date all mandatory training will be completed:'
+    }
+  },
   agreement: 'I agree with {{ agreementDeterminer }} these statements',
   fields: {
     declaration: {
@@ -16,7 +31,8 @@ module.exports = merge({}, baseContent, {
   },
   errors: {
     declaration: {
-      required: 'Select the checkbox to confirm you agree with {{ agreementDeterminer }} these statements'
+      required:
+        'Select the checkbox to confirm you agree with {{ agreementDeterminer }} these statements'
     }
   },
   declarations: {

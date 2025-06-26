@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import {
   ControlBar,
   FormLayout,
@@ -9,7 +9,76 @@ import {
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import namedRoles from '../../content/named-roles';
-const mandatoryTrainingRequirementsForRoles = require('../mandatory-training/content/mandatory-training-requirements-for-roles');
+
+const checkExemptionDelay = (mandatoryTraining) => {
+  const isExemption = Array.isArray(mandatoryTraining)
+    ? mandatoryTraining.includes('exemption')
+    : mandatoryTraining === 'exemption';
+  const isDelay = Array.isArray(mandatoryTraining)
+    ? mandatoryTraining.includes('delay')
+    : mandatoryTraining === 'delay';
+
+  return { isExemption, isDelay };
+};
+
+const ExemptionRequest = () => {
+  return (
+    <p>
+      <dt><Snippet>explanation.exemptionRequest</Snippet></dt>
+    </p>
+  );
+};
+
+const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
+  const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
+  return (
+    <>
+      {nvs.rcvsNumber && (
+        <>
+          <dt><Snippet>explanation.nvs.rcvsNumber</Snippet></dt>
+          <dd>{nvs.rcvsNumber}</dd>
+        </>
+      )}
+
+      {isExemption && <ExemptionRequest /> }
+
+      {isDelay && (
+        <>
+          <dt><Snippet>explanation.nvs.trainingNotComplete</Snippet></dt>
+          <dd />
+          <dt><Snippet>explanation.nvs.reasonForDelay</Snippet></dt>
+          <dd>{incompleteTraining.delayReason}</dd>
+          <dt><Snippet>explanation.nvs.completionDate</Snippet></dt>
+          <dd>{incompleteTraining.completeDate}</dd>
+        </>
+      )}
+    </>
+  );
+};
+
+const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
+  const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
+  const incompleteModules = [].concat(incompleteTraining.incomplete || []).join(', ');
+
+  return (
+    <>
+      {isExemption && <ExemptionRequest /> }
+
+      {isDelay && (
+        <>
+          <dt><Snippet>explanation.nacwo.delay</Snippet></dt>
+          <dd />
+          <dt><Snippet>explanation.nacwo.trainingToComplete</Snippet></dt>
+          <dd>{incompleteModules}</dd>
+          <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
+          <dd>{incompleteTraining.delayReason}</dd>
+          <dt><Snippet>explanation.nacwo.trainingDate</Snippet></dt>
+          <dd>{incompleteTraining.completeDate}</dd>
+        </>
+      )}
+    </>
+  );
+};
 
 const Confirm = ({
   establishment,
@@ -34,6 +103,8 @@ const Confirm = ({
     }
   };
 
+  const { incompleteTraining = {}, mandatoryTraining } = useSelector(state => state.static);
+
   return (
     <FormLayout formatters={formatters}>
       <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
@@ -50,19 +121,13 @@ const Confirm = ({
           }
         </dd>
 
-        { values.rcvsNumber &&
-          <Fragment>
-            <dt><Snippet>rcvsNumber</Snippet></dt>
-            <dd>{values.rcvsNumber}</dd>
-          </Fragment>
-        }
-
-        {mandatoryTrainingRequirementsForRoles[values.type] && (
-          <Fragment>
-            <dt><Snippet>explanation</Snippet></dt>
-            <dd>{values.comment}</dd>
-          </Fragment>
-        )}
+        { values.type === 'nvs' && <NVSRole nvs={values} incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
+        { values.type === 'nacwo' && <NACWORole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
+        { mandatoryTraining === 'yes' && (
+          <>
+            <dt><Snippet>explanation.trainingComplete</Snippet></dt>
+          </>
+        ) }
       </dl>
 
       {
