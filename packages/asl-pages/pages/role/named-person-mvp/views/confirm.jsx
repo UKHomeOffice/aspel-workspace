@@ -21,6 +21,14 @@ const checkExemptionDelay = (mandatoryTraining) => {
   return { isExemption, isDelay };
 };
 
+const ExemptionRequest = () => {
+  return (
+    <p>
+      <dt><Snippet>explanation.exemptionRequest</Snippet></dt>
+    </p>
+  );
+};
+
 const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
   const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
   return (
@@ -32,11 +40,7 @@ const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
         </>
       )}
 
-      {isExemption && (
-        <p>
-          <dt><Snippet>explanation.exemptionRequest</Snippet></dt>
-        </p>
-      )}
+      {isExemption && <ExemptionRequest /> }
 
       {isDelay && (
         <>
@@ -58,11 +62,7 @@ const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
 
   return (
     <>
-      {isExemption && (
-        <p>
-          <dt><Snippet>explanation.exemptionRequest</Snippet></dt>
-        </p>
-      )}
+      {isExemption && <ExemptionRequest /> }
 
       {isDelay && (
         <>
