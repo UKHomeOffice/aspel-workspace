@@ -88,7 +88,7 @@ export function deleteProject(id) {
 export function updateProject(project) {
   return {
     type: types.UPDATE_PROJECT,
-    project
+    project: cloneDeep(project)
   };
 }
 
@@ -162,12 +162,16 @@ const debouncedUpdate = debounce((id, data, dispatch) => {
 export function indexedDBSync(data) {
   return (dispatch, getState) => {
     const project = getState().project;
-    const newState = { ...project, ...data };
+    const newState = {
+      ...cloneDeep(project),
+      ...cloneDeep(data)
+    };
     dispatch(updateProject(newState));
     const id = project.id;
     return debouncedUpdate(id, newState, dispatch);
   };
 }
+
 
 const conditionsToSync = (state) => {
   if (state.application.isSyncing) {
@@ -359,15 +363,17 @@ export function updateRetrospectiveAssessment(retrospectiveAssessment) {
 export function updateConditions(type, conditions, protocolId) {
   return (dispatch, getState) => {
     const state = getState();
+    const cleanConditions = cloneDeep(conditions); // Ensure clean copy
+
     const newConditions = !protocolId
       ? [
         ...(state.project.conditions || []).filter(condition => condition.type !== type),
-        ...conditions
+        ...cleanConditions
       ]
       : [
         ...((state.project.protocols || [])
           .find((p => p.id === protocolId) || {}).conditions || []).filter(condition => condition.type !== type),
-        ...conditions
+        ...cleanConditions
       ];
 
     const newState = cloneDeep(state.project);
@@ -379,7 +385,7 @@ export function updateConditions(type, conditions, protocolId) {
         return protocol;
       });
     } else {
-      newState.conditions = type === 'legacy' ? conditions : newConditions;
+      newState.conditions = type === 'legacy' ? cleanConditions : newConditions;
     }
     dispatch(updateProject(newState));
     return debouncedSyncConditions(dispatch, getState);

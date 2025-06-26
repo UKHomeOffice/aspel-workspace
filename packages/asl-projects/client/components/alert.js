@@ -10,6 +10,11 @@ const mapStateToProps = state => {
 
 class Create extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.nodeRef = React.createRef();
+  }
+
   onClick = () => {
     this.props.hideMessage();
   }
@@ -23,8 +28,13 @@ class Create extends React.Component {
         key="alert"
         classNames="alert"
         timeout={{ enter: 100, exit: 500 }}
+        nodeRef={this.nodeRef}
       >
-        <div className={`alert alert-${this.props.type}`} onClick={this.onClick}>
+        <div
+          ref={this.nodeRef}
+          className={`alert alert-${this.props.type}`}
+          onClick={this.onClick}
+        >
           <div className="govuk-width-container">
             <Markdown>{ this.props.message }</Markdown>
           </div>
