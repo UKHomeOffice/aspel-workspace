@@ -9,6 +9,8 @@ import {JSONPath} from 'jsonpath-plus';
 import LEGACY_SPECIES from '../constants/legacy-species';
 import {projectSpecies as SPECIES} from '@ukhomeoffice/asl-constants';
 import CONDITIONS from '../constants/conditions';
+import React, {Fragment} from "react";
+import classnames from "classnames";
 
 export const formatDate = (date, format) => {
   try {
@@ -85,6 +87,60 @@ export function mapAnimalQuantities(project, name) {
         [`${name}-${key}`]: project[`${name}-${key}`]
       };
     }, { species });
+}
+
+export function animalQuantitiesDiff({ before, value, props, currentValues, isBefore, getLabel, DEFAULT_LABEL }) {
+  const safeBefore = before || {};
+  const beforeSpecies = safeBefore.species || [];
+  const currentSpecies = value?.species || [];
+
+  // union of both to ensure both sides have full species list where necessary
+  const allSpecies = Array.from(new Set([...beforeSpecies, ...currentSpecies]));
+
+  return (
+    <dl className="inline">
+      {allSpecies.map(speciesKey => {
+        const label = getLabel(speciesKey);
+        const previousQuantity = before?.[`${props.name}-${speciesKey}`] ?? null;
+        const currentQuantity = value?.[`${props.name}-${speciesKey}`] ?? null;
+        const reductionQuantity = currentValues[`reduction-quantities-${speciesKey}`];
+        const isChanged = previousQuantity !== reductionQuantity;
+
+        // left side: Initial submission (isBefore === true)
+        if (isBefore) {
+          const speciesRemoved = !currentValues.species.includes(speciesKey);
+          return (
+            <Fragment key={speciesKey}>
+              <dt className={classnames({ diff: speciesRemoved, removed: speciesRemoved })}>{label}:</dt>
+              <dd>
+                {previousQuantity === null
+                  ? <em>{DEFAULT_LABEL} </em>
+                  : <span className={classnames({ diff: isChanged, removed: isChanged })}>{previousQuantity} </span>}
+              </dd>
+            </Fragment>
+          );
+        }
+
+        // right side tab: Proposed version (isBefore === false)
+        const speciesAdded = !beforeSpecies.includes(speciesKey);
+        if (!currentSpecies.includes(speciesKey)) {
+          // Do not show removed species on proposed side
+          return null;
+        }
+
+        return (
+          <Fragment key={speciesKey}>
+            <dt className={classnames({ diff: speciesAdded, added: speciesAdded })}>{label}:</dt>
+            <dd>
+              {currentQuantity === null
+                ? <em>{DEFAULT_LABEL}</em>
+                : <span className={classnames({ diff: isChanged, added: isChanged })}>{currentQuantity}</span>}
+            </dd>
+          </Fragment>
+        );
+      })}
+    </dl>
+  );
 }
 
 export function mapSpecies(project) {
