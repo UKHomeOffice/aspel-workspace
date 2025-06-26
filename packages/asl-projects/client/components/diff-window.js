@@ -15,12 +15,13 @@ import normaliseWhitespace from '../helpers/normalise-whitespace';
 const DEFAULT_LABEL = 'No answer provided';
 
 const DiffWindow = (props) => {
-
   const [modalOpen, setModelOpen] = useState(false);
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const project = useSelector(state => state.project);
+  // mainly contain proposed values with quantities
+  const currentValues =  mapAnimalQuantities(project, props.name);
   const isRa = useSelector(state => state.application.schemaVersion) === 'RA';
 
   const versions = useSelector(state => {
@@ -46,7 +47,10 @@ const DiffWindow = (props) => {
   const dispatch = useDispatch();
 
   const before = useSelector(state => get(state.questionVersions, `['${props.name}'].${versions[active]}.value`));
-
+  const safeBefore = before || {};
+  const safeValue = props.value || {};
+  const beforeSpecies = safeBefore.species || [];
+  const currentSpecies = safeValue.species || [];
   const changes = useSelector(state => {
     if (props.type === 'keywords' && props.value.length > 0 && before) {
       return findArrayDifferences(before, props.value);
@@ -147,7 +151,12 @@ const DiffWindow = (props) => {
     return <span className={classnames('diff', decoration.type)} {...attributes}>{ children }</span>;
   };
 
-  const renderDiff = (parts, value) => {
+  const renderDiff = (parts, value, isBefore) => {
+    if (props.type === 'animal-quantities') {
+      if (!value || !value.species) {
+        value = mapAnimalQuantities(project, props.name);
+      }
+    }
 
     const getLabel = item => {
       if (!props.options || !Array.isArray(props.options)) {
@@ -218,6 +227,60 @@ const DiffWindow = (props) => {
         });
     };
 
+    const animalQuantitiesDiff = () => {
+      const safeBefore = before || {};
+      const beforeSpecies = safeBefore.species || [];
+      const currentSpecies = value?.species || [];
+
+      // union of both to ensure both sides have full species list where necessary
+      const allSpecies = Array.from(new Set([...beforeSpecies, ...currentSpecies]));
+
+      return (
+        <dl className="inline">
+          {allSpecies.map(speciesKey => {
+            const label = getLabel(speciesKey);
+            const previousQuantity = before?.[`${props.name}-${speciesKey}`] ?? null;
+            const currentQuantity = value?.[`${props.name}-${speciesKey}`] ?? null;
+            const reductionQuantity = currentValues[`reduction-quantities-${speciesKey}`];
+            const isChanged = previousQuantity !== reductionQuantity;
+
+            // left side: Initial submission (isBefore === true)
+            if (isBefore) {
+              const speciesRemoved = !currentValues.species.includes(speciesKey);
+              return (
+                <Fragment key={speciesKey}>
+                  <dt className={classnames({ diff: speciesRemoved, removed: speciesRemoved })}>{label}:</dt>
+                  <dd>
+                    {previousQuantity === null
+                      ? <em className="left test">{DEFAULT_LABEL} </em>
+                      : <span className={classnames({ diff: isChanged, removed: isChanged })}>{previousQuantity} </span>}
+                  </dd>
+                </Fragment>
+              );
+            }
+
+            // right side tab: Proposed version (isBefore === false)
+            const speciesAdded = !beforeSpecies.includes(speciesKey);
+            if (!currentSpecies.includes(speciesKey)) {
+              // Do not show removed species on proposed side
+              return null;
+            }
+
+            return (
+              <Fragment key={speciesKey}>
+                <dt className={classnames({ diff: speciesAdded, added: speciesAdded })}>{label}:</dt>
+                <dd className="right test">
+                  {currentQuantity === null
+                    ? <em>{DEFAULT_LABEL}</em>
+                    : <span className={classnames({ diff: isChanged, added: isChanged })}>{currentQuantity}</span>}
+                </dd>
+              </Fragment>
+            );
+          })}
+        </dl>
+      );
+    };
+
     switch (props.type) {
       case 'text':
         return (
@@ -286,23 +349,9 @@ const DiffWindow = (props) => {
             </p>
           );
       case 'animal-quantities':
-        if (value === undefined) {
-          value = mapAnimalQuantities(project, props.name);
-        }
-        return (
-          <ReviewField
-            key={value + active + JSON.stringify(parts)}
-            {...props}
-            name={props.name}
-            decorateNode={decorateNode(parts)}
-            renderDecoration={renderDecoration}
-            type={props.type}
-            value={value}
-            project={value}
-            diff={true}
-            noComments
-          />
-        );
+
+        return animalQuantitiesDiff();
+
       default:
         return (
           <ReviewField
@@ -371,17 +420,13 @@ const DiffWindow = (props) => {
             controls()
           }
           <div className="panel light-grey before">
-            {
-              loading ? <p>Loading...</p> : renderDiff(removed, before)
-            }
+            { loading ? <p>Loading...</p> : renderDiff(removed, before, true) }
           </div>
         </div>
         <div className="govuk-grid-column-one-half">
           <h3>Proposed</h3>
           <div className="panel light-grey after">
-            {
-              renderDiff(added, props.value)
-            }
+            { renderDiff(added, props.value, false) }
           </div>
         </div>
       </div>
