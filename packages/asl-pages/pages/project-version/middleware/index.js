@@ -7,7 +7,7 @@ const {
   pickBy,
   isEmpty,
   castArray,
-  flow
+  flow, omit
 } = require('lodash');
 const isUUID = require('uuid-validate');
 const extractComments = require('../lib/extract-comments');
@@ -220,9 +220,46 @@ const getCacheableVersion = (req, url) => {
     });
 };
 
+function normaliseDeletedSteps(protocol) {
+  if (!protocol.steps) {
+    return [];
+  }
+
+  // legacy protocols have a rich text field for steps
+  if (typeof protocol === 'object' && !Array.isArray(protocol.steps)) {
+    return protocol.steps;
+  }
+
+  return (Array.isArray(protocol.steps) ? protocol.steps : []).flatMap(
+    step => step?.deleted ? [] : [omit(step, 'deleted')]
+  );
+}
+
+/**
+ * Protocols and steps within them are soft deleted using a deleted flag. This
+ * applies the meaning of that flag (deleting protocols/steps) where
+ * `deleted: true`, and hiding the deleted flag when false so that adding the
+ * flag, then setting it to false doesn't count as a change.
+ *
+ * @param versionData
+ * @returns {*&{protocols: (*&{steps})[]}}
+ */
+const normaliseDeletedProtocols = (versionData) => ({
+  ...versionData,
+  protocols: (Array.isArray(versionData.protocols) ? versionData.protocols : []).flatMap(
+    protocol => protocol?.deleted
+      ? []
+      : [{
+        ...omit(protocol, 'deleted'),
+        steps: normaliseDeletedSteps(protocol)
+      }]
+  )
+});
+
 const normaliseData = (versionData, opts) => {
   return flow([
     normaliseConditions(opts),
+    normaliseDeletedProtocols,
     deepRemoveEmpty
   ])(versionData);
 };
@@ -300,7 +337,7 @@ const hasChanged = (before, after, key) => {
   // backwards compatibility check for transition from string to object values for RTEs
   if (typeof before === 'string' && typeof after !== 'string') {
     try {
-      before = JSON.parse(before);
+      return hasChanged(JSON.parse(before), after, key);
     } catch (e) {}
   }
 
@@ -342,7 +379,7 @@ const getPreviousProtocols = (firstVersion, previousVersion, grantedVersion) => 
       .filter(Boolean)
       .filter(p => !p.deleted)
       .map(p => p.steps)
-      .map((element) => element && Array.isArray(element) ? element.filter(s => !s.deleted) : element);
+      .map((element) => element && Array.isArray(element) ? element.filter(s => !s?.deleted) : element);
   }
 
   const steps = extractActiveSteps(previousVersion);

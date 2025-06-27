@@ -29,6 +29,7 @@ import {
     Inset,
     TextAreaWithWordCount
 } from '../';
+import { getLabelFromRenderers } from '../utils';
 
 function getLabel(opt, name, type = 'label') {
     if (type === 'hint') {
@@ -247,11 +248,14 @@ function Field({
     }
 
     const snippetProps = getSnippetProps(name, props.formatters);
+    if(isUndefined(label) && props.renderers) {
+        label = getLabelFromRenderers(props.renderers, name, 'label')?.label;
+    }
 
     return <Component
         label={!labelAsLegend ? <Label name={name} snippetProps={snippetProps} label={label}/> : null}
         hint={isUndefined(hint) ? <Snippet optional {...snippetProps}>{`fields.${name}.hint`}</Snippet> : hint}
-        error={error && <Snippet fallback={`errors.default.${error}`} {...snippetProps}>{`errors.${name}.${error}`}</Snippet>}
+        error={error && <Error name={name} renderers={props.renderers} error={error} snippetProps={snippetProps} />}
         value={fieldValue}
         onChange={onFieldChange}
         name={prefix ? `${prefix}-${name}` : name}
@@ -275,6 +279,7 @@ export default function Fieldset({ schema, errors = {}, formatters = {}, model, 
                                     </h1>
                                 </legend> :
                                 null}
+                            {formatters?.[fieldName]?.additionalContent ?? null}
                             <Field
                                 {...props}
                                 {...field}
@@ -303,4 +308,14 @@ function Label({ label, name, snippetProps }) {
 
 function getSnippetProps (name, formatters) {
     return formatters?.[name]?.renderContext ?? {};
+}
+
+function Error({ renderers, name, error, snippetProps }) {
+    if (renderers) {
+        const error = getLabelFromRenderers(renderers, name, 'error')?.error;
+        if (error) {
+            return error;
+        }
+    }
+    return <Snippet fallback={`errors.default.${error}`} {...snippetProps}>{`errors.${name}.${error}`}</Snippet>;
 }

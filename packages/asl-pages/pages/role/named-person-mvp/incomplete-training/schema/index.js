@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (roleType) => {
 
   const roles = () => [
     {
@@ -10,13 +10,10 @@ module.exports = () => {
       value: 'E1'
     },
     {
-      label: `PILA (theory) - Species specific`,
       value: 'PILA (theory)'
     },
     {
-      label: 'PILA (skills) - Species specific',
-      value: 'PILA (skills)',
-      tag: 'Species specific'
+      value: 'PILA (skills)'
     },
     {
       label: 'PILB',
@@ -40,13 +37,7 @@ module.exports = () => {
     }
   ];
 
-  return {
-    incomplete: {
-      hint: 'Select all that apply.',
-      inputType: 'checkboxGroup',
-      options: roles(),
-      validate: ['required', 'exclusive']
-    },
+  let payload = {
     delayReason: {
       inputType: 'textarea',
       validate: [
@@ -55,7 +46,7 @@ module.exports = () => {
     },
     completeDate: {
       inputType: 'inputDate',
-      hint: 'For example, 20 3 2007.',
+      hint: 'For example, 27 3 2007',
       nullValue: '',
       validate: [
         'required',
@@ -64,4 +55,18 @@ module.exports = () => {
       ]
     }
   };
+
+  if (roleType === 'nacwo') {
+    return {
+      incomplete: {
+        hint: 'Select all that apply.',
+        inputType: 'checkboxGroup',
+        options: roles(),
+        validate: ['required', 'exclusive']
+      },
+      ...payload
+    };
+  }
+
+  return payload;
 };

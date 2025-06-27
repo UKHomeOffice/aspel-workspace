@@ -4,6 +4,28 @@ import omitBy from 'lodash/omitBy';
 import isUndefined from 'lodash/isUndefined';
 import getLocations from './get-locations';
 
+const establishmentsKeys = [
+  'establishments',
+  'polesList',
+  'transferToEstablishmentName',
+  'other-establishments',
+  'poles'
+]
+
+const triggeringKeys = [
+  'objectives',
+  'species',
+    ...establishmentsKeys
+];
+
+function changesShouldTriggerCleanup(changed) {
+  return intersection(Object.keys(changed), triggeringKeys).length > 0;
+}
+
+function changesShouldTriggerEstablishmentCleanup(changed) {
+  return intersection(Object.keys(changed), establishmentsKeys).length > 0;
+}
+
 export default function cleanProtocols({ state, savedState, changed = {}, establishment, schemaVersion }) {
   const project = omitBy({ ...state, ...changed }, isUndefined);
 
@@ -11,7 +33,7 @@ export default function cleanProtocols({ state, savedState, changed = {}, establ
     return project;
   }
 
-  if (!changed.objectives && !changed.establishments && !changed.polesList && !changed.transferToEstablishmentName && !changed.species) {
+  if(!changesShouldTriggerCleanup(changed)) {
     return project;
   }
 
@@ -35,7 +57,7 @@ export default function cleanProtocols({ state, savedState, changed = {}, establ
     if (changed.objectives) {
       protocol.objectives = intersection(protocol.objectives, objectives);
     }
-    if (changed.establishments || changed.polesList || changed.transferToEstablishmentName) {
+    if (changesShouldTriggerEstablishmentCleanup(changed)) {
       protocol.locations = intersection(protocol.locations, locations);
     }
   });
