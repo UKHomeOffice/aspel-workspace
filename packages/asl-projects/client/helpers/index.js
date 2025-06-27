@@ -158,6 +158,63 @@ export function mapSpecies(project) {
   ]);
 }
 
+export function durationDiffDisplay({ before, value, isBefore, DEFAULT_LABEL }) {
+  const safeBefore = before || {};
+  const safeValue = value || {};
+  const hasNoData = !safeValue || (safeValue.years === undefined && safeValue.months === undefined);
+
+  if (hasNoData) {
+    return <p><em>{DEFAULT_LABEL}</em></p>;
+  }
+
+  return (
+    <dl className="inline">
+      {isBefore && (
+        <>
+          {safeBefore.years !== undefined && (
+            <>
+              <dt>Years:</dt>
+              <dd>
+                <span className="diff removed">{safeBefore.years}</span>
+              </dd>
+            </>
+          )}
+          {safeBefore.months !== undefined && (
+            <>
+              <dt>Months:</dt>
+              <dd>
+                <span className="diff removed">{safeBefore.months}</span>
+              </dd>
+            </>
+          )}
+        </>
+      )}
+
+      {!isBefore && (
+        <>
+          {safeValue.years !== undefined && (
+            <>
+              <dt>Years:</dt>
+              <dd>
+                <span className="diff added">{safeValue.years}</span>
+              </dd>
+            </>
+          )}
+          {safeValue.months !== undefined && (
+            <>
+              <dt>Months:</dt>
+              <dd>
+                <span className="diff added">{safeValue.months}</span>
+              </dd>
+            </>
+          )}
+        </>
+      )}
+    </dl>
+  );
+}
+
+
 export const getScrollPos = (elem, offset = 0) => {
   const box = elem.getBoundingClientRect();
   const body = document.body;

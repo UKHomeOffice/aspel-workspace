@@ -5,7 +5,7 @@ import { Value } from 'slate';
 import get from 'lodash/get';
 import { Warning } from '@ukhomeoffice/react-components';
 import { fetchQuestionVersions } from '../actions/projects';
-import { mapAnimalQuantities, animalQuantitiesDiff } from '../helpers';
+import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay } from '../helpers';
 import Modal from './modal';
 import ReviewField from './review-field';
 import Tabs from './tabs';
@@ -23,8 +23,6 @@ const DiffWindow = (props) => {
   // mainly contain proposed values with quantities
   const currentValues =  mapAnimalQuantities(project, props.name);
   const isRa = useSelector(state => state.application.schemaVersion) === 'RA';
-
-  console.log(props);
   const versions = useSelector(state => {
 
     const iterations = isRa
@@ -241,53 +239,13 @@ const DiffWindow = (props) => {
       case 'checkbox':
       case 'location-selector':
       case 'objective-selector':
-      case 'duration': {
-        const safeBefore = before || {};
-        const safeValue = value || {};
-        const hasNoData = !safeValue || (safeValue.years === undefined && safeValue.months === undefined);
-
-        if (hasNoData) {
-          return <p><em>{DEFAULT_LABEL}</em></p>;
-        }
-
-        return (
-          <dl className="inline">
-            {isBefore && (
-              <>
-                {safeBefore.years !== undefined && (
-                  <>
-                    <dt>Years:</dt>
-                    <dd className="diff removed">{safeBefore.years}</dd>
-                  </>
-                )}
-                {safeBefore.months !== undefined && (
-                  <>
-                    <dt>Months:</dt>
-                    <dd className="diff removed">{safeBefore.months}</dd>
-                  </>
-                )}
-              </>
-            )}
-
-            {!isBefore && (
-              <>
-                {safeValue.years !== undefined && (
-                  <>
-                    <dt>Years:</dt>
-                    <dd className="diff added">{safeValue.years}</dd>
-                  </>
-                )}
-                {safeValue.months !== undefined && (
-                  <>
-                    <dt>Months:</dt>
-                    <dd className="diff added">{safeValue.months}</dd>
-                  </>
-                )}
-              </>
-            )}
-          </dl>
-        );
-      }
+      case 'duration':
+        return  durationDiffDisplay({
+        before,
+        value,
+        isBefore,
+        DEFAULT_LABEL
+      });
 
       case 'species-selector':
         return parts.length
