@@ -749,7 +749,6 @@ describe('Form Router', () => {
 
       test('should initialise form session values', () => {
         const req = reqres.req();
-        const res = reqres.res();
         req.model = { id: 'test-id' };
         req.session = { form: {} };
 

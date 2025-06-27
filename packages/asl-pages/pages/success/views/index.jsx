@@ -6,14 +6,13 @@ import { has } from 'lodash';
 
 const Index = ({ onwardLink }) => {
   const establishment = useSelector(state => state.static.establishment);
-  const taskLabel = useSelector(state => state.static.taskLabel);
   const taskId = useSelector(state => state.static.taskId);
   const isAsruUser = useSelector(state => state.static.isAsruUser);
   const additionalInfo = useSelector(state => state.static.additionalInfo);
   const projectId = useSelector(state => state.static.projectId);
   const modelType = useSelector(state => state.static.modelType);
   const action = useSelector(state => state.static.action);
-const  content = useSelector(state => state.static.content);
+  const content = useSelector(state => state.static.content);
   return (
     <div className="govuk-grid-row success">
       <div className="govuk-grid-column-two-thirds">
