@@ -11,7 +11,7 @@ const Page = () => {
     declaration = (
       <Fragment>
         <Warning>They must complete the NVS module and add it to their training record within 12 months of starting the
-          role</Warning>
+          role.</Warning>
       </Fragment>
     );
   }
