@@ -2,6 +2,9 @@ import React from 'react';
 import { Button } from '@ukhomeoffice/react-components';
 
 class WarningButton extends React.Component {
+  static defaultProps = {
+    warning: 'Are you sure?'
+  };
 
   warn (e) {
     e.preventDefault();
@@ -16,9 +19,5 @@ class WarningButton extends React.Component {
   }
 
 }
-
-WarningButton.defaultProps = {
-  warning: 'Are you sure?'
-};
 
 export default WarningButton;

@@ -1,15 +1,19 @@
 /** @type {import('jest').Config} */
 module.exports = {
+  testEnvironment: 'jsdom',
   testEnvironmentOptions: {
     url: 'http://localhost/'
   },
   moduleDirectories: ['pages/common', 'node_modules', 'lib'],
+  transform: {
+    '^.+\\.[jt]sx?$': 'babel-jest',
+    '^.+\\.mjs$': 'babel-jest'
+  },
+  transformIgnorePatterns: [
+    'node_modules/(?!(uuid|react-shallow-renderer|@cfaester|@ukhomeoffice|@asl|sinon))'
+  ],
   watchPathIgnorePatterns: [
     'node_modules/(?!(@ukhomeoffice|@asl))'
   ],
-  transformIgnorePatterns: [
-    'node_modules/(?!(@ukhomeoffice|@asl|remark-flexible-markers|uni))'
-  ],
-  setupFilesAfterEnv: ['<rootDir>/enzyme.setup.js'],
-  snapshotSerializers: ['enzyme-to-json/serializer']
+  setupFilesAfterEnv: ['<rootDir>/setup-tests.js']
 };

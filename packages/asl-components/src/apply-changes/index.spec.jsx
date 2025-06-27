@@ -1,22 +1,25 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { ApplyChanges } from './';
+import { jest, expect } from '@jest/globals';
 
 describe('<ApplyChanges />', () => {
+  afterEach(() => cleanup());
+
   describe('defaults', () => {
     test('renders a link with \'Submit\' label by default', () => {
-      const wrapper = shallow(<ApplyChanges />);
-      expect(wrapper.find('a').length).toBe(1);
-      expect(wrapper.find('form').length).toBe(0);
-      expect(wrapper.text()).toBe('Submit');
+      render(<ApplyChanges />);
+      const link = screen.getByRole('link', { name: 'Submit' });
+      expect(link).toBeInTheDocument();
+      expect(screen.queryByRole('form')).not.toBeInTheDocument();
     });
   });
 
   describe('link', () => {
     test('adds the label passed as a prop', () => {
       const label = 'A Label';
-      const wrapper = shallow(<ApplyChanges label={label} />);
-      expect(wrapper.text()).toBe(label);
+      render(<ApplyChanges label={label} />);
+      expect(screen.getByRole('link', { name: label })).toBeInTheDocument();
     });
 
     test('creates a stringified href from superfluous props', () => {
@@ -33,31 +36,46 @@ describe('<ApplyChanges />', () => {
         }
       };
       const expected = '?filters%5Ba%5D%5B0%5D=1&filters%5Ba%5D%5B1%5D=2&filters%5Ba%5D%5B2%5D=3&filters%5Bb%5D%5B0%5D=2&filters%5Bb%5D%5B1%5D=3&filters%5Bb%5D%5B2%5D=4&sort%5Bascending%5D=true&sort%5Bcolumn%5D=test';
-      const wrapper = shallow(<ApplyChanges { ...props } />);
-      expect(wrapper.find('a').prop('href')).toBe(expected);
+      render(<ApplyChanges {...props} />);
+      const link = screen.getByRole('link');
+      expect(link).toHaveAttribute('href', expected);
     });
 
-    test('prevents default and calls the onApply function on click', () => {
+    test('calls onApply and prevents default on link click', () => {
       const fn = jest.fn();
-      const preventDefault = jest.fn();
-      const wrapper = shallow(<ApplyChanges onApply={fn} />);
-      wrapper.find('a').simulate('click', { preventDefault });
-      expect(preventDefault.mock.calls.length).toBe(1);
-      expect(fn.mock.calls.length).toBe(1);
+
+      render(<ApplyChanges onApply={fn} />);
+      const link = screen.getByRole('link');
+
+      // Create a synthetic event and spy on preventDefault
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+      Object.defineProperty(event, 'preventDefault', {
+        value: jest.fn(),
+        writable: true
+      });
+
+      link.dispatchEvent(event);
+
+      expect(fn).toHaveBeenCalledTimes(1);
+      expect(event.preventDefault).toHaveBeenCalledTimes(1);
     });
+
+
   });
 
   describe('form', () => {
+    const id = 'apply-change-test';
+
     test('renders children', () => {
-      const child = <div id="child" />;
-      const wrapper = shallow(<ApplyChanges type="form">{child}</ApplyChanges>);
-      expect(wrapper.find('#child').length).toBe(1);
+      const child = <div data-testid="child" />;
+      render(<ApplyChanges type="form">{child}</ApplyChanges>);
+      expect(screen.getByTestId('child')).toBeInTheDocument();
     });
 
     test('accepts id', () => {
-      const id = 'test';
-      const wrapper = shallow(<ApplyChanges type="form" id={id} />);
-      expect(wrapper.find('form').prop('id')).toBe(id);
+      render(<ApplyChanges type="form" id={id} />);
+      const form = screen.getByTestId(id);
+      expect(form).toHaveAttribute('id', id);
     });
 
     test('adds a hidden input with stringified superfluous props', () => {
@@ -73,26 +91,26 @@ describe('<ApplyChanges />', () => {
           }
         }
       };
-      const wrapper = shallow(
-        <ApplyChanges
-          type="form"
-          { ...props }
-        />
-      );
       const expected = 'filters%5Ba%5D%5B0%5D=1&filters%5Ba%5D%5B1%5D=2&filters%5Ba%5D%5B2%5D=3&filters%5Bb%5D%5B0%5D=2&filters%5Bb%5D%5B1%5D=3&filters%5Bb%5D%5B2%5D=4&sort%5Bascending%5D=true&sort%5Bcolumn%5D=test';
-      const input = wrapper.find('input[type="hidden"]');
-      expect(input.length).toBe(1);
-      expect(input.prop('name')).toBe('props');
-      expect(input.prop('value')).toBe(expected);
+      render(<ApplyChanges type="form" {...props} />);
+      const input = screen.getByDisplayValue(expected);
+      expect(input).toHaveAttribute('type', 'hidden');
+      expect(input).toHaveAttribute('name', 'props');
     });
 
     test('prevents default and calls onApply on submit', () => {
       const fn = jest.fn();
-      const preventDefault = jest.fn();
-      const wrapper = shallow(<ApplyChanges type="form" onApply={fn} />);
-      wrapper.find('form').simulate('submit', { preventDefault });
-      expect(preventDefault.mock.calls.length).toBe(1);
-      expect(fn.mock.calls.length).toBe(1);
+      const preventDefault = jest.spyOn(Event.prototype, 'preventDefault');
+
+      render(<ApplyChanges type="form" id={id} onApply={fn} />);
+      const form = screen.getByTestId(id);
+
+      fireEvent.submit(form, { preventDefault });
+
+      expect(preventDefault).toHaveBeenCalledTimes(1);
+      expect(fn).toHaveBeenCalledTimes(1);
+      // Restore the spy, clean up.
+      preventDefault.mockRestore();
     });
   });
 });

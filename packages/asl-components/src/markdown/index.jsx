@@ -1,32 +1,57 @@
 /* eslint-disable react/display-name */
-import React, { Fragment } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkFlexibleMarkers from 'remark-flexible-markers';
+import ErrorBoundary from '@asl/projects/client/components/error-boundary';
+
+// Checks if children include any block-level elements (like <p>, <h1>, etc.)
+function containsBlock(children) {
+    return React.Children.toArray(children).some(child => {
+        if (typeof child === 'object' && child !== null && 'type' in child) {
+            const blockTags = ['p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'div', 'section', 'article'];
+            return blockTags.includes(child.type);
+        }
+        return false;
+    });
+}
 
 function RenderLink({ href, children }) {
-    return <Fragment>[{ children }]({ href })</Fragment>;
+    if (containsBlock(children)) {
+    // Don't render anchor tag if it would wrap block-level content
+        return <>{children}</>;
+    }
+    return (
+        <a href={href} target="_blank" rel="noopener noreferrer">
+            {children}
+        </a>
+    );
 }
+
 function RenderLinkReference({ children }) {
-    return <Fragment>[{ children }]</Fragment>;
+    return <>{children}</>;
 }
+
 function RenderUnorderedList({ children }) {
-    return <ul className='govuk-list govuk-list--bullet'>{ children }</ul>;
+    return <ul className="govuk-list govuk-list--bullet">{children}</ul>;
 }
 
-const components = {
-    link: RenderLink,
-    linkReference: RenderLinkReference,
-    ul: RenderUnorderedList,
-};
+const ParagraphComponent = ({ unwrapSingleLine, paragraphProps, children, ...props }) => {
+    const isSingleTextChild = (
+        React.Children.count(children) === 1 &&
+    typeof children[0] === 'string'
+    );
 
-// eslint-disable-next-line no-unused-vars
-const wrapInSpanIfOnlyChild = (enabled, paragraphProps) => ({ node, siblingCount, index, ...props }) => {
-    if (enabled && siblingCount === 1) {
-        return <span {...props} />;
+    const hasVisibleLineBreaks = (
+        isSingleTextChild &&
+    children[0].includes('\n')
+    );
+
+    if (unwrapSingleLine && isSingleTextChild && !hasVisibleLineBreaks) {
+        return <span {...paragraphProps} {...props}>{children}</span>;
     }
 
-    return <p {...paragraphProps} {...props} />;
+    return <p {...paragraphProps} {...props}>{children}</p>;
 };
 
 export default function Markdown({
@@ -36,18 +61,32 @@ export default function Markdown({
     significantLineBreaks = false,
     paragraphProps = {},
     source,
-    ...props
+    linkTarget = '_blank',
+    ...rest
 }) {
-    return <ReactMarkdown
-        includeElementIndex={true}
-        components={{
-            ...(!links && components),
-            p: wrapInSpanIfOnlyChild(unwrapSingleLine, paragraphProps),
-            mark: ({ ...props }) => <mark {...props} />
-        }}
-        remarkPlugins={significantLineBreaks ? [remarkBreaks, remarkFlexibleMarkers] : [remarkFlexibleMarkers]}
-        {...props}
-    >
-        { source || children }
-    </ReactMarkdown>;
+    return (
+        <ErrorBoundary>
+            <ReactMarkdown
+                components={{
+                    ...(!links && {
+                        a: RenderLink,
+                        linkReference: RenderLinkReference,
+                        ul: RenderUnorderedList
+                    }),
+                    p: (props) => (
+                        <ParagraphComponent
+                            unwrapSingleLine={unwrapSingleLine}
+                            paragraphProps={paragraphProps}
+                            {...props}
+                        />
+                    ),
+                    mark: ({ ...props }) => <mark {...props} />
+                }}
+                remarkPlugins={significantLineBreaks ? [remarkBreaks, remarkFlexibleMarkers] : [remarkFlexibleMarkers]}
+                {...rest}
+            >
+                {source || children}
+            </ReactMarkdown>
+        </ErrorBoundary>
+    );
 }

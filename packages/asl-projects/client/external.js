@@ -1,7 +1,7 @@
 import './polyfills';
 
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 import Alert from './components/alert';
@@ -11,7 +11,10 @@ import configureStore from './store';
 
 const renderApp = initialState => {
   const store = configureStore(initialState);
-  render(
+  const container = document.getElementById('ppl-drafting-tool');
+  const root = createRoot(container);
+
+  root.render(
     <ErrorBoundary
       message="Sorry, there is a problem with this page"
       section={true}
@@ -22,8 +25,7 @@ const renderApp = initialState => {
           <ProjectRouter />
         </React.Fragment>
       </Provider>
-    </ErrorBoundary>,
-    document.getElementById('ppl-drafting-tool')
+    </ErrorBoundary>
   );
 };
 
