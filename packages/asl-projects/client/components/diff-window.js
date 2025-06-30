@@ -5,7 +5,7 @@ import { Value } from 'slate';
 import get from 'lodash/get';
 import { Warning } from '@ukhomeoffice/react-components';
 import { fetchQuestionVersions } from '../actions/projects';
-import { mapAnimalQuantities, animalQuantitiesDiff } from '../helpers';
+import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay } from '../helpers';
 import Modal from './modal';
 import ReviewField from './review-field';
 import Tabs from './tabs';
@@ -23,7 +23,6 @@ const DiffWindow = (props) => {
   // mainly contain proposed values with quantities
   const currentValues =  mapAnimalQuantities(project, props.name);
   const isRa = useSelector(state => state.application.schemaVersion) === 'RA';
-
   const versions = useSelector(state => {
 
     const iterations = isRa
@@ -194,11 +193,6 @@ const DiffWindow = (props) => {
       );
     };
 
-    const durationDiff = () => {
-      console.log(value);
-      return null;
-    };
-
     const permissiblePurposeDiff = () => {
       const diffs = parts
         .reduce((arr, {value, added, removed}) => {
@@ -245,8 +239,14 @@ const DiffWindow = (props) => {
       case 'checkbox':
       case 'location-selector':
       case 'objective-selector':
-      case 'duration' :
-        return durationDiff();
+      case 'duration':
+        return  durationDiffDisplay({
+        before,
+        value,
+        isBefore,
+        DEFAULT_LABEL
+      });
+
       case 'species-selector':
         return parts.length
           ? (
@@ -307,7 +307,7 @@ const DiffWindow = (props) => {
           getLabel,
           DEFAULT_LABEL
       });
-        
+
       default:
         return (
           <ReviewField

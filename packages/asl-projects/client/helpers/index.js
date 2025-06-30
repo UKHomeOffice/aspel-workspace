@@ -158,6 +158,47 @@ export function mapSpecies(project) {
   ]);
 }
 
+export function durationDiffDisplay({ before, value, isBefore, DEFAULT_LABEL }) {
+  const safeBefore = before || {};
+  const safeValue = value || {};
+  const hasNoData = !safeValue || (safeValue.years === undefined && safeValue.months === undefined);
+
+  if (hasNoData) {
+    return <p><em>{DEFAULT_LABEL}</em></p>;
+  }
+
+  const diffClass = isBefore ? 'diff removed' : 'diff added';
+
+  const renderDuration = (label, durationValue) => {
+    return durationValue !== undefined && (
+      <>
+        <dt>{label}:</dt>
+        <dd>
+          <span className={diffClass}>{durationValue}</span>
+        </dd>
+      </>
+    );
+  };
+
+  return (
+    <dl className="inline">
+      {isBefore ? (
+        <>
+          {renderDuration('Years', safeBefore.years)}
+          {renderDuration('Months', safeBefore.months)}
+        </>
+      ) : (
+        <>
+          {renderDuration('Years', safeValue.years)}
+          {renderDuration('Months', safeValue.months)}
+        </>
+      )}
+    </dl>
+  );
+}
+
+
+
 export const getScrollPos = (elem, offset = 0) => {
   const box = elem.getBoundingClientRect();
   const body = document.body;
