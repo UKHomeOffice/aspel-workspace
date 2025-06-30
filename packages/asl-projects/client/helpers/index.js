@@ -167,52 +167,36 @@ export function durationDiffDisplay({ before, value, isBefore, DEFAULT_LABEL }) 
     return <p><em>{DEFAULT_LABEL}</em></p>;
   }
 
+  const diffClass = isBefore ? 'diff removed' : 'diff added';
+
+  const renderDuration = (label, durationValue) => {
+    return durationValue !== undefined && (
+      <>
+        <dt>{label}:</dt>
+        <dd>
+          <span className={diffClass}>{durationValue}</span>
+        </dd>
+      </>
+    );
+  };
+
   return (
     <dl className="inline">
-      {isBefore && (
+      {isBefore ? (
         <>
-          {safeBefore.years !== undefined && (
-            <>
-              <dt>Years:</dt>
-              <dd>
-                <span className="diff removed">{safeBefore.years}</span>
-              </dd>
-            </>
-          )}
-          {safeBefore.months !== undefined && (
-            <>
-              <dt>Months:</dt>
-              <dd>
-                <span className="diff removed">{safeBefore.months}</span>
-              </dd>
-            </>
-          )}
+          {renderDuration('Years', safeBefore.years)}
+          {renderDuration('Months', safeBefore.months)}
         </>
-      )}
-
-      {!isBefore && (
+      ) : (
         <>
-          {safeValue.years !== undefined && (
-            <>
-              <dt>Years:</dt>
-              <dd>
-                <span className="diff added">{safeValue.years}</span>
-              </dd>
-            </>
-          )}
-          {safeValue.months !== undefined && (
-            <>
-              <dt>Months:</dt>
-              <dd>
-                <span className="diff added">{safeValue.months}</span>
-              </dd>
-            </>
-          )}
+          {renderDuration('Years', safeValue.years)}
+          {renderDuration('Months', safeValue.months)}
         </>
       )}
     </dl>
   );
 }
+
 
 
 export const getScrollPos = (elem, offset = 0) => {
