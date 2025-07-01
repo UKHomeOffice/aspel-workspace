@@ -9,6 +9,8 @@ import {
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import namedRoles from '../../content/named-roles';
+import { format } from 'date-fns';
+import { dateFormat } from '../../../../constants';
 
 const checkExemptionDelay = (mandatoryTraining) => {
   const isExemption = Array.isArray(mandatoryTraining)
@@ -49,7 +51,7 @@ const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
           <dt><Snippet>explanation.nvs.reasonForDelay</Snippet></dt>
           <dd>{incompleteTraining.delayReason}</dd>
           <dt><Snippet>explanation.nvs.completionDate</Snippet></dt>
-          <dd>{incompleteTraining.completeDate}</dd>
+          <dd>{format(incompleteTraining.completeDate, dateFormat.long)}</dd>
         </>
       )}
     </>
@@ -73,7 +75,7 @@ const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
           <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
           <dd>{incompleteTraining.delayReason}</dd>
           <dt><Snippet>explanation.nacwo.trainingDate</Snippet></dt>
-          <dd>{incompleteTraining.completeDate}</dd>
+          <dd>{format(incompleteTraining.completeDate, dateFormat.long)}</dd>
         </>
       )}
     </>
