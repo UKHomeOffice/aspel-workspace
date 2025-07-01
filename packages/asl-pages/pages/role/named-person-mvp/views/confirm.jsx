@@ -90,8 +90,6 @@ const Confirm = ({
   children,
   ...props
 }) => {
-  const editPath = props.action === 'remove' ? 'delete' : 'create';
-
   const formatters = {
     declaration: {
       propMappers: {
@@ -106,6 +104,11 @@ const Confirm = ({
   };
 
   const { incompleteTraining = {}, mandatoryTraining } = useSelector(state => state.static);
+
+  // Determine the edit path based on action and role type
+  const editPath = props.action === 'remove'
+    ? 'delete'
+    : (['nacwo', 'nvs'].includes(values.type) ? 'mandatoryTraining' : 'create');
 
   return (
     <FormLayout formatters={formatters}>
