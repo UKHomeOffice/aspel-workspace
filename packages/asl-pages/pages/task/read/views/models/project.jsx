@@ -14,6 +14,7 @@ import PplDeclarations from '../components/ppl-declarations';
 import experience from '../../../../project/update-licence-holder/schema/experience-fields';
 import { schema as projectSchema } from '../../../../project/schema';
 import { getAdditionalEstablishments } from '../../../../project-version/helpers/project';
+import {Warning} from '../../../../common/components/warning';
 
 function EstablishmentDiff({ task }) {
   const isComplete = !task.isOpen;
@@ -49,7 +50,7 @@ function EstablishmentDiff({ task }) {
 }
 
 export default function Project({ task }) {
-  const { project, establishment, version, ra, values, isAsru, allowedActions, url } = useSelector(state => state.static, shallowEqual);
+  const { project, establishment, version, ra, values, isAsru, allowedActions, url, isAdmin, isHolc } = useSelector(state => state.static, shallowEqual);
   const [disabled, setDisabled] = useState(false);
 
   const additionalEstablishments = getAdditionalEstablishments(project, version).filter((establishment) => !establishment.deleted);
@@ -128,6 +129,23 @@ export default function Project({ task }) {
           <div className="gutter">
             <EstablishmentDiff task={task} />
           </div>
+        </StickyNavAnchor>
+      )
+    ),
+    (
+      task.data.action === 'transfer' && (isAdmin || isHolc) && (
+        <StickyNavAnchor id="establishment" key="establishment">
+          <>
+            <Warning>
+              <Snippet>warning.establishment.move</Snippet>
+            </Warning>
+            <div className='govuk-warning-text'>
+              <strong className='govuk-warning-text__text'>
+                <Link page="project.read" establishmentId={project.establishmentId} projectId={project.id} label={<Snippet>warning.establishment.downloadLabel</Snippet>} target='downloads' suffix='#downloads'/>&nbsp;
+                <Snippet>warning.establishment.suffix</Snippet>
+              </strong>
+            </div>
+          </>
         </StickyNavAnchor>
       )
     ),

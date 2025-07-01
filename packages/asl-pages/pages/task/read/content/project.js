@@ -33,6 +33,13 @@ module.exports = {
       label: ''
     }
   },
+  warning: {
+    establishment: {
+      move: 'Once the transfer to the new primary establishment is approved, all returns of procedures for this licence (submitted or in progress) will move to the new establishment.',
+      downloadLabel: 'Download any returns',
+      suffix: 'for your records (opens in a new tab).'
+    }
+  },
   status: {
     endorsed: {
       hint: 'Confirm the PEL holder approves this application.',

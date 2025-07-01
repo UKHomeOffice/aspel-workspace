@@ -450,6 +450,14 @@ module.exports = () => {
           res.locals.static.project = req.project;
           res.locals.static.version = req.version;
           res.locals.static.ra = req.ra;
+          const isHolc = req.user.profile.roles.some(r => r.type === 'holc');
+          res.locals.static.isHolc = isHolc;
+          const establishment = req.user.profile.establishments.find(r => r.id === req.task.data.establishmentId);
+          let isAdmin = false;
+          if (establishment) {
+            isAdmin = establishment.role === 'admin';
+          }
+          res.locals.static.isAdmin = isAdmin;
           next();
         },
         process: (req, res, next) => {
