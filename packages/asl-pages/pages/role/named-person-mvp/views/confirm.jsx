@@ -105,10 +105,8 @@ const Confirm = ({
 
   const { incompleteTraining = {}, mandatoryTraining } = useSelector(state => state.static);
 
-  // Determine the edit path based on action and role type
-  const editPath = props.action === 'remove'
-    ? 'delete'
-    : (['nacwo', 'nvs'].includes(values.type) ? 'mandatoryTraining' : 'create');
+  // Determine the edit path based on action
+  const editPath = props.action === 'remove' ? 'delete' : 'create';
 
   return (
     <FormLayout formatters={formatters}>
