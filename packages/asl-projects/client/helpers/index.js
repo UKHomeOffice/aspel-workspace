@@ -197,7 +197,33 @@ export function durationDiffDisplay({ before, value, isBefore, DEFAULT_LABEL }) 
   );
 }
 
+export function additionalAvailabilityDiff({ before, value, props, isBefore, DEFAULT_LABEL }) {
+  let beforeValue = value != null ? value : DEFAULT_LABEL;
+  let afterValue = props?.values?.name != null ? props.values.name : DEFAULT_LABEL;
 
+  const beforeId = (beforeValue !== null && beforeValue !== DEFAULT_LABEL) ? String(beforeValue) : null;
+  const afterId = (afterValue !== null && afterValue !== DEFAULT_LABEL) ? String(afterValue) : null;
+
+  const hasChanged = beforeId !== afterId;
+
+  if (isBefore) {
+    return (
+      <p>
+        {beforeId
+          ? <span className={classnames('diff', { removed: hasChanged })}>{beforeValue}</span>
+          : <em>{DEFAULT_LABEL}</em>}
+      </p>
+    );
+  }
+
+  return (
+    <p>
+      {afterId
+        ? <span className={classnames('diff', { added: hasChanged })}>{afterValue}</span>
+        : <em>{DEFAULT_LABEL}</em>}
+    </p>
+  );
+}
 
 export const getScrollPos = (elem, offset = 0) => {
   const box = elem.getBoundingClientRect();
