@@ -5,7 +5,7 @@ import { Value } from 'slate';
 import get from 'lodash/get';
 import { Warning } from '@ukhomeoffice/react-components';
 import { fetchQuestionVersions } from '../actions/projects';
-import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay } from '../helpers';
+import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay, additionalAvailabilityDiff } from '../helpers';
 import Modal from './modal';
 import ReviewField from './review-field';
 import Tabs from './tabs';
@@ -246,7 +246,14 @@ const DiffWindow = (props) => {
         isBefore,
         DEFAULT_LABEL
       });
-
+      case 'additional-availability':
+        return additionalAvailabilityDiff({
+          before,
+          value,
+          props,
+          isBefore,
+          DEFAULT_LABEL
+        });
       case 'species-selector':
         return parts.length
           ? (
