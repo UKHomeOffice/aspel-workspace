@@ -141,7 +141,7 @@ export default function Project({ task }) {
             </Warning>
             <div className='govuk-warning-text'>
               <strong className='govuk-warning-text__text'>
-                <Link page="project.read" establishmentId={project.establishmentId} projectId={project.id} label={<Snippet>warning.establishment.downloadLabel</Snippet>} target='downloads' suffix='#downloads'/>&nbsp;
+                <Link page="project.read" establishmentId={project.establishmentId} projectId={project.id} label={<Snippet>warning.establishment.downloadLabel</Snippet>} target='downloads' suffix='#reporting'/>&nbsp;
                 <Snippet>warning.establishment.suffix</Snippet>
               </strong>
             </div>
