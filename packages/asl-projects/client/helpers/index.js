@@ -225,6 +225,32 @@ export function additionalAvailabilityDiff({ before, value, props, isBefore, DEF
   );
 }
 
+export function checkboxDiffDisplay({ before = [], value = [], isBefore, DEFAULT_LABEL = 'No answer provided' }) {
+  const removed = before.filter(item => !value.includes(item));
+  const added = value.filter(item => !before.includes(item));
+
+  const renderList = (items, changedItems, type) => {
+    return (
+      <dl className="inline">
+        {items.map((item, i) => {
+          const isChanged = changedItems.includes(item);
+          const className = isChanged ? `diff ${type}` : null;
+          return (
+            <dd key={i}>
+              <span className={className}>{String(item)}</span>
+            </dd>
+          );
+        })}
+      </dl>
+    );
+  };
+
+  if (isBefore) {
+    return before.length ? renderList(before, removed, 'removed') : <p><em>{DEFAULT_LABEL}</em></p>;
+  }
+
+  return value.length ? renderList(value, added, 'added') : <p><em>{DEFAULT_LABEL}</em></p>;
+}
 export const getScrollPos = (elem, offset = 0) => {
   const box = elem.getBoundingClientRect();
   const body = document.body;

@@ -5,7 +5,7 @@ import { Value } from 'slate';
 import get from 'lodash/get';
 import { Warning } from '@ukhomeoffice/react-components';
 import { fetchQuestionVersions } from '../actions/projects';
-import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay, additionalAvailabilityDiff } from '../helpers';
+import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay, additionalAvailabilityDiff,checkboxDiffDisplay } from '../helpers';
 import Modal from './modal';
 import ReviewField from './review-field';
 import Tabs from './tabs';
@@ -238,7 +238,16 @@ const DiffWindow = (props) => {
 
       case 'checkbox':
       case 'location-selector':
-      case 'objective-selector':
+      case 'objective-selector':{
+        const beforeValue = before || [];
+        const afterValue = props.value || [];
+        return checkboxDiffDisplay({
+          before: beforeValue,
+          value: afterValue,
+          isBefore,
+          DEFAULT_LABEL
+        });
+    }
       case 'duration':
         return  durationDiffDisplay({
         before,
