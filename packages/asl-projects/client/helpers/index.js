@@ -225,7 +225,7 @@ export function additionalAvailabilityDiff({ before, value, props, isBefore, DEF
   );
 }
 
-export function checkboxDiffDisplay({ before = [], value = [], isBefore, DEFAULT_LABEL = 'No answer provided' }) {
+export function checkboxDiffDisplay({ before = [], value = [], isBefore, DEFAULT_LABEL }) {
   const removed = before.filter(item => !value.includes(item));
   const added = value.filter(item => !before.includes(item));
 
