@@ -38,13 +38,22 @@ const Page = () => {
           <Details
             summary={<Snippet roleType={roleType.toUpperCase()}>mandatoryTrainingRequirements</Snippet>}
             className="margin-bottom"
+            id="mandatory-training-summary"
+            aria-labelledby="mandatory-training-summary"
+            role="group"
           >
             <Inset>
               <MandatoryTrainingRequirements roleType={roleType} />
             </Inset>
           </Details>
 
-          <Details summary={<Snippet>checkTrainingRecord</Snippet>} className="margin-bottom">
+          <Details
+            summary={<Snippet>checkTrainingRecord</Snippet>}
+            className="margin-bottom"
+            id="check-training-summary"
+            aria-labelledby="check-training-summary"
+            role="group"
+          >
             <Inset>
               <TrainingSummary certificates={profile.certificates} />
               <Link page="training.dashboard" label={<Snippet>updateTrainingRecord</Snippet>} />
