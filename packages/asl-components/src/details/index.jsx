@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 export default function Details({ summary, children, className, id }) {
     const [open, setOpen] = useState(false);
 
-    function toggle(e) {
-        if (e) {
-            e.preventDefault();
-        }
-        setOpen((prev) => !prev);
-    }
+    const toggle = useCallback(
+        e => {
+            e?.preventDefault();
+            setOpen((prev) => !prev);
+        },
+        [setOpen]
+    );
+
+    const toggleOnActivation = useCallback(
+        e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                toggle(e);
+            }
+        },
+        [toggle]
+    );
 
     return (
         <details
@@ -23,11 +33,7 @@ export default function Details({ summary, children, className, id }) {
                 aria-expanded={open}
                 aria-controls={`${id}-content`}
                 onClick={toggle}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        toggle(e);
-                    }
-                }}
+                onKeyDown={toggleOnActivation}
             >
                 {summary}
             </summary>
