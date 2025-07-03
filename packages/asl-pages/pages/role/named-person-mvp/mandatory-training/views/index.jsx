@@ -51,7 +51,6 @@ const Page = () => {
             summary={<Snippet>checkTrainingRecord</Snippet>}
             className="margin-bottom"
             id="check-training-summary"
-            aria-labelledby="check-training-summary"
             role="group"
           >
             <Inset>
