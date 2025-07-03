@@ -39,7 +39,6 @@ const Page = () => {
             summary={<Snippet roleType={roleType.toUpperCase()}>mandatoryTrainingRequirements</Snippet>}
             className="margin-bottom"
             id="mandatory-training-summary"
-            aria-labelledby="mandatory-training-summary"
             role="group"
           >
             <Inset>
