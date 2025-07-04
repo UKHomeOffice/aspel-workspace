@@ -12,3 +12,12 @@ if (typeof global.TextEncoder === 'undefined') {
 if (typeof global.setImmediate === 'undefined') {
   global.setImmediate = (fn, ...args) => setTimeout(fn, 10000, ...args);
 }
+
+// Mock window.matchMedia which is not implemented in JSDOM
+window.matchMedia = window.matchMedia || function() {
+  return {
+    matches: false,
+    addListener: function() {},
+    removeListener: function() {}
+  };
+};

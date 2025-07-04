@@ -90,7 +90,8 @@
     "redux-mock-store": "^1.5.4",
     "reqres": "^2.1.0",
     "sass": "^1.50.1",
-    "sinon": "^19.0.2"
+    "sinon": "^19.0.2",
+    "supertest": "^7.1.1"
   },
   "publishConfig": {
     "registry": "https://artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/"

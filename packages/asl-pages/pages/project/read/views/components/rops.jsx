@@ -40,7 +40,7 @@ export function Rop({ rop, project, active, url }) {
   let cta;
   if (rop.status === 'submitted') {
     cta = (
-      <p>
+      <p data-testid="cta-submitted">
         <Link
           page="rops.procedures"
           ropId={rop.id}
@@ -50,7 +50,7 @@ export function Rop({ rop, project, active, url }) {
     );
   } else if (rop.status === 'draft') {
     cta = (
-      <p>
+      <p data-testid="cta-draft">
         <Link
           page="rops.update"
           step="confirm"
@@ -61,7 +61,7 @@ export function Rop({ rop, project, active, url }) {
     );
   } else {
     cta = (
-      <form method="POST" action={`${url}/rops`}>
+      <form method="POST" action={`${url}/rops`} data-testid="cta-start">
         <input type="hidden" name="year" value={rop.year} />
         <Button className="button-secondary">
           <Snippet year={rop.year}>rops.start</Snippet>
@@ -74,7 +74,7 @@ export function Rop({ rop, project, active, url }) {
 
   const content = (
     <Fragment>
-      <h3>Return of procedures for {rop.year}</h3>
+      <h3 data-testid="rop-title">Return of procedures for {rop.year}</h3>
       <Snippet
         isPtag={false}
         submitted={formatDate(rop.submittedDate, dateFormat.long)}
@@ -88,10 +88,12 @@ export function Rop({ rop, project, active, url }) {
   );
 
   return (
-    <Fragment>
+    <div data-testid="rop" data-year={rop.year} data-status={rop.status} data-active={active}>
       {active && content}
-      {cta}
-    </Fragment>
+      <div data-testid="rop-content">
+        {cta}
+      </div>
+    </div>
   );
 }
 
@@ -147,7 +149,6 @@ export function Rops({ project = {}, ropsYears = [], url, today = new Date() }) 
       {activeRops.map((rop, index) => (
         <Rop key={index} project={project} rop={rop} active={true} url={url} />
       ))}
-
       {!!previousRops.length && (
         <Fragment>
           <h3>

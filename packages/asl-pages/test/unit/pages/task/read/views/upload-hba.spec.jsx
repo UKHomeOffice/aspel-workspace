@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Snippet } from '@ukhomeoffice/asl-components/src/snippet';
-import { expect } from '@jest/globals';
+import { describe, expect, test } from '@jest/globals';
 
 describe('HBA Upload intro', () => {
   const content = {

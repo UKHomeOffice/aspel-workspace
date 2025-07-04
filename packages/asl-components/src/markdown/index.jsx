@@ -1,14 +1,13 @@
-/* eslint-disable react/display-name */
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkFlexibleMarkers from 'remark-flexible-markers';
 import ErrorBoundary from '@asl/projects/client/components/error-boundary';
 
-// Checks if children include any block-level elements (like <p>, <h1>, etc.)
+// Utility function to check for block-level elements
 function containsBlock(children) {
     return React.Children.toArray(children).some(child => {
-        if (typeof child === 'object' && child !== null && 'type' in child) {
+        if (React.isValidElement(child)) {
             const blockTags = ['p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'div', 'section', 'article'];
             return blockTags.includes(child.type);
         }
@@ -18,7 +17,6 @@ function containsBlock(children) {
 
 function RenderLink({ href, children }) {
     if (containsBlock(children)) {
-    // Don't render anchor tag if it would wrap block-level content
         return <>{children}</>;
     }
     return (
@@ -37,18 +35,21 @@ function RenderUnorderedList({ children }) {
 }
 
 const ParagraphComponent = ({ unwrapSingleLine, paragraphProps, children, ...props }) => {
-    const isSingleTextChild = (
-        React.Children.count(children) === 1 &&
-    typeof children[0] === 'string'
-    );
-
-    const hasVisibleLineBreaks = (
-        isSingleTextChild &&
-    children[0].includes('\n')
-    );
+    const childrenArray = React.Children.toArray(children);
+    const isSingleTextChild = childrenArray.length === 1 && typeof childrenArray[0] === 'string';
+    const hasVisibleLineBreaks = isSingleTextChild && childrenArray[0].includes('\n');
 
     if (unwrapSingleLine && isSingleTextChild && !hasVisibleLineBreaks) {
         return <span {...paragraphProps} {...props}>{children}</span>;
+    }
+
+    // Ensure we don't nest paragraphs
+    const containsParagraph = childrenArray.some(child =>
+        React.isValidElement(child) && child.type === 'p'
+    );
+
+    if (containsParagraph) {
+        return <div {...paragraphProps} {...props}>{children}</div>;
     }
 
     return <p {...paragraphProps} {...props}>{children}</p>;
@@ -61,6 +62,7 @@ export default function Markdown({
     significantLineBreaks = false,
     paragraphProps = {},
     source,
+    // eslint-disable-next-line no-unused-vars
     linkTarget = '_blank',
     ...rest
 }) {
@@ -82,7 +84,12 @@ export default function Markdown({
                     ),
                     mark: ({ ...props }) => <mark {...props} />
                 }}
-                remarkPlugins={significantLineBreaks ? [remarkBreaks, remarkFlexibleMarkers] : [remarkFlexibleMarkers]}
+                remarkPlugins={[
+                    ...(significantLineBreaks ? [remarkBreaks] : []),
+                    remarkFlexibleMarkers
+                ]}
+                unwrapDisallowed={true}  // Prevents invalid HTML nesting
+                skipHtml={true}         // Avoids potential HTML parsing issues
                 {...rest}
             >
                 {source || children}

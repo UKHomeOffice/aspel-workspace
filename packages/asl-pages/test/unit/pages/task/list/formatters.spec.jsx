@@ -1,6 +1,6 @@
 import React from 'react';
 import MockDate from 'mockdate';
-import { afterEach, describe, expect, test } from '@jest/globals';
+import { afterEach, describe, expect, jest, test } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
 
 import formatters from '../../../../../pages/task/list/formatters/index';
@@ -24,12 +24,23 @@ const REDUX_STATE = {
     }
   }
 };
+
+jest.mock('@ukhomeoffice/asl-components/src/snippet', () => (props) => {
+  if (props.children === 'deadline.due') {
+    return <span data-testid="snippet">Due today</span>;
+  }
+  if (props.children === 'deadline.overdue') {
+    return <span data-testid="snippet">Overdue</span>;
+  }
+  return <span data-testid="snippet">{props.children}</span>;
+});
+
 describe('Due and overdue tasks display deadlines based on the calendar day', () => {
   afterEach(() => {
     MockDate.reset();
   });
 
-  function expectDeadlineMessage({ deadline, now, expectedText, urgent = true, expectedTitle }) {
+  function renderDeadline({ deadline, now }) {
     MockDate.set(now);
 
     const task = {
@@ -42,15 +53,31 @@ describe('Due and overdue tasks display deadlines based on the calendar day', ()
         {formatters.activeDeadline.format(null, task)}
       </MockReduxProvider>
     );
+  }
 
-    const deadlineSpan = screen.getByText(expectedText, {
-      selector: `span${urgent ? '.urgent' : ':not(.urgent)'} > span`
+  function getDeadlineSpan(expectedText) {
+    // Flexible matcher to find the element inside the urgent notice
+    return screen.getByText((content, element) => {
+      return content === expectedText && element.closest('.notice');
     });
+  }
 
+  function expectDeadlineMessage({ deadline, now, expectedText, urgent = true, expectedTitle }) {
+    renderDeadline({ deadline, now });
+
+    const deadlineSpan = getDeadlineSpan(expectedText);
     expect(deadlineSpan).toBeInTheDocument();
 
+    // Verify if the parent has the 'urgent' class
+    const noticeElement = deadlineSpan.closest('.notice');
+    if (urgent) {
+      expect(noticeElement).toHaveClass('urgent');
+    } else {
+      expect(noticeElement).not.toHaveClass('urgent');
+    }
+
     if (expectedTitle) {
-      expect(deadlineSpan).toHaveAttribute('title', expectedTitle);
+      expect(deadlineSpan.parentElement).toHaveAttribute('title', expectedTitle);
     }
   }
 
