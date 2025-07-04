@@ -158,6 +158,99 @@ export function mapSpecies(project) {
   ]);
 }
 
+export function durationDiffDisplay({ before, value, isBefore, DEFAULT_LABEL }) {
+  const safeBefore = before || {};
+  const safeValue = value || {};
+  const hasNoData = !safeValue || (safeValue.years === undefined && safeValue.months === undefined);
+
+  if (hasNoData) {
+    return <p><em>{DEFAULT_LABEL}</em></p>;
+  }
+
+  const diffClass = isBefore ? 'diff removed' : 'diff added';
+
+  const renderDuration = (label, durationValue) => {
+    return durationValue !== undefined && (
+      <>
+        <dt>{label}:</dt>
+        <dd>
+          <span className={diffClass}>{durationValue}</span>
+        </dd>
+      </>
+    );
+  };
+
+  return (
+    <dl className="inline">
+      {isBefore ? (
+        <>
+          {renderDuration('Years', safeBefore.years)}
+          {renderDuration('Months', safeBefore.months)}
+        </>
+      ) : (
+        <>
+          {renderDuration('Years', safeValue.years)}
+          {renderDuration('Months', safeValue.months)}
+        </>
+      )}
+    </dl>
+  );
+}
+
+export function additionalAvailabilityDiff({ before, value, props, isBefore, DEFAULT_LABEL }) {
+  let beforeValue = value != null ? value : DEFAULT_LABEL;
+  let afterValue = props?.values?.name != null ? props.values.name : DEFAULT_LABEL;
+
+  const beforeId = (beforeValue !== null && beforeValue !== DEFAULT_LABEL) ? String(beforeValue) : null;
+  const afterId = (afterValue !== null && afterValue !== DEFAULT_LABEL) ? String(afterValue) : null;
+
+  const hasChanged = beforeId !== afterId;
+
+  if (isBefore) {
+    return (
+      <p>
+        {beforeId
+          ? <span className={classnames('diff', { removed: hasChanged })}>{beforeValue}</span>
+          : <em>{DEFAULT_LABEL}</em>}
+      </p>
+    );
+  }
+
+  return (
+    <p>
+      {afterId
+        ? <span className={classnames('diff', { added: hasChanged })}>{afterValue}</span>
+        : <em>{DEFAULT_LABEL}</em>}
+    </p>
+  );
+}
+
+export function checkboxDiffDisplay({ before = [], value = [], isBefore, DEFAULT_LABEL }) {
+  const removed = before.filter(item => !value.includes(item));
+  const added = value.filter(item => !before.includes(item));
+
+  const renderList = (items, changedItems, type) => {
+    return (
+      <dl className="inline">
+        {items.map((item, i) => {
+          const isChanged = changedItems.includes(item);
+          const className = isChanged ? `diff ${type}` : null;
+          return (
+            <dd key={i}>
+              <span className={className}>{String(item)}</span>
+            </dd>
+          );
+        })}
+      </dl>
+    );
+  };
+
+  if (isBefore) {
+    return before.length ? renderList(before, removed, 'removed') : <p><em>{DEFAULT_LABEL}</em></p>;
+  }
+
+  return value.length ? renderList(value, added, 'added') : <p><em>{DEFAULT_LABEL}</em></p>;
+}
 export const getScrollPos = (elem, offset = 0) => {
   const box = elem.getBoundingClientRect();
   const body = document.body;

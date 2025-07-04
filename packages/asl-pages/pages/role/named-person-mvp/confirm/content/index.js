@@ -13,8 +13,8 @@ module.exports = merge({}, baseContent, {
     nvs: {
       rcvsNumber: 'RCVS number:',
       trainingNotComplete: 'The NVS module is not yet completed',
-      reasonForDelay: 'Reason why the module is not yet completed',
-      completionDate: 'Date the module will be completed'
+      reasonForDelay: 'Reason why the module is not yet completed:',
+      completionDate: 'Date the module will be completed:'
     },
     nacwo: {
       delay: 'There is an unavoidable delay in completing one or more modules',
