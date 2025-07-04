@@ -133,7 +133,7 @@ export default function Project({ task }) {
       )
     ),
     (
-      task.data.action === 'transfer' && (isAdmin || isHolc) && (
+      task.data.action === 'transfer' && (isAdmin || isHolc) && project.status !== 'inactive' && (
         <StickyNavAnchor id="establishment" key="establishment">
           <>
             <Warning>
