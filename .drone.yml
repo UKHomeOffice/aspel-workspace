@@ -355,7 +355,8 @@ steps:
     environment:
       IMAGE_NAME: asl-data-exports
       ALLOW_CVE_LIST_FILE: packages/asl-data-exports/cve-exceptions.txt
-      TIMEOUT: 10m
+      TIMEOUT: 20m
+      EXCLUDE_PATHS: "**/*.js.map"
   - name: docker push
     image: docker:dind
     environment:

@@ -3,6 +3,10 @@ import React from 'react';
 import flatten from 'lodash/flatten';
 
 class Wizard extends React.Component {
+  static defaultProps = {
+    step: 0,
+    onProgress: null
+  };
 
   advance() {
     const step = Math.min(this.props.step + 1, React.Children.count(this.props.children) - 1);
@@ -34,9 +38,5 @@ class Wizard extends React.Component {
   }
 
 }
-
-Wizard.defaultProps = {
-  steps: 0
-};
 
 export default Wizard;

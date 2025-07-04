@@ -50,6 +50,7 @@ class OtherSpecies extends Component {
               <div className="grow">
                 <Field
                   className="grow"
+                  label={index === 0 ? 'Other species' : ''}
                   name={`${name}-${index}`}
                   type="text"
                   value={item}

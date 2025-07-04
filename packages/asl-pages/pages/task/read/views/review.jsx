@@ -5,7 +5,12 @@ import { Snippet, Header, Link } from '@ukhomeoffice/asl-components';
 import RefusalNotice from './components/refusal-notice';
 
 export default function Review() {
-  const { task, inspector, refusalReason, editUrl, csrfToken } = useSelector(state => state.static);
+  const task = useSelector(state => state.static.task);
+  const inspector = useSelector(state => state.static.inspector);
+  const refusalReason = useSelector(state => state.static.refusalReason);
+  const editUrl = useSelector(state => state.static.editUrl);
+  const csrfToken = useSelector(state => state.static.csrfToken);
+
   const licenceHolder = get(task, 'data.modelData.profile') || get(task, 'data.modelData.licenceHolder') || get(task, 'data.licenceHolder');
 
   return (

@@ -1,29 +1,61 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
 import { Pagination } from './';
-import { ApplyChanges } from '../';
+import { expect, jest } from '@jest/globals';
 
 describe('<Pagination />', () => {
+  const store = configureStore({
+    reducer: {
+      datatable: () => ({
+        filters: {
+          active: {
+            a: [1, 2, 3],
+            b: [2, 3, 4],
+          },
+        },
+        sort: {
+          ascending: true,
+          column: 'test',
+        },
+        pagination: {
+          page: 0,
+          total: 10,
+          Pages: 10,
+          limit: 10,
+          count: 96,
+        },
+      }),
+    },
+  });
 
   test('renders 1-5 page links with the first selected when on page 1', () => {
     const props = {
-      page: 0,
       totalPages: 10,
       limit: 10,
-      count: 96
+      page: 0,
+      count: 96,
+      onPageChange: jest.fn(),
     };
-    const container = shallow(<Pagination {...props}/>);
-    const labels = container.find(ApplyChanges);
-    expect(labels.at(0).prop('label')).toBe(1);
-    expect(labels.at(1).prop('label')).toBe(2);
-    expect(labels.at(2).prop('label')).toBe(3);
-    expect(labels.at(3).prop('label')).toBe(4);
-    expect(labels.at(4).prop('label')).toBe(5);
-    expect(labels.at(0).prop('className')).toContain('current');
-    expect(labels.at(1).prop('className')).not.toContain('current');
-    expect(labels.at(2).prop('className')).not.toContain('current');
-    expect(labels.at(3).prop('className')).not.toContain('current');
-    expect(labels.at(4).prop('className')).not.toContain('current');
+
+    render(
+      <Provider store={store}>
+        <Pagination {...props} />
+      </Provider>);
+
+    const links = screen.getAllByRole('link');
+
+    expect(links[0]).toHaveTextContent('1');
+    expect(links[1]).toHaveTextContent('2');
+    expect(links[2]).toHaveTextContent('3');
+    expect(links[3]).toHaveTextContent('4');
+    expect(links[4]).toHaveTextContent('5');
+    expect(links[0]).toHaveClass('current'); // Corrected index
+    expect(links[1]).not.toHaveClass('current');
+    expect(links[2]).not.toHaveClass('current');
+    expect(links[3]).not.toHaveClass('current');
+    expect(links[4]).not.toHaveClass('current');
   });
 
   test('renders 3-7 page links with the middle page selected when on page 5 of 10', () => {
@@ -31,20 +63,27 @@ describe('<Pagination />', () => {
       page: 4,
       totalPages: 10,
       limit: 10,
-      count: 96
+      count: 96,
+      onPageChange: jest.fn()
     };
-    const container = shallow(<Pagination {...props}/>);
-    const labels = container.find(ApplyChanges);
-    expect(labels.at(1).prop('label')).toBe(3);
-    expect(labels.at(2).prop('label')).toBe(4);
-    expect(labels.at(3).prop('label')).toBe(5);
-    expect(labels.at(4).prop('label')).toBe(6);
-    expect(labels.at(5).prop('label')).toBe(7);
-    expect(labels.at(1).prop('className')).not.toContain('current');
-    expect(labels.at(2).prop('className')).not.toContain('current');
-    expect(labels.at(3).prop('className')).toContain('current');
-    expect(labels.at(4).prop('className')).not.toContain('current');
-    expect(labels.at(5).prop('className')).not.toContain('current');
+
+    render(
+      <Provider store={store}>
+        <Pagination {...props} />
+      </Provider>
+    );
+
+    const links = screen.getAllByRole('link');
+    expect(links[1]).toHaveTextContent('3');
+    expect(links[2]).toHaveTextContent('4');
+    expect(links[3]).toHaveTextContent('5');
+    expect(links[4]).toHaveTextContent('6');
+    expect(links[5]).toHaveTextContent('7');
+    expect(links[1]).not.toHaveClass('current');
+    expect(links[2]).not.toHaveClass('current');
+    expect(links[3]).toHaveClass('current');
+    expect(links[4]).not.toHaveClass('current');
+    expect(links[5]).not.toHaveClass('current');
   });
 
   test('renders 6-10 page links with the last page selected when on page 10 of 10', () => {
@@ -52,20 +91,26 @@ describe('<Pagination />', () => {
       page: 9,
       totalPages: 10,
       limit: 10,
-      count: 96
+      count: 96,
+      onPageChange: jest.fn()
     };
-    const container = shallow(<Pagination {...props}/>);
-    const labels = container.find(ApplyChanges);
-    expect(labels.at(1).prop('label')).toBe(6);
-    expect(labels.at(2).prop('label')).toBe(7);
-    expect(labels.at(3).prop('label')).toBe(8);
-    expect(labels.at(4).prop('label')).toBe(9);
-    expect(labels.at(5).prop('label')).toBe(10);
-    expect(labels.at(1).prop('className')).not.toContain('current');
-    expect(labels.at(2).prop('className')).not.toContain('current');
-    expect(labels.at(3).prop('className')).not.toContain('current');
-    expect(labels.at(4).prop('className')).not.toContain('current');
-    expect(labels.at(5).prop('className')).toContain('current');
-  });
 
+    render(
+      <Provider store={store}>
+        <Pagination {...props} />
+      </Provider>
+    );
+
+    const links = screen.getAllByRole('link');
+    expect(links[1]).toHaveTextContent('6');
+    expect(links[2]).toHaveTextContent('7');
+    expect(links[3]).toHaveTextContent('8');
+    expect(links[4]).toHaveTextContent('9');
+    expect(links[5]).toHaveTextContent('10');
+    expect(links[1]).not.toHaveClass('current');
+    expect(links[2]).not.toHaveClass('current');
+    expect(links[3]).not.toHaveClass('current');
+    expect(links[4]).not.toHaveClass('current');
+    expect(links[5]).toHaveClass('current');
+  });
 });

@@ -19,7 +19,11 @@ import EnforcementFlags from '../../../enforcement/components/enforcement-flags'
 import Reminders from '../../../common/components/reminders';
 
 function Index() {
-  const { establishment, allowedActions, openTask, showRelatedTasks, errors } = useSelector(state => state.static);
+  const establishment = useSelector(state => state.static.establishment);
+  const allowedActions = useSelector(state => state.static.allowedActions);
+  const openTask = useSelector(state => state.static.openTask);
+  const showRelatedTasks = useSelector(state => state.static.showRelatedTasks);
+  const errors = useSelector(state => state.static.errors);
 
   const killing = establishment.authorisations.filter(({ type }) => type === 'killing');
   const rehomes = establishment.authorisations.filter(({ type }) => type === 'rehomes');
