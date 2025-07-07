@@ -20,7 +20,6 @@ env:
   NODE_VERSION: '22.14.0'
   MODULE: packages/asl-components
   WORKSPACE: '@ukhomeoffice/asl-components'
-  # Add registry URLs as environment variables
   NPM_REGISTRY: 'https://artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/'
   GITHUB_REGISTRY: 'https://npm.pkg.github.com'
 
@@ -37,26 +36,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          # Cache npm dependencies
           cache: 'npm'
-          # Set default registry (will be overridden by explicit config)
-          registry-url: ${{ env.NPM_REGISTRY }}
 
       - name: Configure npm registries
         run: |
           # Configure Artifactory
           npm config set @asl:registry ${{ env.NPM_REGISTRY }}
-          npm config set //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:_authToken ${{ secrets.ART_AUTH_TOKEN }}
-          npm config set //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:always-auth=true
+          npm config set //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:_authToken=${{ secrets.ART_AUTH_TOKEN }}
 
           # Configure GitHub Packages
           npm config set @ukhomeoffice:registry ${{ env.GITHUB_REGISTRY }}
-          npm config set //npm.pkg.github.com/:_authToken ${{ secrets.GITHUB_AUTH_TOKEN }}
+          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_AUTH_TOKEN }}
 
-          # Increase timeout and retries
+          # Network settings
           npm config set fetch-retries 5
           npm config set fetch-retry-mintimeout 30000
-          npm config set fetch-retry-maxtimeout 180000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Changeset
         id: changeset
@@ -66,9 +61,6 @@ jobs:
 
       - name: Install dependencies with retries
         if: ${{ steps.changeset.outputs.changed }}
-        env:
-          ART_AUTH_TOKEN: ${{ secrets.ART_AUTH_TOKEN }}
-          GITHUB_AUTH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }}
         run: |
           n=0
           until [ "$n" -ge 3 ]
