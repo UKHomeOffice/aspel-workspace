@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pretest:functional": "NODE_ENV=test npm run migrate",
-    "test": "npm run test:lint && npm run test:unit && npm run test:functional && npm run test:migrations",
+    "test": "npm run test:lint && npm run test:unit && npm run test:functional && npm run test:migrations && npm run seed",
     "test:lint": "eslint .",
     "test:unit": "mocha ./test/unit --recursive --exit",
     "test:functional": "SNAKE_MAPPER=true mocha ./test/functional --recursive --exit",

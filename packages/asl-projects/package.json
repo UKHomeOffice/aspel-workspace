@@ -46,6 +46,7 @@
     "lodash": "^4.17.21",
     "mdn-polyfills": "^5.15.0",
     "minimatch": "^3.0.4",
+    "mustache": "^4.2.0",
     "react": "^16.9.0",
     "react-dom": "^16.6.0",
     "react-icons-kit": "^1.1.6",

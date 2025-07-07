@@ -1696,8 +1696,14 @@ export default () => {
                   section: 'intro'
                 },
                 {
+                  name: 'maximum-animals',
+                  label: 'What is the maximum number of {{ values.value }} that will be used in this protocol?',
+                  type: 'text',
+                  inputmode: 'numeric',
+                },
+                {
                   name: 'life-stages',
-                  label: 'Which life stages will be used during this protocol?',
+                  label: 'Which life stages will be used in this protocol?',
                   hint: 'Select all that apply',
                   type: 'checkbox',
                   className: 'smaller',
@@ -1730,7 +1736,7 @@ export default () => {
                 },
                 {
                   name: 'continued-use',
-                  label: 'Will any animals coming on to this protocol be classed as ‘continued use’?',
+                  label: 'Will any {{ values.value }} coming on to this protocol be classed as ‘continued use’?',
                   hint: '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use or animals that have had procedures applied to them in order to be prepared for use in this protocol.',
                   type: 'radio',
                   options: [
@@ -1776,12 +1782,6 @@ export default () => {
                   ],
                   inline: true,
                   className: 'smaller'
-                },
-                {
-                  name: 'maximum-animals',
-                  label: 'What is the maximum number of animals that will be used on this protocol?',
-                  type: 'text',
-                  hint: 'Please only enter numbers, e.g. 40'
                 },
                 {
                   name: 'maximum-times-used',

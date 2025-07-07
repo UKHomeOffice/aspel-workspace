@@ -6,6 +6,7 @@ import { throwError } from '../actions/messages';
 import isUndefined from 'lodash/isUndefined';
 import castArray from 'lodash/castArray';
 import every from 'lodash/every';
+import Mustache from 'mustache';
 
 import ReactMarkdown from 'react-markdown';
 
@@ -98,6 +99,9 @@ class Field extends Component {
     const { value } = this.state;
 
     let { label, hint } = this.props.altLabels ? this.props.alt : this.props;
+
+    label = typeof label === 'string' ? Mustache.render(label, this.props) : label ;
+    hint = typeof hint === 'string' ? Mustache.render(hint, this.props) : hint ;
 
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
@@ -303,6 +307,7 @@ class Field extends Component {
       value={ value || '' }
       error={ this.props.error }
       onChange={ e => this.onFieldChange(e.target.value)}
+      inputmode={this.props.inputmode}
     />;
   }
 }
