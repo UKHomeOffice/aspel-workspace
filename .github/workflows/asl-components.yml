@@ -38,22 +38,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Configure npm registries
-        run: |
-          # Configure Artifactory
-          npm config set @asl:registry ${{ env.NPM_REGISTRY }}
-          npm config set //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:_authToken=${{ secrets.ART_AUTH_TOKEN }}
-          npm config set //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:always-auth=true
-
-          # Configure GitHub Packages
-          npm config set @ukhomeoffice:registry ${{ env.GITHUB_REGISTRY }}
-          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_AUTH_TOKEN }}
-
-          # Network settings
-          npm config set fetch-retries 5
-          npm config set fetch-retry-mintimeout 30000
-          npm config set fetch-retry-maxtimeout 120000
-
       - name: Changeset
         id: changeset
         uses: ./.github/actions/changeset
