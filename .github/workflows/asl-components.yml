@@ -38,31 +38,25 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Configure npm registries
+      - name: Create .npmrc
         run: |
-          # Set default registry
-          npm config set registry https://registry.npmjs.org/
+          cat << EOF > .npmrc
+          registry=https://registry.npmjs.org/
+          @ukhomeoffice:registry=${{ env.GITHUB_REGISTRY }}
+          //npm.pkg.github.com/:_authToken=${{ secrets.GH_AUTH_TOKEN }}
+          @asl:registry=${{ env.NPM_REGISTRY }}
+          //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:_authToken=${{ secrets.ART_AUTH_TOKEN }}
+          fetch-retries=5
+          fetch-retry-mintimeout=60000
+          fetch-retry-maxtimeout=300000
+          EOF
+          cat .npmrc
 
-          # Configure GitHub Packages
-          npm config set @ukhomeoffice:registry ${{ env.GITHUB_REGISTRY }}
-          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_AUTH_TOKEN }}
-
-          # Configure Artifactory
-          npm config set @asl:registry ${{ env.NPM_REGISTRY }}
-          npm config set //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:_authToken=${{ secrets.ART_AUTH_TOKEN }}
-
-          # Network settings
-          npm config set fetch-retries 5
-          npm config set fetch-retry-mintimeout 60000
-          npm config set fetch-retry-maxtimeout 300000
-
-      - name: Verify registry access
-        run: |
-          echo "Testing Artifactory access..."
-          curl -I -H "Authorization: Bearer ${{ secrets.ART_AUTH_TOKEN }}" ${{ env.NPM_REGISTRY }}
-
-          echo "Testing GitHub Packages access..."
-          curl -I -H "Authorization: Bearer ${{ secrets.GITHUB_AUTH_TOKEN }}" ${{ env.GITHUB_REGISTRY }}
+      - name: Changeset
+        id: changeset
+        uses: ./.github/actions/changeset
+        with:
+          module: ${{ env.MODULE }}
 
       - name: Install with retries
         if: ${{ steps.changeset.outputs.changed }}
@@ -72,8 +66,7 @@ jobs:
           do
             npm ci -w ${{ env.WORKSPACE }} --verbose && break
             n=$((n+1))
-            echo "Attempt $n failed, retrying in 20 seconds..."
-            sleep 20
+            sleep 15
           done
           [ "$n" -lt 3 ] || exit 1
 
