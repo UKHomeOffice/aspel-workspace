@@ -61,6 +61,9 @@ jobs:
 
       - name: Install dependencies with retries
         if: ${{ steps.changeset.outputs.changed }}
+        env:
+          ART_AUTH_TOKEN: ${{ secrets.ART_AUTH_TOKEN }}
+          GITHUB_AUTH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }}
         run: |
           n=0
           until [ "$n" -ge 3 ]
