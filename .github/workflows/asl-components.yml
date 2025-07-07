@@ -21,7 +21,6 @@ env:
   MODULE: packages/asl-components
   WORKSPACE: '@ukhomeoffice/asl-components'
   NPM_REGISTRY: 'https://artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/'
-  GITHUB_REGISTRY: 'https://npm.pkg.github.com'
 
 jobs:
   test:
@@ -38,35 +37,34 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Create .npmrc
+      - name: Configure .npmrc (Drone-style)
         run: |
           cat << EOF > .npmrc
           registry=https://registry.npmjs.org/
-          @ukhomeoffice:registry=${{ env.GITHUB_REGISTRY }}
-          //npm.pkg.github.com/:_authToken=${{ secrets.GH_AUTH_TOKEN }}
           @asl:registry=${{ env.NPM_REGISTRY }}
           //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:_authToken=${{ secrets.ART_AUTH_TOKEN }}
+          @ukhomeoffice:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${{ secrets.GH_AUTH_TOKEN }}
           fetch-retries=5
-          fetch-retry-mintimeout=60000
-          fetch-retry-maxtimeout=300000
+          fetch-retry-mintimeout=30000
           EOF
-          cat .npmrc
 
-      - name: Changeset
-        id: changeset
-        uses: ./.github/actions/changeset
-        with:
-          module: ${{ env.MODULE }}
+      - name: Pre-flight Artifactory check
+        run: |
+          # Test connection with shorter timeout
+          if ! curl -s -m 15 -I ${{ env.NPM_REGISTRY }}; then
+            echo "::warning::Artifactory unreachable, falling back to public registry"
+            npm config set @asl:registry https://registry.npmjs.org/
+          fi
 
       - name: Install with retries
         if: ${{ steps.changeset.outputs.changed }}
         run: |
           n=0
-          until [ "$n" -ge 3 ]
-          do
+          until [ "$n" -ge 3 ]; do
             npm ci -w ${{ env.WORKSPACE }} --verbose && break
             n=$((n+1))
-            sleep 15
+            sleep $((n*5))
           done
           [ "$n" -lt 3 ] || exit 1
 
