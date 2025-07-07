@@ -20,6 +20,8 @@ env:
   NODE_VERSION: '22.14.0'
   MODULE: packages/asl-components
   WORKSPACE: '@ukhomeoffice/asl-components'
+  NPM_REGISTRY: 'https://artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/'
+  GITHUB_REGISTRY: 'https://npm.pkg.github.com'
 
 jobs:
   test:
@@ -30,34 +32,51 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js version ${{ env.NODE_VERSION }}
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
-      - name: Changeset
-        id: changeset
-        uses: ./.github/actions/changeset
-        with:
-          module: ${{ env.MODULE }}
-
-      - name: Install
-        if: ${{ steps.changeset.outputs.changed }}
-        env:
-          ART_AUTH_TOKEN: ${{ secrets.ART_AUTH_TOKEN }}
-          GITHUB_AUTH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }}
-        run: npm ci -w ${{ env.WORKSPACE }}
-
-      - name: Echo parameters
+      - name: Configure npm registries
         run: |
-          echo "Changed: ${{ steps.changeset.outputs.changed }}"
-          echo "Module: ${{ env.MODULE }}"
-          echo "Workspace: ${{ env.WORKSPACE }}"
-          echo "Node Version: ${{ env.NODE_VERSION }}"
-          echo "ART Auth Token: ${{ secrets.ART_AUTH_TOKEN }}"
-          echo "GitHub Auth Token: ${{ secrets.GH_AUTH_TOKEN }}"
+          # Set default registry
+          npm config set registry https://registry.npmjs.org/
+
+          # Configure GitHub Packages
+          npm config set @ukhomeoffice:registry ${{ env.GITHUB_REGISTRY }}
+          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_AUTH_TOKEN }}
+
+          # Configure Artifactory
+          npm config set @asl:registry ${{ env.NPM_REGISTRY }}
+          npm config set //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:_authToken=${{ secrets.ART_AUTH_TOKEN }}
+
+          # Network settings
+          npm config set fetch-retries 5
+          npm config set fetch-retry-mintimeout 60000
+          npm config set fetch-retry-maxtimeout 300000
+
+      - name: Verify registry access
+        run: |
+          echo "Testing Artifactory access..."
+          curl -I -H "Authorization: Bearer ${{ secrets.ART_AUTH_TOKEN }}" ${{ env.NPM_REGISTRY }}
+
+          echo "Testing GitHub Packages access..."
+          curl -I -H "Authorization: Bearer ${{ secrets.GITHUB_AUTH_TOKEN }}" ${{ env.GITHUB_REGISTRY }}
+
+      - name: Install with retries
+        if: ${{ steps.changeset.outputs.changed }}
+        run: |
+          n=0
+          until [ "$n" -ge 3 ]
+          do
+            npm ci -w ${{ env.WORKSPACE }} --verbose && break
+            n=$((n+1))
+            echo "Attempt $n failed, retrying in 20 seconds..."
+            sleep 20
+          done
+          [ "$n" -lt 3 ] || exit 1
 
       - name: Run tests
         if: ${{ steps.changeset.outputs.changed }}
-        run: |
-          npm run -w ${{ env.WORKSPACE }} test
+        run: npm run -w ${{ env.WORKSPACE }} test
