@@ -4,7 +4,7 @@ module.exports = {
         '^.+\\.[jt]sx?$': 'babel-jest'
     },
     transformIgnorePatterns: [
-        '/node_modules/(?!(uuid)/)'
+        '/node_modules/(?!uuid|react-markdown|remark-.*|rehype-.*)/'
     ],
     setupFilesAfterEnv: [
         '<rootDir>/setup-test.js'
