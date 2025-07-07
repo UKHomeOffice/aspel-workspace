@@ -47,7 +47,7 @@ jobs:
           # Configure Artifactory
           npm config set @asl:registry ${{ env.NPM_REGISTRY }}
           npm config set //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:_authToken ${{ secrets.ART_AUTH_TOKEN }}
-          npm config set //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:always-auth true
+          npm config set //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:always-auth=true
 
           # Configure GitHub Packages
           npm config set @ukhomeoffice:registry ${{ env.GITHUB_REGISTRY }}
