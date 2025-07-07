@@ -20,8 +20,6 @@ env:
   NODE_VERSION: '22.14.0'
   MODULE: packages/asl-components
   WORKSPACE: '@ukhomeoffice/asl-components'
-  NPM_REGISTRY: 'https://artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/'
-  GITHUB_REGISTRY: 'https://npm.pkg.github.com'
 
 jobs:
   test:
@@ -32,26 +30,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js
+      - name: Set up Node.js version ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Configure npm registries
-        run: |
-          # Configure Artifactory
-          npm config set @asl:registry ${{ env.NPM_REGISTRY }}
-          npm config set //artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/:_authToken=${{ secrets.ART_AUTH_TOKEN }}
-
-          # Configure GitHub Packages
-          npm config set @ukhomeoffice:registry ${{ env.GITHUB_REGISTRY }}
-          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_AUTH_TOKEN }}
-
-          # Network settings
-          npm config set fetch-retries 5
-          npm config set fetch-retry-mintimeout 30000
-          npm config set fetch-retry-maxtimeout 120000
 
       - name: Changeset
         id: changeset
@@ -59,19 +41,23 @@ jobs:
         with:
           module: ${{ env.MODULE }}
 
-      - name: Install dependencies with retries
+      - name: Install
         if: ${{ steps.changeset.outputs.changed }}
+        env:
+          ART_AUTH_TOKEN: ${{ secrets.ART_AUTH_TOKEN }}
+          GITHUB_AUTH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }}
+        run: npm ci -w ${{ env.WORKSPACE }}
+
+      - name: Echo parameters
         run: |
-          n=0
-          until [ "$n" -ge 3 ]
-          do
-            npm ci -w ${{ env.WORKSPACE }} --verbose && break
-            n=$((n+1))
-            echo "Attempt $n failed. Retrying in 10 seconds..."
-            sleep 10
-          done
-          if [ "$n" -eq 3 ]; then exit 1; fi
+          echo "Changed: ${{ steps.changeset.outputs.changed }}"
+          echo "Module: ${{ env.MODULE }}"
+          echo "Workspace: ${{ env.WORKSPACE }}"
+          echo "Node Version: ${{ env.NODE_VERSION }}"
+          echo "ART Auth Token: ${{ secrets.ART_AUTH_TOKEN }}"
+          echo "GitHub Auth Token: ${{ secrets.GH_AUTH_TOKEN }}"
 
       - name: Run tests
         if: ${{ steps.changeset.outputs.changed }}
-        run: npm run -w ${{ env.WORKSPACE }} test
+        run: |
+          npm run -w ${{ env.WORKSPACE }} test
