@@ -15,12 +15,6 @@ const store = configureAppStore(window.INITIAL_STATE || {});
 hydrateRoot(
   document.getElementById('page-component'),
   <Provider store={store}>
-    <Wrapper>
-      <ErrorBoundary>
-        <Suspense fallback={<div className="loading">Loading…</div>}>
-          <Component />
-        </Suspense>
-      </ErrorBoundary>
-    </Wrapper>
+    <Component />
   </Provider>
 );

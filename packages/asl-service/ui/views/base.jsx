@@ -16,8 +16,8 @@ const Wrapped = ({ store, children }) => (
   </Provider>
 );
 
-const renderChildren = (children, wrap) => (
-  wrap ? <Wrapper>{children}</Wrapper> : children
+const renderChildren = (children) => (
+  <Wrapper>{children}</Wrapper>
 );
 
 const Layout = ({
@@ -43,23 +43,20 @@ const Layout = ({
     ...rest
   } = staticContent;
 
-  const wrap = !error;
-
   // Create Redux store only if we want to wrap
-  const store = wrap
-    ? configureStore({
-      reducer: rootReducer,
-      preloadedState: {
-        ...omit(props, [
-          'footerLinks',
-          'settings',
-          '_locals',
-          'cache',
-          'pageTitle']),
-        static: { ...rest, content, urls }
-      }
-    })
-    : null;
+  const store = configureStore({
+    reducer: rootReducer,
+    preloadedState: {
+      ...omit(props, [
+        'footerLinks',
+        'settings',
+        '_locals',
+        'cache',
+        'pageTitle'
+      ]),
+      static: { ...rest, content, urls }
+    }
+  });
 
   // Create new arrays without mutating props
   const stylesheets = ['/public/css/app.css', ...originalStylesheets];
@@ -75,7 +72,7 @@ const Layout = ({
       linkProps={{
         rel: 'preload',
         as: 'style',
-        onLoad: "this.onload=null;this.rel='stylesheet'"
+        onLoad: 'this.onload=null;this.rel=\'stylesheet\''
       }}
       scripts={scripts}
       headerContent={<StatusBar user={user} />}
@@ -94,31 +91,30 @@ const Layout = ({
           <div className="govuk-grid-row">
             <div className="govuk-grid-column-full">
               <div id="page-component">
-                {renderChildren(children, wrap)}
+                {renderChildren(children)}
               </div>
             </div>
           </div>
         </main>
       </div>
-      {wrap && <script src="/public/js/common/base64.js" />}
-      {wrap && store && (
-        <script
-          nonce={nonce}
-          dangerouslySetInnerHTML={{
-            __html: `
-              function decode(str) { return JSON.parse(window.Base64.decode(str)); }
-              window.INITIAL_STATE = decode('${Buffer.from(
-          JSON.stringify(store.getState()),
-          'utf8'
-        ).toString('base64')}');
-            `
-          }}
-        />
-      )}
+      <script src="/public/js/common/base64.js" />
+      <script
+        nonce={nonce}
+        dangerouslySetInnerHTML={{
+          __html: `
+      function decode(str) { return JSON.parse(window.Base64.decode(str)); }
+      window.INITIAL_STATE = decode('${Buffer.from(
+      JSON.stringify(store.getState()),
+      'utf8'
+    ).toString('base64')}');
+    `
+        }}
+      />
+
     </HomeOffice>
   );
 
-  return wrap ? <Wrapped store={store}>{page}</Wrapped> : page;
+  return <Wrapped store={store}>{page}</Wrapped>;
 };
 
 export default Layout;
