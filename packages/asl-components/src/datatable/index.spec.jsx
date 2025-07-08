@@ -184,7 +184,7 @@ describe('<Datatable />', () => {
     };
 
     function Expandable() {
-      return <td>Expanded</td>;
+      return <div>Expanded</div>;
     }
 
     const expands = row => row.number % 2 === 0;
