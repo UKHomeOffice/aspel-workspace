@@ -2136,9 +2136,9 @@ steps:
     commands:
       - git config advice.detachedHead false
       - git checkout $DRONE_COMMIT
-        - echo "--- DIFF between $TARGET_BRANCH and current commit ($DRONE_COMMIT) ---"
-        - git fetch origin $TARGET_BRANCH
-        - git diff origin/$TARGET_BRANCH --name-status
+      - echo "--- DIFF between $TARGET_BRANCH and current commit ($DRONE_COMMIT) ---"
+      - git fetch origin $TARGET_BRANCH
+      - git diff origin/$TARGET_BRANCH --name-status
       - node ./ci/changeset.js --modules $MODULES
       - git checkout $DRONE_TARGET_BRANCH
       - git merge $DRONE_COMMIT
