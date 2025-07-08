@@ -27,7 +27,6 @@ import GrantedSteps from '../../pages/sections/granted/protocol-steps';
 import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 
 import intersection from 'lodash/intersection';
-import some from 'lodash/some';
 
 import experience from './experience';
 import permissiblePurpose from './permissible-purpose';
@@ -1698,8 +1697,10 @@ export default () => {
                 {
                   name: 'maximum-animals',
                   label: 'What is the maximum number of {{ values.value }} that will be used in this protocol?',
+                  hint: 'Please only enter numerals, for example 40',
                   type: 'text',
-                  inputmode: 'numeric',
+                  inputMode: 'numeric',
+                  className: 'govuk-input--width-5'
                 },
                 {
                   name: 'life-stages',
@@ -1760,36 +1761,49 @@ export default () => {
                 },
                 {
                   name: 'reuse',
-                  label: 'Will you be re-using animals on to this protocol?',
-                  hint: '‘Re-use’ describes using animals again for a new experiment when you could equally use a naïve animal to get the same results.',
-                  type: 'radio',
+                  label: 'Are you re-using any {{ values.value }}?',
+                  hint: `\
+‘Re-use’ describes using an animal for a new experiment when you could equally use a naive animal to get the same results.
+
+Select each that applies`,
+                  type: 'checkbox',
                   options: [
                     {
-                      label: 'Yes',
-                      value: true,
+                      label: 'Yes, from another protocol - in this project or another project',
+                      value: 'another-protocol',
                       reveal: [
                         {
                           name: 'reuse-details',
-                          label: 'Describe any procedure that may have been applied to these animals, and why you are choosing to re-use them.',
+                          label: 'Describe the procedures that have been applied to them, and why you are choosing to re-use them',
                           type: 'texteditor'
                         }
                       ]
                     },
                     {
+                      label: 'Yes, within this protocol',
+                      value: 'this-protocol',
+                      reveal: [
+                        {
+                          name: 'maximum-times-used',
+                          label: 'What is the maximum number of times an animal will be used in this protocol?',
+                          hint: 'Please only enter numerals, for example 40',
+                          type: 'text',
+                          inputMode: 'numeric',
+                          className: 'govuk-input--width-5'
+                        }
+                      ]
+                    },
+                    {
+                      divider: 'or',
+                      id: 'divider'
+                    },
+                    {
                       label: 'No',
-                      value: false
+                      value: 'no',
+                      behaviour: 'exclusive'
                     }
                   ],
-                  inline: true,
-                  className: 'smaller'
                 },
-                {
-                  name: 'maximum-times-used',
-                  label: 'What is the maximum number of uses of this protocol per animal?',
-                  hint: 'For example, if some animals will go through this protocol three more times after their first use, the number of uses will be four.\n\n If no animals will go through this protocol more than once, enter \'1\'.\n\nPlease only enter numbers, e.g. 40',
-                  type: 'text'
-
-                }
               ]
             },
             gaas: {
@@ -2728,7 +2742,12 @@ export default () => {
         },
         'reusing-animals': {
           title: 'Re-using animals',
-          show: project => some(project.protocols, protocol => protocol && some(protocol.speciesDetails, species => (species || {}).reuse)),
+          show: project =>
+            (project.protocols ?? [])
+              .flatMap(protocol => protocol?.speciesDetails ?? [])
+              .flatMap(species => species.reuse ?? [])
+              .some(value => value !== 'no')
+          ,
           intro: 'You are seeing this section because you will be re-using animals during your project. If this is not correct, you can change this in Protocols.',
           fields: [
             {
