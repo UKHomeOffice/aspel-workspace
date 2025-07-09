@@ -42,20 +42,16 @@ import { value } from 'lodash/seq';
  *
  */
 function calculateNewCheckboxValues(values, toggledValue, options) {
-  console.log({values, toggledValue, options});
   if(values.includes(toggledValue)) {
-    console.log('remove');
     return [without(values, toggledValue), true];
   }
 
   const option = options.find(option => option.value === toggledValue);
   if(!option) {
-    console.log('no option');
     return [values, false]
   }
 
   if(option.behaviour === 'exclusive') {
-    console.log('exclusive add')
     return [[toggledValue], values.length > 0]
   }
 
@@ -66,7 +62,6 @@ function calculateNewCheckboxValues(values, toggledValue, options) {
 
   const withoutExclusives = [...values, toggledValue].filter(option => !exclusiveOptions.includes(option));
 
-  console.log('non-exclusive add', withoutExclusives)
   return [withoutExclusives, withoutExclusives.length <= values.length];
 }
 
