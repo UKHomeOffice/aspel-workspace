@@ -421,7 +421,17 @@ const debouncedSyncProject = debounce((...args) => {
 export const ajaxSync = changed => {
   return (dispatch, getState) => {
     const { project, savedProject, application: { establishment, schemaVersion } } = getState();
-    const newState = cleanProtocols({ state: project, savedState: savedProject, changed, establishment, schemaVersion });
+
+    const clonedProject = cloneDeep(project);
+    const clonedSavedProject = cloneDeep(savedProject);
+
+    const newState = cleanProtocols({
+      state: clonedProject,
+      savedState: clonedSavedProject,
+      changed,
+      establishment,
+      schemaVersion
+    });
 
     dispatch(updateProject(newState));
     return debouncedSyncProject(dispatch, getState);
