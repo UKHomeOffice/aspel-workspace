@@ -18,7 +18,7 @@ const CONDITIONS_FIELDS = ['conditions', 'retrospectiveAssessment'];
 
 const jsondiff = require('jsondiffpatch').create({
   objectHash: obj => {
-    return obj.id || sha('sha256').update(obj).digest('hex');
+    return obj.id || sha('sha256').update(JSON.stringify(obj)).digest('hex');
   }
 });
 
