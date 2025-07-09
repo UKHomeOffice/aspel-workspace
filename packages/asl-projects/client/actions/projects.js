@@ -95,9 +95,13 @@ export function updateProject(project) {
 export function saveReusableSteps(reusableSteps) {
   return (dispatch, getState) => {
     const state = getState();
-    const newState = cloneDeep(state.project);
-    const updatedReusableSteps = keyBy(reusableSteps, 'id');
-    newState.reusableSteps = {...newState.reusableSteps, ...updatedReusableSteps};
+    const newState = {
+      ...state.project,
+      reusableSteps: {
+        ...state.project.reusableSteps,
+        ...keyBy(reusableSteps.map(step => ({ ...step })), 'id') // Ensure cloned steps
+      }
+    };
     dispatch(updateProject(newState));
     return debouncedSyncProject(dispatch, getState);
   };

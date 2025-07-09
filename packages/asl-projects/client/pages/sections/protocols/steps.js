@@ -445,26 +445,31 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
       setUpdateReusable(false);
     }}
     onSave={steps => {
-      // Extract reusable steps to save
-      // Update reusableSteps on project only when they are complete, or have previously been saved
-      const reusableSteps = steps.filter(step => step.reusable && (step.completed || step.saved))
-        .map(reusableStep => {
-          return { ...reusableStep, id: reusableStep.reusableStepId || reusableStep.id, saved: true };
-        });
+      // Create deep clones of reusable steps to ensure immutability
+      const reusableSteps = steps
+        .filter(step => step.reusable && (step.completed || step.saved))
+        .map(step => cloneDeep({
+          ...step,
+          id: step.reusableStepId || step.id,
+          saved: true
+        }));
 
       const mappedSteps = steps.map(step => {
         if (step.reusable && (step.completed || step.saved)) {
-          return { id: step.id, reusableStepId: step.reusableStepId || step.id };
+          return {
+            ...step,
+            id: step.id,
+            reusableStepId: step.reusableStepId || step.id
+          };
         }
         return step;
       });
 
-      if (updateReusable) {
+      if (updateReusable && reusableSteps.length > 0) {
         props.dispatch(saveReusableSteps(reusableSteps));
-      } else {
-        setUpdateReusable(true);
       }
       updateItem({ steps: mappedSteps });
+      setUpdateReusable(true); // Always reset this after save
     }}
     addAnother={!props.pdf && !values.deleted && editable && !lastStepIsNew}
     {...props}
