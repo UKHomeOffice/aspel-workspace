@@ -32,13 +32,19 @@ import Comments from './comments';
 import ErrorBoundary from './error-boundary';
 import NtsCheckBoxWithModal from './checkbox';
 import without from 'lodash/without';
-import { value } from 'lodash/seq';
 
 /**
- * @param {string[]} values
- * @param {string} toggledValue
- * @param {*[]} options
- * @return {[string[], boolean]} the new list of checked items, and a flag that is true if the item was removed
+ * Where an option in a checkbox group is marked as exclusive, this handles
+ * unchecking other options as appropriate to maintain that property:
+ * - If an exclusive option is checked, then all other options are cleared
+ * - If a non-exclusive option is checked, then any exclusive checkboxes are
+ *   cleared
+ *
+ * @param {string[]} values      The values checked for the checkbox group
+ * @param {string} toggledValue  The value that has been selected/deselected
+ * @param {*[]} options          The list of options in the checkbox group
+ * @return {[string[], boolean]} the new list of checked items, and a flag that
+ *                               is true if the item was removed.
  *
  */
 function calculateNewCheckboxValues(values, toggledValue, options) {

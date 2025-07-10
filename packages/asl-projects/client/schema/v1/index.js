@@ -1697,7 +1697,7 @@ export default () => {
                 {
                   name: 'maximum-animals',
                   label: 'What is the maximum number of {{ values.value }} that will be used in this protocol?',
-                  hint: 'Please only enter numerals, for example 40',
+                  hint: 'Only enter numerals, for example 40',
                   type: 'text',
                   inputMode: 'numeric',
                   className: 'govuk-input--width-5'
@@ -1786,7 +1786,7 @@ Select each that applies`,
                         {
                           name: 'maximum-times-used',
                           label: 'What is the maximum number of times an animal will be used in this protocol?',
-                          hint: 'Please only enter numerals, for example 40',
+                          hint: 'Only enter numerals, for example 40',
                           type: 'text',
                           inputMode: 'numeric',
                           className: 'govuk-input--width-5'
