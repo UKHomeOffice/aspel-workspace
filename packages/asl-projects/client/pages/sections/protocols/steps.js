@@ -43,11 +43,11 @@ class Step extends Component {
     this.step = createRef();
   }
 
-  removeItem = e => {
+  removeItem = async (e) => {
     e.preventDefault();
     if (window.confirm('Are you sure you want to remove this step?')) {
       if (!this.props.values.completed) {
-        this.setCompleted(true);
+        await this.setCompleted(true);
       }
       this.props.updateReusable(false);
       this.props.removeItem();
