@@ -7,7 +7,7 @@ import {
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
-import { NVSRole, NACWORole } from '../../../../common/components/role-change-summary';
+import { NVSRole, NACWORole, NamedPersonRoleDetails } from '../../../../common/components/role-change-summary';
 
 const selector = ({ static: { establishment, profile, remainingRoles, allowedActions, openTask, errors } }) => ({ establishment, profile, remainingRoles, allowedActions, openTask, errors });
 
@@ -25,7 +25,10 @@ export default function Role({ task, values, schema }) {
       task.data.action === 'create' && (
         <StickyNavAnchor id="role" key="role">
           <h2><Snippet>sticky-nav.role</Snippet></h2>
-          { taskData.type === 'nacwo' && <NACWORole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} /> }
+          <dl>
+            <NamedPersonRoleDetails roleType={taskData.type} profile={profile} />
+            { taskData.type === 'nacwo' && <NACWORole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} /> }
+          </dl>
 
           <dl className="inline">
             {
