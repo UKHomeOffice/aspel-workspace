@@ -17,7 +17,7 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run install:clean"
+args = "npm install --registry=https://registry.npmjs.org/ --ignore-scripts"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
@@ -135,6 +135,23 @@ args = "npm run install:clean"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run build"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+
+[[workflows.workflow]]
+name = "Clean Install & Start"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "rm -f package-lock.json"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --registry=https://registry.npmjs.org/ --ignore-scripts"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
