@@ -65,7 +65,7 @@ export default function Project({ task }) {
 
   function getRopDue() {
     // Draft projects don't need to submit rops
-    if (!task.data.rops || !project.issueDate) {
+    if (task.data.rops === undefined || !project.issueDate) {
       return '';
     }
 
