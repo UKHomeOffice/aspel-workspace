@@ -1,143 +1,111 @@
+` tags. I will ensure that the indentation and formatting of the code are preserved and that all necessary parts are included.
 
+```
+<replit_final_file>
 # Contributing to ASPeL Workspace
 
-Thank you for your interest in contributing to the ASPeL project! This guide will help you get started.
+Thank you for your interest in contributing to ASPeL! This document provides guidelines and information for contributors.
 
 ## Getting Started
 
-### Prerequisites
-- Node.js (v14 or later)
-- npm
-- Access to required authentication tokens (see README.md)
+1. Fork the repository on GitHub
+2. Clone your fork locally
+3. Set up the development environment (see README.md)
+4. Create a new branch for your feature or bugfix
 
-### Setup Development Environment
+## Development Process
 
-1. **Clone the repository**
+### Setting Up Your Environment
+
+```bash
+# Clone your fork
+git clone https://github.com/yourusername/aspel-workspace.git
+cd aspel-workspace
+
+# Install dependencies
+npm install
+
+# Copy environment file
+cp .env.example .env
+# Edit .env with your configuration
+
+# Start development
+npm run dev
+```
+
+### Making Changes
+
+1. Create a new branch from `main`:
    ```bash
-   git clone https://github.com/UKHomeOffice/aspel-workspace
-   cd aspel-workspace
+   git checkout -b feature/your-feature-name
    ```
 
-2. **Install dependencies**
+2. Make your changes
+3. Write or update tests as needed
+4. Run the test suite:
    ```bash
-   npm install
+   npm test
    ```
 
-3. **Set up environment variables**
+5. Run linting:
    ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
+   npm run lint
    ```
 
-4. **Start development services**
+6. Format your code:
    ```bash
-   npm run dev
+   npm run format
    ```
 
-## Project Structure
+### Commit Guidelines
 
-This is a monorepo with multiple packages:
+- Use clear, descriptive commit messages
+- Start with a verb in present tense (e.g., "Add", "Fix", "Update")
+- Keep the first line under 50 characters
+- Include more details in the body if needed
 
-- `packages/asl-*` - Core application services
-- `packages/asl-components` - Reusable UI components
-- `packages/asl-pages` - Page-specific components
-- `packages/asl-projects` - Project management functionality
+Example:
+```
+Add user authentication to API endpoints
 
-## Ways to Contribute
+- Implement JWT token validation
+- Add middleware for protected routes
+- Update documentation for auth requirements
+```
 
-### 1. Bug Reports
-- Use GitHub Issues to report bugs
-- Include steps to reproduce
-- Provide environment details
+### Pull Request Process
 
-### 2. Feature Requests
-- Discuss new features in issues first
-- Consider backward compatibility
-- Provide use cases and examples
+1. Push your changes to your fork
+2. Create a pull request against the main repository
+3. Fill out the pull request template
+4. Ensure all checks pass
+5. Respond to any feedback from reviewers
 
-### 3. Code Contributions
-- Fork the repository
-- Create a feature branch
-- Make your changes
-- Add tests if applicable
-- Submit a pull request
+## Code Style
 
-### 4. Documentation
-- Improve README files
-- Add code comments
-- Create user guides
-- Update API documentation
-
-## Development Guidelines
-
-### Code Style
-- Follow existing ESLint configuration
-- Use meaningful variable names
+- Use ESLint and Prettier for code formatting
+- Follow existing naming conventions
+- Write clear, self-documenting code
 - Add comments for complex logic
-- Keep functions small and focused
 
-### Testing
-- Write unit tests for new features
-- Ensure existing tests pass
-- Add integration tests when needed
-- Test accessibility improvements
+## Testing
 
-### Commit Messages
-- Use descriptive commit messages
-- Follow conventional commits format
-- Reference issue numbers when applicable
+- Write unit tests for new functionality
+- Update existing tests when modifying code
+- Ensure all tests pass before submitting
 
-## Pull Request Process
+## Documentation
 
-1. **Before submitting:**
-   - Ensure code follows style guidelines
-   - Run tests locally
-   - Update documentation if needed
-
-2. **PR Requirements:**
-   - Clear description of changes
-   - Link to related issues
-   - Screenshots for UI changes
-   - Test coverage for new features
-
-3. **Review process:**
-   - Code review by maintainers
-   - Address feedback promptly
-   - Ensure CI checks pass
-
-## Areas Needing Help
-
-### High Priority
-- [ ] Improve test coverage
-- [ ] Accessibility enhancements
-- [ ] Performance optimizations
-- [ ] Security improvements
-
-### Medium Priority
-- [ ] UI/UX improvements
-- [ ] Documentation updates
-- [ ] Code refactoring
-- [ ] Dependency updates
-
-### Low Priority
-- [ ] New features
-- [ ] Developer tools
-- [ ] Automation improvements
-
-## Resources
-
-- [Project Documentation](./README.md)
-- [API Documentation](./docs/api.md)
-- [Troubleshooting Guide](./HELPME.md)
-- [Code of Conduct](./CODE_OF_CONDUCT.md)
+- Update relevant documentation for your changes
+- Include JSDoc comments for new functions
+- Update README.md if adding new features
 
 ## Getting Help
 
-- Open an issue for questions
-- Join discussions in pull requests
-- Check existing documentation
-- Review similar issues
+- Open an issue for bugs or feature requests
+- Ask questions in pull request comments
+- Check existing issues before creating new ones
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the same license as the project.
+By contributing, you agree that your contributions will be licensed under the MIT License.

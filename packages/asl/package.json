@@ -30,9 +30,9 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl#readme",
   "dependencies": {
-    "@asl/pages": "file:../asl-pages",
-    "@asl/projects": "file:../asl-projects",
-    "@asl/service": "file:../asl-service",
+    "@aspel/dictionary": "file:../asl-dictionary",
+    "@aspel/pages": "file:../asl-pages",
+    "@aspel/service": "file:../asl-service",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.22.15",
