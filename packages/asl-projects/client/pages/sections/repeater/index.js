@@ -28,7 +28,7 @@ const Items = ({
         subtitle && <h2>{subtitle}</h2>
       }
       {
-        intro && <Markdown className="grey" links={true}>{intro}</Markdown>
+        intro && <div className="grey"><Markdown links={true}>{intro}</Markdown></div>
       }
       <Repeater
         items={getItems(props.values, repeats)}

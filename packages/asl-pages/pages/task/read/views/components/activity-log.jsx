@@ -318,7 +318,9 @@ function Comment({ changedBy, comment }) {
           <p className="author">{`${changedBy.firstName} ${changedBy.lastName} commented:`}</p>
         )}
         <Inset>
-          <Markdown className="content">{comment}</Markdown>
+          <div className="content">
+            <Markdown>{comment}</Markdown>
+          </div>
         </Inset>
       </div>
     )

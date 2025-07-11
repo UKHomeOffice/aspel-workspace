@@ -1,53 +1,38 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
 
-class BackToTop extends Component {
-    constructor(props) {
-        super(props);
+const BackToTop = ({ showAt = 400 }) => {
+    const [isVisible, setIsVisible] = useState(false);
 
-        this.state = {
-            isVisible: this.props.isVisible || false
-        };
-
-        this.handleScroll = this.handleScroll.bind(this);
-    }
-
-    componentDidMount() {
-        window.addEventListener('scroll', this.handleScroll, true);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('scroll', this.handleScroll);
-    }
-
-    handleScroll() {
-        if (!this.state.isVisible && window.pageYOffset > this.props.showAt) {
-            this.setState({ isVisible: true });
-        } else if (this.state.isVisible && window.pageYOffset < this.props.showAt) {
-            this.setState({ isVisible: false });
+    const handleScroll = () => {
+        if (!isVisible && window.scrollY > showAt) {
+            setIsVisible(true);
+        } else if (isVisible && window.scrollY < showAt) {
+            setIsVisible(false);
         }
-    }
+    };
 
-    scrollToTop(e) {
+    const scrollToTop = (e) => {
         e.preventDefault();
         window.scrollTo({
             top: 0,
             left: 0,
             behavior: 'smooth'
         });
-    }
+    };
 
-    render() {
-        return (
-            <div className={classnames('back-to-top', { hidden: !this.state.isVisible })} >
-                <p><a href="#" onClick={this.scrollToTop}>Back to top</a></p>
-            </div>
-        );
-    }
-}
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll, true);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [isVisible, showAt]);
 
-BackToTop.defaultProps = {
-    showAt: 400
+    return (
+        <div className={classnames('back-to-top', { hidden: !isVisible })}>
+            <p><a href="#" onClick={scrollToTop}>Back to top</a></p>
+        </div>
+    );
 };
 
 export default BackToTop;

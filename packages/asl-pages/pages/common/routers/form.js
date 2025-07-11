@@ -228,7 +228,7 @@ const trim = (value) => {
     // split input into lines, trim each one, and then rejoin
     return value
       .split('\n')
-      .map((s) => s.trim())
+      .map(s => s.trim())
       .join('\n')
       .trim();
   } else if (Array.isArray(value)) {

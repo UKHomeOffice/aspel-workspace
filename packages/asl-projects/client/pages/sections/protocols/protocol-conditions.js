@@ -6,17 +6,17 @@ class Content extends Component {
   render() {
     return (
       <Fragment>
-        <div className="purple-inset">
-          <Markdown className="condition-text">{conditions.anaesthesia}</Markdown>
+        <div className="purple-inset condition-text">
+          <Markdown>{conditions.anaesthesia}</Markdown>
         </div>
-        <div className="purple-inset">
-          <Markdown className="condition-text">{conditions.generalAnaesthesia}</Markdown>
+        <div className="purple-inset condition-text">
+          <Markdown>{conditions.generalAnaesthesia}</Markdown>
         </div>
-        <div className="purple-inset">
-          <Markdown className="condition-text">{conditions.surgery}</Markdown>
+        <div className="purple-inset condition-text">
+          <Markdown>{conditions.surgery}</Markdown>
         </div>
-        <div className="purple-inset">
-          <Markdown className="condition-text">{conditions.administration}</Markdown>
+        <div className="purple-inset condition-text">
+          <Markdown>{conditions.administration}</Markdown>
         </div>
       </Fragment>
     );

@@ -1,29 +1,19 @@
-/* eslint camelcase: ["error", {allow: ["^ic_"]}] */
 import React, { Component, Fragment } from 'react';
 import classnames from 'classnames';
 import {
-  ic_format_bold,
-  ic_format_italic,
-  ic_format_underlined,
-  ic_code,
-  ic_looks_one,
-  ic_looks_two,
-  ic_format_quote,
-  ic_format_list_numbered,
-  ic_format_list_bulleted,
-  ic_image,
-  ic_format_clear
-} from 'react-icons-kit/md/';
-import {
-  superscript,
-  subscript,
-  indent,
-  outdent
-} from 'react-icons-kit/fa/';
-import { table2 } from 'react-icons-kit/icomoon';
-import Icon from 'react-icons-kit';
-
-const SizedIcon = props => <Icon size="24" {...props} />;
+  MdFormatBold,
+  MdFormatItalic,
+  MdFormatUnderlined,
+  MdCode,
+  MdLooksOne,
+  MdLooksTwo,
+  MdFormatQuote,
+  MdFormatListNumbered,
+  MdFormatListBulleted,
+  MdImage,
+  MdFormatClear
+} from 'react-icons/md';
+import { FaSuperscript, FaSubscript, FaIndent, FaOutdent, FaTable } from 'react-icons/fa';
 
 class FormatToolbar extends Component {
 
@@ -32,8 +22,8 @@ class FormatToolbar extends Component {
     return value.activeMarks.some(mark => mark.type === type);
   }
 
-  renderBlockButton = (type, icon, tooltip) => {
-    let isActive = this.props.query('hasBlock', type);
+  renderBlockButton = (type, IconComponent, tooltip) => {
+    const isActive = this.props.query('hasBlock', type);
 
     if (type === 'input-file') {
       return (
@@ -48,7 +38,7 @@ class FormatToolbar extends Component {
             onChange={this.onClickImage}
             aria-label={tooltip}
           />
-          <SizedIcon icon={icon} />
+          <IconComponent size={24} />
         </button>
       );
     }
@@ -60,12 +50,12 @@ class FormatToolbar extends Component {
         title={tooltip}
         aria-label={tooltip}
       >
-        <SizedIcon icon={icon} />
+        <IconComponent size={24} />
       </button>
     );
   }
 
-  renderMarkButton = (type, icon, tooltip) => {
+  renderMarkButton = (type, IconComponent, tooltip) => {
     const isActive = this.hasMark(type);
     return (
       <button
@@ -74,7 +64,7 @@ class FormatToolbar extends Component {
         title={tooltip}
         aria-label={tooltip}
       >
-        <SizedIcon icon={icon} />
+        <IconComponent size={24} />
       </button>
     );
   }
@@ -117,7 +107,7 @@ class FormatToolbar extends Component {
           title="Insert table"
           aria-label="Insert table"
         >
-          <SizedIcon icon={table2} />
+          <FaTable  size={24} />
         </button>
       );
   }
@@ -138,7 +128,7 @@ class FormatToolbar extends Component {
           title={toggleBulletedLabel}
           aria-label={toggleBulletedLabel}
         >
-          <SizedIcon icon={ic_format_list_bulleted} />
+          <MdFormatListBulleted size={24} />
         </button>
         <button
           className={classnames('tooltip-icon-button', { active: inNumbered })}
@@ -146,7 +136,7 @@ class FormatToolbar extends Component {
           title={toggleNumberedLabel}
           aria-label={toggleNumberedLabel}
         >
-          <SizedIcon icon={ic_format_list_numbered} />
+          <MdFormatListNumbered size={24} />
         </button>
         <button
           className="tooltip-icon-button"
@@ -155,7 +145,7 @@ class FormatToolbar extends Component {
           title="Decrease list indent"
           aria-label="Decrease list indent"
         >
-          <SizedIcon icon={outdent} />
+          <FaOutdent size={24} />
         </button>
         <button
           className="tooltip-icon-button"
@@ -164,7 +154,7 @@ class FormatToolbar extends Component {
           title="Increase list indent"
           aria-label="Increase list indent"
         >
-          <SizedIcon icon={indent} />
+          <FaIndent size={24} />
         </button>
       </Fragment>
     );
@@ -179,29 +169,31 @@ class FormatToolbar extends Component {
   }
 
   renderClearFormattingButton() {
-    return <button
-      className="tooltip-icon-button"
-      onMouseDown={this.clearFormatting}
-      title="Clear formatting"
-      aria-label="Clear formatting"
-    >
-      <SizedIcon icon={ic_format_clear} />
-    </button>;
+    return (
+      <button
+        className="tooltip-icon-button"
+        onMouseDown={this.clearFormatting}
+        title="Clear formatting"
+        aria-label="Clear formatting"
+      >
+        <MdFormatClear size={24} />
+      </button>
+    );
   }
 
   render () {
     return (
       <div className="format-toolbar">
-        {this.renderMarkButton('bold', ic_format_bold, 'Bold')}
-        {this.renderMarkButton('italic', ic_format_italic, 'Italic')}
-        {this.renderMarkButton('underlined', ic_format_underlined, 'Underlined')}
-        {this.renderMarkButton('code', ic_code, 'Code')}
-        {this.renderBlockButton('heading-one', ic_looks_one, 'Heading 1')}
-        {this.renderBlockButton('heading-two', ic_looks_two, 'Heading 2')}
-        {this.renderBlockButton('block-quote', ic_format_quote, 'Block quote')}
-        {this.renderBlockButton('input-file', ic_image, 'Insert image')}
-        {this.renderMarkButton('superscript', superscript, 'Superscript')}
-        {this.renderMarkButton('subscript', subscript, 'Subscript')}
+        {this.renderMarkButton('bold', MdFormatBold, 'Bold')}
+        {this.renderMarkButton('italic', MdFormatItalic, 'Italic')}
+        {this.renderMarkButton('underlined', MdFormatUnderlined, 'Underlined')}
+        {this.renderMarkButton('code', MdCode, 'Code')}
+        {this.renderBlockButton('heading-one', MdLooksOne, 'Heading 1')}
+        {this.renderBlockButton('heading-two', MdLooksTwo, 'Heading 2')}
+        {this.renderBlockButton('block-quote', MdFormatQuote, 'Block quote')}
+        {this.renderBlockButton('input-file', MdImage, 'Insert image')}
+        {this.renderMarkButton('superscript', FaSuperscript, 'Superscript')}
+        {this.renderMarkButton('subscript', FaSubscript, 'Subscript')}
         {this.renderListToolbar()}
         {this.renderClearFormattingButton()}
         {this.renderTableToolbar()}
