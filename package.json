@@ -9,10 +9,11 @@
     "lint:fix": "npm run lint:fix --workspaces",
     "build": "npm run build --workspaces",
     "dev": "concurrently \"npm run dev -w asl\" \"npm run dev -w asl-internal-ui\"",
+    "start": "npm run dev",
     "install:env": "export $(cat .env | xargs) && npm install",
     "reset": "rm -rf node_modules && rm -rf packages/*/node_modules && npm install",
     "prepare": "husky install || true",
-    "security:audit": "npm audit --audit-level=high",
+    "security:audit": "npm audit --audit-level=moderate",
     "security:fix": "npm audit fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -44,8 +45,10 @@
   "workspaces": [
     "packages/*"
   ],
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
   "devDependencies": {
-    "concurrently": "^8.2.2",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
     "eslint": "^8.56.0",
