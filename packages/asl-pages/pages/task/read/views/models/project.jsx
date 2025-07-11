@@ -8,8 +8,8 @@ import EstablishmentLinks from '../components/establishment-links';
 
 // need unconnected ReviewFields component and not default
 import { ReviewFields } from '@asl/projects/client/components/review-fields';
-import { format } from 'date-fns';
-import { dateFormat } from '../../../../../constants';
+import { format, getYear, isAfter, subMilliseconds } from 'date-fns';
+import { dateFormat, ropsYears } from '../../../../../constants';
 import PplDeclarations from '../components/ppl-declarations';
 import experience from '../../../../project/update-licence-holder/schema/experience-fields';
 import { schema as projectSchema } from '../../../../project/schema';
@@ -61,6 +61,30 @@ export default function Project({ task }) {
   const isCorrectVersion = get(project, 'versions[0].id') === get(task, 'data.data.version');
   const isRejected = task.status === 'rejected';
   const canReopenTask = isRejected && isCorrectVersion && allowedActions.includes('project.recoverTask');
+  const ropDue = getRopDue();
+
+  function getRopDue() {
+    let yearsString = '';
+    const grantedYear = (project.issueDate && getYear(project.issueDate));
+    const endDate = project.revocationDate || project.expiryDate;
+    const rops = task.data.rops;
+    const today = new Date();
+
+    const years = ropsYears.filter(year => {
+      const firstFeb = subMilliseconds(new Date(`${year}-02-01`), 1);
+      return ((!grantedYear || grantedYear <= year) && ((endDate && isAfter(today, endDate)) || isAfter(today, firstFeb)));
+    });
+
+    years.reverse().forEach(year => {
+      if (!rops.find(ar => ar.year === year)) {
+        if (yearsString) {
+          yearsString += ', ';
+        }
+        yearsString += year;
+      }
+    });
+    return yearsString;
+  }
 
   function onReopen(e) {
     if (window.confirm('Are you sure you want to reopen this task?')) {
@@ -149,7 +173,15 @@ export default function Project({ task }) {
         </StickyNavAnchor>
       )
     ),
-
+    (
+      task.data.action === 'transfer' && isAsru && project.status !== 'inactive' && ropDue && (
+        <StickyNavAnchor id="establishment" key="establishment">
+          <Warning>
+            <Snippet years={ropDue}>warning.establishment.transferRopDue</Snippet>
+          </Warning>
+        </StickyNavAnchor>
+      )
+    ),
     (
       (task.data.action === 'grant' || task.data.action === 'transfer') && (
         <StickyNavAnchor id="submitted-version" key="submitted-version">
