@@ -80,7 +80,7 @@ export default function Project({ task }) {
       // Are rops for the year overdue?
       .filter(year => year < currentYear || (year === currentYear && thisYearsRopsOverdue))
       // Is the rop for this year not submitted
-      .filter(year => !task.data.rops.find(ar => ar.year === year))
+      .filter(year => !task.data.rops?.find(ar => ar.year === year))
       .reverse()
       .join(', ');
   }
