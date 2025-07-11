@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, {Fragment, useMemo, useState} from 'react';
 import { StaticRouter } from 'react-router';
 import { useSelector, shallowEqual } from 'react-redux';
 import pick from 'lodash/pick';
@@ -8,7 +8,7 @@ import EstablishmentLinks from '../components/establishment-links';
 
 // need unconnected ReviewFields component and not default
 import { ReviewFields } from '@asl/projects/client/components/review-fields';
-import { format, getYear, isAfter, subMilliseconds } from 'date-fns';
+import { format, getYear, isBefore } from 'date-fns';
 import { dateFormat, ropsYears } from '../../../../../constants';
 import PplDeclarations from '../components/ppl-declarations';
 import experience from '../../../../project/update-licence-holder/schema/experience-fields';
@@ -61,29 +61,28 @@ export default function Project({ task }) {
   const isCorrectVersion = get(project, 'versions[0].id') === get(task, 'data.data.version');
   const isRejected = task.status === 'rejected';
   const canReopenTask = isRejected && isCorrectVersion && allowedActions.includes('project.recoverTask');
-  const ropDue = getRopDue();
+  const ropDue = useMemo(getRopDue, [project, task.data.rops]);
 
   function getRopDue() {
-    let yearsString = '';
-    const grantedYear = (project.issueDate && getYear(project.issueDate));
-    const endDate = project.revocationDate || project.expiryDate;
-    const rops = task.data.rops;
-    const today = new Date();
+    // Draft projects don't need to submit rops
+    if (!project.issueDate) {
+      return '';
+    }
 
-    const years = ropsYears.filter(year => {
-      const firstFeb = subMilliseconds(new Date(`${year}-02-01`), 1);
-      return ((!grantedYear || grantedYear <= year) && ((endDate && isAfter(today, endDate)) || isAfter(today, firstFeb)));
-    });
+    const grantedYear = getYear(project.issueDate);
+    const endDate = project.revocationDate ?? project.expiryDate;
+    const currentYear = getYear(new Date());
+    const thisYearsRopsOverdue = !isBefore(new Date(`${currentYear}-02-01`), new Date());
 
-    years.reverse().forEach(year => {
-      if (!rops.find(ar => ar.year === year)) {
-        if (yearsString) {
-          yearsString += ', ';
-        }
-        yearsString += year;
-      }
-    });
-    return yearsString;
+    return ropsYears
+      // Was the project active?
+      .filter(year => grantedYear <= year && (endDate ? getYear(endDate) : true))
+      // Are rops for the year overdue?
+      .filter(year => year < currentYear || (year === currentYear && thisYearsRopsOverdue))
+      // Is the rop for this year not submitted
+      .filter(year => !task.data.rops.find(ar => ar.year === year))
+      .reverse()
+      .join(', ');
   }
 
   function onReopen(e) {
