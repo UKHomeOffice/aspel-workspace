@@ -103,7 +103,15 @@ This is a monorepo containing multiple packages organized into distinct layers:
 - PostgreSQL database
 - Redis (for caching and sessions)
 
-### Installation
+### Quick Start (Replit)
+
+1. Click the **Run** button to start the development environment
+2. If you encounter issues, run the clean install script:
+```bash
+bash scripts/clean-install.sh
+```
+
+### Local Installation
 
 1. Clone the repository:
 ```bash
@@ -113,7 +121,7 @@ cd aspel-workspace
 
 2. Install dependencies:
 ```bash
-npm install
+npm install --registry=https://registry.npmjs.org/
 ```
 
 3. Set up environment variables:
@@ -125,6 +133,16 @@ cp .env.example .env
 4. Start the development environment:
 ```bash
 npm run dev
+```
+
+### Troubleshooting
+
+If you encounter npm registry issues:
+```bash
+npm config set registry https://registry.npmjs.org/
+npm cache clean --force
+rm -rf node_modules package-lock.json
+npm install
 ```
 
 ## Development

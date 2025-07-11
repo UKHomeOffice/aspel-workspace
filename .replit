@@ -35,3 +35,29 @@ args = "npm install --registry=https://registry.npmjs.org/"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run build"
+
+[[workflows.workflow]]
+name = "Build All Packages"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --registry=https://registry.npmjs.org/"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow]]
+name = "Run Tests"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --registry=https://registry.npmjs.org/"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm test"
