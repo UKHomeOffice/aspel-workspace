@@ -449,7 +449,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
       const reusableSteps = steps
         .filter(step => step.reusable && (step.completed || step.saved))
         .map(step => cloneDeep({
-          ...step,
+          ...cloneDeep(step),
           id: step.reusableStepId || step.id,
           saved: true
         }));
