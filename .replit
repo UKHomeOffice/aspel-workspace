@@ -17,7 +17,7 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm install --registry=https://registry.npmjs.org/ --ignore-scripts"
+args = "npm install --registry=https://registry.npmjs.org/ --ignore-scripts || npm install --force"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
@@ -61,3 +61,12 @@ args = "npm install --registry=https://registry.npmjs.org/"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm test"
+
+[[workflows.workflow]]
+name = "Start Main App"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm start"
