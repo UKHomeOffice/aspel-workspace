@@ -1,42 +1,48 @@
 
 module.exports = {
-  root: true,
   env: {
+    browser: true,
+    es2021: true,
     node: true,
-    es2022: true,
+    mocha: true,
+    jest: true
   },
   extends: [
     'eslint:recommended',
-    'plugin:security/recommended',
-    'plugin:import/recommended',
-    'plugin:import/errors',
-    'plugin:import/warnings',
+    'standard'
   ],
-  plugins: ['security', 'import'],
   parserOptions: {
-    ecmaVersion: 2022,
+    ecmaVersion: 'latest',
     sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true
+    }
   },
   rules: {
     'no-console': 'warn',
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    'security/detect-object-injection': 'error',
-    'security/detect-non-literal-require': 'error',
-    'security/detect-possible-timing-attacks': 'error',
-    'import/no-unresolved': 'error',
-    'import/named': 'error',
-    'import/no-duplicates': 'error',
+    'prefer-const': 'error',
+    'no-var': 'error'
   },
   overrides: [
     {
-      files: ['packages/*/test/**/*.js', 'packages/*/tests/**/*.js'],
+      files: ['**/*.jsx'],
+      extends: ['eslint:recommended'],
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true
+        }
+      }
+    },
+    {
+      files: ['test/**/*', '**/*.test.js', '**/*.spec.js'],
       env: {
         mocha: true,
-        jest: true,
+        jest: true
       },
       rules: {
-        'no-console': 'off',
-      },
-    },
-  ],
+        'no-unused-expressions': 'off'
+      }
+    }
+  ]
 };

@@ -17,7 +17,7 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm install --registry=https://registry.npmjs.org/ --ignore-scripts || npm install --force"
+args = "npm run install:clean"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
@@ -105,3 +105,37 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "node index.js"
+
+[[workflows.workflow]]
+name = "Quick Start"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --ignore-scripts --no-audit"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node packages/asl/index.js"
+
+[[workflows.workflow]]
+name = "Setup & Fix"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run fix-deps"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run install:clean"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
