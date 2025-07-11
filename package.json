@@ -1,24 +1,47 @@
 {
-  "name": "@ukhomeoffice/aspel_workspace",
-  "private": true,
+  "name": "aspel-workspace",
+  "version": "1.0.0",
+  "description": "Animal Science Procedures e-Licensing (ASPeL) - A comprehensive monorepo for managing animal research licenses and procedures",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "lint:fix": "npm run lint:fix --workspaces",
+    "build": "npm run build --workspaces",
+    "dev": "concurrently \"npm run dev -w asl\" \"npm run dev -w asl-internal-ui\"",
+    "install:env": "export $(cat .env | xargs) && npm install",
+    "reset": "rm -rf node_modules && rm -rf packages/*/node_modules && npm install",
+    "prepare": "husky install || true"
+  },
+  "keywords": [
+    "animal-research",
+    "licensing",
+    "government",
+    "compliance",
+    "monorepo",
+    "nodejs",
+    "react"
+  ],
+  "author": "ASPeL Development Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UKHomeOffice/aspel-workspace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/UKHomeOffice/aspel-workspace/issues"
+  },
+  "homepage": "https://github.com/UKHomeOffice/aspel-workspace#readme",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
   "workspaces": [
     "packages/*"
   ],
-  "version": "1.0.3",
-  "scripts": {
-    "install:env": "set -o allexport && source .env && set +o allexport && npm install",
-    "dev": "sh -c 'cmd=$(source .env && echo ${DEV_SERVICES:-\"asl asl-internal-ui\"} | xargs -n1 -I {} printf \"\\\"npm run dev -w %s\\\" \" {}); eval concurrently --kill-others-on-fail $cmd'",
-    "reset": "find . -type d -name \"node_modules\" -exec rm -rf {} +",
-    "test": "node --test $(find . -type f -name \"*.test.js\" ! -path \"./node_modules/*\" ! -path \"./packages/*\")",
-    "build": "bash scripts/build-aspel-containers.sh"
-  },
   "devDependencies": {
-    "concurrently": "^9.1.2",
-    "proxyquire": "^2.1.3",
-    "yaml": "^2.7.1"
-  },
-  "overrides": {
-    "node-fetch": "^2.6.11",
-    "d3-color": "^3.1.0"
+    "concurrently": "^7.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.0"
   }
 }

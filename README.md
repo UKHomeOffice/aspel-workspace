@@ -1,6 +1,21 @@
 # ASPeL Workspace
 
-Monorepo for the ASPeL project. This repository uses NPM Workspaces to manage multiple packages efficiently and `concurrently` to run scripts across these packages simultaneously.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen)](https://nodejs.org/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
+Animal Science Procedures e-Licensing (ASPeL) - A comprehensive monorepo for managing animal research licenses and procedures in compliance with UK regulations.
+
+This repository uses NPM Workspaces to manage multiple packages efficiently and provides a complete solution for animal research licensing workflow management.
+
+## 🌟 Features
+
+- **Comprehensive License Management**: Handle all types of animal research licenses
+- **Workflow Automation**: Streamlined approval and review processes
+- **Real-time Notifications**: Keep stakeholders informed of license status changes
+- **Document Management**: Secure storage and versioning of license documents
+- **Reporting & Analytics**: Detailed insights into licensing metrics
+- **Multi-tenant Architecture**: Support for multiple research establishments
 
 ## Table of Contents
 
@@ -166,9 +181,41 @@ This second command will only run scripts declared in the root `package.json`, n
 
 See the [HELPME.md](HELPME.md) file.
 
-## Tips and Tricks
+## 🤝 Contributing
 
-### ESLint
+We welcome contributions from the community! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
+
+### Quick Start for Contributors
+
+1. **Setup Development Environment**
+   ```bash
+   git clone https://github.com/UKHomeOffice/aspel-workspace.git
+   cd aspel-workspace
+   ./scripts/setup-dev.sh
+   ```
+
+2. **Make Your Changes**
+   - Create a feature branch: `git checkout -b feature/your-feature-name`
+   - Make your changes following our coding standards
+   - Add tests for new functionality
+
+3. **Submit Your Contribution**
+   - Run tests: `npm test`
+   - Run linting: `npm run lint`
+   - Commit your changes: `git commit -m "feat: add your feature description"`
+   - Push to your fork and submit a pull request
+
+### Code of Conduct
+
+This project adheres to our [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔧 Tips and Tricks
+
+### ESLint Configuration
 
 ESLint relative extends don't work in both the workspace and CI/CD at the same time, as the installation path changes
 between the two. The rules have been moved to `@ukhomeoffice/eslint-config-asl`, so if a module hasn't been updated yet
@@ -179,6 +226,18 @@ extends:
   - "@ukhomeoffice/asl"
 ```
 
-You can get ESLint feedback and automatic fixes as you work in IntelliJ. Go to IntelliJ settings > Languages &
-Frameworks > JavaScript > ESLint. Change the radio group to "Automatic ESLint configuration", and check
-"Run eslint --fix on save".
+### IDE Setup
+
+For VS Code, install the recommended extensions:
+- ESLint
+- Prettier
+- GitLens
+
+For IntelliJ, go to settings > Languages & Frameworks > JavaScript > ESLint. Change to "Automatic ESLint configuration" and check "Run eslint --fix on save".
+
+## 🆘 Support
+
+- 📖 Check the [Documentation](docs/)
+- 🐛 Report bugs via [GitHub Issues](https://github.com/UKHomeOffice/aspel-workspace/issues)
+- 💬 Join our [Discussions](https://github.com/UKHomeOffice/aspel-workspace/discussions)
+- 📧 Email us at support@aspel-project.org
