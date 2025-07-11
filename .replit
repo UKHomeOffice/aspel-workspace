@@ -17,7 +17,7 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run install:clean"
+args = "npm install --registry=https://registry.npmjs.org/ --ignore-scripts"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
