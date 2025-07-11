@@ -37,7 +37,8 @@ module.exports = {
     establishment: {
       move: 'Once the transfer to the new primary establishment is approved, all returns of procedures for this licence (submitted or in progress) will move to the new establishment.',
       downloadLabel: 'Download any returns',
-      suffix: 'for your records (opens in a new tab).'
+      suffix: 'for your records (opens in a new tab).',
+      transferRopDue: 'No returns of procedures have been submitted for {{years}}'
     }
   },
   status: {
