@@ -1,0 +1,18 @@
+
+# Global owners
+* @UKHomeOffice/asl-devs
+
+# Package-specific owners
+/packages/asl-components/ @UKHomeOffice/asl-frontend-devs
+/packages/asl-schema/ @UKHomeOffice/asl-backend-devs
+/packages/asl-workflow/ @UKHomeOffice/asl-backend-devs
+
+# Documentation
+/docs/ @UKHomeOffice/asl-devs
+README.md @UKHomeOffice/asl-devs
+CONTRIBUTING.md @UKHomeOffice/asl-devs
+
+# Security and configuration
+.github/workflows/ @UKHomeOffice/asl-devs
+.github/SECURITY.md @UKHomeOffice/asl-devs
+package.json @UKHomeOffice/asl-devs

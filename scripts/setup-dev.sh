@@ -1,9 +1,15 @@
 
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 echo "🚀 Setting up ASPeL Workspace for development..."
+
+# Check if running as root
+if [[ $EUID -eq 0 ]]; then
+   echo "❌ This script should not be run as root"
+   exit 1
+fi
 
 # Check if Node.js is installed
 if ! command -v node &> /dev/null; then

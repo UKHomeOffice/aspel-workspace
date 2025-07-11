@@ -11,7 +11,12 @@
     "dev": "concurrently \"npm run dev -w asl\" \"npm run dev -w asl-internal-ui\"",
     "install:env": "export $(cat .env | xargs) && npm install",
     "reset": "rm -rf node_modules && rm -rf packages/*/node_modules && npm install",
-    "prepare": "husky install || true"
+    "prepare": "husky install || true",
+    "security:audit": "npm audit --audit-level=high",
+    "security:fix": "npm audit fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "validate": "npm run lint && npm run format:check && npm run security:audit"
   },
   "keywords": [
     "animal-research",
@@ -40,8 +45,10 @@
     "packages/*"
   ],
   "devDependencies": {
-    "concurrently": "^7.6.0",
+    "concurrently": "^8.2.2",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.0"
+    "lint-staged": "^13.2.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1"
   }
 }
