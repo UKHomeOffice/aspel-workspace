@@ -3,7 +3,8 @@ import { useSelector, shallowEqual } from 'react-redux';
 import {
   StickyNavAnchor,
   Snippet,
-  Link, Conditions
+  Link, Conditions,
+  TrainingSummary
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
@@ -103,6 +104,11 @@ export default function Role({ task, values, schema }) {
           }
         </StickyNavAnchor>
       )
+    ),
+    (
+      <StickyNavAnchor id="trainingRecord" key="trainingRecord">
+        <TrainingSummary certificates={profile.certificates} />
+      </StickyNavAnchor>
     ),
     (
       <StickyNavAnchor id="conditions" key="conditions">
