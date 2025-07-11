@@ -9,6 +9,7 @@ import RAPlaybackHint from './ra-playback-hint';
 import { Markdown } from '@ukhomeoffice/asl-components';
 import ErrorBoundary from './error-boundary';
 import classnames from 'classnames';
+import Mustache from 'mustache';
 
 class Review extends React.Component {
 
@@ -33,6 +34,9 @@ class Review extends React.Component {
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
     } else if (hint && !React.isValidElement(hint)) {
+      if(typeof hint === 'string') {
+        hint = Mustache.render(hint, this.props);
+      }
       hint = <Markdown links={true} paragraphProps={{ className: 'grey' }}>{hint}</Markdown>;
     } else if (hint) {
       hint = <p className="grey">{hint}</p>;
@@ -49,10 +53,12 @@ class Review extends React.Component {
       return <Comments field={`${this.props.prefix || ''}${this.props.name}`} collapsed={!this.props.readonly} />;
     }
 
+    const displayedLabel = Mustache.render(review || label, this.props);
+
     return (
       <div className={classnames('review', this.props.className)}>
         {
-          (!isGranted || showGrantedLabel) && <h3>{review || label}</h3>
+          (!isGranted || showGrantedLabel) && <h3>{displayedLabel}</h3>
         }
         {
           showChanges && (

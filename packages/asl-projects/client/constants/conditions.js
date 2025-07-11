@@ -25,15 +25,18 @@ export default {
         {
           title: 'POLEs',
           content: 'ASRU must be notified via [ASRUPoleNotification@homeoffice.gov.uk](mailto:ASRUPoleNotification@homeoffice.gov.uk)' +
-              ' before starting any procedures at a place other than a licensed establishment (POLE) authorised under' +
-              ' this licence, in order that an inspector may be present if ASRU wishes. The minimum period of notice' +
-              ' to be given, the information to be provided, and the means of notification must be agreed in writing' +
-              ' with ASRU at least 7 days before regulated procedures at a POLE are due to start.'
+            ' before starting any procedures at a place other than a licensed establishment (POLE) authorised under' +
+            ' this licence, in order that an inspector may be present if ASRU wishes. The minimum period of notice' +
+            ' to be given, the information to be provided, and the means of notification must be agreed in writing' +
+            ' with ASRU at least 7 days before regulated procedures at a POLE are due to start.'
         }
       ]
     },
     reuse: {
-      include: protocol => some((protocol.speciesDetails || []).filter(Boolean), species => species.reuse),
+      include: protocol =>
+        (protocol?.speciesDetails ?? [])
+          .flatMap(species => species.reuse ?? [])
+          .some(value => value !== 'no'),
       type: 'authorisation',
       versions: [
         {
@@ -141,10 +144,10 @@ export default {
         {
           title: 'POLEs',
           content: 'ASRU must be notified via [ASRUPoleNotification@homeoffice.gov.uk](mailto:ASRUPoleNotification@homeoffice.gov.uk)' +
-              ' before starting any procedures at a place other than a licensed establishment (POLE) authorised under' +
-              ' this licence, in order that an inspector may be present if ASRU wishes. The minimum period of notice' +
-              ' to be given, the information to be provided, and the means of notification must be agreed in writing' +
-              ' with ASRU at least 7 days before regulated procedures at a POLE are due to start.'
+            ' before starting any procedures at a place other than a licensed establishment (POLE) authorised under' +
+            ' this licence, in order that an inspector may be present if ASRU wishes. The minimum period of notice' +
+            ' to be given, the information to be provided, and the means of notification must be agreed in writing' +
+            ' with ASRU at least 7 days before regulated procedures at a POLE are due to start.'
         }
       ]
     },
@@ -297,9 +300,9 @@ Genetically altered animals may not be re-homed.`
           title: 'Training requirement',
           requiresEditing: true,
           content: 'This licence authority will expire <<<INSERT number HERE>>> months after the initial grant date' +
-              ' unless evidence that <<INSERT name HERE>>> has successfully completed accredited training module(s)' +
-              ' <<<INSERT module codes HERE>>> is provided to' +
-              ' [ASRUEnforcement@homeoffice.gov.uk](mailto:ASRUEnforcement@homeoffice.gov.uk).'
+            ' unless evidence that <<INSERT name HERE>>> has successfully completed accredited training module(s)' +
+            ' <<<INSERT module codes HERE>>> is provided to' +
+            ' [ASRUEnforcement@homeoffice.gov.uk](mailto:ASRUEnforcement@homeoffice.gov.uk).'
         }
       ]
     },
@@ -404,8 +407,8 @@ For studies requested for other worldwide authorities, for example the US Food a
           title: 'Reporting requirement',
           requiresEditing: true,
           content: 'A report in writing to [ASRUEnforcement@homeoffice.gov.uk](mailto:ASRUEnforcement@homeoffice.gov.uk)' +
-              ' on the project shall be made by <<<INSERT date HERE>>> or after <<<INSERT number HERE>>> animals have' +
-              ' been used, whichever is the sooner. The report shall contain <<<INSERT required content of report HERE>>>.'
+            ' on the project shall be made by <<<INSERT date HERE>>> or after <<<INSERT number HERE>>> animals have' +
+            ' been used, whichever is the sooner. The report shall contain <<<INSERT required content of report HERE>>>.'
         }
       ]
     },
@@ -415,11 +418,11 @@ For studies requested for other worldwide authorities, for example the US Food a
         {
           title: 'Inspection requirement',
           content: 'The licence holder shall ensure that ASRU is notified via' +
-              ' [ASRUEnforcement@homeoffice.gov.uk](mailto:ASRUEnforcement@homeoffice.gov.uk) before regulated' +
-              ' procedures are applied at any place specified in this licence to enable an inspector to be present if' +
-              ' ASRU wishes. The minimum periods of notice to be given, the information to be provided, and the means' +
-              ' of notification shall be agreed in writing with ASRU at least 7 days before commencement of regulated' +
-              ' procedures in this project.'
+            ' [ASRUEnforcement@homeoffice.gov.uk](mailto:ASRUEnforcement@homeoffice.gov.uk) before regulated' +
+            ' procedures are applied at any place specified in this licence to enable an inspector to be present if' +
+            ' ASRU wishes. The minimum periods of notice to be given, the information to be provided, and the means' +
+            ' of notification shall be agreed in writing with ASRU at least 7 days before commencement of regulated' +
+            ' procedures in this project.'
         }
       ]
     },

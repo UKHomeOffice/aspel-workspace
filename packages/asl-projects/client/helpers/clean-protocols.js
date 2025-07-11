@@ -15,6 +15,7 @@ const establishmentsKeys = [
 const triggeringKeys = [
   'objectives',
   'species',
+  'protocols',
     ...establishmentsKeys
 ];
 
@@ -61,5 +62,16 @@ export default function cleanProtocols({ state, savedState, changed = {}, establ
       protocol.locations = intersection(protocol.locations, locations);
     }
   });
+
+  if(changed.protocols) {
+    project.protocols.forEach(protocol => {
+      protocol.speciesDetails.forEach(speciesDetail => {
+        if(!(speciesDetail.reuse || []).includes('this-protocol')) {
+          speciesDetail['maximum-times-used'] = "1";
+        }
+      })
+    })
+  }
+
   return project;
 }
