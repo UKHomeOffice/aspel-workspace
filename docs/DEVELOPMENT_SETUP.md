@@ -1,169 +1,188 @@
 
 # Development Setup Guide
 
-This guide will help you set up a complete development environment for the ASPeL workspace.
+## 🛠 Prerequisites
 
-## Quick Start
-
-### 1. Environment Setup
-```bash
-# Clone the repository
-git clone https://github.com/UKHomeOffice/aspel-workspace
-cd aspel-workspace
-
-# Install dependencies
-npm install
-
-# Copy environment template
-cp .env.example .env
-```
-
-### 2. Configure Authentication
-Edit your `.env` file with required tokens:
-```env
-GITHUB_AUTH_TOKEN=your_github_token_here
-ART_AUTH_TOKEN=your_artefactory_token_here
-```
-
-### 3. Start Development Services
-```bash
-# Start main development services
-npm run dev
-
-# Or start specific services
-npm run dev -- --services="asl asl-internal-ui"
-```
-
-## Detailed Setup
-
-### Prerequisites
-- Node.js v14+ (recommended: v18+)
-- npm v7+
+- Node.js 18.x or higher
+- PostgreSQL 13.x or higher
+- Redis 6.x or higher (for caching)
 - Git
-- Text editor (VS Code recommended)
 
-### Package-Specific Setup
+## 🚀 Quick Start (Replit)
 
-#### Frontend Development
-For UI work on `asl-components` or `asl-pages`:
+1. **Fork this Repl** and it will automatically set up the development environment
+2. **Run the setup script**:
+   ```bash
+   bash scripts/setup-dev.sh
+   ```
+3. **Start development**:
+   ```bash
+   npm run dev
+   ```
+
+## 🔧 Local Development Setup
+
+### 1. Clone and Install Dependencies
 ```bash
-# Install frontend dependencies
-npm install -w packages/asl-components
-npm install -w packages/asl-pages
-
-# Start development server
-npm run dev -w packages/asl-components
+git clone <your-fork-url>
+cd aspel-workspace
+npm install --registry=https://registry.npmjs.org/
 ```
 
-#### Backend Development
-For API work on `asl-internal-api` or `asl-public-api`:
+### 2. Environment Configuration
 ```bash
-# Install backend dependencies
-npm install -w packages/asl-internal-api
-
-# Start with hot reload
-npm run dev -w packages/asl-internal-api
+cp .env.example .env
+# Edit .env with your configuration
 ```
 
-### Database Setup
-For packages requiring database access:
+### 3. Database Setup
 ```bash
-# Set up database (if needed)
-npm run db:setup
+# Start PostgreSQL service
+# Create database
+createdb aspel_development
 
 # Run migrations
-npm run db:migrate
+npm run migrate
 ```
 
-### Testing Setup
+### 4. Start Development Servers
+```bash
+# Start all services
+npm run dev
+
+# Or start individual services
+npm run start:api
+npm run start:ui
+npm run start:workflow
+```
+
+## 📦 Package Structure
+
+This is a monorepo with the following architecture:
+
+### Frontend Applications
+- `packages/asl/` - Main public interface
+- `packages/asl-internal-ui/` - Admin interface
+- `packages/asl-projects/` - Project management
+
+### Backend Services  
+- `packages/asl-public-api/` - Public REST API
+- `packages/asl-internal-api/` - Internal admin API
+- `packages/asl-workflow/` - Task workflow engine
+- `packages/asl-resolver/` - Business logic layer
+
+### Data Layer
+- `packages/asl-schema/` - Database models
+- `packages/asl-search/` - Elasticsearch integration
+
+### Shared Libraries
+- `packages/asl-components/` - React components
+- `packages/asl-constants/` - Shared constants
+- `packages/asl-permissions/` - Authorization logic
+
+## 🧪 Testing
+
 ```bash
 # Run all tests
 npm test
 
 # Run tests for specific package
-npm test -w packages/asl-components
+npm test --workspace=asl-schema
 
-# Run tests with coverage
+# Run with coverage
 npm run test:coverage
+
+# Run integration tests
+npm run test:integration
 ```
 
-## Development Workflow
+## 🔍 Debugging
 
-### 1. Creating a Feature Branch
 ```bash
-git checkout -b feature/your-feature-name
+# Enable debug logging
+DEBUG=asl:* npm run dev
+
+# Debug specific service
+DEBUG=asl:workflow npm run start:workflow
 ```
 
-### 2. Making Changes
-- Follow existing code style
-- Add tests for new features
-- Update documentation
+## 📊 Code Quality
 
-### 3. Running Quality Checks
 ```bash
 # Lint code
 npm run lint
 
-# Fix linting issues
-npm run lint:fix
+# Format code
+npm run format
 
-# Run tests
-npm test
+# Type checking (if using TypeScript)
+npm run typecheck
 ```
 
-### 4. Committing Changes
+## 🗃️ Database Operations
+
 ```bash
-git add .
-git commit -m "feat: add new feature description"
+# Create new migration
+npx knex migrate:make migration_name
+
+# Run migrations
+npm run migrate
+
+# Rollback migration
+npm run migrate:rollback
+
+# Seed database
+npm run seed
 ```
 
-## Troubleshooting
+## 🚢 Building for Production
 
-### Common Issues
+```bash
+# Build all packages
+npm run build
 
-#### Authentication Errors
-- Ensure tokens are correctly set in `.env`
-- Check token permissions
-- Verify token hasn't expired
-
-#### Build Failures
-- Clear node_modules and reinstall
-- Check Node.js version compatibility
-- Verify all dependencies are installed
-
-#### Port Conflicts
-- Change ports in configuration files
-- Kill processes using required ports
-- Use different port ranges
-
-### Getting Help
-- Check [HELPME.md](../HELPME.md) for common issues
-- Open an issue on GitHub
-- Review existing documentation
-
-## IDE Configuration
-
-### VS Code Setup
-Recommended extensions:
-- ESLint
-- Prettier
-- GitLens
-- Auto Rename Tag
-
-### Workspace Settings
-```json
-{
-  "eslint.workingDirectories": ["packages/*"],
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  }
-}
+# Build specific package
+npm run build --workspace=asl-public-api
 ```
 
-## Next Steps
+## 🛠 Common Issues
 
-1. Read the [Contributing Guide](../CONTRIBUTING.md)
-2. Check [open issues](https://github.com/UKHomeOffice/aspel-workspace/issues)
-3. Join the development community
-4. Start with small contributions
+### Port Conflicts
+```bash
+# Kill processes on default ports
+lsof -ti:3000,5000,8080 | xargs kill -9
+```
+
+### Database Connection Issues
+```bash
+# Check PostgreSQL status
+pg_isready -h localhost -p 5432
+
+# Reset database
+npm run db:reset
+```
+
+### Dependency Issues
+```bash
+# Clean install
+npm run install:clean
+
+# Fix dependency conflicts
+npm run fix-deps
+```
+
+## 🌐 Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://localhost/aspel_dev` |
+| `REDIS_URL` | Redis connection string | `redis://localhost:6379` |
+| `NODE_ENV` | Environment mode | `development` |
+| `PORT` | Server port | `3000` |
+
+## 📚 Additional Resources
+
+- [API Documentation](./API.md)
+- [Database Schema](./SCHEMA.md)
+- [Deployment Guide](./DEPLOYMENT.md)
+- [Architecture Overview](./ARCHITECTURE.md)
