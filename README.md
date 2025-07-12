@@ -1,184 +1,389 @@
 # ASPeL Workspace
 
-Monorepo for the ASPeL project. This repository uses NPM Workspaces to manage multiple packages efficiently and `concurrently` to run scripts across these packages simultaneously.
+Animal Science Procedures e-Licensing (ASPeL) - A comprehensive monorepo for managing animal research licenses and procedures.
 
-## Table of Contents
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13%2B-blue)](https://www.postgresql.org/)
 
-1. [Useful Commands](#useful-commands)
-2. [Requirements](#requirements)
-3. [Install](#install)
-4. [Run](#run)
-5. [NPM Workspaces](#npm-workspaces)
-6. [Troubleshooting](#troubleshooting)
-7. [Tips and Tricks](#tips-and-tricks)
+## Overview
 
-## Useful Commands
+This is an open source version of the UK Home Office's ASPeL system, designed for managing animal research licensing and procedures in compliance with scientific research regulations. The system provides a complete digital workflow for the application, review, and management of licenses under the Animals (Scientific Procedures) Act 1986.
 
-- **Install dependencies:** `npm install` or `npm install:env`
-- **Uninstall dependencies:** `npm run reset`
-- **Build all service containers:** `npm run build`
-- **Run a script in a specific package:** `npm run <script> -w <package_name>`
-- **Run a script in the monorepo root:** `npm run <script>`
-- **Add a dependency to a specific package:** `npm install <dependency_name> -w <package_name>`
-- **Add a dependency to the monorepo root:** `npm install <dependency_name>`
+### Key Benefits
 
-## Requirements
+- **Streamlined Workflows**: Automated approval processes and notifications
+- **Compliance Management**: Built-in regulatory compliance checks
+- **Audit Trail**: Complete history of all license activities
+- **Role-based Access**: Granular permissions for different user types
+- **Integration Ready**: API-first architecture for third-party integrations
 
-- Node.js (v14 or later)
+## Features
 
-## Install
+### Core Functionality
+- **Project Management**: Complete project lifecycle management for animal research
+  - Project applications and amendments
+  - Version control and change tracking
+  - Collaborative editing and review
+  - Automated validation and compliance checks
 
-You will need to have some authentication tokens set to install modules from home office repositories. Ensure the following variables are set in your shell environment, or otherwise create an `.env` file which looks like this:
+- **Licensing System**: Comprehensive license management
+  - PIL (Personal Individual License) applications and renewals
+  - PPL (Project Personal License) processing
+  - Training course management and certification
+  - License transfers and amendments
 
+- **Establishment Management**: Research facility oversight
+  - PEL (Project Establishment License) management
+  - Named person role assignments (PELH, NACWO, NVS, NPRC)
+  - Location and area management
+  - Compliance monitoring
+
+### Advanced Features
+- **Workflow Engine**: Intelligent process automation
+  - Multi-stage approval workflows
+  - Deadline management and notifications
+  - Task assignment and tracking
+  - Status-based routing
+
+- **Reporting & Analytics**: Data-driven insights
+  - Returns of Procedures (ROP) management
+  - Regulatory reporting
+  - Performance metrics and KPIs
+  - Export capabilities
+
+- **User Management**: Secure access control
+  - Role-based permissions (ASRU, Establishment Admin, Applicant)
+  - Single sign-on integration
+  - Profile management
+  - Activity logging
+
+## Architecture
+
+This is a monorepo containing multiple packages organized into distinct layers:
+
+### Frontend Applications
+- `asl` - Main public-facing frontend application
+- `asl-internal-ui` - Internal administration interface for ASRU staff
+- `asl-projects` - Project management and editing interface
+
+### API Services
+- `asl-public-api` - REST API for external integrations
+- `asl-internal-api` - Internal API for administrative functions
+- `asl-attachments` - File upload and document management service
+
+### Core Services
+- `asl-workflow` - Task and workflow management engine
+- `asl-resolver` - Business logic and data resolution service
+- `asl-notifications` - Email and notification delivery system
+- `asl-metrics` - Performance monitoring and analytics
+- `asl-search` - Elasticsearch integration for search functionality
+
+### Data Layer
+- `asl-schema` - Database schema definitions and models
+- `asl-taskflow` - Task persistence and activity logging
+
+### Shared Libraries
+- `asl-components` - Reusable React components and UI elements
+- `asl-constants` - Shared constants and enumerations
+- `asl-pages` - Common page templates and middleware
+- `asl-permissions` - Authorization and access control logic
+- `asl-service` - Base service framework and utilities
+
+### Support Services
+- `asl-emailer` - Email template rendering and delivery
+- `asl-data-exports` - Data export and reporting tools
+- `asl-dictionary` - Translation and localization support
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18 or higher
+- PostgreSQL database
+- Redis (for caching and sessions)
+
+### Quick Start (Replit)
+
+1. Click the **Run** button to start the development environment
+2. If you encounter issues, run the clean install script:
+```bash
+bash scripts/clean-install.sh
 ```
-GITHUB_AUTH_TOKEN=ghp_oam...
-ART_AUTH_TOKEN=eyJ2ZX...
+
+### Local Installation
+
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd aspel-workspace
 ```
 
-The GitHub auth token should be a personal access token with read access on private repositories.
-
-The Artefactory auth token should be sourced from a member of the developer team.
-
-1. **Clone the repository**:
-
-```sh
-git clone https://github.com/UKHomeOffice/aspel-workspace
+2. Install dependencies:
+```bash
+npm install --registry=https://registry.npmjs.org/
 ```
 
-2. **Install dependencies**:
-
-If you are using an `.env` file:
-
-```sh
-npm run install:env
+3. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your configuration
 ```
 
-Otherwise a standard install is fine if the required credentials are already set in your environment:
-
-```sh
-npm install
-```
-
-## Run
-
-### Development Services
-
-**asl** and **asl-internal-ui** are the services you will typically be running in an IDE environment. You can start these automatically with:
-
-```sh
+4. Start the development environment:
+```bash
 npm run dev
 ```
 
-To customise the services which will be run when executing this command, add a space separated environment variable to your `.env` file:
+### Troubleshooting
 
-```sh
-DEV_SERVICES="asl asl-internal-ui asl-internal-api"
+If you encounter npm registry issues:
+```bash
+npm config set registry https://registry.npmjs.org/
+npm cache clean --force
+rm -rf node_modules package-lock.json
+npm install
 ```
 
-Once services have been started, the ideal way so far we discovered is to run the [**asl-conductor**](https://github.com/UKHomeOffice/asl-conductor) with this script:
+## Development
 
-```sh
-npm start -- --local asl --local asl-internal-ui
+### Available Scripts
+
+- `npm run dev` - Start development servers for all services
+- `npm run build` - Build all packages for production
+- `npm run test` - Run tests across all packages
+- `npm run lint` - Run ESLint across all packages
+- `npm run format` - Format code with Prettier
+- `npm run clean` - Clean build artifacts
+- `npm run security:audit` - Run security audit
+
+### Package Structure
+
+Each package in the `packages/` directory is a separate service with its own:
+- `package.json` - Package dependencies and scripts
+- `README.md` - Package-specific documentation
+- `lib/` or `src/` - Source code directory
+- `test/` - Test files and fixtures
+- `config.js` - Service-specific configuration
+
+### Development Workflow
+
+1. **Branch Strategy**: Use feature branches for development
+2. **Code Standards**: Follow ESLint and Prettier configurations
+3. **Testing**: Write unit and integration tests for new features
+4. **Documentation**: Update relevant README files
+5. **Security**: Run security audits before committing
+
+### Debugging
+
+Enable debug logging by setting environment variables:
+```bash
+DEBUG=asl:* npm run dev
 ```
 
-### Containerized Services
+### Database Migrations
 
-Sometimes you may want to run a containerized version of a service to ensure that the compiled code is executing as expected in a more realistic production environment.
+Run database migrations:
+```bash
+# Run all pending migrations
+npm run migrate
 
-To build the container for a service, such as `asl`, run:
-
-```sh
-npm run build -- packages/asl
+# Rollback last migration
+npm run migrate:rollback
 ```
-
-Or otherwise to build containers for all services, run:
-
-```sh
-npm run build
-```
-
-See the script file for more configuration options.
-
-These local containers can be run in `asl-conductor` by modifying the `conductor.json` file to point to the latest local version for each service you want to test:
-
-```js
-{
-  "name": "asl",
-  "image": "asl:latest",
-  "network": "asl",
-  "env": {
-    ...
-  }
-}
-```
-
-## NPM Workspaces
-
-### Adding Dependencies
-
-To add a dependency to a specific package:
-
-```sh
-npm install <dependency_name> -w <package_name>
-```
-
-To add a dependency to the monorepo:
-
-```sh
-npm install <dependency_name>
-```
-
-This second command should not be used to install dependencies required by our sub packages. Only dependencies used by the monorepo root (for CI/test/scripting e.t.c).
-
-### Removing Dependencies
-
-To remove a dependency from a specific package:
-
-```sh
-npm uninstall <dependency_name> -w <package_name>
-```
-
-To remove a dependency from the monorepo:
-
-```sh
-npm uninstall <dependency_name>
-```
-
-This second command will not remove depdencies from sub packages if they are also declared there. Only dependencies in the monorepo root `package.json`.
-
-### Running Scripts
-
-To run a script in a specific package:
-
-```sh
-npm run <script> -w <package_name>
-```
-
-To run a script for the monorepo:
-
-```sh
-npm run <script>
-```
-
-This second command will only run scripts declared in the root `package.json`, not in sub packages.
 
 ## Troubleshooting
 
-See the [HELPME.md](HELPME.md) file.
+### Common Issues
 
-## Tips and Tricks
-
-### ESLint
-
-ESLint relative extends don't work in both the workspace and CI/CD at the same time, as the installation path changes
-between the two. The rules have been moved to `@ukhomeoffice/eslint-config-asl`, so if a module hasn't been updated yet
-update the package.json to use `"@ukhomeoffice/eslint-config-asl": "^3.0.0"` and update .eslintrc to
-
-```yaml
-extends:
-  - "@ukhomeoffice/asl"
+**Port conflicts**: Ensure ports 3000, 5000, 8080 are available
+```bash
+lsof -ti:3000 | xargs kill -9
 ```
 
-You can get ESLint feedback and automatic fixes as you work in IntelliJ. Go to IntelliJ settings > Languages &
-Frameworks > JavaScript > ESLint. Change the radio group to "Automatic ESLint configuration", and check
-"Run eslint --fix on save".
+**Database connection issues**: Verify PostgreSQL is running and accessible
+```bash
+pg_isready -h localhost -p 5432
+```
+
+**Memory issues**: Increase Node.js heap size for large datasets
+```bash
+export NODE_OPTIONS="--max-old-space-size=4096"
+```
+
+**Module resolution errors**: Clear node_modules and reinstall
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+## Configuration
+
+The system requires several environment variables to be configured. See `.env.example` for the complete list.
+
+Key configuration areas:
+- Database connections
+- Email service configuration
+- Authentication settings
+- File storage settings
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and linting
+5. Submit a pull request
+
+Please read our [Contributing Guidelines](CONTRIBUTING.md) for more details.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Testing
+
+### Test Types
+
+- **Unit Tests**: Test individual functions and components
+- **Integration Tests**: Test service interactions
+- **End-to-End Tests**: Test complete user workflows
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests for specific package
+npm test --workspace=asl-schema
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run specific test file
+npm test -- --grep "test pattern"
+```
+
+## API Documentation
+
+### Public API
+
+The ASPeL Public API provides REST endpoints for external integrations:
+
+- **Base URL**: `https://api.aspel.homeoffice.gov.uk`
+- **Authentication**: Bearer token required
+- **Rate Limiting**: 1000 requests per hour per API key
+
+### Key Endpoints
+
+```
+GET /api/establishments - List establishments
+GET /api/projects - List projects
+POST /api/tasks - Create workflow tasks
+GET /api/reports - Generate reports
+```
+
+For detailed API documentation, visit: `/api/docs`
+
+## Deployment
+
+### Environment Requirements
+
+- **Node.js**: 18.x LTS or higher
+- **PostgreSQL**: 13.x or higher
+- **Redis**: 6.x or higher (for caching)
+- **Elasticsearch**: 7.x (for search functionality)
+
+### Production Deployment
+
+1. **Environment Setup**:
+   ```bash
+   NODE_ENV=production
+   DATABASE_URL=postgresql://user:pass@host:port/db
+   REDIS_URL=redis://host:port
+   ELASTICSEARCH_URL=http://host:port
+   ```
+
+2. **Build and Deploy**:
+   ```bash
+   npm ci --production
+   npm run build
+   npm run migrate
+   npm start
+   ```
+
+3. **Health Checks**:
+   - `/health` - Application health status
+   - `/ready` - Readiness probe for container orchestration
+
+### Docker Support
+
+Build and run with Docker:
+```bash
+docker build -t aspel-workspace .
+docker run -p 3000:3000 aspel-workspace
+```
+
+## Performance
+
+### Monitoring
+
+- **Metrics**: Prometheus metrics available at `/metrics`
+- **Logging**: Structured JSON logs with configurable levels
+- **Tracing**: OpenTelemetry integration for distributed tracing
+
+### Optimization Tips
+
+- Enable Redis caching for frequently accessed data
+- Use database connection pooling
+- Implement proper indexing for large datasets
+- Monitor memory usage and tune garbage collection
+
+## Security
+
+### Security Features
+
+- **Authentication**: JWT-based authentication with refresh tokens
+- **Authorization**: Role-based access control (RBAC)
+- **Input Validation**: Comprehensive data validation and sanitization
+- **CSRF Protection**: Cross-Site Request Forgery protection
+- **Rate Limiting**: API rate limiting and abuse prevention
+
+### Security Audits
+
+Regular security audits are performed:
+```bash
+npm audit
+npm run security:scan
+```
+
+## Support
+
+### Getting Help
+
+- **Documentation**: Check package-specific README files
+- **Issues**: Open an issue in the GitHub repository
+- **Discussions**: Use GitHub Discussions for questions
+- **Security**: Report security issues to security@homeoffice.gov.uk
+
+### Community
+
+- **Contributing**: See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
+- **Code of Conduct**: See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- **Roadmap**: See [docs/ROADMAP.md](docs/ROADMAP.md) for future plans
+
+## Acknowledgments
+
+This project was originally developed by the UK Home Office for managing animal research licensing procedures under the Animals (Scientific Procedures) Act 1986.
+
+### Contributors
+
+We thank all contributors who have helped improve this project. Special recognition to:
+- UK Home Office Digital, Data and Technology team
+- Animals in Science Regulation Unit (ASRU)
+- The open source community
+
+### Legal Notice
+
+This software is provided under the MIT License. See [LICENSE](LICENSE) for full terms.

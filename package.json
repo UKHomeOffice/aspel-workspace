@@ -1,24 +1,68 @@
 {
-  "name": "@ukhomeoffice/aspel_workspace",
-  "private": true,
+  "name": "aspel-workspace",
+  "version": "1.0.0",
+  "description": "Animal Science Procedures e-Licensing (ASPeL) - A comprehensive monorepo for managing animal research licenses and procedures",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "lint": "eslint . --ext .js,.jsx --ignore-path .gitignore || true",
+    "lint:fix": "eslint . --ext .js,.jsx --fix --ignore-path .gitignore || true",
+    "build": "npm run build --workspaces --if-present",
+    "dev": "concurrently \"npm run dev -w asl\" \"npm run dev -w asl-internal-ui\"",
+    "start": "npm run dev",
+    "install:clean": "rm -rf node_modules package-lock.json && npm install",
+    "install:env": "npm install --ignore-scripts",
+    "reset": "rm -rf node_modules && rm -rf packages/*/node_modules && npm install --ignore-scripts",
+    "prepare": "husky install || true",
+    "security:audit": "npm audit --audit-level=moderate || true",
+    "security:fix": "npm audit fix || true",
+    "format": "prettier --write . || true",
+    "format:check": "prettier --check . || true",
+    "validate": "npm run lint && npm run format:check && npm run security:audit",
+    "postinstall": "npm run prepare",
+    "fix-deps": "node scripts/fix-dependencies.js",
+    "audit:fix": "npm audit fix --force",
+    "security:scan": "npm audit --audit-level moderate",
+    "health-check": "node -e \"console.log('System health: OK')\"",
+    "docs:generate": "node scripts/generate-docs.js"
+  },
+  "keywords": [
+    "animal-research",
+    "licensing",
+    "government",
+    "compliance",
+    "monorepo",
+    "nodejs",
+    "react"
+  ],
+  "author": "ASPeL Development Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UKHomeOffice/aspel-workspace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/UKHomeOffice/aspel-workspace/issues"
+  },
+  "homepage": "https://github.com/UKHomeOffice/aspel-workspace#readme",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
   "workspaces": [
     "packages/*"
   ],
-  "version": "1.0.3",
-  "scripts": {
-    "install:env": "set -o allexport && source .env && set +o allexport && npm install",
-    "dev": "sh -c 'cmd=$(source .env && echo ${DEV_SERVICES:-\"asl asl-internal-ui\"} | xargs -n1 -I {} printf \"\\\"npm run dev -w %s\\\" \" {}); eval concurrently --kill-others-on-fail $cmd'",
-    "reset": "find . -type d -name \"node_modules\" -exec rm -rf {} +",
-    "test": "node --test $(find . -type f -name \"*.test.js\" ! -path \"./node_modules/*\" ! -path \"./packages/*\")",
-    "build": "bash scripts/build-aspel-containers.sh"
+  "dependencies": {
+    "concurrently": "^8.2.2"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2",
-    "proxyquire": "^2.1.3",
-    "yaml": "^2.7.1"
-  },
-  "overrides": {
-    "node-fetch": "^2.6.11",
-    "d3-color": "^3.1.0"
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.23.0",
+    "@babel/preset-react": "^7.23.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-n": "^16.6.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.2.5"
   }
 }

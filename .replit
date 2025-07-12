@@ -1,0 +1,158 @@
+modules = ["nodejs-14", "bash"]
+run = "npm run dev"
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+run = ["sh", "-c", "npm run dev"]
+
+[workflows]
+runButton = "Development"
+
+[[workflows.workflow]]
+name = "Development"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --registry=https://registry.npmjs.org/ --ignore-scripts"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+
+[[workflows.workflow]]
+name = "Install and Build"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --registry=https://registry.npmjs.org/"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow]]
+name = "Build All Packages"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --registry=https://registry.npmjs.org/"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow]]
+name = "Run Tests"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --registry=https://registry.npmjs.org/"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm test"
+
+[[workflows.workflow]]
+name = "Start Main App"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm start"
+
+[[workflows.workflow]]
+name = "Simple Dev"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --no-optional --ignore-scripts"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+
+[[workflows.workflow]]
+name = "Dev No Lint"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --production --ignore-scripts"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+
+[[workflows.workflow]]
+name = "Basic Start"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node index.js"
+
+[[workflows.workflow]]
+name = "Quick Start"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --ignore-scripts --no-audit"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node packages/asl/index.js"
+
+[[workflows.workflow]]
+name = "Setup & Fix"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run fix-deps"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run install:clean"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+
+[[workflows.workflow]]
+name = "Clean Install & Start"
+author = 44912147
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "rm -f package-lock.json"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --registry=https://registry.npmjs.org/ --ignore-scripts"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
