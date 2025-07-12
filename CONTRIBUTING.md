@@ -6,6 +6,22 @@
 
 Thank you for your interest in contributing to ASPeL! This document provides guidelines and information for contributors.
 
+## 🚀 Quick Start for New Contributors
+
+### First Time Contributing to Open Source?
+Welcome! We're excited to have you. Here are some beginner-friendly ways to get started:
+
+1. **Good First Issues**: Look for issues labeled `good-first-issue` or `beginner-friendly`
+2. **Documentation**: Help improve our documentation, fix typos, or add examples
+3. **Testing**: Write tests for existing functionality
+4. **Bug Reports**: Report bugs you find while using the system
+
+### Understanding the Codebase
+- **Frontend**: React applications in `packages/asl*` directories
+- **Backend**: Node.js APIs and services
+- **Database**: PostgreSQL schemas in `packages/asl-schema`
+- **Shared**: Common utilities in `packages/asl-components` and `packages/asl-constants`
+
 ## Getting Started
 
 1. Fork the repository on GitHub
