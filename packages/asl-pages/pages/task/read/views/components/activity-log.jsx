@@ -355,6 +355,7 @@ function LogItem({ item, task }) {
   const isRa = task.data.action === 'grant-ra';
   const isAssignment = item.eventName === 'assign';
   const isIntentionToRefuse = action === 'intention-to-refuse';
+  const roleData = task.data.data;
 
   if (action === 'update') {
     if (isExtension) {
@@ -374,6 +375,7 @@ function LogItem({ item, task }) {
         activity={item}
         changedBy={item.changedBy}
       />
+      <Snippet fallback='declarations.default'>declarations.{roleData.type}</Snippet>
       <InspectorRecommendation item={item} />
       {isExtension && <DeadlineDetails item={item} />}
       {isRa && <AwerbDate item={item} />}

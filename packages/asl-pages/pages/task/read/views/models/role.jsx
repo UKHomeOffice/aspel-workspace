@@ -3,10 +3,12 @@ import { useSelector, shallowEqual } from 'react-redux';
 import {
   StickyNavAnchor,
   Snippet,
-  Link, Conditions
+  Link, Conditions,
+  TrainingSummary
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
+import { NVSRole, NACWORole, NamedPersonRoleDetails } from '../../../../common/components/role-change-summary';
 
 const selector = ({ static: { establishment, profile, remainingRoles, allowedActions, openTask, errors } }) => ({ establishment, profile, remainingRoles, allowedActions, openTask, errors });
 
@@ -24,13 +26,12 @@ export default function Role({ task, values, schema }) {
       task.data.action === 'create' && (
         <StickyNavAnchor id="role" key="role">
           <h2><Snippet>sticky-nav.role</Snippet></h2>
+          <dl>
+            <NamedPersonRoleDetails roleType={taskData.type} profile={profile} />
+            { taskData.type === 'nacwo' && <NACWORole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} /> }
+          </dl>
+
           <dl className="inline">
-            <dt><Snippet>fields.role.label</Snippet></dt>
-            <dd><Snippet>{`namedRoles.${task.data.data.type}`}</Snippet></dd>
-            <dt><Snippet>action.assigned</Snippet></dt>
-            <dd>
-              <Link page="profile.read" establishmentId={establishment.id} profileId={profile.id} label={`${profile.firstName} ${profile.lastName}`} />
-            </dd>
             {
               task.data.data.rcvsNumber && (
                 <Fragment>
@@ -103,6 +104,11 @@ export default function Role({ task, values, schema }) {
           }
         </StickyNavAnchor>
       )
+    ),
+    (
+      <StickyNavAnchor id="trainingRecord" key="trainingRecord">
+        <TrainingSummary certificates={profile.certificates} />
+      </StickyNavAnchor>
     ),
     (
       <StickyNavAnchor id="conditions" key="conditions">
