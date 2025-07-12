@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "bash"]
+modules = ["nodejs-14", "bash"]
 run = "npm run dev"
 
 [nix]
