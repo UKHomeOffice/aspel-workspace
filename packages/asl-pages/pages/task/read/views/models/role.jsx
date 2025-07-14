@@ -35,6 +35,12 @@ export default function Role({ task, values, schema }) {
           </dl>
 
           <dl className="inline">
+            <dt><Snippet>fields.role.label</Snippet></dt>
+            <dd><Snippet>{`namedRoles.${task.data.data.type}`}</Snippet></dd>
+            <dt><Snippet>action.assigned</Snippet></dt>
+            <dd>
+              <Link page="profile.read" establishmentId={establishment.id} profileId={profile.id} label={`${profile.firstName} ${profile.lastName}`} />
+            </dd>
             {
               task.data.data.rcvsNumber && (
                 <Fragment>
