@@ -12,6 +12,8 @@ import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
 import { NACWORole, NamedPersonRoleDetails } from '../../../../common/components/role-change-summary';
 import MandatoryTrainingRequirements from '../../../../role/component/mandatory-training-requirements';
+import { useFeatureFlag } from '@asl/service/ui/feature-flag';
+const { featureFlags } = require('@ukhomeoffice/asl-constants');
 
 const selector = ({ static: { establishment, profile, remainingRoles, allowedActions, openTask, errors } }) => ({ establishment, profile, remainingRoles, allowedActions, openTask, errors });
 
@@ -19,6 +21,7 @@ export default function Role({ task, values, schema }) {
   const { establishment, profile, remainingRoles, allowedActions, openTask, errors } = useSelector(selector, shallowEqual);
   const canUpdateConditions = allowedActions.includes('establishment.updateConditions');
   const taskData = task.data.data;
+  const namedPersonFeatureFlag = useFeatureFlag(featureFlags.FEATURE_FLAG_NAMED_PERSON_MVP);
 
   if (!taskData.conditions && taskData.conditions !== '') {
     taskData.conditions = establishment.conditions;
@@ -29,10 +32,10 @@ export default function Role({ task, values, schema }) {
       task.data.action === 'create' && (
         <StickyNavAnchor id="role" key="role">
           <h2><Snippet>sticky-nav.role</Snippet></h2>
-          <dl>
+          { namedPersonFeatureFlag && <dl>
             <NamedPersonRoleDetails roleType={taskData.type} profile={profile} />
             { taskData.type === 'nacwo' && <NACWORole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} /> }
-          </dl>
+          </dl> }
 
           <dl className="inline">
             <dt><Snippet>fields.role.label</Snippet></dt>
@@ -114,13 +117,13 @@ export default function Role({ task, values, schema }) {
         </StickyNavAnchor>
       )
     ),
-    (
-      <StickyNavAnchor id="trainingRecord" key="trainingRecord">
+    (namedPersonFeatureFlag &&
+      (<StickyNavAnchor id="trainingRecord" key="trainingRecord">
         <TrainingSummary certificates={profile.certificates} />
-      </StickyNavAnchor>
+      </StickyNavAnchor>)
     ),
-    (
-      <StickyNavAnchor id="mandatoryTrainingRequirements" key="mandatoryTrainingRequirements">
+    (namedPersonFeatureFlag &&
+      (<StickyNavAnchor id="mandatoryTrainingRequirements" key="mandatoryTrainingRequirements">
         <Details
           summary={<Snippet roleType={taskData.type.toUpperCase()}>mandatoryTrainingRequirements</Snippet>}
           className="margin-bottom"
@@ -131,7 +134,7 @@ export default function Role({ task, values, schema }) {
             <MandatoryTrainingRequirements roleType={taskData.type} />
           </Inset>
         </Details>
-      </StickyNavAnchor>
+      </StickyNavAnchor>)
     ),
     (
       <StickyNavAnchor id="conditions" key="conditions">

@@ -12,6 +12,8 @@ import {
   isTrueish
 } from '../../../../../lib/utils';
 import PplDeclarations from './ppl-declarations';
+import { useFeatureFlag } from '@asl/service/ui/feature-flag';
+const { featureFlags } = require('@ukhomeoffice/asl-constants');
 
 function ProfileLink({ id, name, establishmentId, asruUser }) {
   if (establishmentId && !asruUser) {
@@ -356,6 +358,7 @@ function LogItem({ item, task }) {
   const isAssignment = item.eventName === 'assign';
   const isIntentionToRefuse = action === 'intention-to-refuse';
   const roleData = task.data.data;
+  const namedPersonFeatureFlag = useFeatureFlag(featureFlags.FEATURE_FLAG_NAMED_PERSON_MVP);
 
   if (action === 'update') {
     if (isExtension) {
@@ -375,7 +378,7 @@ function LogItem({ item, task }) {
         activity={item}
         changedBy={item.changedBy}
       />
-      <Snippet fallback='declarations.default'>declarations.{roleData.type}</Snippet>
+      { namedPersonFeatureFlag && <Snippet fallback='declarations.default'>declarations.{roleData.type}</Snippet> }
       <InspectorRecommendation item={item} />
       {isExtension && <DeadlineDetails item={item} />}
       {isRa && <AwerbDate item={item} />}

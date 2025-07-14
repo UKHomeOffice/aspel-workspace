@@ -3,10 +3,10 @@ import isEmpty from 'lodash/isEmpty';
 import { Link, Snippet } from '@ukhomeoffice/asl-components';
 import { defineValue } from '../../../common/formatters';
 import { useFeatureFlag } from '@asl/service/ui/feature-flag';
+const { featureFlags } = require('@ukhomeoffice/asl-constants');
 
 function RolesAtEstablishment({ establishment, estRoles, rcvsNumber, allowedActions, profile }) {
-  const FEATURE_FLAG_NAMED_PERSON_MVP = 'feature-named-person-mvp';
-  const namedPersonFeatureFlag = useFeatureFlag(FEATURE_FLAG_NAMED_PERSON_MVP);
+  const namedPersonFeatureFlag = useFeatureFlag(featureFlags.FEATURE_FLAG_NAMED_PERSON_MVP);
   const addRoleLink = namedPersonFeatureFlag ? 'role.namedPersonMvp.beforeYouApply' : 'role.create';
 
   return (
