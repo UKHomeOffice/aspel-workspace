@@ -27,23 +27,6 @@ const ExemptionRequest = () => {
   );
 };
 
-export const NamedPersonDetails = ({ roleType, profile, props, profileReplaced }) => {
-  return (
-    <>
-      <dt><Snippet>applyingFor</Snippet></dt>
-      <dd>{namedRoles[roleType]}</dd>
-
-      <dt><Snippet>onBehalfOf</Snippet></dt>
-      <dd>
-        {`${profile.firstName} ${profile.lastName}`}
-        { profileReplaced && props.action !== 'remove' &&
-          <Warning>The existing {profileReplaced.type.toUpperCase()} {profileReplaced.firstName} {profileReplaced.lastName} will be removed from the role when this request is approved.</Warning>
-        }
-      </dd>
-    </>
-  );
-};
-
 const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
   const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
   return (
@@ -100,6 +83,23 @@ export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, rol
     <>
       { role === 'nacwo' && <NACWORole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
       { role === 'nvs' && <NVSRole nvs={roleDetails} incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
+    </>
+  );
+};
+
+export const NamedPersonDetails = ({ roleType, profile, props, profileReplaced }) => {
+  return (
+    <>
+      <dt><Snippet>applyingFor</Snippet></dt>
+      <dd>{namedRoles[roleType]}</dd>
+
+      <dt><Snippet>onBehalfOf</Snippet></dt>
+      <dd>
+        {`${profile.firstName} ${profile.lastName}`}
+        { profileReplaced && props.action !== 'remove' &&
+          <Warning>The existing {profileReplaced.type.toUpperCase()} {profileReplaced.firstName} {profileReplaced.lastName} will be removed from the role when this request is approved.</Warning>
+        }
+      </dd>
     </>
   );
 };
