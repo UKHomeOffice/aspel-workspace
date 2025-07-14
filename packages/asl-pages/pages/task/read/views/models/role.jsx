@@ -4,11 +4,14 @@ import {
   StickyNavAnchor,
   Snippet,
   Link, Conditions,
-  TrainingSummary
+  TrainingSummary,
+  Details,
+  Inset
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
-import { NVSRole, NACWORole, NamedPersonRoleDetails } from '../../../../common/components/role-change-summary';
+import { NACWORole, NamedPersonRoleDetails } from '../../../../common/components/role-change-summary';
+import MandatoryTrainingRequirements from '../../../../role/component/mandatory-training-requirements';
 
 const selector = ({ static: { establishment, profile, remainingRoles, allowedActions, openTask, errors } }) => ({ establishment, profile, remainingRoles, allowedActions, openTask, errors });
 
@@ -108,6 +111,20 @@ export default function Role({ task, values, schema }) {
     (
       <StickyNavAnchor id="trainingRecord" key="trainingRecord">
         <TrainingSummary certificates={profile.certificates} />
+      </StickyNavAnchor>
+    ),
+    (
+      <StickyNavAnchor id="mandatoryTrainingRequirements" key="mandatoryTrainingRequirements">
+        <Details
+          summary={<Snippet roleType={taskData.type.toUpperCase()}>mandatoryTrainingRequirements</Snippet>}
+          className="margin-bottom"
+          id="mandatory-training-summary"
+          role="group"
+        >
+          <Inset>
+            <MandatoryTrainingRequirements roleType={taskData.type} />
+          </Inset>
+        </Details>
       </StickyNavAnchor>
     ),
     (

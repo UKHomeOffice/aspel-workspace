@@ -27,7 +27,7 @@ const ExemptionRequest = () => {
   );
 };
 
-const NamedPersonRoleDetails = ({ roleType, profile, props, profileReplaced }) => {
+export const NamedPersonRoleDetails = ({ roleType, profile, props, profileReplaced }) => {
   return (
     <>
       <dt><Snippet>applyingFor</Snippet></dt>
@@ -44,7 +44,7 @@ const NamedPersonRoleDetails = ({ roleType, profile, props, profileReplaced }) =
   );
 };
 
-const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
+export const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
   const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
   return (
     <>
@@ -71,7 +71,7 @@ const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
   );
 };
 
-const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
+export const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
   const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
   const incompleteModules = [].concat(incompleteTraining.incomplete || []).join(', ');
 
@@ -94,5 +94,3 @@ const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
     </>
   );
 };
-
-module.exports = { NACWORole, NVSRole, NamedPersonRoleDetails };
