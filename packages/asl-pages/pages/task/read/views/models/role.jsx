@@ -32,18 +32,17 @@ export default function Role({ task, values, schema }) {
       task.data.action === 'create' && (
         <StickyNavAnchor id="role" key="role">
           <h2><Snippet>sticky-nav.role</Snippet></h2>
-          { namedPersonFeatureFlag && <dl>
-            <NamedPersonRoleDetails roleType={taskData.type} profile={profile} />
-            { taskData.type === 'nacwo' && <NACWORole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} /> }
-          </dl> }
+          { namedPersonFeatureFlag
+            ? (<dl>
+              <NamedPersonRoleDetails roleType={taskData.type} profile={profile} />
+              { taskData.type === 'nacwo' && <NACWORole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} /> }
+            </dl>)
+            : (<><dt><Snippet>fields.role.label</Snippet></dt><dd><Snippet>{`namedRoles.${task.data.data.type}`}</Snippet></dd><dt><Snippet>action.assigned</Snippet></dt><dd>
+              <Link page="profile.read" establishmentId={establishment.id} profileId={profile.id} label={`${profile.firstName} ${profile.lastName}`} />
+            </dd></>)
+          }
 
           <dl className="inline">
-            <dt><Snippet>fields.role.label</Snippet></dt>
-            <dd><Snippet>{`namedRoles.${task.data.data.type}`}</Snippet></dd>
-            <dt><Snippet>action.assigned</Snippet></dt>
-            <dd>
-              <Link page="profile.read" establishmentId={establishment.id} profileId={profile.id} label={`${profile.firstName} ${profile.lastName}`} />
-            </dd>
             {
               task.data.data.rcvsNumber && (
                 <Fragment>
