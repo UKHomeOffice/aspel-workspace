@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import { addChange } from '../actions/projects';
@@ -6,17 +6,11 @@ import { throwError } from '../actions/messages';
 import isUndefined from 'lodash/isUndefined';
 import castArray from 'lodash/castArray';
 import every from 'lodash/every';
+import Mustache from 'mustache';
 
 import ReactMarkdown from 'react-markdown';
 
-import {
-  Input,
-  Select,
-  TextArea,
-  RadioGroup,
-  CheckboxGroup,
-  DateInput
-} from '@ukhomeoffice/react-components';
+import { CheckboxGroup, DateInput, Input, RadioGroup, Select, TextArea } from '@ukhomeoffice/react-components';
 
 import RAPlaybackHint from './ra-playback-hint';
 import AdditionalAvailability from './additional-availability';
@@ -37,6 +31,45 @@ import Comments from './comments';
 
 import ErrorBoundary from './error-boundary';
 import NtsCheckBoxWithModal from './checkbox';
+import without from 'lodash/without';
+
+/**
+ * Where an option in a checkbox group is marked as exclusive, this handles
+ * unchecking other options as appropriate to maintain that property:
+ * - If an exclusive option is checked, then all other options are cleared
+ * - If a non-exclusive option is checked, then any exclusive checkboxes are
+ *   cleared
+ *
+ * @param {string[]} values      The values checked for the checkbox group
+ * @param {string} toggledValue  The value that has been selected/deselected
+ * @param {*[]} options          The list of options in the checkbox group
+ * @return {[string[], boolean]} the new list of checked items, and a flag that
+ *                               is true if the item was removed.
+ *
+ */
+function calculateNewCheckboxValues(values, toggledValue, options) {
+  if(values.includes(toggledValue)) {
+    return [without(values, toggledValue), true];
+  }
+
+  const option = options.find(option => option.value === toggledValue);
+  if(!option) {
+    return [values, false]
+  }
+
+  if(option.behaviour === 'exclusive') {
+    return [[toggledValue], values.length > 0]
+  }
+
+  const exclusiveOptions =
+    options
+      .filter(opt => opt.behaviour === 'exclusive')
+      .map(opt => opt.value);
+
+  const withoutExclusives = [...values, toggledValue].filter(option => !exclusiveOptions.includes(option));
+
+  return [withoutExclusives, withoutExclusives.length <= values.length];
+}
 
 class Field extends Component {
 
@@ -98,6 +131,9 @@ class Field extends Component {
     const { value } = this.state;
 
     let { label, hint } = this.props.altLabels ? this.props.alt : this.props;
+
+    label = typeof label === 'string' ? Mustache.render(label, this.props) : label ;
+    hint = typeof hint === 'string' ? Mustache.render(hint, this.props) : hint ;
 
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
@@ -227,22 +263,23 @@ class Field extends Component {
       />;
     }
     if (this.props.type === 'checkbox' || this.props.type === 'permissible-purpose') {
+      const options = this.mapOptions(this.props.options);
+
       return <CheckboxGroup
         className={ this.props.className }
         label={ label }
         hint={ hint }
         name={ this.props.name }
-        options={ this.mapOptions(this.props.options) }
+        options={ options }
         value={ value }
         error={ this.props.error }
         inline={ this.props.inline }
         onChange={ e => {
-          const values = [ ...(value || []) ];
-          const itemRemoved = values.includes(e.target.value);
-
-          const newValue = itemRemoved
-            ? values.filter(v => v !== e.target.value)
-            : [ ...values, e.target.value ];
+          const [newValue, itemRemoved] = calculateNewCheckboxValues(
+            [...(value || [])],
+            e.target.value,
+            options
+          );
 
           if (this.props.confirmRemove && itemRemoved) {
             if (this.props.confirmRemove(this.props.project, e.target.value)) {
@@ -303,6 +340,7 @@ class Field extends Component {
       value={ value || '' }
       error={ this.props.error }
       onChange={ e => this.onFieldChange(e.target.value)}
+      inputMode={this.props.inputMode}
     />;
   }
 }

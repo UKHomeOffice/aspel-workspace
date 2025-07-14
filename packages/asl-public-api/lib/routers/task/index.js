@@ -49,6 +49,11 @@ router.use('/:taskId', async (req, res, next) => {
     } else {
       perm = 'project.read.single';
     }
+    const action = get(req.task, 'data.action');
+    if (action === 'transfer') {
+      const rops = await req.models.Rop.query().select('year').where('project_id', params.id).andWhere('status', 'submitted');
+      req.task.data.rops = rops;
+    }
   } else if (model === 'role') {
     perm = 'establishment.read';
   } else if (model === 'rop') {

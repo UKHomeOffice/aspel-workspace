@@ -741,7 +741,7 @@ module.exports = [
             {
               'id': '39415b58-73bc-4040-b7dd-d5bef57de5f2',
               'name': 'Mice',
-              'reuse': false,
+              'reuse': ['this-protocol'],
               'value': 'mice',
               'life-stages': [ 'adult' ],
               'continued-use': false,
@@ -760,7 +760,7 @@ module.exports = [
             {
               'id': 'f4252ce0-10b0-49d8-ab7c-4548d65c906f',
               'name': 'Rats',
-              'reuse': false,
+              'reuse': ['this-protocol'],
               'value': 'rats',
               'life-stages': [ 'adult' ],
               'continued-use': false,
@@ -792,7 +792,7 @@ module.exports = [
             {
               'id': '39415b58-73bc-4040-b7dd-d5bef57de5f2',
               'name': 'Mice',
-              'reuse': false,
+              'reuse': ['this-protocol'],
               'value': 'mice',
               'life-stages': [ 'adult' ],
               'continued-use': false,
@@ -811,7 +811,7 @@ module.exports = [
             {
               'id': 'f4252ce0-10b0-49d8-ab7c-4548d65c906f',
               'name': 'Rats',
-              'reuse': false,
+              'reuse': ['this-protocol'],
               'value': 'rats',
               'life-stages': [ 'adult' ],
               'continued-use': false,
@@ -1469,11 +1469,11 @@ module.exports = [
           speciesDetails: [
             {
               value: 'mice',
-              reuse: true
+              reuse: ['other-protocol']
             },
             {
               value: 'rats',
-              reuse: false
+              reuse: ['no']
             }
           ]
         }
@@ -1572,7 +1572,7 @@ module.exports = [
               id: uuid(),
               name: 'Mice',
               value: 'mice',
-              reuse: true,
+              reuse: ['other-protocol', 'this-protocol'],
               'maximum-animals': 100,
               'maximum-times-used': 100
             },
@@ -1580,7 +1580,7 @@ module.exports = [
               id: uuid(),
               name: 'Rats',
               value: 'rats',
-              reuse: false
+              reuse: ['no']
             }
           ],
           steps: [
@@ -1607,7 +1607,7 @@ module.exports = [
               id: uuid(),
               name: 'Mice',
               value: 'mice',
-              reuse: true
+              reuse: ['other-protocol']
             }
           ],
           steps: [
@@ -1827,7 +1827,7 @@ module.exports = [
               id: uuid(),
               name: 'Mice',
               value: 'mice',
-              reuse: false,
+              reuse: ['no'],
               'life-stages': ['adult'],
               'continued-use': false,
               'maximum-animals': '100',
@@ -1837,7 +1837,7 @@ module.exports = [
               id: uuid(),
               name: 'Rats',
               value: 'rats',
-              reuse: false,
+              reuse: ['no'],
               'life-stages': ['adult'],
               'continued-use': false,
               'maximum-animals': '50',
@@ -1856,7 +1856,7 @@ module.exports = [
               id: uuid(),
               name: 'Mice',
               value: 'mice',
-              reuse: false,
+              reuse: ['no'],
               'life-stages': ['adult'],
               'continued-use': false,
               'maximum-animals': '30',
@@ -1866,7 +1866,7 @@ module.exports = [
               id: uuid(),
               name: 'Rats',
               value: 'rats',
-              reuse: false,
+              reuse: ['no'],
               'life-stages': ['adult'],
               'continued-use': false,
               'maximum-animals': '10',
@@ -1885,7 +1885,7 @@ module.exports = [
               id: uuid(),
               name: 'Mice',
               value: 'mice',
-              reuse: false,
+              reuse: ['no'],
               'life-stages': ['adult'],
               'continued-use': false,
               'maximum-animals': '5',
