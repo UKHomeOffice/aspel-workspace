@@ -16,6 +16,7 @@ const species = require('./constants/species');
 const projectSpecies = require('./constants/project-species');
 const fees = require('./constants/fees');
 const trainingCoursePurpose = require('./constants/training-course-purpose');
+const featureFlags = require('./constants/feature-flags');
 
 module.exports = {
   accreditingBodies,
@@ -35,5 +36,6 @@ module.exports = {
   suitabilityCodes,
   species,
   fees,
-  trainingCoursePurpose
+  trainingCoursePurpose,
+  featureFlags,
 };
