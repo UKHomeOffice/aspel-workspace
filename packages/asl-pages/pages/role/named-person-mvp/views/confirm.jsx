@@ -8,7 +8,7 @@ import {
   Snippet
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
-import { NVSRole, NACWORole, NamedPersonRoleDetails } from '../../../common/components/role-change-summary';
+import { NamedPersonDetails, DetailsByRole } from '../../../common/components/role-change-summary';
 
 const Confirm = ({
   establishment,
@@ -41,10 +41,9 @@ const Confirm = ({
       <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
       <Header title={<Snippet>confirmTitle</Snippet>}/>
       <dl>
-        <NamedPersonRoleDetails roleType={values.type} profile={profile} props={props} profileReplaced={profileReplaced} />
+        <NamedPersonDetails roleType={values.type} profile={profile} props={props} profileReplaced={profileReplaced} />
 
-        { values.type === 'nvs' && <NVSRole nvs={values} incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
-        { values.type === 'nacwo' && <NACWORole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
+        <DetailsByRole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} role={values.type} roleDetails={values} />
         { mandatoryTraining === 'yes' && (
           <>
             <dt><Snippet>explanation.trainingComplete</Snippet></dt>

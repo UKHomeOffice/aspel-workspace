@@ -10,7 +10,7 @@ import {
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
-import { NACWORole, NamedPersonRoleDetails } from '../../../../common/components/role-change-summary';
+import { DetailsByRole, NamedPersonDetails } from '../../../../common/components/role-change-summary';
 import MandatoryTrainingRequirements from '../../../../role/component/mandatory-training-requirements';
 import { useFeatureFlag } from '@asl/service/ui/feature-flag';
 const { featureFlags } = require('@ukhomeoffice/asl-constants');
@@ -34,8 +34,8 @@ export default function Role({ task, values, schema }) {
           <h2><Snippet>sticky-nav.role</Snippet></h2>
           { namedPersonFeatureFlag
             ? (<dl>
-              <NamedPersonRoleDetails roleType={taskData.type} profile={profile} />
-              { taskData.type === 'nacwo' && <NACWORole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} /> }
+              <NamedPersonDetails roleType={taskData.type} profile={profile} />
+              <DetailsByRole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} role={taskData.type} roleDetails={taskData} />
             </dl>)
             : (<><dt><Snippet>fields.role.label</Snippet></dt><dd><Snippet>{`namedRoles.${task.data.data.type}`}</Snippet></dd><dt><Snippet>action.assigned</Snippet></dt><dd>
               <Link page="profile.read" establishmentId={establishment.id} profileId={profile.id} label={`${profile.firstName} ${profile.lastName}`} />

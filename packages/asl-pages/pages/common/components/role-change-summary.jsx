@@ -27,7 +27,7 @@ const ExemptionRequest = () => {
   );
 };
 
-export const NamedPersonRoleDetails = ({ roleType, profile, props, profileReplaced }) => {
+export const NamedPersonDetails = ({ roleType, profile, props, profileReplaced }) => {
   return (
     <>
       <dt><Snippet>applyingFor</Snippet></dt>
@@ -44,7 +44,7 @@ export const NamedPersonRoleDetails = ({ roleType, profile, props, profileReplac
   );
 };
 
-export const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
+const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
   const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
   return (
     <>
@@ -71,7 +71,7 @@ export const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
   );
 };
 
-export const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
+const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
   const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
   const incompleteModules = [].concat(incompleteTraining.incomplete || []).join(', ');
 
@@ -91,6 +91,15 @@ export const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
           <dd>{format(incompleteTraining.completeDate, dateFormat.long)}</dd>
         </>
       )}
+    </>
+  );
+};
+
+export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, roleDetails }) => {
+  return (
+    <>
+      { role === 'nacwo' && <NACWORole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
+      { role === 'nvs' && <NVSRole nvs={roleDetails} incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
     </>
   );
 };
