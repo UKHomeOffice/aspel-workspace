@@ -3,16 +3,13 @@ import { useSelector, shallowEqual } from 'react-redux';
 import {
   StickyNavAnchor,
   Snippet,
-  Link, Conditions,
-  TrainingSummary,
-  Details,
-  Inset
+  Link, Conditions
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
-import { DetailsByRole, NamedPersonDetails } from '../../../../common/components/role-change-summary';
-import MandatoryTrainingRequirements from '../../../../role/component/mandatory-training-requirements';
 import { useFeatureFlag } from '@asl/service/ui/feature-flag';
+import { NamedPersonTaskDetails } from '../components/named-person-task-details';
+
 const { featureFlags } = require('@ukhomeoffice/asl-constants');
 
 const selector = ({ static: { establishment, profile, remainingRoles, allowedActions, openTask, errors } }) => ({ establishment, profile, remainingRoles, allowedActions, openTask, errors });
@@ -33,27 +30,7 @@ export default function Role({ task, values, schema }) {
         <StickyNavAnchor id="role" key="role">
           <h2><Snippet>sticky-nav.role</Snippet></h2>
           { namedPersonFeatureFlag
-            ? (<dl>
-              <div className="sticky-nav-anchor">
-                <NamedPersonDetails roleType={taskData.type} profile={profile} />
-                <DetailsByRole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} role={taskData.type} roleDetails={taskData} />
-              </div>
-              <div className="sticky-nav-anchor">
-                <TrainingSummary certificates={profile.certificates} />
-              </div>
-              <div>
-                <Details
-                  summary={`${taskData.type.toUpperCase()} mandatory training requirements`}
-                  className="margin-bottom"
-                  id="mandatory-training-summary"
-                  role="group"
-                >
-                  <Inset>
-                    <MandatoryTrainingRequirements roleType={taskData.type} />
-                  </Inset>
-                </Details>
-              </div>
-            </dl>)
+            ? <NamedPersonTaskDetails taskData={taskData} profile={profile} />
             : (<>
               <dt><Snippet>fields.role.label</Snippet></dt><dd><Snippet>{`namedRoles.${task.data.data.type}`}</Snippet></dd><dt><Snippet>action.assigned</Snippet></dt><dd>
                 <Link page="profile.read" establishmentId={establishment.id} profileId={profile.id} label={`${profile.firstName} ${profile.lastName}`} />
