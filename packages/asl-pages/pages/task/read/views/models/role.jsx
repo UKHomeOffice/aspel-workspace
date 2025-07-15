@@ -34,24 +34,42 @@ export default function Role({ task, values, schema }) {
           <h2><Snippet>sticky-nav.role</Snippet></h2>
           { namedPersonFeatureFlag
             ? (<dl>
-              <NamedPersonDetails roleType={taskData.type} profile={profile} />
-              <DetailsByRole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} role={taskData.type} roleDetails={taskData} />
+              <div className="sticky-nav-anchor">
+                <NamedPersonDetails roleType={taskData.type} profile={profile} />
+                <DetailsByRole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} role={taskData.type} roleDetails={taskData} />
+              </div>
+              <div className="sticky-nav-anchor">
+                <TrainingSummary certificates={profile.certificates} />
+              </div>
+              <div>
+                <Details
+                  summary={`${taskData.type.toUpperCase()} mandatory training requirements`}
+                  className="margin-bottom"
+                  id="mandatory-training-summary"
+                  role="group"
+                >
+                  <Inset>
+                    <MandatoryTrainingRequirements roleType={taskData.type} />
+                  </Inset>
+                </Details>
+              </div>
             </dl>)
-            : (<><dt><Snippet>fields.role.label</Snippet></dt><dd><Snippet>{`namedRoles.${task.data.data.type}`}</Snippet></dd><dt><Snippet>action.assigned</Snippet></dt><dd>
-              <Link page="profile.read" establishmentId={establishment.id} profileId={profile.id} label={`${profile.firstName} ${profile.lastName}`} />
-            </dd></>)
+            : (<>
+              <dt><Snippet>fields.role.label</Snippet></dt><dd><Snippet>{`namedRoles.${task.data.data.type}`}</Snippet></dd><dt><Snippet>action.assigned</Snippet></dt><dd>
+                <Link page="profile.read" establishmentId={establishment.id} profileId={profile.id} label={`${profile.firstName} ${profile.lastName}`} />
+              </dd>
+              <dl className="inline">
+                {
+                  task.data.data.rcvsNumber && (
+                    <Fragment>
+                      <dt><Snippet>fields.rcvsNumber.label</Snippet></dt>
+                      <dd>{ task.data.data.rcvsNumber }</dd>
+                    </Fragment>
+                  )
+                }
+              </dl>
+            </>)
           }
-
-          <dl className="inline">
-            {
-              task.data.data.rcvsNumber && (
-                <Fragment>
-                  <dt><Snippet>fields.rcvsNumber.label</Snippet></dt>
-                  <dd>{ task.data.data.rcvsNumber }</dd>
-                </Fragment>
-              )
-            }
-          </dl>
         </StickyNavAnchor>
       )
     ),
@@ -115,25 +133,6 @@ export default function Role({ task, values, schema }) {
           }
         </StickyNavAnchor>
       )
-    ),
-    (namedPersonFeatureFlag &&
-      (<StickyNavAnchor id="trainingRecord" key="trainingRecord">
-        <TrainingSummary certificates={profile.certificates} />
-      </StickyNavAnchor>)
-    ),
-    (namedPersonFeatureFlag &&
-      (<StickyNavAnchor id="mandatoryTrainingRequirements" key="mandatoryTrainingRequirements">
-        <Details
-          summary={<Snippet roleType={taskData.type.toUpperCase()}>mandatoryTrainingRequirements</Snippet>}
-          className="margin-bottom"
-          id="mandatory-training-summary"
-          role="group"
-        >
-          <Inset>
-            <MandatoryTrainingRequirements roleType={taskData.type} />
-          </Inset>
-        </Details>
-      </StickyNavAnchor>)
     ),
     (
       <StickyNavAnchor id="conditions" key="conditions">
