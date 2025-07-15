@@ -57,10 +57,11 @@ const collectDeployStages = async (backoff, positionals, environment) => {
         }
 
         if(!Array.isArray(build.stages)) {
-            log(`Unexpected build response: ${json.stringify(build)}`);
+            log(`Unexpected build response: ${JSON.stringify(build)}`);
             if (--allowedBadResponses <= 0) {
                 throw new Error(`Build failed: bad build info response.`)
             }
+            continue;
         }
 
         for (const buildStage of build.stages) {
