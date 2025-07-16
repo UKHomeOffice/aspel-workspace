@@ -82,7 +82,9 @@ export default function Project({ task }) {
       // Is the rop for this year not submitted
       .filter(year => !task.data.rops.find(ar => ar.year === year))
       .reverse()
-      .join(', ');
+      .join(', ')
+      // this replace last comma with or
+      .replace(/,(?=[^,]*$)/, ' or');
   }
 
   function onReopen(e) {
