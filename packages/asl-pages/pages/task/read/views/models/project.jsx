@@ -83,7 +83,7 @@ export default function Project({ task }) {
       .filter(year => !task.data.rops.find(ar => ar.year === year))
       .reverse()
       .join(', ')
-      // this replace last comma with or
+      // replace last comma with or
       .replace(/,(?=[^,]*$)/, ' or');
   }
 
