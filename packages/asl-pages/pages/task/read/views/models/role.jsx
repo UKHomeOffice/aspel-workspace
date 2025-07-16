@@ -8,7 +8,7 @@ import {
 import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
 import { NamedPersonTaskDetails } from '../components/named-person-task-details';
-const { NAMED_PERSON_VERSION_ID } = require('@ukhomeoffice/asl-constants');
+const { versions } = require('@ukhomeoffice/asl-constants');
 
 const selector = ({ static: { establishment, profile, remainingRoles, allowedActions, openTask, errors } }) => ({ establishment, profile, remainingRoles, allowedActions, openTask, errors });
 
@@ -27,7 +27,7 @@ export default function Role({ task, values, schema }) {
       task.data.action === 'create' && (
         <StickyNavAnchor id="role" key="role">
           <h2><Snippet>sticky-nav.role</Snippet></h2>
-          { version === NAMED_PERSON_VERSION_ID
+          { version === versions.NAMED_PERSON_VERSION_ID
             ? <NamedPersonTaskDetails taskData={taskData} profile={profile} />
             : (<>
               <dl className="inline">

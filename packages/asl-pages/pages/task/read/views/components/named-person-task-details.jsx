@@ -16,7 +16,7 @@ export const NamedPersonTaskDetails = ({ taskData, profile }) => {
         <DetailsByRole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} role={taskData.type} roleDetails={taskData} />
       </div>
 
-      {['nawco', 'nvs'].includes(taskData.type) && (
+      {['nacwo', 'nvs'].includes(taskData.type) && (
         <>
           <div className="sticky-nav-anchor">
             <TrainingSummary certificates={profile.certificates} />
