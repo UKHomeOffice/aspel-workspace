@@ -7,10 +7,8 @@ import {
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
-import { useFeatureFlag } from '@asl/service/ui/feature-flag';
 import { NamedPersonTaskDetails } from '../components/named-person-task-details';
-
-const { featureFlags } = require('@ukhomeoffice/asl-constants');
+const { NAMED_PERSON_VERSION_ID } = require('@ukhomeoffice/asl-constants');
 
 const selector = ({ static: { establishment, profile, remainingRoles, allowedActions, openTask, errors } }) => ({ establishment, profile, remainingRoles, allowedActions, openTask, errors });
 
@@ -18,7 +16,7 @@ export default function Role({ task, values, schema }) {
   const { establishment, profile, remainingRoles, allowedActions, openTask, errors } = useSelector(selector, shallowEqual);
   const canUpdateConditions = allowedActions.includes('establishment.updateConditions');
   const taskData = task.data.data;
-  const namedPersonFeatureFlag = useFeatureFlag(featureFlags.FEATURE_FLAG_NAMED_PERSON_MVP);
+  const { version } = task.data.meta;
 
   if (!taskData.conditions && taskData.conditions !== '') {
     taskData.conditions = establishment.conditions;
@@ -29,7 +27,7 @@ export default function Role({ task, values, schema }) {
       task.data.action === 'create' && (
         <StickyNavAnchor id="role" key="role">
           <h2><Snippet>sticky-nav.role</Snippet></h2>
-          { namedPersonFeatureFlag
+          { version === NAMED_PERSON_VERSION_ID
             ? <NamedPersonTaskDetails taskData={taskData} profile={profile} />
             : (<>
               <dl className="inline">

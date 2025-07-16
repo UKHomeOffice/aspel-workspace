@@ -17,6 +17,7 @@ const projectSpecies = require('./constants/project-species');
 const fees = require('./constants/fees');
 const trainingCoursePurpose = require('./constants/training-course-purpose');
 const featureFlags = require('./constants/feature-flags');
+const versions = require('./constants/versions');
 
 module.exports = {
   accreditingBodies,
@@ -38,4 +39,5 @@ module.exports = {
   fees,
   trainingCoursePurpose,
   featureFlags,
+  versions,
 };
