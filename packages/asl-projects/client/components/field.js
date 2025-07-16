@@ -40,11 +40,11 @@ import without from 'lodash/without';
  * - If a non-exclusive option is checked, then any exclusive checkboxes are
  *   cleared
  *
- * @param {string[]} values      The values checked for the checkbox group
- * @param {string} toggledValue  The value that has been selected/deselected
- * @param {*[]} options          The list of options in the checkbox group
- * @return {[string[], boolean]} the new list of checked items, and a flag that
- *                               is true if the item was removed.
+ * @param {string[]} values           The values checked for the checkbox group
+ * @param {string} toggledValue       The checkbox that was clicked by the user
+ * @param {(object|string)[]} options The list of options in the checkbox group
+ * @return {[string[], boolean]}      The new list of checked items, and a flag
+ *                                    that is true if the item was removed
  *
  */
 function calculateNewCheckboxValues(values, toggledValue, options) {
@@ -52,7 +52,11 @@ function calculateNewCheckboxValues(values, toggledValue, options) {
     return [without(values, toggledValue), true];
   }
 
-  const option = options.find(option => option.value === toggledValue);
+  const option = options.find(
+    option =>
+      (typeof option === 'string' ? option : option.value) === toggledValue
+  );
+
   if(!option) {
     return [values, false]
   }
@@ -66,7 +70,7 @@ function calculateNewCheckboxValues(values, toggledValue, options) {
       .filter(opt => opt.behaviour === 'exclusive')
       .map(opt => opt.value);
 
-  const withoutExclusives = [...values, toggledValue].filter(option => !exclusiveOptions.includes(option));
+  const withoutExclusives = [...values, toggledValue].filter(value => !exclusiveOptions.includes(value));
 
   return [withoutExclusives, withoutExclusives.length <= values.length];
 }
