@@ -34,9 +34,10 @@ const collectArguments = () => {
 }
 
 const collectDeployStages = async (backoff, positionals, environment) => {
-    const pendingDeployStages = positionals.reduce((acc, stage) => (acc[stage] = true, acc), {})
+    const pendingDeployStages = positionals.reduce((acc, stage) => {acc[stage] = true; return acc;}, {})
     const completedDeployStages = {}
-    
+    let allowedBadResponses = 3;
+
     while (Object.keys(pendingDeployStages).length > 0) {
         log(`\nPending build stages: ${Object.keys(pendingDeployStages).join(", ")}`)
         log(`Collected deploy stages: ${Object.keys(completedDeployStages).join(", ")}`)
@@ -44,15 +45,23 @@ const collectDeployStages = async (backoff, positionals, environment) => {
         await new Promise(resolve => setTimeout(resolve, backoff * 1000))
 
         const build = await getBuildInfo(
-            environment.DRONE_SERVER, 
-            environment.DRONE_REPO_OWNER, 
-            environment.DRONE_REPO_NAME, 
-            environment.DRONE_BUILD_NUMBER, 
+            environment.DRONE_SERVER,
+            environment.DRONE_REPO_OWNER,
+            environment.DRONE_REPO_NAME,
+            environment.DRONE_BUILD_NUMBER,
             environment.DRONE_TOKEN,
         )
 
         if (build.status === BUILD_STATUS_FAILURE) {
             throw new Error(`Build failed: ${build.status}`)
+        }
+
+        if(!Array.isArray(build.stages)) {
+            log(`Unexpected build response: ${JSON.stringify(build)}`);
+            if (--allowedBadResponses <= 0) {
+                throw new Error(`Build failed: bad build info response.`)
+            }
+            continue;
         }
 
         for (const buildStage of build.stages) {
@@ -119,7 +128,7 @@ const main = async ({ values, positionals }) => {
     } else {
         log(`\nFound stages to deploy: ${deployStages.join(", ")}`)
     }
-    
+
     return deployStages;
 }
 

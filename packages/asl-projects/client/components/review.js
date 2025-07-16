@@ -53,12 +53,12 @@ class Review extends React.Component {
       return <Comments field={`${this.props.prefix || ''}${this.props.name}`} collapsed={!this.props.readonly} />;
     }
 
-    const displayedLabel = Mustache.render(review || label, this.props);
+    const displayedLabel = Mustache.render(review || label || '', this.props);
 
     return (
       <div className={classnames('review', this.props.className)}>
         {
-          (!isGranted || showGrantedLabel) && <h3>{displayedLabel}</h3>
+          (!isGranted || showGrantedLabel) && displayedLabel && <h3>{displayedLabel}</h3>
         }
         {
           showChanges && (

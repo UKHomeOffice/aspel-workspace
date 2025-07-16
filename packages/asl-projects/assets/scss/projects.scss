@@ -705,6 +705,10 @@ html.modal-open, html.modal-open body {
     &.light-grey {
       background-color: $light-grey;
     }
+
+    .grey {
+      color: #5c6062;
+    }
   }
 
   .diff-window {
