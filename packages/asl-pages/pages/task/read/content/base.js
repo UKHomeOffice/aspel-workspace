@@ -27,7 +27,7 @@ module.exports = {
     'returned-to-applicant': 'returning to applicant',
     'referred-to-inspector': 'inspector referral',
     'inspector-rejected': 'refusal',
-    rejected: 'refusal',
+    'rejected': 'refusal',
     'intention-to-refuse': 'refusal',
     'discarded-by-asru': 'discarding'
   },
@@ -86,8 +86,7 @@ module.exports = {
   },
   asruDiscardTask: {
     summary: 'Discard this task',
-    details:
-      'This task will be closed without any information being updated. This action cannot be undone.',
+    details: 'This task will be closed without any information being updated. This action cannot be undone.',
     action: 'Discard task'
   },
   errors: {
