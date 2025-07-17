@@ -588,6 +588,7 @@ export default () => {
               confirmRemove: confirmProtocolsAffected('remove', 'locations', 'POLE', 'title'),
               subtitle: 'Specify the details of each POLE that you will be using.',
               intro: `If you can’t specify a grid reference for a POLE, include details that allows it to be easily identified for inspection. This could be an address of a site or a postcode of a farm.
+
   If you can only add generic information at this stage, provide a general description of the types of areas you are considering.`,
               fields: [
                 {
@@ -1129,6 +1130,7 @@ export default () => {
                   show: values => !isTrainingLicence(values),
                   label: 'How do each of these objectives relate to each other and help you to achieve your aim?',
                   hint: `Outline any interdependencies, stop:go points, and milestones. Include any key in vitro, ex vivo or in silico work, clinical findings, or results from epidemiological studies carried out under other projects that will enable you to achieve your objectives.
+
   Consider including images (.jpg and .png files) of annotated flow charts
   and decision trees in your action plan to illustrate how objectives relate to
   each other.`,
