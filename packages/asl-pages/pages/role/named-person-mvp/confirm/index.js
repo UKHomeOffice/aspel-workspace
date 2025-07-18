@@ -3,8 +3,7 @@ const { page } = require('@asl/service/ui');
 const form = require('../../../common/routers/form');
 const { populateNamedPeople } = require('../../../common/middleware');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
-
-const NAMED_PERSON_VERSION_ID = 2;
+const { NAMED_PERSON_VERSION_ID } = require('@ukhomeoffice/asl-constants');
 
 const getIncompleteTrainingDetails = (req) => {
   const formData = get(
@@ -109,5 +108,3 @@ module.exports = (settings) => {
 
   return app;
 };
-
-module.exports.NAMED_PERSON_VERSION_ID = NAMED_PERSON_VERSION_ID;
