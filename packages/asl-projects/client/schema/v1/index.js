@@ -1696,7 +1696,7 @@ export default () => {
                 },
                 {
                   name: 'maximum-animals',
-                  label: 'What is the maximum number of {{ values.value }} that will be used in this protocol?',
+                  label: 'What is the maximum number of {{ values.speciesLabel }} that will be used in this protocol?',
                   hint: 'Only enter numerals, for example 40',
                   type: 'text',
                   inputMode: 'numeric',
@@ -1737,7 +1737,7 @@ export default () => {
                 },
                 {
                   name: 'continued-use',
-                  label: 'Will any {{ values.value }} coming onto this protocol be classed as ‘continued use’?',
+                  label: 'Will any {{ values.speciesLabel }} coming onto this protocol be classed as ‘continued use’?',
                   hint: '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use or animals that have had procedures applied to them in order to be prepared for use in this protocol.',
                   type: 'radio',
                   options: [
@@ -1761,7 +1761,7 @@ export default () => {
                 },
                 {
                   name: 'reuse',
-                  label: 'Are you re-using any {{ values.value }}?',
+                  label: 'Are you re-using any {{ values.speciesLabel }}?',
                   hint: `\
 ‘Re-use’ describes using an animal for a new experiment when you could equally use a naive animal to get the same results.
 

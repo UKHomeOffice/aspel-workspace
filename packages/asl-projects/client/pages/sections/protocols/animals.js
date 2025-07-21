@@ -73,7 +73,7 @@ class Animal extends Component {
             ? (
               <Fieldset
                 fields={fields}
-                values={values}
+                values={{ ...values, speciesLabel: values.value ?? values.name.toLowerCase() }}
                 prefix={prefix}
                 onFieldChange={(key, value) => updateItem({ [key]: value })}
               />
