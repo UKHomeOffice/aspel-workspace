@@ -65,6 +65,7 @@ class Animal extends Component {
   render() {
     const { prefix, fields, values, updateItem, editable, deleted } = this.props;
     const { expanded } = this.state;
+    const valuesWithLabel = { ...values, speciesLabel: values.value ?? values.name.toLowerCase() };
     return (
       <Expandable className="no-bg" onHeaderClick={this.toggleExpanded} expanded={expanded}>
         <h3 className="title">{values.name}</h3>
@@ -73,7 +74,7 @@ class Animal extends Component {
             ? (
               <Fieldset
                 fields={fields}
-                values={{ ...values, speciesLabel: values.value ?? values.name.toLowerCase() }}
+                values={valuesWithLabel}
                 prefix={prefix}
                 onFieldChange={(key, value) => updateItem({ [key]: value })}
               />
@@ -81,7 +82,7 @@ class Animal extends Component {
             : (
               <ReviewFields
                 fields={fields}
-                values={values}
+                values={valuesWithLabel}
                 prefix={prefix}
                 readonly={deleted}
                 editLink={`0#${prefix}`}
