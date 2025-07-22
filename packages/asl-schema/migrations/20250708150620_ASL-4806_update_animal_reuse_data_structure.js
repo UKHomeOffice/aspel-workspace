@@ -53,6 +53,10 @@ WITH detailsByProtocol
            FROM project_versions pv,
                 JSONB_ARRAY_ELEMENTS(pv.data -> 'protocols') WITH ORDINALITY AS proto(value, idx),
                 JSONB_ARRAY_ELEMENTS(proto.value -> 'speciesDetails') WITH ORDINALITY AS details(value, idx)
+           WHERE pv.data IS NOT NULL
+           AND pv.data -> 'protocols' IS NOT NULL
+           -- Some protocol lists contain null entries.
+           AND jsonb_typeof(proto.value) = 'object' 
            GROUP BY pv.id, proto_idx, pv.status),
      protocolsByVersion AS (SELECT pv.id,
                                    JSONB_AGG(
@@ -75,6 +79,9 @@ WITH detailsByProtocol
                                  CROSS JOIN JSONB_ARRAY_ELEMENTS(pv.data -> 'protocols') WITH ORDINALITY AS proto(value, idx)
                                  LEFT JOIN detailsByProtocol AS details
                                            ON pv.id = details.id AND proto.idx = details.proto_idx
+                            WHERE pv.data IS NOT NULL
+                              AND pv.data -> 'protocols' IS NOT NULL
+                              AND jsonb_typeof(proto.value) = 'object'
                             GROUP BY pv.id, pv.status)
 UPDATE project_versions pv
 SET data = JSONB_SET(
@@ -90,6 +97,7 @@ SET data = JSONB_SET(
            )
 FROM protocolsByVersion
 WHERE protocolsByVersion.id = pv.id
+AND pv.data IS NOT NULL
 ;
   `);
 };
@@ -114,6 +122,9 @@ WITH detailsByProtocol
            FROM project_versions pv,
                 JSONB_ARRAY_ELEMENTS(pv.data -> 'protocols') WITH ORDINALITY AS proto(value, idx),
                 JSONB_ARRAY_ELEMENTS(proto.value -> 'speciesDetails') WITH ORDINALITY AS details(value, idx)
+           WHERE pv.data IS NOT NULL
+             AND pv.data -> 'protocols' IS NOT NULL
+             AND jsonb_typeof(proto.value) = 'object'
            GROUP BY pv.id, proto_idx, pv.status),
      protocolsByVersion AS (SELECT pv.id,
                                    JSONB_AGG(
@@ -136,6 +147,9 @@ WITH detailsByProtocol
                                  CROSS JOIN JSONB_ARRAY_ELEMENTS(pv.data -> 'protocols') WITH ORDINALITY AS proto(value, idx)
                                  LEFT JOIN detailsByProtocol AS details
                                            ON pv.id = details.id AND proto.idx = details.proto_idx
+                            WHERE pv.data IS NOT NULL
+                              AND pv.data -> 'protocols' IS NOT NULL
+                              AND jsonb_typeof(proto.value) = 'object'
                             GROUP BY pv.id, pv.status)
 UPDATE project_versions pv
 SET data = JSONB_SET(
@@ -151,6 +165,7 @@ SET data = JSONB_SET(
            )
 FROM protocolsByVersion
 WHERE protocolsByVersion.id = pv.id
+  AND pv.data IS NOT NULL
 ;
   `);
 };
