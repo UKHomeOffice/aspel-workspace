@@ -27,7 +27,7 @@ export default function Role({ task, values, schema }) {
       task.data.action === 'create' && (
         <StickyNavAnchor id="role" key="role">
           <h2><Snippet>sticky-nav.role</Snippet></h2>
-          { version === versions.NAMED_PERSON_VERSION_ID
+          { version === versions.role.NAMED_PERSON_VERSION_ID
             ? <NamedPersonTaskDetails taskData={taskData} profile={profile} />
             : (<>
               <dl className="inline">

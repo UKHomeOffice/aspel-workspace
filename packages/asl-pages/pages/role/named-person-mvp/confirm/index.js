@@ -3,7 +3,7 @@ const { page } = require('@asl/service/ui');
 const form = require('../../../common/routers/form');
 const { populateNamedPeople } = require('../../../common/middleware');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
-const { NAMED_PERSON_VERSION_ID } = require('@ukhomeoffice/asl-constants');
+const { versions } = require('@ukhomeoffice/asl-constants');
 
 const getIncompleteTrainingDetails = (req) => {
   const formData = get(
@@ -48,7 +48,7 @@ const sendData = (req, params = {}) => {
           replaceProfile,
           replaceRoles: PELH_OR_NPRC_ROLES
         },
-        meta: { version: NAMED_PERSON_VERSION_ID }
+        meta: { version: versions.role.NAMED_PERSON_VERSION_ID }
       },
       params
     )
