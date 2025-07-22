@@ -66,11 +66,11 @@ const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
         <>
           <dt><Snippet>explanation.nacwo.delay</Snippet></dt>
           <dd />
-          <dt><Snippet>explanation.nacwo.trainingToComplete</Snippet></dt>
+          <dt><Snippet>explanation.nacwo.trainingNotComplete</Snippet></dt>
           <dd>{incompleteModules}</dd>
           <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
           <dd>{incompleteTraining.delayReason}</dd>
-          <dt><Snippet>explanation.nacwo.trainingDate</Snippet></dt>
+          <dt><Snippet>explanation.nacwo.completionDate</Snippet></dt>
           <dd>{format(incompleteTraining.completeDate, dateFormat.long)}</dd>
         </>
       )}
