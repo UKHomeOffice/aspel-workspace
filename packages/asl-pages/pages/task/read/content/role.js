@@ -5,8 +5,11 @@ module.exports = {
   'sticky-nav': {
     applicant: 'Applicant',
     role: 'Amendment details',
-    conditions: 'Establishment conditions'
+    conditions: 'Establishment conditions',
+    trainingRecord: `{{profile.firstName}}'s training record`,
+    mandatoryTrainingRequirements: 'NACWO mandatory training requirements'
   },
+  mandatoryTrainingRequirements: 'NACWO mandatory training requirements',
   fields: {
     role: {
       label: 'Role'
