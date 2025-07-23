@@ -21,6 +21,9 @@ module.exports = {
     licenceHolder: {
       label: 'PPL holder'
     },
+    licenceNumber: {
+      label: 'Licence number'
+    },
     ropsDeadline: {
       label: 'Deadline for submission'
     },
