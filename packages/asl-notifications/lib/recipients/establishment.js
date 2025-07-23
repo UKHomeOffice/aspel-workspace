@@ -1,3 +1,4 @@
+const dictionary = require('@ukhomeoffice/asl-dictionary');
 const { get } = require('lodash');
 const moment = require('moment');
 const taskHelper = require('../utils/task');
@@ -13,6 +14,7 @@ module.exports = async ({ schema, logger, task }) => {
   const action = get(task, 'data.action');
   const model = get(task, 'data.model');
   const dateFormat = 'D MMM YYYY';
+  const version = get(task, 'data.meta.version');
 
   const allowedActions = {
     establishment: [
@@ -114,6 +116,17 @@ module.exports = async ({ schema, logger, task }) => {
     applicant
   };
 
+  const roleFlow = params => {
+    if (model === 'role' && version) {
+      params.emailTemplate += task.data.meta.version;
+      notifyPelh(params);
+    } else {
+      notifyUser(applicant, params);
+    }
+    notifyAdmins(params);
+    return notifications;
+  };
+
   if (applicant) {
     logger.debug(`applicant is ${applicant.firstName} ${applicant.lastName}`);
   }
@@ -187,41 +200,32 @@ module.exports = async ({ schema, logger, task }) => {
     return notifications;
   }
 
+  if (model === 'role' && version) {
+    params.roleName = dictionary[task.data.data.type.toUpperCase()];
+    const subject = await Profile.query().findById(task.data.data.profileId);
+    params.name = `${subject.firstName} ${subject.lastName}`;
+    params.addTaskTypeToSubject = false;
+  }
+
   if (taskHelper.isWithApplicant(task)) {
     const withApplicantParams = { ...params, emailTemplate: 'task-action-required', logMsg: 'task is with applicant' };
-
-    notifyUser(applicant, withApplicantParams);
-    notifyAdmins(withApplicantParams);
-
-    return notifications;
+    return roleFlow(withApplicantParams);
   }
 
   if (taskHelper.isOverTheFence(task)) {
-    const overTheFenceParams = { ...params, emailTemplate: 'task-with-asru', logMsg: 'task is over the fence' };
-
-    notifyUser(applicant, overTheFenceParams);
-    notifyAdmins(overTheFenceParams);
-
-    return notifications;
+    let overTheFenceParams = { ...params, emailTemplate: 'task-with-asru', logMsg: 'task is over the fence' };
+    return roleFlow(overTheFenceParams);
   }
 
   if (taskHelper.isGranted(task)) {
     const emailTemplate = ['place', 'role'].includes(model) ? 'licence-amended' : 'licence-granted';
     const taskGrantedParams = { ...params, emailTemplate, logMsg: 'licence is granted' };
-
-    notifyUser(applicant, taskGrantedParams);
-    notifyAdmins(taskGrantedParams);
-
-    return notifications;
+    return roleFlow(taskGrantedParams);
   }
 
   if (taskHelper.isClosed(task)) {
     const taskClosedParams = { ...params, emailTemplate: 'task-closed', logMsg: 'task is closed' };
-
-    notifyUser(applicant, taskClosedParams);
-    notifyAdmins(taskClosedParams);
-
-    return notifications;
+    return roleFlow(taskClosedParams);
   }
 
   return notifications;

@@ -91,7 +91,14 @@ module.exports = {
     'inspector-rejected': 'Recommendation made',
     resolved: 'Approved',
     autoresolved: 'Approved',
-    rejected: 'Rejected'
+    rejected: 'Rejected',
+    'status:new:with-inspectorate': 'submitted',
+    'status:with-inspectorate:rejected': 'rejected',
+    'status:with-inspectorate:returned-to-applicant': 'returned',
+    'status:with-inspectorate:resolved': 'approved'
+  },
+  statusLine: {
+    'status:with-inspectorate:resolved': ' This is a PEL amendment.'
   },
   subject: {
     'task-action': 'Action required {{licenceNumber}}',
@@ -117,6 +124,8 @@ module.exports = {
     'retrospective-assessment-due': 'Reminder: Retrospective assessment due {{when}} for {{projectStatus}} project licence {{licenceNumber}}',
     'condition-reminder': 'Reminder: {{modelType}} licence {{licenceNumber}} has a condition that is due {{when}}',
     'condition-reminder-overdue': 'Notification: {{modelType}} licence {{licenceNumber}} has a condition that was due yesterday',
-    'rop-reminder': `Reminder: Return of procedures due {{when}} for {{#status}}{{status}} {{/status}}project licence {{licenceNumber}}`
+    'rop-reminder': `Reminder: Return of procedures due {{when}} for {{#status}}{{status}} {{/status}}project licence {{licenceNumber}}`,
+    'task-with-asru2': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
+    'task-change2': 'The {{ roleName }} role application for {{ name }} has been {{ status }}'
   }
 };
