@@ -1770,7 +1770,7 @@ Select each that applies`,
                   options: [
                     {
                       label: 'Yes, from another protocol - in this project or another project',
-                      value: 'another-protocol',
+                      value: 'other-protocol',
                       reveal: [
                         {
                           name: 'reuse-details',
