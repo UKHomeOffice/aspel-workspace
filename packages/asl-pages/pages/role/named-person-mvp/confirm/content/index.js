@@ -18,9 +18,9 @@ module.exports = merge({}, baseContent, {
     },
     nacwo: {
       delay: 'There is an unavoidable delay in completing one or more modules',
-      trainingToComplete: 'NACWO training modules to be completed:',
+      trainingNotComplete: 'NACWO training modules to be completed:',
       reasonForDelay: 'Reason for delay:',
-      trainingDate: 'Date all mandatory training will be completed:'
+      completionDate: 'Date all mandatory training will be completed:'
     }
   },
   agreement: 'I agree with {{ agreementDeterminer }} these statements',
