@@ -7,6 +7,8 @@ import {
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
+import { NamedPersonTaskDetails } from '../components/named-person-task-details';
+const { versions } = require('@ukhomeoffice/asl-constants');
 
 const selector = ({ static: { establishment, profile, remainingRoles, allowedActions, openTask, errors } }) => ({ establishment, profile, remainingRoles, allowedActions, openTask, errors });
 
@@ -14,6 +16,7 @@ export default function Role({ task, values, schema }) {
   const { establishment, profile, remainingRoles, allowedActions, openTask, errors } = useSelector(selector, shallowEqual);
   const canUpdateConditions = allowedActions.includes('establishment.updateConditions');
   const taskData = task.data.data;
+  const { version } = task.data.meta;
 
   if (!taskData.conditions && taskData.conditions !== '') {
     taskData.conditions = establishment.conditions;
@@ -24,22 +27,27 @@ export default function Role({ task, values, schema }) {
       task.data.action === 'create' && (
         <StickyNavAnchor id="role" key="role">
           <h2><Snippet>sticky-nav.role</Snippet></h2>
-          <dl className="inline">
-            <dt><Snippet>fields.role.label</Snippet></dt>
-            <dd><Snippet>{`namedRoles.${task.data.data.type}`}</Snippet></dd>
-            <dt><Snippet>action.assigned</Snippet></dt>
-            <dd>
-              <Link page="profile.read" establishmentId={establishment.id} profileId={profile.id} label={`${profile.firstName} ${profile.lastName}`} />
-            </dd>
-            {
-              task.data.data.rcvsNumber && (
-                <Fragment>
-                  <dt><Snippet>fields.rcvsNumber.label</Snippet></dt>
-                  <dd>{ task.data.data.rcvsNumber }</dd>
-                </Fragment>
-              )
-            }
-          </dl>
+          { version === versions.role.NAMED_PERSON_VERSION_ID
+            ? <NamedPersonTaskDetails taskData={taskData} profile={profile} />
+            : (<>
+              <dl className="inline">
+                <dt><Snippet>fields.role.label</Snippet></dt>
+                <dd><Snippet>{`namedRoles.${task.data.data.type}`}</Snippet></dd>
+                <dt><Snippet>action.assigned</Snippet></dt>
+                <dd>
+                  <Link page="profile.read" establishmentId={establishment.id} profileId={profile.id} label={`${profile.firstName} ${profile.lastName}`} />
+                </dd>
+                {
+                  task.data.data.rcvsNumber && (
+                    <Fragment>
+                      <dt><Snippet>fields.rcvsNumber.label</Snippet></dt>
+                      <dd>{ task.data.data.rcvsNumber }</dd>
+                    </Fragment>
+                  )
+                }
+              </dl>
+            </>)
+          }
         </StickyNavAnchor>
       )
     ),

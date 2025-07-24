@@ -39,7 +39,7 @@
     "@ukhomeoffice/asl-components": "file:../asl-components",
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@ukhomeoffice/frontend-toolkit": "^3.0.0",
-    "@ukhomeoffice/react-components": "^1.5.0",
+    "@ukhomeoffice/react-components": "^1.6.4",
     "audit-ci": "^7.1.0",
     "body-parser": "^1.18.3",
     "deep-diff": "^1.0.2",

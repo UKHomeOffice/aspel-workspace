@@ -12,6 +12,7 @@ import {
   isTrueish
 } from '../../../../../lib/utils';
 import PplDeclarations from './ppl-declarations';
+const { versions } = require('@ukhomeoffice/asl-constants');
 
 function ProfileLink({ id, name, establishmentId, asruUser }) {
   if (establishmentId && !asruUser) {
@@ -357,6 +358,8 @@ function LogItem({ item, task }) {
   const isRa = task.data.action === 'grant-ra';
   const isAssignment = item.eventName === 'assign';
   const isIntentionToRefuse = action === 'intention-to-refuse';
+  const roleData = task.data.data;
+  const { version } = task.data.meta;
 
   if (action === 'update') {
     if (isExtension) {
@@ -376,6 +379,7 @@ function LogItem({ item, task }) {
         activity={item}
         changedBy={item.changedBy}
       />
+      { version === versions.role.NAMED_PERSON_VERSION_ID && <Snippet fallback='declarations.default'>declarations.{roleData.type}</Snippet> }
       <InspectorRecommendation item={item} />
       {isExtension && <DeadlineDetails item={item} />}
       {isRa && <AwerbDate item={item} />}

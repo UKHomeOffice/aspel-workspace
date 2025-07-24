@@ -21,6 +21,11 @@ body {
   color: $hint-colour;
 }
 
+// Remove checkbox item padding for hints nested in reveals
+.govuk-checkboxes__item .govuk-form-group > .govuk-hint {
+  padding-left: 0;
+}
+
 .not-applicable {
   color: $hint-colour;
 }

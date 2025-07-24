@@ -27,14 +27,13 @@ import GrantedSteps from '../../pages/sections/granted/protocol-steps';
 import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 
 import intersection from 'lodash/intersection';
-import some from 'lodash/some';
 
 import experience from './experience';
 import permissiblePurpose from './permissible-purpose';
 
 import confirmProtocolsAffected from '../../helpers/confirm-protocols-affected';
 
-import {isTrainingLicence, markdownLink, getCurrentURLForFateOfAnimals} from '../../helpers';
+import { isTrainingLicence, markdownLink, getCurrentURLForFateOfAnimals } from '../../helpers';
 import NTSFateOfAnimalFields from '../../helpers/nts-field';
 import { trainingSummaryRenderer } from '../../components/download-link/components/training-summary-renderer.mjs';
 
@@ -589,7 +588,7 @@ export default () => {
               confirmRemove: confirmProtocolsAffected('remove', 'locations', 'POLE', 'title'),
               subtitle: 'Specify the details of each POLE that you will be using.',
               intro: `If you can’t specify a grid reference for a POLE, include details that allows it to be easily identified for inspection. This could be an address of a site or a postcode of a farm.
-  
+
   If you can only add generic information at this stage, provide a general description of the types of areas you are considering.`,
               fields: [
                 {
@@ -1131,7 +1130,7 @@ export default () => {
                   show: values => !isTrainingLicence(values),
                   label: 'How do each of these objectives relate to each other and help you to achieve your aim?',
                   hint: `Outline any interdependencies, stop:go points, and milestones. Include any key in vitro, ex vivo or in silico work, clinical findings, or results from epidemiological studies carried out under other projects that will enable you to achieve your objectives.
-  
+
   Consider including images (.jpg and .png files) of annotated flow charts
   and decision trees in your action plan to illustrate how objectives relate to
   each other.`,
@@ -1696,8 +1695,16 @@ export default () => {
                   section: 'intro'
                 },
                 {
+                  name: 'maximum-animals',
+                  label: 'What is the maximum number of {{ values.speciesLabel }} that will be used in this protocol?',
+                  hint: 'Only enter numerals, for example 40',
+                  type: 'text',
+                  inputMode: 'numeric',
+                  className: 'govuk-input--width-5'
+                },
+                {
                   name: 'life-stages',
-                  label: 'Which life stages will be used during this protocol?',
+                  label: 'Which life stages will be used in this protocol?',
                   hint: 'Select all that apply',
                   type: 'checkbox',
                   className: 'smaller',
@@ -1730,7 +1737,7 @@ export default () => {
                 },
                 {
                   name: 'continued-use',
-                  label: 'Will any animals coming on to this protocol be classed as ‘continued use’?',
+                  label: 'Will any {{ values.speciesLabel }} coming onto this protocol be classed as ‘continued use’?',
                   hint: '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use or animals that have had procedures applied to them in order to be prepared for use in this protocol.',
                   type: 'radio',
                   options: [
@@ -1754,42 +1761,49 @@ export default () => {
                 },
                 {
                   name: 'reuse',
-                  label: 'Will you be re-using animals on to this protocol?',
-                  hint: '‘Re-use’ describes using animals again for a new experiment when you could equally use a naïve animal to get the same results.',
-                  type: 'radio',
+                  label: 'Are you re-using any {{ values.speciesLabel }}?',
+                  hint: `\
+‘Re-use’ describes using an animal for a new experiment when you could equally use a naive animal to get the same results.
+
+Select each that applies`,
+                  type: 'checkbox',
                   options: [
                     {
-                      label: 'Yes',
-                      value: true,
+                      label: 'Yes, from another protocol - in this project or another project',
+                      value: 'other-protocol',
                       reveal: [
                         {
                           name: 'reuse-details',
-                          label: 'Describe any procedure that may have been applied to these animals, and why you are choosing to re-use them.',
+                          label: 'Describe the procedures that have been applied to them and why are you choosing to re-use them',
                           type: 'texteditor'
                         }
                       ]
                     },
                     {
+                      label: 'Yes, within this protocol',
+                      value: 'this-protocol',
+                      reveal: [
+                        {
+                          name: 'maximum-times-used',
+                          label: 'What is the maximum number of times an animal will be used in this protocol?',
+                          hint: 'Only enter numerals, for example 40',
+                          type: 'text',
+                          inputMode: 'numeric',
+                          className: 'govuk-input--width-5'
+                        }
+                      ]
+                    },
+                    {
+                      divider: 'or',
+                      id: 'divider'
+                    },
+                    {
                       label: 'No',
-                      value: false
+                      value: 'no',
+                      behaviour: 'exclusive'
                     }
                   ],
-                  inline: true,
-                  className: 'smaller'
                 },
-                {
-                  name: 'maximum-animals',
-                  label: 'What is the maximum number of animals that will be used on this protocol?',
-                  type: 'text',
-                  hint: 'Please only enter numbers, e.g. 40'
-                },
-                {
-                  name: 'maximum-times-used',
-                  label: 'What is the maximum number of uses of this protocol per animal?',
-                  hint: 'For example, if some animals will go through this protocol three more times after their first use, the number of uses will be four.\n\n If no animals will go through this protocol more than once, enter \'1\'.\n\nPlease only enter numbers, e.g. 40',
-                  type: 'text'
-
-                }
               ]
             },
             gaas: {
@@ -1964,7 +1978,7 @@ export default () => {
             },
             fate: {
               title: 'Fate of animals',
-              show: ({isGranted, isFullApplication}) => !isGranted || isFullApplication,
+              show: ({ isGranted, isFullApplication }) => !isGranted || isFullApplication,
               granted: {
                 order: 11
               },
@@ -2728,7 +2742,12 @@ export default () => {
         },
         'reusing-animals': {
           title: 'Re-using animals',
-          show: project => some(project.protocols, protocol => protocol && some(protocol.speciesDetails, species => (species || {}).reuse)),
+          show: project =>
+            (project.protocols ?? [])
+              .flatMap(protocol => protocol?.speciesDetails ?? [])
+              .flatMap(species => species.reuse ?? [])
+              .some(value => value !== 'no')
+          ,
           intro: 'You are seeing this section because you will be re-using animals during your project. If this is not correct, you can change this in Protocols.',
           fields: [
             {
