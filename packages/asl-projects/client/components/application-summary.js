@@ -31,11 +31,14 @@ const mapStateToProps = ({
   }
 }) => {
   const schema = schemaMap[schemaVersion];
-  const fieldsBySection = Object.values(schema()).map(section => section.subsections).reduce((obj, subsections) => {
+  const fieldsBySubsection = Object.values(schema()).map(section => section.subsections).reduce((obj, subsections) => {
     const includeReveals = true;
     return {
       ...obj,
-      ...mapValues(subsections, subsection => flattenReveals(getFields(subsection, includeReveals), project).map(field => field.name))
+      ...mapValues(subsections, subsection => [
+        ...flattenReveals(getFields(subsection, includeReveals), project).map(field => field.name),
+        ...(subsection.hiddenFields ?? [])
+      ])
     };
   }, {});
   return {
@@ -43,7 +46,7 @@ const mapStateToProps = ({
     showComments,
     showConditions,
     newComments: getNewComments(comments, user, project),
-    fieldsBySection,
+    fieldsBySubsection,
     legacy: schemaVersion === 0,
     values: project,
     sections: schema(),
@@ -56,7 +59,7 @@ const ApplicationSummary = () => {
   const props = useSelector(mapStateToProps);
   const { isSyncing } = useSelector(selector);
   const [submitted, setSubmitted] = useState(false);
-  const { legacy, values, readonly, sections, basename, fieldsBySection, newComments, project, showComments } = props;
+  const { legacy, values, readonly, sections, basename, fieldsBySubsection, newComments, project, showComments } = props;
   const [errors, setErrors] = useState(false);
   const ref = useRef(null);
 
@@ -151,7 +154,7 @@ const ApplicationSummary = () => {
   };
 
   const getCommentCount = (key) => {
-    const fields = fieldsBySection[key] || [];
+    const fields = fieldsBySubsection[key] || [];
     const getCommentsForKey = key => {
       const match = minimatch.filter(key);
       return Object.keys(newComments)
@@ -226,11 +229,8 @@ const ApplicationSummary = () => {
                   subsections.map(key => {
 
                     const subsection = section.subsections[key];
-                    const fields = Object.values(fieldsBySection[key] || []);
+                    const fields = Object.values(fieldsBySubsection[key] || []);
 
-                    if (key === 'protocols') {
-                      fields.push('reusableSteps');
-                    }
                     if (subsection.repeats) {
                       fields.push(subsection.repeats);
                     }

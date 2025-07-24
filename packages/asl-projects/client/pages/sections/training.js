@@ -5,6 +5,7 @@ import { TrainingSummary } from '@ukhomeoffice/asl-components';
 import { Button } from '@ukhomeoffice/react-components';
 import Fieldset from '../../components/fieldset';
 import ReviewFields from '../../components/review-fields';
+import ChangedBadge from '../../components/changed-badge';
 
 export default function Training(props) {
   const { training, basename, readonly, canUpdateTraining } = useSelector(state => state.application, shallowEqual);
@@ -31,6 +32,7 @@ export default function Training(props) {
       }
       <p>{props.intro}</p>
       <h2>Training record</h2>
+      <ChangedBadge fields={['training']} />
       <TrainingSummary certificates={readonly ? project.training : training} />
       {
         (readonly || !canUpdateTraining)
