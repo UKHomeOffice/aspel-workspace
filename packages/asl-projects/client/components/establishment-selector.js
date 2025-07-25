@@ -49,13 +49,18 @@ export default function EstablishmentSelector({ value, onFieldChange, review, di
 
   useEffect(() => {
     if (onFieldChange && localValue !== value) {
-      onFieldChange({
+      const selectedEstablishment = establishments.find(e => e.id === localValue) || {};
+
+      const updates = {
         'transfer-of-animals-complete': false,
         'protocols-complete': false,
         'experience-complete': false,
         transferToEstablishment: localValue,
-        transferToEstablishmentName: (establishments.find(e => e.id === localValue) || {}).name
-      });
+        transferToEstablishmentName: selectedEstablishment.name
+      };
+
+      // Prevent downstream mutation
+      onFieldChange(JSON.parse(JSON.stringify(updates)));
     }
   }, [localValue]);
 

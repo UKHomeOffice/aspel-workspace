@@ -91,7 +91,7 @@ export default function Index() {
           </ul>
           {
             reports && reports.slice(0, 3).map(report => (
-              <p key={report.path}>
+              <p key={report.id}>
                 <Link
                   page="downloads.taskMetrics"
                   exportId={report.id}
@@ -106,7 +106,7 @@ export default function Index() {
                 <summary>Older reports</summary>
                 {
                   reports.slice(3).map(report => (
-                    <p key={report.path}>
+                    <p key={report.id}>
                       <Link
                         page="downloads.taskMetrics"
                         exportId={report.id}

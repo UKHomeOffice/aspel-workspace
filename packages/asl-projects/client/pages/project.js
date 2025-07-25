@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import { Redirect, useLocation } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
@@ -14,7 +14,12 @@ function useQuery() {
 }
 
 export default function Index() {
-  const { project, application: { isGranted, schemaVersion } } = useSelector(state => state);
+  const { project, application } = useSelector(state => ({
+    project: state.project,
+    application: state.application
+  }), shallowEqual);
+
+  const { isGranted, schemaVersion } = application;
 
   const query = useQuery();
   if (!project) {

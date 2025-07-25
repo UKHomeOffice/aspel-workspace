@@ -112,13 +112,24 @@ export function Datatable({
                     data.length === 0 && noDataWarning && <tr><td colSpan={colSpan}>{noDataWarning}</td></tr>
                 }
                 {
-                    data.map(row =>
-                        <RowComponent key={row.id} schema={schema} row={row} Expandable={Expandable} Actions={Actions} expands={expands} alwaysExpanded={alwaysExpanded} />
-                    )
+                    data.map((row, index) => {
+                        const key = row.id ?? `row-${index}`;
+                        return (
+                            <RowComponent
+                                key={key}
+                                schema={schema}
+                                row={row}
+                                Expandable={Expandable}
+                                Actions={Actions}
+                                expands={expands}
+                                alwaysExpanded={alwaysExpanded}
+                            />
+                        );
+                    })
                 }
             </tbody>
             {
-                !pagination.hideUI &&
+                !pagination?.hideUI &&
           <tfoot>
               <tr>
                   <td colSpan={colSpan}>

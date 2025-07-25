@@ -1,6 +1,12 @@
 module.exports = {
-    setupFilesAfterEnv: [
-        '<rootDir>/enzyme.setup.js'
+    testEnvironment: 'jsdom',
+    transform: {
+        '^.+\\.[jt]sx?$': 'babel-jest'
+    },
+    transformIgnorePatterns: [
+        '/node_modules/(?!uuid|react-markdown|remark-.*|rehype-.*)/'
     ],
-    transformIgnorePatterns: []
+    setupFilesAfterEnv: [
+        '<rootDir>/setup-test.js'
+    ]
 };
