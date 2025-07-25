@@ -113,7 +113,7 @@ export function Datatable({
                 }
                 {
                     data.map((row, index) => {
-                        const key = row.id ?? `${index}-${JSON.stringify(row).slice(0, 20)}`;
+                        const key = row.id ?? `row-${index}`;
                         return (
                             <RowComponent
                                 key={key}
