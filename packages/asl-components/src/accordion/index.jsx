@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import every from 'lodash/every';
 import castArray from 'lodash/castArray';
 
 const Accordion = ({ children, closeAll = 'Close all', openAll = 'Open all' }) => {
-    const [open, setOpen] = useState([]);
+    const initialOpen = useMemo(() =>
+        React.Children.map(children, child => child?.props?.isOpen || false),
+    [children]
+    );
 
-    useEffect(() => {
-        const initialOpen = children.map(child => (child.props && child.props.isOpen) ? child.props.isOpen : false);
-        setOpen(initialOpen);
-    }, [children]);
+    const [open, setOpen] = useState(initialOpen);
 
     const toggle = (i) => {
         setOpen(prevOpen => prevOpen.map((item, index) => index === i ? !item : item));

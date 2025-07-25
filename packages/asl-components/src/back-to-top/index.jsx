@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import classnames from 'classnames';
 
 const BackToTop = ({ showAt = 400 }) => {
     const [isVisible, setIsVisible] = useState(false);
 
-    const handleScroll = () => {
+    const handleScroll = useCallback(() => {
         if (!isVisible && window.scrollY > showAt) {
             setIsVisible(true);
         } else if (isVisible && window.scrollY < showAt) {
             setIsVisible(false);
         }
-    };
+    }, [isVisible, showAt]);
 
     const scrollToTop = (e) => {
         e.preventDefault();
@@ -26,7 +26,7 @@ const BackToTop = ({ showAt = 400 }) => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, [isVisible, showAt]);
+    }, [handleScroll]); // now only depends on handleScroll
 
     return (
         <div className={classnames('back-to-top', { hidden: !isVisible })}>

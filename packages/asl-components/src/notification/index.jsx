@@ -5,21 +5,14 @@ import { hideNotification } from './actions';
 const NOTIFICATION_DURATION = 5000;
 
 const Notification = ({ timeout = NOTIFICATION_DURATION, type = 'alert', message, hideNotification }) => {
-    const timer = useCallback(() => {
-        if (timeout && message) {
-            const timeoutId = setTimeout(hideNotification, timeout);
-            return () => clearTimeout(timeoutId);
-        }
+    useEffect(() => {
+        if (!timeout || !message) return;
+
+        const timeoutId = setTimeout(hideNotification, timeout);
+        return () => clearTimeout(timeoutId);
     }, [timeout, message, hideNotification]);
 
-    useEffect(() => {
-        const cleanup = timer();
-        return cleanup;
-    }, [timer]);
-
-    if (!message) {
-        return null;
-    }
+    if (!message) return null;
 
     return (
         <div
