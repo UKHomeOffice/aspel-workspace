@@ -2,7 +2,6 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkFlexibleMarkers from 'remark-flexible-markers';
-import ErrorBoundary from '@asl/projects/client/components/error-boundary';
 
 // Utility function to check for block-level elements
 function containsBlock(children) {
@@ -67,33 +66,32 @@ export default function Markdown({
     ...rest
 }) {
     return (
-        <ErrorBoundary>
-            <ReactMarkdown
-                components={{
-                    ...(!links && {
-                        a: RenderLink,
-                        linkReference: RenderLinkReference,
-                        ul: RenderUnorderedList
-                    }),
-                    p: (props) => (
-                        <ParagraphComponent
-                            unwrapSingleLine={unwrapSingleLine}
-                            paragraphProps={paragraphProps}
-                            {...props}
-                        />
-                    ),
-                    mark: ({ ...props }) => <mark {...props} />
-                }}
-                remarkPlugins={[
-                    ...(significantLineBreaks ? [remarkBreaks] : []),
-                    remarkFlexibleMarkers
-                ]}
-                unwrapDisallowed={true}  // Prevents invalid HTML nesting
-                skipHtml={true}         // Avoids potential HTML parsing issues
-                {...rest}
-            >
-                {source || children}
-            </ReactMarkdown>
-        </ErrorBoundary>
+
+        <ReactMarkdown
+            components={{
+                ...(!links && {
+                    a: RenderLink,
+                    linkReference: RenderLinkReference,
+                    ul: RenderUnorderedList
+                }),
+                p: (props) => (
+                    <ParagraphComponent
+                        unwrapSingleLine={unwrapSingleLine}
+                        paragraphProps={paragraphProps}
+                        {...props}
+                    />
+                ),
+                mark: ({ ...props }) => <mark {...props} />
+            }}
+            remarkPlugins={[
+                ...(significantLineBreaks ? [remarkBreaks] : []),
+                remarkFlexibleMarkers
+            ]}
+            unwrapDisallowed={true}  // Prevents invalid HTML nesting
+            skipHtml={true}         // Avoids potential HTML parsing issues
+            {...rest}
+        >
+            {source || children}
+        </ReactMarkdown>
     );
 }

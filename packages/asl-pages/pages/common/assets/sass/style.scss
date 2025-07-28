@@ -936,3 +936,16 @@ section#rops {
   padding: 15px;
   background-color: #fff;
 }
+
+dl.inline-wide {
+  margin-top: 1em;
+  margin-bottom: 1em;
+
+  dt {
+    margin-right: 5%;
+  }
+
+  dd {
+    margin-left: 55%;
+  }
+}
