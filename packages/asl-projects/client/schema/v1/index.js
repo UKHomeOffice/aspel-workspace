@@ -1767,6 +1767,7 @@ export default () => {
 
 Select each that applies`,
                   type: 'checkbox',
+                  preserveHierarchy: true,
                   options: [
                     {
                       label: 'Yes, from another protocol - in this project or another project',
