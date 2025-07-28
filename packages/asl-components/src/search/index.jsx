@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { doSearch } from './actions';
 import { ApplyChanges } from '../';
@@ -6,7 +6,7 @@ import { ApplyChanges } from '../';
 export const Search = ({ filter, name = 'filter', label, hint, action, query, labelledBy, onChange }) => {
     const [value, setValue] = useState(filter);
 
-    useEffect(() => {
+    useMemo(() => {
         setValue(filter);
     }, [filter]);
 

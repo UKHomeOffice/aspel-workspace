@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 import { indexedDBSync, ajaxSync } from '../actions/projects';
 import DefaultSection from './sections';
 import SectionsLink from '../components/sections-link';
-import ErrorBoundary from '../components/error-boundary';
+import ErrorBoundary from '@ukhomeoffice/asl-components/src/error-boundary';
 import StaticSection from '../components/static-section';
 import RaSidePanel from '../components/ra-side-panel';
 import RAHint from '../components/ra-hint';

@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 import Alert from './components/alert';
-import ErrorBoundary from './components/error-boundary';
+import ErrorBoundary from '@ukhomeoffice/asl-components/src/error-boundary';
 import ProjectRouter from './project-router';
 import configureStore from './store';
 
