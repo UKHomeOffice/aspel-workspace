@@ -23,7 +23,11 @@ function legalPersonFrom(value) {
 }
 
 export default function Establishment({ task, values }) {
-  const { establishment, allowedActions, openTask, errors } = useSelector(state => state.static);
+  const establishment = useSelector(state => state.static.establishment);
+  const allowedActions = useSelector(state => state.static.allowedActions);
+  const openTask = useSelector(state => state.static.openTask);
+  const errors = useSelector(state => state.static.errors);
+
   const isComplete = !task.isOpen;
   const canUpdateConditions = allowedActions.includes('establishment.updateConditions');
   const taskData = task.data.data;

@@ -2,7 +2,14 @@ import React, { Fragment } from 'react';
 import { Countdown } from '../';
 import { format } from 'date-fns';
 
-const ExpiryDate = ({ date, expiry, dateFormat, unit, showUrgent, showNotice }) => {
+const ExpiryDate = ({
+    date,
+    expiry,
+    dateFormat = 'dd MMMM yyyy',
+    unit = 'month',
+    showUrgent = 3,
+    showNotice = true
+}) => {
     if (!date) {
         return null;
     }
@@ -16,17 +23,10 @@ const ExpiryDate = ({ date, expiry, dateFormat, unit, showUrgent, showNotice }) 
             { format(date, dateFormat) }
             {
                 showNotice !== false &&
-          <Countdown expiry={expiry} unit={unit} showUrgent={showUrgent} showNotice={showNotice} />
+        <Countdown expiry={expiry} unit={unit} showUrgent={showUrgent} showNotice={showNotice} />
             }
         </Fragment>
     );
-};
-
-ExpiryDate.defaultProps = {
-    dateFormat: 'dd MMMM yyyy',
-    unit: 'month',
-    showUrgent: 3,
-    showNotice: true
 };
 
 export default ExpiryDate;

@@ -29,7 +29,7 @@ function getTemplate(content, primary, fallback) {
     return undefined;
 }
 
-export const Snippet = ({ content, children, optional, fallback, ...props }) => {
+export const Snippet = ({ content, children, optional, fallback, isPtag = true, ...props }) => {
     // dynamic children with {value} values get passes as an array
     const primary = Array.isArray(children) ? children.join('') : children;
 
@@ -48,7 +48,7 @@ export const Snippet = ({ content, children, optional, fallback, ...props }) => 
 
     return (
         <Markdown
-            unwrapSingleLine={true}
+            unwrapSingleLine={isPtag}
             linkTarget={props.linkTarget}
         >{ source }</Markdown>
     );

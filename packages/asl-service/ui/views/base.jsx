@@ -1,6 +1,6 @@
 import React from 'react';
 import omit from 'lodash/omit';
-import { createStore } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import HomeOffice from '../components/home-office';
 import rootReducer from '../reducers';
@@ -10,20 +10,21 @@ import {
   Wrapper
 } from '@ukhomeoffice/asl-components';
 
-const Wrapped = ({ store, children }) => <Provider store={store}>{ children }</Provider>;
+const Wrapped = ({ store, children }) => (
+  <Provider store={store}>
+    {children}
+  </Provider>
+);
 
-const renderChildren = (children, wrap) => {
-  if (wrap) {
-    return <Wrapper>{ children }</Wrapper>;
-  }
-  return children;
-};
+const renderChildren = (children) => (
+  <Wrapper>{children}</Wrapper>
+);
 
 const Layout = ({
   error,
   children,
-  scripts = [],
-  stylesheets = [],
+  scripts: originalScripts = [],
+  stylesheets: originalStylesheets = [],
   user,
   crumbs,
   footerLinks,
@@ -32,6 +33,15 @@ const Layout = ({
   phaseBannerSurvey,
   ...props
 }) => {
+  if (error) {
+    return (
+      <div className="error">
+        <h1>Something went wrong</h1>
+        <p>{error.message || 'An unknown error occurred.'}</p>
+      </div>
+    );
+  }
+
   const {
     content: {
       siteTitle = 'Research and testing using animals',
@@ -42,21 +52,37 @@ const Layout = ({
     ...rest
   } = staticContent;
 
-  const wrap = !error;
-  const store = wrap
-    ? createStore(rootReducer, {
-      ...omit(props, ['footerLinks', 'settings', '_locals', 'cache']),
+  // Create Redux store only if we want to wrap
+  const store = configureStore({
+    reducer: rootReducer,
+    preloadedState: {
+      ...omit(props, [
+        'footerLinks',
+        'settings',
+        '_locals',
+        'cache',
+        'pageTitle'
+      ]),
       static: { ...rest, content, urls }
-    })
-    : {};
-  if (scripts.length) {
-    scripts = ['/public/js/common/bundle.js'].concat(scripts);
-  }
+    }
+  });
+
+  // Create new arrays without mutating props
+  const stylesheets = ['/public/css/app.css', ...originalStylesheets];
+  const scripts = originalScripts.length
+    ? ['/public/js/common/bundle.js', ...originalScripts]
+    : [];
+
   const page = (
     <HomeOffice
       title={props.pageTitle ? `${props.pageTitle} - ${siteTitle}` : siteTitle}
       propositionHeader={siteTitle}
-      stylesheets={['/public/css/app.css'].concat(stylesheets)}
+      stylesheets={stylesheets}
+      linkProps={{
+        rel: 'preload',
+        as: 'style',
+        onLoad: 'this.onload=null;this.rel=\'stylesheet\''
+      }}
       scripts={scripts}
       headerContent={<StatusBar user={user} />}
       nonce={nonce}
@@ -74,27 +100,30 @@ const Layout = ({
           <div className="govuk-grid-row">
             <div className="govuk-grid-column-full">
               <div id="page-component">
-                { renderChildren(children, wrap) }
+                {renderChildren(children)}
               </div>
             </div>
           </div>
         </main>
       </div>
-      {
-        wrap && <script src="/public/js/common/base64.js" />
-      }
-      {
-        wrap && <script nonce={nonce} dangerouslySetInnerHTML={{__html: `
-          function decode(str) { return JSON.parse(window.Base64.decode(str)); }
-          window.INITIAL_STATE=decode('${Buffer.from(JSON.stringify(store.getState()), 'utf8').toString('base64')}');
-        `}} />
-      }
+      <script src="/public/js/common/base64.js" />
+      <script
+        nonce={nonce}
+        dangerouslySetInnerHTML={{
+          __html: `
+      function decode(str) { return JSON.parse(window.Base64.decode(str)); }
+      window.INITIAL_STATE = decode('${Buffer.from(
+      JSON.stringify(store.getState()),
+      'utf8'
+    ).toString('base64')}');
+    `
+        }}
+      />
+
     </HomeOffice>
   );
-  if (wrap) {
-    return <Wrapped store={store}>{ page }</Wrapped>;
-  }
-  return page;
+
+  return <Wrapped store={store}>{page}</Wrapped>;
 };
 
-module.exports = Layout;
+export default Layout;

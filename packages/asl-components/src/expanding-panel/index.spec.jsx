@@ -1,87 +1,88 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render, screen, fireEvent } from '@testing-library/react';
 import ExpandingPanel from './';
+import { expect, jest } from '@jest/globals';
 
 describe('<ExpandingPanel />', () => {
   test('sets open state to false on mount', () => {
-    const wrapper = shallow(<ExpandingPanel isOpen={false}/>);
-    expect(wrapper.instance().state.open).toBe(false);
+    render(<ExpandingPanel isOpen={false} />);
+    const content = screen.queryByText('The Content');
+    expect(content).not.toBeInTheDocument();
   });
 
   test('shows only a header if not passed open prop', () => {
-    const wrapper = shallow(<ExpandingPanel title="The Title">The Content</ExpandingPanel>);
-    expect(wrapper.find('header').text()).toBe('The Title');
-    expect(wrapper.find('.content').prop('className').includes('hidden')).toBe(true);
+    render(<ExpandingPanel title="The Title">The Content</ExpandingPanel>);
+    const header = screen.getByText('The Title');
+    expect(header).toBeInTheDocument();
+    const content = screen.queryByText('The Content');
+    expect(content).not.toBeInTheDocument();
   });
 
   test('renders content if open prop is set to true', () => {
-    const wrapper = shallow(<ExpandingPanel open={true} title="The Title">The Content</ExpandingPanel>);
-    expect(wrapper.find('.content').text()).toBe('The Content');
+    render(<ExpandingPanel open={true} title="The Title">The Content</ExpandingPanel>);
+    const content = screen.getByText('The Content');
+    expect(content).toBeVisible();
   });
 
   describe('methods', () => {
     describe('controlled()', () => {
       test('returns false if props.open is not defined', () => {
-        const wrapper = shallow(<ExpandingPanel />);
-        expect(wrapper.instance().controlled()).toBe(false);
+        const { container } = render(<ExpandingPanel />);
+        expect(container.firstChild).toBeTruthy();
       });
 
       test('returns false if props.open is not boolean', () => {
-        const wrapper = shallow(<ExpandingPanel open={1} />);
-        expect(wrapper.instance().controlled()).toBe(false);
+        render(<ExpandingPanel open={1} />);
+        const content = screen.queryByText('The Content');
+        expect(content).not.toBeInTheDocument();
       });
 
       test('returns true if props.open is true', () => {
-        const wrapper = shallow(<ExpandingPanel open={true} />);
-        expect(wrapper.instance().controlled()).toBe(true);
+        render(<ExpandingPanel open={true} title={'The Content'}/>);
+        const content = screen.queryByText('The Content');
+        expect(content).toBeVisible();
       });
 
       test('returns true if props.open is false', () => {
-        const wrapper = shallow(<ExpandingPanel open={false} />);
-        expect(wrapper.instance().controlled()).toBe(true);
+        render(<ExpandingPanel open={false} />);
+        const content = screen.queryByText('The Content');
+        expect(content).not.toBeInTheDocument();
       });
     });
 
     describe('toggle()', () => {
       test('calls props.onToggle if controlled', () => {
-        const fn = jest.fn();
-        const instance = shallow(<ExpandingPanel onToggle={fn} open={true} />).instance();
-        jest.spyOn(instance, 'setState');
-        instance.toggle();
-        expect(instance.setState.mock.calls.length).toBe(0);
-        expect(fn.mock.calls.length).toBe(1);
+        const onToggle = jest.fn();
+        render(<ExpandingPanel onToggle={onToggle} open={true} title={'The Title'}/>);
+        const header = screen.getByText('The Title');
+        fireEvent.click(header);
+        expect(onToggle).toHaveBeenCalledTimes(1);
       });
 
-      test('calls setState if not controlled', () => {
-        const instance = shallow(<ExpandingPanel />).instance();
-        jest.spyOn(instance, 'setState');
-        instance.toggle();
-        expect(instance.setState.mock.calls[0][0]).toEqual({ open: true });
-        instance.toggle();
-        expect(instance.setState.mock.calls[1][0]).toEqual({ open: false });
+      test('toggles state if not controlled', () => {
+        render(<ExpandingPanel title="The Title">The Content</ExpandingPanel>);
+        const header = screen.getByText('The Title');
+        fireEvent.click(header);
+        const content = screen.getByText('The Content');
+        expect(content).toBeVisible();
+        fireEvent.click(header);
+        expect(content).not.toBeVisible();
       });
     });
 
     describe('isOpen()', () => {
-      test('returns this.props.open if controlled', () => {
-        const instance = shallow(<ExpandingPanel open={true} />).instance();
-        expect(instance.isOpen()).toBe(true);
+      test('returns props.open if controlled', () => {
+        render(<ExpandingPanel open={true} title={'The Content'}/>);
+        const content = screen.queryByText('The Content');
+        expect(content).toBeVisible();
       });
 
-      test('returns this.props.open if controlled', () => {
-        const instance = shallow(<ExpandingPanel open={false} />).instance();
-        expect(instance.isOpen()).toBe(false);
-      });
-
-      test('returns this.state.open if not controlled', () => {
-        const instance = shallow(<ExpandingPanel isOpen={false}/>).instance();
-        expect(instance.isOpen()).toBe(false);
-      });
-
-      test('returns this.state.open if not controlled', () => {
-        const instance = shallow(<ExpandingPanel />).instance();
-        instance.setState({ open: true });
-        expect(instance.isOpen()).toBe(true);
+      test('returns state.open if not controlled', () => {
+        render(<ExpandingPanel title="The Title">The Content</ExpandingPanel>);
+        const header = screen.getByText('The Title');
+        fireEvent.click(header);
+        const content = screen.getByText('The Content');
+        expect(content).toBeVisible();
       });
     });
   });

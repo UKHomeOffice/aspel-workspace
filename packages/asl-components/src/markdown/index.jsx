@@ -1,32 +1,57 @@
-/* eslint-disable react/display-name */
-import React, { Fragment } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkFlexibleMarkers from 'remark-flexible-markers';
 
+// Utility function to check for block-level elements
+function containsBlock(children) {
+    return React.Children.toArray(children).some(child => {
+        if (React.isValidElement(child)) {
+            const blockTags = ['p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'div', 'section', 'article'];
+            return blockTags.includes(child.type);
+        }
+        return false;
+    });
+}
+
 function RenderLink({ href, children }) {
-    return <Fragment>[{ children }]({ href })</Fragment>;
+    if (containsBlock(children)) {
+        return <>{children}</>;
+    }
+    return (
+        <a href={href} target="_blank" rel="noopener noreferrer">
+            {children}
+        </a>
+    );
 }
+
 function RenderLinkReference({ children }) {
-    return <Fragment>[{ children }]</Fragment>;
+    return <>{children}</>;
 }
+
 function RenderUnorderedList({ children }) {
-    return <ul className='govuk-list govuk-list--bullet'>{ children }</ul>;
+    return <ul className="govuk-list govuk-list--bullet">{children}</ul>;
 }
 
-const components = {
-    link: RenderLink,
-    linkReference: RenderLinkReference,
-    ul: RenderUnorderedList,
-};
+const ParagraphComponent = ({ unwrapSingleLine, paragraphProps, children, ...props }) => {
+    const childrenArray = React.Children.toArray(children);
+    const isSingleTextChild = childrenArray.length === 1 && typeof childrenArray[0] === 'string';
+    const hasVisibleLineBreaks = isSingleTextChild && childrenArray[0].includes('\n');
 
-// eslint-disable-next-line no-unused-vars
-const wrapInSpanIfOnlyChild = (enabled, paragraphProps) => ({ node, siblingCount, index, ...props }) => {
-    if (enabled && siblingCount === 1) {
-        return <span {...props} />;
+    if (unwrapSingleLine && isSingleTextChild && !hasVisibleLineBreaks) {
+        return <span {...paragraphProps} {...props}>{children}</span>;
     }
 
-    return <p {...paragraphProps} {...props} />;
+    // Ensure we don't nest paragraphs
+    const containsParagraph = childrenArray.some(child =>
+        React.isValidElement(child) && child.type === 'p'
+    );
+
+    if (containsParagraph) {
+        return <div {...paragraphProps} {...props}>{children}</div>;
+    }
+
+    return <p {...paragraphProps} {...props}>{children}</p>;
 };
 
 export default function Markdown({
@@ -36,18 +61,37 @@ export default function Markdown({
     significantLineBreaks = false,
     paragraphProps = {},
     source,
-    ...props
+    // eslint-disable-next-line no-unused-vars
+    linkTarget = '_blank',
+    ...rest
 }) {
-    return <ReactMarkdown
-        includeElementIndex={true}
-        components={{
-            ...(!links && components),
-            p: wrapInSpanIfOnlyChild(unwrapSingleLine, paragraphProps),
-            mark: ({ ...props }) => <mark {...props} />
-        }}
-        remarkPlugins={significantLineBreaks ? [remarkBreaks, remarkFlexibleMarkers] : [remarkFlexibleMarkers]}
-        {...props}
-    >
-        { source || children }
-    </ReactMarkdown>;
+    return (
+
+        <ReactMarkdown
+            components={{
+                ...(!links && {
+                    a: RenderLink,
+                    linkReference: RenderLinkReference,
+                    ul: RenderUnorderedList
+                }),
+                p: (props) => (
+                    <ParagraphComponent
+                        unwrapSingleLine={unwrapSingleLine}
+                        paragraphProps={paragraphProps}
+                        {...props}
+                    />
+                ),
+                mark: ({ ...props }) => <mark {...props} />
+            }}
+            remarkPlugins={[
+                ...(significantLineBreaks ? [remarkBreaks] : []),
+                remarkFlexibleMarkers
+            ]}
+            unwrapDisallowed={true}  // Prevents invalid HTML nesting
+            skipHtml={true}         // Avoids potential HTML parsing issues
+            {...rest}
+        >
+            {source || children}
+        </ReactMarkdown>
+    );
 }

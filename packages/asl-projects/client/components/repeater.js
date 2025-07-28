@@ -10,6 +10,21 @@ import isUndefined from 'lodash/isUndefined';
 import { throwError } from '../actions/messages';
 
 class Repeater extends Component {
+  static defaultProps = {
+    type: 'item',
+    singular: 'item',
+    addOnInit: true,
+    addAnother: true,
+    softDelete: false,
+    itemProps: {},
+    onBeforeAdd: () => Promise.resolve(),
+    onAfterAdd: () => Promise.resolve(),
+    onBeforeRemove: () => Promise.resolve(),
+    onAfterRemove: () => Promise.resolve(),
+    onBeforeDuplicate: items => Promise.resolve(items),
+    onAfterDuplicate: item => Promise.resolve(item)
+  };
+
   constructor(props) {
     super(props);
     this.addItem = this.addItem.bind(this);
@@ -88,8 +103,6 @@ class Repeater extends Component {
     return Promise.resolve()
       .then(this.props.onBeforeRemove)
       .then(() => {
-        // mark record deleted, second check is to
-        // ensure that reusable step which was used to create reusable step in a protocol is not deleted, when deleting an instance of reusable step.
         if (this.props.softDelete && !this.state.items[index].reusable) {
           return this.update(this.state.items.map((item, i) => {
             if (index === i) {
@@ -180,7 +193,6 @@ class Repeater extends Component {
                 prefix: `${this.props.prefix || ''}${this.props.type}.${item.id}.`,
                 length: this.state.items.length,
                 expanded: this.props.expanded && this.props.expanded[index],
-                // get index ignoring previous deleted items
                 number: index - (this.state.items.slice(0, index).filter(i => i.deleted) || []).length
               });
             })
@@ -193,20 +205,5 @@ class Repeater extends Component {
     );
   }
 }
-
-Repeater.defaultProps = {
-  type: 'item',
-  singular: 'item',
-  addOnInit: true,
-  addAnother: true,
-  softDelete: false,
-  itemProps: {},
-  onBeforeAdd: () => Promise.resolve(),
-  onAfterAdd: () => Promise.resolve(),
-  onBeforeRemove: () => Promise.resolve(),
-  onAfterRemove: () => Promise.resolve(),
-  onBeforeDuplicate: items => Promise.resolve(items),
-  onAfterDuplicate: item => Promise.resolve(item)
-};
 
 export default connect(null, { throwError })(Repeater);

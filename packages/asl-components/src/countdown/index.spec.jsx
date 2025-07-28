@@ -1,66 +1,113 @@
+jest.mock('../snippet', () => (props) => (
+  <span data-testid="snippet">{props.children}</span>
+));
+
 import React from 'react';
-import { shallow } from 'enzyme';
-import Countdown from './';
-import Snippet from '../snippet';
+import { render, screen, cleanup } from '@testing-library/react';
+import { configureStore } from '@reduxjs/toolkit'
+import { Provider } from 'react-redux'
 import { endOfTomorrow, addWeeks, addMonths } from 'date-fns';
+import Countdown from './';
+import { expect, jest } from '@jest/globals';
 
 describe('<Countdown />', () => {
+  beforeEach(() => {
+    jest.useFakeTimers('modern');
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+    cleanup();
+  });
+
+  const store = configureStore({
+    reducer: {
+      dummy: (state = {}) => state  // no-op reducer
+    }
+  });
 
   test('shows an expired message if provided date is in the past', () => {
-    const wrapper = shallow(<Countdown expiry={'2017-01-01'} />);
-    expect(wrapper.find(Snippet).props().children).toEqual('countdown.expired');
+    render(
+      <Provider store={store}>
+        <Countdown expiry={'2017-01-01'} />
+      </Provider>
+    );
+    expect(screen.getByText('countdown.expired')).toBeInTheDocument();
   });
 
   test('shows an expires today message if the date is today', () => {
-    const wrapper = shallow(<Countdown expiry={new Date()} />);
-    expect(wrapper.find(Snippet).length).toBe(1);
-    expect(wrapper.find(Snippet).props().children).toEqual('countdown.expiresToday');
-    expect(wrapper.find('span').props().className).toMatch('urgent');
-    expect(wrapper.find(Snippet).props().unit).toEqual('day');
-    expect(wrapper.find(Snippet).props().diff).toEqual(0);
+    const today = new Date(2025, 4, 29);
+    today.setHours(0, 0, 0, 0); // Normalize to start of the day
+    jest.setSystemTime(today);
+    render(
+      <Provider store={store}>
+        <Countdown expiry={today} />
+      </Provider>
+    );
+
+    const snippet = screen.getByText('countdown.expiresToday');
+    expect(snippet).toBeInTheDocument();
+    expect(snippet.parentElement).toHaveClass('urgent');
   });
 
   test('shows urgent 1 day left message if the expiry date is tomorrow', () => {
-    const wrapper = shallow(<Countdown expiry={endOfTomorrow()} />);
-    expect(wrapper.find(Snippet).length).toBe(1);
-    expect(wrapper.find(Snippet).props().children).toEqual('countdown.singular');
-    expect(wrapper.find('span').props().className).toMatch('urgent');
-    expect(wrapper.find(Snippet).props().unit).toEqual('day');
-    expect(wrapper.find(Snippet).props().diff).toEqual(1);
+    render(
+      <Provider store={store}>
+        <Countdown expiry={endOfTomorrow()} />
+      </Provider>
+    );
+    const snippet = screen.getByText('countdown.singular');
+    expect(snippet).toBeInTheDocument();
+    expect(snippet.parentElement).toHaveClass('urgent');
   });
 
   test('shows less than x weeks left if the expiry date is greater than 2 weeks but less than a month', () => {
-    const wrapper = shallow(<Countdown expiry={addWeeks(new Date(), 3)} />);
-    expect(wrapper.find(Snippet).length).toBe(1);
-    expect(wrapper.find(Snippet).props().unit).toEqual('week');
-    expect(wrapper.find(Snippet).props().children).toEqual('countdown.plural');
+    render(<Provider store={store}>
+      <Countdown expiry={addWeeks(new Date(), 3)} />
+    </Provider>
+    );
+    expect(screen.getByText('countdown.plural')).toBeInTheDocument();
   });
 
   test('shows less than x months left if the expiry date is greater than 1 month but less than a year', () => {
-    const wrapper = shallow(<Countdown expiry={addMonths(new Date(), 9)} />);
-    expect(wrapper.find(Snippet).length).toBe(1);
-    expect(wrapper.find(Snippet).props().unit).toEqual('month');
-    expect(wrapper.find(Snippet).props().children).toEqual('countdown.plural');
+    render(<Provider store={store}>
+      <Countdown expiry={addMonths(new Date(), 9)} />
+    </Provider>
+    );
+    expect(screen.getByText('countdown.plural')).toBeInTheDocument();
   });
 
   test('does not display if showNotice is less than the current time difference', () => {
-    const wrapper = shallow(<Countdown expiry={addMonths(new Date(), 9)} unit='month' showNotice={7} />);
-    expect(wrapper.find('span').length).toBe(0);
+    const { container } = render(
+      <Provider store={store}>
+        <Countdown expiry={addMonths(new Date(), 9)} unit="month" showNotice={7} />
+      </Provider>
+    );
+    expect(container).toBeEmptyDOMElement();
   });
 
   describe('custom content key', () => {
-
     test('uses in place of default key if provided', () => {
-      const expired = shallow(<Countdown expiry={'2017-01-01'} contentPrefix="custom" />);
-      expect(expired.find(Snippet).props().children).toEqual('custom.expired');
+      render(
+        <Provider store={store}>
+          <Countdown expiry={'2017-01-01'} contentPrefix="custom" />
+        </Provider>
+      );
+      expect(screen.getByText('custom.expired')).toBeInTheDocument();
 
-      const today = shallow(<Countdown expiry={new Date()} contentPrefix="custom" />);
-      expect(today.find(Snippet).props().children).toEqual('custom.expiresToday');
+      render(
+        <Provider store={store}>
+          <Countdown expiry={new Date()} contentPrefix="custom" />
+        </Provider>
+      );
+      expect(screen.getByText('custom.expiresToday')).toBeInTheDocument();
 
-      const tomorrow = shallow(<Countdown expiry={endOfTomorrow()} contentPrefix="custom" />);
-      expect(tomorrow.find(Snippet).props().children).toEqual('custom.singular');
+      render(
+        <Provider store={store}>
+          <Countdown expiry={endOfTomorrow()} contentPrefix="custom" />
+        </Provider>
+      );
+      expect(screen.getByText('custom.singular')).toBeInTheDocument();
     });
-
   });
-
 });

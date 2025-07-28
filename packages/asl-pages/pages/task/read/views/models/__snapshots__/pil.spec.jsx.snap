@@ -1,91 +1,197 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<PIL /> renders only conditions when action is update-conditions 1`] = `
-<ForwardRef
-  id="conditions"
-  key="conditions"
->
-  <h2>
-    <Connect(Snippet)>
-      sticky-nav.conditions
-    </Connect(Snippet)>
-  </h2>
-  <DiffText
-    currentLabel={
-      <Memo(Connect(Snippet))>
-        diff.previous
-      </Memo(Connect(Snippet))>
-    }
-    newValue="old-conditions"
-    oldValue="new-conditions"
-    proposedLabel={
-      <Memo(Connect(Snippet))>
-        diff.changed-to
-      </Memo(Connect(Snippet))>
-    }
-  />
-</ForwardRef>
+exports[`<PIL /> renders correctly for default task with procedures and species 1`] = `
+<div>
+  <div
+    data-testid="sticky-nav-anchor"
+  >
+    <h2>
+      <span
+        data-testid="snippet"
+      >
+        sticky-nav.procedures
+      </span>
+    </h2>
+    <div
+      data-testid="procedures-diff"
+    >
+      Mocked ProceduresDiff
+    </div>
+  </div>
+  <div
+    data-testid="sticky-nav-anchor"
+  >
+    <h2>
+      <span
+        data-testid="snippet"
+      >
+        sticky-nav.species
+      </span>
+    </h2>
+    <div
+      data-testid="species-diff"
+    >
+      Mocked SpeciesDiff
+    </div>
+  </div>
+  <div
+    data-testid="sticky-nav-anchor"
+  >
+    <h2>
+      <span
+        data-testid="snippet"
+      >
+        sticky-nav.training
+      </span>
+    </h2>
+    <div
+      data-testid="training-summary"
+    >
+      Mocked TrainingSummary
+    </div>
+  </div>
+</div>
 `;
 
-exports[`<PIL /> renders when action is update 1`] = `
-[
-  <ForwardRef
-    id="procedures"
-    key="procedures"
+exports[`<PIL /> renders correctly for transfer task 1`] = `
+<div>
+  <div
+    data-testid="sticky-nav-anchor"
   >
     <h2>
-      <Connect(Snippet)>
+      <span
+        data-testid="snippet"
+      >
+        sticky-nav.transfer
+      </span>
+    </h2>
+    <table
+      class="govuk-table compare"
+    >
+      <thead>
+        <tr>
+          <th>
+            <span
+              data-testid="snippet"
+            >
+              pil.establishment.current
+            </span>
+          </th>
+          <th>
+            <span
+              data-testid="snippet"
+            >
+              pil.establishment.proposed
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a
+              href="establishment.dashboard"
+            >
+              Current Establishment
+            </a>
+          </td>
+          <td>
+            <span
+              class="highlight"
+            >
+              <a
+                href="establishment.dashboard"
+              >
+                New Establishment
+              </a>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div
+    data-testid="sticky-nav-anchor"
+  >
+    <h2>
+      <span
+        data-testid="snippet"
+      >
         sticky-nav.procedures
-      </Connect(Snippet)>
+      </span>
     </h2>
-    <PilProcedures
-      task={
-        {
-          "data": {
-            "data": {
-              "certificates": [
-                {},
-                {},
-              ],
-            },
-          },
-          "isOpen": false,
-        }
-      }
-    />
-  </ForwardRef>,
-  <ForwardRef
-    id="species"
-    key="species"
+    <div
+      data-testid="procedures-diff"
+    >
+      Mocked ProceduresDiff
+    </div>
+  </div>
+  <div
+    data-testid="sticky-nav-anchor"
   >
     <h2>
-      <Connect(Snippet)>
+      <span
+        data-testid="snippet"
+      >
         sticky-nav.species
-      </Connect(Snippet)>
+      </span>
     </h2>
-    <SpeciesDiff
-      after={
-        {
-          "certificates": [
-            {},
-            {},
-          ],
-        }
-      }
-    />
-  </ForwardRef>,
-  <ForwardRef
-    id="training"
-    key="training"
+    <div
+      data-testid="species-diff"
+    >
+      Mocked SpeciesDiff
+    </div>
+  </div>
+  <div
+    data-testid="sticky-nav-anchor"
   >
     <h2>
-      <Connect(Snippet)>
+      <span
+        data-testid="snippet"
+      >
         sticky-nav.training
-      </Connect(Snippet)>
+      </span>
     </h2>
-    <SummaryTable
-      certificates={[]}
-    />
-  </ForwardRef>,
-]
+    <div
+      data-testid="training-summary"
+    >
+      Mocked TrainingSummary
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<PIL /> renders correctly for update-conditions action 1`] = `
+<div>
+  <div
+    data-testid="sticky-nav-anchor"
+  >
+    <h2>
+      <span
+        data-testid="snippet"
+      >
+        sticky-nav.conditions
+      </span>
+    </h2>
+    <div
+      data-testid="diff-text"
+    >
+      <span
+        data-testid="snippet"
+      >
+        diff.previous
+      </span>
+       
+      old-conditions
+       
+      new-conditions
+       
+      <span
+        data-testid="snippet"
+      >
+        diff.changed-to
+      </span>
+    </div>
+  </div>
+</div>
 `;

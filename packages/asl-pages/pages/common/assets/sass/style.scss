@@ -1,4 +1,5 @@
 @import 'ho-frontend-toolkit';
+@import "@ukhomeoffice/frontend-toolkit";
 @import '@ukhomeoffice/react-components';
 @import '@ukhomeoffice/asl-components';
 @import 'images';
@@ -934,4 +935,17 @@ section#rops {
   border-color: #b1b4b6;
   padding: 15px;
   background-color: #fff;
+}
+
+dl.inline-wide {
+  margin-top: 1em;
+  margin-bottom: 1em;
+
+  dt {
+    margin-right: 5%;
+  }
+
+  dd {
+    margin-left: 55%;
+  }
 }

@@ -7,7 +7,9 @@ import ToggleASRU from './toggle-asru';
 import ASRURoles from '@asl/pages/pages/global-profile/components/asru-roles';
 
 export default function ASRUAdmin() {
-  const { model, static: { canAdmin, roles } } = useSelector(state => state);
+  const model = useSelector(state => state.model);
+  const canAdmin = useSelector(state => state.static.canAdmin);
+  const roles = useSelector(state => state.static.roles);
   const hasEstablishments = !!(model.establishments || []).length;
 
   if (hasEstablishments) {

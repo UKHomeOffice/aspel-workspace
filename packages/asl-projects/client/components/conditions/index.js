@@ -43,10 +43,10 @@ function ConditionsPage({
   return (
     <Fragment>
       {
-        editConditions && <Markdown className="grey">{conditions.length ? intro : emptyIntro}</Markdown>
+        editConditions && <div className="grey"><Markdown>{conditions.length ? intro : emptyIntro}</Markdown></div>
       }
       {
-        !editConditions && !conditions.length && <Markdown className="grey">{emptyIntroReadOnly}</Markdown>
+        !editConditions && !conditions.length && <div className="grey"><Markdown>{emptyIntroReadOnly}</Markdown></div>
       }
       {
         editConditions && <RetrospectiveAssessment />

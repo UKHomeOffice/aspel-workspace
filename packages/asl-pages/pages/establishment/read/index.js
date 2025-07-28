@@ -95,6 +95,11 @@ module.exports = settings => {
     res.redirect(req.buildRoute('establishment.read'));
   });
 
+  app.get('/', (req, res, next) => {
+    res.template = require('./views').default; // resolves to ./view/index.jsx
+    return next();
+  });
+
   app.get('/', (req, res) => res.sendResponse());
 
   return app;

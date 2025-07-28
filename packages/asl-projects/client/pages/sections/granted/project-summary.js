@@ -13,7 +13,9 @@ import { DATE_FORMAT } from '../../../constants';
 const GrantedAuthoritySection = () => (
   <div className="granted-section">
     <h2>Granted authority</h2>
-    <Markdown className="legal">{LEGAL.grantedAuthority}</Markdown>
+    <div className="legal">
+      <Markdown>{LEGAL.grantedAuthority}</Markdown>
+    </div>
   </div>
 );
 
@@ -59,7 +61,9 @@ export default function ProjectSummary({ fields = [], pdf }) {
       <div className="granted-section">
         <h2>Project licence holder</h2>
         <p className="licence-holder">{`${licenceHolder.firstName} ${licenceHolder.lastName}`}</p>
-        <Markdown className="legal">{LEGAL.licenceHolder}</Markdown>
+        <div className="legal">
+        <Markdown>{LEGAL.licenceHolder}</Markdown>
+        </div>
       </div>
       {
         pdf && (

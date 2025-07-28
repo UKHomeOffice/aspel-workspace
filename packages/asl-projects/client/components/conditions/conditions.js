@@ -75,7 +75,7 @@ function Condition({
                       showRevert={!custom}
                       reminders={reminders}
                     />
-                    : <Markdown className="condition-text">{displayContent}</Markdown>
+                    : <div className="condition-text"><Markdown>{displayContent}</Markdown></div>
                 }
               </Fragment>
             )
@@ -159,10 +159,11 @@ function Conditions({ updating, editConditions, conditions, saveConditions, show
           : notRa.map((condition, index) => {
             const template = get(CONDITIONS[scope], condition.path, {});
             const { title, content } = template;
-            return <Condition
-              key={condition.key}
-              conditionKey={condition.key}
-              className={condition.key}
+            const { key: someKey, ...rest } = condition;
+            return  <Condition
+              key={someKey}
+              conditionKey={someKey}
+              className={someKey}
               singular={singular}
               editConditions={editConditions}
               updating={updating}
@@ -170,10 +171,10 @@ function Conditions({ updating, editConditions, conditions, saveConditions, show
               number={index + 1}
               custom={condition.custom}
               content={content}
-              {...condition}
-              onSave={handleSave(condition.key)}
-              onRemove={handleRemove(condition.key)}
-            />;
+              {...rest}
+              onSave={handleSave(someKey)}
+              onRemove={handleRemove(someKey)}
+            />
           })
         : null
       }
