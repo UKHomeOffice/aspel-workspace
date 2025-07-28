@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Snippet from '../snippet';
 import classnames from 'classnames';
 import { format } from 'date-fns';
-import { DATE_FORMAT } from '@asl/projects/client/constants';
 
-function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat= DATE_FORMAT.long, colour, title, suspendedEstablishment, children }) {
+function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat='dd MMMM yyyy', colour, title, suspendedEstablishment, children }) {
     const [open, setOpen] = useState(true);
     const establishment = suspendedEstablishment || licence.establishment;
     const establishmentSuspended = !!(licence.status === 'active' && !licence.suspendedDate && establishment && establishment.suspendedDate);
