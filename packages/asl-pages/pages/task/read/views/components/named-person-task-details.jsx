@@ -21,7 +21,7 @@ export const NamedPersonTaskDetails = ({ taskData, profile }) => {
         <>
           <div className="sticky-nav-anchor">
             <h2><Snippet>trainingRecord</Snippet></h2>
-              <TrainingSummary certificates={profile.certificates} />
+            <TrainingSummary certificates={profile.certificates} />
           </div>
           <div>
             <Details
