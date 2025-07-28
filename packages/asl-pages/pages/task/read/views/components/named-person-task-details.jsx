@@ -1,6 +1,7 @@
 import React from 'react';
 import { DetailsByRole, NamedPersonDetails } from '../../../../common/components/role-change-summary';
 import {
+  Snippet,
   TrainingSummary,
   Details,
   Inset
@@ -19,6 +20,7 @@ export const NamedPersonTaskDetails = ({ taskData, profile }) => {
       {['nacwo', 'nvs'].includes(taskData.type) && (
         <>
           <div className="sticky-nav-anchor">
+            <h2><Snippet>trainingRecord</Snippet></h2>
             <TrainingSummary certificates={profile.certificates} />
           </div>
           <div>
