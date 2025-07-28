@@ -7,7 +7,7 @@ import ReviewField from './review-field';
 import ChangedBadge from './changed-badge';
 import RAPlaybackHint from './ra-playback-hint';
 import { Markdown } from '@ukhomeoffice/asl-components';
-import ErrorBoundary from '@ukhomeoffice/asl-components/src/error-boundary';
+import ErrorBoundary from './error-boundary';
 import classnames from 'classnames';
 import Mustache from 'mustache';
 

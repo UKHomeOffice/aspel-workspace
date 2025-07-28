@@ -29,7 +29,7 @@ import Repeater from './repeater-field';
 import Fieldset from './fieldset';
 import Comments from './comments';
 
-import ErrorBoundary from '@ukhomeoffice/asl-components/src/error-boundary';
+import ErrorBoundary from './error-boundary';
 import NtsCheckBoxWithModal from './checkbox';
 import without from 'lodash/without';
 

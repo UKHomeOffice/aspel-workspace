@@ -2,7 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkFlexibleMarkers from 'remark-flexible-markers';
-import ErrorBoundary from '../error-boundary';
+import ErrorBoundary from '@asl/projects/client/components/error-boundary';
 
 // Utility function to check for block-level elements
 function containsBlock(children) {

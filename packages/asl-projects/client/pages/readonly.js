@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import SideNav from '../components/side-nav';
 import StaticSection from '../components/static-section';
-import ErrorBoundary from '@ukhomeoffice/asl-components/src/error-boundary';
+import ErrorBoundary from '../components/error-boundary';
 
 import { keepAlive } from '../actions/session';
 
