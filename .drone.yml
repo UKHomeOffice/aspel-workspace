@@ -9,6 +9,11 @@ steps:
     image: node:22.14.0
     commands:
       - npm ci --workspaces=false
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
   - name: deployset
     image: node:22.14.0
     environment:
