@@ -78,32 +78,40 @@ module.exports = settings => {
       );
 
       let html = '';
+      let called = false;
+
+      const safeCallback = (err, result) => {
+        if (!called) {
+          called = true;
+          callback(err, result);
+        }
+      };
+
       const stream = renderToPipeableStream(element, {
         onAllReady() {
           const writable = new Writable({
-            write(chunk, encoding, callback) {
+            write(chunk, encoding, cb) {
               html += chunk.toString();
-              callback();
+              cb();
             },
-            final(callback) {
-              // Do NOT call callback twice
-              callback();
+            final(cb) {
+              cb();
             }
           });
 
           stream.pipe(writable);
           writable.on('finish', () => {
-            callback(null, html);
+            safeCallback(null, html);
           });
         },
         onError(err) {
           console.error('SSR stream error:', err);
-          callback(err);
+          safeCallback(err);
         }
       });
     } catch (err) {
       console.error('JSX render error:', err);
-      callback(err);
+      callback(err); // still ok here because outer try/catch won't conflict
     }
   });
 
