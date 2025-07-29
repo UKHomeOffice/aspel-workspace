@@ -28,6 +28,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@ukhomeoffice/asl-dictionary": "file:../asl-dictionary",
+    "@asl/projects": "file:../asl-projects",
     "@ukhomeoffice/react-components": "^1.6.4",
     "@x-govuk/govuk-prototype-components": "^3.0.9",
     "accessible-autocomplete": "^3.0.1",

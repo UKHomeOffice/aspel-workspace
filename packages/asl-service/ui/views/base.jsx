@@ -20,6 +20,8 @@ const renderChildren = (children) => (
   <Wrapper>{children}</Wrapper>
 );
 
+// todo: error handled in layout, but not in the view, currently automatically rendering the error page.
+// eslint-disable-next-line handle-callback-err
 const Layout = ({
   error,
   children,
@@ -33,15 +35,6 @@ const Layout = ({
   phaseBannerSurvey,
   ...props
 }) => {
-  if (error) {
-    return (
-      <div className="error">
-        <h1>Something went wrong</h1>
-        <p>{error.message || 'An unknown error occurred.'}</p>
-      </div>
-    );
-  }
-
   const {
     content: {
       siteTitle = 'Research and testing using animals',
