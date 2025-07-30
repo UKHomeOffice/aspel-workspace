@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
@@ -6,6 +6,9 @@ import { Provider } from 'react-redux';
 import Component from '{{page}}';
 // eslint-disable-next-line implicit-dependencies/no-implicit
 import configureAppStore from '@asl/service/ui/store';
+import { Wrapper } from '@ukhomeoffice/asl-components';
+// eslint-disable-next-line implicit-dependencies/no-implicit
+import ErrorBoundary from '@asl/projects/client/components/error-boundary';
 // eslint-disable-next-line implicit-dependencies/no-implicit
 
 const store = configureAppStore(window.INITIAL_STATE || {});
@@ -13,6 +16,12 @@ const store = configureAppStore(window.INITIAL_STATE || {});
 hydrateRoot(
   document.getElementById('page-component'),
   <Provider store={store}>
-    <Component />
+    <Wrapper>
+      <ErrorBoundary>
+        <Suspense fallback={<div className="loading">Loading…</div>}>
+          <Component />
+        </Suspense>
+      </ErrorBoundary>
+    </Wrapper>
   </Provider>
 );
