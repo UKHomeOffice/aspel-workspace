@@ -95,10 +95,13 @@ module.exports = {
     'status:new:with-inspectorate': 'submitted',
     'status:with-inspectorate:rejected': 'rejected',
     'status:with-inspectorate:returned-to-applicant': 'returned',
-    'status:with-inspectorate:resolved': 'approved'
+    'status:with-inspectorate:resolved': 'approved',
+    'status:resubmitted:with-inspectorate': 'submitted',
+    'status:returned-to-applicant:discarded-by-applicant': 'discarded'
   },
   statusLine: {
-    'status:with-inspectorate:resolved': ' This is a PEL amendment.'
+    'status:with-inspectorate:resolved': ' This is a PEL amendment.',
+    'status:new:with-inspectorate': ' This is a PEL amendment.'
   },
   subject: {
     'task-action': 'Action required {{licenceNumber}}',
@@ -126,6 +129,9 @@ module.exports = {
     'condition-reminder-overdue': 'Notification: {{modelType}} licence {{licenceNumber}} has a condition that was due yesterday',
     'rop-reminder': `Reminder: Return of procedures due {{when}} for {{#status}}{{status}} {{/status}}project licence {{licenceNumber}}`,
     'task-with-asru2': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
-    'task-change2': 'The {{ roleName }} role application for {{ name }} has been {{ status }}'
+    'task-change2': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
+    'role-approved-subject': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
+    'role-removed': '{{ name }} has been removed from the role of {{ roleName }}',
+    'role-removed-subject': '{{ name }} has been removed from the role of {{ roleName }}'
   }
 };

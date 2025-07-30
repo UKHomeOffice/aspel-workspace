@@ -14,7 +14,8 @@ module.exports = async ({ schema, logger, task }) => {
   const action = get(task, 'data.action');
   const model = get(task, 'data.model');
   const dateFormat = 'D MMM YYYY';
-  const version = get(task, 'data.meta.version');
+  let version = get(task, 'data.meta.version');
+  let subject;
 
   const allowedActions = {
     establishment: [
@@ -116,8 +117,20 @@ module.exports = async ({ schema, logger, task }) => {
     applicant
   };
 
-  const roleFlow = params => {
+  const setRoleParams = async params => {
+    subject = await Profile.query().findById(task.data.data.profileId);
+    let type = get(task, 'data.data.type');
+    if (!type) {
+      type = get(task, 'data.modelData.type', '');
+    }
+    params.roleName = dictionary[type.toUpperCase()];
+    params.name = `${subject.firstName} ${subject.lastName}`;
+    params.addTaskTypeToSubject = false;
+  };
+
+  const roleFlow = async params => {
     if (model === 'role' && version) {
+      await setRoleParams(params);
       params.emailTemplate += task.data.meta.version;
       notifyPelh(params);
     } else {
@@ -200,11 +213,14 @@ module.exports = async ({ schema, logger, task }) => {
     return notifications;
   }
 
-  if (model === 'role' && version) {
-    params.roleName = dictionary[task.data.data.type.toUpperCase()];
-    const subject = await Profile.query().findById(task.data.data.profileId);
-    params.name = `${subject.firstName} ${subject.lastName}`;
-    params.addTaskTypeToSubject = false;
+  if (model === 'role' && action === 'delete' && taskHelper.isGranted(task)) {
+    const roleDeleteParams = { ...params, emailTemplate: 'role-removed', logMsg: 'role removed granted' };
+    await setRoleParams(roleDeleteParams);
+    notifyPelh(roleDeleteParams);
+    notifyAdmins(roleDeleteParams);
+    roleDeleteParams.emailTemplate = 'role-removed-subject';
+    notifyUser(subject, roleDeleteParams);
+    return notifications;
   }
 
   if (taskHelper.isWithApplicant(task)) {
@@ -220,7 +236,12 @@ module.exports = async ({ schema, logger, task }) => {
   if (taskHelper.isGranted(task)) {
     const emailTemplate = ['place', 'role'].includes(model) ? 'licence-amended' : 'licence-granted';
     const taskGrantedParams = { ...params, emailTemplate, logMsg: 'licence is granted' };
-    return roleFlow(taskGrantedParams);
+    await roleFlow(taskGrantedParams);
+    if (model === 'role' && version) {
+      taskGrantedParams.emailTemplate = 'role-approved-subject';
+      notifyUser(subject, taskGrantedParams);
+    }
+    return notifications;
   }
 
   if (taskHelper.isClosed(task)) {

@@ -16,6 +16,7 @@ const oldTemplateMap = {
   'task-with-asru': 'task-change',
   'profile-updated': 'task-change',
   'task-action-required': 'task-action',
+  'task-role-deleted': 'task-change2',
   'task-closed2': 'task-change2',
   'task-action-required2': 'task-change2',
   'licence-amended2': 'task-change2'
@@ -53,7 +54,7 @@ module.exports = ({ schema, notify, logger, publicUrl }) => async ({ task, notif
     };
 
     Object.assign(templateVars, {
-      status: get(content, `status[${task.event}]`),
+      status: get(content, `status[${task.event}]`, task.status),
       statusLine: get(content, `statusLine[${task.event}]`, '')
     });
 
