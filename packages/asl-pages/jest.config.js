@@ -6,5 +6,5 @@ module.exports = {
   },
   transformIgnorePatterns: [],
   collectCoverage: true,
-  coverageReporters: ["json", "html", "text"]
+  coverageReporters: ['json', 'html', 'text']
 };
