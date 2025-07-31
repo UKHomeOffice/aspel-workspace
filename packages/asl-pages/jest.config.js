@@ -4,5 +4,7 @@ module.exports = {
   transform: {
     '^.+\\.[jt]sx?$': 'babel-jest' // Use Babel to transform JS/TS files
   },
-  transformIgnorePatterns: []
+  transformIgnorePatterns: [],
+  collectCoverage: true,
+  coverageReporters: ["json", "html"]
 };
