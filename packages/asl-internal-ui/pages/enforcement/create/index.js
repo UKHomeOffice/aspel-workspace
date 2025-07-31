@@ -25,9 +25,10 @@ module.exports = settings => {
         .then(({ json: { data } }) => {
           if (!isEmpty(data)) {
             return next({ validation: { caseNumber: 'notUnique' } });
+          } else {
+            return next();
           }
         })
-        .then(() => next())
         .catch(next);
     },
     cancelEdit: (req, res, next) => {
@@ -37,6 +38,7 @@ module.exports = settings => {
   }));
 
   app.post('/', (req, res, next) => {
+    if (res.headersSent) return;
     const params = {
       method: 'POST',
       json: {

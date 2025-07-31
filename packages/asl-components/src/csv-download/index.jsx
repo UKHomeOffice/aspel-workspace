@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { stringify } from 'qs';
 import get from 'lodash/get';
+import { createSelector } from 'reselect';
 
-export default function CSVDownloadLink ({ label = 'Download this data (.csv)', query = {} }) {
-    const querystring = useSelector(state => {
-        const filters = get(state, 'datatable.filters.active');
-        const sort = get(state, 'datatable.sort');
-        return { filters, sort, csv: 1, ...query };
-    });
-    return <a href={`?${stringify(querystring)}`} className="download">{ label }</a>;
+// Memoised selector using reselect
+const selectCsvParams = createSelector(
+    state => get(state, 'datatable.filters.active'),
+    state => get(state, 'datatable.sort'),
+    (filters, sort) => ({ filters, sort })
+);
+
+export default function CSVDownloadLink({ label = 'Download this data (.csv)', query = {} }) {
+    const { filters, sort } = useSelector(selectCsvParams);
+
+    const querystring = useMemo(() => ({
+        filters,
+        sort,
+        csv: 1,
+        ...query
+    }), [filters, sort, query]);
+
+    return <a href={`?${stringify(querystring)}`} className="download">{label}</a>;
 }
