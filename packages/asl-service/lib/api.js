@@ -17,6 +17,7 @@ module.exports = (root, defaults = {}) => {
         return response.json()
           .then(json => {
             if (response.status > 399) {
+              console.error(`${response.status} from ${url}`);
               const err = new Error(`${url}: ${json.message}`);
               err.status = response.status;
               Object.assign(err, json);
