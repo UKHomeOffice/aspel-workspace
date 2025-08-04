@@ -61,6 +61,8 @@
     "redux-thunk": "^3.1.0",
     "remark-parse": "^9.0.0",
     "reselect": "^5.1.1",
+    "shasum": "^1.0.2",
+    "sha.js": "^2.4.12",
     "slate": "^0.47.8",
     "slate-react": "^0.22.10",
     "unified": "^9.2.2",

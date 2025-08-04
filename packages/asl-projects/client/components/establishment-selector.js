@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { RadioGroup, Warning } from '@ukhomeoffice/react-components';
 import { Details, Inset, Markdown, Link } from '@ukhomeoffice/asl-components';
 import { useSelector, shallowEqual } from 'react-redux';
+import cloneDeep from 'lodash/cloneDeep';
 
 const revealContent = `To change the primary establishment you must:
 
@@ -60,7 +61,7 @@ export default function EstablishmentSelector({ value, onFieldChange, review, di
       };
 
       // Prevent downstream mutation
-      onFieldChange(JSON.parse(JSON.stringify(updates)));
+      onFieldChange(cloneDeep(updates));
     }
   }, [localValue]);
 

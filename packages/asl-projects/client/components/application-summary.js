@@ -246,27 +246,29 @@ const ApplicationSummary = () => {
               {section.subtitle && <h3 className="section-heading">{section.subtitle}</h3>}
               <table className="govuk-table">
                 <tbody>
-                {subsections.map(key => {
-                  const subsection = section.subsections[key];
-                  const fields = Object.values(fieldsBySection[key] || []);
-                  if (key === 'protocols') fields.push('reusableSteps');
-                  if (subsection.repeats) fields.push(subsection.repeats);
+                  {
+                    subsections.map(key => {
+                      const subsection = section.subsections[key];
+                      const fields = Object.values(fieldsBySection[key] || []);
+                      if (key === 'protocols') fields.push('reusableSteps');
+                      if (subsection.repeats) fields.push(subsection.repeats);
 
-                  return (
-                    <tr key={key}>
-                      <td>
-                        <ErrorMessage title={subsection.title} isComplete={isComplete(subsection, key)}>
-                          <Link to={`/${key}`}>{subsection.title}</Link>
-                        </ErrorMessage>
-                      </td>
-                      <td className="controls">
-                        <Comments subsection={key} />
-                        <ChangedBadge fields={fields} />
-                        <CompleteBadge isComplete={isComplete(subsection, key)} />
-                      </td>
-                    </tr>
-                  );
-                })}
+                      return (
+                        <tr key={key}>
+                          <td>
+                            <ErrorMessage title={subsection.title} isComplete={isComplete(subsection, key)}>
+                              <Link to={`/${key}`}>{subsection.title}</Link>
+                            </ErrorMessage>
+                          </td>
+                          <td className="controls">
+                            <Comments subsection={key} />
+                            <ChangedBadge fields={fields} />
+                            <CompleteBadge isComplete={isComplete(subsection, key)} />
+                          </td>
+                        </tr>
+                      );
+                    })
+                  }
                 </tbody>
               </table>
             </Fragment>
