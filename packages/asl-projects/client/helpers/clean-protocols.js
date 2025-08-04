@@ -65,7 +65,7 @@ export default function cleanProtocols({ state, savedState, changed = {}, establ
 
   if (changed.protocols) {
     project.protocols.forEach(protocol => {
-      protocol.speciesDetails.forEach(speciesDetail => {
+      (protocol.speciesDetails ?? []).forEach(speciesDetail => {
         if (!(speciesDetail.reuse || []).includes('this-protocol')) {
           speciesDetail['maximum-times-used'] = '1';
         }
