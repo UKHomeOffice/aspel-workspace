@@ -176,7 +176,6 @@ export function indexedDBSync(data) {
   };
 }
 
-
 const conditionsToSync = (state) => {
   if (state.application.isSyncing) {
     return null;
@@ -301,11 +300,11 @@ const syncProject = (dispatch, getState) => {
   dispatch(isSyncing());
 
   // Create a deep clone of the project to ensure no mutations
-  const project = JSON.parse(JSON.stringify(
+  const project = cloneDeep(
     state.application.schemaVersion > 0
       ? getProjectWithConditions(state.project)
       : state.project
-  ));
+  );
 
   const patch = jsondiff.diff(state.savedProject, project);
   if (!patch) {
@@ -318,7 +317,7 @@ const syncProject = (dispatch, getState) => {
     state,
     method: 'PUT',
     url: state.application.basename,
-    data: JSON.parse(JSON.stringify(patch)) // Safe clone
+    data: cloneDeep(patch)
   };
 
   return Promise.resolve()
@@ -335,7 +334,7 @@ const syncProject = (dispatch, getState) => {
     })
     .then(response => {
       // Create a deep clone before patching
-      const baseState = JSON.parse(JSON.stringify(state.savedProject));
+      const baseState = cloneDeep(state.savedProject);
       const patched = jsondiff.patch(baseState, patch);
 
       const checksumOmit = [...(response.checksumOmit || []), 'id'];
@@ -344,7 +343,7 @@ const syncProject = (dispatch, getState) => {
       }
 
       // Ensure final dispatch uses immutable update
-      dispatch(updateSavedProject(JSON.parse(JSON.stringify(patched)))); // Line 338 fixed
+      dispatch(updateSavedProject(cloneDeep(patched)));
     })
     .then(() => wait(2000))
     .then(() => syncProject(dispatch, getState))
