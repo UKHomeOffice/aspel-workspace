@@ -1,4 +1,4 @@
-import React, { Children, Fragment, useCallback, useMemo } from 'react';
+import React, { Children, cloneElement, Fragment, useCallback, useMemo, useState } from 'react';
 import classnames from 'classnames';
 import { useDispatch } from 'react-redux';
 import { Button } from '@ukhomeoffice/react-components';
@@ -44,7 +44,10 @@ export default ({
     [props.onAfterDuplicate]
   );
 
-  const [items, setItems] = React.useState([]);
+  const [items, setItems] = useState([]);
+  useMemo(() => {
+    setItems(props.items ?? []);
+  }, [setItems, props.items]);
 
   const dispatch = useDispatch();
   const dispatchError = useCallback((message) => {
@@ -63,7 +66,7 @@ export default ({
   const addItem = useCallback(() => {
     Promise.resolve()
       .then(onBeforeAdd)
-      .then(() => update([ items, { id: uuid(), ...(itemProps ?? {}) } ]))
+      .then(() => update([ ...items, { id: uuid(), ...(itemProps ?? {}) } ]))
       .then(onAfterAdd)
       .catch(err => dispatchError(err.message || 'Error adding item'));
   }, [onBeforeAdd, update, items, itemProps, onAfterAdd, dispatchError]);
@@ -166,11 +169,7 @@ export default ({
   }, [update, items]);
 
   useMemo(() => {
-    setItems(props.items ?? []);
-  }, [setItems, props.items]);
-
-  useMemo(() => {
-    if (addOnInit && !props.items?.length) {
+    if (addOnInit && !items.length) {
       addItem();
     }
   }, [] /* Only run on first render */);
@@ -190,7 +189,7 @@ export default ({
       {
         items.map((item, index) =>
           Children.map(children, child => {
-            return React.cloneElement(child, {
+            return cloneElement(child, {
               ...child.props,
               index,
               key: item.id,
