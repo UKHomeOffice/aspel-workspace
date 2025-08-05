@@ -44,7 +44,7 @@ export default ({
     [props.onAfterDuplicate]
   );
 
-  const [items, setItems] = useState(props.items);
+  const [items, setItems] = useState(props.items ?? []);
   useMemo(() => {
     setItems(props.items ?? []);
   }, [setItems, props.items]);
