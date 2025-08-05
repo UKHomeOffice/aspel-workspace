@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect, useSelector } from 'react-redux';
 import {
   ControlBar,
