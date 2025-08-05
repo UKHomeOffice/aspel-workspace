@@ -83,6 +83,11 @@ export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, rol
     <>
       { role === 'nacwo' && <NACWORole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
       { role === 'nvs' && <NVSRole nvs={roleDetails} incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
+      { mandatoryTraining === 'yes' && (
+          <>
+            <dt><Snippet>explanation.trainingComplete</Snippet></dt>
+          </>
+        ) }
     </>
   );
 };
