@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Snippet from '../snippet';
 import classnames from 'classnames';
 import { format } from 'date-fns';
 
 function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat='dd MMMM yyyy', colour, title, suspendedEstablishment, children }) {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const establishment = suspendedEstablishment || licence.establishment;
     const establishmentSuspended = !!(licence.status === 'active' && !licence.suspendedDate && establishment && establishment.suspendedDate);
     const suspendedDate = establishmentSuspended ? establishment.suspendedDate : licence.suspendedDate;
@@ -13,8 +13,6 @@ function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat='dd MMMM 
     if (licenceStatus === 'active' && suspendedDate) {
         licenceStatus = 'suspended';
     }
-
-    useEffect(() => setOpen(false), []);
 
     const toggle = () => setOpen(!open);
 
