@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect, useSelector } from 'react-redux';
 import {
   ControlBar,
@@ -44,11 +44,6 @@ const Confirm = ({
         <NamedPersonDetails roleType={values.type} profile={profile} props={props} profileReplaced={profileReplaced} />
 
         <DetailsByRole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} role={values.type} roleDetails={values} />
-        { mandatoryTraining === 'yes' && (
-          <>
-            <dt><Snippet>explanation.trainingComplete</Snippet></dt>
-          </>
-        ) }
       </dl>
 
       {
