@@ -149,7 +149,7 @@ const SpeciesSelector = ({
 
     return (
         <div className="species-selector">
-            <InputWrapper {...pick({ id, name, fieldName, label, hint, error, onChange, disabled })}>
+            <InputWrapper {...{ id, name, fieldName, label, hint, error, onChange, disabled }}>
                 {map(omit(species, 'OTHER'), (group, key) => {
                     const options = group.types || group;
                     return (
