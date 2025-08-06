@@ -33,12 +33,22 @@ function RenderUnorderedList({ children }) {
     return <ul className="govuk-list govuk-list--bullet">{children}</ul>;
 }
 
-const ParagraphComponent = ({ unwrapSingleLine, paragraphProps, children, ...props }) => {
+const ParagraphComponent = ({
+    unwrapSingleLine,
+    paragraphProps,
+    contentLength,
+    children,
+    node,
+    significantLineBreaks,
+    ...props
+}) => {
+    const { start, end } = node.position;
+    const isOnlyNode = contentLength && start.offset === 0 && end.offset === contentLength;
     const childrenArray = React.Children.toArray(children);
     const isSingleTextChild = childrenArray.length === 1 && typeof childrenArray[0] === 'string';
-    const hasVisibleLineBreaks = isSingleTextChild && childrenArray[0].includes('\n');
+    const hasVisibleLineBreaks = significantLineBreaks && childrenArray[0].includes('\n');
 
-    if (unwrapSingleLine && isSingleTextChild && !hasVisibleLineBreaks) {
+    if (unwrapSingleLine && isOnlyNode && isSingleTextChild && !hasVisibleLineBreaks) {
         return <span {...paragraphProps} {...props}>{children}</span>;
     }
 
@@ -65,8 +75,10 @@ export default function Markdown({
     linkTarget = '_blank',
     ...rest
 }) {
-    return (
+    const contents = source || children;
+    const contentLength = contents.length ? contents.length : 0;
 
+    return (
         <ReactMarkdown
             components={{
                 ...(!links && {
@@ -77,6 +89,8 @@ export default function Markdown({
                 p: (props) => (
                     <ParagraphComponent
                         unwrapSingleLine={unwrapSingleLine}
+                        significantLineBreaks={significantLineBreaks}
+                        contentLength={contentLength}
                         paragraphProps={paragraphProps}
                         {...props}
                     />
@@ -87,11 +101,10 @@ export default function Markdown({
                 ...(significantLineBreaks ? [remarkBreaks] : []),
                 remarkFlexibleMarkers
             ]}
-            unwrapDisallowed={true}  // Prevents invalid HTML nesting
-            skipHtml={true}         // Avoids potential HTML parsing issues
+            //unwrapDisallowed={true}  // Prevents invalid HTML nesting
             {...rest}
         >
-            {source || children}
+            {contents}
         </ReactMarkdown>
     );
 }

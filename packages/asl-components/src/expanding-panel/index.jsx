@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import classnames from 'classnames';
 
 const ExpandingPanel = ({
@@ -15,14 +15,11 @@ const ExpandingPanel = ({
     const isControlled = typeof controlledOpen === 'boolean';
 
     // Sync internal state when controlled prop changes
-    useEffect(() => {
+    useMemo(() => {
         if (isControlled) {
             setInternalOpen(controlledOpen);
         }
     }, [controlledOpen, isControlled]);
-
-    // Determine the current open state
-    const isOpen = isControlled ? controlledOpen : internalOpen;
 
     // Toggle handler
     const toggle = () => {
@@ -34,12 +31,12 @@ const ExpandingPanel = ({
     };
 
     return (
-        <section className={`expanding-panel${isOpen ? ' open' : ''}`}>
+        <section className={`expanding-panel${internalOpen ? ' open' : ''}`}>
             <header onClick={toggle}>
                 {wrapTitle ? <h3>{title}</h3> : title}
             </header>
-            {isOpen && (
-                <div className={classnames('content', { hidden: !isOpen })}>
+            {internalOpen && (
+                <div className={classnames('content', { hidden: !internalOpen })}>
                     {children}
                 </div>
             )}
