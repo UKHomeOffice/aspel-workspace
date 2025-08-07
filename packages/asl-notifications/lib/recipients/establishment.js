@@ -129,9 +129,11 @@ module.exports = async ({ schema, logger, task }) => {
   };
 
   const roleFlow = async params => {
-    if (model === 'role' && version) {
+    if (model === 'role' && (version || action === 'delete')) {
       await setRoleParams(params);
-      params.emailTemplate += task.data.meta.version;
+      if (version) {
+        params.emailTemplate += version;
+      }
       notifyPelh(params);
     } else {
       notifyUser(applicant, params);
@@ -225,10 +227,19 @@ module.exports = async ({ schema, logger, task }) => {
 
   if (taskHelper.isWithApplicant(task)) {
     const withApplicantParams = { ...params, emailTemplate: 'task-action-required', logMsg: 'task is with applicant' };
+    if (model === 'role' && task.status === 'recalled-by-applicant') {
+      return notifications;
+    }
+    if (model === 'role' && action === 'delete') {
+      withApplicantParams.emailTemplate = 'role-removed-returned';
+    }
     return roleFlow(withApplicantParams);
   }
 
   if (taskHelper.isOverTheFence(task)) {
+    if (model === 'role' && action === 'delete') {
+      return notifications;
+    }
     let overTheFenceParams = { ...params, emailTemplate: 'task-with-asru', logMsg: 'task is over the fence' };
     return roleFlow(overTheFenceParams);
   }
@@ -246,6 +257,12 @@ module.exports = async ({ schema, logger, task }) => {
 
   if (taskHelper.isClosed(task)) {
     const taskClosedParams = { ...params, emailTemplate: 'task-closed', logMsg: 'task is closed' };
+    if (model === 'role' && task.status === 'discarded-by-applicant') {
+      return notifications;
+    }
+    if (model === 'role' && action === 'delete') {
+      taskClosedParams.emailTemplate = 'role-removed-refused';
+    }
     return roleFlow(taskClosedParams);
   }
 
