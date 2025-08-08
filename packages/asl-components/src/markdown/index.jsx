@@ -14,12 +14,15 @@ function containsBlock(children) {
     });
 }
 
-function RenderLink({ href, children }) {
+function RenderLink({ href, children, linkTarget }) {
     if (containsBlock(children)) {
         return <>{children}</>;
     }
+
+    const linkProps = linkTarget ? { target: linkTarget, rel: 'noopener noreferrer' } : {};
+
     return (
-        <a href={href} target="_blank" rel="noopener noreferrer">
+        <a href={href} {...linkProps} >
             {children}
         </a>
     );
@@ -72,17 +75,17 @@ export default function Markdown({
     paragraphProps = {},
     source,
     // eslint-disable-next-line no-unused-vars
-    linkTarget = '_blank',
+    linkTarget,
     ...rest
 }) {
     const contents = source || children;
-    const contentLength = contents.length ? contents.length : 0;
+    const contentLength = contents?.length ? contents.length : 0;
 
     return (
         <ReactMarkdown
             components={{
                 ...(!links && {
-                    a: RenderLink,
+                    a: props => <RenderLink linkTarget={linkTarget} {...props} />,
                     linkReference: RenderLinkReference,
                     ul: RenderUnorderedList
                 }),
@@ -95,7 +98,7 @@ export default function Markdown({
                         {...props}
                     />
                 ),
-                mark: ({ ...props }) => <mark {...props} />
+                mark: (props) => <mark {...props} />
             }}
             remarkPlugins={[
                 ...(significantLineBreaks ? [remarkBreaks] : []),

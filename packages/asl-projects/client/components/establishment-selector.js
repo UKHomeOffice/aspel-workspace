@@ -91,7 +91,10 @@ export default function EstablishmentSelector({ value, onFieldChange, review, di
 
   const hint = <Details summary="Help if your establishment's not listed" className="margin-top">
     <Inset>
-      <p>You need to be invited to an establishment before you can make them your primary establishment. Ask the Home Office Liaison Contact (HOLC) at your chosen establishment to send you an invitation.</p>
+      <p>
+        You need to be invited to an establishment before you can make them your primary establishment.
+        Ask the Home Office Liaison Contact (HOLC) at your chosen establishment to send you an invitation.
+      </p>
     </Inset>
   </Details>;
 
