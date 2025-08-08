@@ -112,7 +112,7 @@ export default ({
     return Promise.resolve()
       .then(onBeforeRemove)
       .then(() => {
-        if (softDelete && items[index].reusable) {
+        if (softDelete && !items[index].reusable) {
           return update(items.map((item, i) => {
             if (index === i) {
               return { ...item, deleted: true };

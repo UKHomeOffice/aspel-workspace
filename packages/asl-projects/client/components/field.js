@@ -48,7 +48,7 @@ import without from 'lodash/without';
  *
  */
 function calculateNewCheckboxValues(values, toggledValue, options) {
-  if(values.includes(toggledValue)) {
+  if (values.includes(toggledValue)) {
     return [without(values, toggledValue), true];
   }
 
@@ -57,12 +57,12 @@ function calculateNewCheckboxValues(values, toggledValue, options) {
       (typeof option === 'string' ? option : option.value) === toggledValue
   );
 
-  if(!option) {
-    return [values, false]
+  if (!option) {
+    return [values, false];
   }
 
-  if(option.behaviour === 'exclusive') {
-    return [[toggledValue], values.length > 0]
+  if (option.behaviour === 'exclusive') {
+    return [[toggledValue], values.length > 0];
   }
 
   const exclusiveOptions =
@@ -136,8 +136,8 @@ class Field extends Component {
 
     let { label, hint } = this.props.altLabels ? this.props.alt : this.props;
 
-    label = typeof label === 'string' ? Mustache.render(label, this.props) : label ;
-    hint = typeof hint === 'string' ? Mustache.render(hint, this.props) : hint ;
+    label = typeof label === 'string' ? Mustache.render(label, this.props) : label;
+    hint = typeof hint === 'string' ? Mustache.render(hint, this.props) : hint;
 
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
