@@ -97,11 +97,12 @@ module.exports = {
     'status:with-inspectorate:returned-to-applicant': 'returned',
     'status:with-inspectorate:resolved': 'approved',
     'status:resubmitted:with-inspectorate': 'submitted',
-    'status:returned-to-applicant:discarded-by-applicant': 'discarded'
+    'status:returned-to-applicant:discarded-by-applicant': 'discarded',
+    'status:new:resolved': 'approved'
   },
   statusLine: {
-    'status:with-inspectorate:resolved': ' This is a PEL amendment.',
-    'status:new:with-inspectorate': ' This is a PEL amendment.'
+    'resolved': ' This is a PEL amendment.',
+    'with-inspectorate': ' This is a PEL amendment.'
   },
   subject: {
     'task-action': 'Action required {{licenceNumber}}',
