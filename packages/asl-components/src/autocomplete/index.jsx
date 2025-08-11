@@ -64,7 +64,6 @@ export default function AutoComplete(props) {
     }, []);
 
     const onConfirm = useCallback(option => {
-        console.log('onConfirm', option);
         if (typeof option === 'string') {
             return setValue(option);
         }
