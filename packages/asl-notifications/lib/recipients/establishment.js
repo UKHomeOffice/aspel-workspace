@@ -224,5 +224,16 @@ module.exports = async ({ schema, logger, task }) => {
     return notifications;
   }
 
+  if (taskHelper.isNamedPerson(task)) {
+    const namedPersonData = task.data.data
+    const templateParams = {
+      name: applicant,
+      type: namedPersonData.type.toUpperCase(),
+      completeDate: completeDate,
+      establishmentName: establishment
+    }
+    const namedPersonParams = { templateParams, emailTemplate: 'training-due-reminder', logMsg: 'named person role added' }
+  }
+
   return notifications;
 };

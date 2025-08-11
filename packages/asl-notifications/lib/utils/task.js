@@ -153,6 +153,14 @@ const taskHelper = {
 
   isRefused: task => {
     return task.status === 'refused';
+  },
+
+  isNamedPerson: function (task) {
+    return task.data.meta.version === 2;
+  },
+
+  getNamedPersonData: function (task) {
+    return this.isNamedPerson(task) && task.data.data
   }
 };
 
