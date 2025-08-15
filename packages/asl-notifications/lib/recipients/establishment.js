@@ -108,6 +108,18 @@ module.exports = async ({ schema, logger, task }) => {
     });
   };
 
+
+  const getNamedPersonParams = (task, applicant, establishment) => {
+    const namedPersonData = task.data.data
+    const namedPersontemplateParams = {
+      name: `${applicant.firstName} ${applicant.lastName}`,
+      roleType: namedPersonData.type.toUpperCase(),
+      completeDate: namedPersonData.completeDate,
+      establishmentName: establishment.name
+    }
+    return { namedPersontemplateParams, emailTemplate: 'training-due-reminder', logMsg: 'named person role added' }
+  }
+
   const params = {
     establishmentId,
     licenceNumber: establishment.licenceNumber,
@@ -201,6 +213,11 @@ module.exports = async ({ schema, logger, task }) => {
 
     notifyUser(applicant, overTheFenceParams);
     notifyAdmins(overTheFenceParams);
+
+    if (taskHelper.isNamedPerson(task)) {
+      const namedPersonParams = getNamedPersonParams(task, applicant, establishment);
+      notifyAdmins(namedPersonParams)
+    }
 
     return notifications;
   }

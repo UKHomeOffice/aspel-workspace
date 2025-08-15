@@ -22,6 +22,7 @@ module.exports = ({ schema, notify, logger, publicUrl }) => async ({ task, notif
   const licenceType = getLicenceType(task);
   const taskType = getTaskType(task);
   const model = await getModel({ schema, licenceType, task, logger });
+  const roleType = get(task, 'data.data.type')
 
   return Promise.all(Array.from(notifications).map(([id, notification]) => {
     logger.debug(`sending ${notification.emailTemplate} to ${notification.recipient.email}`);
@@ -46,6 +47,8 @@ module.exports = ({ schema, notify, logger, publicUrl }) => async ({ task, notif
       licenceNumber: model && model.licenceNumber,
       licenceUrl: `${publicUrl}/${licencePath}?notification=${task.id}`,
       loginUrl: publicUrl,
+      name: `${applicant.firstName} ${applicant.lastName}`,
+      roleType,
       ...notification
     };
 

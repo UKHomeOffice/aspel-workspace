@@ -117,6 +117,7 @@ module.exports = {
     'retrospective-assessment-due': 'Reminder: Retrospective assessment due {{when}} for {{projectStatus}} project licence {{licenceNumber}}',
     'condition-reminder': 'Reminder: {{modelType}} licence {{licenceNumber}} has a condition that is due {{when}}',
     'condition-reminder-overdue': 'Notification: {{modelType}} licence {{licenceNumber}} has a condition that was due yesterday',
-    'rop-reminder': `Reminder: Return of procedures due {{when}} for {{#status}}{{status}} {{/status}}project licence {{licenceNumber}}`
+    'rop-reminder': `Reminder: Return of procedures due {{when}} for {{#status}}{{status}} {{/status}}project licence {{licenceNumber}}`,
+    'training-due-reminder': 'Reminder: {{name}} needs to complete their {{roleType}} mandatory training'
   }
 };

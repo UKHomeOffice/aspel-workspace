@@ -2,10 +2,14 @@ const api = require('@asl/service/api');
 const errorHandler = require('@asl/service/lib/error-handler');
 const db = require('@asl/schema');
 const Emailer = require('./emailer');
+const trainingDueReminder = require('../jobs/training-due-reminder');
 
 module.exports = ({ settings, logger }) => {
   const app = api(settings);
   const schema = db(settings.db);
+  const { knex } = db(settings.taskflowdb);
+
+  trainingDueReminder({ knex }).then(console.log)
   const publicUrl = settings.publicUrl;
   const emailer = Emailer({ schema, publicUrl, logger });
 
