@@ -8,6 +8,13 @@ module.exports = {
     password: process.env.DATABASE_PASSWORD,
     port: process.env.DATABASE_PORT
   },
+  taskflowdb: {
+    database: process.env.TASK_DATABASE_NAME || 'taskflow',
+    host: process.env.TASK_DATABASE_HOST || 'localhost',
+    user: process.env.TASK_DATABASE_USERNAME || 'postgres',
+    password: process.env.TASK_DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT
+  },
   emailer: {
     host: process.env.EMAILER_SERVICE
   },
