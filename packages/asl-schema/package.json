@@ -27,7 +27,7 @@
   "homepage": "https://github.com/UKHomeOffice/asl-schema#readme",
   "dependencies": {
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
-    "csv-stringify": "^5.4.3",
+    "csv-stringify": "^6.6.0",
     "deep-diff": "^1.0.2",
     "glob": "^7.1.7",
     "immutable": "^4.0.0-rc.12",
