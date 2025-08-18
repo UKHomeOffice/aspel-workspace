@@ -1,7 +1,7 @@
 const { get } = require('lodash');
 const updateReminders = require('../utils/update-reminders');
 
-module.exports = ({ models }) => async ({action, data, id}, transaction) => {
+module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
   // assignment/removal of a HOLC should not trigger an establishment update
   const nopes = [
     'holc'
@@ -12,8 +12,19 @@ module.exports = ({ models }) => async ({action, data, id}, transaction) => {
     establishmentId,
     profileId,
     type,
-    role
+    role,
+    mandatory,
+    incomplete,
+    delayReason,
+    completeDate,
   } = data;
+
+  const trainingExemptionDetails = {
+    mandatory,
+    incomplete,
+    delayReason,
+    completeDate
+  }
 
   const dissociatePlaces = (establishmentId, type) => {
     return PlaceRole.query(transaction)
@@ -46,7 +57,7 @@ module.exports = ({ models }) => async ({action, data, id}, transaction) => {
           return existing;
         }
         return Role.query(transaction)
-          .insert({ establishmentId, profileId, type: typeOfRole })
+          .insert({ establishmentId, profileId, type: typeOfRole, trainingExemptionDetails })
           .returning('*');
       })
       .then(result => touchEstablishment(establishmentId, typeOfRole).then(() => result))
