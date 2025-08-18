@@ -53,10 +53,12 @@ module.exports = ({ schema, notify, logger, publicUrl }) => async ({ task, notif
       ...notification
     };
 
-    Object.assign(templateVars, {
-      status: get(content, `status[${task.event}]`, task.status),
-      statusLine: get(content, `statusLine[${task.status}]`, '')
-    });
+    if (!templateVars.status) {
+      Object.assign(templateVars, {
+        status: get(content, `status[${task.event}]`, task.status),
+        statusLine: get(content, `statusLine[${task.status}]`, '')
+      });
+    }
 
     const subject = mustache.render(subjectTemplate, templateVars);
 
