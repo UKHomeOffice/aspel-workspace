@@ -28,7 +28,7 @@ const getReproducibleUuid = str => {
     return uuid({ random: new Uint8Array(unsignedInts) });
 };
 
-export default function MultiInput({ value, onChange, onFieldChange, name, label, hint, error, disabled = [], disabledWarning, objectItems = false }) {
+export default function MultiInput({ value = [], onChange, onFieldChange, name, label, hint, error, disabled = [], disabledWarning, objectItems = false }) {
     const initialValue = (value ? castArray(value) : [])
         .filter(Boolean)
         .map((value, idx) => {
@@ -115,7 +115,3 @@ export default function MultiInput({ value, onChange, onFieldChange, name, label
         </div>
     );
 }
-
-MultiInput.defaultProps = {
-    value: []
-};

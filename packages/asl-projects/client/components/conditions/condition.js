@@ -76,13 +76,14 @@ const Condition = ({
             <Fragment>
               {
                 content && content !== ''
-                  ? <Markdown
-                    id={id}
-                    className={classnames('light', { clamp: expandable && !expanded })}
-                    significantLineBreaks
-                  >
-                    {content}
-                  </Markdown>
+                  ? <div className={classnames('light', { clamp: expandable && !expanded })}>
+                    <Markdown
+                      id={id}
+                      significantLineBreaks
+                    >
+                      {content}
+                    </Markdown>
+                  </div>
                   : <em>No answer provided</em>
               }
               {
@@ -92,7 +93,8 @@ const Condition = ({
                 (editable || expandable) && (
                   <p className="light">
                     {
-                      expandable && <a href="#" className="expand" aria-controls={id} aria-expanded={expanded} onClick={toggleExpanded}>{ expanded ? 'Collapse' : 'Expand' }</a>
+                      expandable && <a href="#" className="expand" aria-controls={id} aria-expanded={expanded}
+                        onClick={toggleExpanded}>{expanded ? 'Collapse' : 'Expand'}</a>
                     }
                     {
                       editable && expandable && <span> | </span>
@@ -112,7 +114,8 @@ const Condition = ({
 
 const MarkdownHint = () => <>
   You can use markdown to format this condition.<br />
-  <a href="https://commonmark.org/help/" target="_blank" rel="noreferrer">Markdown quick reference (opens in new window)</a>.
+  <a href="https://commonmark.org/help/" target="_blank" rel="noreferrer">Markdown quick reference (opens in new
+    window)</a>.
 </>;
 
 export default Condition;

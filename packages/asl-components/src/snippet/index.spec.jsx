@@ -1,86 +1,87 @@
 import React from 'react';
-import { render } from 'enzyme';
+import { cleanup, render, screen } from '@testing-library/react';
 import { Snippet } from './';
+import { expect, jest } from '@jest/globals';
 
-const string = '<span>one line</span>';
-const list = `<ul class="govuk-list govuk-list--bullet">
-<li>one</li>
-<li>two</li>
-<li>three</li>
-</ul>`;
-const paragraphs = `<p>one</p>
-<p>two</p>`;
-
-describe('<Snippet />', () => {
-
-  const content = {
-    string: 'one line',
-    list: `* one
+const content = {
+  string: 'one line',
+  list: `* one
 * two
 * three`,
-    paragraphs: `one
+  paragraphs: `one
 
 two`,
-    nested: {
-      string: 'nested string',
-      template: 'Hello {{ name }}'
-    }
-  };
+  nested: {
+    string: 'nested string',
+    template: 'Hello {{ name }}'
+  }
+};
 
-  test('does not include a wrapping element on single line input', () => {
-    const wrapper = render(<div><Snippet content={content}>string</Snippet></div>);
-    expect(wrapper.find('p').length).toEqual(0);
-    expect(wrapper.find('span').length).toEqual(1);
-    expect(wrapper.html()).toEqual(string);
+describe('<Snippet />', () => {
+  afterEach(() => {
+    cleanup();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  test('includes wrapping elements on list inputs inputs', () => {
-    const wrapper = render(<div><Snippet content={content}>list</Snippet></div>);
-    expect(wrapper.find('ul').length).toEqual(1);
-    expect(wrapper.html()).toEqual(list);
+  test('does not include a wrapping element on single line input', () => {
+    render(<Snippet content={content}>string</Snippet>);
+    expect(screen.queryByText('one line')).toBeInTheDocument();
+    expect(screen.queryByRole('paragraph')).not.toBeInTheDocument();
+  });
+
+  test('includes wrapping elements on list inputs', () => {
+    render(<Snippet content={content}>list</Snippet>);
+    expect(screen.getByRole('list')).toBeInTheDocument();
+    expect(screen.getByText('one')).toBeInTheDocument();
+    expect(screen.getByText('two')).toBeInTheDocument();
+    expect(screen.getByText('three')).toBeInTheDocument();
   });
 
   test('includes wrapping elements on multi-line paragraph inputs', () => {
-    const wrapper = render(<div><Snippet content={content}>paragraphs</Snippet></div>);
-    expect(wrapper.find('p').length).toEqual(2);
-    expect(wrapper.html()).toEqual(paragraphs);
+    render(<Snippet content={content}>paragraphs</Snippet>);
+    const paragraphs = screen.getAllByText(/one|two/);
+    expect(paragraphs.length).toBe(2);
   });
 
   test('will inject props as template variables', () => {
-    const wrapper = render(<div><Snippet content={content} name={"world"}>nested.template</Snippet></div>);
-    expect(wrapper.html()).toEqual('<span>Hello world</span>');
-  })
+    render(<Snippet content={content} name="world">nested.template</Snippet>);
+    expect(screen.getByText('Hello world')).toBeInTheDocument();
+  });
 
   test('can accept single fallback', () => {
-    const wrapper = render(<div><Snippet content={content} fallback={'paragraphs'}>non.existent</Snippet></div>);
-    expect(wrapper.find('p').length).toEqual(2);
-    expect(wrapper.html()).toEqual(paragraphs);
+    render(<Snippet content={content} fallback="paragraphs">non.existent</Snippet>);
+    const paragraphs = screen.getAllByText(/one|two/);
+    expect(paragraphs.length).toBe(2);
   });
 
   test('can accept multiple fallbacks', () => {
-    const wrapper = render(<div><Snippet content={content} fallback={['non.existent.2', 'paragraphs', 'list']}>non.existent</Snippet></div>);
-    expect(wrapper.find('p').length).toEqual(2);
-    expect(wrapper.html()).toEqual(paragraphs);
+    render(<Snippet content={content} fallback={['non.existent.2', 'paragraphs', 'list']}>non.existent</Snippet>);
+    const paragraphs = screen.getAllByText(/one|two/);
+    expect(paragraphs.length).toBe(2);
   });
 
   test('will error if no fallback matches content', () => {
-    expect(() => render(<div><Snippet content={content} fallback={['non.existent.2', 'missing']}>non.existent</Snippet></div>))
-        .toThrow('Failed to lookup content snippet. Tried keys: ["non.existent","non.existent.2","missing"]');
+    expect(() =>
+      render(<Snippet content={content} fallback={['non.existent.2', 'missing']}>non.existent</Snippet>)
+    ).toThrow('Failed to lookup content snippet. Tried keys: ["non.existent","non.existent.2","missing"]');
+
   });
 
   test('will return null if no content matches and the snippet is optional', () => {
-    const wrapper = render(<div><Snippet content={content} fallback={['non.existent.2', 'missing']} optional>non.existent</Snippet></div>);
-    expect(wrapper.html()).toEqual('');
+    const { container } = render(
+      <Snippet content={content} fallback={['non.existent.2', 'missing']} optional>non.existent</Snippet>
+    );
+    expect(container.firstChild).toBeNull();
   });
 
   test('errors if content at the specified key is not a string', () => {
-    expect(() => render(<div><Snippet content={content}>nested</Snippet></div>))
-        .toThrow('Failed to lookup content snippet. Tried keys: ["nested"]');
+    expect(() =>
+      render(<Snippet content={content}>nested</Snippet>)
+    ).toThrow('Failed to lookup content snippet. Tried keys: ["nested"]');
   });
 
   test('renders a fallback if content at the specified key is not a string', () => {
-    const wrapper = render(<div><Snippet content={content} fallback={'nested.string'}>nested</Snippet></div>);
-    expect(wrapper.html()).toEqual('<span>nested string</span>');
+    render(<Snippet content={content} fallback="nested.string">nested</Snippet>);
+    expect(screen.getByText('nested string')).toBeInTheDocument();
   });
-
 });

@@ -4,7 +4,7 @@
   "workspaces": [
     "packages/*"
   ],
-  "version": "1.0.3",
+  "version": "2.0.2",
   "scripts": {
     "install:env": "set -o allexport && source .env && set +o allexport && npm install",
     "dev": "sh -c 'cmd=$(source .env && echo ${DEV_SERVICES:-\"asl asl-internal-ui\"} | xargs -n1 -I {} printf \"\\\"npm run dev -w %s\\\" \" {}); eval concurrently --kill-others-on-fail $cmd'",
@@ -19,6 +19,12 @@
   },
   "overrides": {
     "node-fetch": "^2.6.11",
-    "d3-color": "^3.1.0"
+    "d3-color": "^3.1.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-redux": "8.1.3"
+  },
+  "dependencies": {
+    "@ukhomeoffice/frontend-toolkit": "^3.0.0"
   }
 }

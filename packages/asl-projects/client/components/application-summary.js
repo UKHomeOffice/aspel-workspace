@@ -6,9 +6,12 @@ import pickBy from 'lodash/pickBy';
 import some from 'lodash/some';
 import mapValues from 'lodash/mapValues';
 import minimatch from 'minimatch';
+import { createSelector } from 'reselect';
+
 import { INCOMPLETE, PARTIALLY_COMPLETE, COMPLETE } from '../constants/completeness';
 import schemaMap from '../schema';
 import { flattenReveals, getNewComments, getFields, getScrollPos } from '../helpers';
+
 import NewComments from './new-comments';
 import ChangedBadge from './changed-badge';
 import NextSteps from './next-steps';
@@ -17,28 +20,58 @@ import Submit from './submit';
 import { selector } from './sync-handler';
 import HoldingPage from './holding-page';
 
-const mapStateToProps = ({
-  project,
-  comments,
-  application: {
-    schemaVersion,
+/** ----- MEMOIZED SELECTORS ----- */
+
+const getSchemaVersion = state => state.application.schemaVersion;
+const getSchema = createSelector([getSchemaVersion], version => schemaMap[version]());
+
+const getProject = state => state.project;
+const getComments = state => state.comments;
+const getUser = state => state.application.user;
+
+const getFieldsBySection = createSelector(
+  [getSchema, getProject],
+  (schema, project) => {
+    const includeReveals = true;
+    return Object.values(schema)
+      .map(section => section.subsections)
+      .reduce((obj, subsections) => ({
+        ...obj,
+        ...mapValues(
+          subsections,
+          subsection => flattenReveals(getFields(subsection, includeReveals), project).map(field => field.name)
+        )
+      }), {});
+  }
+);
+
+const getMappedProps = createSelector(
+  [
+    state => state.application.readonly,
+    state => state.application.showComments,
+    state => state.application.showConditions,
+    getProject,
+    getComments,
+    getUser,
+    getFieldsBySection,
+    getSchema,
+    state => state.application.basename,
+    state => state.application.project,
+    getSchemaVersion
+  ],
+  (
     readonly,
     showComments,
     showConditions,
+    project,
+    comments,
     user,
+    fieldsBySection,
+    schema,
     basename,
-    project: actualProject
-  }
-}) => {
-  const schema = schemaMap[schemaVersion];
-  const fieldsBySection = Object.values(schema()).map(section => section.subsections).reduce((obj, subsections) => {
-    const includeReveals = true;
-    return {
-      ...obj,
-      ...mapValues(subsections, subsection => flattenReveals(getFields(subsection, includeReveals), project).map(field => field.name))
-    };
-  }, {});
-  return {
+    actualProject,
+    schemaVersion
+  ) => ({
     readonly,
     showComments,
     showConditions,
@@ -46,14 +79,16 @@ const mapStateToProps = ({
     fieldsBySection,
     legacy: schemaVersion === 0,
     values: project,
-    sections: schema(),
+    sections: schema,
     basename,
     project: actualProject
-  };
-};
+  })
+);
+
+/** ----- COMPONENT ----- */
 
 const ApplicationSummary = () => {
-  const props = useSelector(mapStateToProps);
+  const props = useSelector(getMappedProps);
   const { isSyncing } = useSelector(selector);
   const [submitted, setSubmitted] = useState(false);
   const { legacy, values, readonly, sections, basename, fieldsBySection, newComments, project, showComments } = props;
@@ -61,15 +96,19 @@ const ApplicationSummary = () => {
   const ref = useRef(null);
 
   useEffect(() => {
-    if (submitted && !isSyncing) { submit(); }
+    if (submitted && !isSyncing) {
+      submit();
+    }
   }, [isSyncing, submitted]);
 
   const getIncompleteSubsections = () => {
     if (legacy) {
       return true;
     }
-    const subsections = map(pickBy(sections, section => !section.show || section.show(props)), section => pickBy(section.subsections, subsectionVisible))
-      .reduce((obj, values) => ({ ...obj, ...values }), {});
+    const subsections = map(
+      pickBy(sections, section => !section.show || section.show(props)),
+      section => pickBy(section.subsections, subsectionVisible)
+    ).reduce((obj, values) => ({ ...obj, ...values }), {});
 
     return Object.keys(subsections)
       .map(key => ({ ...subsections[key], key }))
@@ -94,9 +133,7 @@ const ApplicationSummary = () => {
   };
 
   const CompleteBadge = ({ isComplete }) => {
-    if (legacy) {
-      return null;
-    }
+    if (legacy) return null;
     switch (isComplete) {
       case COMPLETE:
         return <span className="badge complete">complete</span>;
@@ -107,25 +144,22 @@ const ApplicationSummary = () => {
     }
   };
 
-  const ErrorMessage = ({title, isComplete, children}) => {
-    if (readonly || legacy || !errors) {
-      return children;
-    }
-    if (isComplete === COMPLETE) {
+  const ErrorMessage = ({ title, isComplete, children }) => {
+    if (readonly || legacy || !errors || isComplete === COMPLETE) {
       return children;
     }
     return (
       <div className="govuk-form-group--error">
-        <span className="govuk-error-message">Complete the {title.replace(/^[A-Z]{1}/, str => str.toLowerCase())} section</span>
-        { children }
+        <span className="govuk-error-message">
+          Complete the {title.replace(/^[A-Z]/, str => str.toLowerCase())} section
+        </span>
+        {children}
       </div>
     );
   };
 
   const ErrorSummary = () => {
-    if (readonly || !errors) {
-      return null;
-    }
+    if (readonly || !errors) return null;
     const incomplete = getIncompleteSubsections();
     return (
       <div className="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabIndex="-1">
@@ -135,11 +169,11 @@ const ApplicationSummary = () => {
         <div className="govuk-error-summary__body">
           <p>You must complete the following sections before you can continue:</p>
           <ul className="govuk-list govuk-error-summary__list">
-            {
-              incomplete.map(({ key, title }) =>
-                <li key={key}><Link to={`/${key}`}>{title}</Link></li>
-              )
-            }
+            {incomplete.map(({ key, title }) => (
+              <li key={key}>
+                <Link to={`/${key}`}>{title}</Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -150,7 +184,7 @@ const ApplicationSummary = () => {
     return !subsection.show || subsection.show(values);
   };
 
-  const getCommentCount = (key) => {
+  const getCommentCount = key => {
     const fields = fieldsBySection[key] || [];
     const getCommentsForKey = key => {
       const match = minimatch.filter(key);
@@ -162,9 +196,7 @@ const ApplicationSummary = () => {
   };
 
   const Comments = ({ subsection }) => {
-    if (!showComments) {
-      return null;
-    }
+    if (!showComments) return null;
     const count = getCommentCount(subsection);
     return <NewComments comments={count} />;
   };
@@ -173,7 +205,7 @@ const ApplicationSummary = () => {
     const incomplete = getIncompleteSubsections();
     if (incomplete.length) {
       setErrors(true);
-      const top = getScrollPos(ref.current, -120); // shift 120px for the sticky header
+      const top = getScrollPos(ref.current, -120);
       window.scrollTo({ top, behavior: 'smooth' });
       return;
     }
@@ -192,76 +224,61 @@ const ApplicationSummary = () => {
     window.location.href = `${basename}/submit`;
   };
 
-  if (!values) {
-    return null;
-  }
-
-  if (submitted) {
-    return <HoldingPage />;
-  }
+  if (!values) return null;
+  if (submitted) return <HoldingPage />;
 
   return (
     <div className="application-summary" ref={ref}>
       <ErrorSummary />
-      {
-        Object.keys(sections).filter(section => !sections[section].show || sections[section].show(props)).map(key => {
+      {Object.keys(sections)
+        .filter(section => !sections[section].show || sections[section].show(props))
+        .map(key => {
           const section = sections[key];
-          const subsections = Object.keys(section.subsections)
-            .filter(subsection => subsectionVisible(section.subsections[subsection]));
+          const subsections = Object.keys(section.subsections).filter(subsection =>
+            subsectionVisible(section.subsections[subsection])
+          );
 
-          if (!subsections.length) {
-            return null;
-          }
+          if (!subsections.length) return null;
 
-          return <Fragment key={key}>
-            {
-              section.title && <h2 className="section-heading">{ section.title }</h2>
-            }
-            {
-              section.subtitle && <h3 className="section-heading">{ section.subtitle }</h3>
-            }
-            <table className="govuk-table">
-              <tbody>
-                {
-                  subsections.map(key => {
+          return (
+            <Fragment key={key}>
+              {section.title && <h2 className="section-heading">{section.title}</h2>}
+              {section.subtitle && <h3 className="section-heading">{section.subtitle}</h3>}
+              <table className="govuk-table">
+                <tbody>
+                  {
+                    subsections.map(key => {
+                      const subsection = section.subsections[key];
+                      const fields = Object.values(fieldsBySection[key] || []);
+                      if (key === 'protocols') fields.push('reusableSteps');
+                      if (subsection.repeats) fields.push(subsection.repeats);
 
-                    const subsection = section.subsections[key];
-                    const fields = Object.values(fieldsBySection[key] || []);
-
-                    if (key === 'protocols') {
-                      fields.push('reusableSteps');
-                    }
-                    if (subsection.repeats) {
-                      fields.push(subsection.repeats);
-                    }
-
-                    return <tr key={key}>
-                      <td>
-                        <ErrorMessage title={subsection.title} isComplete={isComplete(subsection, key)}>
-                          <Link to={`/${key}`}>{ subsection.title }</Link>
-                        </ErrorMessage>
-                      </td>
-                      <td className="controls">
-                        <Comments subsection={key} />
-                        <ChangedBadge fields={fields} />
-                        <CompleteBadge isComplete={isComplete(subsection, key)} />
-                      </td>
-                    </tr>;
-                  })
-                }
-              </tbody>
-            </table>
-          </Fragment>;
-        })
-      }
-      {
-        !readonly && <Submit onComplete={onComplete} />
-      }
+                      return (
+                        <tr key={key}>
+                          <td>
+                            <ErrorMessage title={subsection.title} isComplete={isComplete(subsection, key)}>
+                              <Link to={`/${key}`}>{subsection.title}</Link>
+                            </ErrorMessage>
+                          </td>
+                          <td className="controls">
+                            <Comments subsection={key} />
+                            <ChangedBadge fields={fields} />
+                            <CompleteBadge isComplete={isComplete(subsection, key)} />
+                          </td>
+                        </tr>
+                      );
+                    })
+                  }
+                </tbody>
+              </table>
+            </Fragment>
+          );
+        })}
+      {!readonly && <Submit onComplete={onComplete} />}
       <PreviewLicence />
       <NextSteps />
     </div>
   );
-
 };
 
 export default ApplicationSummary;

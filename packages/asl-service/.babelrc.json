@@ -1,13 +1,17 @@
 {
   "presets": [
-    "@babel/preset-react",
+    [
+      "@babel/preset-react",
+      { "runtime": "automatic" }
+    ],
     [
       "@babel/preset-env",
       {
         "useBuiltIns": "entry",
         "targets": {
           "ie": 11
-        }
+        },
+        "corejs": 3
       }
     ]
   ],

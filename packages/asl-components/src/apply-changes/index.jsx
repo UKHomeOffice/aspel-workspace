@@ -5,11 +5,11 @@ import omit from 'lodash/omit';
 
 export const ApplyChanges = ({
     id,
-    type,
-    label,
-    onApply,
+    type = 'link',
+    label = 'Submit',
+    onApply = e => e.target.submit(),
     children,
-    query,
+    query = {},
     action,
     method = 'GET',
     ...rest
@@ -23,7 +23,7 @@ export const ApplyChanges = ({
             }
             {
                 type === 'form' && (
-                    <form id={id} action={action} method={method} onSubmit={e => { e.preventDefault(); onApply(e); }}>
+                    <form id={id} data-testid={id} action={action} method={method} onSubmit={e => { e.preventDefault(); onApply(e); }}>
                         <input type="hidden" name="props" value={stringify(query)} {...omit(rest, 'dispatch')}/>
                         { children }
                     </form>
@@ -31,13 +31,6 @@ export const ApplyChanges = ({
             }
         </Fragment>
     );
-};
-
-ApplyChanges.defaultProps = {
-    type: 'link',
-    label: 'Submit',
-    onApply: e => e.target.submit(),
-    query: {}
 };
 
 const mapStateToProps = ({

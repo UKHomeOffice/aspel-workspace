@@ -7,6 +7,8 @@ module.exports = {
     role: 'Amendment details',
     conditions: 'Establishment conditions'
   },
+  mandatoryTrainingRequirements: 'NACWO mandatory training requirements',
+  trainingRecord: `{{profile.firstName}}'s training record`,
   fields: {
     role: {
       label: 'Role'

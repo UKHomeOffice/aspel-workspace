@@ -22,7 +22,7 @@ import { ReviewRepeater } from '../pages/sections/repeater/review';
 
 function RevealChildren({ value, options, values, prefix, diff }) {
   const option = (options || []).find(option => option.value === value);
-  if (!option.reveal || diff) {
+  if (!option?.reveal || diff) {
     return null;
   }
 

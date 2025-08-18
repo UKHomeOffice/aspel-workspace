@@ -13,10 +13,10 @@ import { Button } from '@ukhomeoffice/react-components';
 import RefusalNotice from './components/refusal-notice';
 
 function CommentForm({ formFields, task, errors, values, comment }) {
-  const hba = useSelector((state) => state.static.hba);
-  const { requiresDeclaration, inspector } = useSelector(
-    (state) => state.static
-  );
+  const requiresDeclaration = useSelector(state => state.static.requiresDeclaration);
+  const inspector = useSelector(state => state.static.inspector);
+  const hba = useSelector(state => state.static.hba);
+
   const model = task.data.model;
   let action = task.data.action;
   if (action === 'grant' && task.type === 'amendment') {

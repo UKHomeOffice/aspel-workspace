@@ -4,6 +4,10 @@ module.exports = {
     show: true,
     title: 'Project title'
   },
+  licenceNumber: {
+    show: true,
+    title: 'Licence number'
+  },
   licenceHolder: {
     show: true,
     sort: 'licenceHolder.lastName',

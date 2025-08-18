@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { RadioGroup, Warning } from '@ukhomeoffice/react-components';
 import { Details, Inset, Markdown, Link } from '@ukhomeoffice/asl-components';
 import { useSelector, shallowEqual } from 'react-redux';
+import cloneDeep from 'lodash/cloneDeep';
 
 const revealContent = `To change the primary establishment you must:
 
@@ -49,13 +50,18 @@ export default function EstablishmentSelector({ value, onFieldChange, review, di
 
   useEffect(() => {
     if (onFieldChange && localValue !== value) {
-      onFieldChange({
+      const selectedEstablishment = establishments.find(e => e.id === localValue) || {};
+
+      const updates = {
         'transfer-of-animals-complete': false,
         'protocols-complete': false,
         'experience-complete': false,
         transferToEstablishment: localValue,
-        transferToEstablishmentName: (establishments.find(e => e.id === localValue) || {}).name
-      });
+        transferToEstablishmentName: selectedEstablishment.name
+      };
+
+      // Prevent downstream mutation
+      onFieldChange(cloneDeep(updates));
     }
   }, [localValue]);
 
@@ -85,7 +91,10 @@ export default function EstablishmentSelector({ value, onFieldChange, review, di
 
   const hint = <Details summary="Help if your establishment's not listed" className="margin-top">
     <Inset>
-      <p>You need to be invited to an establishment before you can make them your primary establishment. Ask the Home Office Liaison Contact (HOLC) at your chosen establishment to send you an invitation.</p>
+      <p>
+        You need to be invited to an establishment before you can make them your primary establishment.
+        Ask the Home Office Liaison Contact (HOLC) at your chosen establishment to send you an invitation.
+      </p>
     </Inset>
   </Details>;
 

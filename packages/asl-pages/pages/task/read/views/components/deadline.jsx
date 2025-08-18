@@ -51,10 +51,10 @@ export default function Deadline({ task }) {
 
   return (
     <div className="deadline">
-      { isAsru &&
+      {
+        isAsru &&
         <h2><Snippet date={formatDate(activeDeadlineDate, dateFormat.long)}>deadline.processBy</Snippet></h2>
       }
-
       <dl className="inline-wide">
 
         { isAsru && internalDeadline &&
@@ -168,7 +168,6 @@ export default function Deadline({ task }) {
           )
         }
       </dl>
-
     </div>
   );
 }

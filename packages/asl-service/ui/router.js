@@ -1,11 +1,14 @@
 require('../lib/register');
 
+const React = require('react');
+const { Provider } = require('react-redux');
 const { merge, set } = require('lodash');
 const bodyParser = require('body-parser');
 const express = require('express');
 const path = require('path');
 const uuid = require('uuid');
-const expressViews = require('express-react-views');
+const { renderToPipeableStream } = require('react-dom/server');
+const { Writable } = require('stream');
 const { MemoryStore } = require('express-session');
 const homeOffice = require('@ukhomeoffice/frontend-toolkit');
 const session = require('@lennym/redis-session');
@@ -27,6 +30,8 @@ const privacy = require('./pages/privacy');
 const cookies = require('./pages/cookies');
 const accessibility = require('./pages/accessibility');
 const ErrorComponent = require('./views/error');
+
+const configureStore = require('./store');
 
 const featureFlag = require('./feature-flag');
 
@@ -52,9 +57,68 @@ module.exports = settings => {
     path.resolve(__dirname, './views')
   ]);
 
-  app.engine('jsx', expressViews.createEngine({
-    transformViews: false
-  }));
+  app.engine('jsx', (filePath, options, callback) => {
+    try {
+      delete require.cache[require.resolve(filePath)];
+      const PageComponent = require(filePath).default || require(filePath);
+
+      const viewsDirs = app.get('views');
+      const layoutDir = Array.isArray(viewsDirs) ? viewsDirs[0] : viewsDirs;
+      const layoutPath = path.join(layoutDir, 'layout.jsx');
+      delete require.cache[require.resolve(layoutPath)];
+      const Layout = require(layoutPath).default || require(layoutPath);
+
+      const preloadedState = options?.preloadedState || {};
+      const store = configureStore(preloadedState);
+
+      const element = React.createElement(
+        Provider,
+        { store },
+        React.createElement(Layout, { Component: PageComponent, ...options })
+      );
+
+      let html = '';
+      let called = false;
+
+      const safeCallback = (err, result) => {
+        if (!called) {
+          called = true;
+          callback(err, result);
+        }
+      };
+
+      const stream = renderToPipeableStream(element, {
+        onAllReady() {
+          const writable = new Writable({
+            write(chunk, encoding, cb) {
+              html += chunk.toString();
+              cb();
+            },
+            final(cb) {
+              cb();
+            }
+          });
+
+          stream.pipe(writable);
+          writable.on('finish', () => {
+            safeCallback(null, html);
+          });
+        },
+        onError(err) {
+          console.error('SSR stream error:', err);
+          safeCallback(err);
+        }
+      });
+    } catch (err) {
+      console.error('JSX render error:', err);
+      callback(err); // still ok here because outer try/catch won't conflict
+    }
+  });
+
+  app.set('view engine', 'jsx');
+  app.set('views', [
+    path.join(__dirname, 'views')
+  ]);
 
   app.use(staticrouter);
 
@@ -136,6 +200,17 @@ module.exports = settings => {
   });
 
   app.use(sendResponse(settings));
+
+  // google dev tools
+  app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
+    res.status(200).json({});
+  });
+  app.use((req, res, next) => {
+    if (req.path === '/.well-known/appspecific/com.chrome.devtools.json') {
+      return res.status(200).json({});
+    }
+    next();
+  });
 
   app.use('/privacy', privacy());
   app.use('/cookies', cookies());
