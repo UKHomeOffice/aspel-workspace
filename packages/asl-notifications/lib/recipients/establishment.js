@@ -129,12 +129,10 @@ module.exports = async ({ schema, logger, task }) => {
   };
 
   const roleFlow = async params => {
-    if (model === 'role' && (version || action === 'delete' || applicant.asruUser)) {
+    if (model === 'role' && (version || action === 'delete')) {
       await setRoleParams(params);
       if (version) {
         params.emailTemplate += version;
-      } else if (applicant.asruUser) {
-        params.emailTemplate += 2;
       }
       notifyPelh(params);
     } else {
@@ -250,7 +248,7 @@ module.exports = async ({ schema, logger, task }) => {
     const emailTemplate = ['place', 'role'].includes(model) ? 'licence-amended' : 'licence-granted';
     const taskGrantedParams = { ...params, emailTemplate, logMsg: 'licence is granted' };
     await roleFlow(taskGrantedParams);
-    if (model === 'role' && (version || applicant.asruUser)) {
+    if (model === 'role' && version) {
       taskGrantedParams.emailTemplate = 'role-approved-subject';
       notifyUser(subject, taskGrantedParams);
     }

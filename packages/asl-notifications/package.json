@@ -25,7 +25,6 @@
   "homepage": "https://github.com/UKHomeOffice/asl-notifications#readme",
   "devDependencies": {
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
-    "@ukhomeoffice/asl-dictionary": "file:../asl-dictionary",
     "dotenv": "^6.2.0",
     "eslint": "^5.16.0",
     "eslint-plugin-undocumented-env": "^1.0.0",
@@ -38,6 +37,7 @@
   "dependencies": {
     "@asl/schema": "file:../asl-schema",
     "@asl/service": "file:../asl-service",
+    "asl/asl-dictionary": "file:../asl-dictionary",
     "hot-shots": "^8.3.1",
     "lodash": "^4.17.21",
     "minimist": "^1.2.6",
