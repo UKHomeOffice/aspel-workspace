@@ -22,10 +22,10 @@ class Role extends BaseModel {
           type: ['object', 'null'],
           properties: {
             mandatory: {
-              type: 'array',
+              type: ['array', 'string'],
               items: {
                 type: 'string',
-                enum: ['delay', 'exemption']
+                enum: ['delay', 'exemption', 'yes']
               }
             },
             incomplete: { type: ['string', 'null'] },

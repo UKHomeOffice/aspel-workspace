@@ -19,7 +19,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
     completeDate,
   } = data;
 
-  const trainingExemptionDetails = {
+  const exemptionDetails = {
     mandatory,
     incomplete,
     delayReason,
@@ -51,6 +51,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
   if (action === 'create') {
     // renamed `role` to `type` - fallback for b/c
     const typeOfRole = type || role;
+    const trainingExemptionDetails = (['nvs', 'nacwo'].includes(typeOfRole) && exemptionDetails.completeDate) ? exemptionDetails : null
     return Role.query(transaction).findOne({ establishmentId, profileId, type: typeOfRole })
       .then(existing => {
         if (existing) {
