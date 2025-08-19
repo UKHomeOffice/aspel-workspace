@@ -16,7 +16,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
     mandatory,
     incomplete,
     delayReason,
-    completeDate,
+    completeDate
   } = data;
 
   const exemptionDetails = {
@@ -24,7 +24,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
     incomplete,
     delayReason,
     completeDate
-  }
+  };
 
   const dissociatePlaces = (establishmentId, type) => {
     return PlaceRole.query(transaction)
@@ -52,7 +52,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
     // renamed `role` to `type` - fallback for b/c
     const typeOfRole = type || role;
     // Exemption details are available only when there is unavoidable delay in completing training
-    const trainingExemptionDetails = exemptionDetails.completeDate ? exemptionDetails : null
+    const trainingExemptionDetails = exemptionDetails.completeDate ? exemptionDetails : null;
     return Role.query(transaction).findOne({ establishmentId, profileId, type: typeOfRole })
       .then(existing => {
         if (existing) {
