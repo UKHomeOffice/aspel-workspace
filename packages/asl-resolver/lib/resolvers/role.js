@@ -44,7 +44,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
   if (action === 'create') {
     // renamed `role` to `type` - fallback for b/c
     const typeOfRole = type || role;
-    // Exemption details are available only when there is unavoidable delay in completing training
+    // Training delay details are available only when there is unavoidable delay in completing training
     const trainingDelayDetails = completeDate ? {
       mandatory,
       incomplete,
