@@ -1,6 +1,6 @@
 {
   "name": "@asl/service",
-  "version": "11.0.6",
+  "version": "11.0.7",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -27,6 +27,8 @@
     "@babel/register": "^7.23.7",
     "@lennym/redis-session": "^2.2.0",
     "@redux-devtools/extension": "^3.3.0",
+    "@reduxjs/toolkit": "^2.8.2",
+    "@testing-library/dom": "^10.4.1",
     "@ukhomeoffice/asl-components": "file:../asl-components",
     "@ukhomeoffice/frontend-toolkit": "^3.0.0",
     "aws-sdk": "^2.1370.0",
@@ -67,7 +69,6 @@
     "url": "^0.11.0",
     "url-search-params": "^1.1.0",
     "uuid": "^8.3.2",
-    "@reduxjs/toolkit": "^2.8.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {
