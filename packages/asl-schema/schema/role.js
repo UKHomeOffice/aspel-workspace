@@ -18,17 +18,22 @@ class Role extends BaseModel {
           type: 'string',
           enum: roles
         },
-        trainingExemptionDetails: {
+        trainingDelayDetails: {
           type: ['object', 'null'],
           properties: {
             mandatory: {
               type: ['array', 'string'],
               items: {
                 type: 'string',
-                enum: ['delay', 'exemption', 'yes']
+                enum: ['delay', 'exemption']
               }
             },
-            incomplete: { type: ['string', 'null'] },
+            incomplete: {
+              type: ['string', 'null', 'array'],
+              items: {
+                type: 'string'
+              }
+            },
             delayReason: { type: ['string', 'null'] },
             completeDate: { type: 'string', format: 'date' }
           }

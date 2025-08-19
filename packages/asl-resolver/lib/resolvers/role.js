@@ -19,13 +19,6 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
     completeDate
   } = data;
 
-  const exemptionDetails = {
-    mandatory,
-    incomplete,
-    delayReason,
-    completeDate
-  };
-
   const dissociatePlaces = (establishmentId, type) => {
     return PlaceRole.query(transaction)
       .where({ roleId: id })
@@ -52,14 +45,19 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
     // renamed `role` to `type` - fallback for b/c
     const typeOfRole = type || role;
     // Exemption details are available only when there is unavoidable delay in completing training
-    const trainingExemptionDetails = exemptionDetails.completeDate ? exemptionDetails : null;
+    const trainingDelayDetails = completeDate ? {
+      mandatory,
+      incomplete,
+      delayReason,
+      completeDate
+    } : null;
     return Role.query(transaction).findOne({ establishmentId, profileId, type: typeOfRole })
       .then(existing => {
         if (existing) {
           return existing;
         }
         return Role.query(transaction)
-          .insert({ establishmentId, profileId, type: typeOfRole, trainingExemptionDetails })
+          .insert({ establishmentId, profileId, type: typeOfRole, trainingDelayDetails })
           .returning('*');
       })
       .then(result => touchEstablishment(establishmentId, typeOfRole).then(() => result))

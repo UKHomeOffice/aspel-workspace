@@ -5,7 +5,7 @@
 exports.up = function (knex) {
   return knex.schema
     .table('roles', (table) => {
-      table.jsonb('training_exemption_details');
+      table.jsonb('training_delay_details');
     });
 };
 
@@ -16,6 +16,6 @@ exports.up = function (knex) {
 exports.down = function (knex) {
   return knex.schema
     .table('roles', (table) => {
-      table.dropColumn('training_exemption_details');
+      table.dropColumn('training_delay_details');
     });
 };
