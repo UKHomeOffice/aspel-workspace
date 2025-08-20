@@ -2,6 +2,7 @@ const { page } = require('@asl/service/ui');
 const { form } = require('../../../common/routers');
 const { buildModel } = require('../../../../lib/utils');
 const schema = require('./schema');
+const { format } = require('date-fns');
 
 module.exports = (settings) => {
   const app = page({
@@ -28,9 +29,7 @@ module.exports = (settings) => {
         const day = req.body['completeDate-day'];
         const month = req.body['completeDate-month'];
         const year = req.body['completeDate-year'];
-        Object.assign(req.form.values, {
-          completeDate: `${year}-${month}-${day}`
-        });
+        req.form.values.completeDate = format(`${year}-${month}-${day}`, 'yyyy-MM-dd');
         next();
       },
       locals: (req, res, next) => {

@@ -18,6 +18,26 @@ class Role extends BaseModel {
           type: 'string',
           enum: roles
         },
+        trainingDelayDetails: {
+          type: ['object', 'null'],
+          properties: {
+            mandatory: {
+              type: ['array', 'string'],
+              items: {
+                type: 'string',
+                enum: ['delay', 'exemption']
+              }
+            },
+            incomplete: {
+              type: ['string', 'null', 'array'],
+              items: {
+                type: 'string'
+              }
+            },
+            delayReason: { type: ['string', 'null'] },
+            completeDate: { type: 'string', format: 'date' }
+          }
+        },
         establishmentId: { type: 'integer' },
         profileId: { type: 'string' },
         createdAt: { type: 'string', format: 'date-time' },
