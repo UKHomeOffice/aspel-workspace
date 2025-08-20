@@ -23,12 +23,14 @@ function getFieldsForSection(section, project) {
       ];
     }, []);
   }
-  const fields = flattenReveals(getFields(section), project).map(field => field.name);
+  const fields = [
+    ...flattenReveals(getFields(section), project).map(field => field.name),
+    ...(section.hiddenFields ?? []),
+  ];
   if (section.repeats) {
     fields.push(section.repeats);
   }
   if (section.name === 'protocols') {
-    fields.push('reusableSteps');
     return fields.filter(f => f !== 'title');
   }
   return fields;
