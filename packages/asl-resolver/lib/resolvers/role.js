@@ -1,7 +1,7 @@
 const { get } = require('lodash');
 const updateReminders = require('../utils/update-reminders');
 
-module.exports = ({ models }) => async ({action, data, id}, transaction) => {
+module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
   // assignment/removal of a HOLC should not trigger an establishment update
   const nopes = [
     'holc'
@@ -12,7 +12,11 @@ module.exports = ({ models }) => async ({action, data, id}, transaction) => {
     establishmentId,
     profileId,
     type,
-    role
+    role,
+    mandatory,
+    incomplete,
+    delayReason,
+    completeDate
   } = data;
 
   const dissociatePlaces = (establishmentId, type) => {
@@ -40,13 +44,20 @@ module.exports = ({ models }) => async ({action, data, id}, transaction) => {
   if (action === 'create') {
     // renamed `role` to `type` - fallback for b/c
     const typeOfRole = type || role;
+    // Training delay details are available only when there is unavoidable delay in completing training
+    const trainingDelayDetails = completeDate ? {
+      mandatory,
+      incomplete,
+      delayReason,
+      completeDate
+    } : null;
     return Role.query(transaction).findOne({ establishmentId, profileId, type: typeOfRole })
       .then(existing => {
         if (existing) {
           return existing;
         }
         return Role.query(transaction)
-          .insert({ establishmentId, profileId, type: typeOfRole })
+          .insert({ establishmentId, profileId, type: typeOfRole, trainingDelayDetails })
           .returning('*');
       })
       .then(result => touchEstablishment(establishmentId, typeOfRole).then(() => result))
