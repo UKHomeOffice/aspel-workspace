@@ -45,13 +45,36 @@ const DiffWindow = (props) => {
 
   const dispatch = useDispatch();
 
-  const before = useSelector(state => get(state.questionVersions, `['${props.name}'].${versions[active]}.value`));
-  const changes = useSelector(state => {
+  let before = useSelector(state => get(state.questionVersions, `['${props.name}'].${versions[active]}.value`));
+
+  //dealing with protocol steps when moved from normal to reusable or when protocols/steps are moved around
+  let recheckDiff = false;
+  if (before === undefined && props.stepId && props.previousProtocols) {
+    recheckDiff = true;
+    let protocolIndex;
+    if (versions[active] === 'granted') {
+      protocolIndex = props.previousProtocols.granted.indexOf(props.protocolId);
+      before = get(props.previousProtocols.grantedSteps[protocolIndex].find(s => s.id === props.stepId), props.fieldName, undefined);
+    } else if (versions[active] === 'first') {
+      protocolIndex = props.previousProtocols.first.indexOf(props.protocolId);
+      before = get(props.previousProtocols.firstSteps[protocolIndex].find(s => s.id === props.stepId), props.fieldName, undefined);
+    } else {
+      protocolIndex = props.previousProtocols.previous.indexOf(props.protocolId);
+      before = get(props.previousProtocols.steps[protocolIndex].find(s => s.id === props.stepId), props.fieldName, undefined);
+    }
+
+  }
+
+  let changes = useSelector(state => {
     if (props.type === 'keywords' && props.value.length > 0 && before) {
       return findArrayDifferences(before, props.value);
     }
     return get(state.questionVersions, `['${props.name}'].${versions[active]}.diff`, { added: [], removed: [] });
   });
+
+  if (recheckDiff && before) {
+    //changes = findArrayDifferences(before, props.value);
+  }
 
   useEffect(() => {
     if (!before && modalOpen) {
