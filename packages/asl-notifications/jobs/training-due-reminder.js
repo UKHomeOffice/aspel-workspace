@@ -16,7 +16,7 @@ module.exports = async ({ schema, logger, publicUrl }) => {
   const { Role, Profile } = schema;
   const emailer = Emailer({ schema, logger, publicUrl });
 
-  // Remove below line before deployment
+  //TODO: Remove before merge
   const roleQuery = buildRoleQueryWithCompletionDate({ Role, completeDate: '2026-01-01', emailer, logger });
   const notify3Months = buildRoleQueryWithCompletionDate({ Role, completeDate: moment().add(3, 'months').format('YYYY-MM-DD'), emailer });
   const notify1Months = buildRoleQueryWithCompletionDate({ Role, completeDate: moment().add(1, 'months').format('YYYY-MM-DD'), emailer });
