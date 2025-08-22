@@ -5,7 +5,7 @@ const { query } = require('../../asl-schema/schema/base-model');
 
 const buildRoleQueryWithCompletionDate = ({ Role, completeDate }) => {
   return Role.query()
-    .select('roles.type', 'profile.first_name', 'profile.last_name', 'establishment.name')
+    .select('roles.profileId', 'roles.establishmentId', 'roles.type', 'roles.trainingDelayDetails', 'profile.first_name', 'profile.last_name', 'establishment.name')
     // .whereRaw(`training_delay_details->>'completeDate' = '2026-01-01'`)
     .joinRelated('profile')
     .joinRelated('establishment')
@@ -16,6 +16,7 @@ module.exports = async ({ schema, logger, publicUrl }) => {
   const { Role, Profile } = schema;
   const emailer = Emailer({ schema, logger, publicUrl });
 
+  // Remove below line before deployment
   const roleQuery = buildRoleQueryWithCompletionDate({ Role, completeDate: '2026-01-01', emailer, logger });
   const notify3Months = buildRoleQueryWithCompletionDate({ Role, completeDate: moment().add(3, 'months').format('YYYY-MM-DD'), emailer });
   const notify1Months = buildRoleQueryWithCompletionDate({ Role, completeDate: moment().add(1, 'months').format('YYYY-MM-DD'), emailer });
@@ -26,15 +27,26 @@ module.exports = async ({ schema, logger, publicUrl }) => {
 
   logger.debug(`Found ${rolesWithTrainingOutstanding.length} roles with training due in 3 months`);
 
-  return Promise.all(rolesWithTrainingOutstanding.flat().map(role => console.log(role)));
-  // return Promise.all(rolesWithTrainingOutstanding.flat().map(role => emailer({
-  //   event: 'direct-notification',
-  //   data: {
-  //     id: role.id,
-  //     model: 'establishment',
-  //     establishmentId: role.establishmentId,
-  //     action: 'training-due-reminder',
-  //     subject: role.profileId
-  //   }
-  // })));
+  // return Promise.all(rolesWithTrainingOutstanding.flat().map(role => console.log(role)));
+  return Promise.all(rolesWithTrainingOutstanding.flat().map(role => {
+    console.log(role);
+    emailer({
+      event: 'direct-notification',
+      data: {
+        id: role.id,
+        model: 'role',
+        establishmentId: role.establishmentId,
+        action: 'training-due-reminder',
+        status: 'training-due-reminder',
+        changedBy: role.profileId,
+        data: {
+          type: role.type,
+          firstName: role.firstName,
+          lastName: role.lastName,
+          name: role.name,
+          completeDate: role.trainingDelayDetails.completeDate
+        }
+      }
+    });
+  }));
 };
