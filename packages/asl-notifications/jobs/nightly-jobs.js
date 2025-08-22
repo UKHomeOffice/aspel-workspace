@@ -6,7 +6,8 @@ const jobs = [
   './ra-due-notice',
   './rop-reminder-notice-deadline',
   './reminder-notice',
-  './pil-review-notice'
+  './pil-review-notice',
+  './training-due-reminder'
 ];
 
 module.exports = async (params) => {
