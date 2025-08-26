@@ -64,6 +64,12 @@ const ParagraphComponent = ({
         return <div {...paragraphProps} {...props}>{children}</div>;
     }
 
+    // inline mark elements should not be wrapped in a paragraph, extend to other inline elements as needed
+    if (childrenArray.every(
+        child => React.isValidElement(child) && (child.type?.name === 'mark'))) {
+        return <span {...paragraphProps} {...props}>{children}</span>;
+    }
+
     return <p {...paragraphProps} {...props}>{children}</p>;
 };
 
