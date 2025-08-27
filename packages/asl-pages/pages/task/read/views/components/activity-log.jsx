@@ -319,7 +319,9 @@ function Comment({ changedBy, comment }) {
           <p className="author">{`${changedBy.firstName} ${changedBy.lastName} commented:`}</p>
         )}
         <Inset>
-          <Markdown className="content">{comment}</Markdown>
+          <div className="content">
+            <Markdown>{comment}</Markdown>
+          </div>
         </Inset>
       </div>
     )
@@ -377,7 +379,12 @@ function LogItem({ item, task }) {
         activity={item}
         changedBy={item.changedBy}
       />
-      { version === versions.role.NAMED_PERSON_VERSION_ID && <Snippet fallback='declarations.default'>declarations.{roleData.type}</Snippet> }
+      {version === versions.role.NAMED_PERSON_VERSION_ID &&
+        item.id === task.activityLog[task.activityLog.length - 1].id && (
+        <Snippet fallback="declarations.default">
+          {`declarations.${roleData.type}`}
+        </Snippet>)
+      }
       <InspectorRecommendation item={item} />
       {isExtension && <DeadlineDetails item={item} />}
       {isRa && <AwerbDate item={item} />}

@@ -1,46 +1,47 @@
-import React, { Component } from 'react';
+import React, { useState, useMemo } from 'react';
 import classnames from 'classnames';
 
-class ExpandingPanel extends Component {
+const ExpandingPanel = ({
+    isOpen: initialOpen = false,
+    open: controlledOpen,
+    onToggle,
+    wrapTitle = true,
+    title,
+    children
+}) => {
+    const [internalOpen, setInternalOpen] = useState(initialOpen);
 
-    componentDidMount() {
-        this.setState({ open: this.props.isOpen });
-    }
+    // Determine if the component is controlled
+    const isControlled = typeof controlledOpen === 'boolean';
 
-    controlled() {
-        return typeof this.props.open === 'boolean';
-    }
-
-    toggle () {
-        if (this.controlled()) {
-            return this.props.onToggle();
+    // Sync internal state when controlled prop changes
+    useMemo(() => {
+        if (isControlled) {
+            setInternalOpen(controlledOpen);
         }
-        return this.setState({ open: !this.state.open });
-    }
+    }, [controlledOpen, isControlled]);
 
-    isOpen() {
-        if (this.controlled()) {
-            return this.props.open;
+    // Toggle handler
+    const toggle = () => {
+        if (isControlled) {
+            onToggle?.();
+        } else {
+            setInternalOpen(prev => !prev);
         }
-        return !this.state || this.state.open;
-    }
+    };
 
-    render() {
-        return (
-            <section className={`expanding-panel${this.isOpen() ? ' open' : ''}`}>
-                <header onClick={() => this.toggle()}>
-                    {
-                        this.props.wrapTitle ? <h3>{ this.props.title }</h3> : this.props.title
-                    }
-                </header>
-                <div className={classnames('content', { hidden: !this.isOpen() })}>{ this.props.children }</div>
-            </section>
-        );
-    }
-}
-
-ExpandingPanel.defaultProps = {
-    wrapTitle: true
+    return (
+        <section className={`expanding-panel${internalOpen ? ' open' : ''}`}>
+            <header onClick={toggle}>
+                {wrapTitle ? <h3>{title}</h3> : title}
+            </header>
+            {internalOpen && (
+                <div className={classnames('content', { hidden: !internalOpen })}>
+                    {children}
+                </div>
+            )}
+        </section>
+    );
 };
 
 export default ExpandingPanel;

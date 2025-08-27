@@ -77,7 +77,9 @@ export default function EditableField({
                                         autoExpand={true}
                                     />
                                 )
-                                : <Markdown className="highlight">{proposedContent || 'None'}</Markdown>
+                                : <div className="highlight">
+                                    <Markdown>{proposedContent || 'None'}</Markdown>
+                                </div>
                         }
                     </Fragment>
                 )

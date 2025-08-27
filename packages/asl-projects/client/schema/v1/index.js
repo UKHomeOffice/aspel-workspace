@@ -1769,6 +1769,7 @@ export default () => {
 
 Select each that applies`,
                   type: 'checkbox',
+                  preserveHierarchy: true,
                   options: [
                     {
                       label: 'Yes, from another protocol - in this project or another project',
@@ -1776,7 +1777,7 @@ Select each that applies`,
                       reveal: [
                         {
                           name: 'reuse-details',
-                          label: 'Describe the procedures that have been applied to them and why are you choosing to re-use them',
+                          label: 'Describe the procedures that have been applied to them and why you are choosing to re-use them',
                           type: 'texteditor'
                         }
                       ]

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class PhaseBanner extends React.Component {
-
   renderContent() {
     if (this.props.content) {
       return this.props.content;

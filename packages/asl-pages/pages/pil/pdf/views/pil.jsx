@@ -18,7 +18,9 @@ const PIL = ({ pil, content }) => {
 
       <h1 className="licence-holder">{`${licenceHolder.firstName} ${licenceHolder.lastName}`}</h1>
 
-      <Markdown className="legal-preamble">{content.legalPreamble}</Markdown>
+      <div className="legal-preamble">
+        <Markdown>{content.legalPreamble}</Markdown>
+      </div>
 
       {
         !pil.multipleEstablishments && (

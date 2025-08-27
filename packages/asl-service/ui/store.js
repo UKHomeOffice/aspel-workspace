@@ -1,34 +1,33 @@
-const url = require('url');
-const { applyMiddleware, createStore } = require('redux');
-const thunk = require('redux-thunk').default;
+const { configureStore } = require('@reduxjs/toolkit');
 const rootReducer = require('./reducers');
 const { queryStringFromState } = require('@ukhomeoffice/asl-components/src/utils');
-const { composeWithDevTools } = require('@redux-devtools/extension');
 
-const persistState = store => next => action => {
-  const result = next(action);
-  switch (action.type) {
-    case 'SET_SORT':
-    case 'SET_FILTERS':
-    case 'SET_FILTER':
-    case 'SET_PAGE':
-      const href = new url.URL(window.location.href);
-      href.search = queryStringFromState(store.getState());
-      window.history.replaceState(undefined, undefined, href.format());
-  }
-  return result;
-};
+function persistStateMiddleware(storeAPI) {
+  return next => action => {
+    const result = next(action);
 
-const middleware = [thunk, persistState];
+    if (typeof window !== 'undefined') {
+      switch (action.type) {
+        case 'SET_SORT':
+        case 'SET_FILTERS':
+        case 'SET_FILTER':
+        case 'SET_PAGE': {
+          const href = new URL(window.location.href) || '';
+          href.search = queryStringFromState(storeAPI.getState());
+          window.history.replaceState(undefined, undefined, href.toString());
+        }
+      }
+    }
 
-if (process.env.NODE_ENV === 'development') {
-  const { logger } = require('redux-logger');
-  middleware.push(logger);
+    return result;
+  };
 }
 
-const middlewareEnhancer = applyMiddleware(...middleware);
-const enhancer = process.env.NODE_ENV === 'development'
-  ? composeWithDevTools(middlewareEnhancer)
-  : middlewareEnhancer;
-
-module.exports = createStore(rootReducer, window.INITIAL_STATE, enhancer);
+module.exports = function configureAppStore(preloadedState = {}) {
+  return configureStore({
+    reducer: rootReducer,
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(persistStateMiddleware),
+    preloadedState,
+    devTools: true
+  });
+};

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AccessibleAutocomplete from 'accessible-autocomplete/react';
 import { InputWrapper } from '@ukhomeoffice/react-components';
 import { getUrl } from '../link';
@@ -37,7 +37,7 @@ export default function AutoComplete(props) {
         typeof props.onChange === 'function' && props.onChange({ target: { value } });
     }, [value]);
 
-    function simpleSearch (query, syncResults) {
+    const simpleSearch = useCallback((query, syncResults) => {
         syncResults(query
             ? props.options.filter(result => {
                 const option = typeof result === 'string' ? result : result.label;
@@ -45,9 +45,9 @@ export default function AutoComplete(props) {
             })
             : []
         );
-    }
+    }, [props.options]);
 
-    function apiSearch (query, syncResults) {
+    const apiSearch = useCallback((query, syncResults) => {
         if (!query) {
             return syncResults([]);
         }
@@ -57,11 +57,18 @@ export default function AutoComplete(props) {
                 syncResults(results || []);
             })
             .catch(err => console.error('Failed to fetch', err));
-    }
+    }, []);
 
-    function renderLabel(item) {
+    const renderLabel = useCallback(item => {
         return typeof item === 'object' ? item.label : item;
-    }
+    }, []);
+
+    const onConfirm = useCallback(option => {
+        if (typeof option === 'string') {
+            return setValue(option);
+        }
+        setValue(option ? option.value : '');
+    }, [setValue]);
 
     return (
         <InputWrapper {...props}>
@@ -75,12 +82,7 @@ export default function AutoComplete(props) {
                     inputValue: renderLabel,
                     suggestion: renderLabel
                 }}
-                onConfirm={option => {
-                    if (typeof option === 'string') {
-                        return setValue(option);
-                    }
-                    setValue(option ? option.value : '');
-                }}
+                onConfirm={onConfirm}
                 confirmOnBlur={false}
                 defaultValue={defaultValue}
             />

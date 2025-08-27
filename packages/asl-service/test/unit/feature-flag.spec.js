@@ -47,20 +47,26 @@ describe('Feature flags', () => {
 
   describe('React hook', () => {
     const MockReduxProvider = ({state, children}) => {
-      return <Provider store={configureStore([])(state)}>{children}</Provider>;
+      return React.createElement(
+        Provider,
+        { store: configureStore([])(state) },
+        children
+      );
     };
 
     const TestComponent = ({role}) => {
       const hasRole = useFeatureFlag(role);
 
-      return <p>{hasRole ? 'Has role' : 'Missing role'}</p>;
+      return React.createElement('p', null, hasRole ? 'Has role' : 'Missing role');
     };
 
     it('Can test if a role is present', async () => {
       const component = render(
-        <MockReduxProvider state={{static: {keycloakRoles: ['base-role', 'feature-a']}}}>
-          <TestComponent role="feature-a" />
-        </MockReduxProvider>
+        React.createElement(
+          MockReduxProvider,
+          { state: { static: { keycloakRoles: ['base-role', 'feature-a'] } } },
+          React.createElement(TestComponent, { role: 'feature-a' })
+        )
       );
 
       assert.notEqual(await component.queryByText('Has role'), null);
@@ -68,9 +74,11 @@ describe('Feature flags', () => {
 
     it('Can test if a role is missing', async () => {
       const component = render(
-        <MockReduxProvider state={{static: {keycloakRoles: ['base-role', 'feature-a']}}}>
-          <TestComponent role="feature-b" />
-        </MockReduxProvider>
+        React.createElement(
+          MockReduxProvider,
+          { state: { static: { keycloakRoles: ['base-role', 'feature-a'] } } },
+          React.createElement(TestComponent, { role: 'feature-b' })
+        )
       );
 
       assert.notEqual(await component.queryByText('Missing role'), null);

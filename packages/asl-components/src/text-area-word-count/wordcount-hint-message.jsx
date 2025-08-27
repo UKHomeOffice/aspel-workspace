@@ -18,7 +18,7 @@ const WordCountHintMessage = ({ content, id, maxWordCount = 0 }) => {
     }
 
     return (
-        <div id={hintId} aria-live="polite" className="govuk-hint govuk-character-count__message">
+        <div id={hintId} data-testid={hintId} aria-live="polite" className="govuk-hint govuk-character-count__message">
             {hintText}
         </div>
     );

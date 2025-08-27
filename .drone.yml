@@ -9,6 +9,11 @@ steps:
     image: node:22.14.0
     commands:
       - npm ci --workspaces=false
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
   - name: deployset
     image: node:22.14.0
     environment:
@@ -355,7 +360,8 @@ steps:
     environment:
       IMAGE_NAME: asl-data-exports
       ALLOW_CVE_LIST_FILE: packages/asl-data-exports/cve-exceptions.txt
-      TIMEOUT: 10m
+      TIMEOUT: 20m
+      EXCLUDE_PATHS: "**/*.js.map"
   - name: docker push
     image: docker:dind
     environment:
@@ -2103,6 +2109,75 @@ services:
   environment:
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: test-password
+
+trigger:
+  event:
+    - push
+    - pull_request
+
+---
+
+kind: pipeline
+name: asl-components
+type: kubernetes
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: node:22.14.0
+    commands:
+      - git clone $DRONE_REMOTE_URL .
+
+  - name: changeset
+    image: node:22.14.0
+    environment:
+      TARGET_BRANCH: "${DRONE_TARGET_BRANCH}"
+      SOURCE_COMMIT: "${DRONE_COMMIT}"
+      BUILD_EVENT: "${DRONE_BUILD_EVENT}"
+      SKIP_STATUS: 78
+      MODULES: packages/asl-components
+    commands:
+      - git config advice.detachedHead false
+      - git checkout $DRONE_COMMIT
+      - echo "--- DIFF between $TARGET_BRANCH and current commit ($DRONE_COMMIT) ---"
+      - git fetch origin $TARGET_BRANCH
+      - git diff origin/$TARGET_BRANCH --name-status
+      - node ./ci/changeset.js --modules $MODULES
+      - git checkout $DRONE_TARGET_BRANCH
+      - git merge $DRONE_COMMIT
+      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
+
+  - name: install
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm ci --workspace @ukhomeoffice/asl-components
+
+  - name: test-lint
+    image: node:22.14.0
+    commands:
+      - npm run test:lint --workspace @ukhomeoffice/asl-components
+
+  - name: test-unit
+    image: node:22.14.0
+    commands:
+      - npm run test:unit --workspace @ukhomeoffice/asl-components
+
+  - name: audit
+    image: node:22.14.0
+    environment:
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+    commands:
+      - npm audit --workspace=@ukhomeoffice/asl-components --audit-level=high --omit=dev
 
 trigger:
   event:

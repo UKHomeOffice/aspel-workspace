@@ -18,7 +18,7 @@ const CONDITIONS_FIELDS = ['conditions', 'retrospectiveAssessment'];
 
 const jsondiff = require('jsondiffpatch').create({
   objectHash: obj => {
-    return obj.id || sha('sha256').update(obj).digest('hex');
+    return obj.id || sha('sha256').update(JSON.stringify(obj)).digest('hex');
   }
 });
 
@@ -88,16 +88,20 @@ export function deleteProject(id) {
 export function updateProject(project) {
   return {
     type: types.UPDATE_PROJECT,
-    project
+    project: cloneDeep(project)
   };
 }
 
 export function saveReusableSteps(reusableSteps) {
   return (dispatch, getState) => {
     const state = getState();
-    const newState = cloneDeep(state.project);
-    const updatedReusableSteps = keyBy(reusableSteps, 'id');
-    newState.reusableSteps = {...newState.reusableSteps, ...updatedReusableSteps};
+    const newState = {
+      ...state.project,
+      reusableSteps: {
+        ...state.project.reusableSteps,
+        ...keyBy(reusableSteps.map(step => ({ ...step })), 'id') // Ensure cloned steps
+      }
+    };
     dispatch(updateProject(newState));
     return debouncedSyncProject(dispatch, getState);
   };
@@ -162,7 +166,10 @@ const debouncedUpdate = debounce((id, data, dispatch) => {
 export function indexedDBSync(data) {
   return (dispatch, getState) => {
     const project = getState().project;
-    const newState = { ...project, ...data };
+    const newState = {
+      ...cloneDeep(project),
+      ...cloneDeep(data)
+    };
     dispatch(updateProject(newState));
     const id = project.id;
     return debouncedUpdate(id, newState, dispatch);
@@ -292,14 +299,16 @@ const syncProject = (dispatch, getState) => {
 
   dispatch(isSyncing());
 
-  // don't evaluate conditions on legacy projects
-  const project = state.application.schemaVersion > 0
-    ? getProjectWithConditions(state.project)
-    : state.project;
+  // Create a deep clone of the project to ensure no mutations
+  const project = cloneDeep(
+    state.application.schemaVersion > 0
+      ? getProjectWithConditions(state.project)
+      : state.project
+  );
 
   const patch = jsondiff.diff(state.savedProject, project);
   if (!patch) {
-    dispatch(updateSavedProject(project));
+    dispatch(updateSavedProject({ ...project })); // Ensure new reference
     dispatch(doneSyncing());
     return Promise.resolve();
   }
@@ -308,14 +317,14 @@ const syncProject = (dispatch, getState) => {
     state,
     method: 'PUT',
     url: state.application.basename,
-    data: patch
+    data: cloneDeep(patch)
   };
 
   return Promise.resolve()
-    .then(() => dispatch(updateProject(project)))
+    .then(() => dispatch(updateProject({ ...project }))) // New reference
     .then(() => sendMessage(params))
     .then(json => {
-      dispatch(setChanges(json.changes, state.changes.version));
+      dispatch(setChanges({ ...json.changes }, state.changes.version));
       dispatch(doneSyncing());
       if (state.application.syncError) {
         dispatch(syncErrorResolved());
@@ -324,14 +333,17 @@ const syncProject = (dispatch, getState) => {
       return json;
     })
     .then(response => {
-      const patched = jsondiff.patch(state.savedProject, patch);
-      // always exclude the id from the checksum since it does not exist in the server data and is set locally
-      // also exclude any server-computed properties that are returned in the response
+      // Create a deep clone before patching
+      const baseState = cloneDeep(state.savedProject);
+      const patched = jsondiff.patch(baseState, patch);
+
       const checksumOmit = [...(response.checksumOmit || []), 'id'];
       if (response.checksum !== shasum(omit(patched, ...checksumOmit))) {
         dispatch(showWarning('This project has been updated elsewhere. [Reload the page]() to get the latest version.'));
       }
-      dispatch(updateSavedProject(patched));
+
+      // Ensure final dispatch uses immutable update
+      dispatch(updateSavedProject(cloneDeep(patched)));
     })
     .then(() => wait(2000))
     .then(() => syncProject(dispatch, getState))
@@ -359,15 +371,17 @@ export function updateRetrospectiveAssessment(retrospectiveAssessment) {
 export function updateConditions(type, conditions, protocolId) {
   return (dispatch, getState) => {
     const state = getState();
+    const cleanConditions = cloneDeep(conditions); // Ensure clean copy
+
     const newConditions = !protocolId
       ? [
         ...(state.project.conditions || []).filter(condition => condition.type !== type),
-        ...conditions
+        ...cleanConditions
       ]
       : [
         ...((state.project.protocols || [])
           .find((p => p.id === protocolId) || {}).conditions || []).filter(condition => condition.type !== type),
-        ...conditions
+        ...cleanConditions
       ];
 
     const newState = cloneDeep(state.project);
@@ -379,7 +393,7 @@ export function updateConditions(type, conditions, protocolId) {
         return protocol;
       });
     } else {
-      newState.conditions = type === 'legacy' ? conditions : newConditions;
+      newState.conditions = type === 'legacy' ? cleanConditions : newConditions;
     }
     dispatch(updateProject(newState));
     return debouncedSyncConditions(dispatch, getState);
@@ -410,7 +424,17 @@ const debouncedSyncProject = debounce((...args) => {
 export const ajaxSync = changed => {
   return (dispatch, getState) => {
     const { project, savedProject, application: { establishment, schemaVersion } } = getState();
-    const newState = cleanProtocols({ state: project, savedState: savedProject, changed, establishment, schemaVersion });
+
+    const clonedProject = cloneDeep(project);
+    const clonedSavedProject = cloneDeep(savedProject);
+
+    const newState = cleanProtocols({
+      state: clonedProject,
+      savedState: clonedSavedProject,
+      changed,
+      establishment,
+      schemaVersion
+    });
 
     dispatch(updateProject(newState));
     return debouncedSyncProject(dispatch, getState);
