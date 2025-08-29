@@ -8,19 +8,16 @@ const normaliseWhitespace = str => str.replace(/[\u0000-\u0008\u000B-\u0019\u001
 
 // Find the old steps field data (document)
 export const findSteps = (version, previousProtocols, protocolId, stepId, fieldName) => {
-  let step;
-  let protocolIndex;
   if (version === 'granted') {
-    protocolIndex = previousProtocols.granted.indexOf(protocolId);
-    step = get(previousProtocols.grantedSteps[protocolIndex].find(s => s.id === stepId), fieldName, undefined);
+    const protocolIndex = previousProtocols.granted.indexOf(protocolId);
+    return get(previousProtocols.grantedSteps[protocolIndex].find(s => s.id === stepId), fieldName, undefined);
   } else if (version === 'first') {
-    protocolIndex = previousProtocols.first.indexOf(protocolId);
-    step = get(previousProtocols.firstSteps[protocolIndex].find(s => s.id === stepId), fieldName, undefined);
+    const protocolIndex = previousProtocols.first.indexOf(protocolId);
+    return get(previousProtocols.firstSteps[protocolIndex].find(s => s.id === stepId), fieldName, undefined);
   } else {
-    protocolIndex = previousProtocols.previous.indexOf(protocolId);
-    step = get(previousProtocols.steps[protocolIndex].find(s => s.id === stepId), fieldName, undefined);
+    const protocolIndex = previousProtocols.previous.indexOf(protocolId);
+    return get(previousProtocols.steps[protocolIndex].find(s => s.id === stepId), fieldName, undefined);
   }
-  return step;
 };
 
 export const getChanges = (current, before, granularity = 'word') => {
