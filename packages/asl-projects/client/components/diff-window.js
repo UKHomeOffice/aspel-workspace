@@ -47,8 +47,8 @@ const DiffWindow = (props) => {
   const dispatch = useDispatch();
 
   const { before, changes } = useSelector(state => {
-    const before = get(state.questionVersions, `['${props.name}'].${versions[active]}.value`));
-    
+    const before = get(state.questionVersions, `['${props.name}'].${versions[active]}.value`);
+
     // dealing with protocol step when it was moved from normal to reusable
     if (before === undefined && props.stepId && props.previousProtocols) {
       const beforeSteps = findSteps(versions[active], props.previousProtocols, props.protocolId, props.stepId, props.fieldName);
@@ -56,26 +56,13 @@ const DiffWindow = (props) => {
         return { before: beforeSteps, changes: getChanges(props.value, beforeSteps) };
       }
     }
-    
-    const changes = props.type === 'keywords' && props.value.length > 0 && before
-      ? findArrayDifferences(before, props.value);
-      : get(state.questionVersions, `['${props.name}'].${versions[active]}.diff`, { added: [], removed: [] });
-        
-    return { before, changes };
-  }
-    if (props.type === 'keywords' && props.value.length > 0 && before) {
-      return findArrayDifferences(before, props.value);
-    }
-    return get(state.questionVersions, `['${props.name}'].${versions[active]}.diff`, { added: [], removed: [] });
-  });
 
-  //dealing with protocol step when it was moved from normal to reusable
-  if (before === undefined && props.stepId && props.previousProtocols) {
-    before = findSteps(versions[active], props.previousProtocols, props.protocolId, props.stepId, props.fieldName);
-    if (before) {
-      changes = getChanges(props.value, before);
-    }
-  }
+    const changes = props.type === 'keywords' && props.value.length > 0 && before
+      ? findArrayDifferences(before, props.value)
+      : get(state.questionVersions, `['${props.name}'].${versions[active]}.diff`, { added: [], removed: [] });
+
+    return { before, changes };
+  });
 
   useEffect(() => {
     if (!before && modalOpen) {
@@ -209,8 +196,8 @@ const DiffWindow = (props) => {
               <em>{DEFAULT_LABEL}</em>
             ) : (
               <span className={`diff ${parts.added ? 'added' : 'removed'}`}>
-            {booleanValue}
-          </span>
+                {booleanValue}
+              </span>
             )
           }
         </p>
@@ -262,7 +249,7 @@ const DiffWindow = (props) => {
 
       case 'checkbox':
       case 'location-selector':
-      case 'objective-selector':{
+      case 'objective-selector': {
         const beforeValue = before || [];
         const afterValue = props.value || [];
         return checkboxDiffDisplay({
@@ -271,14 +258,14 @@ const DiffWindow = (props) => {
           isBefore,
           DEFAULT_LABEL
         });
-    }
+      }
       case 'duration':
-        return  durationDiffDisplay({
-        before,
-        value,
-        isBefore,
-        DEFAULT_LABEL
-      });
+        return durationDiffDisplay({
+          before,
+          value,
+          isBefore,
+          DEFAULT_LABEL
+        });
       case 'additional-availability':
         return additionalAvailabilityDiff({
           before,
@@ -339,14 +326,14 @@ const DiffWindow = (props) => {
           );
       case 'animal-quantities':
         return animalQuantitiesDiff({
-        before,
-        value,
-        props,
-        currentValues,
-        isBefore,
+          before,
+          value,
+          props,
+          currentValues,
+          isBefore,
           getLabel,
           DEFAULT_LABEL
-      });
+        });
 
       default:
         return (
