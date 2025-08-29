@@ -64,9 +64,8 @@ const ParagraphComponent = ({
         return <div {...paragraphProps} {...props}>{children}</div>;
     }
 
-    // inline mark elements should not be wrapped in a paragraph, extend
-    if (childrenArray.every(child => typeof child === 'string' || (React.isValidElement(child) && (child.type?.name === 'mark')) ))
-    {
+    // inline markdown for in-complete training page
+    if (unwrapSingleLine) {
         return <span {...paragraphProps} {...props}>{children}</span>;
     }
 
