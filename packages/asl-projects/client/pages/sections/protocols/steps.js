@@ -177,6 +177,7 @@ class Step extends Component {
           prefix={changeFieldPrefix}
           editLink={`0#${this.props.prefix}`}
           protocolId={protocol.id}
+          stepId={values.id}
           readonly={!isReviewStep}
           additionalCommentFields={values.reusableStepId ? [`${this.props.prefix}title`] : []}
         />

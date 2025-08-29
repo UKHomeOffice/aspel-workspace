@@ -10,6 +10,7 @@ import Modal from './modal';
 import ReviewField from './review-field';
 import Tabs from './tabs';
 import { findArrayDifferences } from '../helpers/array-diff';
+import { getChanges, findSteps } from '../helpers/document-diff';
 import normaliseWhitespace from '../helpers/normalise-whitespace';
 
 const DEFAULT_LABEL = 'No answer provided';
@@ -45,13 +46,21 @@ const DiffWindow = (props) => {
 
   const dispatch = useDispatch();
 
-  const before = useSelector(state => get(state.questionVersions, `['${props.name}'].${versions[active]}.value`));
-  const changes = useSelector(state => {
+  let before = useSelector(state => get(state.questionVersions, `['${props.name}'].${versions[active]}.value`));
+  let changes = useSelector(state => {
     if (props.type === 'keywords' && props.value.length > 0 && before) {
       return findArrayDifferences(before, props.value);
     }
     return get(state.questionVersions, `['${props.name}'].${versions[active]}.diff`, { added: [], removed: [] });
   });
+
+  //dealing with protocol step when it was moved from normal to reusable
+  if (before === undefined && props.stepId && props.previousProtocols) {
+    before = findSteps(versions[active], props.previousProtocols, props.protocolId, props.stepId, props.fieldName);
+    if (before) {
+      changes = getChanges(props.value, before);
+    }
+  }
 
   useEffect(() => {
     if (!before && modalOpen) {
