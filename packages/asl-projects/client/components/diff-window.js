@@ -46,8 +46,23 @@ const DiffWindow = (props) => {
 
   const dispatch = useDispatch();
 
-  let before = useSelector(state => get(state.questionVersions, `['${props.name}'].${versions[active]}.value`));
-  let changes = useSelector(state => {
+  const { before, changes } = useSelector(state => {
+    const before = get(state.questionVersions, `['${props.name}'].${versions[active]}.value`));
+    
+    // dealing with protocol step when it was moved from normal to reusable
+    if (before === undefined && props.stepId && props.previousProtocols) {
+      const beforeSteps = findSteps(versions[active], props.previousProtocols, props.protocolId, props.stepId, props.fieldName);
+      if (beforeSteps) {
+        return { before: beforeSteps, changes: getChanges(props.value, beforeSteps) };
+      }
+    }
+    
+    const changes = props.type === 'keywords' && props.value.length > 0 && before
+      ? findArrayDifferences(before, props.value);
+      : get(state.questionVersions, `['${props.name}'].${versions[active]}.diff`, { added: [], removed: [] });
+        
+    return { before, changes };
+  }
     if (props.type === 'keywords' && props.value.length > 0 && before) {
       return findArrayDifferences(before, props.value);
     }
