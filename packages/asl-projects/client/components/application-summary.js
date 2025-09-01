@@ -69,7 +69,7 @@ const getMappedProps = createSelector(
     project,
     comments,
     user,
-    fieldsBySection,
+    fieldsBySubsection,
     schema,
     basename,
     actualProject,
@@ -79,7 +79,7 @@ const getMappedProps = createSelector(
     showComments,
     showConditions,
     newComments: getNewComments(comments, user, project),
-    fieldsBySection,
+    fieldsBySubsection,
     legacy: schemaVersion === 0,
     values: project,
     sections: schema,
@@ -262,7 +262,7 @@ const ApplicationSummary = () => {
                   {
                     subsections.map(key => {
                       const subsection = section.subsections[key];
-                      const fields = Object.values(subsection[key] || []);
+                      const fields = Object.values(fieldsBySubsection[key] || []);
                       if (subsection.repeats) {
                         fields.push(subsection.repeats);
                       }
