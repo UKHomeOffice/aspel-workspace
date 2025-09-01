@@ -29,7 +29,6 @@ module.exports = async ({ schema, logger, publicUrl }) => {
 
   // return Promise.all(rolesWithTrainingOutstanding.flat().map(role => console.log(role)));
   return Promise.all(rolesWithTrainingOutstanding.flat().map(role => {
-    console.log(role);
     emailer({
       event: 'direct-notification',
       data: {
