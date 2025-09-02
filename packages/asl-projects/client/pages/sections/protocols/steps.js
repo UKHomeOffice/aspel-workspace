@@ -225,6 +225,7 @@ class Step extends Component {
             editLink={`0#${this.props.prefix}`}
             readonly={!isReviewStep}
             protocolId={protocol.id}
+            stepId={values.id}
           />
           {
             !values.reusable && editable && !deleted && <a href="#" onClick={this.editStep}>Edit step</a>
