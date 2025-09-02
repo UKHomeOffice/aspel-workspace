@@ -29,6 +29,7 @@ const ReviewFields = ({
   readonly,
   step,
   protocolId,
+  stepId,
   application,
   hideChanges,
   showTitle = true,
@@ -62,6 +63,7 @@ const ReviewFields = ({
                   : `${step}#${field.name}`
                 }
                 protocolId={protocolId}
+                stepId={stepId}
                 onEdit={ onEdit }
                 noComments={ noComments }
                 altLabels={altLabels}
