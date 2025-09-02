@@ -42,27 +42,37 @@ function RenderUnorderedList({ children }) {
     return <ul className="govuk-list govuk-list--bullet">{children}</ul>;
 }
 
+function getTagName(reactElement) {
+    if(typeof reactElement.type === 'string') {
+        return reactElement.type;
+    }
+
+    if(typeof reactElement.type === 'function' && typeof reactElement.type.name === 'string') {
+        return reactElement.type.name;
+    }
+
+    return '';
+}
+
 const ParagraphComponent = ({
     unwrapSingleLine,
     paragraphProps,
     contentLength,
     children,
     node,
-    significantLineBreaks,
+    significantLineBreaks: _,
     ...props
 }) => {
     const { start, end } = node.position;
-    const isOnlyNode = contentLength && start.offset === 0 && end.offset === contentLength;
+    const isOnlyRootNode = contentLength && start.offset === 0 && end.offset === contentLength;
     const childrenArray = React.Children.toArray(children);
     const calculateInline = (
         childrenArray => childrenArray.every(
             child => {
                 if (typeof child === 'string') {
-                    return significantLineBreaks
-                        ? !child.includes('\n')
-                        : !child.match(/\n\r?\n/);
+                    return true;
                 }
-                else if (React.isValidElement(child) && INLINE_HTML_TAGS.includes(child.type?.name)) {
+                else if (React.isValidElement(child) && INLINE_HTML_TAGS.includes(getTagName(child))) {
                     return child.props && child.props.children
                         ? calculateInline(React.Children.toArray(child.props.children))
                         : true;
@@ -74,7 +84,7 @@ const ParagraphComponent = ({
         )
     );
     const isAllInline = calculateInline(childrenArray);
-    if (isOnlyNode && unwrapSingleLine && isAllInline) {
+    if (isOnlyRootNode && unwrapSingleLine && isAllInline) {
         return <span {...paragraphProps} {...props}>{children}</span>;
     }
 
