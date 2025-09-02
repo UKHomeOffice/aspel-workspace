@@ -36,7 +36,7 @@ module.exports = async ({ schema, logger, publicUrl }) => {
 
   const rolesWithTrainingOutstanding = await buildRoleQueryWithCompletionDate({ Role, dates: completeDatesToQuery });
 
-  logger.debug(`Found ${rolesWithTrainingOutstanding.length} roles with training due in 3 months`);
+  logger.debug(`Found ${rolesWithTrainingOutstanding.length} roles with training due reminders to send`);
 
   return Promise.all(rolesWithTrainingOutstanding.map(role => {
     emailer({
