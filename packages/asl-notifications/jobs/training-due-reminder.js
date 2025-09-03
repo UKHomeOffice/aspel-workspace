@@ -21,7 +21,7 @@ const buildRoleQueryWithCompletionDate = ({ Role, dates }) => {
 };
 
 module.exports = async ({ schema, logger, publicUrl }) => {
-  const { Role, Profile } = schema;
+  const { Role } = schema;
   const emailer = Emailer({ schema, logger, publicUrl });
 
   const completeDatesToQuery = [
