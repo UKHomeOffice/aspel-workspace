@@ -16,7 +16,8 @@ const buildRoleQueryWithCompletionDate = ({ Role, dates }) => {
     .joinRelated('profile')
     .joinRelated('establishment')
     .whereRaw(
-      `training_delay_details->>'completeDate' IN (${dates.map(date => `'${date}'`).join(', ')})`
+      `training_delay_details->>'completeDate' IN (${dates.map(() => '?').join(', ')})`,
+      dates
     );
 };
 
