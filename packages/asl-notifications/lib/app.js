@@ -2,17 +2,12 @@ const api = require('@asl/service/api');
 const errorHandler = require('@asl/service/lib/error-handler');
 const db = require('@asl/schema');
 const Emailer = require('./emailer');
-//TODO: Remove before merge
-const training = require('../jobs/training-due-reminder');
 
 module.exports = ({ settings, logger }) => {
   const app = api(settings);
   const schema = db(settings.db);
   const publicUrl = settings.publicUrl;
   const emailer = Emailer({ schema, publicUrl, logger });
-
-  //TODO: Remove before merge
-  training({ schema, logger, publicUrl })
 
   app.post('/',
     (req, res, next) => {

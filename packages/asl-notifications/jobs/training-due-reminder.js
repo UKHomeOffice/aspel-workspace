@@ -25,8 +25,6 @@ module.exports = async ({ schema, logger, publicUrl }) => {
   const emailer = Emailer({ schema, logger, publicUrl });
 
   const completeDatesToQuery = [
-    //TODO: Remove before merge
-    '2026-01-01',
     moment().add(3, 'months').format('YYYY-MM-DD'),
     moment().add(1, 'months').format('YYYY-MM-DD'),
     moment().add(1, 'days').format('YYYY-MM-DD')
