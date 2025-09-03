@@ -226,9 +226,9 @@ module.exports = async ({ schema, logger, task }) => {
   }
 
   if (model === 'role' && action === 'training-due-reminder') {
-    const { firstName, lastName, name, type, completeDate } = task.data.data
-    const fullName = `${firstName} ${lastName}`
-    const identifier = `${applicant.id}-${completeDate}-${action}`
+    const { firstName, lastName, name, type, completeDate } = task.data.data;
+    const fullName = `${firstName} ${lastName}`;
+    const identifier = `${applicant.id}-${completeDate}-${action}`;
 
     const trainingDueReminderParams = {
       ...params,
