@@ -1,6 +1,4 @@
-const value = `Hello
-
-Your submission for {{ name }} to be removed from the role of {{ roleName }} has been returned.
+const value = `Your submission for {{ name }} to be removed from the role of {{ roleName }} has been returned.
 
 {{ identifier }}: {{ identifierValue }}
 
