@@ -48,7 +48,8 @@ module.exports = (settings) => {
       req.user.can('project.manageAccess', params),
       req.user.can('project.rops.update', params),
       req.user.can('project.rops.create', params),
-      req.user.can('retrospectiveAssessment.update', params)
+      req.user.can('retrospectiveAssessment.update', params),
+      req.user.can('project.replaceHBA', params)
     ])
       .then(
         ([
@@ -60,7 +61,8 @@ module.exports = (settings) => {
           canManageAccess,
           canUpdateRops,
           canCreateRops,
-          canUpdateRa
+          canUpdateRa,
+          canReplaceHBA
         ]) => {
           const openTasks = req.project.openTasks;
           const openTask =
@@ -90,6 +92,7 @@ module.exports = (settings) => {
           res.locals.static.openRaTask = openRaTask;
           res.locals.static.canSuspend = canSuspend;
           res.locals.static.canRevoke = canRevoke;
+          res.locals.static.canReplaceHBA = canReplaceHBA;
           res.locals.static.asruUser = req.user.profile.asruUser;
           res.locals.static.showManageSection =
             canUpdate ||
