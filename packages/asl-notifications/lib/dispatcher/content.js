@@ -134,8 +134,8 @@ module.exports = {
     'task-change2': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
     'role-approved-subject': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
     'role-removed': '{{ name }} has been removed from the role of {{ roleName }}',
-    'role-removed-returned': 'Returned request for {{ name }} to be removed from the role of {{ roleName }}',
-    'role-removed-refused': 'Refused request for {{ name }} to be removed from the role of {{ roleName }}',
+    'role-removed-returned': "The request to remove {{ name }}'s {{ roleName }} role has been returned",
+    'role-removed-refused': "The request to remove {{ name }}'s {{ roleName }} role has been refused",
     'role-removed-subject': '{{ name }} has been removed from the role of {{ roleName }}'
   }
 };

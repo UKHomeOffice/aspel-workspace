@@ -1,4 +1,4 @@
-const value = `Your submission for {{ name }} to be removed from the role of {{ roleName }} has been refused.
+const value = `The request to remove {{ name }}'s {{ roleName }} role has been refused.
 
 {{ identifier }}: {{ identifierValue }}
 
