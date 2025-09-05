@@ -15,8 +15,10 @@ export default function CurrentVersion() {
   if (project.isLegacyStub) {
     return null;
   }
-  const { additionalAvailability, canUpdate, asruUser, openTask, editable } =
+  const { additionalAvailability, canUpdate, asruUser, openTask, editable, canReplaceHBA } =
     useSelector((state) => state.static);
+
+  console.log('can replace HBA', canReplaceHBA);
 
   const showEditLink =
     project.status === 'inactive' && project.draft && canUpdate && !asruUser;
@@ -80,9 +82,12 @@ export default function CurrentVersion() {
       </p>
       {version.hbaToken && (
         <p>
-          <a href={`/attachment/${version.hbaToken}`} download={`${version.hbaFilename}`}>
+          <a href={`/attachment/${version.hbaToken}`} download={version.hbaFilename}>
             <Snippet>otherDocuments.links.hba</Snippet>
           </a>
+          {canReplaceHBA && (
+            <span> <Snippet>otherDocuments.links.replaceHba</Snippet></span>
+          )}
         </p>
       )}
     </Subsection>
