@@ -31,7 +31,7 @@ module.exports = async ({ schema, logger, task }) => {
       'condition-reminder-overdue'
     ],
     place: ['create', 'update', 'delete'],
-    role: ['create', 'delete']
+    role: ['create', 'delete', 'training-due-reminder']
   };
 
   if (!allowedActions[model].includes(action)) {
@@ -222,6 +222,27 @@ module.exports = async ({ schema, logger, task }) => {
     notifyAdmins(roleDeleteParams);
     roleDeleteParams.emailTemplate = 'role-removed-subject';
     notifyUser(subject, roleDeleteParams);
+    return notifications;
+  }
+
+  if (model === 'role' && action === 'training-due-reminder') {
+    const { firstName, lastName, name, type, completeDate } = task.data.data;
+    const fullName = `${firstName} ${lastName}`;
+    const identifier = `${applicant.id}-${completeDate}-${action}`;
+
+    const trainingDueReminderParams = {
+      ...params,
+      fullName,
+      name,
+      type,
+      completeDate,
+      identifier,
+      emailTemplate: 'training-due-reminder',
+      logMsg: 'training due reminder sent'
+    };
+    notifyPelh(trainingDueReminderParams);
+    notifyAdmins(trainingDueReminderParams);
+    notifyUser(applicant, trainingDueReminderParams);
     return notifications;
   }
 

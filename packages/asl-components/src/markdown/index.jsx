@@ -3,6 +3,12 @@ import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkFlexibleMarkers from 'remark-flexible-markers';
 
+const INLINE_HTML_TAGS = [
+    'a', 'span', 'b', 'i', 'strong', 'em', 'mark', 'small', 'sub', 'sup', 'u',
+    'abbr', 'cite', 'code', 'dfn', 'kbd', 's', 'samp', 'time', 'var', 'q',
+    'wbr', 'img'
+];
+
 // Utility function to check for block-level elements
 function containsBlock(children) {
     return React.Children.toArray(children).some(child => {
@@ -36,22 +42,49 @@ function RenderUnorderedList({ children }) {
     return <ul className="govuk-list govuk-list--bullet">{children}</ul>;
 }
 
+function getTagName(reactElement) {
+    if(typeof reactElement.type === 'string') {
+        return reactElement.type;
+    }
+
+    if(typeof reactElement.type === 'function' && typeof reactElement.type.name === 'string') {
+        return reactElement.type.name;
+    }
+
+    return '';
+}
+
 const ParagraphComponent = ({
     unwrapSingleLine,
     paragraphProps,
     contentLength,
     children,
     node,
-    significantLineBreaks,
+    significantLineBreaks: _,
     ...props
 }) => {
     const { start, end } = node.position;
-    const isOnlyNode = contentLength && start.offset === 0 && end.offset === contentLength;
+    const isOnlyRootNode = contentLength && start.offset === 0 && end.offset === contentLength;
     const childrenArray = React.Children.toArray(children);
-    const isSingleTextChild = childrenArray.length === 1 && typeof childrenArray[0] === 'string';
-    const hasVisibleLineBreaks = significantLineBreaks && childrenArray[0].includes('\n');
-
-    if (unwrapSingleLine && isOnlyNode && isSingleTextChild && !hasVisibleLineBreaks) {
+    const calculateInline = (
+        childrenArray => childrenArray.every(
+            child => {
+                if (typeof child === 'string') {
+                    return true;
+                }
+                else if (React.isValidElement(child) && INLINE_HTML_TAGS.includes(getTagName(child))) {
+                    return child.props && child.props.children
+                        ? calculateInline(React.Children.toArray(child.props.children))
+                        : true;
+                }
+                else {
+                    return false;
+                }
+            }
+        )
+    );
+    const isAllInline = calculateInline(childrenArray);
+    if (isOnlyRootNode && unwrapSingleLine && isAllInline) {
         return <span {...paragraphProps} {...props}>{children}</span>;
     }
 
@@ -59,7 +92,6 @@ const ParagraphComponent = ({
     const containsParagraph = childrenArray.some(child =>
         React.isValidElement(child) && child.type === 'p'
     );
-
     if (containsParagraph) {
         return <div {...paragraphProps} {...props}>{children}</div>;
     }
