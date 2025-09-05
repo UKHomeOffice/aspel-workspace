@@ -11,6 +11,10 @@ module.exports = getQuery => {
     let { model, modelId } = query;
     model = model === 'profile-touched' ? 'profile' : model;
 
+    if (!modelId) {
+      return false;
+    }
+
     const params = {
       id: modelId,
       establishment: model === 'establishment' ? modelId : query.establishmentId

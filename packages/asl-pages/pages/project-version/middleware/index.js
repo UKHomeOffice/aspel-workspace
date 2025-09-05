@@ -220,7 +220,7 @@ const getCacheableVersion = (req, url) => {
     });
 };
 
-function normaliseDeletedSteps(protocol) {
+function normaliseSteps(protocol) {
   if (!protocol.steps) {
     return [];
   }
@@ -231,7 +231,13 @@ function normaliseDeletedSteps(protocol) {
   }
 
   return (Array.isArray(protocol.steps) ? protocol.steps : []).flatMap(
-    step => step?.deleted ? [] : [omit(step, 'deleted')]
+    step => {
+      // If step is not reusable, then it dont need reusableStepId, this is causing issues down the line
+      if (step?.reusableStepId && step?.hasOwnProperty('reusable') && step?.reusable === false) {
+        delete step.reusableStepId;
+      }
+      return step?.deleted ? [] : [omit(step, 'deleted')];
+    }
   );
 }
 
@@ -251,7 +257,7 @@ const normaliseDeletedProtocols = (versionData) => ({
       ? []
       : [{
         ...omit(protocol, 'deleted'),
-        steps: normaliseDeletedSteps(protocol)
+        steps: normaliseSteps(protocol)
       }]
   )
 });
