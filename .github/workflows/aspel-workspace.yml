@@ -34,7 +34,7 @@ jobs:
       - name: Install
         env:
           ART_AUTH_TOKEN: ${{ secrets.ART_AUTH_TOKEN }}
-          GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_AUTH_TOKEN }}
+          GITHUB_AUTH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }}
         run: npm ci --workspaces=false
 
       - name: Test
