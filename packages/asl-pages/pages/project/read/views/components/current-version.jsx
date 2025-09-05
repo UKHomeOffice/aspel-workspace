@@ -18,8 +18,6 @@ export default function CurrentVersion() {
   const { additionalAvailability, canUpdate, asruUser, openTask, editable, canReplaceHBA } =
     useSelector((state) => state.static);
 
-  console.log('can replace HBA', canReplaceHBA);
-
   const showEditLink =
     project.status === 'inactive' && project.draft && canUpdate && !asruUser;
   const page = showEditLink ? 'projectVersion.update' : 'projectVersion';
@@ -86,7 +84,12 @@ export default function CurrentVersion() {
             <Snippet>otherDocuments.links.hba</Snippet>
           </a>
           {canReplaceHBA && (
-            <span> <Snippet>otherDocuments.links.replaceHba</Snippet></span>
+            <span>
+              <Link
+                page="project.replaceHba"
+                label={<Snippet>otherDocuments.links.replaceHba</Snippet>}
+              />
+            </span>
           )}
         </p>
       )}
