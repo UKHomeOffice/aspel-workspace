@@ -8,7 +8,7 @@ module.exports = settings => {
   app.use(
     (req, res, next) => {
       if (!req.hasFeatureFlag(FEATURE_FLAG_CAT_E)) {
-        return res.redirect(req.buildRoute('pil.unscoped.courses.list'));
+        return res.redirect(req.buildRoute('pils.courses.list'));
       }
 
       if (!req.establishment?.isTrainingEstablishment) {
