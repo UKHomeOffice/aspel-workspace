@@ -118,6 +118,11 @@ module.exports = {
     breadcrumb: false,
     router: pages.place
   },
+  course: {
+    path: '/establishments/:establishmentId/course',
+    breadcrumb: false,
+    router: pages.course
+  },
   pils: {
     path: '/establishments/:establishmentId/pils',
     breadcrumb: false,
