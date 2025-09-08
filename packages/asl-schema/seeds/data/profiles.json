@@ -379,6 +379,108 @@
     ]
   },
   {
+    "id": "c0b9a642-0d96-4153-8fb8-788c2635b9a4",
+    "userId": "09ed07e4-7213-48c0-a05f-0c5f349c1d0e",
+    "title": "Dr",
+    "firstName": "cat",
+    "lastName": "e",
+    "dob": "1970-04-23",
+    "position": "University Vice-Chancellor",
+    "qualifications": "BLib",
+    "certifications": "",
+    "address": "Lunar House\nSydenham Road,\nCroydon\nLondon",
+    "postcode": "CR0 2YF",
+    "email": "holc-cat-e@example.com",
+    "telephone": "01840 345 678",
+    "notes": "",
+    "certificates": [
+      {
+        "modules": [
+          "PILA (theory)",
+          "PILA (skills)"
+        ],
+        "species": [
+          "Mice",
+          "Rats"
+        ],
+        "passDate": "2015-06-04",
+        "accreditingBody": "Royal Society of Biology",
+        "certificateNumber": "12345",
+        "createdAt": "2020-09-10T10:40:30.000Z"
+      },
+      {
+        "modules": [
+          "L"
+        ],
+        "species": null,
+        "passDate": "2015-06-05",
+        "accreditingBody": "Royal Society of Biology",
+        "certificateNumber": "1234567890",
+        "createdAt": "2020-09-10T10:45:30.000Z"
+      }
+    ],
+    "roles": [
+      {
+        "establishmentId": 8201,
+        "type": "pelh"
+      },
+      {
+        "establishmentId": 8201,
+        "type": "holc"
+      },
+      {
+        "establishmentId": 30001,
+        "type": "holc"
+      },
+      {
+        "establishmentId": 30002,
+        "type": "holc"
+      },
+      {
+        "establishmentId": 9999,
+        "type": "pelh"
+      }
+    ],
+    "permissions": [
+      {
+        "establishmentId": 8201,
+        "role": "admin"
+      },
+      {
+        "establishmentId": 8202,
+        "role": "admin"
+      },
+      {
+        "establishmentId": 30001,
+        "role": "admin"
+      },
+      {
+        "establishmentId": 30002,
+        "role": "admin"
+      },
+      {
+        "establishmentId": 9999,
+        "role": "admin"
+      },
+      {
+        "establishmentId": 10264,
+        "role": "admin"
+      },
+      {
+        "establishmentId": 10267,
+        "role": "admin"
+      },
+      {
+        "establishmentId": 10268,
+        "role": "admin"
+      },
+      {
+        "establishmentId": 10269,
+        "role": "admin"
+      }
+    ]
+  },
+  {
     "id": "0b2d1c52-f8e4-4d16-b58c-0ce80ca58d0c",
     "userId": "ba836eae-28b7-408e-99e5-dae65d40db4d",
     "title": "Dr",
@@ -497,7 +599,9 @@
     ],
     "emailPreferences": {
       "preferences": {
-        "alerts-8201": ["pel"]
+        "alerts-8201": [
+          "pel"
+        ]
       }
     }
   },
@@ -683,8 +787,13 @@
       "id": "04c88dd7-e711-4ec7-afc8-fe721dbe9588",
       "issueDate": "2018-09-18",
       "establishmentId": 8201,
-      "species": ["Mice"],
-      "procedures": ["A", "B"]
+      "species": [
+        "Mice"
+      ],
+      "procedures": [
+        "A",
+        "B"
+      ]
     }
   },
   {
@@ -731,7 +840,10 @@
     "pil": {
       "issueDate": "2018-09-18",
       "establishmentId": 8201,
-      "species": ["Rats", "Mice"]
+      "species": [
+        "Rats",
+        "Mice"
+      ]
     }
   },
   {
@@ -798,7 +910,9 @@
         "certificateNumber": "12345"
       },
       {
-        "modules": ["PILB"],
+        "modules": [
+          "PILB"
+        ],
         "isExemption": true,
         "exemptionReason": "Years of experience",
         "species": [
@@ -1078,7 +1192,10 @@
     "pilLicenceNumber": "OI-742855",
     "pil": {
       "issueDate": "2016-09-24",
-      "procedures": ["A", "B"],
+      "procedures": [
+        "A",
+        "B"
+      ],
       "conditions": "Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinarsed, nisl. Nunc rhoncus dui vel sem.\n\nSed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus."
     }
   },
@@ -1097,7 +1214,10 @@
     "pilLicenceNumber": "UM-726120",
     "pil": {
       "issueDate": "2017-05-05",
-      "procedures": ["D", "F"],
+      "procedures": [
+        "D",
+        "F"
+      ],
       "conditions": "Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.\n\nCras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque."
     }
   },
@@ -1119,7 +1239,10 @@
     "pilLicenceNumber": "SQ-025927",
     "pil": {
       "status": "revoked",
-      "procedures": ["A", "B"],
+      "procedures": [
+        "A",
+        "B"
+      ],
       "issueDate": "2017-05-16",
       "revocationDate": "2017-06-16",
       "conditions": ""
@@ -1342,7 +1465,7 @@
     }
   },
   {
-    "id":"cef52399-5e40-44f1-b7d1-ce840da9847c",
+    "id": "cef52399-5e40-44f1-b7d1-ce840da9847c",
     "permissions": [
       {
         "establishmentId": 8201
@@ -1487,7 +1610,9 @@
     },
     "emailPreferences": {
       "preferences": {
-        "newsletters": ["operational"]
+        "newsletters": [
+          "operational"
+        ]
       }
     }
   },
@@ -1510,7 +1635,9 @@
     },
     "emailPreferences": {
       "preferences": {
-        "newsletters": ["operational"]
+        "newsletters": [
+          "operational"
+        ]
       }
     }
   },
@@ -1533,7 +1660,9 @@
     },
     "emailPreferences": {
       "preferences": {
-        "newsletters": ["non-operational"]
+        "newsletters": [
+          "non-operational"
+        ]
       }
     }
   },
@@ -1618,7 +1747,7 @@
       }
     ]
   },
-    {
+  {
     "permissions": [
       {
         "establishmentId": 8201
@@ -1678,7 +1807,10 @@
     "pilLicenceNumber": "SM-402875",
     "pil": {
       "issueDate": "2016-02-16",
-      "procedures": ["D", "F"],
+      "procedures": [
+        "D",
+        "F"
+      ],
       "notesCatF": "Some notes about my cat F PIL",
       "conditions": "Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.\n\nDuis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit."
     }
@@ -1716,7 +1848,10 @@
     "pilLicenceNumber": "GV-794484",
     "pil": {
       "status": "revoked",
-      "procedures": ["A", "B"],
+      "procedures": [
+        "A",
+        "B"
+      ],
       "issueDate": "2017-02-13",
       "revocationDate": "2018-11-06",
       "conditions": ""
@@ -1741,8 +1876,14 @@
     "pil": {
       "status": "active",
       "issueDate": "2023-01-24",
-      "procedures": ["A", "B"],
-      "species": ["Mice", "Rats"]
+      "procedures": [
+        "A",
+        "B"
+      ],
+      "species": [
+        "Mice",
+        "Rats"
+      ]
     }
   },
   {
@@ -1829,8 +1970,16 @@
     "pil": {
       "issueDate": "2017-08-28",
       "conditions": "",
-      "procedures": ["B", "C", "D", "F"],
-      "species": ["Mice", "Rats"]
+      "procedures": [
+        "B",
+        "C",
+        "D",
+        "F"
+      ],
+      "species": [
+        "Mice",
+        "Rats"
+      ]
     }
   },
   {
@@ -1942,7 +2091,7 @@
         "establishmentId": 8201
       }
     ],
-    "id":"d76f441b-928e-4d20-a100-04b8781363e5",
+    "id": "d76f441b-928e-4d20-a100-04b8781363e5",
     "title": "Mr",
     "firstName": "Maire",
     "lastName": "Hanson",
@@ -2780,8 +2929,12 @@
         "num": 2,
         "unit": "months"
       },
-      "procedures": ["C"],
-      "species": ["Gerbils"]
+      "procedures": [
+        "C"
+      ],
+      "species": [
+        "Gerbils"
+      ]
     }
   },
   {
@@ -2818,8 +2971,15 @@
     "pil": {
       "status": "active",
       "issueDate": "2015-01-01",
-      "procedures": ["A", "B", "C"],
-      "species": ["Mice", "Rats"]
+      "procedures": [
+        "A",
+        "B",
+        "C"
+      ],
+      "species": [
+        "Mice",
+        "Rats"
+      ]
     }
   },
   {
@@ -2838,8 +2998,12 @@
     "pil": {
       "status": "active",
       "issueDate": "2015-01-01",
-      "procedures": ["B"],
-      "species": ["Mice"]
+      "procedures": [
+        "B"
+      ],
+      "species": [
+        "Mice"
+      ]
     }
   },
   {
@@ -2862,8 +3026,12 @@
     "pil": {
       "status": "active",
       "issueDate": "2015-01-01",
-      "procedures": ["C"],
-      "species": ["Dogs"]
+      "procedures": [
+        "C"
+      ],
+      "species": [
+        "Dogs"
+      ]
     }
   },
   {
@@ -2901,8 +3069,12 @@
     "pil": {
       "status": "active",
       "issueDate": "2015-01-01",
-      "procedures": ["A"],
-      "species": ["Mice"],
+      "procedures": [
+        "A"
+      ],
+      "species": [
+        "Mice"
+      ],
       "establishmentId": 10261
     }
   },
@@ -2921,8 +3093,12 @@
     "pil": {
       "status": "active",
       "issueDate": "2015-01-01",
-      "procedures": ["B"],
-      "species": ["Rats"]
+      "procedures": [
+        "B"
+      ],
+      "species": [
+        "Rats"
+      ]
     }
   },
   {
