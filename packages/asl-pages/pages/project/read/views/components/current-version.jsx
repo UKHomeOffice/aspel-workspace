@@ -87,6 +87,8 @@ export default function CurrentVersion() {
             <span>
               <Link
                 page="project.replaceHba"
+                project={project}
+                className="govuk-!-padding-left-3"
                 label={<Snippet>otherDocuments.links.replaceHba</Snippet>}
               />
             </span>
