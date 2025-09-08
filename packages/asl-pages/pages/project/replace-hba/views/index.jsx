@@ -10,22 +10,12 @@ import {
 } from '@ukhomeoffice/asl-components';
 
 const UploadView = () => {
-  const { project, url } = useSelector(state => state.static);
-
-  const handleFileChange = e => {
-    console.log('File selected:', e.target.files[0]);
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    console.log('Submitting upload...');
-  };
+  const { project } = useSelector(state => state.static);
 
   return (
     <WidthContainer>
       <ErrorSummary />
       <Form
-        onSubmit={handleSubmit}
         cancelLink={
           <Link page="project.read" label="Cancel" establishmentId={project.establishmentId} projectId={project.id} />
         }>
@@ -54,7 +44,6 @@ const UploadView = () => {
           <input
             id="fileUpload"
             type="file"
-            onChange={handleFileChange}
             style={{ display: 'block', marginBottom: '20px' }}
           />
         </div>
