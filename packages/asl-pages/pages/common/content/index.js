@@ -17,6 +17,9 @@ module.exports = {
       suspend: 'Suspend establishment licence',
       reinstate: 'Reinstate establishment licence'
     },
+    course: {
+      list: 'Courses and category E PILs'
+    },
     pil: {
       read: 'View personal licence',
       create: 'Apply for personal licence',
@@ -137,6 +140,9 @@ module.exports = {
       updatePassword: {
         base: 'Change your password'
       }
+    },
+    course: {
+      list: 'Courses and category E PILs'
     },
     dashboard: {
       greeting: 'Hello {{name}}',

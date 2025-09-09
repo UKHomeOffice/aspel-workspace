@@ -9,6 +9,7 @@ module.exports = {
   projectVersion: require('./project-version'),
   retrospectiveAssessment: require('./retrospective-assessment'),
   pil: require('./pil'),
+  course: require('./course'),
   unscopedPils: require('./pil/unscoped'),
   task: require('./task'),
   training: require('./training'),
