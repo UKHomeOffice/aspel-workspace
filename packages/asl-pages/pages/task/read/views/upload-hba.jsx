@@ -10,7 +10,7 @@ import {
 import {
   getTypeAdjustedWording,
   isAmendment
-} from '../../../task/read/views/adjusted-wording';
+} from './adjusted-wording';
 import { getFromContentTemplate } from '../../../../lib/utils';
 
 const UploadHba = ({ hba, task, content }) => {
