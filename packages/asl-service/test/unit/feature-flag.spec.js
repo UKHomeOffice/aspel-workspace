@@ -4,7 +4,7 @@ const { render } = require('@testing-library/react');
 const { Provider } = require('react-redux');
 const { configureStore } = require('redux-mock-store');
 const assert = require('assert');
-const { middleware, useFeatureFlag } = require('../../ui/feature-flag');
+const { middleware, useFeatureFlag, useFeatureFlags } = require('../../ui/feature-flag');
 
 function getFakeReq(features = []) {
   return {
@@ -56,8 +56,16 @@ describe('Feature flags', () => {
 
     const TestComponent = ({role}) => {
       const hasRole = useFeatureFlag(role);
+      const hasFlag = useFeatureFlags();
 
-      return React.createElement('p', null, hasRole ? 'Has role' : 'Missing role');
+      return React.createElement(
+        React.Fragment,
+        null,
+        [
+          React.createElement('p', { key: 'hook' }, hasRole ? 'Has role from hook' : 'Missing role from hook'),
+          React.createElement('p', { key: 'function' }, hasFlag(role) ? 'Has role from function' : 'Missing role from function')
+        ]
+      );
     };
 
     it('Can test if a role is present', async () => {
@@ -69,7 +77,8 @@ describe('Feature flags', () => {
         )
       );
 
-      assert.notEqual(await component.queryByText('Has role'), null);
+      assert.notEqual(await component.queryByText('Has role from hook'), null);
+      assert.notEqual(await component.queryByText('Has role from function'), null);
     });
 
     it('Can test if a role is missing', async () => {
@@ -81,7 +90,8 @@ describe('Feature flags', () => {
         )
       );
 
-      assert.notEqual(await component.queryByText('Missing role'), null);
+      assert.notEqual(await component.queryByText('Missing role from hook'), null);
+      assert.notEqual(await component.queryByText('Missing role from function'), null);
     });
   });
 });

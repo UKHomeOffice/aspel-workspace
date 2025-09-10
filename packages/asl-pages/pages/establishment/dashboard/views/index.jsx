@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import sortBy from 'lodash/sortBy';
 import {
@@ -11,11 +11,18 @@ import {
 } from '@ukhomeoffice/asl-components';
 import ProfileLink from '../../components/profile-link';
 import EnforcementFlags from '../../../enforcement/components/enforcement-flags';
+import { FEATURE_FLAG_CAT_E, useFeatureFlags } from '@asl/service/ui/feature-flag';
 
 const links = [
   { page: 'establishment.read', permissions: 'establishment.read' },
   { page: 'place.list', permissions: 'place.list' },
   { page: 'profile.list', permissions: 'profile.read.basic' },
+  {
+    page: 'course.list',
+    permissions: 'trainingCourse.read',
+    conditions: (establishment) => establishment.isTrainingEstablishment,
+    featureFlag: FEATURE_FLAG_CAT_E
+  },
   { page: 'pils', permissions: 'pil.list' },
   { page: 'project.list', permissions: 'project.read.basic' },
   { page: 'establishment.rops', permissions: 'establishment.rops' },
@@ -47,10 +54,32 @@ function DashboardLink ({ page, route, ...params }) {
 
 export default function Index() {
   const { establishment, allowedActions, profile } = useSelector(state => state.static);
+  const hasFeatureFlag = useFeatureFlags();
+
   const asruUser = profile.asruUser;
-  const holcs = sortBy(establishment.holc, p => p.profile.lastName);
-  const openApplication = allowedActions.includes('establishment.update') && establishment.openTasks.find(task => task.data && task.data.model === 'establishment' && task.data.action === 'grant');
-  const canApply = establishment.status !== 'active' && allowedActions.includes('establishment.update') && !openApplication;
+  const holcs = useMemo(
+    () => sortBy(establishment.holc, p => p.profile.lastName),
+    [establishment.holc]
+  );
+  const openApplication = useMemo(
+    () =>
+      allowedActions.includes('establishment.update') &&
+      establishment.openTasks.find(
+        task => task.data && task.data.model === 'establishment' && task.data.action === 'grant'
+      ),
+    [allowedActions, establishment.openTasks]
+  );
+  const canApply = useMemo(
+    () => establishment.status !== 'active' && allowedActions.includes('establishment.update') && !openApplication,
+    [allowedActions, establishment.status, openApplication]
+  );
+  const allowedLinks = useMemo(
+    () => links
+      .filter(link => allowedActions.includes(link.permissions))
+      .filter(link => !link.conditions || link.conditions(establishment))
+      .filter(link => !link.featureFlag || hasFeatureFlag(link.featureFlag)),
+    [links, establishment, hasFeatureFlag]
+  );
 
   return (
     <Fragment>
@@ -64,9 +93,10 @@ export default function Index() {
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <PanelList
-            panels={links.filter(link => allowedActions.includes(link.permissions)).map((link, index) => <DashboardLink key={index} { ...link } />)}
-          />
+          <PanelList panels={
+            allowedLinks.map((link, index) =>
+              <DashboardLink key={index} { ...link } />
+            )} />
           {
             canApply &&
               <Link page="establishment.apply" label={<Snippet>buttons.establishment.apply</Snippet>} className="govuk-button" />

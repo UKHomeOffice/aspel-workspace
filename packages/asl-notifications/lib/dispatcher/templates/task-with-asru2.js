@@ -1,6 +1,4 @@
-const value = `Hello
-
-The {{ roleName }} role application for {{ name }} has been {{ status }}.{{ statusLine }}
+const value = `The {{ roleName }} role application for {{ name }} has been {{ status }}.{{ statusLine }}
 
 {{ identifier }}: {{ identifierValue }}
 

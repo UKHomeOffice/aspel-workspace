@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
 
   const model = res.enforcementModel;
 
-  if (!model) {
+  if (!model?.id) {
     return next();
   }
 

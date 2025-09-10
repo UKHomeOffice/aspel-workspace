@@ -129,12 +129,13 @@ module.exports = {
     'condition-reminder': 'Reminder: {{modelType}} licence {{licenceNumber}} has a condition that is due {{when}}',
     'condition-reminder-overdue': 'Notification: {{modelType}} licence {{licenceNumber}} has a condition that was due yesterday',
     'rop-reminder': `Reminder: Return of procedures due {{when}} for {{#status}}{{status}} {{/status}}project licence {{licenceNumber}}`,
+    'training-due-reminder': 'Reminder: {{fullName}} needs to complete their {{type}} mandatory training',
     'task-with-asru2': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
     'task-change2': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
     'role-approved-subject': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
     'role-removed': '{{ name }} has been removed from the role of {{ roleName }}',
-    'role-removed-returned': 'Returned request for {{ name }} to be removed from the role of {{ roleName }}',
-    'role-removed-refused': 'Refused request for {{ name }} to be removed from the role of {{ roleName }}',
+    'role-removed-returned': "The request to remove {{ name }}'s {{ roleName }} role has been returned",
+    'role-removed-refused': "The request to remove {{ name }}'s {{ roleName }} role has been refused",
     'role-removed-subject': '{{ name }} has been removed from the role of {{ roleName }}'
   }
 };
