@@ -86,7 +86,8 @@ module.exports = {
       import: 'Import project',
       addUser: 'Give access to this PPL',
       transferDraft: 'Transfer draft project',
-      replaceHba: 'Replace harm benefit analysis file'
+      replaceHba: 'Replace harm benefit analysis file',
+      confirmReplaceHba: 'Confirm replace harm benefit analysis file'
     },
     projectVersion: {
       read: 'View',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ErrorSummary, WidthContainer, Header } from '@ukhomeoffice/asl-components';
 
-const ConfirmReplaceHba = () => {
+const Index = () => {
   return (
     <WidthContainer>
       <ErrorSummary />
@@ -13,4 +13,4 @@ const ConfirmReplaceHba = () => {
     </WidthContainer>
   );
 };
-export default ConfirmReplaceHba;
+export default Index;
