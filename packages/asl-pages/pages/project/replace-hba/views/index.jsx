@@ -35,18 +35,9 @@ const UploadView = () => {
             >
               {project.granted.hbaFilename}
             </a>
+            <br />
           </>
         )}
-
-        <div style={{ marginBottom: '20px' }}>
-          <br />
-          <h2 style={{ marginBottom: '10px' }}>Replacement HBA file</h2>
-          <input
-            id="fileUpload"
-            type="file"
-            style={{ display: 'block', marginBottom: '20px' }}
-          />
-        </div>
       </Form>
     </WidthContainer>
   );

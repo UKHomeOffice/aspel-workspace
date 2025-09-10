@@ -8,5 +8,13 @@ module.exports = merge({}, baseContent, {
 - the wrong file has been uploaded by mistake`,
   buttons: {
     submit: 'Continue'
+  },
+  fields: {
+    upload: {
+      label: '## Replacement HBA file'
+    },
+    hba: {
+      label: 'Selected harm benefit analysis file'
+    }
   }
 });

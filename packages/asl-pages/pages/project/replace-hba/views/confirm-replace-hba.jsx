@@ -1,8 +1,16 @@
 import React from 'react';
+import { ErrorSummary, WidthContainer, Header } from '@ukhomeoffice/asl-components';
 
 const ConfirmReplaceHba = () => {
   return (
-    <h1>Confirm HBA re</h1>
+    <WidthContainer>
+      <ErrorSummary />
+      <Header
+        title="Confirm HBA file"
+        subtitle="Project licence amendment"
+      />
+
+    </WidthContainer>
   );
 };
 export default ConfirmReplaceHba;
