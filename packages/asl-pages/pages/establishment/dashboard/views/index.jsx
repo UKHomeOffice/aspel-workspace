@@ -45,9 +45,7 @@ function DashboardLink ({ page, route, ...params }) {
         label={<Snippet>{`pages.${contentKey}`}</Snippet>}
         {...params}
       />
-      <p>
-        <Snippet>{`dashboard.${contentKey}.subtitle`}</Snippet>
-      </p>
+      <Snippet isPtag={false}>{`dashboard.${contentKey}.subtitle`}</Snippet>
     </Fragment>
   );
 }
