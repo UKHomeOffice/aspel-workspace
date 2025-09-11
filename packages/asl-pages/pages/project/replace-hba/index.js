@@ -45,8 +45,12 @@ module.exports = (settings) => {
           const { data } = await axios.post(settings.attachments, formData, {
             headers: { ...formData.getHeaders() }
           });
-          req.form.values.hbaToken = data.token;
-          req.form.values.hbaFilename = file.originalname;
+
+          req.session.form = req.session.form || {};
+          req.session.form.hba = {
+            token: data.token,
+            filename: file.originalname
+          };
 
           console.log('Uploaded to attachments service:', data);
           next();
@@ -59,7 +63,7 @@ module.exports = (settings) => {
   );
 
   app.post('/', (req, res) => {
-    res.redirect(req.buildRoute('project.replaceHba', { suffix: 'confirm-replace-hba' }));
+    res.redirect(req.buildRoute('project.confirmReplaceHba', { projectId: req.params.projectId }));
   });
 
   return app;
