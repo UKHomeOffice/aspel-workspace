@@ -22,8 +22,7 @@ module.exports = {
     course: {
       list: {
         subtitle: `\
-Add and manage courses.
-
+Add and manage courses.  
 Apply for and manage category E PILs (personal licences for higher education or training).`
       }
     },
