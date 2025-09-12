@@ -130,5 +130,10 @@ module.exports = () => {
     submit('update-licence-number')
   );
 
+  router.put('/:projectId/replace-hba', (req, res) => {
+    console.log('HBA replacement endpoint hit');
+    res.json({ message: 'Not implemented' });
+  });
+
   return router;
 };

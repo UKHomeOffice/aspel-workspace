@@ -1,4 +1,5 @@
 const { page } = require('@asl/service/ui');
+const { default: axios } = require('axios');
 const { form } = require('../../../common/routers');
 const schema = require('../schema/confirm-replace-hba');
 module.exports = (settings) => {
@@ -36,9 +37,33 @@ module.exports = (settings) => {
 
         if (token) {
           delete req.session.form.hba;
-          console.log('Deleted HBA unconfirmed replacement hba');
+          // DELETE FROM S3 AND DB
+          await axios.delete(`${settings.attachments}/${token}`);
+          console.log(`Deleted HBA with token: ${token}`);
           return res.redirect(req.buildRoute('project.replaceHba', { projectId: req.params.projectId }));
         }
+      } else if (confirmHba === 'yes') {
+        const { token, fileName } = req.session.form?.hba || {};
+
+        if (!token) {
+          return next(new Error('Missing HBA token for replacement'));
+        }
+
+        const opts = {
+          method: 'PUT',
+          headers: { 'Content-type': 'application/json' },
+          json: {
+            data: { token, fileName }
+          }
+        };
+
+        // Backend API folder is matching URL structure, nextJS type pattern.
+        return req
+          .api(`/project/${req.projectId}/replace-hba`, opts)
+          .then(() => res.redirect(req.buildRoute('project.replaceHba', { projectId: req.params.projectId })))
+          .catch(next);
+      } else {
+        return next(new Error('Invalid choice'));
       }
     } catch (err) {
       console.error(err);
