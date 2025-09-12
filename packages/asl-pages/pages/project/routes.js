@@ -8,6 +8,8 @@ const suspend = require('../suspend');
 const addUser = require('./add-user');
 const removeUser = require('./remove-user');
 const transferDraft = require('./transfer-draft');
+const replaceHba = require('./replace-hba');
+const confirmReplaceHba = require('./replace-hba/confirm-replace-hba');
 
 module.exports = {
   list: {
@@ -63,5 +65,15 @@ module.exports = {
     path: '/:projectId/transfer-draft',
     permissions: 'project.transfer',
     router: transferDraft
+  },
+  replaceHba: {
+    path: '/:projectId/replace-hba',
+    permissions: 'project.replaceHBA',
+    router: replaceHba
+  },
+  confirmReplaceHba: {
+    path: '/:projectId/replace-hba/confirm-replace-hba',
+    permissions: 'project.replaceHBA',
+    router: confirmReplaceHba
   }
 };
