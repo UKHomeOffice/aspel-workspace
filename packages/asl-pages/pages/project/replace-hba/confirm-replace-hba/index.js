@@ -60,7 +60,7 @@ module.exports = (settings) => {
         // Backend API folder is matching URL structure, nextJS type pattern.
         return req
           .api(`/project/${req.projectId}/replace-hba`, opts)
-          .then(() => res.redirect(req.buildRoute('project.replaceHba', { projectId: req.params.projectId })))
+          .then(() => res.redirect(req.buildRoute('project.read', { projectId: req.params.projectId })))
           .catch(next);
       } else {
         return next(new Error('Invalid choice'));
