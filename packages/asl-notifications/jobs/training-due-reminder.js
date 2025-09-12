@@ -1,6 +1,5 @@
 const moment = require('moment');
 const Emailer = require('../lib/emailer');
-const { format: dateFormatter } = require('date-fns');
 
 const buildRoleQueryWithCompletionDate = ({ Role, dates }) => {
   return Role.query()
@@ -53,7 +52,7 @@ module.exports = async ({ schema, logger, publicUrl }) => {
           firstName: role.firstName,
           lastName: role.lastName,
           name: role.name,
-          completeDate: dateFormatter(role.trainingDelayDetails.completeDate, 'dd MMMM yyyy')
+          completeDate: moment(role.trainingDelayDetails.completeDate).format('DD MMM YYYY')
         }
       }
     })));
