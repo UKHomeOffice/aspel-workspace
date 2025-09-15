@@ -238,7 +238,8 @@ module.exports = async ({ schema, logger, task }) => {
       completeDate,
       identifier,
       emailTemplate: 'training-due-reminder',
-      logMsg: 'training due reminder sent'
+      logMsg: 'training due reminder sent',
+      addTaskTypeToSubject: false
     };
     notifyPelh(trainingDueReminderParams);
     notifyAdmins(trainingDueReminderParams);
