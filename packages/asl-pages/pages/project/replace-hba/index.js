@@ -3,23 +3,11 @@ const { form } = require('../../common/routers');
 const schema = require('../../task/schema/upload-hba');
 const FormData = require('form-data');
 const { default: axios } = require('axios');
-const { UnauthorisedError } = require('@asl/service/errors');
 
 module.exports = (settings) => {
   const app = page({
     ...settings,
     root: __dirname
-  });
-
-  app.use((req, res, next) => {
-    if (!req.user.profile.asruUser && !req.user.profile.asruAdmin) {
-      return next(
-        new UnauthorisedError(
-          'Only ASRU users can upload harm benefit analysis file'
-        )
-      );
-    }
-    next();
   });
 
   app.use(
