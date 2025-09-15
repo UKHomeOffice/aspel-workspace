@@ -228,7 +228,8 @@ class Project extends BaseModel {
         previousProjectId: { type: ['string', 'null'], pattern: uuid.v4 },
         previousEstablishmentId: { type: ['integer', 'null'] },
         transferProjectId: { type: ['string', 'null'], pattern: uuid.v4 },
-        transferEstablishmentId: { type: ['integer', 'null'] }
+        transferEstablishmentId: { type: ['integer', 'null'] },
+        hbaReplaced: { type: 'array', items: { type: 'string', pattern: uuid.v4 } }
       }
     };
   }

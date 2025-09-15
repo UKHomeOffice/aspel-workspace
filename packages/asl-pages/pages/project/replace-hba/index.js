@@ -18,13 +18,11 @@ module.exports = (settings) => {
         next();
       },
       process: async (req, res, next) => {
-        console.log('process middleware hit');
         const file = req.files?.upload?.[0];
         if (!file) {
           console.log('No file found in request');
           return next();
         }
-        console.log('File received:', file.originalname);
 
         const formData = new FormData();
         formData.append('file', file.buffer, file.originalname);
@@ -39,8 +37,6 @@ module.exports = (settings) => {
             token: data.token,
             filename: file.originalname
           };
-
-          console.log('Uploaded to attachments service:', data);
           next();
         } catch (error) {
           console.error('Upload error:', error);

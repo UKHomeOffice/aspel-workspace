@@ -31,7 +31,7 @@ module.exports = (settings) => {
   app.post('/', async (req, res, next) => {
     const { confirmHba } = req.form.values;
     const hbaSession = req.session.form?.hba || {};
-    const { token, fileName } = hbaSession;
+    const { token, filename } = hbaSession;
 
     try {
       if (confirmHba === 'no') {
@@ -58,6 +58,7 @@ module.exports = (settings) => {
             await axios.delete(`${settings.attachments}/${oldToken}`);
           } catch (err) {
             console.warn(`Could not fetch/delete old HBA token ${oldToken}:`, err.message);
+            next(err);
           }
         }
 
@@ -67,7 +68,7 @@ module.exports = (settings) => {
           json: {
             data: {
               token,
-              fileName,
+              filename,
               attachmentId,
               projectVersionId: req.project?.granted?.id || null,
               projectId: req.params.projectId
