@@ -4,7 +4,7 @@
  */
 exports.up = function(knex) {
   return knex.schema.table('projects', (table) => {
-    table.json('hba_replaced').nullable();
+    table.jsonb('hba_replaced').nullable();
   });
 };
 
