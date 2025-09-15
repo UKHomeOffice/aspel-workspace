@@ -30,41 +30,57 @@ module.exports = (settings) => {
 
   app.post('/', async (req, res, next) => {
     const { confirmHba } = req.form.values;
+    const hbaSession = req.session.form?.hba || {};
+    const { token, fileName } = hbaSession;
 
     try {
       if (confirmHba === 'no') {
-        const { token } = req.session.form?.hba || {};
-
         if (token) {
           delete req.session.form.hba;
-          // DELETE FROM S3 AND DB
           await axios.delete(`${settings.attachments}/${token}`);
           console.log(`Deleted HBA with token: ${token}`);
-          return res.redirect(req.buildRoute('project.replaceHba', { projectId: req.params.projectId }));
         }
-      } else if (confirmHba === 'yes') {
-        const { token, fileName } = req.session.form?.hba || {};
+        return res.redirect(req.buildRoute('project.replaceHba', { projectId: req.params.projectId }));
+      }
 
+      if (confirmHba === 'yes') {
         if (!token) {
           return next(new Error('Missing HBA token for replacement'));
+        }
+
+        const oldToken = req.project?.granted?.hbaToken;
+        let attachmentId = null;
+
+        if (oldToken) {
+          try {
+            const { data } = await axios.get(`${settings.attachments}/attachment-id/${oldToken}`);
+            attachmentId = data.id;
+            await axios.delete(`${settings.attachments}/${oldToken}`);
+          } catch (err) {
+            console.warn(`Could not fetch/delete old HBA token ${oldToken}:`, err.message);
+          }
         }
 
         const opts = {
           method: 'PUT',
           headers: { 'Content-type': 'application/json' },
           json: {
-            data: { token, fileName }
+            data: {
+              token,
+              fileName,
+              attachmentId,
+              projectVersionId: req.project?.granted?.id || null,
+              projectId: req.params.projectId
+            }
           }
         };
 
-        // Backend API folder is matching URL structure, nextJS type pattern.
-        return req
-          .api(`/project/${req.projectId}/replace-hba`, opts)
+        return req.api(`/project/${req.params.projectId}/replace-hba`, opts)
           .then(() => res.redirect(req.buildRoute('project.read', { projectId: req.params.projectId })))
           .catch(next);
-      } else {
-        return next(new Error('Invalid choice'));
       }
+
+      return next(new Error('Invalid choice'));
     } catch (err) {
       console.error(err);
       return next(err);

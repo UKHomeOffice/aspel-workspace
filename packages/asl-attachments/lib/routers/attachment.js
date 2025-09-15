@@ -99,5 +99,20 @@ module.exports = settings => {
     }
   });
 
+  router.get('/attachment-id/:token', async (req, res, next) => {
+    const { token } = req.params;
+
+    try {
+      const attachment = await Attachment.query().findOne({ token });
+
+      if (!attachment) {
+        return next(new NotFoundError());
+      }
+      return res.status(200).json({ id: attachment.id });
+    } catch (e) {
+      next(e);
+    }
+  });
+
   return router;
 };

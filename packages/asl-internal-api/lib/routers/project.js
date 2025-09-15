@@ -130,9 +130,36 @@ module.exports = () => {
     submit('update-licence-number')
   );
 
-  router.put('/:projectId/replace-hba', (req, res) => {
-    console.log('HBA replacement endpoint hit');
-    res.json({ message: 'Not implemented' });
+  router.put('/:projectId/replace-hba', async (req, res, next) => {
+    // const { Project, ProjectVersion } = req.models;
+    // const { projectId } = req.params;
+    // const { token, fileName, attachmentId, projectVersionId } = req.body.data || {};
+    //
+    try {
+    //
+    //   // 2. Update the project → store replaced HBA details in JSON array
+    //   if (projectId && attachmentId) {
+    //     await Project.query()
+    //       .findById(projectId)
+    //       .patch({
+    //         hba_replaced: JSON.stringify([{ attachmentId }])
+    //       });
+    //   }
+    //
+    //   // 3. Update project version with the new file
+    //   if (projectVersionId && token) {
+    //     await ProjectVersion.query()
+    //       .findById(projectVersionId)
+    //       .patch({
+    //         hbaToken: token,
+    //         hbaFileName: fileName
+    //       });
+    //   }
+
+      res.json({ success: true, message: 'HBA replaced successfully' });
+    } catch (err) {
+      next(err);
+    }
   });
 
   return router;

@@ -4,7 +4,7 @@
  */
 exports.up = function(knex) {
   return knex.schema.table('projects', (table) => {
-    table.json('hbaReplaced').nullable();
+    table.json('hba_replaced').nullable();
   });
 };
 
@@ -14,6 +14,6 @@ exports.up = function(knex) {
  */
 exports.down = function(knex) {
   return knex.schema.table('projects', (table) => {
-    table.dropColumn('hbaReplaced');
+    table.dropColumn('hba_replaced');
   });
 };
