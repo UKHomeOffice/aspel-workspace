@@ -37,7 +37,7 @@ module.exports = async ({ schema, logger, publicUrl }) => {
 
   logger.debug(`Found ${rolesWithTrainingOutstanding.length} roles with training due reminders to send`);
 
-  return Promise.all(rolesWithTrainingOutstanding.map(role => {
+  return Promise.all(rolesWithTrainingOutstanding.map(role =>
     emailer({
       event: 'direct-notification',
       data: {
@@ -55,6 +55,5 @@ module.exports = async ({ schema, logger, publicUrl }) => {
           completeDate: role.trainingDelayDetails.completeDate
         }
       }
-    });
-  }));
+    })));
 };

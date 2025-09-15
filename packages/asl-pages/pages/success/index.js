@@ -3,7 +3,7 @@ const { merge, get, upperFirst } = require('lodash');
 const { Router } = require('express');
 const { NotFoundError } = require('@asl/service/errors');
 const successMessages = require('./content');
-const { FEATURE_NAMED_PERSON_MVP } = require('@asl/service/ui/feature-flag');
+const { FEATURE_FLAG_NAMED_PERSON_MVP } = require('@asl/service/ui/feature-flag');
 const { versions } = require('@ukhomeoffice/asl-constants');
 
 const headerContent = (title, subtitle) => {
@@ -212,11 +212,11 @@ module.exports = () => {
     const success = merge(
       {},
       successMessages.default,
-      req.hasFeatureFlag(FEATURE_NAMED_PERSON_MVP)
+      req.hasFeatureFlag(FEATURE_FLAG_NAMED_PERSON_MVP)
         ? successMessages.default.namedPerson
         : {},
       get(successMessages, successType),
-      req.hasFeatureFlag(FEATURE_NAMED_PERSON_MVP)
+      req.hasFeatureFlag(FEATURE_FLAG_NAMED_PERSON_MVP)
         ? get(successMessages, `${successType}.namedPerson`)
         : {},
       getTaskContent(req.task)

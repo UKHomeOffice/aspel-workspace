@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { FEATURE_FLAG_CAT_E } = require('@ukhomeoffice/asl-constants/constants/feature-flags');
+const { FEATURE_FLAG_CAT_E } = require('@asl/service/ui/feature-flag');
 const routes = require('./routes');
 
 module.exports = settings => {
