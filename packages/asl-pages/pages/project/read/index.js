@@ -202,5 +202,21 @@ module.exports = (settings) => {
       .catch(next);
   });
 
+  // Attach flash messages to res.locals so React can access them
+  app.use((req, res, next) => {
+    if (req.session.flash) {
+      res.locals.flash = { ...req.session.flash };
+      req.session.flash = {}; // remove after reading
+    } else {
+      res.locals.flash = {};
+    }
+    next();
+  });
+  // Attach flash to redux state
+  app.use((req, res, next) => {
+    res.locals.static.flash = res.locals.flash || {};
+    next();
+  });
+
   return app;
 };

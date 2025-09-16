@@ -55,6 +55,8 @@ function hasPreviousVersions() {
 export default function ProjectLandingPage() {
   const project = useSelector(state => state.model);
   const { openRaTask, url, canUpdateRa } = useSelector(state => state.static, shallowEqual);
+  const flashMessage = useSelector(state => state.static.flash?.hbaFileReplaced);
+
   const snippetPath = `tabs.${project.granted ? 'granted' : 'application'}`;
 
   const isInactive = project.status === 'expired' || project.status === 'revoked';
@@ -103,6 +105,7 @@ export default function ProjectLandingPage() {
 
   return (
     <div className="project-landing-page">
+      {flashMessage && <div className="alert">{flashMessage}</div>}
       <EnforcementFlags model={project} />
       {
         showRaWarning && (
