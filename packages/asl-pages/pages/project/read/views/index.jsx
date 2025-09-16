@@ -14,6 +14,7 @@ import Reporting from './sections/reporting';
 import AdditionalAvailabilityWarning from './components/additional-availability-warning';
 import EnforcementFlags from '../../../enforcement/components/enforcement-flags';
 import Reminders from '../../../common/components/reminders';
+import FlashBanner from '@ukhomeoffice/asl-components/src/flash-banner';
 
 function SectionNav({ sections, activeSection, setActiveSection }) {
   const activeTab = Object.keys(sections).indexOf(activeSection);
@@ -105,7 +106,6 @@ export default function ProjectLandingPage() {
 
   return (
     <div className="project-landing-page">
-      {flashMessage && <div className="alert">{flashMessage}</div>}
       <EnforcementFlags model={project} />
       {
         showRaWarning && (
@@ -138,7 +138,8 @@ export default function ProjectLandingPage() {
         title={<Snippet>{`page.title.${project.status === 'inactive' ? 'application' : 'granted'}`}</Snippet>}
         subtitle={project.title || 'Untitled project'}
       />
-
+      {flashMessage && (<FlashBanner className="success" heading="HBA file replaced"
+        body={flashMessage} />)}
       <SectionNav sections={sections} activeSection={activeSection} setActiveSection={setActiveSection} />
       <AdditionalAvailabilityWarning />
 
