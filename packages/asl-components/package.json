@@ -25,6 +25,7 @@
     "@ukhomeoffice:registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
+    "@hods/alert": "^0.5.1",
     "@reduxjs/toolkit": "^2.8.2",
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@ukhomeoffice/asl-dictionary": "file:../asl-dictionary",
