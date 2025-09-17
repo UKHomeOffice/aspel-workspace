@@ -47,6 +47,8 @@ The following environment variables can be optionally defined:
 * `REDIS_PASSWORD` - redis instance used to store rate limit data - default `undefined`
 * `RATE_LIMIT_TOTAL` - maximum requests per hour allowable per-user - default `1000`
 * `BODY_SIZE_LIMIT` - maximum body size for requests - default `50mb`
+* `SERVE_API_DOCS` - if `TRUE` then the swagger api docs generated from [the OpenAPU spec](./openapi.json) will be 
+  served at `/docs`.
 
 ## Connected services
 
@@ -69,7 +71,7 @@ The following services must be available in order to run:
 
 Scripts for setting up a local database with dev data are available in the [`asl-schema` project](https://github.com/ukhomeoffice/asl-schema). First clone that repo and install the dependencies. Then run the following commands in the schema project directory:
 
-To setup the inital table schemas:
+To set up the initial table schemas:
 
 ```
 npm run migrate
@@ -106,8 +108,8 @@ _Note: you may need to create the database `asl-test` locally before running tes
 
 #### Mocking permissions
 
-By default when running tests the user will have full permissions. To define a custom permissions function to use in a test, run the the following code before making an API call:
+By default, when running tests the user will have full permissions. To define a custom permissions function to use in a test, include the following code before making an API call:
 
 ```js
-this.api.setUser({ can: (task, params) => <Promise> });
+this.api.setUser({ can: async (task, params) => {/* ... */} });
 ```

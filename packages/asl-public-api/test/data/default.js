@@ -138,6 +138,14 @@ module.exports = models => {
         lastName: 'active0',
         email: 'aaactive@example.com',
         emailConfirmed: true
+      },
+      {
+        id: ids.profiles.trainingAdmin,
+        title: 'Ms',
+        firstName: 'Catherine',
+        lastName: 'eLicence',
+        email: 'cate@example.com',
+        emailConfirmed: true
       }
     ]))
     .then(() => models.Profile.query().insert([
@@ -161,6 +169,7 @@ module.exports = models => {
       {
         id: ids.establishments.croydon,
         issueDate: '2018-01-01T12:00:00Z',
+        status: 'active',
         name: 'University of Croydon',
         country: 'england',
         address: '100 High Street',
@@ -169,6 +178,7 @@ module.exports = models => {
       {
         id: ids.establishments.marvell,
         issueDate: '2020-07-01T12:00:00Z',
+        status: 'active',
         name: 'Marvell Pharmaceuticals',
         country: 'england',
         address: '101 High Street',
@@ -191,6 +201,14 @@ module.exports = models => {
         issueDate: '2017-01-01T12:00:00Z',
         revocationDate: '2020-07-01T12:00:00Z',
         status: 'revoked'
+      },
+      {
+        id: ids.establishments.trainingEstablishment,
+        name: 'Training establishment',
+        issueDate: '2020-01-01T12:00:00Z',
+        status: 'active',
+        corporateStatus: 'non-profit',
+        isTrainingEstablishment: true
       }
     ]))
     .then(() => models.Place.query().insert([
@@ -389,6 +407,42 @@ module.exports = models => {
         expiryDate: '2040-01-01T12:00:00Z',
         licenceNumber: 'abc000',
         licenceHolderId: ids.profiles.linfordChristie
+      },
+      {
+        id: ids.projects.trainingEstablishment.trainingWithRodents,
+        establishmentId: ids.establishments.trainingEstablishment,
+        title: 'Training with rodents',
+        status: 'active',
+        schemaVersion: 1,
+        issueDate: moment().subtract(1, 'year').toISOString(),
+        expiryDate: moment().subtract(4, 'years').toISOString(),
+        licenceNumber: 'TR-RODENT',
+        licenceHolderId: ids.profiles.trainingAdmin,
+        species: ['Mice', 'Rats']
+      },
+      {
+        id: ids.projects.trainingEstablishment.trainingWithFish,
+        establishmentId: ids.establishments.trainingEstablishment,
+        title: 'Training with fish',
+        status: 'active',
+        schemaVersion: 1,
+        issueDate: moment().subtract(1, 'year').toISOString(),
+        expiryDate: moment().subtract(4, 'years').toISOString(),
+        licenceNumber: 'TR-FISHES',
+        licenceHolderId: ids.profiles.trainingAdmin,
+        species: ['Zebra fish (Danio rerio)']
+      },
+      {
+        id: ids.projects.trainingEstablishment.notTraining,
+        establishmentId: ids.establishments.trainingEstablishment,
+        title: 'Non-training licemce',
+        status: 'active',
+        schemaVersion: 1,
+        issueDate: moment().subtract(1, 'year').toISOString(),
+        expiryDate: moment().subtract(4, 'years').toISOString(),
+        licenceNumber: 'NOT-TRAIN',
+        licenceHolderId: ids.profiles.trainingAdmin,
+        species: ['wombats']
       }
     ]))
     .then(() => models.Project.query().insert([
@@ -563,6 +617,30 @@ module.exports = models => {
           transferToEstablishment: ids.establishments.croydon,
           transferToEstablishmentName: 'University of Croydon'
         }
+      },
+      {
+        id: uuid(),
+        projectId: ids.projects.trainingEstablishment.trainingWithRodents,
+        status: 'granted',
+        data: {
+          trainingLicence: true
+        }
+      },
+      {
+        id: uuid(),
+        projectId: ids.projects.trainingEstablishment.trainingWithFish,
+        status: 'granted',
+        data: {
+          trainingLicence: true
+        }
+      },
+      {
+        id: uuid(),
+        projectId: ids.projects.trainingEstablishment.notTraining,
+        status: 'granted',
+        data: {
+          trainingLicence: false
+        }
       }
     ]))
     .then(() => models.ProjectVersion.query().insert([
@@ -696,6 +774,11 @@ module.exports = models => {
         profileId: ids.profiles.activeAA,
         establishmentId: ids.establishments.marvell,
         role: 'basic'
+      },
+      {
+        profileId: ids.profiles.trainingAdmin,
+        establishmentId: ids.establishments.trainingEstablishment,
+        role: 'admin'
       }
     // permissions does not have an id column
     ]).returning('*'))
