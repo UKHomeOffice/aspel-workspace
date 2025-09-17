@@ -234,7 +234,7 @@ module.exports = async ({ schema, logger, task }) => {
       ...params,
       fullName,
       name,
-      type,
+      type: type.toUpperCase(),
       completeDate,
       identifier,
       emailTemplate: 'training-due-reminder',
