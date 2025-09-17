@@ -138,7 +138,7 @@ export default function ProjectLandingPage() {
         title={<Snippet>{`page.title.${project.status === 'inactive' ? 'application' : 'granted'}`}</Snippet>}
         subtitle={project.title || 'Untitled project'}
       />
-      {flashMessage && (<FlashBanner className="success" heading="HBA file replaced"
+      {flashMessage && (<FlashBanner className="flash-banner--success" heading="HBA file replaced"
         body={flashMessage} />)}
       <SectionNav sections={sections} activeSection={activeSection} setActiveSection={setActiveSection} />
       <AdditionalAvailabilityWarning />
