@@ -56,8 +56,6 @@ function hasPreviousVersions() {
 export default function ProjectLandingPage() {
   const project = useSelector(state => state.model);
   const { openRaTask, url, canUpdateRa } = useSelector(state => state.static, shallowEqual);
-  const flash = useSelector(state => state.static.flash);
-
   const snippetPath = `tabs.${project.granted ? 'granted' : 'application'}`;
 
   const isInactive = project.status === 'expired' || project.status === 'revoked';
