@@ -29,7 +29,7 @@
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "aws-sdk": "2.1169.0",
     "hot-shots": "^6.8.2",
-    "jsondiffpatch": "^0.4.1",
+    "jsondiffpatch": "^0.7.3",
     "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
     "minimist": "^1.2.6",
