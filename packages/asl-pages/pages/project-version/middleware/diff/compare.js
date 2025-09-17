@@ -6,7 +6,19 @@ const parseValue = (val) => {
   if (typeof val === 'string') {
     val = JSON.parse(val || '{}');
   }
-  return Value.fromJSON(val || {});
+  return getText(val.document.nodes);
+};
+
+const getText = (nodes) => {
+  let tempText = '';
+  nodes?.forEach((element) => {
+    if (element?.object === 'block') {
+      tempText += getText(element?.nodes);
+    } else if (element?.object === 'text') {
+      tempText += element.text + ' ';
+    }
+  });
+  return tempText;
 };
 
 // eslint-disable-next-line no-control-regex
