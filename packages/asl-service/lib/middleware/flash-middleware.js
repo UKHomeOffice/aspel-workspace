@@ -1,16 +1,19 @@
 module.exports = function(req, res, next) {
-  if (!req.session.flash) req.session.flash = {};
+  // Initialise session flash if not already present
+  if (!req.session.flash) {
+    req.session.flash = null;
+  }
 
-  // Set a flash message
-  res.flash = (key, value) => {
-    req.session.flash[key] = value;
+  // Set a flash message with a standard shape
+  res.setFlash = (title, body, type = 'success') => {
+    req.session.flash = { title, body, type };
   };
 
-  // Get a flash message once
-  res.locals.getFlash = (key) => {
-    const value = req.session.flash[key];
-    delete req.session.flash[key]; // remove after reading
-    return value;
+  // Get and consume the flash message
+  res.locals.getFlash = () => {
+    const flash = req.session.flash;
+    req.session.flash = null; // clear after reading
+    return flash;
   };
 
   next();

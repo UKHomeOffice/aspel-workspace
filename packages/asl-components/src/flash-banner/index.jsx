@@ -1,10 +1,10 @@
 import React from 'react';
 import Inset from '../inset';
 
-const FlashBanner = ({ heading, body, className }) => {
+const FlashBanner = ({ title, body, type }) => {
     return (
-        <Inset className={className}>
-            {heading && <h2>{heading}</h2>}
+        <Inset className={`flash-banner--${type}`}>
+            {title && <h2>{title}</h2>}
             <p>{body}</p>
         </Inset>
     );

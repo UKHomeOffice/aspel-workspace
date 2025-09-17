@@ -56,7 +56,7 @@ function hasPreviousVersions() {
 export default function ProjectLandingPage() {
   const project = useSelector(state => state.model);
   const { openRaTask, url, canUpdateRa } = useSelector(state => state.static, shallowEqual);
-  const flashMessage = useSelector(state => state.static.flash?.hbaFileReplaced);
+  const flash = useSelector(state => state.static.flash);
 
   const snippetPath = `tabs.${project.granted ? 'granted' : 'application'}`;
 
@@ -138,8 +138,8 @@ export default function ProjectLandingPage() {
         title={<Snippet>{`page.title.${project.status === 'inactive' ? 'application' : 'granted'}`}</Snippet>}
         subtitle={project.title || 'Untitled project'}
       />
-      {flashMessage && (<FlashBanner className="flash-banner--success" heading="HBA file replaced"
-        body={flashMessage} />)}
+      {flash && (<FlashBanner type="success" heading={flash?.title}
+        body={flash?.body} />)}
       <SectionNav sections={sections} activeSection={activeSection} setActiveSection={setActiveSection} />
       <AdditionalAvailabilityWarning />
 
