@@ -9,15 +9,18 @@ const parseValue = (val) => {
 };
 
 const getText = (nodes) => {
-  let tempText = '';
-  nodes?.forEach((element) => {
-    if (element?.object === 'block') {
-      tempText += getText(element?.nodes);
-    } else if (element?.object === 'text') {
-      tempText += element.text + ' ';
-    }
-  });
-  return tempText;
+  const iter = (nodes) =>  
+    (nodes ?? []).flatMap(node => {
+      if (node?.object === 'block') {
+        return iter(node?.nodes);
+      } else if (node?.object === 'text') {
+        return [element.text];
+      } else {
+        return [];
+      }
+    });
+    
+  return iter(nodes).join(' ');
 };
 
 // eslint-disable-next-line no-control-regex
