@@ -1,4 +1,3 @@
-const { Value } = require('slate');
 const { diffWords, diffSentences, diffArrays } = require('diff');
 const last = require('lodash/last');
 
