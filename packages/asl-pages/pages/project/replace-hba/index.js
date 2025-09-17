@@ -20,7 +20,6 @@ module.exports = (settings) => {
       process: async (req, res, next) => {
         const file = req.files?.upload?.[0];
         if (!file) {
-          console.log('No file found in request');
           return next();
         }
 
@@ -39,7 +38,6 @@ module.exports = (settings) => {
           };
           next();
         } catch (error) {
-          console.error('Upload error:', error);
           return next(error);
         }
       }

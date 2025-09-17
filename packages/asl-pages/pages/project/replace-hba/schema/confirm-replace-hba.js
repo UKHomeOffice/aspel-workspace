@@ -2,7 +2,6 @@ const content = require('../confirm-replace-hba/content');
 const { getFromContentTemplate } = require('../../../../lib/utils');
 
 const buildOptions = (taskType) => ['yes', 'no'].map((value) => {
-  console.log({value, taskType});
   return {
     value,
     label: getFromContentTemplate(
@@ -30,8 +29,6 @@ module.exports = (taskType) => {
       ]
     }
   };
-
-  console.log(JSON.stringify(schema));
 
   return schema;
 };

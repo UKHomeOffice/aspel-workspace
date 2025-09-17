@@ -38,7 +38,6 @@ module.exports = (settings) => {
         if (token) {
           delete req.session.form.hba;
           await axios.delete(`${settings.attachments}/${token}`);
-          console.log(`Deleted HBA with token: ${token}`);
         }
         return res.redirect(req.buildRoute('project.replaceHba', { projectId: req.params.projectId }));
       }
@@ -57,7 +56,6 @@ module.exports = (settings) => {
             attachmentId = data.id;
             await axios.delete(`${settings.attachments}/${oldToken}`);
           } catch (err) {
-            console.warn(`Could not fetch/delete old HBA token ${oldToken}:`, err.message);
             next(err);
           }
         }
@@ -84,7 +82,6 @@ module.exports = (settings) => {
 
       return next(new Error('Invalid choice'));
     } catch (err) {
-      console.error(err);
       return next(err);
     }
   });
