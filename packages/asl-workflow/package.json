@@ -33,7 +33,7 @@
     "@ukhomeoffice/asl-taskflow": "file:../asl-taskflow",
     "aws-sdk": "2.1354.0",
     "deep-diff": "^1.0.2",
-    "express": "^4.19.2",
+    "express": "^5.1.0",
     "lodash": "^4.17.21",
     "minimatch": "^3.0.4",
     "moment": "^2.29.3",
