@@ -53,6 +53,9 @@ module.exports = {
       update: ['asru:*', 'establishment:admin', 'establishment:role:ntco'],
       relatedTasks: ['asru:*', 'establishment:admin', 'establishment:role:ntco']
     },
+    trainingPil: {
+      filterTasks: ['asru:*', 'establishment:admin', 'establishment:role:ntco']
+    },
     pil: {
       list: ['asru:*', 'establishment:admin', 'establishment:read', 'establishment:role:ntco'],
       read: ['pil:own', 'asru:*', 'establishment:admin', 'establishment:read', 'establishment:role:ntco'],
@@ -127,6 +130,12 @@ module.exports = {
     licenceFees: ['asru:*'],
     asruReporting: ['asru:*'],
     asruRops: ['asru:rops'],
-    enforcement: ['asru:*']
+    enforcement: ['asru:*'],
+    tasks: {
+      filter: {
+        all: ['asru:*'],
+        byEstablishment: ['establishment:admin']
+      }
+    }
   }
 };

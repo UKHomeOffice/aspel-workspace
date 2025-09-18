@@ -88,10 +88,14 @@ module.exports = settings => {
         return res.status(500).send('API handler not configured');
       }
 
-      const path = req.originalUrl.replace(/^\/api/, '') || '/';
-      const { json, status } = await req.api(path);
+      try {
+        const path = new URL(req.url, 'http://localhost').pathname;
+        const { json, status } = await req.api(path, { query: req.query });
 
-      return res.status(status).json(json);
+        return res.status(status).json(json);
+      } catch (err) {
+        res.status(500).json({message: err.message, ...err});
+      }
     });
   }
 
