@@ -94,3 +94,20 @@ $govuk-brand-colour: #8f23b3;
 .align-right {
   text-align: right;
 }
+
+.govuk-inset-text.flash-banner--success {
+  border-left-color: #00703c;
+  background-color: #c6ece9;
+  padding: 1rem;
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: black;
+  }
+
+  p {
+    margin: 0;
+    color: black;
+  }
+}

@@ -93,6 +93,7 @@ module.exports = {
       updateConditions: ['asru:*'],
       updateIssueDate: ['asru:inspector'],
       updateLicenceNumber: ['asru:inspector'],
+      replaceHBA: ['asru:admin'],
       delete: ['holdingEstablishment:admin', 'project:own', 'asru:inspector'],
       revoke: ['asru:inspector', 'holdingEstablishment:admin', 'project:own'],
       suspend: ['asru:inspector'],
