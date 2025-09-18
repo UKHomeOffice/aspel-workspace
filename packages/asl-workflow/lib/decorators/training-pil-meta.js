@@ -9,14 +9,14 @@ module.exports = (flow, settings) => {
     const id = task.data.id;
     const model = task.data.model;
     const action = task.data.action;
-    const courseId = task.data.data.trainingCourseId;
+    const courseId = task.data.data?.trainingCourseId;
 
     if (model !== 'trainingPil' || action !== 'grant') {
       return task;
     }
 
     const trainingPil = await TrainingPil.query().findById(id).select('status');
-    const trainingCourse = await TrainingCourse.query().findById(courseId);
+    const trainingCourse = courseId ? await TrainingCourse.query().findById(courseId) : undefined;
 
     const revocationCount = await Task.query()
       .whereJsonSupersetOf('data', { id, action: 'revoke' })
