@@ -9,18 +9,18 @@ const parseValue = (val) => {
 };
 
 const getText = (nodes) => {
-  const iter = (nodes) =>  
-    (nodes ?? []).flatMap(node => {
-      if (node?.object === 'block') {
-        return iter(node?.nodes);
-      } else if (node?.object === 'text') {
-        return [element.text];
-      } else {
-        return [];
+  const getAllNodes = (elements) => {
+    let texts = [];
+    elements?.forEach((element) => {
+      if (element?.object === 'block') {
+        texts.push(getAllNodes(element?.nodes));
+      } else if (element?.object === 'text') {
+        texts.push(element.text);
       }
     });
-    
-  return iter(nodes).join(' ');
+    return texts;
+  };
+  return getAllNodes(nodes).join(' ');
 };
 
 // eslint-disable-next-line no-control-regex
@@ -52,13 +52,14 @@ const diff = (a, b, { type, granularity = 'word' }) => {
         before = parseValue(a);
         after = parseValue(b);
       } catch (e) {
+        console.log(e);
         return { error: e, added: [], removed: [] };
       }
 
       if (granularity === 'word') {
-        diffs = diffWords(normaliseWhitespace(before.document.text), normaliseWhitespace(after.document.text));
+        diffs = diffWords(normaliseWhitespace(before), normaliseWhitespace(after));
       } else {
-        diffs = diffSentences(normaliseWhitespace(before.document.text), normaliseWhitespace(after.document.text));
+        diffs = diffSentences(normaliseWhitespace(before), normaliseWhitespace(after));
       }
 
       removed = diffs.reduce((arr, d) => {
