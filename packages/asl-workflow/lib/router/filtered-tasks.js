@@ -3,7 +3,7 @@ const moment = require('moment');
 const { get, isUndefined } = require('lodash');
 const router = Router({ mergeParams: true });
 
-const { BadRequestError, NotFoundError } = require('@asl/service/errors');
+const { NotFoundError } = require('@asl/service/errors');
 const { Task } = require('@ukhomeoffice/asl-taskflow');
 const { filterToEstablishments } = require('../query-builders/filter-to-establishments');
 const {
@@ -60,16 +60,25 @@ const buildQuery = filters => {
   return query;
 };
 
-const checkPermissions = (user, query) => {
-  if (!user.profile.asruUser) {
-    const establishment = get(query, 'filters.establishment');
-    if (!establishment) {
-      throw new BadRequestError('establishment must be provided for non-ASRU users');
-    }
-    if (!user.profile.establishments.some(est => est.id === establishment)) {
-      throw new NotFoundError();
-    }
+const checkPermissions = async(user, query) => {
+  if (await user.can('tasks.filter.all')) {
+    return;
   }
+
+  const establishment = get(query, 'filters.establishment');
+  if (!establishment) {
+    throw new NotFoundError();
+  }
+
+  if (await user.can('tasks.filter.byEstablishment', query.filters)) {
+    return;
+  }
+
+  if (query.filters?.model && await user.can(`${query.filters.model}.filterTasks`, query.filters)) {
+    return;
+  }
+
+  throw new NotFoundError();
 };
 
 module.exports = (taskflow) => {

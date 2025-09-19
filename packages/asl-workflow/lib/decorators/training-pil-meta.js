@@ -3,18 +3,20 @@ const { open } = require('../flow');
 
 module.exports = (flow, settings) => {
   const { Task } = flow;
-  const { TrainingPil } = settings.models;
+  const { TrainingPil, TrainingCourse } = settings.models;
 
   return async task => {
     const id = task.data.id;
     const model = task.data.model;
     const action = task.data.action;
+    const courseId = task.data.data?.trainingCourseId;
 
     if (model !== 'trainingPil' || action !== 'grant') {
       return task;
     }
 
     const trainingPil = await TrainingPil.query().findById(id).select('status');
+    const trainingCourse = courseId ? await TrainingCourse.query().findById(courseId) : undefined;
 
     const revocationCount = await Task.query()
       .whereJsonSupersetOf('data', { id, action: 'revoke' })
@@ -30,7 +32,8 @@ module.exports = (flow, settings) => {
     return {
       ...task,
       openRevocation,
-      modelStatus: trainingPil && trainingPil.status
+      modelStatus: trainingPil && trainingPil.status,
+      trainingCourse
     };
   };
 

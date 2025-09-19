@@ -7,15 +7,21 @@ const logger = require('../lib/logger');
 const workflow = require('../lib/workflow');
 const healthcheck = require('../lib/healthcheck');
 const cacheControl = require('../lib/middleware/cache-control');
+const swaggerUi = require('swagger-ui-express');
 
-module.exports = settings => {
-  settings = normalise(settings);
+module.exports = appSettings => {
+  const settings = normalise(appSettings);
   const app = express();
 
   app.use('/healthcheck', healthcheck(settings));
 
   app.use(cacheControl(settings));
   app.use(logger(settings));
+
+  if (settings.openApi?.serveApiDocs) {
+    const apiSpec = require(settings.openApi.openApiSpec);
+    app.use('/docs', swaggerUi.serve, swaggerUi.setup(apiSpec));
+  }
 
   if (settings.auth) {
     const keycloak = auth(Object.assign(settings.auth, { bearerOnly: true }));

@@ -22,17 +22,35 @@ class Role extends BaseModel {
           type: ['object', 'null'],
           properties: {
             mandatory: {
-              type: ['array', 'string'],
-              items: {
-                type: 'string',
-                enum: ['delay', 'exemption']
-              }
+              anyOf: [
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: ['delay', 'exemption']
+                  }
+                },
+                {
+                  type: 'string',
+                  enum: ['delay', 'exemption']
+                }
+              ]
             },
             incomplete: {
-              type: ['string', 'null', 'array'],
-              items: {
-                type: 'string'
-              }
+              anyOf: [
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string'
+                  }
+                },
+                {
+                  type: 'string'
+                },
+                {
+                  type: 'null'
+                }
+              ]
             },
             delayReason: { type: ['string', 'null'] },
             completeDate: { type: 'string', format: 'date' }
