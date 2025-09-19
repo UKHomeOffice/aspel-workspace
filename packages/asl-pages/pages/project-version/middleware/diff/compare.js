@@ -1,26 +1,12 @@
 const { diffWords, diffSentences, diffArrays } = require('diff');
 const last = require('lodash/last');
+const { concatTextFromNodes } = require('@asl/pages/utils');
 
 const parseValue = (val) => {
   if (typeof val === 'string') {
     val = JSON.parse(val || '{}');
   }
-  return getText(val.document.nodes);
-};
-
-const getText = (nodes) => {
-  const getAllNodes = (elements) => {
-    let texts = [];
-    elements?.forEach((element) => {
-      if (element?.object === 'block') {
-        texts.push(getAllNodes(element?.nodes));
-      } else if (element?.object === 'text') {
-        texts.push(element.text);
-      }
-    });
-    return texts;
-  };
-  return getAllNodes(nodes).join(' ');
+  return concatTextFromNodes(val.document.nodes);
 };
 
 // eslint-disable-next-line no-control-regex
