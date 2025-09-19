@@ -19,11 +19,13 @@ module.exports = {
         subtitle: 'People affiliated with {{establishment.name}} including named people, licence holders and Home Office liaison contacts.'
       }
     },
-    course: {
-      list: {
-        subtitle: `\
+    categoryE: {
+      course: {
+        list: {
+          subtitle: `\
 Add and manage courses.  
 Apply for and manage category E PILs (personal licences for higher education or training).`
+        }
       }
     },
     pils: {

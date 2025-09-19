@@ -8,6 +8,7 @@ import pickBy from 'lodash/pickBy';
 import { getValue } from '../utils';
 import DatatableHeader from './header';
 import { Pagination } from '../';
+import Snippet from '../snippet';
 
 export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded }) {
     const rowExpands = expands(row);
@@ -71,7 +72,8 @@ export function Datatable({
     schema: tableSchema,
     pagination,
     noDataWarning,
-    allowScroll = true
+    allowScroll = true,
+    caption
 }) {
     const schema = pickBy(merge({}, tableSchema, formatters), (item) => item.show);
     const RowComponent = CustomRow || Row;
@@ -94,6 +96,11 @@ export function Datatable({
 
     return (
         <table className={classnames('govuk-table', 'govuk-react-datatable', className, isFetching && 'loading')} ref={tableRef}>
+            {caption &&
+              <caption className='govuk-table__caption govuk-table__caption--m'>
+                  <Snippet>{caption}</Snippet>
+              </caption>
+            }
             <thead>
                 <tr>
                     {

@@ -193,8 +193,7 @@ module.exports = settings => {
 
   app.use((req, res, next) => {
     req.breadcrumb = crumb => {
-      req.breadcrumbs = req.breadcrumbs || [];
-      req.breadcrumbs = [ ...req.breadcrumbs, crumb ];
+      req.breadcrumbs = [ ...(req.breadcrumbs || []), crumb ];
     };
     next();
   });
