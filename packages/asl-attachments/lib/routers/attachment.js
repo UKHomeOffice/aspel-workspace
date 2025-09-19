@@ -74,45 +74,5 @@ module.exports = settings => {
     }
   });
 
-  router.delete('/:token', async (req, res, next) => {
-    const { token } = req.params;
-
-    try {
-      // Find the attachment by token
-      const attachment = await Attachment.query().findOne({ token });
-      if (!attachment) {
-        return next(new NotFoundError());
-      }
-
-      // Delete from S3
-      await s3.deleteObject({
-        Bucket: settings.s3.bucket,
-        Key: attachment.id
-      }).promise();
-
-      // Delete from DB
-      await Attachment.query().deleteById(attachment.id);
-
-      return res.sendStatus(204);
-    } catch (e) {
-      next(e);
-    }
-  });
-
-  router.get('/attachment-id/:token', async (req, res, next) => {
-    const { token } = req.params;
-
-    try {
-      const attachment = await Attachment.query().findOne({ token });
-
-      if (!attachment) {
-        return next(new NotFoundError());
-      }
-      return res.status(200).json({ id: attachment.id });
-    } catch (e) {
-      next(e);
-    }
-  });
-
   return router;
 };

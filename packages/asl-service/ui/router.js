@@ -12,7 +12,6 @@ const { Writable } = require('stream');
 const { MemoryStore } = require('express-session');
 const homeOffice = require('@ukhomeoffice/frontend-toolkit');
 const session = require('@lennym/redis-session');
-const flashMiddleware = require('../lib/middleware/flash-middleware');
 const helmet = require('helmet');
 const getContentSecurityPolicy = require('../lib/get-content-security-policy');
 const sendResponse = require('../lib/send-response');
@@ -136,8 +135,6 @@ module.exports = settings => {
 
   if (settings.session) {
     app.use(session(settings.session));
-    app.use(flashMiddleware);
-
     app.use('/logout', (req, res, next) => {
       req.session.destroy(() => next());
     });

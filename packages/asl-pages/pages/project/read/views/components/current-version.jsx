@@ -15,7 +15,7 @@ export default function CurrentVersion() {
   if (project.isLegacyStub) {
     return null;
   }
-  const { additionalAvailability, canUpdate, asruUser, openTask, editable, canReplaceHBA } =
+  const { additionalAvailability, canUpdate, asruUser, openTask, editable } =
     useSelector((state) => state.static);
 
   const showEditLink =
@@ -80,19 +80,9 @@ export default function CurrentVersion() {
       </p>
       {version.hbaToken && (
         <p>
-          <a href={`/attachment/${version.hbaToken}`} download={version.hbaFilename}>
+          <a href={`/attachment/${version.hbaToken}`} download={`${version.hbaFilename}`}>
             <Snippet>otherDocuments.links.hba</Snippet>
           </a>
-          {canReplaceHBA && (
-            <span>
-              <Link
-                page="project.replaceHba"
-                project={project}
-                className="govuk-!-padding-left-3"
-                label={<Snippet>otherDocuments.links.replaceHba</Snippet>}
-              />
-            </span>
-          )}
         </p>
       )}
     </Subsection>
