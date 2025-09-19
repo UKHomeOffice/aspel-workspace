@@ -2,6 +2,7 @@ export { default as AutoComplete } from './autocomplete';
 export { default as Accordion } from './accordion';
 export { default as Acronym } from './acronym';
 export { default as AddAnother } from './add-another';
+export { default as AlertBanner } from './alert';
 export { default as ApplicationProgress } from './application-progress';
 export { default as ApplicationConfirm } from './application-confirm';
 export { default as ApplyChanges } from './apply-changes';
