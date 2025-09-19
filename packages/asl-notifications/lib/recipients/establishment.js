@@ -237,13 +237,15 @@ module.exports = async ({ schema, logger, task }) => {
 
   if (model === 'role' && action === 'training-due-reminder') {
     const { firstName, lastName, name, type, completeDate } = task.data.data;
-    const fullName = `${firstName} ${lastName}`;
+    const fullName = `${firstName} ${lastName}'s`;
     const identifier = `${applicant.id}-${completeDate}-${action}`;
 
     const trainingDueReminderParams = {
       ...params,
       fullName,
+      fullNameInSubject: fullName,
       name,
+      their: 'their',
       type: type.toUpperCase(),
       completeDate,
       identifier,
@@ -254,7 +256,13 @@ module.exports = async ({ schema, logger, task }) => {
     notifyPelh(trainingDueReminderParams);
     notifyAdmins(trainingDueReminderParams);
     notifyNTCOs(trainingDueReminderParams);
-    notifyUser(applicant, { ...trainingDueReminderParams, addressingUserDirectly: 'Your' });
+    notifyUser(applicant, {
+      ...trainingDueReminderParams, ...{
+        fullName: 'Your',
+        fullNameInSubject: 'You',
+        their: 'your'
+      }
+    });
     return notifications;
   }
 
