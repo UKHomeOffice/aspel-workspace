@@ -1,6 +1,7 @@
+import { concatTextFromNodes } from '../../../../utils';
+
 const { diffWords, diffSentences, diffArrays } = require('diff');
 const last = require('lodash/last');
-const { concatTextFromNodes } = require('@asl/pages/utils');
 
 const parseValue = (val) => {
   if (typeof val === 'string') {
