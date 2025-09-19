@@ -201,8 +201,7 @@ Contact your establishments Single Point of Contact for more information.`
     links: {
       nts: 'Non-technical summary',
       ra: 'Non-technical summary and retrospective assessment',
-      hba: 'Download harm benefit analysis',
-      replaceHba: 'Replace harm benefit analysis file'
+      hba: 'Download harm benefit analysis'
     }
   },
   manage: {

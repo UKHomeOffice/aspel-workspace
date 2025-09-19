@@ -85,9 +85,7 @@ module.exports = {
       reinstate: 'Reinstate project licence',
       import: 'Import project',
       addUser: 'Give access to this PPL',
-      transferDraft: 'Transfer draft project',
-      replaceHba: 'Replace harm benefit analysis file',
-      confirmReplaceHba: 'Confirm replacement HBA file'
+      transferDraft: 'Transfer draft project'
     },
     projectVersion: {
       read: 'View',

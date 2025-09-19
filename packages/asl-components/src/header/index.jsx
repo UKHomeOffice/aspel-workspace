@@ -6,7 +6,7 @@ const Header = ({
 }) => (
     <header className="page-header">
         {
-            subtitle && <span className="govuk-caption-l">{subtitle}</span>
+            subtitle && <h2>{subtitle}</h2>
         }
         {
             title && <h1>{title}</h1>
