@@ -59,7 +59,7 @@ module.exports = {
     hint: 'Download a copy of the data that can be uploaded to use as a template for similar projects.'
   },
   hba: {
-    heading: 'Harm benefit assessment',
+    heading: 'Harm benefit analysis',
     hint: 'Download a copy of the harm benefit assessment for this licence.',
     link: 'Download harm benefit analysis.'
   }
