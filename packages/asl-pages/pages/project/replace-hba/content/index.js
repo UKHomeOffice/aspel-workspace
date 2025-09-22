@@ -17,5 +17,12 @@ module.exports = merge({}, baseContent, hba, {
     hba: {
       label: 'Selected harm benefit analysis file'
     }
+  },
+  errors: {
+    upload: {
+      fileRequired: 'Choose a replacement HBA file',
+      maxSize: 'The harm benefit analysis file should be smaller than 15MB',
+      ext: 'The selected file must be a .doc, .docx or .pdf'
+    }
   }
 });

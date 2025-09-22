@@ -233,9 +233,9 @@ function DownloadSection({ project, version, canReplaceHBA }) {
 
       {version.hbaToken && (
         <div>
-          <h4>
+          <h3>
             <Snippet>downloads.hba.heading</Snippet>
-          </h4>
+          </h3>
           <p>
             <a href={`/attachment/${version.hbaToken}`} download={version.hbaFilename}>
               <Snippet>downloads.hba.link</Snippet>
