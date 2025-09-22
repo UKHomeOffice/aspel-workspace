@@ -257,7 +257,8 @@ module.exports = async ({ schema, logger, task }) => {
     notifyAdmins(trainingDueReminderParams);
     notifyNTCOs(trainingDueReminderParams);
     notifyUser(applicant, {
-      ...trainingDueReminderParams, ...{
+      ...trainingDueReminderParams,
+      ...{
         fullName: 'Your',
         fullNameInSubject: 'You',
         their: 'your'
