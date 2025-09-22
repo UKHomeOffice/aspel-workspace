@@ -48,5 +48,17 @@ module.exports = (settings) => {
     res.redirect(req.buildRoute('project.confirmReplaceHba', { projectId: req.params.projectId }));
   });
 
+  // Clear stale validationErrors on every load
+  app.use((req, res, next) => {
+    if (req.session && req.session.form) {
+      Object.keys(req.session.form).forEach(key => {
+        if (req.session.form[key] && req.session.form[key].validationErrors) {
+          delete req.session.form[key].validationErrors;
+        }
+      });
+    }
+    next();
+  });
+
   return app;
 };
