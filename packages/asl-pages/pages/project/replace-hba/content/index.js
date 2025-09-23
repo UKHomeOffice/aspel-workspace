@@ -20,7 +20,7 @@ module.exports = merge({}, baseContent, hba, {
   },
   errors: {
     upload: {
-      fileRequired: 'Choose a replacement HBA file',
+      fileRequired: 'Confirm or discard the selected HBA file',
       maxSize: 'The harm benefit analysis file should be smaller than 15MB',
       ext: 'The selected file must be a .doc, .docx or .pdf'
     }

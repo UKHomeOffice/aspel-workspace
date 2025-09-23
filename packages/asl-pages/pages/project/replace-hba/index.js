@@ -50,10 +50,12 @@ module.exports = (settings) => {
 
   // Clear stale validationErrors on every load
   app.use((req, res, next) => {
-    if (req.session && req.session.form) {
-      Object.keys(req.session.form).forEach(key => {
-        if (req.session.form[key] && req.session.form[key].validationErrors) {
-          delete req.session.form[key].validationErrors;
+    const form = req.session?.form;
+    if (form && Object.keys(form).length > 0) {
+      Object.keys(form).forEach(key => {
+        const field = form[key];
+        if (field?.validationErrors) {
+          delete field.validationErrors;
         }
       });
     }

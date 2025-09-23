@@ -18,9 +18,14 @@ module.exports = merge({}, baseContent, {
     }
   },
   warning: {
-    amendment: 'Once confirmed, this HBA file in ASPeL (not SharePoint) will be the single point of reference for this amendment, for future assessment and audit purposes.'
+    amendment: 'Once confirmed, this HBA file in ASPeL (not SharePoint) will be the single point of reference for this licence, for future assessment and audit purposes.'
   },
   buttons: {
-    submit: 'Confirm'
+    submit: 'Continue'
+  },
+  errors: {
+    confirmHba: {
+      required: 'Confirm or discard the selected HBA file'
+    }
   }
 });
