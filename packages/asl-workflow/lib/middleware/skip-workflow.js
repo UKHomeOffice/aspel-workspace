@@ -7,7 +7,7 @@ module.exports = settings => {
     const shouldSkipWorkflow = () => {
       const model = get(req.body, 'model');
       const action = get(req.body, 'action');
-      const nopes = ['update', 'patch', 'updateConditions'];
+      const nopes = ['update', 'patch', 'updateConditions', 'replaceHba'];
       if (model === 'export') {
         return true;
       }

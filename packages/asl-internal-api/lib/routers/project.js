@@ -27,6 +27,7 @@ const submit = action => (req, res, next) => {
         case 'update-licence-number':
         case 'suspend':
         case 'reinstate':
+        case 'replaceHba':
           return req.workflow.update({
             ...params,
             id: req.project.id,
@@ -130,40 +131,11 @@ module.exports = () => {
     submit('update-licence-number')
   );
 
-  router.put('/:projectId/replace-hba', async (req, res, next) => {
-    const { Project, ProjectVersion } = req.models;
-    const { projectId } = req.params;
-    const { token, filename, attachmentId, projectVersionId } = req.body.data || {};
-
-    try {
-      // Append to existing hba_replaced array
-      if (projectId && attachmentId) {
-        const project = await Project.query().findById(projectId);
-        const replaced = project.hbaReplaced || [];
-        replaced.push(attachmentId);
-
-        await Project.query()
-          .findById(projectId)
-          .patch({
-            hbaReplaced: replaced
-          });
-      }
-
-      // Update project version with the new file
-      if (projectVersionId && token) {
-        await ProjectVersion.query()
-          .findById(projectVersionId)
-          .patch({
-            hbaFilename: filename,
-            hbaToken: token
-          });
-      }
-
-      res.json({ success: true, message: 'HBA replaced successfully' });
-    } catch (err) {
-      next(err);
-    }
-  });
+  router.put('/:projectId/replace-hba',
+    permissions('project.replaceHBA'),
+    whitelist('token', 'filename', 'attachmentId', 'projectVersionId', 'projectId'),
+    submit('replaceHba')
+  );
 
   return router;
 };

@@ -766,5 +766,31 @@ module.exports =
       });
     }
 
+    if (action === 'replaceHba') {
+      const projectId = id;
+      const { projectVersionId, token, filename, attachmentId } = data;
+
+      // Append to existing hba_replaced array
+      if (projectId && attachmentId) {
+        const project = await Project.query(transaction).findById(projectId);
+        const replaced = project.hbaReplaced || [];
+        if (!replaced.includes(attachmentId)) {
+          replaced.push(attachmentId);
+        }
+
+        await Project.query(transaction)
+          .patchAndFetchById(projectId, { hbaReplaced: replaced });
+      }
+
+      // Update project version with the new file
+      if (projectVersionId && token) {
+        return ProjectVersion.query(transaction)
+          .patchAndFetchById(projectVersionId, {
+            hbaFilename: filename,
+            hbaToken: token
+          });
+      }
+    }
+
     return resolver({ Model: models.Project, action, data, id }, transaction);
   };
