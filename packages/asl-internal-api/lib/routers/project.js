@@ -27,7 +27,6 @@ const submit = action => (req, res, next) => {
         case 'update-licence-number':
         case 'suspend':
         case 'reinstate':
-        case 'replaceHba':
           return req.workflow.update({
             ...params,
             id: req.project.id,
@@ -64,6 +63,49 @@ const isActiveProject = (req, res, next) => {
     return next(new BadRequestError('only active projects can have their issue date changed'));
   }
   next();
+};
+
+const replaceHba = async (req, res, next) => {
+  try {
+    if (!req.project) {
+      throw new Error('Project not loaded');
+    }
+
+    const { token, filename, attachmentId, projectVersionId } = req.body.data || {};
+
+    if (!token || !filename) {
+      throw new BadRequestError('token and filename are required');
+    }
+
+    // Build workflow params
+    const workflowParams = {
+      model: 'project',
+      id: req.project.id,
+      data: {
+        replaceHba: true,
+        token,
+        filename,
+        attachmentId,
+        projectVersionId,
+        projectId: req.project.id,
+        establishmentId: req.project.establishmentId
+      },
+      meta: {
+        changedBy: req.user.profile.id,
+        ...req.body.meta
+      },
+      action: 'update'
+    };
+
+    // Call the workflow update
+    const result = await req.workflow.update(workflowParams);
+
+    // Respond with workflow result
+    res.response = result.json?.data || result;
+    next();
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = () => {
@@ -133,8 +175,8 @@ module.exports = () => {
 
   router.put('/:projectId/replace-hba',
     permissions('project.replaceHBA'),
-    whitelist('token', 'filename', 'attachmentId', 'projectVersionId', 'projectId'),
-    submit('replaceHba')
+    whitelist('token', 'filename', 'attachmentId', 'projectVersionId', 'projectId', 'establishmentId'),
+    replaceHba
   );
 
   return router;

@@ -5,13 +5,13 @@ module.exports = ({ Model, action, data, id }, transaction) => {
     return Promise.reject(new Error(`id is required on ${action}`));
   }
 
-  if (data) {
-    if (Array.isArray(data)) {
-      data = data.map(d => pick(d, Object.keys(Model.jsonSchema.properties)));
-    } else {
-      data = pick(data, Object.keys(Model.jsonSchema.properties));
+    if (!data.replaceHba) {
+      if (Array.isArray(data)) {
+        data = data.map(d => pick(d, Object.keys(Model.jsonSchema.properties)));
+      } else {
+        data = pick(data, Object.keys(Model.jsonSchema.properties));
+      }
     }
-  }
 
   if (action === 'create') {
     return Model.query(transaction)
