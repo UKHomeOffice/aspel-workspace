@@ -101,7 +101,7 @@ const replaceHba = async (req, res, next) => {
     const result = await req.workflow.update(workflowParams);
 
     // Respond with workflow result
-    res.response = result.json?.data || result;
+    res.response = result.json.data || result;
     next();
   } catch (err) {
     next(err);
