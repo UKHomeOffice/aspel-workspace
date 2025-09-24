@@ -16,7 +16,34 @@ router.get('/related', (req, res, next) => {
 });
 
 router.get('/filtered', (req, res, next) => {
-  return req.workflow.filtered({ query: { filters: req.query } })
+  const {
+    establishment,
+    establishmentId,
+    model,
+    action,
+    initiatedBy,
+    isAmendment,
+    schemaVersion,
+    sort,
+    limit,
+    offset
+  } = req.query;
+
+  const query = {
+    filters: {
+      establishment: establishmentId ?? establishment,
+      model,
+      action,
+      initiatedBy,
+      isAmendment,
+      schemaVersion
+    },
+    sort,
+    limit,
+    offset
+  };
+
+  return req.workflow.filtered({ query })
     .then(response => {
       res.response = response.json.data;
       res.meta = response.json.meta;
@@ -197,7 +224,11 @@ router.post('/:taskId/comment', (req, res, next) => {
 });
 
 router.put('/:taskId/comment/:commentId', (req, res, next) => {
-  return req.workflow.task(req.taskId).updateComment({ id: req.params.commentId, comment: req.body.comment, meta: req.body.meta })
+  return req.workflow.task(req.taskId).updateComment({
+    id: req.params.commentId,
+    comment: req.body.comment,
+    meta: req.body.meta
+  })
     .then(response => {
       res.response = response.json.data;
       next();

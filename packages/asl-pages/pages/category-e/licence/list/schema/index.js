@@ -1,19 +1,28 @@
 module.exports = {
-  title: {
+  profile: {
+    accessor: 'data.subject',
+    sort: ['data.modelData.profile.lastName', 'data.modelData.profile.firstName'],
     show: true
   },
-  species: {
+  courseTitle: {
     show: true,
+    accessor: 'trainingCourse.title',
     sortable: false
   },
   startDate: {
-    show: true
-  },
-  applications: {
+    accessor: 'trainingCourse.startDate',
     show: true,
     sortable: false
   },
-  licences: {
+  details: {
+    show: true,
+    sortable: false
+  },
+  status: {
+    show: true,
+    sortable: false
+  },
+  actions: {
     show: true,
     sortable: false
   }

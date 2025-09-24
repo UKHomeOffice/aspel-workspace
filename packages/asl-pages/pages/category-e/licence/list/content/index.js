@@ -9,20 +9,23 @@ module.exports = {
     'course or select an existing course.',
   tableCaption: 'Category E PILs',
   fields: {
-    title: {
-      label: 'Course title'
+    profile: {
+      label: 'Name'
     },
-    species: {
-      label: 'Animals used'
+    courseTitle: {
+      label: 'Course title'
     },
     startDate: {
       label: 'Course date(s)'
     },
-    applications: {
-      label: 'Participants added'
+    details: {
+      label: 'Details'
     },
-    licences: {
-      label: 'Licences granted'
+    status: {
+      label: 'Status'
+    },
+    actions: {
+      label: 'Action'
     }
   }
 };

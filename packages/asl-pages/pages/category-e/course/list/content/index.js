@@ -2,14 +2,7 @@ const baseContent = require('../../content');
 
 module.exports = {
   ...baseContent,
-  title: 'Courses and category E PILs',
-  subtitle:
-    'To apply for category E PILs for course participants, first add a new ' +
-    'course or select an existing course.',
   tableCaption: 'Higher education or training courses',
-  buttons: {
-    add: 'Add course details'
-  },
   fields: {
     title: {
       label: 'Course title'

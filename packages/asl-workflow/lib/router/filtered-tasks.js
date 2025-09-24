@@ -92,7 +92,12 @@ module.exports = (taskflow) => {
         const { sort = { column: 'updatedAt', ascending: true }, filters = {}, limit, offset } = req.query;
 
         let query = buildQuery(filters);
-        query = Task.orderBy({ query, sort });
+        (Array.isArray(sort.column) ? sort.column : [sort.column]).forEach(
+          column => {
+            query = Task.orderBy({ query, sort: { ...sort, column } });
+          }
+        );
+
         query = Task.paginate({ query, limit, offset });
 
         req.log('debug', { filters });
