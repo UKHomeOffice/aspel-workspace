@@ -19,7 +19,7 @@ const Index = () => {
           <a href={`/attachment/${hbaToken}`} download={`${hbaFilename}`}>{hbaFilename}</a>{' '}
         </p>
         <Warning>
-          <Snippet>warning.amendment</Snippet>
+          <Snippet>warning</Snippet>
         </Warning>
       </Form>
 
