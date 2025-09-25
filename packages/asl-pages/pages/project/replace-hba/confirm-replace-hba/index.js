@@ -42,8 +42,8 @@ module.exports = (settings) => {
     try {
       if (confirmHba === 'no') {
         if (token) {
-          delete req.session.form.hba;
           await axios.delete(`${settings.attachments}/${token}`);
+          delete req.session.form;
         }
         return res.redirect(req.buildRoute('project.replaceHba', { projectId: req.params.projectId }));
       }
