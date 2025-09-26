@@ -17,7 +17,7 @@ const UploadView = () => {
       <ErrorSummary />
       <Form
         cancelLink={
-          <Link page="project.read" label="Cancel" establishmentId={project.establishmentId} projectId={project.id} />
+          <Link page="project.read" label="Cancel" establishmentId={project.establishmentId} projectId={project.id} query={{ clearForm: 1 }}/>
         }>
 
         <Header title={<Snippet>breadcrumbs.project.replaceHba</Snippet>} subtitle={project.title} />

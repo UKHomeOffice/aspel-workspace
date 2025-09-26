@@ -12,6 +12,14 @@ module.exports = (settings) => {
     root: __dirname
   });
 
+  // Clear any form data in the session if requested from replaceHba page
+  app.get('/', (req, res, next) => {
+    if (req.query.clearForm) {
+      delete req.session.form;
+    }
+    next();
+  });
+
   app.use((req, res, next) => {
     if (!req.project.title) {
       req.project.title = 'Untitled project';
