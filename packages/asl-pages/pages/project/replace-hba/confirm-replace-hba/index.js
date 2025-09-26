@@ -1,7 +1,7 @@
 const { page } = require('@asl/service/ui');
 const { default: axios } = require('axios');
 const { form } = require('../../../common/routers');
-const schema = require('../schema/confirm-replace-hba');
+const schema = require('./schema/confirm-replace-hba');
 module.exports = (settings) => {
   const app = page({
     ...settings,
@@ -18,11 +18,17 @@ module.exports = (settings) => {
     next();
   });
 
-  // this middleware is used to create radio buttons...
+  // form middleware
   app.use(
     form({
       configure(req, res, next) {
-        req.form.schema = schema('amendment');
+        req.form.schema = schema();
+        next();
+      },
+      locals(req, res, next) {
+        // pass HBA info to template
+        res.locals.static.hbaToken = req.session.form?.hba?.token;
+        res.locals.static.hbaFilename = req.session.form?.hba?.filename;
         next();
       }
     })
@@ -36,8 +42,8 @@ module.exports = (settings) => {
     try {
       if (confirmHba === 'no') {
         if (token) {
-          delete req.session.form.hba;
           await axios.delete(`${settings.attachments}/${token}`);
+          delete req.session.form;
         }
         return res.redirect(req.buildRoute('project.replaceHba', { projectId: req.params.projectId }));
       }
@@ -78,9 +84,9 @@ module.exports = (settings) => {
           .then(() => res.setFlash('HBA file replaced', `${filename} is now attached to this licence.`, 'success'))
           .then(() => res.redirect(req.buildRoute('project.read', { projectId: req.params.projectId })))
           .catch(next);
+      } else {
+        return next(new Error('Invalid choice'));
       }
-
-      return next(new Error('Invalid choice'));
     } catch (err) {
       return next(err);
     }

@@ -1,7 +1,7 @@
-const content = require('../confirm-replace-hba/content');
-const { getFromContentTemplate } = require('../../../../lib/utils');
+const content = require('../content');
+const { getFromContentTemplate } = require('../../../../../lib/utils');
 
-const buildOptions = (taskType) => ['yes', 'no'].map((value) => {
+const buildOptions = () => ['yes', 'no'].map((value) => {
   return {
     value,
     label: getFromContentTemplate(
@@ -14,8 +14,8 @@ const buildOptions = (taskType) => ['yes', 'no'].map((value) => {
   };
 });
 
-module.exports = (taskType) => {
-  const options = buildOptions(taskType);
+module.exports = () => {
+  const options = buildOptions();
   const schema = {
     confirmHba: {
       inputType: 'radioGroup',
