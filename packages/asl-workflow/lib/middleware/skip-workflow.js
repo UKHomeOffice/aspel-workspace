@@ -7,16 +7,7 @@ module.exports = settings => {
     const shouldSkipWorkflow = () => {
       const model = get(req.body, 'model');
       const action = get(req.body, 'action');
-      const replaceHba = get(req.body.data, 'replaceHba');
-      const nopes = ['update', 'patch', 'updateConditions', 'replaceHba'];
-      if (model === 'project' && replaceHba) {
-        return resolver({ data: req.body, update: noop, patch: noop })
-          .then(result => res.json({ data: { data: result } }))
-          .catch((e) => {
-            console.log('skipWorkflow Error: ', e);
-            next();
-          });
-      }
+      const nopes = ['update', 'patch', 'updateConditions'];
       if (model === 'export') {
         return true;
       }

@@ -16,7 +16,8 @@ const tasks = [
     id: uuid(),
     data: {
       data: {
-        name: 'trainingPil with ntco'
+        name: 'trainingPil with ntco',
+        courseId: ids.model.trainingCourse
       },
       initiatedByAsru: false,
       establishmentId: 100,
@@ -34,7 +35,8 @@ const tasks = [
     data: {
       data: {
         name: 'trainingPil at different establishment',
-        establishmentId: 100
+        establishmentId: 100,
+        courseId: ids.model.trainingCourse
       },
       initiatedByAsru: false,
       establishmentId: 101,

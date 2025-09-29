@@ -65,49 +65,6 @@ const isActiveProject = (req, res, next) => {
   next();
 };
 
-const replaceHba = async (req, res, next) => {
-  try {
-    if (!req.project) {
-      throw new Error('Project not loaded');
-    }
-
-    const { token, filename, attachmentId, projectVersionId } = req.body.data || {};
-
-    if (!token || !filename) {
-      throw new BadRequestError('token and filename are required');
-    }
-
-    // Build workflow params
-    const workflowParams = {
-      model: 'project',
-      id: req.project.id,
-      data: {
-        replaceHba: true,
-        token,
-        filename,
-        attachmentId,
-        projectVersionId,
-        projectId: req.project.id,
-        establishmentId: req.project.establishmentId
-      },
-      meta: {
-        changedBy: req.user.profile.id,
-        ...req.body.meta
-      },
-      action: 'update'
-    };
-
-    // Call the workflow update
-    const result = await req.workflow.update(workflowParams);
-
-    // Respond with workflow result
-    res.response = result.json.data || result;
-    next();
-  } catch (err) {
-    next(err);
-  }
-};
-
 module.exports = () => {
   const router = Router();
 
@@ -173,11 +130,40 @@ module.exports = () => {
     submit('update-licence-number')
   );
 
-  router.put('/:projectId/replace-hba',
-    permissions('project.replaceHBA'),
-    whitelist('token', 'filename', 'attachmentId', 'projectVersionId', 'projectId', 'establishmentId'),
-    replaceHba
-  );
+  router.put('/:projectId/replace-hba', async (req, res, next) => {
+    const { Project, ProjectVersion } = req.models;
+    const { projectId } = req.params;
+    const { token, filename, attachmentId, projectVersionId } = req.body.data || {};
+
+    try {
+      // Append to existing hba_replaced array
+      if (projectId && attachmentId) {
+        const project = await Project.query().findById(projectId);
+        const replaced = project.hbaReplaced || [];
+        replaced.push(attachmentId);
+
+        await Project.query()
+          .findById(projectId)
+          .patch({
+            hbaReplaced: replaced
+          });
+      }
+
+      // Update project version with the new file
+      if (projectVersionId && token) {
+        await ProjectVersion.query()
+          .findById(projectVersionId)
+          .patch({
+            hbaFilename: filename,
+            hbaToken: token
+          });
+      }
+
+      res.json({ success: true, message: 'HBA replaced successfully' });
+    } catch (err) {
+      next(err);
+    }
+  });
 
   return router;
 };

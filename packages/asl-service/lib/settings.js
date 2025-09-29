@@ -1,15 +1,17 @@
 const { cloneDeep, merge } = require('lodash');
 
 module.exports = settings => {
-  settings = cloneDeep(settings);
-  return merge({
-    urls: {},
-    log: {
-      level: 'info',
-      format: 'combined',
-      json: true
+  return merge(
+    {
+      urls: {},
+      log: {
+        level: 'info',
+        format: 'combined',
+        json: true
+      },
+      verboseErrors: false,
+      root: process.cwd()
     },
-    verboseErrors: false,
-    root: process.cwd()
-  }, settings);
+    cloneDeep(settings)
+  );
 };

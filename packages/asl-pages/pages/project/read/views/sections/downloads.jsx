@@ -7,7 +7,7 @@ import { dateFormat } from '../../../../../constants';
 import { Link, Snippet, Inset } from '@ukhomeoffice/asl-components';
 import Subsection from '../components/subsection';
 
-function DownloadSection({ project, version, canReplaceHBA }) {
+function DownloadSection({ project, version }) {
   const isApplication = project.status === 'inactive';
   const isAmendment =
     project.status === 'active' && version.status !== 'granted';
@@ -233,25 +233,19 @@ function DownloadSection({ project, version, canReplaceHBA }) {
 
       {version.hbaToken && (
         <div>
-          <h3>
+          <h4>
             <Snippet>downloads.hba.heading</Snippet>
-          </h3>
+          </h4>
+          <p className="govuk-hint">
+            <Snippet>downloads.hba.hint</Snippet>
+          </p>
           <p>
-            <a href={`/attachment/${version.hbaToken}`} download={version.hbaFilename}>
+            <a href={`/attachment/${version.hbaToken}`} download={`${version.hbaFilename}`}>
               <Snippet>downloads.hba.link</Snippet>
             </a>
-            {canReplaceHBA && (
-              <Link
-                page="project.replaceHba"
-                project={project}
-                className="govuk-!-padding-left-3"
-                label={<Snippet>otherDocuments.links.replaceHba</Snippet>}
-              />
-            )}
           </p>
         </div>
       )}
-
     </section>
   );
 }
@@ -261,8 +255,6 @@ export default function Downloads() {
   const viewingAtAAEstablishment = useSelector(
     (state) => state.static.additionalAvailability
   );
-  const { canReplaceHBA } =
-    useSelector((state) => state.static);
 
   const latestVersion = project.versions[0];
   const grantedVersion = project.granted;
@@ -281,7 +273,7 @@ export default function Downloads() {
           {
             // latest version might be application, amendment or granted
             latestVersion && (latestIsGranted || !viewingAtAAEstablishment) && (
-              <DownloadSection project={project} version={latestVersion} canReplaceHBA={canReplaceHBA} />
+              <DownloadSection project={project} version={latestVersion} />
             )
           }
 

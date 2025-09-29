@@ -456,6 +456,38 @@ router.get(
   fetchOpenTasks()
 );
 
+// router.get('/project-licences', (req, res, next) => {
+//   const { Project } = req.models;
+
+//   const query = Project.query()
+//     .join('project_versions', 'projects.id', '=', 'project_versions.projectId')
+//     .join('training_courses', 'projects.establishmentId', '=', 'training_courses.establishment_id')
+//     .where('projects.status', 'active')
+//     .where('projects.establishmentId', req.establishment.id)
+//     .where('training_courses.course_purpose', 'IN', ['higherEducation', 'training'])
+//     .orderBy('createdAt', 'desc')
+//     .then((versions) => {
+//       const version = versions.find(v => get(v, 'data.training-licence') === true).first();
+//       req.project.latestVersionWithTrainingLicense = version;
+//       next();
+//     })
+//     .catch(next);
+
+//   Promise.all([
+//     query
+//       .count()
+//       .first()
+//       .then((result) => result.count),
+//     query
+//   ])
+//     .then(([count, results]) => {
+//       res.response = results;
+//       res.meta.count = count;
+//     })
+//     .then(() => next())
+//     .catch(next);
+// });
+
 router.post(
   '/',
   permissions('project.create', (req) => ({

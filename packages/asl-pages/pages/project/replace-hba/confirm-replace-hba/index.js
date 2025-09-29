@@ -56,36 +56,28 @@ module.exports = (settings) => {
             attachmentId = data.id;
             await axios.delete(`${settings.attachments}/${oldToken}`);
           } catch (err) {
-            return next(err);
+            next(err);
           }
         }
 
-        // Build workflow params in the expected shape
-        const params = {
-          id: req.project.id,
-          data: {
-            token,
-            filename,
-            attachmentId,
-            projectVersionId: req.project?.granted?.id,
-            projectId: req.params.projectId,
-            establishmentId: req.project?.establishment?.id
-          },
-          meta: {
-            changedBy: req.user.profile.id
+        const opts = {
+          method: 'PUT',
+          headers: { 'Content-type': 'application/json' },
+          json: {
+            data: {
+              token,
+              filename,
+              attachmentId,
+              projectVersionId: req.project?.granted?.id || null,
+              projectId: req.params.projectId
+            }
           }
         };
 
-        const opts = {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          json: params
-        };
-
-        await req.api(`/project/${req.params.projectId}/replace-hba`, opts);
-
-        res.setFlash('HBA file replaced', `${filename} is now attached to this licence.`, 'success');
-        return res.redirect(req.buildRoute('project.read', { projectId: req.params.projectId }));
+        return req.api(`/project/${req.params.projectId}/replace-hba`, opts)
+          .then(() => res.setFlash('HBA file replaced', `${filename} is now attached to this licence.`, 'success'))
+          .then(() => res.redirect(req.buildRoute('project.read', { projectId: req.params.projectId })))
+          .catch(next);
       }
 
       return next(new Error('Invalid choice'));
