@@ -1,5 +1,44 @@
 const uuid = require('uuid/v4');
-const { omit } = require('lodash');
+const { omit, toSafeInteger } = require('lodash');
+
+function normaliseProtocolSpecies(protocol) {
+  if (!protocol.speciesDetails) {
+    return;
+  }
+  protocol.speciesDetails.forEach(species => {
+    species.id = species.id || uuid();
+  });
+}
+
+/**
+ * ASL-4511 changed the format of `protocol.reuse` from a boolean to an array
+ * due to the input changing to a multiselect with two reuse options or an
+ * exclusive "no reuse" option. Where there are existing `.ppl` templates we
+ * need to transform the old representation into the new.
+ *
+ * @param {object} protocol
+ */
+function normaliseProtocolReuse(protocol) {
+  if (!protocol.speciesDetails) {
+    return;
+  }
+
+  protocol.speciesDetails.forEach(species => {
+    if (Array.isArray(species.reuse)) {
+      return;
+    }
+
+    species.reuse = [
+      ...(species.reuse ? ['other-protocol'] : []),
+      ...(toSafeInteger(species['maximum-times-used']) > 1 ? ['this-protocol'] : [])
+    ];
+
+    if (species.reuse.length === 0) {
+      species.reuse = ['no'];
+    }
+  });
+
+}
 
 module.exports = (version = {}) => {
   if (!version.data) {
@@ -15,12 +54,8 @@ module.exports = (version = {}) => {
     return version;
   }
   version.data.protocols.forEach(protocol => {
-    if (!protocol.speciesDetails) {
-      return;
-    }
-    protocol.speciesDetails.forEach(species => {
-      species.id = species.id || uuid();
-    });
+    normaliseProtocolSpecies(protocol);
+    normaliseProtocolReuse(protocol);
   });
 
   return version;
