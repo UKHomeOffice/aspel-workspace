@@ -14,6 +14,7 @@ import Reporting from './sections/reporting';
 import AdditionalAvailabilityWarning from './components/additional-availability-warning';
 import EnforcementFlags from '../../../enforcement/components/enforcement-flags';
 import Reminders from '../../../common/components/reminders';
+import FlashBanner from '@ukhomeoffice/asl-components/src/flash-banner';
 
 function SectionNav({ sections, activeSection, setActiveSection }) {
   const activeTab = Object.keys(sections).indexOf(activeSection);
@@ -136,6 +137,7 @@ export default function ProjectLandingPage() {
         subtitle={project.title || 'Untitled project'}
       />
 
+      <FlashBanner />
       <SectionNav sections={sections} activeSection={activeSection} setActiveSection={setActiveSection} />
       <AdditionalAvailabilityWarning />
 

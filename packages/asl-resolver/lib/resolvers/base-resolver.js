@@ -6,10 +6,13 @@ module.exports = ({ Model, action, data, id }, transaction) => {
   }
 
   if (data) {
+    // only strip if replaceHba is not true
+    const shouldPick = !data.replaceHba;
+
     if (Array.isArray(data)) {
-      data = data.map(d => pick(d, Object.keys(Model.jsonSchema.properties)));
+      data = data.map(d => shouldPick ? pick(d, Object.keys(Model.jsonSchema.properties)) : d);
     } else {
-      data = pick(data, Object.keys(Model.jsonSchema.properties));
+      data = shouldPick ? pick(data, Object.keys(Model.jsonSchema.properties)) : data;
     }
   }
 

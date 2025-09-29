@@ -12,6 +12,14 @@ module.exports = (settings) => {
     root: __dirname
   });
 
+  // Clear any form data in the session if requested from replaceHba page
+  app.get('/', (req, res, next) => {
+    if (req.query.clearForm) {
+      delete req.session.form;
+    }
+    next();
+  });
+
   app.use((req, res, next) => {
     if (!req.project.title) {
       req.project.title = 'Untitled project';
@@ -48,7 +56,8 @@ module.exports = (settings) => {
       req.user.can('project.manageAccess', params),
       req.user.can('project.rops.update', params),
       req.user.can('project.rops.create', params),
-      req.user.can('retrospectiveAssessment.update', params)
+      req.user.can('retrospectiveAssessment.update', params),
+      req.user.can('project.replaceHBA', params)
     ])
       .then(
         ([
@@ -60,7 +69,8 @@ module.exports = (settings) => {
           canManageAccess,
           canUpdateRops,
           canCreateRops,
-          canUpdateRa
+          canUpdateRa,
+          canReplaceHBA
         ]) => {
           const openTasks = req.project.openTasks;
           const openTask =
@@ -90,6 +100,7 @@ module.exports = (settings) => {
           res.locals.static.openRaTask = openRaTask;
           res.locals.static.canSuspend = canSuspend;
           res.locals.static.canRevoke = canRevoke;
+          res.locals.static.canReplaceHBA = canReplaceHBA;
           res.locals.static.asruUser = req.user.profile.asruUser;
           res.locals.static.showManageSection =
             canUpdate ||
@@ -197,6 +208,22 @@ module.exports = (settings) => {
         res.redirect(req.buildRoute('projectVersion.update'));
       })
       .catch(next);
+  });
+
+  // Attach flash messages to res.locals so React can access them
+  app.use((req, res, next) => {
+    if (req.session.flash) {
+      res.locals.flash = { ...req.session.flash };
+      req.session.flash = {}; // remove after reading
+    } else {
+      res.locals.flash = {};
+    }
+    next();
+  });
+  // Attach flash to redux state
+  app.use((req, res, next) => {
+    res.locals.static.flash = res.locals.flash || {};
+    next();
   });
 
   return app;
