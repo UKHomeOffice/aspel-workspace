@@ -1,7 +1,7 @@
 const uuid = require('uuid/v4');
 const { omit, toSafeInteger } = require('lodash');
 
-function normaliseProtocolSpecies(protocol) {
+function normaliseProtocolSpeciesId(protocol) {
   if (!protocol.speciesDetails) {
     return;
   }
@@ -18,7 +18,7 @@ function normaliseProtocolSpecies(protocol) {
  *
  * @param {object} protocol
  */
-function normaliseProtocolReuse(protocol) {
+function normaliseProtocolSpeciesReuse(protocol) {
   if (!protocol.speciesDetails) {
     return;
   }
@@ -54,8 +54,8 @@ module.exports = (version = {}) => {
     return version;
   }
   version.data.protocols.forEach(protocol => {
-    normaliseProtocolSpecies(protocol);
-    normaliseProtocolReuse(protocol);
+    normaliseProtocolSpeciesId(protocol);
+    normaliseProtocolSpeciesReuse(protocol);
   });
 
   return version;
