@@ -3,11 +3,10 @@ const baseContent = require('../../content');
 module.exports = {
   from: __dirname,
   ...baseContent,
-  title: 'Courses and category E PILs',
-  subtitle:
-    'To apply for category E PILs for course participants, first add a new ' +
-    'course or select an existing course.',
   tableCaption: 'Category E PILs',
+  search: {
+    label: 'Search by name or email'
+  },
   fields: {
     profile: {
       label: 'Name'
@@ -18,7 +17,7 @@ module.exports = {
     startDate: {
       label: 'Course date(s)'
     },
-    details: {
+    licenceDetails: {
       label: 'Details'
     },
     status: {

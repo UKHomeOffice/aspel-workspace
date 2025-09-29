@@ -76,16 +76,19 @@ export default {
         : species.sort().join(', ')
   },
   licenceDetails: {
-    format(trainingPilId, model) {
-      if (trainingPilId && model.modelStatus === 'active') {
+    format(val, task) {
+      if (task.status !== 'resolved') {
+        return <Link page="task.read" taskId={task.id} label="View task" />;
+      }
+      if (task.modelStatus === 'active') {
         return <Link
-          page='category-e.licence.read'
-          trainingPilId={trainingPilId}
-          establishmentId={model.data.establishmentId}
-          label
+          page="categoryE.licence.read"
+          trainingPilId={task.data.id}
+          establishemntId={task.data.establishmentId}
+          label={task.data.subject.pilLicenceNumber}
         />;
       }
-
+      return '-';
     }
   }
 };

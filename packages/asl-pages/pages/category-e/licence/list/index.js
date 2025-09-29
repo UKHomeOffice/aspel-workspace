@@ -22,7 +22,12 @@ module.exports = settings => {
     getApiPath: (req, res, next) => {
       const query = {
         model: 'trainingPil',
-        establishment: req.establishmentId
+        establishment: req.establishmentId,
+        searchFields: [
+          'data.modelData.profile.firstName',
+          'data.modelData.profile.lastName',
+          'data.modelData.profile.email'
+        ]
       };
       req.datatable.apiPath = ['/tasks/filtered', { query }];
       next();

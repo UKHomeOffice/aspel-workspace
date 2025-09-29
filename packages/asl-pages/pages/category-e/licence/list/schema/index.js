@@ -14,7 +14,7 @@ module.exports = {
     show: true,
     sortable: false
   },
-  details: {
+  licenceDetails: {
     show: true,
     sortable: false
   },

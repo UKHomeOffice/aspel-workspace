@@ -26,7 +26,9 @@ router.get('/filtered', (req, res, next) => {
     schemaVersion,
     sort,
     limit,
-    offset
+    offset,
+    search,
+    searchFields = []
   } = req.query;
 
   const query = {
@@ -38,6 +40,8 @@ router.get('/filtered', (req, res, next) => {
       isAmendment,
       schemaVersion
     },
+    search,
+    searchFields,
     sort,
     limit,
     offset

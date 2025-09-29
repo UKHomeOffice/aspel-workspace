@@ -2,7 +2,7 @@ import React from 'react';
 import CategoryELandingPage from '../../../components/category-e-landing-page';
 import baseFormatters from '../../../formatters';
 import { useSelector } from 'react-redux';
-import { Datatable } from '@ukhomeoffice/asl-components';
+import { Datatable, Search, Snippet } from '@ukhomeoffice/asl-components';
 import get from 'lodash/get';
 
 const lens = (formatter, path) => ({
@@ -21,7 +21,10 @@ export default function CoursesList() {
 
   return <CategoryELandingPage activeTab={'licences'}>
     {
-      hasData && <Datatable formatters={formatters} caption='tableCaption' />
+      hasData && <>
+        <Search label={<Snippet>search.label</Snippet>} />
+        <Datatable formatters={formatters} caption='tableCaption' />
+      </>
     }
   </CategoryELandingPage>;
 }

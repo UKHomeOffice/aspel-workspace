@@ -89,9 +89,17 @@ module.exports = (taskflow) => {
     Promise.resolve()
       .then(() => checkPermissions(req.user, req.query))
       .then(() => {
-        const { sort = { column: 'updatedAt', ascending: true }, filters = {}, limit, offset } = req.query;
+        const {
+          sort = { column: 'updatedAt', ascending: true },
+          filters = {},
+          search,
+          searchFields = [],
+          limit,
+          offset
+        } = req.query;
 
         let query = buildQuery(filters);
+        query = Task.filterBySearchTerm(query, search, searchFields);
         (Array.isArray(sort.column) ? sort.column : [sort.column]).forEach(
           column => {
             query = Task.orderBy({ query, sort: { ...sort, column } });
@@ -101,7 +109,8 @@ module.exports = (taskflow) => {
         query = Task.paginate({ query, limit, offset });
 
         req.log('debug', { filters });
-        req.log('debug', { sql: query.toKnexQuery().toString() });
+        const sql = query.toKnexQuery().toString();
+        req.log('info', { sql });
 
         const totalQuery = buildQuery(filters).count();
         const totalCount = totalQuery.then(result => parseInt(result[0].count, 10));

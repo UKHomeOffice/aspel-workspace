@@ -136,7 +136,7 @@ export function Datatable({
                 }
             </tbody>
             {
-                !pagination?.hideUI &&
+                !(pagination?.hideUI || (pagination?.autoUI && pagination?.totalPages <= 1)) &&
           <tfoot>
               <tr>
                   <td colSpan={colSpan}>
@@ -162,6 +162,10 @@ function selector(state) {
 export default function ConnectedDatatable(props) {
 
     const globalProps = useSelector(selector, shallowEqual);
+    globalProps.pagination = {
+        ...(props.pagination ?? {}),
+        ...(globalProps.pagination ?? {}),
+    };
 
     return (
         <Datatable {...props} {...globalProps} />

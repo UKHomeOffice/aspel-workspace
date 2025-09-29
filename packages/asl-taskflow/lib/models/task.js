@@ -4,8 +4,8 @@ const { NotFoundError, InvalidRequestError, UnauthorisedError } = require('../er
 const { forOwn } = require('lodash');
 const normaliseComments = require('../activitylog/normalise-comments');
 
-function asJsonAccessor(sort) {
-  const [, ...parts] = [...sort.column.split('.')]
+function asJsonAccessor(field) {
+  const [, ...parts] = [...field.split('.')]
     // these are json keys - limit char set to protect against injection
     .filter(part => part.match(/^[a-zA-Z]+$/))
     .map(part => `'${part}'`);
@@ -220,12 +220,30 @@ class Task {
     }
 
     if (sort.column?.startsWith('data.')) {
-      const column = asJsonAccessor(sort);
+      const column = asJsonAccessor(sort.column);
       return query.orderByRaw(`${column} ${sort.ascending ? 'ASC' : 'DESC'}`);
     }
 
     return query
       .orderBy(sort.column, sort.ascending ? 'asc' : 'desc');
+  }
+
+  static filterBySearchTerm(query, term, fields) {
+    if (!term || !(fields?.length)) {
+      return query;
+    }
+
+    return query.andWhere(builder => {
+      const words = term.split(/\s+/);
+      fields.forEach(fieldSpec => {
+        if (fieldSpec.startsWith('data.')) {
+          const field = asJsonAccessor(fieldSpec);
+          words.forEach(word => builder.orWhereRaw(`${field} LIKE ?`, [`%${word}%`]));
+        } else {
+          words.forEach(word => builder.orWhere(fieldSpec, 'like', `%${word}%`));
+        }
+      });
+    });
   }
 
   comment(comment, { user, payload }) {
