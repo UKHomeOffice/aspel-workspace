@@ -1,6 +1,5 @@
 const { page } = require('@asl/service/ui');
 const { form } = require('../../../common/routers');
-const { buildModel } = require('../../../../lib/utils');
 const { set } = require('lodash');
 
 module.exports = (settings) => {
@@ -9,22 +8,8 @@ module.exports = (settings) => {
     ...settings
   });
 
-  app.use((req, res, next) => {
-    req.model = {
-      id: `${req.profile.id}-npm`
-    };
-    next();
-  });
-
   app.use(
     form({
-      configure(req, res, next) {
-        next();
-      },
-      saveValues: (req, res, next) => {
-        req.session.form[req.model.id].values = req.form.values;
-        next();
-      },
       locals: (req, res, next) => {
         set(
           res.locals,
