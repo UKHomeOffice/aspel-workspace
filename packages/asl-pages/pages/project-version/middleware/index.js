@@ -253,13 +253,16 @@ function normaliseSteps(protocol) {
 const normaliseDeletedProtocols = (versionData) => ({
   ...versionData,
   protocols: (Array.isArray(versionData.protocols) ? versionData.protocols : []).flatMap(
-    protocol => protocol?.deleted
-      ? []
-      : [{
-        ...omit(protocol, 'deleted'),
-        steps: normaliseSteps(protocol)
-      }]
-  )
+    protocol => {
+      // This was causing change badge to appear even though there are no other changes apart from marking it complete.
+      protocol.complete = true;
+      return protocol?.deleted
+        ? []
+        : [{
+          ...omit(protocol, 'deleted'),
+          steps: normaliseSteps(protocol)
+        }];
+    })
 });
 
 const normaliseData = (versionData, opts) => {

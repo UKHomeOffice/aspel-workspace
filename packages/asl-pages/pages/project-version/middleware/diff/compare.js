@@ -1,12 +1,12 @@
-const { Value } = require('slate');
 const { diffWords, diffSentences, diffArrays } = require('diff');
 const last = require('lodash/last');
+const { concatTextFromNodes } = require('../../../../utils');
 
 const parseValue = (val) => {
   if (typeof val === 'string') {
     val = JSON.parse(val || '{}');
   }
-  return Value.fromJSON(val || {});
+  return concatTextFromNodes(val.document.nodes);
 };
 
 // eslint-disable-next-line no-control-regex
@@ -38,13 +38,14 @@ const diff = (a, b, { type, granularity = 'word' }) => {
         before = parseValue(a);
         after = parseValue(b);
       } catch (e) {
+        console.log(e);
         return { error: e, added: [], removed: [] };
       }
 
       if (granularity === 'word') {
-        diffs = diffWords(normaliseWhitespace(before.document.text), normaliseWhitespace(after.document.text));
+        diffs = diffWords(normaliseWhitespace(before), normaliseWhitespace(after));
       } else {
-        diffs = diffSentences(normaliseWhitespace(before.document.text), normaliseWhitespace(after.document.text));
+        diffs = diffSentences(normaliseWhitespace(before), normaliseWhitespace(after));
       }
 
       removed = diffs.reduce((arr, d) => {
