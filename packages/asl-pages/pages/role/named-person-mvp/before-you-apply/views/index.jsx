@@ -8,7 +8,6 @@ const Page = () => {
 
   return (
     <div>
-      <ErrorSummary />
       <span className="govuk-caption-l">{profile.firstName} {profile.lastName}</span>
 
       <div className="govuk-grid-row">
