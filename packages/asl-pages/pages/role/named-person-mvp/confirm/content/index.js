@@ -57,6 +57,22 @@ module.exports = merge({}, baseContent, {
 **I also confirm that the PEL holder supports the application and is confident that {{profile.firstName}}:**
 * has expertise in the health and welfare of the species they'll be responsible for
 * has no significant conflict of interest, and their declaration form is held on record at the establishment`,
+    nio: `\
+**By submitting this application, I confirm that {{profile.firstName}} has agreed to be nominated for the NIO role.**
+
+**I also confirm that the PEL holder supports the application and is confident that {{profile.firstName}} has the following recommended skills and experience:**
+
+  * a good understanding of legal and ethical aspects of use of animals for scientific purposes (covered by training modules L and E1)
+  * familiarity with the concept, principles and potential applications of the 3Rs (covered by training module E2)
+  * expertise in sourcing, retrieving and storing relevant information
+  * good communication and networking skills`,
+    ntco: `\
+**By submitting this application, I confirm that {{profile.firstName}} has agreed to be nominated for the NTCO role.**
+
+**I also confirm that the PEL holder supports the application and is confident that {{profile.firstName}} has the following recommended skills and experience:**
+
+  * sufficient seniority to influence others and make decisions on training issues
+  * good communication, management and organisational skills`,
     default: `\
 **By submitting this application, I confirm that {{profile.firstName}} has agreed to be nominated for the role.**
 
