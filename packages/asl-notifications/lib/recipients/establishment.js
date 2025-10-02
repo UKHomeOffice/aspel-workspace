@@ -51,6 +51,11 @@ module.exports = async ({ schema, logger, task }) => {
     .withGraphFetched('emailPreferences')
     .scopeToEstablishment('establishments.id', establishmentId, 'admin');
 
+  const ntcos = await Profile.query()
+    .scopeToEstablishment('establishments.id', establishmentId)
+    .leftJoinRelated('roles')
+    .where('roles.type', 'ntco');
+
   const notifyUser = (recipient, params) => {
     logger.verbose(`${params.logMsg}, notifying licence holder / applicant`);
     notifications.set(recipient.id, { ...params, recipient });
@@ -109,6 +114,11 @@ module.exports = async ({ schema, logger, task }) => {
         notifications.set(pplh.id, { ...params, recipient: pplh });
       }
     });
+  };
+
+  const notifyNTCOs = params => {
+    logger.verbose(`${params.logMsg}, notifying NTCOs`);
+    ntcos.forEach(ntco => notifications.set(ntco.id, { ...params, recipient: ntco }));
   };
 
   const params = {
@@ -227,13 +237,15 @@ module.exports = async ({ schema, logger, task }) => {
 
   if (model === 'role' && action === 'training-due-reminder') {
     const { firstName, lastName, name, type, completeDate } = task.data.data;
-    const fullName = `${firstName} ${lastName}`;
+    const fullName = `${firstName} ${lastName}’s`;
     const identifier = `${applicant.id}-${completeDate}-${action}`;
 
     const trainingDueReminderParams = {
       ...params,
       fullName,
+      fullNameInSubject: fullName,
       name,
+      their: 'their',
       type: type.toUpperCase(),
       completeDate,
       identifier,
@@ -243,7 +255,15 @@ module.exports = async ({ schema, logger, task }) => {
     };
     notifyPelh(trainingDueReminderParams);
     notifyAdmins(trainingDueReminderParams);
-    notifyUser(applicant, trainingDueReminderParams);
+    notifyNTCOs(trainingDueReminderParams);
+    notifyUser(applicant, {
+      ...trainingDueReminderParams,
+      ...{
+        fullName: 'Your',
+        fullNameInSubject: 'You',
+        their: 'your'
+      }
+    });
     return notifications;
   }
 
