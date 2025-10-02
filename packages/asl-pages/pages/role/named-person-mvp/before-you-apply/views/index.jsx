@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Snippet, Header, Form, SupportingLinks, ErrorSummary } from '@ukhomeoffice/asl-components';
+import { Snippet, Header, Form, SupportingLinks } from '@ukhomeoffice/asl-components';
 
 const Page = () => {
 
@@ -8,7 +8,6 @@ const Page = () => {
 
   return (
     <div>
-      <ErrorSummary />
       <span className="govuk-caption-l">{profile.firstName} {profile.lastName}</span>
 
       <div className="govuk-grid-row">
