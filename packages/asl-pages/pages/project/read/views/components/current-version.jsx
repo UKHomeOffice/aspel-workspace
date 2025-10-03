@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link, Snippet } from '@ukhomeoffice/asl-components';
 import Subsection from './subsection';
+import HBA from './hba';
 
 export default function CurrentVersion() {
   const project = useSelector((state) => state.model);
@@ -78,23 +79,14 @@ export default function CurrentVersion() {
           }
         />
       </p>
-      {version.hbaToken && (
-        <p>
-          <a href={`/attachment/${version.hbaToken}`} download={version.hbaFilename}>
-            <Snippet>otherDocuments.links.hba</Snippet>
-          </a>
-          {canReplaceHBA && (
-            <span>
-              <Link
-                page="project.replaceHba"
-                project={project}
-                className="govuk-!-padding-left-3"
-                label={<Snippet>otherDocuments.links.replaceHba</Snippet>}
-              />
-            </span>
-          )}
-        </p>
-      )}
+
+      <HBA
+        version={version}
+        project={project}
+        canReplaceHBA={canReplaceHBA}
+        hbaHeading={true}
+      />
+
     </Subsection>
   );
 }
