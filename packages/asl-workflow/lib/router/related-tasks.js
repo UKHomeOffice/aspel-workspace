@@ -15,7 +15,7 @@ module.exports = taskflow => {
     let query = Task.query();
 
     switch (model) {
-      case 'establishment':
+      case 'establishment': {
         // any changes to the establishment licence, including places and roles
         const id = parseInt(modelId, 10);
 
@@ -26,7 +26,7 @@ module.exports = taskflow => {
           builder.orWhereJsonSupersetOf('data', { model: 'role' });
         });
         break;
-
+      }
       case 'profile-touched':
         // all tasks that have involved the profile
         // e.g. licence holder, application submitter, application endorsement, profile updates, role assignment

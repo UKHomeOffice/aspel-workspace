@@ -36,7 +36,7 @@ module.exports = (req, res, next) => {
       model = 'projectVersion';
       action = 'update';
       params.establishmentId = req.project.establishmentId;
-      params.versionId = req.project.draft.id;
+      params.versionId = req.project.draft?.id;
     } else if (action === 'update') {
       action = 'updateLicenceHolder';
     } else if (action === 'grant-ra') {

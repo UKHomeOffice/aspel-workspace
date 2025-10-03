@@ -382,8 +382,8 @@
     "id": "c0b9a642-0d96-4153-8fb8-788c2635b9a4",
     "userId": "09ed07e4-7213-48c0-a05f-0c5f349c1d0e",
     "title": "Dr",
-    "firstName": "cat",
-    "lastName": "e",
+    "firstName": "Catherine",
+    "lastName": "eLicence",
     "dob": "1970-04-23",
     "position": "University Vice-Chancellor",
     "qualifications": "BLib",
@@ -437,6 +437,10 @@
         "type": "holc"
       },
       {
+        "establishmentId": 54321,
+        "type": "holc"
+      },
+      {
         "establishmentId": 9999,
         "type": "pelh"
       }
@@ -476,6 +480,10 @@
       },
       {
         "establishmentId": 10269,
+        "role": "admin"
+      },
+      {
+        "establishmentId": 54321,
         "role": "admin"
       }
     ]

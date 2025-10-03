@@ -5,6 +5,7 @@ const errorHandler = require('./error-handler');
 const userRouter = require('./routers/user');
 const establishmentRouter = require('./routers/establishment');
 const proxy = require('./middleware/proxy');
+const OpenApiValidator = require('express-openapi-validator');
 
 module.exports = settings => {
 
@@ -22,6 +23,15 @@ module.exports = settings => {
     res.meta = {};
     next();
   });
+
+  app.use(
+    OpenApiValidator.middleware({
+      apiSpec: './openapi.json',
+      validateRequests: true, // Validate request bodies, params, etc.
+      validateResponses: false, // Optional: validate responses
+      ignoreUndocumented: true
+    })
+  );
 
   // tell res.json() to strip any carriage returns from the response data
   app.set('json replacer', (key, value) => {
