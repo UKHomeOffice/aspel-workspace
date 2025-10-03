@@ -33,6 +33,43 @@ const update = () => (req, res, next) => {
     .catch(next);
 };
 
+const replaceHba = async (req, res, next) => {
+  try {
+    const { token, filename, attachmentId, projectId, projectVersionId } = req.body.data || {};
+    if (!token || !filename) {
+      throw new BadRequestError('token and filename are required');
+    }
+
+    const params = {
+      model: 'projectVersion',
+      id: projectId,
+      data: {
+        replaceHba: true,
+        token,
+        filename,
+        attachmentId,
+        projectVersionId,
+        projectId,
+        establishmentId: req.version.project.establishmentId
+      },
+      meta: {
+        changedBy: req.user.profile.id,
+        ...req.body.meta
+      },
+      action: 'replaceHba'
+    };
+
+    // Call the workflow update
+    const result = await req.workflow.update(params);
+
+    // Respond with workflow result
+    res.response = result.json.data || result;
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = () => {
   const router = Router();
 
@@ -58,6 +95,12 @@ module.exports = () => {
     whitelist('conditions', 'protocolId', 'retrospectiveAssessment'),
     canUpdate,
     update()
+  );
+
+  router.put('/:id/replace-hba',
+    permissions('project.replaceHBA'),
+    whitelist('token', 'filename', 'attachmentId', 'projectVersionId', 'projectId', 'establishmentId'),
+    replaceHba
   );
 
   return router;

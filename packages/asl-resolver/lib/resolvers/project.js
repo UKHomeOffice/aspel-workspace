@@ -280,7 +280,7 @@ module.exports =
     const hbaToken = get(meta, 'hbaToken', null);
     const hbaFilename = get(meta, 'hbaFilename', null);
 
-    if (data && !data.replaceHba) {
+    if (data) {
       let fields = Object.keys(Project.jsonSchema.properties);
       if (action === 'update') {
         fields = [...fields, ...EXPERIENCE_FIELDS];
@@ -289,33 +289,6 @@ module.exports =
     }
 
     const grantedVersion = await getMostRecentVersion('granted');
-
-    console.log('resolver start');
-    if (action === 'update' && data.replaceHba) {
-      console.log('resolver replaceHba');
-      const projectId = id;
-      const { projectVersionId, token, filename, attachmentId } = data;
-      console.log('resolver: ');
-      console.log(data);
-      if (projectId && attachmentId) {
-        const project = await Project.query(transaction).findById(projectId);
-        const replaced = project.hbaReplaced || [];
-        if (!replaced.includes(attachmentId)) {
-          replaced.push(attachmentId);
-        }
-
-        await Project.query(transaction)
-          .patchAndFetchById(projectId, { hbaReplaced: replaced });
-      }
-
-      if (projectVersionId && token) {
-        return ProjectVersion.query(transaction)
-          .patchAndFetchById(projectVersionId, {
-            hbaFilename: filename,
-            hbaToken: token
-          });
-      }
-    }
 
     if (action === 'create') {
       const isLegacyStub = get(data, 'isLegacyStub', false);
