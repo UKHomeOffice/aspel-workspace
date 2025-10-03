@@ -445,30 +445,34 @@ router.get('/ras-due', (req, res, next) => {
 
 router.get('/project-licences/cat-e',
   permissions('project.read.catE'),
-  (req, res, next) => {
+  async (req, res, next) => {
     const { Project } = req.models;
 
-    const query = Project.query()
-      .select('projects.*')
-      .joinRaw(`
-      JOIN LATERAL (
-        SELECT *
-        FROM project_versions pv
-        WHERE pv.project_id = projects.id AND pv.status = 'granted'
-        ORDER BY pv.created_at DESC
-        LIMIT 1
-      ) pv ON TRUE
-      `)
-      .where({ 'projects.status': 'active' })
-      .where({ 'projects.establishmentId': req.establishment.id })
-      .whereRaw("(pv.data->>'training-licence')::boolean = true");
+    if (!req.establishment || !req.establishment.id) {
+      return next(new BadRequestError('Missing establishment id'));
+    }
 
-    return Promise.resolve()
-      .then(() => query)
-      .then((results) => {
-        res.response = results;
-        next();
-      });
+    try {
+      const results = await Project.query()
+        .select('projects.*')
+        .joinRaw(`
+          JOIN LATERAL (
+            SELECT *
+            FROM project_versions pv
+            WHERE pv.project_id = projects.id AND pv.status = 'granted'
+            ORDER BY pv.created_at DESC
+            LIMIT 1
+          ) pv ON TRUE
+        `)
+        .where({ 'projects.status': 'active' })
+        .where({ 'projects.establishmentId': req.establishment.id })
+        .whereRaw("(pv.data->>'training-licence')::boolean = true");
+
+      res.response = results;
+      next();
+    } catch (error) {
+      next(error);
+    }
   }
 );
 
