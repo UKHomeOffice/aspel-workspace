@@ -17,6 +17,11 @@ const buildOptions = () => ['yes', 'no'].map((value) => {
 module.exports = () => {
   const options = buildOptions();
   const schema = {
+    'hbaReplacementReason': {
+      meta: true,
+      inputType: 'textarea',
+      validate: ['required']
+    },
     confirmHba: {
       inputType: 'radioGroup',
       options,
