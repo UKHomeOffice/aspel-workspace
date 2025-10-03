@@ -233,7 +233,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.param('projectId', (req, res, next, projectId) => {
-  if (projectId === 'ras-due') {
+  if (projectId === 'ras-due' || projectId === 'project-licences') {
     return next('route');
   }
   const { Project } = req.models;
@@ -442,6 +442,35 @@ router.get('/ras-due', (req, res, next) => {
     .then(() => next())
     .catch(next);
 });
+
+router.get('/project-licences/cat-e',
+  permissions('project.read.catE'),
+  (req, res, next) => {
+    const { Project } = req.models;
+
+    const query = Project.query()
+      .select('projects.*')
+      .joinRaw(`
+      JOIN LATERAL (
+        SELECT *
+        FROM project_versions pv
+        WHERE pv.project_id = projects.id AND pv.status = 'granted'
+        ORDER BY pv.created_at DESC
+        LIMIT 1
+      ) pv ON TRUE
+      `)
+      .where({ 'projects.status': 'active' })
+      .where({ 'projects.establishmentId': req.establishment.id })
+      .whereRaw("(pv.data->>'training-licence')::boolean = true");
+
+    return Promise.resolve()
+      .then(() => query)
+      .then((results) => {
+        res.response = results;
+        next();
+      });
+  }
+);
 
 router.use('/:projectId', loadVersions, loadRa);
 

@@ -513,7 +513,7 @@ module.exports = models => {
         id: uuid(),
         projectId: ids.projects.croydon.activeAA,
         status: 'granted',
-        data: {}
+        data: { 'training-licence': true }
       },
       {
         id: ids.versions.testProject,
