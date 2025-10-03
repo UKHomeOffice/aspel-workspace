@@ -32,10 +32,14 @@ const HBA = ({ version, project, canReplaceHBA, hbaHeading }) => {
       </p>
 
       {version.hbaReplaced && (
-        <span>Replaced {formatDate(version.updatedAt, dateFormat.datetime)}</span>
-      )}
+        <div className="govuk-hint">
+          <strong>Replaced</strong>  {formatDate(version.updatedAt, dateFormat.datetime)}
+        </div>
+      )
+      }
     </div>
-  );
+  )
+  ;
 };
 
 export default HBA;
