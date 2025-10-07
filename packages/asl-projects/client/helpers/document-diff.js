@@ -11,13 +11,13 @@ const normaliseWhitespace = str => str.replace(/[\u0000-\u0008\u000B-\u0019\u001
 export const findSteps = (version, previousProtocols, protocolId, stepId, fieldName) => {
   if (version === 'granted') {
     const protocolIndex = previousProtocols.granted.indexOf(protocolId);
-    return get(previousProtocols.grantedSteps[protocolIndex].find(s => s.id === stepId), fieldName, undefined);
+    return get(previousProtocols.grantedSteps[protocolIndex]?.find(s => s.id === stepId), fieldName, undefined);
   } else if (version === 'first') {
     const protocolIndex = previousProtocols.first.indexOf(protocolId);
-    return get(previousProtocols.firstSteps[protocolIndex].find(s => s.id === stepId), fieldName, undefined);
+    return get(previousProtocols.firstSteps[protocolIndex]?.find(s => s.id === stepId), fieldName, undefined);
   } else {
     const protocolIndex = previousProtocols.previous.indexOf(protocolId);
-    return get(previousProtocols.steps[protocolIndex].find(s => s.id === stepId), fieldName, undefined);
+    return get(previousProtocols.steps[protocolIndex]?.find(s => s.id === stepId), fieldName, undefined);
   }
 };
 
@@ -31,8 +31,8 @@ export const getChanges = (current, before, granularity = 'word') => {
     beforeText = concatTextFromNodes(before.document.nodes);
   }
   const diffs = diffWords(normaliseWhitespace(beforeText), normaliseWhitespace(currentText));
-  let added = [];
-  let removed = [];
+  let added, removed;
+
   removed = diffs.reduce((arr, d) => {
     // ignore additions
     if (!d.added) {

@@ -129,7 +129,7 @@ module.exports = {
     'condition-reminder': 'Reminder: {{modelType}} licence {{licenceNumber}} has a condition that is due {{when}}',
     'condition-reminder-overdue': 'Notification: {{modelType}} licence {{licenceNumber}} has a condition that was due yesterday',
     'rop-reminder': `Reminder: Return of procedures due {{when}} for {{#status}}{{status}} {{/status}}project licence {{licenceNumber}}`,
-    'training-due-reminder': 'Reminder: {{fullName}} needs to complete their {{type}} mandatory training',
+    'training-due-reminder': 'Reminder: {{ fullNameInSubject }} needs to complete {{their}} {{type}} mandatory training',
     'task-with-asru2': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
     'task-change2': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
     'role-approved-subject': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',

@@ -6,29 +6,27 @@ module.exports = {
 ### Before you nominate someone for a role you must ensure:
 
 * they have agreed to be nominated
-* they meet all the mandatory training requirements, or they have grounds for exemption
-* __the Named Training and Competency Officer (NTCO) has endorsed their training and exemptions:__
-    * the nominee has discussed their training and exemptions with the NTCO
-    * the NTCO has checked their mandatory training certificates
-    * the NTCO has checked any certificates and evidence to support exemption requests, and emailed them to ASRU Licensing:
-      [ASRULicensing@homeoffice.gov.uk](mailto:ASRULicensing@homeoffice.gov.uk)
 * you have added them as an ASPeL user
+* the establishment licence (PEL) holder supports the nomination and is confident that the nominee has the recommended skills and experience, as outlined in the relevant named person role guide
+
+### If there are mandatory training requirements
+
+There are mandatory training requirements for NACWO and NVS/SQP roles. Ensure the following:
+
+* they meet the mandatory training requirements, or they have grounds for exemption
+* the Named Training and Competency Officer (NTCO) has endorsed their training and exemptions:
+  * the nominee has discussed their training and exemptions with the NTCO
+  * the NTCO has checked their mandatory training certificates
+  * the NTCO has checked any certificates and evidence to support exemption requests, and emailed them to ASRU Licensing: [ASRULicensing@homeoffice.gov.uk](mailto:ASRULicensing@homeoffice.gov.uk)
 * they have updated their training and exemptions in their [training record in ASPeL]({{trainingDashboardUrl}})
-* __the PEL holder supports the nomination and is confident that the nominee:__
-    * has the recommended skills and experience
-    * has no significant conflict of interest, and their declaration form is held on record at the establishment`,
-  fields: {
-    type: {
-      label: `Is {{profile.firstName}}'s training record accurate and up to date?`
-    }
-  },
+
+### If a conflict of interest declaration is needed
+
+For NACWO and NVS/SQP, ensure the declaration form has been completed and a record kept at the establishment. You do not need to send the declaration form to ASRU.
+
+For PEL holder/NPRC, you need to send the form to ASRU Licensing: [ASRULicensing@homeoffice.gov.uk](mailto:ASRULicensing@homeoffice.gov.uk)`,
   buttons: {
     submit: 'Continue',
     cancel: 'Cancel'
-  },
-  errors: {
-    type: {
-      required: `Tell us if {{profile.firstName}}'s training record is accurate and up to date`
-    }
   }
 };
