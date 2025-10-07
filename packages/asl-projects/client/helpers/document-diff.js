@@ -2,6 +2,7 @@ import get from 'lodash/get';
 
 const { diffWords } = require('diff');
 const last = require('lodash/last');
+const { concatTextFromNodes } = require('@asl/pages/utils');
 
 // eslint-disable-next-line no-control-regex
 const normaliseWhitespace = str => str.replace(/[\u0000-\u0008\u000B-\u0019\u001b\u009b\u00ad\u200b\u2028\u2029\ufeff\ufe00-\ufe0f]/g, '');
@@ -20,26 +21,14 @@ export const findSteps = (version, previousProtocols, protocolId, stepId, fieldN
   }
 };
 
-const getText = (nodes) => {
-  let tempText = '';
-  nodes?.forEach((element) => {
-    if (element?.object === 'block') {
-      tempText += getText(element?.nodes);
-    } else if (element?.object === 'text') {
-      tempText += element.text;
-    }
-  });
-  return tempText;
-};
-
 export const getChanges = (current, before, granularity = 'word') => {
   let currentText = '';
   let beforeText = '';
   if (Array.isArray(current?.document?.nodes)) {
-    currentText = getText(current.document.nodes);
+    currentText = concatTextFromNodes(current.document.nodes);
   }
   if (Array.isArray(before?.document?.nodes)) {
-    beforeText = getText(before.document.nodes);
+    beforeText = concatTextFromNodes(before.document.nodes);
   }
   const diffs = diffWords(normaliseWhitespace(beforeText), normaliseWhitespace(currentText));
   let added, removed;
