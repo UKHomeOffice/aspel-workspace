@@ -2,7 +2,7 @@ import get from 'lodash/get';
 
 const { diffWords } = require('diff');
 const last = require('lodash/last');
-const { concatTextFromNodes } = require('@asl/pages/utils');
+const { concatTextFromNodes } = require('../../utils');
 
 // eslint-disable-next-line no-control-regex
 const normaliseWhitespace = str => str.replace(/[\u0000-\u0008\u000B-\u0019\u001b\u009b\u00ad\u200b\u2028\u2029\ufeff\ufe00-\ufe0f]/g, '');
