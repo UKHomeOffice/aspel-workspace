@@ -237,7 +237,7 @@ module.exports = async ({ schema, logger, task }) => {
 
   if (model === 'role' && action === 'training-due-reminder') {
     const { firstName, lastName, name, type, completeDate } = task.data.data;
-    const typeUpper = type?.toUpperCase();
+    const typeUpper = type && type.toUpperCase();
 
     if (typeUpper === 'NACWO' || typeUpper === 'NVS') {
       const fullName = `${firstName} ${lastName}’s`;
@@ -266,7 +266,7 @@ module.exports = async ({ schema, logger, task }) => {
           fullName: 'Your',
           fullNameInSubject: 'You',
           their: 'your',
-          need: 'need',
+          need: 'need'
         }
       });
       return notifications;
