@@ -5,7 +5,11 @@ const deleteIndex = require('../utils/delete-index');
 const getDecorators = require('./decorators');
 const synonyms = require('../profiles/synonyms');
 
-const columnsToIndex = [
+const IndexName = 'tasks';
+const BATCH_SIZE = 256;
+const flushTimeout = 500;
+
+const COLUMNS_TO_INDEX = [
   'id',
   'open',
   'status',
@@ -19,236 +23,165 @@ const columnsToIndex = [
   'assignedTo'
 ];
 
-const reset = esClient => {
-  console.log(`Rebuilding index tasks`);
-  return Promise.resolve()
-    .then(() => deleteIndex(esClient, 'tasks'))
-    .then(() => {
-      return esClient.indices.create({
-        index: 'tasks',
-        body: {
-          settings: {
-            analysis: {
-              analyzer: {
-                default: {
-                  tokenizer: 'standard',
-                  filter: ['lowercase']
-                },
-                firstName: {
-                  tokenizer: 'standard',
-                  filter: ['lowercase', 'asciifolding', 'synonyms']
-                },
-                lastName: {
-                  tokenizer: 'standard',
-                  filter: ['lowercase', 'asciifolding']
-                },
-                projectTitle: {
-                  tokenizer: 'standard',
-                  filter: ['lowercase', 'stop']
-                }
-              },
-              normalizer: {
-                licenceNumber: {
-                  type: 'custom',
-                  filter: ['lowercase']
-                }
-              },
-              filter: {
-                synonyms: {
-                  type: 'synonym',
-                  synonyms
-                }
-              }
+async function resetIndex(esClient) {
+  console.log(`Rebuilding index [${IndexName}]...`);
+  await deleteIndex(esClient, IndexName);
+
+  await esClient.indices.create({
+    index: IndexName,
+    body: {
+      settings: {
+        analysis: {
+          analyzer: {
+            default: { tokenizer: 'standard', filter: ['lowercase'] },
+            firstName: { tokenizer: 'standard', filter: ['lowercase', 'asciifolding', 'synonyms'] },
+            lastName: { tokenizer: 'standard', filter: ['lowercase', 'asciifolding'] },
+            projectTitle: { tokenizer: 'standard', filter: ['lowercase', 'stop'] }
+          },
+          normalizer: {
+            licenceNumber: { type: 'custom', filter: ['lowercase'] }
+          },
+          filter: { synonyms: { type: 'synonym', synonyms } }
+        }
+      },
+      mappings: {
+        properties: {
+          open: { type: 'boolean' },
+          status: { type: 'keyword', fields: { value: { type: 'keyword' } } },
+          createdAt: { type: 'date' },
+          updatedAt: { type: 'date' },
+          model: { type: 'keyword' },
+          type: { type: 'keyword' },
+          licenceNumber: { type: 'keyword', normalizer: 'licenceNumber' },
+          establishment: { properties: { name: { type: 'text', fields: { value: { type: 'keyword' } } } } },
+          projectTitle: { type: 'text', analyzer: 'projectTitle' },
+          licenceHolder: {
+            properties: {
+              firstName: { type: 'text', analyzer: 'firstName' },
+              lastName: { type: 'text', analyzer: 'lastName' }
             }
           },
-          mappings: {
+          subject: {
             properties: {
-              open: {
-                type: 'boolean'
-              },
-              status: {
-                type: 'keyword',
-                fields: {
-                  value: {
-                    type: 'keyword'
-                  }
-                }
-              },
-              createdAt: {
-                type: 'date',
-                fields: {
-                  value: {
-                    type: 'date'
-                  }
-                }
-              },
-              updatedAt: {
-                type: 'date',
-                fields: {
-                  value: {
-                    type: 'date'
-                  }
-                }
-              },
-              model: {
-                type: 'keyword',
-                fields: {
-                  value: {
-                    type: 'keyword'
-                  }
-                }
-              },
-              type: {
-                type: 'keyword',
-                fields: {
-                  value: {
-                    type: 'keyword'
-                  }
-                }
-              },
-              licenceNumber: {
-                type: 'keyword',
-                normalizer: 'licenceNumber'
-              },
-              establishment: {
-                properties: {
-                  name: {
-                    type: 'text',
-                    fields: {
-                      value: {
-                        type: 'keyword'
-                      }
-                    }
-                  }
-                }
-              },
-              projectTitle: {
-                type: 'text',
-                analyzer: 'projectTitle'
-              },
-              licenceHolder: {
-                properties: {
-                  firstName: {
-                    type: 'text',
-                    analyzer: 'firstName'
-                  },
-                  lastName: {
-                    type: 'text',
-                    analyzer: 'lastName'
-                  }
-                }
-              },
-              subject: {
-                properties: {
-                  firstName: {
-                    type: 'text',
-                    analyzer: 'firstName'
-                  },
-                  lastName: {
-                    type: 'text',
-                    analyzer: 'lastName'
-                  }
-                }
-              },
-              assignedTo: {
-                properties: {
-                  firstName: {
-                    type: 'text',
-                    analyzer: 'firstName'
-                  },
-                  lastName: {
-                    type: 'text',
-                    analyzer: 'lastName'
-                  }
-                }
-              }
+              firstName: { type: 'text', analyzer: 'firstName' },
+              lastName: { type: 'text', analyzer: 'lastName' }
+            }
+          },
+          assignedTo: {
+            properties: {
+              firstName: { type: 'text', analyzer: 'firstName' },
+              lastName: { type: 'text', analyzer: 'lastName' }
             }
           }
         }
-      });
-    });
-};
-
-module.exports = async ({ aslSchema, taskflowDb, esClient, logger, options = {} }) => {
-  if (options.reset && options.id) {
-    throw new Error('Do not define an id when resetting indexes');
-  }
-
-  const bulkIndexStream = new ElasticsearchWritableStream(esClient, { highWaterMark: 256, flushTimeout: 500, logger });
-
-  let taskCount = 0;
-
-  const taskDecorator = decorators => {
-    return new Transform({
-      objectMode: true,
-      transform: async (task, enc, done) => {
-        const decoratedTask = await Object.keys(decorators).reduce(async (decoratedTask, key) => {
-          return decorators[key](await decoratedTask);
-        }, Promise.resolve(task));
-        done(null, decoratedTask);
       }
-    });
-  };
-
-  const documentTransform = new Transform({
-    objectMode: true,
-    transform: (task, enc, done) => {
-      const document = {
-        index: 'tasks',
-        id: task.id,
-        type: '_doc',
-        body: {
-          model: get(task, 'data.model') || '',
-          modelStatus: get(task, 'data.modelData.status') || '',
-          action: get(task, 'data.action') || '',
-          licenceNumber: get(task, 'data.modelData.licenceNumber') || '',
-          ...pick(task, columnsToIndex)
-        }
-      };
-
-      if (document.body.model === 'project') {
-        document.body.projectTitle = get(task, 'data.modelData.title') || '';
-      }
-
-      done(null, document);
     }
   });
+}
 
+function createTaskDecorator(decorators) {
+  return new Transform({
+    objectMode: true,
+    async transform(task, enc, done) {
+      try {
+        const decorated = await Object.keys(decorators).reduce(
+          async (acc, key) => decorators[key](await acc),
+          Promise.resolve(task)
+        );
+        done(null, decorated);
+      } catch (err) {
+        console.error(`Failed to decorate task ${task.id}: ${err.message}`);
+        done(); // Skip this task
+      }
+    }
+  });
+}
+
+function createDocumentTransform() {
+  return new Transform({
+    objectMode: true,
+    transform(task, enc, done) {
+      try {
+        const body = {
+          model: get(task, 'data.model', ''),
+          modelStatus: get(task, 'data.modelData.status', ''),
+          action: get(task, 'data.action', ''),
+          licenceNumber: get(task, 'data.modelData.licenceNumber', ''),
+          ...pick(task, COLUMNS_TO_INDEX)
+        };
+
+        if (body.model === 'project') {
+          body.projectTitle = get(task, 'data.modelData.title', '');
+        }
+
+        done(null, { index: IndexName, id: task.id, type: '_doc', body });
+      } catch (err) {
+        console.error(`Failed to transform task ${task.id}: ${err.message}`);
+        done(); // Skip this record
+      }
+    }
+  });
+}
+
+function createCounter() {
+  let count = 0;
   const counter = new Transform({
     objectMode: true,
-    transform: (data, enc, done) => {
-      taskCount++;
+    transform(data, enc, done) {
+      count++;
       done(null, data);
     }
   });
+  counter.getCount = () => count;
+  return counter;
+}
+
+module.exports = async ({ aslSchema, taskflowDb, esClient, logger, options = {} }) => {
+  if (options.reset && options.id) {
+    throw new Error('Do not define an ID when resetting indexes');
+  }
 
   if (options.reset) {
-    await reset(esClient);
+    await resetIndex(esClient);
   }
 
   const decorators = await getDecorators(aslSchema);
+  const counter = createCounter();
 
-  await new Promise((resolve, reject) => {
-    const query = taskflowDb.select('*')
-      .from('cases')
-      .whereNot('status', 'autoresolved')
-      .where(builder => {
-        if (options.id) {
-          builder.where({ id: options.id });
-        }
-      });
-
-    return query.stream(readStream => {
-      readStream
-        .pipe(counter)
-        .pipe(taskDecorator(decorators))
-        .pipe(documentTransform)
-        .pipe(bulkIndexStream)
-        .on('finish', resolve)
-        .on('error', reject);
-    }).catch(reject);
+  const bulkIndexStream = new ElasticsearchWritableStream(esClient, {
+    highWaterMark: BATCH_SIZE,
+    flushTimeout: flushTimeout,
+    logger
   });
 
-  console.log(`\nindexed ${taskCount} tasks`);
-  await esClient.indices.refresh({ index: 'tasks' });
+  const taskDecorator = createTaskDecorator(decorators);
+  const documentTransform = createDocumentTransform();
+
+  const query = taskflowDb
+    .select('*')
+    .from('cases')
+    .whereNot('status', 'autoresolved')
+    .modify(qb => {
+      if (options.id) qb.where({ id: options.id });
+    });
+
+  console.log(`Indexing tasks${options.id ? ` (id=${options.id})` : ''}...`);
+
+  await new Promise((resolve, reject) => {
+    query
+      .stream(stream => {
+        stream
+          .pipe(counter)
+          .pipe(taskDecorator)
+          .pipe(documentTransform)
+          .pipe(bulkIndexStream)
+          .on('finish', resolve)
+          .on('error', reject);
+      })
+      .catch(reject);
+  });
+
+  const total = counter.getCount();
+  console.log(`Indexed ${total} task${total === 1 ? '' : 's'}`);
+  await esClient.indices.refresh({ index: IndexName });
 };
