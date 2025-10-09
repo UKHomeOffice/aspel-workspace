@@ -6,6 +6,10 @@ module.exports = {
   noLicencesMessage: 'There are no category E PILs yet.',
   tableCaption:
     {
+      // The caption is different if the user has used the search bar to filter
+      // the PIL tasks/licences or not. `datatable.filters.active.*` is falsey
+      // if the table is not filtered, and truthy (an array with the term(s))
+      // if a search term is filtering the table data.
       $pluralisation: {
         countKey: 'datatable.pagination.count',
         0: '{{#datatable.filters.active.*}}' +
@@ -14,14 +18,14 @@ module.exports = {
           'There are no category E PILs yet.' +
           '{{/datatable.filters.active.*}}',
         1: '{{#datatable.filters.active.*}}' +
-          'Showing {{ datatable.pagination.count }} search result' +
+          'Showing 1 search result' +
           '{{/datatable.filters.active.*}}{{^datatable.filters.active.*}}' +
           'All {{ datatable.pagination.totalCount }} Category E PIL' +
           '{{/datatable.filters.active.*}}',
         default: '{{#datatable.filters.active.*}}' +
           'Showing {{ datatable.pagination.count }} search results' +
           '{{/datatable.filters.active.*}}{{^datatable.filters.active.*}}' +
-          'All {{ datatable.pagination.totalCount }} Category E PILs' +
+          'All {{ datatable.pagination.count }} Category E PILs' +
           '{{/datatable.filters.active.*}}'
       }
     },
