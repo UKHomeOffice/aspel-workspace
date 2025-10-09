@@ -1,41 +1,29 @@
+const Cacheable = require('./cacheable');
 const { get } = require('lodash');
 
-module.exports = async aslSchema => {
+const columns = ['id', 'firstName', 'lastName'];
+
+module.exports = aslSchema => {
   const { Profile } = aslSchema;
+  const cache = Cacheable();
 
-  const allProfiles = await Profile.query().select('id', 'firstName', 'lastName');
-  const profileMap = new Map(allProfiles.map(p => [p.id, p]));
-  console.log(`Preloaded ${allProfiles.length} profiles`);
+  return async task => {
+    const subjectId = get(task, 'data.subject');
+    const licenceHolderId = get(task, 'data.modelData.licenceHolderId') || get(task, 'data.data.licenceHolderId');
+    const assignedAsruId = get(task, 'assignedTo');
 
-  return task => {
-    try {
-      const subjectId = get(task, 'data.subject');
-      const licenceHolderId = get(task, 'data.modelData.licenceHolderId') || get(task, 'data.data.licenceHolderId');
-      const assignedAsruId = get(task, 'assignedTo');
+    // Run ALL cache queries in parallel
+    const [subject, licenceHolder, assignedTo] = await Promise.all([
+      subjectId ? cache.query(Profile, subjectId, columns) : Promise.resolve(null),
+      licenceHolderId ? cache.query(Profile, licenceHolderId, columns) : Promise.resolve(null),
+      assignedAsruId ? cache.query(Profile, assignedAsruId, columns) : Promise.resolve(null)
+    ]);
 
-      if (subjectId) {
-        const profile = profileMap.get(parseInt(subjectId));
-        if (profile) {
-          task.subject = { id: profile.id, firstName: profile.firstName, lastName: profile.lastName };
-        }
-      }
+    // Assign results
+    if (subject) task.subject = subject;
+    if (licenceHolder) task.licenceHolder = licenceHolder;
+    if (assignedTo) task.assignedTo = assignedTo;
 
-      if (licenceHolderId) {
-        const profile = profileMap.get(parseInt(licenceHolderId));
-        if (profile) {
-          task.licenceHolder = { id: profile.id, firstName: profile.firstName, lastName: profile.lastName };
-        }
-      }
-
-      if (assignedAsruId) {
-        const profile = profileMap.get(parseInt(assignedAsruId));
-        if (profile) {
-          task.assignedTo = { id: profile.id, firstName: profile.firstName, lastName: profile.lastName };
-        }
-      }
-    } catch (err) {
-      console.error(`Failed to decorate profiles for task ${task.id}:`, err.message);
-    }
     return task;
   };
 };
