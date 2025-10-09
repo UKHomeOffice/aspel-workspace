@@ -20,12 +20,12 @@ module.exports = {
         1: '{{#datatable.filters.active.*}}' +
           'Showing 1 search result' +
           '{{/datatable.filters.active.*}}{{^datatable.filters.active.*}}' +
-          'All {{ datatable.pagination.totalCount }} Category E PIL' +
+          'All category E PILs' +
           '{{/datatable.filters.active.*}}',
         default: '{{#datatable.filters.active.*}}' +
           'Showing {{ datatable.pagination.count }} search results' +
           '{{/datatable.filters.active.*}}{{^datatable.filters.active.*}}' +
-          'All {{ datatable.pagination.count }} Category E PILs' +
+          'All {{ datatable.pagination.count }} category E PILs' +
           '{{/datatable.filters.active.*}}'
       }
     },
