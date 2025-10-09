@@ -16,13 +16,18 @@ function getKeysToTry(primary, fallback) {
     return [primary];
 }
 
-function getTemplate(content, primary, fallback) {
+function getTemplate(content, primary, fallback, props) {
     const keysToTry = getKeysToTry(primary, fallback);
 
     for (let key of keysToTry) {
         const template = get(content, key);
         if (typeof template === 'string') {
             return template;
+        }
+        if(typeof template === 'object' && template.$pluralisation) {
+            const { countKey, ...variants } = template.$pluralisation;
+            const count = get(props, countKey);
+            return variants[count] ?? variants.default;
         }
     }
 
@@ -34,7 +39,7 @@ export const Snippet = ({ content, children, optional, fallback, isPtag = true, 
     const primary = Array.isArray(children) ? children.join('') : children;
 
 
-    const str = getTemplate(content, primary, fallback);
+    const str = getTemplate(content, primary, fallback, props);
 
     if (str === undefined && optional) {
         return null;
@@ -56,10 +61,12 @@ export const Snippet = ({ content, children, optional, fallback, isPtag = true, 
 
 const mapStateToProps = ({
     static: staticProps,
-    model
+    model,
+    datatable
 }) => ({
     ...staticProps,
-    model
+    model,
+    datatable
 });
 
 export default connect(mapStateToProps)(Snippet);

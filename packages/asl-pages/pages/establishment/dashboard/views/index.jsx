@@ -18,7 +18,7 @@ const links = [
   { page: 'place.list', permissions: 'place.list' },
   { page: 'profile.list', permissions: 'profile.read.basic' },
   {
-    page: 'course.list',
+    page: 'categoryE.course.list',
     permissions: 'trainingCourse.read',
     conditions: (establishment) => establishment.isTrainingEstablishment,
     featureFlag: FEATURE_FLAG_CAT_E

@@ -17,8 +17,18 @@ module.exports = {
       suspend: 'Suspend establishment licence',
       reinstate: 'Reinstate establishment licence'
     },
-    course: {
-      list: 'Courses and category E PILs'
+    categoryE: {
+      course: {
+        list: 'Courses and category E PILs',
+        read: '{{trainingCourse.title}}'
+      },
+      licence: {
+        list: 'Courses and category E PILs',
+        read: {
+          index: 'TODO: training PIL profile name',
+          revoke: 'Revoke'
+        }
+      }
     },
     pil: {
       read: 'View personal licence',
@@ -143,8 +153,10 @@ module.exports = {
         base: 'Change your password'
       }
     },
-    course: {
-      list: 'Courses and category E PILs'
+    categoryE: {
+      course: {
+        list: 'Courses and category E PILs'
+      }
     },
     dashboard: {
       greeting: 'Hello {{name}}',

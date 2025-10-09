@@ -31,7 +31,7 @@ module.exports = knex => async (opts = {}) => {
     const status = opts.status || 'with-inspectorate';
     const profile = await Profile.query().findById(changedBy).withGraphFetched('establishments');
     // eslint-disable-next-line camelcase
-    const created_at = opts.date || (new Date()).toISOString();
+    const createdAt = opts.date || (new Date()).toISOString();
 
     const task = {
       id,
@@ -52,8 +52,8 @@ module.exports = knex => async (opts = {}) => {
         changedBy,
         modelData
       },
-      created_at,
-      updated_at: created_at
+      created_at: createdAt,
+      updated_at: createdAt
     };
 
     const activity = [
@@ -73,8 +73,8 @@ module.exports = knex => async (opts = {}) => {
             }
           }
         },
-        created_at,
-        updated_at: created_at
+        created_at: createdAt,
+        updated_at: createdAt
       }
     ];
 
