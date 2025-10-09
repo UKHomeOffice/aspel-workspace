@@ -13,12 +13,13 @@ module.exports = (flow, settings) => {
     const id = task.data.id;
     const model = task.data.model;
     const action = task.data.action;
-    const courseId = task.data.data?.trainingCourseId;
-    const profileId = task.data.modelData.profile.id;
 
     if (model !== 'trainingPil' || action !== 'grant') {
       return task;
     }
+
+    const courseId = task.data.data?.trainingCourseId;
+    const profileId = task.data.modelData.profile?.id;
 
     const trainingPil = await TrainingPil.query().findById(id).select('status');
     const trainingCourse = courseId ? await TrainingCourse.query().findById(courseId) : undefined;

@@ -1,18 +1,12 @@
 import React, { Fragment } from 'react';
-import { useSelector, shallowEqual } from 'react-redux';
-import {
-  Link,
-  Snippet,
-  Header,
-  Tabs
-} from '@ukhomeoffice/asl-components';
+import { shallowEqual, useSelector } from 'react-redux';
+import { Header, Link, Snippet, Tabs } from '@ukhomeoffice/asl-components';
 import EstablishmentHeader from '../../common/components/establishment-header';
 
 export default function CategoryELandingPage({ children, activeTab }) {
   const { establishment } = useSelector(state => state.static, shallowEqual);
-  const hasData = useSelector(state => state.datatable.data.rows.length) > 0;
   const allowedActions = useSelector(state => state.static.allowedActions);
-  const canUpdate = allowedActions.includes('trainingCourse.update');
+  const canAddCourse = allowedActions.includes('trainingCourse.update');
 
   const tabs = [
     {
@@ -33,14 +27,20 @@ export default function CategoryELandingPage({ children, activeTab }) {
         subtitle={<EstablishmentHeader establishment={establishment}/>}
       />
       {
-        canUpdate && (
-          <Fragment>
-            <Snippet optional>landingPage.subtitle</Snippet>
+        canAddCourse
+          ? <Fragment>
+            <p>
+              {establishment.trainingCoursesCount === 0 && <><Snippet>landingPage.noCoursesMessage</Snippet>{' '}</>}
+              <Snippet optional>landingPage.addCourseDescription</Snippet>
+            </p>
             <p>
               <Link className="govuk-button" page="pils.courses.create" label={<Snippet>landingPage.buttons.add</Snippet>} />
             </p>
           </Fragment>
-        )
+          : <p>
+            {establishment.trainingCoursesCount === 0 && <><Snippet>landingPage.noCoursesMessage</Snippet>{' '}</>}
+            <Snippet>landingPage.cannotUpdate</Snippet>
+          </p>
       }
       <Tabs active={tabs.findIndex(tab => tab.key === activeTab)}>
         {
@@ -48,9 +48,6 @@ export default function CategoryELandingPage({ children, activeTab }) {
         }
       </Tabs>
       { children }
-      {
-        !hasData && !canUpdate && <p><Snippet>landingPage.cannotUpdate</Snippet></p>
-      }
     </>
   );
 }

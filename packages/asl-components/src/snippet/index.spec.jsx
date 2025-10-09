@@ -14,6 +14,14 @@ two`,
   nested: {
     string: 'nested string',
     template: 'Hello {{ name }}'
+  },
+  plural: {
+    $pluralisation: {
+      countKey: 'pagination.count',
+      0: 'No results',
+      1: 'One result',
+      default: '{{ pagination.count }} results',
+    }
   }
 };
 
@@ -84,4 +92,27 @@ describe('<Snippet />', () => {
     render(<Snippet content={content} fallback="nested.string">nested</Snippet>);
     expect(screen.getByText('nested string')).toBeInTheDocument();
   });
+
+  describe('renders plural values', () => {
+    const contextForCount = (count) => ({
+      pagination: {
+        count
+      }
+    });
+
+    test('renders a singular value', () => {
+      render(<Snippet content={content} {...contextForCount(1)}>plural</Snippet>);
+      expect(screen.getByText('One result')).toBeInTheDocument();
+    });
+
+    test('renders a plural value', () => {
+      render(<Snippet content={content} {...contextForCount(3)}>plural</Snippet>);
+      expect(screen.getByText('3 results')).toBeInTheDocument();
+    });
+
+    test('renders a zero value', () => {
+      render(<Snippet content={content} {...contextForCount(0)}>plural</Snippet>);
+      expect(screen.getByText('No results')).toBeInTheDocument();
+    });
+  })
 });

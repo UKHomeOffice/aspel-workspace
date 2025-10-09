@@ -422,27 +422,15 @@
     "roles": [
       {
         "establishmentId": 8201,
-        "type": "pelh"
-      },
-      {
-        "establishmentId": 8201,
         "type": "holc"
       },
       {
-        "establishmentId": 30001,
-        "type": "holc"
-      },
-      {
-        "establishmentId": 30002,
+        "establishmentId": 8202,
         "type": "holc"
       },
       {
         "establishmentId": 54321,
         "type": "holc"
-      },
-      {
-        "establishmentId": 9999,
-        "type": "pelh"
       }
     ],
     "permissions": [
@@ -452,34 +440,6 @@
       },
       {
         "establishmentId": 8202,
-        "role": "admin"
-      },
-      {
-        "establishmentId": 30001,
-        "role": "admin"
-      },
-      {
-        "establishmentId": 30002,
-        "role": "admin"
-      },
-      {
-        "establishmentId": 9999,
-        "role": "admin"
-      },
-      {
-        "establishmentId": 10264,
-        "role": "admin"
-      },
-      {
-        "establishmentId": 10267,
-        "role": "admin"
-      },
-      {
-        "establishmentId": 10268,
-        "role": "admin"
-      },
-      {
-        "establishmentId": 10269,
         "role": "admin"
       },
       {
@@ -521,6 +481,35 @@
       },
       {
         "establishmentId": 10268,
+        "role": "basic"
+      }
+    ]
+  },
+  {
+    "id": "b3258732-a47d-4770-b5e9-c237f10ff15d",
+    "userId": "650a4b15-13ff-4567-8a25-7be2f6a72c4a",
+    "title": "Ms",
+    "firstName": "Katrina",
+    "lastName": "Entiseyoh",
+    "dob": "1978-11-23",
+    "email": "cat-e-ntco@example.com",
+    "roles": [
+      {
+        "establishmentId": 8201,
+        "type": "ntco"
+      },
+      {
+        "establishmentId": 54321,
+        "type": "ntco"
+      }
+    ],
+    "permissions": [
+      {
+        "establishmentId": 8201,
+        "role": "basic"
+      },
+      {
+        "establishmentId": 54321,
         "role": "basic"
       }
     ]
@@ -658,6 +647,26 @@
       },
       {
         "establishmentId": 8202,
+        "role": "read"
+      }
+    ]
+  },
+  {
+    "id": "e49a0272-d2f6-46f3-bfd4-e8b145ee9d54",
+    "userId": "fbbb93eb-8146-4cb2-b758-e6f28d171a42",
+    "title": "Rev",
+    "firstName": "Katy",
+    "lastName": "Reed",
+    "dob": "1975-03-22",
+    "email": "cat-e-read@example.com",
+    "roles": [],
+    "permissions": [
+      {
+        "establishmentId": 8201,
+        "role": "read"
+      },
+      {
+        "establishmentId": 54321,
         "role": "read"
       }
     ]

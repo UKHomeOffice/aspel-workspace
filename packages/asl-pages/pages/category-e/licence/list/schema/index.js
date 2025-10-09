@@ -22,7 +22,7 @@ module.exports = {
     show: true,
     sortable: false
   },
-  actions: {
+  action: {
     show: true,
     sortable: false
   }

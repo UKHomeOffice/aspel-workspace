@@ -19,10 +19,15 @@ module.exports = {
     },
     categoryE: {
       course: {
-        list: 'Courses and category E PILs'
+        list: 'Courses and category E PILs',
+        read: '{{trainingCourse.title}}'
       },
       licence: {
-        list: 'Courses and category E PILs'
+        list: 'Courses and category E PILs',
+        read: {
+          index: 'TODO: training PIL profile name',
+          revoke: 'Revoke'
+        }
       }
     },
     pil: {

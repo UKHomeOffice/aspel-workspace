@@ -3,7 +3,28 @@ const baseContent = require('../../content');
 module.exports = {
   from: __dirname,
   ...baseContent,
-  tableCaption: 'Category E PILs',
+  noLicencesMessage: 'There are no category E PILs yet.',
+  tableCaption:
+    {
+      $pluralisation: {
+        countKey: 'datatable.pagination.count',
+        0: '{{#datatable.filters.active.*}}' +
+          'No Category E PILs matched your search' +
+          '{{/datatable.filters.active.*}}{{^datatable.filters.active.*}}' +
+          'There are no category E PILs yet.' +
+          '{{/datatable.filters.active.*}}',
+        1: '{{#datatable.filters.active.*}}' +
+          'Showing {{ datatable.pagination.count }} search result' +
+          '{{/datatable.filters.active.*}}{{^datatable.filters.active.*}}' +
+          'All {{ datatable.pagination.totalCount }} Category E PIL' +
+          '{{/datatable.filters.active.*}}',
+        default: '{{#datatable.filters.active.*}}' +
+          'Showing {{ datatable.pagination.count }} search results' +
+          '{{/datatable.filters.active.*}}{{^datatable.filters.active.*}}' +
+          'All {{ datatable.pagination.totalCount }} Category E PILs' +
+          '{{/datatable.filters.active.*}}'
+      }
+    },
   search: {
     label: 'Search by name or email'
   },
@@ -23,7 +44,7 @@ module.exports = {
     status: {
       label: 'Status'
     },
-    actions: {
+    action: {
       label: 'Action'
     }
   }
