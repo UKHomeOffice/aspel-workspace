@@ -54,7 +54,7 @@ module.exports = {
       relatedTasks: ['asru:*', 'establishment:admin', 'establishment:role:ntco']
     },
     trainingPil: {
-      filterTasks: ['asru:*', 'establishment:admin', 'establishment:role:ntco']
+      filterTasks: ['asru:*', 'establishment:admin', 'establishment:read', 'establishment:role:ntco']
     },
     pil: {
       list: ['asru:*', 'establishment:admin', 'establishment:read', 'establishment:role:ntco'],
