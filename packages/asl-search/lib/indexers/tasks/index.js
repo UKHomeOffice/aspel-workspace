@@ -6,21 +6,12 @@ const getDecorators = require('./decorators');
 const synonyms = require('../profiles/synonyms');
 
 const IndexName = 'tasks';
-const BATCH_SIZE = 256;
-const flushTimeout = 500;
+const BATCH_SIZE = 500; // Increased for better throughput
+const flushTimeout = 1000; // Increased for larger batches
 
 const COLUMNS_TO_INDEX = [
-  'id',
-  'open',
-  'status',
-  'type',
-  'establishment',
-  'subject',
-  'licenceHolder',
-  'asruUser',
-  'createdAt',
-  'updatedAt',
-  'assignedTo'
+  'id', 'open', 'status', 'type', 'establishment', 'subject',
+  'licenceHolder', 'asruUser', 'createdAt', 'updatedAt', 'assignedTo'
 ];
 
 async function resetIndex(esClient) {
@@ -84,13 +75,17 @@ function createTaskDecorator(decorators) {
     objectMode: true,
     async transform(task, enc, done) {
       try {
-        const decorated = await Object.keys(decorators).reduce(
-          async (acc, key) => decorators[key](await acc),
-          Promise.resolve(task)
+        const decorationPromises = Object.keys(decorators).map(key =>
+          Promise.resolve(decorators[key](task))
         );
+
+        const results = await Promise.all(decorationPromises);
+
+        const decorated = results.reduce((acc, result) => ({ ...acc, ...result }), task);
+
         done(null, decorated);
       } catch (err) {
-        console.error(`Failed to decorate task ${task.id}: ${err.message}`);
+        console.error(`Failed to decorate task ${task.id}:`, err.message);
         done(); // Skip this task
       }
     }
@@ -136,6 +131,29 @@ function createCounter() {
   return counter;
 }
 
+function createProgressTracker() {
+  let processed = 0;
+  const startTime = Date.now();
+  let lastLogTime = startTime;
+
+  return new Transform({
+    objectMode: true,
+    transform(data, enc, done) {
+      processed++;
+
+      const now = Date.now();
+      if (processed % 10000 === 0 || now - lastLogTime >= 30000) {
+        const elapsed = (now - startTime) / 1000;
+        const rate = processed / elapsed;
+        console.log(`Progress: ${processed.toLocaleString()} tasks (${Math.round(rate)}/sec)`);
+        lastLogTime = now;
+      }
+
+      done(null, data);
+    }
+  });
+}
+
 module.exports = async ({ aslSchema, taskflowDb, esClient, logger, options = {} }) => {
   if (options.reset && options.id) {
     throw new Error('Do not define an ID when resetting indexes');
@@ -145,13 +163,33 @@ module.exports = async ({ aslSchema, taskflowDb, esClient, logger, options = {} 
     await resetIndex(esClient);
   }
 
+  console.log('Loading decorators...');
   const decorators = await getDecorators(aslSchema);
+
+  const formatSafeLogger = {
+    info: (message, ...args) => {
+      if (typeof message === 'string' && message.includes('%')) {
+        // Use util.format to handle printf-style formatting
+        const formatted = require('util').format(message, ...args);
+        logger.info(formatted);
+      } else {
+        logger.info(message, ...args);
+      }
+    },
+    error: logger.error.bind(logger),
+    warn: logger.warn.bind(logger),
+    debug: logger.debug.bind(logger)
+  };
+
   const counter = createCounter();
+  const progressTracker = createProgressTracker();
 
   const bulkIndexStream = new ElasticsearchWritableStream(esClient, {
     highWaterMark: BATCH_SIZE,
     flushTimeout: flushTimeout,
-    logger
+    logger: formatSafeLogger,
+    maxRetries: 3,
+    retryDelay: 1000
   });
 
   const taskDecorator = createTaskDecorator(decorators);
@@ -162,26 +200,44 @@ module.exports = async ({ aslSchema, taskflowDb, esClient, logger, options = {} 
     .from('cases')
     .whereNot('status', 'autoresolved')
     .modify(qb => {
-      if (options.id) qb.where({ id: options.id });
+      if (options.id) {
+        qb.where({ id: options.id });
+      } else {
+        // Order by ID for better database performance on full reindex
+        qb.orderBy('id');
+      }
     });
 
   console.log(`Indexing tasks${options.id ? ` (id=${options.id})` : ''}...`);
 
-  await new Promise((resolve, reject) => {
-    query
-      .stream(stream => {
-        stream
-          .pipe(counter)
-          .pipe(taskDecorator)
-          .pipe(documentTransform)
-          .pipe(bulkIndexStream)
-          .on('finish', resolve)
-          .on('error', reject);
-      })
-      .catch(reject);
-  });
+  const startTime = Date.now();
 
-  const total = counter.getCount();
-  console.log(`Indexed ${total} task${total === 1 ? '' : 's'}`);
-  await esClient.indices.refresh({ index: IndexName });
+  try {
+    await new Promise((resolve, reject) => {
+      query
+        .stream(stream => {
+          stream
+            .pipe(counter)
+            .pipe(progressTracker)
+            .pipe(taskDecorator)
+            .pipe(documentTransform)
+            .pipe(bulkIndexStream)
+            .on('finish', resolve)
+            .on('error', reject);
+        })
+        .catch(reject);
+    });
+
+    const total = counter.getCount();
+    const totalTime = (Date.now() - startTime) / 1000;
+    const rate = total / totalTime;
+
+    console.log(`Indexed ${total.toLocaleString()} tasks in ${Math.round(totalTime)}s (${Math.round(rate)} tasks/sec)`);
+    await esClient.indices.refresh({ index: IndexName });
+
+  } catch (error) {
+    const failedAt = counter.getCount();
+    console.error(`Failed after ${failedAt.toLocaleString()} tasks:`, error.message);
+    throw error;
+  }
 };

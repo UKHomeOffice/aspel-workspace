@@ -4,8 +4,10 @@ const establishment = require('./establishment');
 const profiles = require('./profiles');
 
 module.exports = async aslSchema => {
-  const establishmentDecorator = await establishment(aslSchema);
-  const profilesDecorator = await profiles(aslSchema);
+  const [establishmentDecorator, profilesDecorator] = await Promise.all([
+    establishment(aslSchema),
+    profiles(aslSchema)
+  ]);
 
   return {
     openClosed,

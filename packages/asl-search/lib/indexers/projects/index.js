@@ -1,21 +1,14 @@
 const { pick } = require('lodash');
+const { Transform } = require('stream');
 const extractSpecies = require('./extract-species');
 const deleteIndex = require('../utils/delete-index');
 
 const indexName = 'projects';
+const BATCH_SIZE = 100;
+
 const columnsToIndex = [
-  'id',
-  'title',
-  'status',
-  'licenceNumber',
-  'issueDate',
-  'expiryDate',
-  'revocationDate',
-  'raDate',
-  'refusedDate',
-  'suspendedDate',
-  'isLegacyStub',
-  'schemaVersion'
+  'id', 'title', 'status', 'licenceNumber', 'issueDate', 'expiryDate',
+  'revocationDate', 'raDate', 'refusedDate', 'suspendedDate', 'isLegacyStub', 'schemaVersion'
 ];
 
 const ANALYSIS_SETTINGS = {
@@ -86,46 +79,129 @@ async function resetIndex(esClient) {
   });
 }
 
-async function buildProjectDocument(project, ProjectVersion) {
-  const version = await ProjectVersion.query()
-    .where({
-      // look for most recent submitted draft for inactive projects
-      status: project.status === 'inactive' ? 'submitted' : 'granted',
-      projectId: project.id
-    })
-    .orderBy('updatedAt', 'desc')
-    .first();
-
-  const data = version.data ? version.data : {};
-  const species = extractSpecies(data, project);
-
-  return {
-    ...pick(project, columnsToIndex),
-    licenceNumber: project.licenceNumber ? project.licenceNumber.toUpperCase() : null,
-    licenceHolder: pick(project.licenceHolder, ['id', 'firstName', 'lastName']),
-    establishment: pick(project.establishment, ['id', 'name']),
-    endDate: getEndDate(project),
-    keywords: data.keywords,
-    species
-  };
+function streamProjectsWithVersions(Project, options = {}) {
+  return Project.knex().raw(`
+    WITH latest_versions AS (
+      SELECT DISTINCT ON (pv.project_id)
+        pv.project_id,
+        pv.data,
+        pv.status as version_status
+      FROM project_versions pv
+      WHERE pv.status IN ('submitted', 'granted')
+        AND pv.status != 'draft'
+      ORDER BY pv.project_id, pv.updated_at DESC
+    )
+    SELECT
+      p.*,
+      lv.data as version_data,
+      lh.first_name as licence_holder_first_name,
+      lh.last_name as licence_holder_last_name,
+      e.name as establishment_name,
+      e.id as establishment_id
+    FROM projects p
+    LEFT JOIN latest_versions lv ON p.id = lv.project_id
+    LEFT JOIN profiles lh ON p.licence_holder_id = lh.id
+    LEFT JOIN establishments e ON p.establishment_id = e.id
+    WHERE p.deleted IS NULL
+    AND EXISTS (
+      SELECT 1 FROM project_versions pv2
+      WHERE pv2.project_id = p.id
+      AND pv2.status IN ('submitted', 'granted')
+      AND pv2.status != 'draft'
+    )
+    ${options.id ? 'AND p.id = ?' : ''}
+    ORDER BY p.id
+  `, options.id ? [options.id] : []).stream();
 }
 
-async function indexProject(esClient, project, ProjectVersion) {
-  try {
-    const body = await buildProjectDocument(project, ProjectVersion);
+function createDocumentTransform() {
+  return new Transform({
+    objectMode: true,
+    transform(project, encoding, callback) {
+      try {
+        const data = project.version_data ? project.version_data : {};
+        const species = extractSpecies(data, project);
 
-    await esClient.index({
-      index: indexName,
-      id: project.id,
-      body
-    });
-  } catch (error) {
-    console.error(`Failed to index project ${project.id}:`, error.message);
-  }
+        const document = {
+          ...pick(project, columnsToIndex),
+          licenceNumber: project.licenceNumber ? project.licenceNumber.toUpperCase() : null,
+          licenceHolder: {
+            id: project.licence_holder_id,
+            firstName: project.licence_holder_first_name,
+            lastName: project.licence_holder_last_name
+          },
+          establishment: {
+            id: project.establishment_id,
+            name: project.establishment_name
+          },
+          endDate: getEndDate(project),
+          keywords: data.keywords,
+          species
+        };
+
+        callback(null, { id: project.id, document });
+      } catch (error) {
+        console.error(`Failed to transform project ${project.id}:`, error.message);
+        callback();
+      }
+    }
+  });
+}
+
+function createBatchProcessor(esClient) {
+  let batch = [];
+  let processedCount = 0;
+
+  const processBatch = async () => {
+    if (batch.length === 0) return;
+
+    const currentBatch = [...batch];
+    batch = [];
+
+    try {
+      const body = currentBatch.flatMap(({ id, document }) => [
+        { index: { _index: indexName, _id: id } },
+        document
+      ]);
+
+      const response = await esClient.bulk({ refresh: false, body });
+
+      if (response.errors) {
+        const errors = response.items.filter(item => item.index.error);
+        if (errors.length > 0) {
+          console.error(`Batch had ${errors.length} indexing failures`);
+        }
+      }
+
+      processedCount += currentBatch.length;
+      console.log(`Indexed ${processedCount} projects...`);
+    } catch (error) {
+      console.error('Failed to index batch:', error.message);
+    }
+  };
+
+  return new Transform({
+    objectMode: true,
+    async transform(doc, encoding, callback) {
+      batch.push(doc);
+
+      if (batch.length >= BATCH_SIZE) {
+        await processBatch();
+      }
+
+      callback();
+    },
+
+    async flush(callback) {
+      await processBatch();
+      console.log(`Completed streaming ${processedCount} projects`);
+      callback();
+    }
+  });
 }
 
 module.exports = async (db, esClient, options = {}) => {
-  const { Project, ProjectVersion } = db;
+  const { Project } = db;
 
   if (options.reset && options.id) {
     throw new Error('Do not define an ID when resetting indexes');
@@ -135,26 +211,29 @@ module.exports = async (db, esClient, options = {}) => {
     await resetIndex(esClient);
   }
 
-  const query = Project.query()
-    .select(columnsToIndex)
-    .withGraphFetched('[licenceHolder, establishment]')
-    .whereExists(Project.relatedQuery('version').where('status', '!=', 'draft'));
+  console.log('Streaming projects with optimized query...');
 
-  if (options.id) {
-    query.where({ id: options.id });
-  }
+  return new Promise((resolve, reject) => {
+    let totalStreamed = 0;
 
-  const projects = await query;
+    const stream = streamProjectsWithVersions(Project, options);
+    const documentTransform = createDocumentTransform();
+    const batchProcessor = createBatchProcessor(esClient);
 
-  console.log(`Indexing ${projects.length} projects...`);
-
-  // Limit concurrency to avoid overwhelming ES and DB
-  const concurrency = 10;
-  for (let i = 0; i < projects.length; i += concurrency) {
-    const batch = projects.slice(i, i + concurrency);
-    await Promise.all(batch.map(p => indexProject(esClient, p, ProjectVersion)));
-  }
-
-  await esClient.indices.refresh({ index: indexName });
-  console.log(`Indexed ${projects.length} projects`);
+    stream
+      .on('data', () => {
+        totalStreamed++;
+        if (totalStreamed % 1000 === 0) {
+          console.log(`Streamed ${totalStreamed} projects from database...`);
+        }
+      })
+      .pipe(documentTransform)
+      .pipe(batchProcessor)
+      .on('finish', async () => {
+        await esClient.indices.refresh({ index: indexName });
+        console.log(`Index refresh completed for ${totalStreamed} projects`);
+        resolve(totalStreamed);
+      })
+      .on('error', reject);
+  });
 };
