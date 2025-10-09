@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "nodemon -r dotenv/config",
     "test": "eslint .",
-    "indexer": "bin/indexer",
-    "rebuildIndex": "bin/indexer --reset"
+    "indexer": "bin/indexer"
   },
   "author": "",
   "license": "MIT",
