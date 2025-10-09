@@ -1,4 +1,4 @@
-const value = `{{ fullName }} {{ type }} mandatory training is due to be completed by {{ completeDate }}.
+const value = `{{ fullName }} {{ type }} is due to be completed by {{ completeDate }}.
 Establishment name: {{ name }}
 Once completed, ensure the training is added to their training record.
 `;

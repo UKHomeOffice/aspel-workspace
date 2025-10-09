@@ -1,7 +1,8 @@
 const { projectSpecies } = require('@ukhomeoffice/asl-constants');
-const { flatten, uniq } = require('lodash');
+const { uniq } = require('lodash');
 
-const legacy = {
+const legacySpecies = Object.freeze({
+  '1': 'N/A',
   '2': 'Amphibians',
   '3': 'Animals taken from the wild',
   '4': 'Avian Eggs',
@@ -13,44 +14,39 @@ const legacy = {
   '10': 'Deer',
   '11': 'Dogs',
   '12': 'Ferrets',
-  '14': 'Fish - all other fish',
   '13': 'Fish - Zebra Fish',
+  '14': 'Fish - all other fish',
   '15': 'Gerbils',
-  '29': 'Goats',
   '16': 'Goats, sheep',
   '17': 'Guinea-pigs',
   '18': 'Hamsters',
   '19': 'Horses',
   '20': 'Mice',
-  '1': 'N/A',
   '21': 'Non-human primates - new world (e.g. marmosets)',
   '22': 'Non-human primates - old world (e.g. macaques)',
-  '28': 'Other species',
   '23': 'Pigs',
   '24': 'Rabbits',
   '25': 'Rats',
   '26': 'Reptiles',
   '27': 'Seals',
+  '28': 'Other species',
+  '29': 'Goats',
   '30': 'Sheep'
-};
+});
 
-const species = flatten(Object.values(projectSpecies));
+const speciesList = Object.values(projectSpecies).flat();
 
-const extractLegacy = data => {
+function extractLegacy(data = {}) {
   const protocols = data.protocols || [];
-  return protocols
-    .reduce((list, protocol) => {
-      return [...list, ...(protocol.species || [])];
-    }, [])
-    .map(s => {
-      if (s.speciesId === '28') {
-        return s['other-species-type'];
-      }
-      return legacy[s.speciesId];
-    });
-};
 
-const extract = data => {
+  return protocols.flatMap(protocol =>
+    (protocol.species || []).map(s =>
+      s.speciesId === '28' ? s['other-species-type'] : legacySpecies[s.speciesId]
+    )
+  );
+}
+
+function extractModern(data = {}) {
   const fields = [
     'species',
     'species-other',
@@ -60,26 +56,22 @@ const extract = data => {
     'species-other-fish',
     'species-other-rodents'
   ];
-  return fields
-    .reduce((list, key) => {
-      return [...list, ...(data[key] || [])];
-    }, [])
-    .filter(s => !s.match(/^other-/))
-    .map(s => {
-      const coded = species.find(sp => sp.value === s);
-      return coded ? coded.label : s;
-    });
-};
 
-module.exports = (data, {schemaVersion, id}) => {
+  return fields
+    .flatMap(field => data[field] || [])
+    .filter(s => typeof s === 'string' && !s.startsWith('other-'))
+    .map(s => {
+      const match = speciesList.find(sp => sp.value === s);
+      return match ? match.label : s;
+    });
+}
+
+module.exports = (data, { schemaVersion, id }) => {
   try {
-    if (schemaVersion === 0) {
-      return uniq(extractLegacy(data));
-    }
-    return uniq(extract(data));
-  } catch (e) {
-    console.error(`Failed to extract species from project ${id}`);
-    console.error(e.stack);
+    const extractor = schemaVersion === 0 ? extractLegacy : extractModern;
+    return uniq(extractor(data)).filter(Boolean);
+  } catch (err) {
+    console.error(`Failed to extract species from project ${id}: ${err.message}`);
     return [];
   }
 };
