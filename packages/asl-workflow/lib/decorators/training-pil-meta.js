@@ -19,11 +19,11 @@ module.exports = (flow, settings) => {
     }
 
     const courseId = task.data.data?.trainingCourseId;
-    const profileId = task.data.modelData.profile?.id;
+    const profileId = task.data.modelData?.profile?.id;
 
     const trainingPil = await TrainingPil.query().findById(id).select('status');
     const trainingCourse = courseId ? await TrainingCourse.query().findById(courseId) : undefined;
-    const profile = await Profile.query().findById(profileId).select('pil_licence_number');
+    const profile = profileId ? await Profile.query().findById(profileId).select('pil_licence_number') : undefined;
 
     const revocationCount = await Task.query()
       .whereJsonSupersetOf('data', { id, action: 'revoke' })
@@ -36,7 +36,7 @@ module.exports = (flow, settings) => {
     // if subject isn't set, copy it from the modelData sans nested pils (avoids excessive data duplication)
     task.data.subject = {
       ...(task.data.subject || omit(get(task, 'data.modelData.profile'), 'trainingPils', 'pil')),
-      pilLicenceNumber: profile.pilLicenceNumber
+      pilLicenceNumber: profile?.pilLicenceNumber
     };
 
     return {
