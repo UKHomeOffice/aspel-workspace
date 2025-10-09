@@ -237,34 +237,40 @@ module.exports = async ({ schema, logger, task }) => {
 
   if (model === 'role' && action === 'training-due-reminder') {
     const { firstName, lastName, name, type, completeDate } = task.data.data;
-    const fullName = `${firstName} ${lastName}’s`;
-    const identifier = `${applicant.id}-${completeDate}-${action}`;
+    const typeUpper = type && type.toUpperCase();
 
-    const trainingDueReminderParams = {
-      ...params,
-      fullName,
-      fullNameInSubject: fullName,
-      name,
-      their: 'their',
-      type: type.toUpperCase(),
-      completeDate,
-      identifier,
-      emailTemplate: 'training-due-reminder',
-      logMsg: 'training due reminder sent',
-      addTaskTypeToSubject: false
-    };
-    notifyPelh(trainingDueReminderParams);
-    notifyAdmins(trainingDueReminderParams);
-    notifyNTCOs(trainingDueReminderParams);
-    notifyUser(applicant, {
-      ...trainingDueReminderParams,
-      ...{
-        fullName: 'Your',
-        fullNameInSubject: 'You',
-        their: 'your'
-      }
-    });
-    return notifications;
+    if (typeUpper === 'NACWO' || typeUpper === 'NVS') {
+      const fullName = `${firstName} ${lastName}’s`;
+      const identifier = `${applicant.id}-${completeDate}-${action}`;
+
+      const trainingDueReminderParams = {
+        ...params,
+        fullName,
+        fullNameInSubject: fullName,
+        name,
+        their: 'their',
+        need: 'needs',
+        type: typeUpper === 'NACWO' ? `${typeUpper} mandatory training` : `${typeUpper} module`,
+        completeDate,
+        identifier,
+        emailTemplate: 'training-due-reminder',
+        logMsg: 'training due reminder sent',
+        addTaskTypeToSubject: false
+      };
+      notifyPelh(trainingDueReminderParams);
+      notifyAdmins(trainingDueReminderParams);
+      notifyNTCOs(trainingDueReminderParams);
+      notifyUser(applicant, {
+        ...trainingDueReminderParams,
+        ...{
+          fullName: 'Your',
+          fullNameInSubject: 'You',
+          their: 'your',
+          need: 'need'
+        }
+      });
+      return notifications;
+    }
   }
 
   if (taskHelper.isWithApplicant(task)) {
