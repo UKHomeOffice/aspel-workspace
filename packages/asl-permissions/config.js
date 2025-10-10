@@ -76,6 +76,7 @@ module.exports = {
       read: {
         all: ['asru:*', 'establishment:admin', 'establishment:read'],
         basic: ['asru:*', 'establishment:*'],
+        catE: ['asru:*', 'establishment:admin', 'establishment:role:ntco'],
         single: ['asru:*', 'holdingEstablishment:admin', 'holdingEstablishment:read', 'additionalEstablishment:admin', 'additionalEstablishment:read', 'project:own', 'project:collaborator']
       },
       manageAccess: ['holdingEstablishment:admin', 'project:own', 'asru:inspector', 'additionalEstablishment:admin'],

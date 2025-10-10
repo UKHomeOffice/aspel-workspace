@@ -27,6 +27,19 @@ describe('/projects', () => {
       });
   });
 
+  it('returns project licenses to add course which is approved for higher education or training purposes', () => {
+    return request(this.api)
+      // "abc" matches licence number for all projects
+      .get(`/establishment/${ids.establishments.croydon}/projects/project-licences/cat-e`)
+      .expect(200)
+      .expect(response => {
+        assert.equal(response.body.data.length, 1, 'Returns exactly one project');
+        const project = response.body.data[0];
+        assert.equal(project.title, 'Active AA');
+        assert.equal(project.licenceNumber, 'abc000');
+      });
+  });
+
   describe('PUT /:id/revoke', () => {
     it('prevents the revocation of non-active projects', () => {
       return request(this.api)
