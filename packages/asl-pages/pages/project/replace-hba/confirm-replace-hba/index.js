@@ -80,7 +80,7 @@ module.exports = (settings) => {
           }
         };
 
-        return req.api(`/project/${req.params.projectId}/replace-hba`, opts)
+        return req.api(`/project-versions/${req.project?.granted?.id}/replace-hba`, opts)
           .then(() => res.setFlash('HBA file replaced', `${filename} is now attached to this licence.`, 'success'))
           .then(() => res.redirect(req.buildRoute('project.read', { projectId: req.params.projectId })))
           .catch(next);
