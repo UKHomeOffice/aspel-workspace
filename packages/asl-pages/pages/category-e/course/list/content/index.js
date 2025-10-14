@@ -2,9 +2,10 @@ const baseContent = require('../../content');
 
 module.exports = {
   ...baseContent,
+  noCoursesMessage: 'There are no courses yet.',
   tableCaption: 'Higher education or training courses',
   fields: {
-    title: {
+    courseTitle: {
       label: 'Course title'
     },
     species: {

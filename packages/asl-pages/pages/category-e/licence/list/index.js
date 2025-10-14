@@ -8,9 +8,9 @@ module.exports = settings => {
     root: __dirname
   });
 
-  app.use((req, res, next) => {
+  app.get('/', (req, res, next) => {
     const pageContent = res.locals.static.content.landingPage;
-    res.locals.pageTitle = `${pageContent.tabs.courses} - ${pageContent.title} - ${req.establishment.name}`;
+    res.locals.pageTitle = `${pageContent.tabs.licences} - ${pageContent.title} - ${req.establishment.name}`;
     next();
   });
 

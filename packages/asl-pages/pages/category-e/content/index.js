@@ -1,7 +1,8 @@
 module.exports = {
   landingPage: {
     title: 'Courses and category E PILs',
-    subtitle:
+    noCoursesMessage: 'There are no courses or category E PILs yet.',
+    addCourseDescription:
       'To apply for category E PILs for course participants, first add a new ' +
       'course or select an existing course.',
     tabs: {
@@ -11,8 +12,11 @@ module.exports = {
     buttons: {
       add: 'Add course details'
     },
-    cannotUpdate: 'No training courses have been added, you’ll need to contact ' +
-      'an Admin user or NTCO at your establishment if you wish to add a ' +
-      'training course.'
+    cannotUpdate: 'Only a person with establishment admin permissions or who' +
+      ' has been assigned the NTCO role, can add courses and apply for' +
+      ' category E PILs.'
+  },
+  actions: {
+    revoke: 'Revoke'
   }
 };

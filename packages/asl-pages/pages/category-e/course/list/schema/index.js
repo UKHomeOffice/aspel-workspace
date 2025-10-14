@@ -1,5 +1,6 @@
 module.exports = {
-  title: {
+  courseTitle: {
+    accessor: 'title',
     show: true
   },
   species: {

@@ -12,17 +12,15 @@ module.exports = aslSchema => {
     const licenceHolderId = get(task, 'data.modelData.licenceHolderId') || get(task, 'data.data.licenceHolderId');
     const assignedAsruId = get(task, 'assignedTo');
 
-    if (subjectId) {
-      task.subject = await cache.query(Profile, subjectId, columns);
-    }
+    const [subject, licenceHolder, assignedTo] = await Promise.all([
+      subjectId ? cache.query(Profile, subjectId, columns) : Promise.resolve(null),
+      licenceHolderId ? cache.query(Profile, licenceHolderId, columns) : Promise.resolve(null),
+      assignedAsruId ? cache.query(Profile, assignedAsruId, columns) : Promise.resolve(null)
+    ]);
 
-    if (licenceHolderId) {
-      task.licenceHolder = await cache.query(Profile, licenceHolderId, columns);
-    }
-
-    if (assignedAsruId) {
-      task.assignedTo = await cache.query(Profile, assignedAsruId, columns);
-    }
+    if (subject) task.subject = subject;
+    if (licenceHolder) task.licenceHolder = licenceHolder;
+    if (assignedTo) task.assignedTo = assignedTo;
 
     return task;
   };
