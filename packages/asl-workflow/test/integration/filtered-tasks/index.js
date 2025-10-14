@@ -20,17 +20,17 @@ describe('Filtered tasks', () => {
 
   describe('External users', () => {
     before(() => {
-      this.workflow.setUser({ profile: holc });
+      this.workflow.setUser({
+        profile: holc,
+        can: async (permission, context) =>
+          context?.establishment === '8201' && permission === 'tasks.filter.byEstablishment'
+      });
     });
 
     it('cannot query without specifying an establishment', () => {
       return request(this.workflow)
         .get(`/filtered-tasks`)
-        .expect(400)
-        .then(response => response.body)
-        .then(error => {
-          assert.equal(error.message, 'establishment must be provided for non-ASRU users');
-        });
+        .expect(404);
     });
 
     it('cannot query establishments they do not belong to', () => {

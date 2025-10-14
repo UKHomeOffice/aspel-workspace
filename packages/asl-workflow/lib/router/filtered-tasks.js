@@ -3,7 +3,7 @@ const moment = require('moment');
 const { get, isUndefined } = require('lodash');
 const router = Router({ mergeParams: true });
 
-const { BadRequestError, NotFoundError } = require('@asl/service/errors');
+const { NotFoundError } = require('@asl/service/errors');
 const { Task } = require('@ukhomeoffice/asl-taskflow');
 const { filterToEstablishments } = require('../query-builders/filter-to-establishments');
 const {
@@ -60,16 +60,25 @@ const buildQuery = filters => {
   return query;
 };
 
-const checkPermissions = (user, query) => {
-  if (!user.profile.asruUser) {
-    const establishment = get(query, 'filters.establishment');
-    if (!establishment) {
-      throw new BadRequestError('establishment must be provided for non-ASRU users');
-    }
-    if (!user.profile.establishments.some(est => est.id === establishment)) {
-      throw new NotFoundError();
-    }
+const checkPermissions = async(user, query) => {
+  if (await user.can('tasks.filter.all')) {
+    return;
   }
+
+  const establishment = get(query, 'filters.establishment');
+  if (!establishment) {
+    throw new NotFoundError();
+  }
+
+  if (await user.can('tasks.filter.byEstablishment', query.filters)) {
+    return;
+  }
+
+  if (query.filters?.model && await user.can(`${query.filters.model}.filterTasks`, query.filters)) {
+    return;
+  }
+
+  throw new NotFoundError();
 };
 
 module.exports = (taskflow) => {
@@ -80,14 +89,28 @@ module.exports = (taskflow) => {
     Promise.resolve()
       .then(() => checkPermissions(req.user, req.query))
       .then(() => {
-        const { sort = { column: 'updatedAt', ascending: true }, filters = {}, limit, offset } = req.query;
+        const {
+          sort = { column: 'updatedAt', ascending: true },
+          filters = {},
+          search,
+          searchFields = [],
+          limit,
+          offset
+        } = req.query;
 
         let query = buildQuery(filters);
-        query = Task.orderBy({ query, sort });
+        query = Task.filterBySearchTerm(query, search, searchFields);
+        (Array.isArray(sort.column) ? sort.column : [sort.column]).forEach(
+          column => {
+            query = Task.orderBy({ query, sort: { ...sort, column } });
+          }
+        );
+
         query = Task.paginate({ query, limit, offset });
 
         req.log('debug', { filters });
-        req.log('debug', { sql: query.toKnexQuery().toString() });
+        const sql = query.toKnexQuery().toString();
+        req.log('info', { sql });
 
         const totalQuery = buildQuery(filters).count();
         const totalCount = totalQuery.then(result => parseInt(result[0].count, 10));

@@ -35,7 +35,7 @@ describe('/billing', () => {
       });
   });
 
-  it('includes transfered PILs in the response', () => {
+  it('includes transferred PILs in the response', () => {
     return request(this.api)
       .get(`/establishment/${ids.establishments.marvell}/billing?year=2019`)
       .expect(200)
@@ -151,10 +151,10 @@ describe('/billing', () => {
         .get(`/establishment/${ids.establishments.croydon}/billing/pils?year=2020`)
         .expect(200)
         .expect(response => {
-          const transfered = response.body.data.find(pil => pil.id === ids.pils.linfordChristie);
-          const notTransfered = response.body.data.find(pil => pil.id === ids.pils.multipleEstablishments);
-          assert.equal(transfered.startDate, '2020-01-01T12:00:00.000Z'); // start date is transfer date
-          assert.equal(notTransfered.startDate, '2016-01-01T12:00:00.000Z'); // start date is issue date
+          const transferred = response.body.data.find(pil => pil.id === ids.pils.linfordChristie);
+          const notTransferred = response.body.data.find(pil => pil.id === ids.pils.multipleEstablishments);
+          assert.equal(transferred.startDate, '2020-01-01T12:00:00.000Z'); // start date is transfer date
+          assert.equal(notTransferred.startDate, '2016-01-01T12:00:00.000Z'); // start date is issue date
         });
     });
 
@@ -163,8 +163,8 @@ describe('/billing', () => {
         .get(`/establishment/${ids.establishments.marvell}/billing/pils?year=2019`)
         .expect(200)
         .expect(response => {
-          const transfered = response.body.data.find(pil => pil.id === ids.pils.linfordChristie);
-          assert.equal(transfered.endDate, '2020-01-01T12:00:00.000Z'); // end date is transfer date
+          const transferred = response.body.data.find(pil => pil.id === ids.pils.linfordChristie);
+          assert.equal(transferred.endDate, '2020-01-01T12:00:00.000Z'); // end date is transfer date
         });
     });
 

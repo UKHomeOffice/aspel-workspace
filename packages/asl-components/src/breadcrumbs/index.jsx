@@ -11,16 +11,18 @@ export const Breadcrumb = ({ crumb = {}, link = false }) => {
         crumb = crumb.label;
     }
 
+    const snippet =
+      <Snippet {...props} fallback={`breadcrumbs.${crumb}.index`}>
+          {`breadcrumbs.${crumb}`}
+      </Snippet>;
+
     return (
         <li className="govuk-breadcrumbs__list-item"
             data-testid="breadcrumb"
             data-crumb={crumb}
-            data-link={link}>
-            {
-                link
-                    ? <Link page={crumb} label={<Snippet {...props}>{`breadcrumbs.${crumb}`}</Snippet>} {...props} />
-                    : <Snippet {...props}>{`breadcrumbs.${crumb}`}</Snippet>
-            }
+            data-link={link}
+        >
+            {link ? <Link page={crumb} label={snippet} {...props} /> : snippet}
         </li>
     );
 };
