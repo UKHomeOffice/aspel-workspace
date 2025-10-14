@@ -29,44 +29,35 @@ module.exports = (settings) => {
     next();
   });
 
-  app.put('/:index/:id', async (req, res, next) => {
-    const { index, id } = req.params;
-    const options = { id };
+  app.put('/:index/:id', (req, res, next) => {
+    const options = { id: req.params.id };
 
-    try {
-      const client = settings.esClient;
-      logger.info(`Starting reindex for ${index}:${id}`);
+    return Promise.resolve(settings.esClient)
+      .then(client => {
+        switch (req.params.index) {
+          case 'establishments':
+            return Promise.all([
+              indexers.establishments(aslSchema, client, options),
+              indexers.places(aslSchema, client, { establishmentId: req.params.id })
+            ]);
 
-      switch (index) {
-        case 'establishments':
-          await Promise.all([
-            indexers.establishments(aslSchema, client, options),
-            indexers.places(aslSchema, client, { establishmentId: id })
-          ]);
-          break;
+          case 'projects':
+            return Promise.all([
+              indexers.projects(aslSchema, client, options),
+              indexers['projects-content'](aslSchema, client, options)
+            ]);
 
-        case 'projects':
-          await Promise.all([
-            indexers.projects(aslSchema, client, options),
-            indexers['projects-content'](aslSchema, client, options)
-          ]);
-          break;
+          case 'tasks':
+            return indexers.tasks({ aslSchema, taskflowDb, esClient: client, logger, options });
 
-        case 'tasks':
-          await indexers.tasks({ aslSchema, taskflowDb, esClient: client, logger, options });
-          break;
-
-        default:
-          await indexers[index](aslSchema, client, options);
-      }
-
-      logger.info(`Successfully reindexed ${index}:${id}`);
-      res.json({ message: `Reindexed ${index}:${id}` });
-
-    } catch (err) {
-      logger.error(`Error reindexing ${req.params.index}:${req.params.id}`, err);
-      next(err);
-    }
+          default:
+            return indexers[req.params.index](aslSchema, client, options);
+        }
+      })
+      .then(() => {
+        res.json({ message: `Re-indexed ${req.params.index}:${req.params.id}` });
+      })
+      .catch(next);
   });
 
   return app;
