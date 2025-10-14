@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "nodemon -r dotenv/config",
     "test": "eslint .",
-    "indexer": "bin/indexer",
-    "rebuildIndex": "bin/indexer --reset"
+    "indexer": "bin/indexer"
   },
   "author": "",
   "license": "MIT",
@@ -18,7 +17,6 @@
     "@asl/service": "file:../asl-service",
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@elastic/elasticsearch": "7.13.0",
-    "elasticsearch": "^16.7.3",
     "elasticsearch-writable-stream": "^2.0.1",
     "aws-sdk": "^2.864.0",
     "chalk": "^4.0.0",
