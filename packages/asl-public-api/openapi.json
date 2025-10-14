@@ -79,15 +79,9 @@
           "previousEstablishmentId": { "type": ["integer", "null"] },
           "transferProjectId": { "type": ["string", "null"], "format": "uuid" },
           "transferEstablishmentId": { "type": ["integer", "null"] },
-          "raDate": { "type": ["string", "null"], "format": "date-time" },
-          "species": {
-            "type": ["array", "null"],
-            "items": { "type": "string" }
-          },
-          "raGrantedDate": {
-            "type": ["string", "null"],
-            "format": "date-time"
-          },
+          "raDate": { "type": [ "string", "null" ], "format": "date-time" },
+          "species": { "type": ["array", "null"], "items": { "type": "string" } },
+          "raGrantedDate": { "type": ["string", "null"], "format": "date-time" },
           "refusedDate": { "type": ["string", "null"], "format": "date-time" },
           "suspendedDate": { "type": ["string", "null"], "format": "date-time" }
         },
@@ -112,23 +106,13 @@
           "id": { "type": "integer" },
           "name": { "type": "string" },
           "status": { "type": "string" },
-          "revocationDate": {
-            "type": ["string", "null"],
-            "format": "date-time"
-          },
+          "revocationDate": { "type": ["string", "null"], "format": "date-time" },
           "issueDate": { "type": "string", "format": "date-time" },
           "isTrainingEstablishment": { "type": "boolean" },
-          "corporateStatus": {
-            "type": ["string", "null"],
-            "enum": ["non-profit", "corporate"]
-          }
+          "corporateStatus": { "type": ["string", "null"], "enum": ["non-profit", "corporate"]}
         },
         "required": [
-          "id",
-          "name",
-          "status",
-          "issueDate",
-          "isTrainingEstablishment"
+          "id", "name", "status", "issueDate", "isTrainingEstablishment"
         ]
       }
     }
@@ -163,9 +147,7 @@
                       "properties": {
                         "total": { "type": "integer" },
                         "count": { "type": "integer" },
-                        "establishment": {
-                          "$ref": "#/components/schemas/EstablishmentSummary"
-                        }
+                        "establishment": { "$ref": "#/components/schemas/EstablishmentSummary" }
                       },
                       "required": ["total", "count", "establishment"]
                     }
