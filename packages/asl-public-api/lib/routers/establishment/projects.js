@@ -233,7 +233,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.param('projectId', (req, res, next, projectId) => {
-  if (projectId === 'ras-due' || projectId === 'project-licences') {
+  if (projectId === 'ras-due' || projectId === 'cat-e') {
     return next('route');
   }
   const { Project } = req.models;
