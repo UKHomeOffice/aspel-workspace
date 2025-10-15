@@ -219,9 +219,9 @@
                           "expiry-date": "2026-12-31T23:59:59Z"
                         },
                         {
-                          "project-title": "Neuroscience Study",
+                          "project-title": "Training establishment project",
                           "licence-number": "PPL7654321",
-                          "species": ["zebrafish"],
+                          "species": ["rat"],
                           "expiry-date": "2025-06-30T23:59:59Z"
                         }
                       ]
