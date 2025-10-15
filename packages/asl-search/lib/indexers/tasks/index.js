@@ -228,31 +228,6 @@ function createDocumentTransform() {
   });
 }
 
-function createProgressCounter() {
-  let taskCount = 0;
-  let lastLogged = 0;
-
-  return new Transform({
-    objectMode: true,
-    transform(data, encoding, callback) {
-      taskCount++;
-
-      // Log progress every 10,000 records for large datasets
-      if (taskCount - lastLogged >= 10000) {
-        console.log(`Processed ${taskCount} tasks...`);
-        lastLogged = taskCount;
-      }
-
-      callback(null, data);
-    },
-
-    flush(callback) {
-      console.log(`Total tasks processed: ${taskCount}`);
-      callback();
-    }
-  });
-}
-
 function createBulkIndexStream(esClient, logger) {
   const bulkIndexStream = new ElasticsearchWritableStream(esClient, {
     highWaterMark: 500, // Increased for better throughput
