@@ -10,14 +10,20 @@ const indexEnforcement = (esClient, enforcement) => {
     id: enforcement.id,
     body: {
       ...pick(enforcement, columnsToIndex),
-      subjects: enforcement.subjects.map(subject => {
+      subjects: (enforcement.subjects || []).map(subject => {
+        // Add null checks to prevent errors
+        if (!subject || !subject.profile || !subject.establishment) {
+          return null;
+        }
         return {
-          profile: subject.profile,
+          profile: pick(subject.profile, ['id', 'firstName', 'lastName', 'email']),
           establishment: subject.establishment.name,
-          establishmentKeywords: subject.establishment.keywords,
-          flags: subject.flags
+          establishmentKeywords: subject.establishment.keywords || [],
+          flags: (subject.flags || []).map(flag =>
+            pick(flag, ['id', 'modelType', 'modelId'])
+          )
         };
-      })
+      }).filter(Boolean) // Remove null subjects
     }
   });
 };
@@ -103,6 +109,7 @@ module.exports = (schema, esClient, options = {}) => {
       }
     })
     .then(() => {
+      // SIMPLIFIED: Only fetch essential relationships
       return EnforcementCase.query()
         .where(builder => {
           if (options.id) {
@@ -110,13 +117,20 @@ module.exports = (schema, esClient, options = {}) => {
           }
         })
         .select(columnsToIndex)
-        .withGraphFetched('subjects.[establishment, profile, flags.[establishment, profile.establishments, pil.establishment, project.establishment]]');
+        .withGraphFetched('subjects.[establishment, profile, flags]'); // Simplified!
     })
     .then(enforcements => {
       console.log(`Indexing ${enforcements.length} enforcements`);
-      return enforcements.reduce((p, enforcement) => {
-        return p.then(() => indexEnforcement(esClient, enforcement));
-      }, Promise.resolve());
+
+      // Use Promise.all for parallel processing (since you only have 7 records)
+      return Promise.all(
+        enforcements.map(enforcement =>
+          indexEnforcement(esClient, enforcement).catch(error => {
+            console.error(`Failed to index enforcement ${enforcement.id}:`, error.message);
+            return null; // Continue even if one fails
+          })
+        )
+      );
     })
     .then(() => esClient.indices.refresh({ index: indexName }));
 };

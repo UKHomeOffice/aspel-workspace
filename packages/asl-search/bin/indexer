@@ -1,75 +1,199 @@
 #!/usr/bin/env node
 
 try {
-  // eslint-disable-next-line implicit-dependencies/no-implicit
   require('dotenv').config();
 } catch (e) {}
 
 const { get } = require('lodash');
 const minimist = require('minimist');
-const { green } = require('chalk');
+const { green, yellow, red } = require('chalk');
 const winston = require('winston');
 const settings = require('../config');
 const db = require('../lib/db');
 const taskflowDb = require('../lib/db/taskflow');
 const { createESClient } = require('../lib/elasticsearch');
-
 const { indexers } = require('../lib/indexers');
 
-const start = process.hrtime();
 const args = minimist(process.argv.slice(2));
 const model = args._[0] || 'all';
 
 const logger = winston.createLogger({
   level: 'debug',
-  transports: [ new winston.transports.Console({ level: process.env.LOG_LEVEL || 'info' }) ]
+  transports: [new winston.transports.Console({ level: process.env.LOG_LEVEL || 'info' })]
 });
 
-Promise.resolve()
-  .then(() => createESClient(settings.es))
-  .then(esClient => {
-    const index = key => {
-      console.log(`Indexing ${green(key)}`);
-      const indexer = indexers[key];
-      if (!indexer) {
-        throw new Error(`No indexer available for ${green(model)}.`);
-      }
-      return Promise.resolve()
-        .then(() => {
-          if (key === 'tasks') {
-            return indexer({ aslSchema: db, taskflowDb, esClient, logger, options: args });
-          }
-          return indexer(db, esClient, args);
-        })
-        .then(() => {
-          console.log(`Completed index ${green(key)}`);
-          console.log();
-        });
+class IndexManager {
+  constructor(esClient, options = {}) {
+    this.esClient = esClient;
+    this.options = options;
+    this.stats = {
+      startTime: Date.now(),
+      processed: 0,
+      errors: 0
     };
 
-    if (model === 'all') {
-      return Object.keys(indexers).reduce((p, key) => p.then(() => index(key)), Promise.resolve());
-    }
-    return index(model);
-  })
+    // Define large indexes that need special handling
+    this.largeIndexes = ['projects', 'projects-content', 'tasks'];
+  }
 
-  .then(() => {
-    console.log('Done!');
+  async indexAll() {
+    console.log(yellow('Starting sequential indexing for all models...'));
+
+    const indexKeys = Object.keys(indexers);
+    const results = [];
+
+    // Process ONE index at a time (sequential) for large datasets
+    const BATCH_SIZE = 1;
+
+    for (let i = 0; i < indexKeys.length; i += BATCH_SIZE) {
+      const batch = indexKeys.slice(i, i + BATCH_SIZE);
+      const currentKey = batch[0];
+
+      console.log(yellow(`Processing: ${currentKey}`));
+
+      const batchResults = await Promise.allSettled(
+        batch.map(key => this.indexSingle(key))
+      );
+
+      results.push(...batchResults);
+
+      // Longer pause between indexes, especially after large ones
+      if (i + BATCH_SIZE < indexKeys.length) {
+        const delayTime = this.largeIndexes.includes(currentKey) ? 10000 : 2000;
+        console.log(yellow(`Cooling down for ${delayTime/1000} seconds...`));
+        await this.delay(delayTime);
+      }
+    }
+
+    return this.report(results);
+  }
+
+  async indexSingle(key) {
+    const startTime = Date.now();
+    console.log(green(`Indexing ${key}...`));
+
+    try {
+      const indexer = indexers[key];
+      if (!indexer) {
+        throw new Error(`No indexer available for ${key}`);
+      }
+
+      let result;
+      if (key === 'tasks') {
+        result = await indexer({
+          aslSchema: db,
+          taskflowDb,
+          esClient: this.esClient,
+          logger,
+          options: this.options
+        });
+      } else {
+        result = await indexer(db, this.esClient, this.options);
+      }
+
+      const duration = Date.now() - startTime;
+      const rate = result && typeof result === 'number' ? Math.round(result / (duration / 1000)) : 'N/A';
+
+      if (typeof result === 'number') {
+        console.log(green(`✓ Completed ${key}: ${result} records in ${duration}ms (${rate} records/sec)`));
+      } else {
+        console.log(green(`✓ Completed ${key} in ${duration}ms`));
+      }
+
+      return { key, success: true, duration, result };
+    } catch (error) {
+      const duration = Date.now() - startTime;
+      console.error(red(`✗ Failed ${key} after ${duration}ms:`), error.message);
+
+      return { key, success: false, duration, error: error.message };
+    }
+  }
+
+  async report(results) {
+    const totalTime = Date.now() - this.stats.startTime;
+    const successful = results.filter(r => r.status === 'fulfilled' && r.value.success).length;
+    const failed = results.filter(r => r.status === 'rejected' || !r.value?.success).length;
+
+    console.log('\n' + '='.repeat(50));
+    console.log(yellow('INDEXING COMPLETE'));
+    console.log('='.repeat(50));
+    console.log(green(`Successful: ${successful}`));
+    console.log(red(`Failed: ${failed}`));
+    console.log(yellow(`Total time: ${Math.round(totalTime / 1000)}s`));
+
+    // Log detailed results
+    results.forEach(result => {
+      if (result.status === 'fulfilled' && result.value.success) {
+        const value = result.value;
+        const recordInfo = typeof value.result === 'number' ? ` (${value.result} records)` : '';
+        console.log(green(`  ✓ ${value.key}: ${value.duration}ms${recordInfo}`));
+      } else {
+        const error = result.status === 'rejected' ? result.reason : result.value?.error;
+        console.log(red(`  ✗ ${result.value?.key || 'unknown'}: ${error}`));
+      }
+    });
+
+    return { successful, failed, totalTime };
+  }
+
+  delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+}
+
+// Graceful shutdown handling
+process.on('SIGINT', async () => {
+  console.log(yellow('\nReceived SIGINT. Shutting down gracefully...'));
+  await cleanup();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  console.log(yellow('\nReceived SIGTERM. Shutting down gracefully...'));
+  await cleanup();
+  process.exit(0);
+});
+
+async function cleanup() {
+  try {
+    console.log(yellow('Closing database connections...'));
+    await Promise.allSettled([
+      db.destroy(),
+      taskflowDb.destroy()
+    ]);
+    console.log(green('Cleanup completed'));
+  } catch (error) {
+    console.error(red('Cleanup error:'), error);
+  }
+}
+
+// Main execution
+async function main() {
+  const start = process.hrtime();
+
+  try {
+    const esClient = await createESClient(settings.es);
+    const manager = new IndexManager(esClient, args);
+
+    let result;
+    if (model === 'all') {
+      result = await manager.indexAll();
+    } else {
+      result = await manager.indexSingle(model);
+    }
 
     const end = process.hrtime(start);
-    console.log(`\nIndexing took: ${(end[0] * 1000) + Math.round(end[1] / 1e6)}ms`);
+    const totalMs = (end[0] * 1000) + Math.round(end[1] / 1e6);
+    console.log(yellow(`\nTotal script execution: ${totalMs}ms (${Math.round(totalMs / 1000)}s)`));
 
-    db.destroy();
-    taskflowDb.destroy();
-    process.exit(0);
-  })
+    await cleanup();
+    process.exit(result.failed > 0 ? 1 : 0);
 
-  .catch(err => {
-    const error = get(err, 'meta.body.error');
-    if (error) {
-      console.error(error);
-    } else {
-      console.log(err);
-    }
+  } catch (error) {
+    console.error(red('Fatal error:'), error);
+    await cleanup();
     process.exit(1);
-  });
+  }
+}
+
+main();

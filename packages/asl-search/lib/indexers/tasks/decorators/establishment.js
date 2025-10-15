@@ -3,17 +3,26 @@ const { get, pick } = require('lodash');
 module.exports = aslSchema => {
   const { Establishment } = aslSchema;
 
-  // preload all establishments into memory so that we don't have to query the db for every task
   return Establishment.queryWithDeleted().select('id', 'name')
     .then(establishments => {
+      // Create Map for O(1) lookups
+      const establishmentMap = new Map(
+        establishments.map(e => [e.id, pick(e, 'id', 'name')])
+      );
+
       return task => {
         const establishmentId = get(task, 'data.establishmentId');
 
         if (establishmentId) {
-          task.establishment = pick(establishments.find(e => e.id === establishmentId), 'id', 'name');
+          task.establishment = establishmentMap.get(establishmentId);
         }
 
         return task;
       };
+    })
+    .catch(error => {
+      console.error('Failed to load establishments:', error);
+      // Return a fallback decorator that doesn't fail
+      return task => task;
     });
 };
