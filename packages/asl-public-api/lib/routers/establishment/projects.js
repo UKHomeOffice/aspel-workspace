@@ -454,7 +454,12 @@ router.get('/cat-e',
 
     try {
       const results = await Project.query()
-        .select('projects.*')
+        .select([
+          'projects.title as project-title',
+          'projects.licenceNumber as licence-number',
+          'projects.species',
+          'projects.expiryDate as expiry-date'
+        ])
         .joinRaw(`
           JOIN LATERAL (
             SELECT *
