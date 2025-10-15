@@ -443,7 +443,7 @@ router.get('/ras-due', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/project-licences/cat-e',
+router.get('/cat-e',
   permissions('project.read.catE'),
   async (req, res, next) => {
     const { Project } = req.models;

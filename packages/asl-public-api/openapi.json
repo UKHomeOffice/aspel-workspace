@@ -114,6 +114,24 @@
         "required": [
           "id", "name", "status", "issueDate", "isTrainingEstablishment"
         ]
+      },
+      "CatEProject": {
+        "type": "object",
+        "properties": {
+          "project-title": { "type": "string" },
+          "licence-number": { "type": "string" },
+          "species": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "expiry-date": { "type": "string", "format": "date-time" }
+        },
+        "required": [
+          "project-title",
+          "licence-number",
+          "species",
+          "expiry-date"
+        ]
       }
     }
   },
@@ -160,9 +178,9 @@
         }
       }
     },
-    "/establishment/{establishmentId}/project-licences": {
+    "/establishment/{establishmentId}/projects/cat-e": {
       "get": {
-        "summary": "Get project licences for an establishment",
+        "summary": "List an establishment's project licences that are licenced for training and higher education",
         "tags": ["Courses and category E licences"],
         "parameters": [
           {
@@ -174,7 +192,7 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of project licences at the establishment",
+            "description": "Successful response containing the list of training and higher education project licences",
             "content": {
               "application/json": {
                 "schema": {
@@ -183,19 +201,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "type": "object",
-                        "properties": {
-                          "project-title": { "type": "string" },
-                          "licence-number": { "type": "string" },
-                          "species": {
-                            "type": "array",
-                            "items": { "type": "string" }
-                          },
-                          "expiry-date": {
-                            "type": "string",
-                            "format": "date-time"
-                          }
-                        }
+                        "$ref": "#/components/schemas/CatEProject"
                       }
                     }
                   },
