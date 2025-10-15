@@ -31,7 +31,9 @@ describe('/projects', () => {
   it('returns project licenses to add course which is approved for higher education or training purposes', async () => {
     const res = await openAPI.validateGet(
       this.api,
-      `/establishment/${ids.establishments.trainingEstablishment}/projects/cat-e`);
+      '/establishment/{establishmentId}/projects/cat-e',
+      {establishmentId: ids.establishments.trainingEstablishment}
+    );
 
     assert.equal(res.status, 200);
     assert.equal(res.body.data.length, 1, 'Returns exactly one project');

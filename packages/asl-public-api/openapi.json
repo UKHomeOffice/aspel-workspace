@@ -213,15 +213,15 @@
                     "value": {
                       "data": [
                         {
-                          "project-title": "Cancer Research Project",
+                          "project-title": "Training in complex procedures",
                           "licence-number": "PPL1234567",
-                          "species": ["mouse", "rat"],
+                          "species": ["mice", "rats"],
                           "expiry-date": "2026-12-31T23:59:59Z"
                         },
                         {
                           "project-title": "Training establishment project",
                           "licence-number": "PPL7654321",
-                          "species": ["rat"],
+                          "species": ["rats"],
                           "expiry-date": "2025-06-30T23:59:59Z"
                         }
                       ]
