@@ -134,6 +134,7 @@
       "CatEProject": {
         "type": "object",
         "properties": {
+          "id": { "type": "string", "format": "uuid" },
           "projectTitle": { "type": "string" },
           "licenceNumber": { "type": "string" },
           "species": {
@@ -142,7 +143,13 @@
           },
           "expiryDate": { "type": "string", "format": "date-time" }
         },
-        "required": ["projectTitle", "licenceNumber", "species", "expiryDate"]
+        "required": [
+          "id",
+          "projectTitle",
+          "licenceNumber",
+          "species",
+          "expiryDate"
+        ]
       }
     }
   },
@@ -226,12 +233,14 @@
                     "value": {
                       "data": [
                         {
+                          "id": 1,
                           "projectTitle": "Training in complex procedures",
                           "licenceNumber": "PPL1234567",
                           "species": ["mice", "rats"],
                           "expiryDate": "2026-12-31T23:59:59Z"
                         },
                         {
+                          "id": 2,
                           "projectTitle": "Training establishment project",
                           "licenceNumber": "PPL7654321",
                           "species": ["rats"],

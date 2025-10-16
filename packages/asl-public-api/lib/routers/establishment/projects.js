@@ -455,6 +455,7 @@ router.get('/cat-e',
     try {
       const results = await Project.query()
         .select([
+          'projects.id',
           'projects.title as projectTitle',
           'projects.licenceNumber as licenceNumber',
           'projects.species',
