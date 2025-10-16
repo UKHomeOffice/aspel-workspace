@@ -1,5 +1,6 @@
 const { page } = require('@asl/service/ui');
 const selectLicence = require('./routers/select-licence');
+const courseDetails = require('./routers/course-details');
 const { form } = require('../../../common/routers');
 const schema = require('./schema');
 const { pickBy } = require('lodash');
@@ -13,8 +14,8 @@ module.exports = settings => {
     root: __dirname,
     index: false,
     paths: [
-      '/select-licence'
-      //   '/course-details',
+      '/select-licence',
+      '/course-details'
       //   '/confirm'
     ]
   });
@@ -45,10 +46,24 @@ module.exports = settings => {
     configure(req, res, next) {
       req.form.schema = pickBy(schema, ({page}) => page === req.page);
       return next();
+    },
+    locals: (req, res, next) => {
+      const projectId = req.model.projectId;
+      if (!projectId) {
+        return next();
+      }
+      req.api(`/establishment/${req.establishmentId}/projects/${projectId}`)
+        .then(response => response.json.data)
+        .then(project => {
+          req.locals.static.project = project;
+          next();
+        })
+        .catch(next);
     }
   }));
 
   app.use('/select-licence', selectLicence());
+  app.use('/course-details', courseDetails());
 
   return app;
 };

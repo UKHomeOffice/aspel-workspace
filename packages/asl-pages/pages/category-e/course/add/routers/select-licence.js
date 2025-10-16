@@ -25,5 +25,9 @@ module.exports = () => {
 
   app.get('/', (req, res) => res.sendResponse());
 
+  app.post('/', (req, res) => {
+    return res.redirect(req.buildRoute('categoryE.course.add', {suffix: 'course-details'}));
+  });
+
   return app;
 };

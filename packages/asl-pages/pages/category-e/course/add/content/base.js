@@ -16,6 +16,9 @@ module.exports = {
   ...baseContent,
   fields: {
     projectId: { label: 'Select a project licence' },
+    title: { label: 'Course title' },
+    startDate: { label: 'Course start date' },
+    species: { label: 'Species' },
     coursePurpose: {
       label: 'Course Purpose',
       options: coursePurposeOptions
