@@ -1922,5 +1922,23 @@ module.exports = [
         }
       ]
     }
+  },
+  {
+    projectId: 'cf407d38-bbae-4782-a34d-4dc945619402',
+    status: 'granted',
+    data: {
+      title: 'Training in complex surgical procedures',
+      species: ['mice', 'rats'],
+      'training-licence': true
+    }
+  },
+  {
+    projectId: '9645a2ce-77f4-4baa-ad41-add4070637b1',
+    status: 'granted',
+    data: {
+      title: 'Training course procedures',
+      species: ['mice', 'rats'],
+      'training-licence': true
+    }
   }
 ];

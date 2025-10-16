@@ -25,5 +25,7 @@ module.exports = settings => {
     }
   })({ schema, defaultRowCount: 10 }));
 
+  app.get('/', (req, res) => res.sendResponse());
+
   return app;
 };

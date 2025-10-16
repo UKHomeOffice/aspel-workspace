@@ -151,6 +151,37 @@
           "expiryDate"
         ]
       }
+    },
+    "parameters": {
+      "Sort": {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "column": {
+            "oneOf": [
+              {"type": "string"},
+              {"type": "array", "items": {"type": "string"}}
+            ]
+          },
+          "ascending": {"type": "boolean"}
+        },
+        "description": "Used by datatables to specify the column(s) to sort by, and the direction"
+      },
+      "Limit": {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": {"type": "integer", "minimum": 1},
+        "description": "Used by datatables to specify the page size when paginating"
+      },
+      "Offset": {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "schema": {"type": "integer", "minimum": 0},
+        "description": "Used by datatables to specify the page offset when paginating"
+      }
     }
   },
   "paths": {
@@ -208,7 +239,10 @@
             "in": "path",
             "required": true,
             "schema": { "type": "integer" }
-          }
+          },
+          { "$ref": "#/components/parameters/Sort" },
+          { "$ref": "#/components/parameters/Limit" },
+          { "$ref": "#/components/parameters/Offset" }
         ],
         "responses": {
           "200": {
@@ -223,9 +257,18 @@
                       "items": {
                         "$ref": "#/components/schemas/CatEProject"
                       }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total": { "type": "integer" },
+                        "count": { "type": "integer" },
+                        "establishment": { "$ref": "#/components/schemas/EstablishmentSummary" }
+                      },
+                      "required": ["total", "count", "establishment"]
                     }
                   },
-                  "required": ["data"]
+                  "required": ["data", "meta"]
                 },
                 "examples": {
                   "example-1": {

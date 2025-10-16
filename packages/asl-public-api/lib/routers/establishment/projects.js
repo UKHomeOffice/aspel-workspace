@@ -452,8 +452,10 @@ router.get('/cat-e',
       return next(new BadRequestError('Missing establishment id'));
     }
 
+    const {sort, limit = 10, offset = 0} = req.query ?? {};
+
     try {
-      const results = await Project.query()
+      let query = Project.query()
         .select([
           'projects.id',
           'projects.title as projectTitle',
@@ -474,7 +476,16 @@ router.get('/cat-e',
         .where({ 'projects.establishmentId': req.establishment.id })
         .whereRaw("(pv.data->>'training-licence')::boolean = true");
 
+      if (sort.column) {
+        query = Project.orderBy({query, sort});
+      }
+      query = Project.paginate({query, limit, offset});
+
+      const { results, total } = await query;
+      res.meta.total = total;
+      res.meta.count = total;
       res.response = results;
+
       next();
     } catch (error) {
       next(error);
