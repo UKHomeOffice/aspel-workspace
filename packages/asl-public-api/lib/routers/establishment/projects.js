@@ -476,7 +476,7 @@ router.get('/cat-e',
         .where({ 'projects.establishmentId': req.establishment.id })
         .whereRaw("(pv.data->>'training-licence')::boolean = true");
 
-      if (sort.column) {
+      if (sort?.column) {
         query = Project.orderBy({query, sort});
       }
       query = Project.paginate({query, limit, offset});
