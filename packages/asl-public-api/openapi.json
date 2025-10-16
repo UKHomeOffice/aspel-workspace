@@ -233,14 +233,14 @@
                     "value": {
                       "data": [
                         {
-                          "id": 1,
+                          "id": "7a79e0ab-89da-471a-993b-1fd7cb4cff66",
                           "projectTitle": "Training in complex procedures",
                           "licenceNumber": "PPL1234567",
                           "species": ["mice", "rats"],
                           "expiryDate": "2026-12-31T23:59:59Z"
                         },
                         {
-                          "id": 2,
+                          "id": "467295a2-948a-4a34-a729-6d9a38448882",
                           "projectTitle": "Training establishment project",
                           "licenceNumber": "PPL7654321",
                           "species": ["rats"],
