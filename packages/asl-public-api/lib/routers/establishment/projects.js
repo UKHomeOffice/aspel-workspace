@@ -233,7 +233,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.param('projectId', (req, res, next, projectId) => {
-  if (projectId === 'ras-due') {
+  if (projectId === 'ras-due' || projectId === 'cat-e') {
     return next('route');
   }
   const { Project } = req.models;
@@ -442,6 +442,45 @@ router.get('/ras-due', (req, res, next) => {
     .then(() => next())
     .catch(next);
 });
+
+router.get('/cat-e',
+  permissions('project.read.catE'),
+  async (req, res, next) => {
+    const { Project } = req.models;
+
+    if (!req.establishment || !req.establishment.id) {
+      return next(new BadRequestError('Missing establishment id'));
+    }
+
+    try {
+      const results = await Project.query()
+        .select([
+          'projects.id',
+          'projects.title as projectTitle',
+          'projects.licenceNumber as licenceNumber',
+          'projects.species',
+          'projects.expiryDate as expiryDate'
+        ])
+        .joinRaw(`
+          JOIN LATERAL (
+            SELECT *
+            FROM project_versions pv
+            WHERE pv.project_id = projects.id AND pv.status = 'granted'
+            ORDER BY pv.created_at DESC
+            LIMIT 1
+          ) pv ON TRUE
+        `)
+        .where({ 'projects.status': 'active' })
+        .where({ 'projects.establishmentId': req.establishment.id })
+        .whereRaw("(pv.data->>'training-licence')::boolean = true");
+
+      res.response = results;
+      next();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 router.use('/:projectId', loadVersions, loadRa);
 

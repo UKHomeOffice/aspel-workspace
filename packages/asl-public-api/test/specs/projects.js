@@ -1,6 +1,7 @@
 const assert = require('assert');
 const request = require('supertest');
 const apiHelper = require('../helpers/api');
+const openAPI = require('../helpers/open-api');
 const ids = require('../data/ids');
 
 describe('/projects', () => {
@@ -25,6 +26,18 @@ describe('/projects', () => {
         assert.equal(response.body.data.length, 1, 'Returns exactly one project');
         assert.equal(response.body.data[0].title, 'Draft project');
       });
+  });
+
+  it('returns project licenses to add course which is approved for higher education or training purposes', async () => {
+    const res = await openAPI.validateGet(
+      this.api,
+      '/establishment/{establishmentId}/projects/cat-e',
+      {establishmentId: ids.establishments.trainingEstablishment}
+    );
+
+    assert.equal(res.status, 200);
+    assert.equal(res.body.data.length, 1, 'Returns exactly one project');
+    assert.equal(res.body.data[0]['projectTitle'], 'Training with rodents');
   });
 
   describe('PUT /:id/revoke', () => {
