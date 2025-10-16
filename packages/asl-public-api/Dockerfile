@@ -13,7 +13,6 @@ WORKDIR /app
 COPY .npmrc /app/.npmrc
 COPY package-lock.json /app/package-lock.json
 COPY package.json /app/package.json
-COPY openapi.json /app/openapi.json
 
 RUN for path in $MODULE_PATHS; do \
         mkdir -p /app/$path; \
