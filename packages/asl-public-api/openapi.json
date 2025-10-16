@@ -79,9 +79,15 @@
           "previousEstablishmentId": { "type": ["integer", "null"] },
           "transferProjectId": { "type": ["string", "null"], "format": "uuid" },
           "transferEstablishmentId": { "type": ["integer", "null"] },
-          "raDate": { "type": [ "string", "null" ], "format": "date-time" },
-          "species": { "type": ["array", "null"], "items": { "type": "string" } },
-          "raGrantedDate": { "type": ["string", "null"], "format": "date-time" },
+          "raDate": { "type": ["string", "null"], "format": "date-time" },
+          "species": {
+            "type": ["array", "null"],
+            "items": { "type": "string" }
+          },
+          "raGrantedDate": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
           "refusedDate": { "type": ["string", "null"], "format": "date-time" },
           "suspendedDate": { "type": ["string", "null"], "format": "date-time" }
         },
@@ -106,32 +112,37 @@
           "id": { "type": "integer" },
           "name": { "type": "string" },
           "status": { "type": "string" },
-          "revocationDate": { "type": ["string", "null"], "format": "date-time" },
+          "revocationDate": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
           "issueDate": { "type": "string", "format": "date-time" },
           "isTrainingEstablishment": { "type": "boolean" },
-          "corporateStatus": { "type": ["string", "null"], "enum": ["non-profit", "corporate"]}
+          "corporateStatus": {
+            "type": ["string", "null"],
+            "enum": ["non-profit", "corporate"]
+          }
         },
         "required": [
-          "id", "name", "status", "issueDate", "isTrainingEstablishment"
+          "id",
+          "name",
+          "status",
+          "issueDate",
+          "isTrainingEstablishment"
         ]
       },
       "CatEProject": {
         "type": "object",
         "properties": {
-          "project-title": { "type": "string" },
-          "licence-number": { "type": "string" },
+          "projectTitle": { "type": "string" },
+          "licenceNumber": { "type": "string" },
           "species": {
             "type": "array",
             "items": { "type": "string" }
           },
-          "expiry-date": { "type": "string", "format": "date-time" }
+          "expiryDate": { "type": "string", "format": "date-time" }
         },
-        "required": [
-          "project-title",
-          "licence-number",
-          "species",
-          "expiry-date"
-        ]
+        "required": ["projectTitle", "licenceNumber", "species", "expiryDate"]
       }
     }
   },
@@ -165,7 +176,9 @@
                       "properties": {
                         "total": { "type": "integer" },
                         "count": { "type": "integer" },
-                        "establishment": { "$ref": "#/components/schemas/EstablishmentSummary" }
+                        "establishment": {
+                          "$ref": "#/components/schemas/EstablishmentSummary"
+                        }
                       },
                       "required": ["total", "count", "establishment"]
                     }
@@ -213,16 +226,16 @@
                     "value": {
                       "data": [
                         {
-                          "project-title": "Training in complex procedures",
-                          "licence-number": "PPL1234567",
+                          "projectTitle": "Training in complex procedures",
+                          "licenceNumber": "PPL1234567",
                           "species": ["mice", "rats"],
-                          "expiry-date": "2026-12-31T23:59:59Z"
+                          "expiryDate": "2026-12-31T23:59:59Z"
                         },
                         {
-                          "project-title": "Training establishment project",
-                          "licence-number": "PPL7654321",
+                          "projectTitle": "Training establishment project",
+                          "licenceNumber": "PPL7654321",
                           "species": ["rats"],
-                          "expiry-date": "2025-06-30T23:59:59Z"
+                          "expiryDate": "2025-06-30T23:59:59Z"
                         }
                       ]
                     }

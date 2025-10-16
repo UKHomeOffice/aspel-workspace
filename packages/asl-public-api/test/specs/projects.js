@@ -37,7 +37,7 @@ describe('/projects', () => {
 
     assert.equal(res.status, 200);
     assert.equal(res.body.data.length, 1, 'Returns exactly one project');
-    assert.equal(res.body.data[0]['project-title'], 'Training with rodents');
+    assert.equal(res.body.data[0]['projectTitle'], 'Training with rodents');
   });
 
   describe('PUT /:id/revoke', () => {
