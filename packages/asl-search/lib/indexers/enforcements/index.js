@@ -118,7 +118,7 @@ module.exports = (schema, esClient, options = {}) => {
           }
         })
         .select(columnsToIndex)
-        .withGraphFetched('subjects.[establishment, profile, flags]'); // Simplified!
+        .withGraphFetched('subjects.[establishment, profile, flags.[establishment, profile.establishments, pil.establishment, project.establishment]]');
     })
     .then(enforcements => {
       logger.info(`Indexing ${enforcements.length} enforcements`);
