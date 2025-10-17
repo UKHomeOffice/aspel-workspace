@@ -26,7 +26,7 @@ module.exports = settings => {
 
   app.use(
     OpenApiValidator.middleware({
-      apiSpec: './openapi.json',
+      apiSpec: settings.openApi.openApiSpec,
       validateRequests: true, // Validate request bodies, params, etc.
       validateResponses: false, // Optional: validate responses
       ignoreUndocumented: true
