@@ -24,6 +24,6 @@ module.exports = {
   bodySizeLimit: process.env.BODY_SIZE_LIMIT,
   openApi: {
     serveApiDocs: process.env.SERVE_API_DOCS === 'TRUE',
-    openApiSpec: path.resolve('./openapi.json')
+    openApiSpec: path.resolve(path.join(__dirname, 'openapi.json'))
   }
 };
