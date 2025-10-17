@@ -623,7 +623,7 @@ module.exports = models => {
         projectId: ids.projects.trainingEstablishment.trainingWithRodents,
         status: 'granted',
         data: {
-          trainingLicence: true
+          'training-licence': true
         }
       },
       {
