@@ -139,6 +139,7 @@ function Field({
     options,
     preventOptionMapping = false,
     labelAsLegend = false,
+    formatters,
     ...props
 }) {
     if (inputType === 'checkboxGroup') {
@@ -237,7 +238,7 @@ function Field({
         setFieldValue(newValue);
     }
 
-    const Component = fields[inputType];
+    const Component = formatters?.[name]?.component ?? fields[inputType];
 
     if (showIf && !showIf(props.values)) {
         return null;
@@ -260,6 +261,7 @@ function Field({
         onChange={onFieldChange}
         name={prefix ? `${prefix}-${name}` : name}
         options={normalisedOptions}
+        formatters={formatters}
         {...props}
     />;
 }
@@ -274,7 +276,7 @@ export default function Fieldset({ schema, errors = {}, formatters = {}, model, 
                         <Fragment key={fieldName}>
                             {field.labelAsLegend ?
                                 <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                    <h1 className="govuk-fieldset__heading">
+                                    <h1 className="govuk-fieldset__heading" id={`${fieldName}-legend`}>
                                         <Label name={key} label={field.label} snippetProps={getSnippetProps(key, formatters)} />
                                     </h1>
                                 </legend> :

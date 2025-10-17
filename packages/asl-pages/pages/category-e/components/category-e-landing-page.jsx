@@ -34,7 +34,7 @@ export default function CategoryELandingPage({ children, activeTab }) {
               <Snippet optional>landingPage.addCourseDescription</Snippet>
             </p>
             <p>
-              <Link className="govuk-button" page="pils.courses.create" label={<Snippet>landingPage.buttons.add</Snippet>} />
+              <Link className="govuk-button" page="categoryE.course.add" label={<Snippet>landingPage.buttons.add</Snippet>} />
             </p>
           </Fragment>
           : <p>

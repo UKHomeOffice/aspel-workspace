@@ -13,6 +13,7 @@ const Form = ({
     declaration,
     disabled = false,
     onSubmit = () => {},
+    formProps = {},
     ...props
 }) => {
 
@@ -60,6 +61,7 @@ const Form = ({
             className={className}
             onSubmit={onFormSubmit}
             encType={Object.values(schema).map(s => s.inputType).includes('inputFile') ? 'multipart/form-data' : null}
+            {...formProps}
         >
             <input type="hidden" name="_csrf" value={csrfToken} />
             {

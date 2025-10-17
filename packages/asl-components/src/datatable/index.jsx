@@ -35,7 +35,7 @@ export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded 
                 {
                     map(schema, (column, key) => {
                         const datum = getValue({ row, schema: column, key });
-                        return <td key={key} className={key}>
+                        return <td key={key} className={classnames(key, column.className)}>
                             { column.format ? column.format(datum, row) : datum }
                         </td>;
                     })
@@ -73,7 +73,8 @@ export function Datatable({
     pagination,
     noDataWarning,
     allowScroll = true,
-    caption
+    caption,
+    tableProps
 }) {
     const schema = pickBy(merge({}, tableSchema, formatters), (item) => item.show);
     const RowComponent = CustomRow || Row;
@@ -95,7 +96,11 @@ export function Datatable({
     }, [isFetching]);
 
     return (
-        <table className={classnames('govuk-table', 'govuk-react-datatable', className, isFetching && 'loading')} ref={tableRef}>
+        <table
+            className={classnames('govuk-table', 'govuk-react-datatable', className, isFetching && 'loading')}
+            ref={tableRef}
+            {...(tableProps ?? {})}
+        >
             {caption &&
               <caption className='govuk-table__caption govuk-table__caption--m'>
                   <Snippet>{caption}</Snippet>
