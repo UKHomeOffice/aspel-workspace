@@ -71,6 +71,7 @@ export default function SelectProjectLicencePage() {
       fullWidth
       cancelLink={'categoryE.course.list'}
       formatters={formatters}
+      formProps={{'aria-describedby': 'projectId-description'}}
     />
     : <>
       <h1><Snippet>pageTitle</Snippet></h1>

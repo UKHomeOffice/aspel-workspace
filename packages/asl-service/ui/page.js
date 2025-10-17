@@ -16,7 +16,6 @@ const lookup = (...args) => {
 
 module.exports = ({
   root,
-  crumbs = [],
   paths = [],
   content = {},
   contentPath = '../content',
@@ -40,7 +39,7 @@ module.exports = ({
     return {
       ...all,
       [templatePath]: {
-        content,
+        content: {...content},
         template: template.default || template
       }
     };
@@ -65,11 +64,10 @@ module.exports = ({
     });
 
     if (req.user && req.user.profile) {
-      const allowedActions = []
+      res.locals.static.allowedActions = []
         .concat(req.user.profile.allowedActions.global)
         .concat(req.user.profile.allowedActions[req.establishmentId])
         .filter(Boolean);
-      res.locals.static.allowedActions = allowedActions;
     }
     res.locals.pageTitle = res.locals.pageTitle || res.locals.static.content.pageTitle;
     res.template = pages[req.path]?.template;

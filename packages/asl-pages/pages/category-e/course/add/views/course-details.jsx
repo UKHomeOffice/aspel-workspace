@@ -1,10 +1,10 @@
 import React from 'react';
 import { FormLayout, Header, Snippet } from '@ukhomeoffice/asl-components';
 
-module.exports = function CourseDetailsPage() {
+export default function CourseDetailsPage() {
   return <>
     <FormLayout>
       <Header title={<Snippet>pageTitle</Snippet>} />
     </FormLayout>
   </>;
-};
+}
