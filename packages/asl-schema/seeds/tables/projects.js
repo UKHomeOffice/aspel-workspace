@@ -1,5 +1,5 @@
 const { omit } = require('lodash');
-const projects = require('../data/projects.json');
+const projects = require('../data/projects.js');
 const getNonRandomProject = require('./utils/get-non-random-item');
 
 const nopes = ['Basic', 'Read', 'Ella', 'Unaffiliated', 'AA'];

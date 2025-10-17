@@ -20,7 +20,8 @@ module.exports = {
     categoryE: {
       course: {
         list: 'Courses and category E PILs',
-        read: '{{trainingCourse.title}}'
+        read: '{{trainingCourse.title}}',
+        add: 'Add new course'
       },
       licence: {
         list: 'Courses and category E PILs',

@@ -7,10 +7,11 @@ const FormLayout = ({
     className,
     openTasks,
     sidebar,
+    fullWidth = false,
     ...props
 }) => (
     <div className={classnames('govuk-grid-row', className)}>
-        <div className="govuk-grid-column-two-thirds">
+        <div className={fullWidth ? 'govuk-grid-column-full' : 'govuk-grid-column-two-thirds'}>
             <OpenTaskWarning openTasks={openTasks} />
             <ErrorSummary formatters={props.formatters} />
             {
