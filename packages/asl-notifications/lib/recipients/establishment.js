@@ -240,12 +240,12 @@ module.exports = async ({ schema, logger, task }) => {
     const typeUpper = type && type.toUpperCase();
 
     if (typeUpper === 'NACWO' || typeUpper === 'NVS') {
-      const fullName = `${firstName} ${lastName}’s`;
+      const fullName = `${firstName} ${lastName}`;
       const identifier = `${applicant.id}-${completeDate}-${action}`;
 
       const trainingDueReminderParams = {
         ...params,
-        fullName,
+        fullName: `${fullName}’s`,
         fullNameInSubject: fullName,
         name,
         their: 'their',
