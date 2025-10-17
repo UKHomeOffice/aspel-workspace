@@ -1,6 +1,6 @@
 import React from 'react';
 import get from 'lodash/get';
-import {format as formatDate} from 'date-fns';
+import { format, toDate, isValid } from 'date-fns';
 import { dateFormat } from '@asl/pages/constants';
 import { Link } from '@ukhomeoffice/asl-components';
 
@@ -55,7 +55,9 @@ export default {
   },
   date: {
     format: value => {
-      return <span className="date">{formatDate(value, dateFormat.medium)}</span>;
+      return <span className="date">{
+        isValid(toDate(value)) ? format(value, dateFormat.medium) : '-'
+      }</span>;
     }
   }
 };
