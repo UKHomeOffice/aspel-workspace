@@ -6,7 +6,7 @@ const logger = winston.createLogger({
     winston.format.colorize(),
     winston.format.simple()
   ),
-  transports: [new winston.transports.Console({ level: process.env.LOG_LEVEL || 'info' })]
+  transports: [new winston.transports.Console({ level: process.env.LOG_LEVEL || 'debug' })]
 });
 
 // Add custom colors

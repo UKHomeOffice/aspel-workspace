@@ -290,15 +290,26 @@ module.exports = (db, esClient, options = {}) => {
           .pipe(batchProcessor)
           .on('finish', async () => {
             try {
+              logger.debug('All content streams finished, refreshing index...');
               await esClient.indices.refresh({ index: indexName });
-              logger.info(`Index refresh completed for ${totalStreamed} projects`);
+              logger.info(`Content index refresh completed for ${totalStreamed} projects`);
               resolve(totalStreamed);
             } catch (error) {
+              logger.error('Content index refresh failed:', error.message);
+              logger.debug('Content refresh error details:', error);
               reject(error);
             }
           })
-          .on('error', reject);
+          .on('error', (error) => {
+            logger.error('Content batch processor error:', error.message);
+            logger.debug('Content batch processor error details:', error);
+            reject(error);
+          });
       })
-      .catch(reject);
+      .catch(error => {
+        logger.error('Content indexer initialization error:', error.message);
+        logger.debug('Content initialization error details:', error);
+        reject(error);
+      });
   });
 };

@@ -67,6 +67,7 @@ class IndexManager {
 
       let result;
       if (key === 'tasks') {
+        logger.debug('Using tasks-specific indexer with taskflowDb &  aslSchema databases');
         result = await indexer({
           aslSchema: db,
           taskflowDb,
@@ -75,6 +76,7 @@ class IndexManager {
           options: this.options
         });
       } else {
+        logger.debug('Using standard indexer');
         result = await indexer(db, this.esClient, this.options);
       }
 
@@ -90,6 +92,7 @@ class IndexManager {
       return { key, success: true, duration, result };
     } catch (error) {
       const duration = Date.now() - startTime;
+      logger.debug(`Error stack: ${error.stack}`);
       logger.error(`✗ Failed ${key} after ${duration}ms: ${error.message}`);
 
       return { key, success: false, duration, error: error.message };
