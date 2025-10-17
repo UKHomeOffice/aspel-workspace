@@ -245,7 +245,7 @@ module.exports = async ({ schema, logger, task }) => {
 
       const trainingDueReminderParams = {
         ...params,
-        fullName: `${fullName}’s`,
+        fullName,
         fullNameInSubject: fullName,
         name,
         their: 'their',
