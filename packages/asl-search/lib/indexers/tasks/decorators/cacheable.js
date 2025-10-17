@@ -1,15 +1,29 @@
+const logger = require('../../../logger');
+
 const cache = {};
+let cacheSize = 0;
+const MAX_CACHE_SIZE = 10000; // Prevent memory overflow
 
 const clean = () => {
+  const now = Date.now();
   Object.keys(cache).forEach(key => {
-    if (cache[key].expires < Date.now()) {
+    if (cache[key].expires < now) {
       delete cache[key];
+      cacheSize--;
     }
   });
+
+  // Emergency cleanup if cache grows too large
+  if (cacheSize > MAX_CACHE_SIZE) {
+    const keys = Object.keys(cache);
+    for (let i = 0; i < Math.floor(keys.length / 2); i++) {
+      delete cache[keys[i]];
+      cacheSize--;
+    }
+  }
 };
 
-// get a vanilla object without Knex functions
-const cleanModel = data => data.toJSON();
+const cleanModel = data => data ? data.toJSON() : null;
 
 setInterval(clean, 300000);
 
@@ -20,17 +34,24 @@ module.exports = (settings = {}) => {
     const key = `${Model.tableName}:${id}`;
     if (cache[key] && cache[key].expires > Date.now()) {
       return Promise.resolve(cache[key].result);
-    } else {
-      return Model.queryWithDeleted().select(columns || '*').findById(id)
-        .then(result => cleanModel(result, columns))
-        .then(result => {
+    }
+
+    return Model.queryWithDeleted().select(columns || '*').findById(id)
+      .then(result => cleanModel(result, columns))
+      .then(result => {
+        if (cacheSize < MAX_CACHE_SIZE) {
           cache[key] = {
             expires: Date.now() + settings.ttl,
             result
           };
-          return result;
-        });
-    }
+          cacheSize++;
+        }
+        return result;
+      })
+      .catch(error => {
+        logger.error(`Cache query failed for ${key}:`, error.message);
+        return null; // Return null instead of failing
+      });
   };
 
   return { query };
