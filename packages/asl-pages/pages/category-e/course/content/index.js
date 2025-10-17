@@ -21,7 +21,7 @@ module.exports = merge({}, {
       required: 'Please select at least one animal type.'
     },
     projectId: {
-      required: 'Enter the licence number of the training project.'
+      required: 'Select a project licence'
     }
   },
   buttons: {

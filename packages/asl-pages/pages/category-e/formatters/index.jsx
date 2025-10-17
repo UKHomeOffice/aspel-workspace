@@ -5,7 +5,7 @@ import { dateFormat } from '../../../constants';
 import taskFormatters from '../../task/list/formatters';
 import classnames from 'classnames';
 
-const formatDate = date => date ? format(date, dateFormat.long) : '-';
+export const formatDate = (date, formatSpec = dateFormat.medium) => date ? format(date, formatSpec) : '-';
 
 export const formatCourseTitle = (title, trainingCourseId) =>
   <Link
@@ -14,10 +14,19 @@ export const formatCourseTitle = (title, trainingCourseId) =>
     label={title}
   />;
 
+export const formatProjectLicenceNumber = (licenceNumber, establishmentId, projectId) =>
+  <Link
+    page="project.read"
+    establishmentId={establishmentId}
+    projectId={projectId}
+    label={licenceNumber}
+  />;
+
+const ucFirst = (str) => str.charAt(0).toLocaleUpperCase() + str.slice(1);
 export const formatSpecies = species =>
   !species || species.length === 0
     ? '-'
-    : species.sort().join(', ');
+    : species.map(ucFirst).sort().join(', ');
 
 export const formatCourseDates = (startDate, endDate) => {
   if (!endDate) {
