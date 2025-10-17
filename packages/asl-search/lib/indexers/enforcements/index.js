@@ -12,19 +12,51 @@ const indexEnforcement = (esClient, enforcement) => {
     body: {
       ...pick(enforcement, columnsToIndex),
       subjects: (enforcement.subjects || []).map(subject => {
-        // Add null checks to prevent errors
         if (!subject || !subject.profile || !subject.establishment) {
           return null;
         }
+
         return {
           profile: pick(subject.profile, ['id', 'firstName', 'lastName', 'email']),
           establishment: subject.establishment.name,
           establishmentKeywords: subject.establishment.keywords || [],
-          flags: (subject.flags || []).map(flag =>
-            pick(flag, ['id', 'modelType', 'modelId'])
-          )
+          flags: (subject.flags || []).map(flag => {
+            // Include the nested relationships that the formatters need
+            const baseFlag = pick(flag, ['id', 'modelType', 'modelId', 'status']);
+
+            // Add the nested objects that formatters expect
+            if (flag.establishment) {
+              baseFlag.establishment = pick(flag.establishment, ['id', 'name', 'licenceNumber']);
+            }
+
+            if (flag.profile) {
+              baseFlag.profile = pick(flag.profile, ['id', 'firstName', 'lastName', 'pilLicenceNumber']);
+              if (flag.profile.establishments && flag.profile.establishments[0]) {
+                baseFlag.profile.establishments = [pick(flag.profile.establishments[0], ['name'])];
+              }
+            }
+
+            if (flag.pil && flag.pil.establishment) {
+              baseFlag.pil = {
+                establishmentId: flag.pil.establishment.id,
+                profileId: flag.pil.profileId,
+                establishment: pick(flag.pil.establishment, ['id', 'name'])
+              };
+            }
+
+            if (flag.project && flag.project.establishment) {
+              baseFlag.project = {
+                id: flag.project.id,
+                establishmentId: flag.project.establishment.id,
+                licenceNumber: flag.project.licenceNumber,
+                establishment: pick(flag.project.establishment, ['id', 'name'])
+              };
+            }
+
+            return baseFlag;
+          })
         };
-      }).filter(Boolean) // Remove null subjects
+      }).filter(Boolean)
     }
   });
 };
@@ -96,42 +128,43 @@ const reset = esClient => {
     });
 };
 
-module.exports = (schema, esClient, options = {}) => {
+module.exports = async (schema, esClient, options = {}) => {
   const { EnforcementCase } = schema;
 
   if (options.reset && options.id) {
     throw new Error('Do not define an id when resetting indexes');
   }
 
-  return Promise.resolve()
-    .then(() => {
-      if (options.reset) {
-        return reset(esClient);
-      }
-    })
-    .then(() => {
-      // SIMPLIFIED: Only fetch essential relationships
-      return EnforcementCase.query()
-        .where(builder => {
-          if (options.id) {
-            builder.where({ id: options.id });
-          }
-        })
-        .select(columnsToIndex)
-        .withGraphFetched('subjects.[establishment, profile, flags.[establishment, profile.establishments, pil.establishment, project.establishment]]');
-    })
-    .then(enforcements => {
-      logger.info(`Indexing ${enforcements.length} enforcements`);
+  try {
+    if (options.reset) {
+      await reset(esClient);
+    }
 
-      // Use Promise.all for parallel processing (since you only have 7 records)
-      return Promise.all(
-        enforcements.map(enforcement =>
-          indexEnforcement(esClient, enforcement).catch(error => {
-            logger.error(`Failed to index enforcement ${enforcement.id}:`, error.message);
-            return null; // Continue even if one fails
-          })
-        )
-      );
-    })
-    .then(() => esClient.indices.refresh({ index: indexName }));
+    // Keep the original graph fetching - it's needed for the nested data
+    const enforcements = await EnforcementCase.query()
+      .where(builder => {
+        if (options.id) {
+          builder.where({ id: options.id });
+        }
+      })
+      .select(columnsToIndex)
+      .withGraphFetched('subjects.[establishment, profile, flags.[establishment, profile.establishments, pil.establishment, project.establishment]]');
+
+    logger.info(`Indexing ${enforcements.length} enforcements`);
+
+    await Promise.all(
+      enforcements.map(enforcement =>
+        indexEnforcement(esClient, enforcement).catch(error => {
+          logger.error(`Failed to index enforcement ${enforcement.id}:`, error.message);
+          return null;
+        })
+      )
+    );
+
+    await esClient.indices.refresh({ index: indexName });
+
+  } catch (error) {
+    logger.error('Failed to index enforcements:', error);
+    throw error;
+  }
 };
