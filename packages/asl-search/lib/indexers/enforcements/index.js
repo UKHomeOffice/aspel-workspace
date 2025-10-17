@@ -1,5 +1,6 @@
 const { pick } = require('lodash');
 const deleteIndex = require('../utils/delete-index');
+const logger = require('../../logger');
 
 const indexName = 'enforcements';
 const columnsToIndex = ['id', 'caseNumber', 'createdAt', 'updatedAt'];
@@ -29,7 +30,7 @@ const indexEnforcement = (esClient, enforcement) => {
 };
 
 const reset = esClient => {
-  console.log(`Rebuilding index ${indexName}`);
+  logger.info(`Rebuilding index ${indexName}`);
   return Promise.resolve()
     .then(() => deleteIndex(esClient, indexName))
     .then(() => {
@@ -120,13 +121,13 @@ module.exports = (schema, esClient, options = {}) => {
         .withGraphFetched('subjects.[establishment, profile, flags]'); // Simplified!
     })
     .then(enforcements => {
-      console.log(`Indexing ${enforcements.length} enforcements`);
+      logger.info(`Indexing ${enforcements.length} enforcements`);
 
       // Use Promise.all for parallel processing (since you only have 7 records)
       return Promise.all(
         enforcements.map(enforcement =>
           indexEnforcement(esClient, enforcement).catch(error => {
-            console.error(`Failed to index enforcement ${enforcement.id}:`, error.message);
+            logger.error(`Failed to index enforcement ${enforcement.id}:`, error.message);
             return null; // Continue even if one fails
           })
         )

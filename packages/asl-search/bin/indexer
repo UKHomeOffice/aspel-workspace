@@ -6,21 +6,16 @@ try {
 
 const { get } = require('lodash');
 const minimist = require('minimist');
-const { green, yellow, red } = require('chalk');
 const winston = require('winston');
 const settings = require('../config');
 const db = require('../lib/db');
 const taskflowDb = require('../lib/db/taskflow');
 const { createESClient } = require('../lib/elasticsearch');
 const { indexers } = require('../lib/indexers');
+const logger = require('../lib/logger');
 
 const args = minimist(process.argv.slice(2));
 const model = args._[0] || 'all';
-
-const logger = winston.createLogger({
-  level: 'debug',
-  transports: [new winston.transports.Console({ level: process.env.LOG_LEVEL || 'info' })]
-});
 
 class IndexManager {
   constructor(esClient, options = {}) {
@@ -37,30 +32,22 @@ class IndexManager {
   }
 
   async indexAll() {
-    console.log(yellow('Starting sequential indexing for all models...'));
+    logger.info('Starting sequential indexing for all models...');
 
     const indexKeys = Object.keys(indexers);
     const results = [];
 
-    // Process ONE index at a time (sequential) for large datasets
-    const BATCH_SIZE = 1;
+    // Process indexes sequentially using for loop
+    for (const [index, key] of indexKeys.entries()) {
+      logger.info(`Processing: ${key} (${index + 1}/${indexKeys.length})`);
 
-    for (let i = 0; i < indexKeys.length; i += BATCH_SIZE) {
-      const batch = indexKeys.slice(i, i + BATCH_SIZE);
-      const currentKey = batch[0];
+      const result = await this.indexSingle(key);
+      results.push(result);
 
-      console.log(yellow(`Processing: ${currentKey}`));
-
-      const batchResults = await Promise.allSettled(
-        batch.map(key => this.indexSingle(key))
-      );
-
-      results.push(...batchResults);
-
-      // Longer pause between indexes, especially after large ones
-      if (i + BATCH_SIZE < indexKeys.length) {
-        const delayTime = this.largeIndexes.includes(currentKey) ? 10000 : 2000;
-        console.log(yellow(`Cooling down for ${delayTime/1000} seconds...`));
+      // Add cooling period between indexes, especially after large ones
+      if (index < indexKeys.length - 1) {
+        const delayTime = this.largeIndexes.includes(key) ? 10000 : 2000;
+        logger.info(`Cooling down for ${delayTime/1000} seconds...`);
         await this.delay(delayTime);
       }
     }
@@ -70,7 +57,7 @@ class IndexManager {
 
   async indexSingle(key) {
     const startTime = Date.now();
-    console.log(green(`Indexing ${key}...`));
+    logger.info(`Indexing ${key}...`);
 
     try {
       const indexer = indexers[key];
@@ -95,15 +82,15 @@ class IndexManager {
       const rate = result && typeof result === 'number' ? Math.round(result / (duration / 1000)) : 'N/A';
 
       if (typeof result === 'number') {
-        console.log(green(`✓ Completed ${key}: ${result} records in ${duration}ms (${rate} records/sec)`));
+        logger.info(`✓ Completed ${key}: ${result} records in ${duration}ms (${rate} records/sec)`);
       } else {
-        console.log(green(`✓ Completed ${key} in ${duration}ms`));
+        logger.info(`✓ Completed ${key} in ${duration}ms`);
       }
 
       return { key, success: true, duration, result };
     } catch (error) {
       const duration = Date.now() - startTime;
-      console.error(red(`✗ Failed ${key} after ${duration}ms:`), error.message);
+      logger.error(`✗ Failed ${key} after ${duration}ms: ${error.message}`);
 
       return { key, success: false, duration, error: error.message };
     }
@@ -111,25 +98,23 @@ class IndexManager {
 
   async report(results) {
     const totalTime = Date.now() - this.stats.startTime;
-    const successful = results.filter(r => r.status === 'fulfilled' && r.value.success).length;
-    const failed = results.filter(r => r.status === 'rejected' || !r.value?.success).length;
+    const successful = results.filter(r => r.success).length;
+    const failed = results.filter(r => !r.success).length;
 
-    console.log('\n' + '='.repeat(50));
-    console.log(yellow('INDEXING COMPLETE'));
-    console.log('='.repeat(50));
-    console.log(green(`Successful: ${successful}`));
-    console.log(red(`Failed: ${failed}`));
-    console.log(yellow(`Total time: ${Math.round(totalTime / 1000)}s`));
+    logger.info('\n' + '='.repeat(50));
+    logger.info('INDEXING COMPLETE');
+    logger.info('='.repeat(50));
+    logger.info(`Successful: ${successful}`);
+    logger.info(`Failed: ${failed}`);
+    logger.info(`Total time: ${Math.round(totalTime / 1000)}s`);
 
     // Log detailed results
     results.forEach(result => {
-      if (result.status === 'fulfilled' && result.value.success) {
-        const value = result.value;
-        const recordInfo = typeof value.result === 'number' ? ` (${value.result} records)` : '';
-        console.log(green(`  ✓ ${value.key}: ${value.duration}ms${recordInfo}`));
+      if (result.success) {
+        const recordInfo = typeof result.result === 'number' ? ` (${result.result} records)` : '';
+        logger.info(`  ✓ ${result.key}: ${result.duration}ms${recordInfo}`);
       } else {
-        const error = result.status === 'rejected' ? result.reason : result.value?.error;
-        console.log(red(`  ✗ ${result.value?.key || 'unknown'}: ${error}`));
+        logger.error(`  ✗ ${result.key}: ${result.error}`);
       }
     });
 
@@ -143,27 +128,27 @@ class IndexManager {
 
 // Graceful shutdown handling
 process.on('SIGINT', async () => {
-  console.log(yellow('\nReceived SIGINT. Shutting down gracefully...'));
+  logger.warn('\nReceived SIGINT. Shutting down gracefully...');
   await cleanup();
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  console.log(yellow('\nReceived SIGTERM. Shutting down gracefully...'));
+  logger.warn('\nReceived SIGTERM. Shutting down gracefully...');
   await cleanup();
   process.exit(0);
 });
 
 async function cleanup() {
   try {
-    console.log(yellow('Closing database connections...'));
+    logger.info('Closing database connections...');
     await Promise.allSettled([
       db.destroy(),
       taskflowDb.destroy()
     ]);
-    console.log(green('Cleanup completed'));
+    logger.info('Cleanup completed');
   } catch (error) {
-    console.error(red('Cleanup error:'), error);
+    logger.error('Cleanup error:', error);
   }
 }
 
@@ -184,13 +169,13 @@ async function main() {
 
     const end = process.hrtime(start);
     const totalMs = (end[0] * 1000) + Math.round(end[1] / 1e6);
-    console.log(yellow(`\nTotal script execution: ${totalMs}ms (${Math.round(totalMs / 1000)}s)`));
+    logger.info(`\nTotal script execution: ${totalMs}ms (${Math.round(totalMs / 1000)}s)`);
 
     await cleanup();
     process.exit(result.failed > 0 ? 1 : 0);
 
   } catch (error) {
-    console.error(red('Fatal error:'), error);
+    logger.error('Fatal error:', error);
     await cleanup();
     process.exit(1);
   }

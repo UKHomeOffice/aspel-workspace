@@ -1,5 +1,6 @@
 const { pick } = require('lodash');
 const deleteIndex = require('../utils/delete-index');
+const logger = require('../../logger');
 
 const indexName = 'places';
 const columnsToIndex = ['id', 'establishmentId', 'suitability', 'holding', 'restrictions'];
@@ -38,7 +39,7 @@ const indexPlace = (esClient, place) => {
 };
 
 const reset = esClient => {
-  console.log(`Rebuilding index ${indexName}`);
+  logger.info(`Rebuilding index ${indexName}`);
   return Promise.resolve()
     .then(() => deleteIndex(esClient, indexName))
     .then(() => {
@@ -161,7 +162,7 @@ module.exports = (schema, esClient, options = {}) => {
       });
     })
     .then(places => {
-      console.log(`Indexing ${places.length} places`);
+      logger.info(`Indexing ${places.length} places`);
       return places.reduce((p, place) => {
         return p.then(() => indexPlace(esClient, place));
       }, Promise.resolve());

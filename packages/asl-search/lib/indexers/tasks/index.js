@@ -4,6 +4,7 @@ const ElasticsearchWritableStream = require('elasticsearch-writable-stream');
 const deleteIndex = require('../utils/delete-index');
 const getDecorators = require('./decorators');
 const synonyms = require('../profiles/synonyms');
+const logger = require('../../logger');
 
 const columnsToIndex = [
   'id',
@@ -157,7 +158,7 @@ const FIELD_MAPPINGS = {
 };
 
 async function resetIndex(esClient) {
-  console.log('Rebuilding index tasks');
+  logger.info('Rebuilding index tasks');
   await deleteIndex(esClient, 'tasks');
 
   await esClient.indices.create({
@@ -178,19 +179,17 @@ function createTaskDecorator(decorators) {
       try {
         let decoratedTask = task;
 
-        // Apply decorators sequentially with error handling
         for (const [key, decorator] of Object.entries(decorators)) {
           try {
             decoratedTask = await decorator(decoratedTask);
           } catch (error) {
-            console.error(`Decorator ${key} failed for task ${task.id}:`, error.message);
-            // Continue with partially decorated task
+            logger.error(`Decorator ${key} failed for task ${task.id}:`, error.message);
           }
         }
 
         callback(null, decoratedTask);
       } catch (error) {
-        console.error(`Task decoration failed for ${task.id}:`, error.message);
+        logger.error(`Task decoration failed for ${task.id}:`, error.message);
         callback(null, task); // Pass through original task if decoration fails
       }
     }
@@ -221,7 +220,7 @@ function createDocumentTransform() {
 
         callback(null, document);
       } catch (error) {
-        console.error(`Failed to transform task ${task.id}:`, error.message);
+        logger.error(`Failed to transform task ${task.id}:`, error.message);
         callback(); // Skip this task but continue processing
       }
     }
@@ -254,14 +253,14 @@ module.exports = async ({ aslSchema, taskflowDb, esClient, logger, options = {} 
     throw new Error('Do not define an id when resetting indexes');
   }
 
-  console.log('Loading decorators...');
+  logger.info('Loading decorators...');
   const decorators = await getDecorators(aslSchema);
 
   if (options.reset) {
     await resetIndex(esClient);
   }
 
-  console.log('Indexing tasks...');
+  logger.info('Indexing tasks...');
   const startTime = Date.now();
 
   const bulkIndexStream = createBulkIndexStream(esClient, logger);
@@ -278,14 +277,14 @@ module.exports = async ({ aslSchema, taskflowDb, esClient, logger, options = {} 
 
       // Log progress every 10,000 records for large datasets
       if (taskCount % 10000 === 0) {
-        console.log(`Processed ${taskCount} tasks...`);
+        logger.info(`Processed ${taskCount} tasks...`);
       }
 
       callback(null, data);
     },
 
     flush(callback) {
-      console.log(`Total tasks processed: ${taskCount}`);
+      logger.info(`Total tasks processed: ${taskCount}`);
       callback();
     }
   });
@@ -314,7 +313,7 @@ module.exports = async ({ aslSchema, taskflowDb, esClient, logger, options = {} 
         .on('finish', () => {
           const duration = Date.now() - startTime;
           const rate = taskCount > 0 ? Math.round(taskCount / (duration / 1000)) : 0;
-          console.log(`Indexed ${taskCount} tasks in ${duration}ms (${rate} tasks/sec)`);
+          logger.info(`Indexed ${taskCount} tasks in ${duration}ms (${rate} tasks/sec)`);
           resolve(taskCount);
         })
         .on('error', reject);
@@ -325,7 +324,7 @@ module.exports = async ({ aslSchema, taskflowDb, esClient, logger, options = {} 
       return count;
     })
     .catch(error => {
-      console.error('Task indexing failed:', error);
+      logger.error('Task indexing failed:', error);
       throw error;
     });
 };

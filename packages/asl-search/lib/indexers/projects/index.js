@@ -2,6 +2,7 @@ const { pick } = require('lodash');
 const { Transform } = require('stream');
 const extractSpecies = require('./extract-species');
 const deleteIndex = require('../utils/delete-index');
+const logger = require('../../logger');
 
 const indexName = 'projects';
 const BATCH_SIZE = 100;
@@ -66,7 +67,7 @@ function getEndDate(project) {
 }
 
 async function resetIndex(esClient) {
-  console.log(`Rebuilding index ${indexName}`);
+  logger.info(`Rebuilding index ${indexName}`);
   await deleteIndex(esClient, indexName);
 
   await esClient.indices.create({
@@ -80,16 +81,6 @@ async function resetIndex(esClient) {
 
 function streamProjectsWithVersions(Project, options = {}) {
   return Project.knex().raw(`
-    WITH latest_versions AS (
-      SELECT DISTINCT ON (pv.project_id)
-        pv.project_id,
-        pv.data,
-        pv.status as version_status
-      FROM project_versions pv
-      WHERE pv.status IN ('submitted', 'granted')
-        AND pv.status != 'draft'
-      ORDER BY pv.project_id, pv.updated_at DESC
-    )
     SELECT
       p.*,
       lv.data as version_data,
@@ -98,16 +89,17 @@ function streamProjectsWithVersions(Project, options = {}) {
       e.name as establishment_name,
       e.id as establishment_id
     FROM projects p
-    LEFT JOIN latest_versions lv ON p.id = lv.project_id
+    JOIN LATERAL (
+      SELECT data
+      FROM project_versions pv
+      WHERE pv.project_id = p.id
+      AND pv.status = CASE WHEN p.status = 'inactive' THEN 'submitted' ELSE 'granted' END
+      ORDER BY pv.updated_at DESC
+      LIMIT 1
+    ) lv ON TRUE
     LEFT JOIN profiles lh ON p.licence_holder_id = lh.id
     LEFT JOIN establishments e ON p.establishment_id = e.id
     WHERE p.deleted IS NULL
-    AND EXISTS (
-      SELECT 1 FROM project_versions pv2
-      WHERE pv2.project_id = p.id
-      AND pv2.status IN ('submitted', 'granted')
-      AND pv2.status != 'draft'
-    )
     ${options.id ? 'AND p.id = ?' : ''}
     ORDER BY p.id
   `, options.id ? [options.id] : []).stream();
@@ -140,7 +132,7 @@ function createDocumentTransform() {
 
         callback(null, { id: project.id, document });
       } catch (error) {
-        console.error(`Failed to transform project ${project.id}:`, error.message);
+        logger.error(`Failed to transform project ${project.id}:`, error.message);
         callback();
       }
     }
@@ -168,16 +160,16 @@ function createBatchProcessor(esClient) {
       if (response.errors) {
         const errors = response.items.filter(item => item.index.error);
         if (errors.length > 0) {
-          console.error(`Batch had ${errors.length} indexing failures`);
+          logger.error(`Batch had ${errors.length} indexing failures`);
         }
       }
 
       processedCount += currentBatch.length;
       if (processedCount % 1000 === 0) {
-        console.log(`Indexed ${processedCount} projects...`);
+        logger.info(`Indexed ${processedCount} projects...`);
       }
     } catch (error) {
-      console.error('Failed to index batch:', error.message);
+      logger.error('Failed to index batch:', error.message);
     }
   };
 
@@ -195,7 +187,7 @@ function createBatchProcessor(esClient) {
 
     async flush(callback) {
       await processBatch();
-      console.log(`Completed streaming ${processedCount} projects`);
+      logger.info(`Completed streaming ${processedCount} projects`);
       callback();
     }
   });
@@ -215,7 +207,7 @@ module.exports = (db, esClient, options = {}) => {
           await resetIndex(esClient);
         }
 
-        console.log('Streaming projects with optimized query...');
+        logger.info('Streaming projects with optimized query...');
 
         let totalStreamed = 0;
 
@@ -227,7 +219,7 @@ module.exports = (db, esClient, options = {}) => {
           .on('data', () => {
             totalStreamed++;
             if (totalStreamed % 1000 === 0) {
-              console.log(`Streamed ${totalStreamed} projects from database...`);
+              logger.info(`Streamed ${totalStreamed} projects from database...`);
             }
           })
           .on('error', reject)
@@ -237,7 +229,7 @@ module.exports = (db, esClient, options = {}) => {
           .on('finish', async () => {
             try {
               await esClient.indices.refresh({ index: indexName });
-              console.log(`Index refresh completed for ${totalStreamed} projects`);
+              logger.info(`Index refresh completed for ${totalStreamed} projects`);
               resolve(totalStreamed);
             } catch (error) {
               reject(error);

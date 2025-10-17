@@ -2,6 +2,7 @@ const openClosed = require('./open-closed');
 const taskType = require('./task-type');
 const establishment = require('./establishment');
 const profiles = require('./profiles');
+const logger = require('../../../logger');
 
 module.exports = async (aslSchema) => {
   try {
@@ -17,8 +18,7 @@ module.exports = async (aslSchema) => {
       profiles: profilesDecorator.status === 'fulfilled' ? profilesDecorator.value : task => task
     };
   } catch (error) {
-    console.error('Failed to load decorators:', error);
-    // Return fallback decorators that don't fail
+    logger.error('Failed to load decorators:', error);
     return {
       openClosed,
       taskType,

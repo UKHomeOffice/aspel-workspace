@@ -1,3 +1,5 @@
+const logger = require('../../../logger');
+
 const cache = {};
 let cacheSize = 0;
 const MAX_CACHE_SIZE = 10000; // Prevent memory overflow
@@ -47,7 +49,7 @@ module.exports = (settings = {}) => {
         return result;
       })
       .catch(error => {
-        console.error(`Cache query failed for ${key}:`, error.message);
+        logger.error(`Cache query failed for ${key}:`, error.message);
         return null; // Return null instead of failing
       });
   };

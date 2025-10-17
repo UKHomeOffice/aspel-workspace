@@ -3,6 +3,7 @@ const { Transform } = require('stream');
 const extractContent = require('./extract-content');
 const extractSpecies = require('../projects/extract-species');
 const deleteIndex = require('../utils/delete-index');
+const logger = require('../../logger');
 
 const indexName = 'projects-content';
 const BATCH_SIZE = 100;
@@ -89,7 +90,7 @@ function extractPurposes(data) {
 }
 
 async function resetIndex(esClient) {
-  console.log(`Rebuilding index ${indexName}`);
+  logger.info(`Rebuilding index ${indexName}`);
   await deleteIndex(esClient, indexName);
 
   await esClient.indices.create({
@@ -169,7 +170,7 @@ function createDocumentTransform() {
 
         callback(null, { id: project.id, document });
       } catch (error) {
-        console.error(`Failed to transform project ${project.id}:`, error.message);
+        logger.error(`Failed to transform project ${project.id}:`, error.message);
         callback();
       }
     }
@@ -197,16 +198,16 @@ function createBatchProcessor(esClient) {
       if (response.errors) {
         const errors = response.items.filter(item => item.index.error);
         if (errors.length > 0) {
-          console.error(`Batch had ${errors.length} indexing failures`);
+          logger.error(`Batch had ${errors.length} indexing failures`);
         }
       }
 
       processedCount += currentBatch.length;
       if (processedCount % 1000 === 0) {
-        console.log(`Indexed ${processedCount} projects...`);
+        logger.info(`Indexed ${processedCount} projects...`);
       }
     } catch (error) {
-      console.error('Failed to index batch:', error.message);
+      logger.error('Failed to index batch:', error.message);
     }
   };
 
@@ -224,7 +225,7 @@ function createBatchProcessor(esClient) {
 
     async flush(callback) {
       await processBatch();
-      console.log(`Completed streaming ${processedCount} projects`);
+      logger.info(`Completed streaming ${processedCount} projects`);
       callback();
     }
   });
@@ -240,7 +241,7 @@ function createProgressCounter() {
       projectCount++;
 
       if (projectCount - lastLogged >= 1000) {
-        console.log(`Streamed ${projectCount} projects from database...`);
+        logger.info(`Streamed ${projectCount} projects from database...`);
         lastLogged = projectCount;
       }
 
@@ -248,7 +249,7 @@ function createProgressCounter() {
     },
 
     flush(callback) {
-      console.log(`Total projects processed: ${projectCount}`);
+      logger.info(`Total projects processed: ${projectCount}`);
       callback();
     }
   });
@@ -268,7 +269,7 @@ module.exports = (db, esClient, options = {}) => {
           await resetIndex(esClient);
         }
 
-        console.log('Indexing projects...');
+        logger.info('Indexing projects...');
 
         let totalStreamed = 0;
 
@@ -290,7 +291,7 @@ module.exports = (db, esClient, options = {}) => {
           .on('finish', async () => {
             try {
               await esClient.indices.refresh({ index: indexName });
-              console.log(`Index refresh completed for ${totalStreamed} projects`);
+              logger.info(`Index refresh completed for ${totalStreamed} projects`);
               resolve(totalStreamed);
             } catch (error) {
               reject(error);

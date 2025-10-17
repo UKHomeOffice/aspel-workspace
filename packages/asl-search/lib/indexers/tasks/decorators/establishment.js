@@ -1,4 +1,5 @@
 const { get, pick } = require('lodash');
+const logger = require('../../../logger');
 
 module.exports = aslSchema => {
   const { Establishment } = aslSchema;
@@ -21,8 +22,7 @@ module.exports = aslSchema => {
       };
     })
     .catch(error => {
-      console.error('Failed to load establishments:', error);
-      // Return a fallback decorator that doesn't fail
+      logger.error('Failed to load establishments:', error);
       return task => task;
     });
 };
