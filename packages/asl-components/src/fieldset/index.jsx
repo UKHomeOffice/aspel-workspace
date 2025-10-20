@@ -65,7 +65,7 @@ function SingleRadio(props) {
 }
 
 const fields = {
-    inputText: props => <Input { ...props } />,
+    inputText: props => <Input { ...props } value={props.value ?? ''} />,
     inputEmail: props => <Input type="email" { ...props } />,
     inputFile: props => <Input type="file" { ...props } />,
     inputPassword: props => <Input type="password" { ...props } />,

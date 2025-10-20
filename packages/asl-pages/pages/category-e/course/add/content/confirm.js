@@ -5,9 +5,9 @@ module.exports = merge(
   {},
   baseContent,
   {
-    pageTitle: 'Add course details',
+    pageTitle: 'Check course details',
     buttons: {
-      submit: 'Continue',
+      submit: 'Submit new course',
       cancel: 'Cancel'
     }
   }

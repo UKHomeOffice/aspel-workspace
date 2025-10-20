@@ -35,7 +35,7 @@ export function getUrl({ page, url, query, path, suffix, ...props }) {
     return query ? `${href}?${stringify(query)}` : href;
 }
 
-export default function Link({ label, className, target, ...props }) {
+export default function Link({ label, className, target, children, ...props }) {
     const isPdf = useSelector(state => state.static.isPdf);
     if (isPdf) {
         return null;
@@ -43,5 +43,5 @@ export default function Link({ label, className, target, ...props }) {
 
     const href = getUrl({ ...props });
 
-    return <a className={className} href={href} target={target}>{label}</a>;
+    return <a className={className} href={href} target={target}>{label ?? children}</a>;
 }

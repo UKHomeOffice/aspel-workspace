@@ -39,7 +39,7 @@ module.exports = ({
     return {
       ...all,
       [templatePath]: {
-        content: {...content},
+        content,
         template: template.default || template
       }
     };
