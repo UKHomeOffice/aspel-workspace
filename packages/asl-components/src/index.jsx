@@ -71,5 +71,5 @@ export { default as WidthContainer } from './width-container';
 export { default as Wrapper } from './wrapper';
 export { default as TextAreaWithWordCount } from './text-area-word-count';
 export { default as SupportingLinks } from './supporting-links';
-
+export { default as Utils } from './utils';
 export * from './layouts';
