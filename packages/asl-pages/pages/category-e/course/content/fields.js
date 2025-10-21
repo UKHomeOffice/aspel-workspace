@@ -1,7 +1,4 @@
-const baseContent = require('../../content');
-
 module.exports = {
-  ...baseContent,
   title: {
     label: 'Course title',
     hint: 'For your records'
@@ -33,6 +30,6 @@ For example, 12 11 2020`
     label: 'Issue date'
   },
   expiryDate: {
-    label: 'Expiry date'
+    label: 'Project licence expiry date'
   }
 };

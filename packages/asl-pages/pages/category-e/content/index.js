@@ -17,6 +17,8 @@ module.exports = {
       ' category E PILs.'
   },
   actions: {
-    revoke: 'Revoke'
+    revoke: 'Revoke',
+    changeProjectLicence: 'Change project licence',
+    changeCourseDetails: 'Change course details'
   }
 };

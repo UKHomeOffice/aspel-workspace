@@ -1,4 +1,5 @@
 const { trainingCoursePurpose } = require('@ukhomeoffice/asl-constants');
+const moment = require('moment');
 
 module.exports = {
   projectId: {
@@ -23,22 +24,59 @@ module.exports = {
     options: [...Object.keys(trainingCoursePurpose)],
     validate: ['required']
   },
-  startDate: {
+  courseDuration: {
     page: 'course-details',
-    inputType: 'inputDate',
-    show: true,
-    validate: [
-      'required',
-      'validDate',
-      { dateIsAfter: 'now' }
-    ]
+    inputType: 'radioGroup',
+    automapReveals: true,
+    options: [
+      {
+        value: 'one-day',
+        reveal: {
+          courseDate: {
+            inputType: 'inputDate',
+            show: true,
+            validate: [
+              'required',
+              'validDate',
+              { dateIsAfter: 'now' },
+              { dateIsSameOrBefore: (_values, model) => moment(model?.project?.expiryDate) }
+            ]
+          }
+        }
+      },
+      {
+        value: 'multi-day',
+        reveal: {
+          startDate: {
+            inputType: 'inputDate',
+            show: true,
+            validate: [
+              'required',
+              'validDate',
+              { dateIsAfter: 'now' }
+            ]
+          },
+          endDate: {
+            inputType: 'inputDate',
+            show: true,
+            validate: [
+              'required',
+              'validDate',
+              { dateIsAfter: (values) => values.startDate },
+              { dateIsSameOrBefore: (_values, model) =>
+                moment(model?.project?.expiryDate)
+              }
+            ]
+          }
+        }
+      }
+    ],
+    validate: ['required']
   },
   species: {
     page: 'course-details',
-    inputType: 'speciesSelector',
-    format: JSON.parse,
-    validate: [
-      'required'
-    ]
+    inputType: 'checkboxGroup',
+    options: [/* Set dynamically from chosen project */],
+    validate: ['required']
   }
 };

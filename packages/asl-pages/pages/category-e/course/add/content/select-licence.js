@@ -2,6 +2,7 @@ const { merge } = require('lodash');
 const baseContent = require('./base');
 
 module.exports = merge(
+  {},
   baseContent,
   {
     pageTitle: 'Select a project licence',

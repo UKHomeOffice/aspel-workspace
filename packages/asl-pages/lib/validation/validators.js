@@ -1,6 +1,16 @@
 const { isUndefined, isNull, every, castArray, some } = require('lodash');
 const moment = require('moment');
 
+function normaliseDate(dateSpec, values, model) {
+  if (typeof dateSpec === 'function') {
+    return dateSpec(values, model);
+  } else if (dateSpec === 'now') {
+    return moment();
+  } else {
+    return dateSpec;
+  }
+}
+
 const validators = {
   type: (field, value, type) => {
     if (isUndefined(value) || isNull(value)) {
@@ -61,26 +71,25 @@ const validators = {
     }
     return isNull(value) || moment(value, 'YYYY-MM-DD').isValid();
   },
-  dateIsBefore(field, value, isBefore) {
-    if (typeof isBefore === 'function') {
-      isBefore = isBefore();
-    }
-    if (isBefore === 'now') {
-      isBefore = moment();
-    }
-    return isNull(value) || moment(value, 'YYYY-MM-DD').isBefore(isBefore);
-  },
   lessThanOrEqualToMaxWordCount(fieldName, value, params, values, model, field) {
     return value?.split(/\s+/).filter(Boolean).length <= field.maxWordCount;
   },
-  dateIsAfter(field, value, isAfter) {
-    if (typeof isAfter === 'function') {
-      isAfter = isAfter();
-    }
-    if (isAfter === 'now') {
-      isAfter = moment();
-    }
-    return isNull(value) || moment(value, 'YYYY-MM-DD').isAfter(isAfter);
+  dateIsAfter(field, value, date, values, model) {
+    return isNull(value) ||
+      moment(value, 'YYYY-MM-DD').isAfter(normaliseDate(date, values, model));
+  },
+  dateIsSameOrAfter(field, value, date, values, model) {
+    return isNull(value) ||
+      moment(value, 'YYYY-MM-DD').isSameOrAfter(normaliseDate(date, values, model));
+  },
+  dateIsBefore(field, value, date, values, model) {
+    return isNull(value) ||
+      moment(value, 'YYYY-MM-DD').isBefore(normaliseDate(date, values, model));
+  },
+  dateIsSameOrBefore(field, value, date, values, model) {
+    const threshold = normaliseDate(date, values, model);
+    return isNull(value) ||
+      moment(value, 'YYYY-MM-DD').isSameOrBefore(threshold);
   },
   // file validation
   fileRequired(field, value) {
