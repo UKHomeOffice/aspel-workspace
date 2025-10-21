@@ -949,3 +949,13 @@ dl.inline-wide {
     margin-left: 55%;
   }
 }
+
+.model-summary{
+  &:has(+ p > a) {
+    margin-bottom: 0;
+  }
+
+  & + p:has(> a) {
+    margin-bottom: 30px;
+  }
+}
