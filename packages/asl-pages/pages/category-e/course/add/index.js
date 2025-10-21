@@ -76,8 +76,8 @@ module.exports = settings => {
   }
 
   const parseAndSetDate = (req, key) => {
-    const day = req.body[`${key}-day`];
-    const month = req.body[`${key}-month`];
+    const day = req.body[`${key}-day`].padStart(2, '0');
+    const month = req.body[`${key}-month`].padStart(2, '0');
     const year = req.body[`${key}-year`];
 
     Object.assign(req.form.values, {
@@ -103,14 +103,14 @@ module.exports = settings => {
 
       if (req.form.values.courseDuration === 'one-day') {
         parseAndSetDate(req, 'courseDate');
-        delete req.form.values.startDate;
-        delete req.form.values.endDate;
+        req.form.values.startDate = null;
+        req.form.values.endDate = null;
       }
 
       if (req.form.values.courseDuration === 'multi-day') {
         parseAndSetDate(req, 'startDate');
         parseAndSetDate(req, 'endDate');
-        delete req.form.values.courseDate;
+        req.form.values.courseDate = null;
       }
     })
   }));
