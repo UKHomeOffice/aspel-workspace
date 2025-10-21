@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { formatCourseDates, formatCoursePurpose, ucFirst } from '../formatters';
+import { formatCourseDateRange, formatCoursePurpose, ucFirst } from '../formatters';
 import { Link, ModelSummary, Snippet } from '@ukhomeoffice/asl-components';
 
 const schema = {
@@ -16,9 +16,9 @@ const formatters = {
     format: (duration, course) => {
       switch (duration) {
         case 'one-day':
-          return formatCourseDates(course.courseDate);
+          return formatCourseDateRange(course.courseDate);
         case 'multi-day':
-          return formatCourseDates(course.startDate, course.endDate);
+          return formatCourseDateRange(course.startDate, course.endDate);
       }
     }
   },

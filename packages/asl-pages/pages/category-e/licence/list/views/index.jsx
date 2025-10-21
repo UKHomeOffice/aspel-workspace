@@ -2,7 +2,7 @@ import React from 'react';
 import CategoryELandingPage from '../../../components/category-e-landing-page';
 import {
   formatCourseTitle,
-  formatCourseDates,
+  formatCourseDateRange,
   formatProfile,
   formatTaskDetails,
   formatTaskStatus,
@@ -24,7 +24,7 @@ const formatters = {
     format: (title, task) => formatCourseTitle(title, task.trainingCourse.id)
   },
   startDate: {
-    format: (startDate, task) => formatCourseDates(startDate, task.trainingCourse.endDate)
+    format: (startDate, task) => formatCourseDateRange(startDate, task.trainingCourse.endDate)
   },
   licenceDetails: {
     format: (_, task) => formatTaskDetails(task)

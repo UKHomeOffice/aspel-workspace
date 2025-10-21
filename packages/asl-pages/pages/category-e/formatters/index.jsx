@@ -39,7 +39,7 @@ const getStartDateFormat = (startDate, endDate) => {
   }
 };
 
-export const formatCourseDates = (startDate, endDate) => {
+export const formatCourseDateRange = (startDate, endDate) => {
   return endDate
     ? `${formatDate(startDate, getStartDateFormat(startDate, endDate))} to ${formatDate(endDate, dateFormat.medium)}`
     : formatDate(startDate, dateFormat.medium);
