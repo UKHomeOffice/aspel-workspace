@@ -21,6 +21,7 @@ module.exports = settings => {
     },
     getApiPath: (req, res, next) => {
       const query = {
+        taskStatus: '*',
         model: 'trainingPil',
         establishment: req.establishmentId,
         searchFields: [
