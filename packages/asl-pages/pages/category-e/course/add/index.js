@@ -76,8 +76,8 @@ module.exports = settings => {
   }
 
   const parseAndSetDate = (req, key) => {
-    const day = req.body[`${key}-day`].padStart(2, '0');
-    const month = req.body[`${key}-month`].padStart(2, '0');
+    const day = req.body[`${key}-day`];
+    const month = req.body[`${key}-month`];
     const year = req.body[`${key}-year`];
 
     Object.assign(req.form.values, {
@@ -112,6 +112,11 @@ module.exports = settings => {
         parseAndSetDate(req, 'endDate');
         req.form.values.courseDate = null;
       }
+
+      const projectSpecies = project.species ?? [];
+
+      req.form.values.species = (req.form.values.species ?? [])
+        .filter(species => projectSpecies.includes(species));
     })
   }));
 
