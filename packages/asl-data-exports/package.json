@@ -48,6 +48,6 @@
     "ndjson": "^2.0.0",
     "node-fetch": "^2.6.7",
     "through2": "^4.0.2",
-    "winston": "^3.4.0"
+    "winston": "^3.18.3"
   }
 }
