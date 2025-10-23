@@ -3,6 +3,10 @@ const { merge } = require('lodash');
 module.exports = merge({
   fields: {
     hbaFilename: { label: 'Selected HBA file:' },
+    hbaReplacementReason: {
+      label: 'Replacement reason',
+      hint: 'why this replacement is needed?'
+    },
     confirmHba: {
       label: 'What do you want to do?',
       options: {

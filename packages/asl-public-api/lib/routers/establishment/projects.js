@@ -142,7 +142,8 @@ const loadVersions = (req, res, next) => {
       'asruVersion',
       'updatedAt',
       'hbaToken',
-      'hbaFilename'
+      'hbaFilename',
+      'hbaReplaced'
     )
     .select(ref('data:isLegacyStub').as('isLegacyStub'))
     .select(ref('data:duration').as('duration'))
