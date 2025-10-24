@@ -1,4 +1,4 @@
-const { isUndefined, isNull, every, castArray, some } = require('lodash');
+const { isUndefined, isNull, every, castArray, some, zip } = require('lodash');
 const moment = require('moment');
 
 function normaliseDate(dateSpec, values, model) {
@@ -7,10 +7,13 @@ function normaliseDate(dateSpec, values, model) {
   } else if (dateSpec === 'now') {
     return moment();
   } else {
-    return dateSpec;
+    return zip(dateSpec.split('-'), [4, 2, 2])
+      .map(([part, length]) => part.padStart(length, '0'))
+      .join('-');
   }
 }
 
+// noinspection JSUnusedGlobalSymbols
 const validators = {
   type: (field, value, type) => {
     if (isUndefined(value) || isNull(value)) {
@@ -28,12 +31,16 @@ const validators = {
     }
     return false;
   },
-  required: (field, value, params, values, model) => {
-    if (params && params.valFromModel && !value) {
-      value = model[field];
-    }
+  required: (field, formValue, params, values, model, fieldSpec) => {
+    const value = params?.valFromModel && !formValue
+      ? model[field]
+      : formValue;
+
     if (Array.isArray(value)) {
       return !!value.length;
+    }
+    if (fieldSpec.inputType === 'inputDate') {
+      return value != null && value.toString().replaceAll(/[-0]/g, '').length > 0;
     }
     return value !== null && value !== '' && !isUndefined(value);
   },
