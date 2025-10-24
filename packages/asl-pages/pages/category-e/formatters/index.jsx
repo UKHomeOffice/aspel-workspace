@@ -46,7 +46,7 @@ export const formatCourseDateRange = (startDate, endDate) => {
 };
 
 export const formatProfile = (profileId, firstName, lastName, establishmentId) =>
-  profileId
+  profileId && establishmentId
     ? <Link
       page='profile.read'
       profileId={profileId}
