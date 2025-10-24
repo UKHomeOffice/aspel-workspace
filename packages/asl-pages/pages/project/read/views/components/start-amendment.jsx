@@ -86,7 +86,7 @@ export default function StartAmendment() {
                   />
                 )
                 : (
-                  <form method="POST" action={`${url}/delete/amendment`} onSubmit={confirmSubmission(confirmMessage)}>
+                  <form method="POST" action={`${url}delete/amendment`} onSubmit={confirmSubmission(confirmMessage)}>
                     <button className="link">
                       <span><Snippet>actions.discard.amendment</Snippet></span>
                     </button>
