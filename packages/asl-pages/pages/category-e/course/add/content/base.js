@@ -25,7 +25,8 @@ module.exports = {
       options: {
         'one-day': 'One day',
         'multi-day': 'Longer than one day'
-      }
+      },
+      checkAnswerLabel: 'Course date{{#model.endDate}}s{{/model.endDate}}'
     },
     courseDate: {
       label: 'Course date',
@@ -41,7 +42,8 @@ module.exports = {
     },
     species: {
       label: 'Animals to be used for this course',
-      hint: 'Select all that apply'
+      hint: 'Select all that apply',
+      checkAnswerLabel: 'Animals used'
     },
     coursePurpose: {
       label: 'Course Purpose',

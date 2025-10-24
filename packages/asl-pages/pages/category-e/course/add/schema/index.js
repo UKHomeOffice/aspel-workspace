@@ -1,5 +1,6 @@
 const { trainingCoursePurpose } = require('@ukhomeoffice/asl-constants');
 const moment = require('moment');
+const castArray = require('lodash/castArray');
 
 module.exports = {
   projectId: {
@@ -77,6 +78,7 @@ module.exports = {
     page: 'course-details',
     inputType: 'checkboxGroup',
     options: [/* Set dynamically from chosen project */],
-    validate: ['required']
+    validate: ['required'],
+    format: val => castArray(val ?? [])
   }
 };
