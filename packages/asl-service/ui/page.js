@@ -49,7 +49,7 @@ module.exports = ({
     const baseUrl = req.baseUrl === '/'
       ? ''
       : req.baseUrl;
-    const url = `${baseUrl}${req.path}`;
+    const url = `${baseUrl}${req.path === '/' ? '' : req.path}`;
 
     const filename = req.path.replace('/', '') || 'index';
 
