@@ -1,30 +1,33 @@
 import React from 'react';
 import CategoryELandingPage from '../../../components/category-e-landing-page';
 import {
+  formatCourseDateRange,
   formatCourseTitle,
-  formatCourseDates,
   formatProfile,
+  formatTaskActions,
   formatTaskDetails,
-  formatTaskStatus,
-  formatTaskActions
+  formatTaskStatus
 } from '../../../formatters';
 import { useSelector } from 'react-redux';
 import { Datatable, Search, Snippet } from '@ukhomeoffice/asl-components';
 
 const formatters = {
   profile: {
-    format: (subject, task) => formatProfile(
-      subject.profileId,
-      subject.firstName,
-      subject.lastName,
-      task.data.establishmentId
-    )
+    format: (subject, task) =>
+      subject
+        ? formatProfile(
+          subject.profileId,
+          subject.firstName,
+          subject.lastName,
+          task.data?.establishmentId
+        )
+        : '-'
   },
   courseTitle: {
     format: (title, task) => formatCourseTitle(title, task.trainingCourse.id)
   },
   startDate: {
-    format: (startDate, task) => formatCourseDates(startDate, task.trainingCourse.endDate)
+    format: (startDate, task) => formatCourseDateRange(startDate, task.trainingCourse.endDate)
   },
   licenceDetails: {
     format: (_, task) => formatTaskDetails(task)

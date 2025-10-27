@@ -103,15 +103,20 @@ module.exports = settings => {
 
       if (req.form.values.courseDuration === 'one-day') {
         parseAndSetDate(req, 'courseDate');
-        delete req.form.values.startDate;
-        delete req.form.values.endDate;
+        req.form.values.startDate = null;
+        req.form.values.endDate = null;
       }
 
       if (req.form.values.courseDuration === 'multi-day') {
         parseAndSetDate(req, 'startDate');
         parseAndSetDate(req, 'endDate');
-        delete req.form.values.courseDate;
+        req.form.values.courseDate = null;
       }
+
+      const projectSpecies = project.species ?? [];
+
+      req.form.values.species = (req.form.values.species ?? [])
+        .filter(species => projectSpecies.includes(species));
     })
   }));
 

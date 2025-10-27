@@ -28,10 +28,10 @@ const buildQuery = filters => {
   } = filters;
 
   const query = Task.query()
-    .where({ status })
+    .andWhere(status === '*' ? true : { status })
     .andWhere('updatedAt', '>', moment(start).startOf('day').toISOString())
     .andWhere('updatedAt', '<', moment(end).endOf('day').toISOString())
-    .whereRaw(`(data->>'establishmentId' != '1502162' or data->>'establishmentId' is null)`);
+    .andWhereRaw(`(data->>'establishmentId' != '1502162' or data->>'establishmentId' is null)`);
 
   if (model) {
     query.andWhere(filterByModel(model));
@@ -110,7 +110,7 @@ module.exports = (taskflow) => {
 
         req.log('debug', { filters });
         const sql = query.toKnexQuery().toString();
-        req.log('info', { sql });
+        req.log('debug', { sql });
 
         const totalQuery = buildQuery(filters).count();
         const totalCount = totalQuery.then(result => parseInt(result[0].count, 10));

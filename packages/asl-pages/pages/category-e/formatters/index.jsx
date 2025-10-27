@@ -1,9 +1,10 @@
 import React from 'react';
-import { format, getYear } from 'date-fns';
+import { format, getMonth, getYear } from 'date-fns';
 import { Link, Snippet } from '@ukhomeoffice/asl-components';
 import { dateFormat } from '../../../constants';
 import taskFormatters from '../../task/list/formatters';
 import classnames from 'classnames';
+import { trainingCoursePurpose } from '@ukhomeoffice/asl-constants';
 
 export const formatDate = (date, formatSpec = dateFormat.medium) => date ? format(date, formatSpec) : '-';
 
@@ -28,20 +29,24 @@ export const formatSpecies = species =>
     ? '-'
     : species.map(ucFirst).sort().join(', ');
 
-export const formatCourseDates = (startDate, endDate) => {
-  if (!endDate) {
-    return formatDate(startDate, dateFormat.medium);
+const getStartDateFormat = (startDate, endDate) => {
+  if (endDate == null || getYear(startDate) !== getYear(endDate)) {
+    return dateFormat.medium;
+  } else if (getMonth(startDate) !== getMonth(endDate)) {
+    return 'd MMM';
   } else {
-    const startDateFormat = getYear(startDate) === getYear(endDate)
-      ? 'dd MMM'
-      : dateFormat.medium;
-
-    return `${formatDate(startDate, startDateFormat)} - ${formatDate(endDate, dateFormat.medium)}`;
+    return 'd';
   }
 };
 
+export const formatCourseDateRange = (startDate, endDate) => {
+  return endDate
+    ? `${formatDate(startDate, getStartDateFormat(startDate, endDate))} to ${formatDate(endDate, dateFormat.medium)}`
+    : formatDate(startDate, dateFormat.medium);
+};
+
 export const formatProfile = (profileId, firstName, lastName, establishmentId) =>
-  profileId
+  profileId && establishmentId
     ? <Link
       page='profile.read'
       profileId={profileId}
@@ -90,3 +95,5 @@ export const formatTaskActions = task => {
     />;
   }
 };
+
+export const formatCoursePurpose = purpose => trainingCoursePurpose[purpose] ?? purpose;

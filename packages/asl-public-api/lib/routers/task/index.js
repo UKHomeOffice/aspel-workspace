@@ -27,12 +27,14 @@ router.get('/filtered', (req, res, next) => {
     sort,
     limit,
     offset,
+    taskStatus,
     search,
     searchFields = []
   } = req.query;
 
   const query = {
     filters: {
+      status: taskStatus ?? 'resolved',
       establishment: establishmentId ?? establishment,
       model,
       action,

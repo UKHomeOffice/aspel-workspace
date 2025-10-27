@@ -1,7 +1,7 @@
 import { Datatable, Snippet } from '@ukhomeoffice/asl-components';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { formatCourseTitle, formatSpecies, formatCourseDates } from '../../../formatters';
+import { formatCourseTitle, formatSpecies, formatCourseDateRange } from '../../../formatters';
 import CategoryELandingPage from '../../../components/category-e-landing-page';
 
 const tableFormatters = {
@@ -12,7 +12,7 @@ const tableFormatters = {
     format: (species) => formatSpecies(species)
   },
   startDate: {
-    format: (startDate, course) => formatCourseDates(startDate, course.endDate)
+    format: (startDate, course) => formatCourseDateRange(startDate, course.endDate)
   }
 };
 

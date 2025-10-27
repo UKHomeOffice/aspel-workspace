@@ -1,4 +1,5 @@
 const baseContent = require('../../content');
+const status = require('../../../../task/content/status');
 
 module.exports = {
   from: __dirname,
@@ -51,5 +52,6 @@ module.exports = {
     action: {
       label: 'Action'
     }
-  }
+  },
+  status
 };

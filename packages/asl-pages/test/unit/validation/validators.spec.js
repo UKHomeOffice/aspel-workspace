@@ -2,7 +2,7 @@ import moment from 'moment';
 import sinon from 'sinon';
 import validators from '../../../lib/validation/validators';
 
-const doTest = (fieldName, value, params, type, expected, values, model, field) => {
+const doTest = (fieldName, value, params, type, expected, values, model, field = {}) => {
   test(`testing '${value}' against ${params}`, () => {
     expect(validators[type](null, value, params, values, model, field)).toBe(expected);
   });
@@ -150,7 +150,20 @@ describe('validation', () => {
         undefined
       ];
       values.forEach(value => doTest(null, value, true, 'required', false));
+
+      // an empty date combined into ISO format using `${year}-${month}-${day}` === '--'
+      doTest(
+        null,
+        '--',
+        true,
+        'required',
+        false,
+        {},
+        {},
+        {inputType: 'inputDate'}
+      );
     });
+
   });
 
   describe('dates', () => {
