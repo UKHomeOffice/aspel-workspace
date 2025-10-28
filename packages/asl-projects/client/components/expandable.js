@@ -28,19 +28,21 @@ const Expandable = ({
     </Fragment>;
   }
 
-  return <div className={classnames('expandable', { expanded }, className)}>
-    <div className="header" onClick={onHeaderClick}>
-      {
-        title && <h2>{title}</h2>
-      }
-      {
-        hasTwoChildren(children) && children[0]
-      }
-    </div>
-    <div className={classnames('content', { hidden: !expanded })}>
-      { renderContent() }
-    </div>
-  </div>;
+  return (
+      <div className={classnames('expandable', { expanded }, className)} onClick={onHeaderClick}>
+        <div className="header">
+          {
+            title && <h2>{title}</h2>
+          }
+          {
+            hasTwoChildren(children) && children[0]
+          }
+        </div>
+        <div className={classnames('content', { hidden: !expanded })}>
+          { renderContent() }
+        </div>
+      </div>
+  );
 };
 
 export default Expandable;
