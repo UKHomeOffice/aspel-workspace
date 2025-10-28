@@ -157,5 +157,26 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
           .then(() => ({ id }));
       });
   }
+
+  if (action === 'replaceHba') {
+    const { projectVersionId, token, filename, attachmentId } = data;
+    if (projectVersionId && attachmentId) {
+      const projectVersion = await ProjectVersion.query(transaction).findById(projectVersionId);
+      const replaced = projectVersion.hbaReplaced || [];
+      if (!replaced.includes(attachmentId)) {
+        replaced.push(attachmentId);
+      }
+
+      if (token) {
+        return ProjectVersion.query(transaction)
+          .patchAndFetchById(projectVersionId, {
+            hbaFilename: filename,
+            hbaToken: token,
+            hbaReplaced: replaced
+          });
+      }
+    }
+  }
+
   return resolver({ Model: ProjectVersion, action, data, id }, transaction);
 };
