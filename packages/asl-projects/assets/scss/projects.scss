@@ -442,12 +442,6 @@ html.modal-open, html.modal-open body {
       margin-right: $govuk-gutter-half;
     }
 
-    &.no-bg {
-      @extend a;
-      background: none;
-      box-shadow: none;
-    }
-
     &.button-secondary {
       background: $white;
       color: $govuk-text-colour;
@@ -457,6 +451,14 @@ html.modal-open, html.modal-open body {
         background: $light-grey;
       }
     }
+  }
+
+  .govuk-button > h2.title {
+    margin-bottom: 0;
+  }
+
+  .govuk-button:has(> h2.title) {
+    margin-bottom: 1em;
   }
 
   a.sections-link {
@@ -964,6 +966,10 @@ html.modal-open, html.modal-open body {
       > .expandable {
         > .header {
           background-color: $blue;
+
+          :focus :not(.restore) {
+            color: #0b0c0c;
+          }
 
           *:not(.restore) {
             color: $white;
