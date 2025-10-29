@@ -442,6 +442,12 @@ html.modal-open, html.modal-open body {
       margin-right: $govuk-gutter-half;
     }
 
+    &.no-bg {
+      @extend a;
+      background: none;
+      box-shadow: none;
+    }
+
     &.button-secondary {
       background: $white;
       color: $govuk-text-colour;

@@ -105,7 +105,7 @@ class ProtocolSections extends PureComponent {
         }
         <Expandable expanded={this.state.expanded} onHeaderClick={this.toggleExpanded}>
           <Completable status={values.deleted ? 'deleted' : values.complete ? 'complete' : 'incomplete'}>
-            <button className='govuk-button link'><h2 className="title inline-block">{values.deleted ? title : `${number + 1}: ${title}`}</h2></button>
+            <button className='govuk-button no-bg'><h2 className="title inline-block">{values.deleted ? title : `${number + 1}: ${title}`}</h2></button>
             {
               editable && <button className={classnames('govuk-button link', { restore: values.deleted })} onClick={values.deleted ? this.props.restoreItem : this.toggleActive}>{values.deleted ? 'Restore' : 'Edit title'}</button>
             }
