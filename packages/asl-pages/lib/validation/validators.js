@@ -4,7 +4,7 @@ const moment = require('moment');
 function normaliseDate(dateSpec, values, model) {
   if (typeof dateSpec === 'function') {
     return dateSpec(values, model);
-  } else if (dateSpec === 'now') {
+  } else if (dateSpec === 'now' || dateSpec == null) {
     return moment();
   } else {
     return zip(dateSpec.split('-'), [4, 2, 2])
