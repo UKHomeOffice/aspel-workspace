@@ -49,7 +49,7 @@ export default function ExpandingPanel(props) {
   return (
     <section className={classnames('expanding-panel', { open }, props.className)}>
       <header onClick={toggle}>
-        <h3 ref={ref}>{ props.title }</h3>
+        <button className='govuk-button link'><h3 ref={ref}>{ props.title }</h3></button>
       </header>
       <div className={classnames('content', { hidden: !open })}>
         { open && content() }
