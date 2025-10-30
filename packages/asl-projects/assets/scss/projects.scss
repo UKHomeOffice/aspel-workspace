@@ -968,7 +968,7 @@ html.modal-open, html.modal-open body {
           background-color: $blue;
 
           :focus :not(.restore) {
-            color: #0b0c0c;
+            color: $black;
           }
 
           *:not(.restore) {
