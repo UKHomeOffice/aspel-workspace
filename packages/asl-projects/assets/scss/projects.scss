@@ -1789,3 +1789,22 @@ html.modal-open, html.modal-open body {
   cursor: pointer;
   color: blue;
 }
+// Custom training summary overrides
+#ppl-drafting-tool {
+  span.govuk-tag.badge.created.gray,
+  span.govuk-tag.badge.changed.gray,
+  span.govuk-tag.badge.deleted.gray {
+    background: #6F777B !important;
+  }
+
+  .modal-trigger {
+    margin-left: 0;
+    float: left;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  span.changedText {
+    padding-left: 32px;
+  }
+}
