@@ -29,7 +29,10 @@ const tableFormatters = (establishmentId, value) => ({
     format: (licenceNumber, project) => formatProjectLicenceNumber(licenceNumber, establishmentId, project.id)
   },
   expiryDate: {
-    format: (startDate, course) => formatDate(startDate, course.endDate)
+    format: (startDate, course) => formatDate(startDate, course.endDate),
+    headerProps: {
+      style: {width: '12%'}
+    }
   }
 });
 
