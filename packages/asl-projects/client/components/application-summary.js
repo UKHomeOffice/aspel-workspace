@@ -109,8 +109,6 @@ const ApplicationSummary = () => {
   } = props;
   const [errors, setErrors] = useState(false);
   const ref = useRef(null);
-  console.log(project);
-  console.log(props);
   useEffect(() => {
     if (submitted && !isSyncing) {
       submit();
