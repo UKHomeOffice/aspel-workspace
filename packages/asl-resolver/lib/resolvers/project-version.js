@@ -157,28 +157,5 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
           .then(() => ({ id }));
       });
   }
-
-  // >>> TEST INSERT <<<
-  if (action === 'read' || action === 'get') {
-    const version = await ProjectVersion.query(transaction).findById(id);
-    if (version) {
-      const allTraining = await ProjectVersion.getTrainingAcrossVersions(version.projectId, transaction);
-      // attach under meta, to avoid breaking current schema
-      version.meta = {
-        ...(version.meta || {}),
-        trainingRecordsAcrossVersions: allTraining
-      };
-
-      // 🪶 Add these debug logs test
-      console.log('✅ test project-version resolver reached:', id);
-      console.log(
-        'meta.trainingRecordsAcrossVersions length =',
-        allTraining?.length || 0
-      );
-
-    }
-    return version;
-  }
-  // >>> TEST INSERT <<<
   return resolver({ Model: ProjectVersion, action, data, id }, transaction);
 };
