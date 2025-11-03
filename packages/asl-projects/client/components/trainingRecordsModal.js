@@ -1,12 +1,11 @@
 import React, { Fragment, useState } from 'react';
 import classnames from 'classnames';
 import Modal from './modal';
-import Tabs from './tabs';
 import { Warning } from '@ukhomeoffice/react-components';
 
 const DEFAULT_LABEL = 'No data available';
 
-export default function trainingRecordModal({
+export default function TrainingRecordModal({
                                               current = {},
                                               previous = {},
                                               first = {},
@@ -25,33 +24,19 @@ export default function trainingRecordModal({
     setActive(n);
   };
 
-  // Define this here (NOT inside JSX)
-  const hasPrevChanges = JSON.stringify(current) !== JSON.stringify(previous);
-  // Field difference display
   const diffField = (prev = '', next = '', side = 'left') => {
     if (prev === next) return <span>{next || <em>{DEFAULT_LABEL}</em>}</span>;
-
-    if (side === 'left') {
-      // Show only removed
-      return prev ? <span className="diff removed">{prev}</span> : <span>-</span>;
-    }
-    if (side === 'right') {
-      // Show only added
-      return next ? <span className="diff added">{next}</span> : <span>-</span>;
-    }
+    if (side === 'left') return prev ? <span className="diff removed">{prev}</span> : <span>-</span>;
+    if (side === 'right') return next ? <span className="diff added">{next}</span> : <span>-</span>;
   };
 
-  // Array (modules/species) difference display
   const diffArray = (prevArr = [], nextArr = [], side = 'left') => {
+    prevArr = Array.isArray(prevArr) ? prevArr : [];
+    nextArr = Array.isArray(nextArr) ? nextArr : [];
+
     const removed = prevArr.filter(x => !nextArr.includes(x));
     const added = nextArr.filter(x => !prevArr.includes(x));
-    let items = [];
-
-    if (side === 'left') {
-      items = removed.length ? removed : prevArr;
-    } else {
-      items = added.length ? added : nextArr;
-    }
+    const items = side === 'left' ? prevArr : nextArr;
 
     if (!items.length) return <p><em>{DEFAULT_LABEL}</em></p>;
 
@@ -76,110 +61,81 @@ export default function trainingRecordModal({
     );
   };
 
-  // Main comparison layout
-  const compareView = (leftLabel, leftData, rightLabel, rightData) => (
-    <Fragment>
-      <div className="govuk-grid-row">
-        {/* LEFT SIDE: removed */}
-        <div className="govuk-grid-column-one-half ">
-          <h3>{leftLabel}</h3>
-          <div className="panel light-grey before">
-            <div className="govuk-form-group">
-              <strong>Modules</strong>
-              {diffArray(leftData.modules, rightData.modules, 'left')}
-            </div>
-            <div className="govuk-form-group">
-              <strong>Species</strong>
-              {diffArray(leftData.species, rightData.species, 'left')}
-            </div>
-            <div className="govuk-form-group">
-              <strong>Details</strong>
-              <p>Certificate Number: {diffField(leftData.certificateNumber, rightData.certificateNumber, 'left')}</p>
-              <p>Awarded On: {diffField(leftData.passDate, rightData.passDate, 'left')}</p>
-              <p>Awarded By: {diffField(leftData.accreditingBody, rightData.accreditingBody, 'left')}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT SIDE: added */}
-        <div className="govuk-grid-column-one-half">
-          <h3>{rightLabel}</h3>
-          <div className="panel light-grey after">
-            <div className="govuk-form-group">
-              <strong>Modules</strong>
-              {diffArray(leftData.modules, rightData.modules, 'right')}
-            </div>
-            <div className="govuk-form-group">
-              <strong>Species</strong>
-              {diffArray(leftData.species, rightData.species, 'right')}
-            </div>
-            <div className="govuk-form-group">
-              <strong>Details</strong>
-              <p>Certificate Number: {diffField(leftData.certificateNumber, rightData.certificateNumber, 'right')}</p>
-              <p>Awarded On: {diffField(leftData.passDate, rightData.passDate, 'right')}</p>
-              <p>Awarded By: {diffField(leftData.accreditingBody, rightData.accreditingBody, 'right')}</p>
-            </div>
-          </div>
-        </div>
+  const leftPanel = (data, compareTo) => (
+    <div className="panel light-grey before">
+      <div className="govuk-form-group">
+        <strong>Modules</strong>
+        {diffArray(data.modules, compareTo.modules, 'left')}
       </div>
-    </Fragment>
+      <div className="govuk-form-group">
+        <strong>Species</strong>
+        {diffArray(data.species, compareTo.species, 'left')}
+      </div>
+      <div className="govuk-form-group">
+        <strong>Details</strong>
+        <p>Certificate Number: {diffField(data.certificateNumber, compareTo.certificateNumber, 'left')}</p>
+        <p>Awarded On: {diffField(data.passDate, compareTo.passDate, 'left')}</p>
+        <p>Awarded By: {diffField(data.accreditingBody, compareTo.accreditingBody, 'left')}</p>
+      </div>
+    </div>
   );
 
-  // No visible change warning
-  const noChanges =
-    JSON.stringify(current) === JSON.stringify(previous) &&
-    JSON.stringify(previous) === JSON.stringify(first);
+  const rightPanel = (data, compareTo) => (
+    <div className="panel light-grey after">
+      <div className="govuk-form-group">
+        <strong>Modules</strong>
+        {diffArray(compareTo.modules, data.modules, 'right')}
+      </div>
+      <div className="govuk-form-group">
+        <strong>Species</strong>
+        {diffArray(compareTo.species, data.species, 'right')}
+      </div>
+      <div className="govuk-form-group">
+        <strong>Details</strong>
+        <p>Certificate Number: {diffField(compareTo.certificateNumber, data.certificateNumber, 'right')}</p>
+        <p>Awarded On: {diffField(compareTo.passDate, data.passDate, 'right')}</p>
+        <p>Awarded By: {diffField(compareTo.accreditingBody, data.accreditingBody, 'right')}</p>
+      </div>
+    </div>
+  );
 
-  const renderBody = () => {
-    if (noChanges) {
-      return (
-        <Warning>
-          <p>No visible differences detected. There may be metadata-only changes.</p>
-        </Warning>
-      );
-    }
-
-    if (active === 0) {
-      return compareView('Previous version', previous, 'Proposed version', current);
-    }
-
-    if (active === 1) {
-      return compareView('Initial submission', first, 'Current version', current);
-    }
-
-    return null;
-  };
-
-  // Final Render
   return modalOpen ? (
     <Modal onClose={toggleModal}>
       <div className="diff-window">
         <div className="diff-window-header">
-          <h1>See what&apos;s changed</h1>
+          <h1>See what's changed</h1>
           <a href="#" className="float-right close" onClick={toggleModal}>
             Close
           </a>
         </div>
 
         <div className="diff-window-body">
-          <div className="diff-window-body">
-            <h2>{label}</h2>
-            {hasPrevChanges ? (
-              <>
-                <Tabs active={active}>
-                  <a href="#" onClick={selectTab(0)}> Previous submission vs Proposed submission </a>
-                  <a href="#" onClick={selectTab(1)}>Initial submission vs Current submission</a>
-                </Tabs>
-                <h2>&nbsp;</h2>
-                {active === 0
-                  ? compareView('Previous version', previous, 'Proposed version', current)
-                  : compareView('Initial submission', first, 'Proposed', current)}
-              </>
-            ) : (
-              <>
-                {compareView('Initial submission', first, 'Proposed', current)}
-              </>
-            )}
+          <h2>{label}</h2>
+
+          <div className="govuk-grid-row">
+            {/* Left side with tabs */}
+            <div className="govuk-grid-column-one-half">
+              <nav className="govuk-tabs">
+                <ul>
+                  <li className={active === 1 ? 'active' : ''}>
+                    <a href="#" onClick={selectTab(1)}>Initial submission</a>
+                  </li>
+                  <li className={active === 0 ? 'active' : ''}>
+                    <a href="#" onClick={selectTab(0)}>Previous version</a>
+                  </li>
+                </ul>
+              </nav>
+
+              {active === 0
+                ? leftPanel(previous, current)
+                : leftPanel(first, current)}
+            </div>
+
+            {/* Right side always shows proposed */}
+            <div className="govuk-grid-column-one-half">
+              <h3>Proposed</h3>
+              {rightPanel(current, active === 0 ? previous : first)}
+            </div>
           </div>
         </div>
 
@@ -194,7 +150,7 @@ export default function trainingRecordModal({
     </Modal>
   ) : (
     <a href="#" className="modal-trigger" onClick={toggleModal}>
-      See what&apos;s <span className="changedText">changed</span>
+      See what's <span className="changedText">changed</span>
     </a>
   );
 }

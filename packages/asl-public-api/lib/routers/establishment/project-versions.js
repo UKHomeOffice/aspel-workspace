@@ -171,8 +171,6 @@ router.get('/:versionId',
     // Add trainingHistory to the response object (add as part of version data)
     req.version.data.trainingHistory = trainingHistory;
 
-    console.log("Training History for Each Version:", trainingHistory);
-
     const transferToEstablishment = get(req.version, 'data.transferToEstablishment');
     if (transferToEstablishment && !get(req.version, 'data.transferToEstablishmentName')) {
       const est = await req.models.Establishment.query().findById(transferToEstablishment).select('name');
@@ -185,8 +183,6 @@ router.get('/:versionId',
   fetchReminders('projectVersion'),
   fetchOpenTasks(req => req.version.projectId)
 );
-
-
 
 
 router.put('/:versionId/:action',
