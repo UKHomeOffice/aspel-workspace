@@ -1,8 +1,8 @@
-@import 'editor';
-@import 'images';
-$light-green: #26a197;
+@import "editor";
+@import "images";
+$light-green: #26A197;
 $pink: #ff1493;
-$hint-colour: #696f73;
+$hint-colour: #696F73;
 
 @mixin sticky {
   position: -webkit-sticky;
@@ -15,8 +15,7 @@ $hint-colour: #696f73;
   padding-left: $govuk-gutter-half;
 }
 
-html.modal-open,
-html.modal-open body {
+html.modal-open, html.modal-open body {
   overflow: hidden;
 }
 
@@ -31,8 +30,7 @@ html.modal-open body {
     tr.expandable {
       cursor: pointer;
 
-      &.hover,
-      &.expanded {
+      &.hover, &.expanded {
         background-color: white;
       }
 
@@ -156,6 +154,7 @@ html.modal-open body {
   }
 
   .diff {
+
     &.added {
       border-bottom: 3px solid #47ff47;
       background-color: #d3ffd3;
@@ -200,7 +199,7 @@ html.modal-open body {
     }
   }
 
-  a[href='#']:visited {
+  a[href="#"]:visited {
     color: $govuk-link-colour;
   }
 
@@ -264,8 +263,7 @@ html.modal-open body {
         text-decoration: underline;
       }
 
-      &.previous,
-      &.next {
+      &.previous, &.next {
         h3:before {
           position: absolute;
           left: 0;
@@ -275,13 +273,13 @@ html.modal-open body {
 
       &.previous {
         h3:before {
-          content: '\2190';
+          content: "\2190";
         }
       }
 
       &.next {
         h3:before {
-          content: '\2192';
+          content: "\2192";
         }
       }
     }
@@ -297,9 +295,7 @@ html.modal-open body {
     text-decoration: none !important;
   }
 
-  h1,
-  h2:not(.govuk-fieldset__heading),
-  h3 {
+  h1, h2:not(.govuk-fieldset__heading), h3 {
     margin-bottom: 1em;
   }
 
@@ -491,6 +487,8 @@ html.modal-open body {
         margin-top: -5px;
       }
     }
+
+
   }
 
   dl {
@@ -569,7 +567,7 @@ html.modal-open body {
       background: $govuk-error-colour;
     }
     &.alert-warning {
-      background: #e3733b;
+      background: #E3733B;
     }
     a {
       color: white;
@@ -644,8 +642,7 @@ html.modal-open body {
     padding: 2em 0 1px;
     margin-bottom: 2em;
 
-    h1,
-    h2 {
+    h1, h2 {
       color: $white;
     }
 
@@ -663,8 +660,7 @@ html.modal-open body {
         overflow: auto;
       }
 
-      h1,
-      h3 {
+      h1, h3 {
         color: $govuk-error-colour;
         margin: 0;
       }
@@ -769,13 +765,13 @@ html.modal-open body {
       min-height: auto;
     }
 
-    .govuk-radios [type='radio'] + label::after {
+     .govuk-radios [type='radio'] + label::after {
       border: 7px solid;
       top: 5px;
       left: 5px;
     }
 
-    .govuk-radios__label {
+     .govuk-radios__label {
       padding: 0;
     }
 
@@ -793,12 +789,12 @@ html.modal-open body {
       }
     }
 
-    .govuk-checkboxes [type='checkbox'] + label::before {
+    .govuk-checkboxes [type=checkbox] + label::before {
       width: 25px;
       height: 25px;
     }
 
-    .govuk-checkboxes [type='checkbox'] + label::after {
+    .govuk-checkboxes [type=checkbox] + label::after {
       border-width: 0 0 3px 3px;
       width: 11px;
       height: 4px;
@@ -817,8 +813,7 @@ html.modal-open body {
         margin-left: -30px;
         margin-top: $govuk-gutter-half;
 
-        input,
-        textarea {
+        input, textarea {
           margin-bottom: 0;
         }
       }
@@ -831,8 +826,7 @@ html.modal-open body {
 
   .govuk-reveal {
     margin-bottom: $govuk-gutter;
-    textarea:last-child,
-    .editor:last-child {
+    textarea:last-child, .editor:last-child {
       margin-bottom: 0;
     }
   }
@@ -869,8 +863,7 @@ html.modal-open body {
   }
 
   .expandable {
-    > .header,
-    .content {
+    > .header, .content {
       @extend .panel;
     }
 
@@ -905,14 +898,14 @@ html.modal-open body {
     }
 
     .review {
-      hr,
-      a {
+      hr, a {
         display: none;
       }
     }
   }
 
   .steps {
+
     .step {
       margin-bottom: $govuk-gutter;
 
@@ -942,6 +935,7 @@ html.modal-open body {
       }
     }
   }
+
 
   .protocol {
     margin-bottom: $govuk-gutter;
@@ -1155,14 +1149,14 @@ html.modal-open body {
   }
 
   .accordion > .expanding-panel {
-    header .govuk-button.link {
-      width: 100%;
-      text-align: left;
+      header .govuk-button.link {
+        width: 100%;
+        text-align: left;
 
-      h3:after {
-        top: 0;
+        h3:after {
+          top: 0
+        }
       }
-    }
   }
 
   .document-header .page-title {
@@ -1220,8 +1214,7 @@ html.modal-open body {
       flex-shrink: 0;
     }
 
-    > nav,
-    .content {
+    > nav, .content {
       vertical-align: top;
     }
 
@@ -1273,7 +1266,7 @@ html.modal-open body {
     }
   }
 
-  input[type='number'] {
+  input[type="number"] {
     width: 6em;
   }
 
@@ -1314,8 +1307,7 @@ html.modal-open body {
     margin-bottom: $govuk-gutter;
   }
 
-  .location-selector,
-  .objective-selector {
+  .location-selector, .objective-selector {
     margin-bottom: $govuk-gutter;
 
     > .govuk-form-group {
@@ -1406,12 +1398,13 @@ html.modal-open body {
             }
 
             &:after {
-              content: '▼';
+              content: '▼'
             }
           }
         }
       }
     }
+
   }
 
   .steps-back-to-top {
@@ -1481,33 +1474,33 @@ html.modal-open body {
       }
 
       &:before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 0;
-        height: 0;
-        border: 20px solid transparent;
-        border-top-color: $govuk-border-colour;
-        border-bottom: 0;
-        border-right: 0;
-        margin-left: -20px;
-        margin-top: -3px;
+      	content: '';
+      	position: absolute;
+      	left: 0;
+      	top: 0;
+      	width: 0;
+      	height: 0;
+      	border: 20px solid transparent;
+      	border-top-color: $govuk-border-colour;
+      	border-bottom: 0;
+      	border-right: 0;
+      	margin-left: -20px;
+      	margin-top: -3px;
       }
 
       &:after {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 0;
-        height: 0;
-        border: 20px solid transparent;
-        border-top-color: $white;
-        border-bottom: 0;
-        border-right: 0;
-        margin-left: -13px;
-        margin-top: -0px;
+      	content: '';
+      	position: absolute;
+      	left: 0;
+      	top: 0;
+      	width: 0;
+      	height: 0;
+      	border: 20px solid transparent;
+      	border-top-color: $white;
+      	border-bottom: 0;
+      	border-right: 0;
+      	margin-left: -13px;
+      	margin-top: -0px;
       }
 
       &.mine {
@@ -1516,8 +1509,7 @@ html.modal-open body {
         margin-left: $govuk-gutter;
         margin-right: 0;
 
-        &:before,
-        &:after {
+        &:before, &:after {
           right: 0;
           border-left: 0;
           border-right: 20px solid transparent;
@@ -1605,8 +1597,7 @@ html.modal-open body {
         }
       }
 
-      > ul,
-      ol {
+      > ul, ol {
         li {
           display: none;
 
@@ -1637,13 +1628,13 @@ html.modal-open body {
         margin-right: $govuk-gutter / 4;
       }
 
-      &[aria-expanded='false'] {
+      &[aria-expanded=false] {
         &:before {
           content: '►';
         }
       }
 
-      &[aria-expanded='true'] {
+      &[aria-expanded=true] {
         &:before {
           content: '▲';
         }
@@ -1676,8 +1667,7 @@ html.modal-open body {
   }
 
   .repeats-establishments {
-    fieldset,
-    .panel .review {
+    fieldset, .panel .review {
       background-color: white;
       margin: 0 (-$govuk-gutter-half);
       padding: $govuk-gutter-half;
@@ -1703,8 +1693,7 @@ html.modal-open body {
         }
       }
 
-      fieldset,
-      .panel .review {
+      fieldset, .panel .review {
         background-color: #f3f3f3;
       }
     }
@@ -1712,7 +1701,7 @@ html.modal-open body {
 
   // hack to always show sub-list for permissible purposes
   // and to remove the checkbox for the reveal option
-  input[name='permissible-purpose'][value='translational-research'] {
+  input[name="permissible-purpose"][value="translational-research"] {
     & + label {
       opacity: 1 !important;
       &:before,
@@ -1737,7 +1726,7 @@ html.modal-open body {
   margin-bottom: 2em;
 }
 .spinner {
-  border: 12px solid #dee0e2;
+  border: 12px solid #DEE0E2;
   border-radius: 50%;
   border-top-color: #808080;
   width: 40px;
@@ -1747,20 +1736,12 @@ html.modal-open body {
   margin: 0 auto;
 }
 @-webkit-keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
 }
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 .sync-indicator {
   display: inline-block;
