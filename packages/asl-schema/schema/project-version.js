@@ -53,35 +53,7 @@ class ProjectVersion extends BaseModel {
       }
     };
   }
-
-  //  test method - to be removed
-  static async getTrainingAcrossVersions(projectId, transaction) {
-    const versions = await this.query(transaction)
-      .where({ projectId })
-      .select('id', 'status', 'data')
-      .orderBy('createdAt', 'desc');
-
-    // Return only versions that actually have training entries
-    const result = versions
-      .filter(v => Array.isArray(v.data?.sections?.training) && v.data.sections.training.length > 0)
-      .map(v => ({
-        id: v.id,
-        status: v.status,
-        data: {
-          sections: {
-            training: v.data.sections.training
-          }
-        }
-      }));
-
-    console.log('Training records across versions:', result.length);
-    result.forEach(v => {
-      console.log('→', v.id, v.status, v.data.sections.training.length, 'records');
-    });
-
-    return result;
-  }
-
+  
 }
 
 module.exports = ProjectVersion;
