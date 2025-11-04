@@ -149,8 +149,8 @@ router.get('/:versionId',
         const versionTrainingData = version.training.map((training) => {
           return {
             trainingId: training.id,
-            isExemption : training.isExemption,
-            exemptionReason : training.exemptionReason,
+            isExemption: training.isExemption,
+            exemptionReason: training.exemptionReason,
             modules: training.modules,
             species: training.species,
             passDate: training.passDate,
