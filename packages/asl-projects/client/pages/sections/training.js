@@ -8,17 +8,18 @@ import TrainingSummaryCustom from '../../components/training-summary-custom';
 import Fieldset from '../../components/fieldset';
 import ReviewFields from '../../components/review-fields';
 import ChangedBadge from '../../components/changed-badge';
-
+const { FEATURE_FLAG_TRAINING_RECORD } = require('@asl/service/ui/feature-flag');
 export default function Training(props) {
   const { training, basename, readonly, canUpdateTraining } = useSelector(state => state.application, shallowEqual);
   const project = useSelector(state => state.project);
   const form = useRef(null);
   const history = useHistory();
   const trainingComplete = project['training-complete'];
-
+  const trainingRecordHighlight = true; //useFeatureFlag(FEATURE_FLAG_TRAINING_RECORD);
   const fields = props.fields.map(f => {
     return f.name === 'training-complete' ? { ...f, type: 'comments-only' } : f;
   });
+
 
 
   const comparisons = compareTrainingRecords(
@@ -42,18 +43,19 @@ export default function Training(props) {
 
       <h2>Training records</h2>
       <ChangedBadge fields={['training']} />
-
-      {/* original training record component
-      <TrainingSummary certificates={readonly ? project.training : training} />
-      */}
-
-      {/* Custom summary with highlights */}
-      <TrainingSummaryCustom
-        certificates={readonly ? project.training : training}
-        comparisons={comparisons}
-        project={project}
-        readonly={readonly}
-      />
+      {
+        /* feature flag enabled  */
+        trainingRecordHighlight ? (
+          <TrainingSummaryCustom
+            certificates={readonly ? project.training : training}
+            comparisons={comparisons}
+            project={project}
+            readonly={readonly}
+          />
+        ) : (
+          <TrainingSummary certificates={readonly ? project.training : training} />
+        )
+      }
 
       {(readonly || !canUpdateTraining)
         ? <ReviewFields {...props} fields={fields} />
