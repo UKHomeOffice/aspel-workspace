@@ -1,8 +1,6 @@
 const baseContent = require('../../content');
-const status = require('../../../../task/content/status');
 
 module.exports = {
-  from: __dirname,
   ...baseContent,
   noLicencesMessage: 'There are no category E PILs yet.',
   tableCaption:
@@ -52,6 +50,5 @@ module.exports = {
     action: {
       label: 'Action'
     }
-  },
-  status
+  }
 };
