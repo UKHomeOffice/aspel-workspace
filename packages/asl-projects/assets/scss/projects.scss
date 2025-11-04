@@ -453,6 +453,14 @@ html.modal-open, html.modal-open body {
     }
   }
 
+  .govuk-button > h2.title {
+    margin-bottom: 0;
+  }
+
+  .govuk-button:has(> h2.title) {
+    margin-bottom: 1em;
+  }
+
   a.sections-link {
     background-color: $black;
     color: $white;
@@ -959,6 +967,10 @@ html.modal-open, html.modal-open body {
         > .header {
           background-color: $blue;
 
+          :focus :not(.restore) {
+            color: $black;
+          }
+
           *:not(.restore) {
             color: $white;
 
@@ -1095,7 +1107,6 @@ html.modal-open, html.modal-open body {
     &:last-child {
       border-bottom: 1px solid $govuk-border-colour;
     }
-
     header {
       padding: $govuk-gutter-half;
       padding-left: 0;
@@ -1132,9 +1143,20 @@ html.modal-open, html.modal-open body {
       padding: $govuk-gutter;
 
       h2:first-child {
-        margin-top:0;
+        margin-top: 0;
       }
     }
+  }
+
+  .accordion > .expanding-panel {
+      header .govuk-button.link {
+        width: 100%;
+        text-align: left;
+
+        h3:after {
+          top: 0
+        }
+      }
   }
 
   .document-header .page-title {
