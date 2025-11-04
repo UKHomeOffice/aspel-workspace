@@ -73,9 +73,15 @@ export default function TrainingRecordModal({
       </div>
       <div className="govuk-form-group">
         <strong>Details</strong>
-        <p>Certificate Number: {diffField(data.certificateNumber, compareTo.certificateNumber, 'left')}</p>
-        <p>Awarded On: {diffField(data.passDate, compareTo.passDate, 'left')}</p>
-        <p>Awarded By: {diffField(data.accreditingBody, compareTo.accreditingBody, 'left')}</p>
+        {data.isExemption ? (
+          <p className="preserve-whitespace">{data.exemptionReason || '-'}</p>
+        ) : (
+          <>
+            <p>Certificate Number: {diffField(data.certificateNumber, compareTo.certificateNumber, 'left')}</p>
+            <p>Awarded On: {diffField(data.passDate, compareTo.passDate, 'left')}</p>
+            <p>Awarded By: {diffField(data.accreditingBody, compareTo.accreditingBody, 'left')}</p>
+          </>
+        )}
       </div>
     </div>
   );
@@ -92,9 +98,15 @@ export default function TrainingRecordModal({
       </div>
       <div className="govuk-form-group">
         <strong>Details</strong>
+        {data.isExemption ? (
+          <p className="preserve-whitespace">{data.exemptionReason || '-'}</p>
+        ) : (
+          <>
         <p>Certificate Number: {diffField(compareTo.certificateNumber, data.certificateNumber, 'right')}</p>
         <p>Awarded On: {diffField(compareTo.passDate, data.passDate, 'right')}</p>
         <p>Awarded By: {diffField(compareTo.accreditingBody, data.accreditingBody, 'right')}</p>
+          </>
+        )}
       </div>
     </div>
   );
