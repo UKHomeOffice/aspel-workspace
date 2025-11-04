@@ -14,7 +14,7 @@ const extractComments = require('../lib/extract-comments');
 const { mapSpecies, mapPermissiblePurpose, mapAnimalQuantities } = require('@asl/projects/client/helpers');
 const diff = require('./diff');
 const { deepRemoveEmpty } = require('../helpers/project');
-const validate = require('uuid-validate');
+
 // eslint-disable-next-line no-control-regex
 const invisibleWhitespace = /[\u0000-\u0008\u000B-\u0019\u001b\u009b\u00ad\u200b\u2028\u2029\ufeff\ufe00-\ufe0f]/g;
 
@@ -431,9 +431,11 @@ const getChangedValues = (question, req, type = 'project-versions') => {
     first: getFirstVersion
   };
 
-  const versionKey = validate(req.query.version) ? req.query.version : null;
+  const validKeys = Object.keys(getVersion);
+  const versionKey = validKeys.includes(req.query.version) ? req.query.version : 'latest';
 
-  return getVersion[versionKey](req, type)
+  return Promise.resolve()
+    .then(() => getVersion[versionKey](req, type))
     .then(async (result) => {
       const value = result && getNode(result.data, question);
       const current = getNode(req[model].data, question);
