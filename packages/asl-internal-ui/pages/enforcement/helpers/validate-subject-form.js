@@ -24,7 +24,7 @@ const validateSubjectForm = formValues => {
   flags.forEach(flag => {
     const [, modelType, id] = flag.match(/^([a-z]+)-([a-f0-9-]+)$/);
     if (modelType === 'establishment') {
-      if (!modelOptions.some(opt => !!opt.match(new RegExp(`-${id}$`)))) {
+      if (!modelOptions.some(opt => opt.endsWith(`-${id}`))) {
         errors.modelOptions = 'required';
       }
     }
