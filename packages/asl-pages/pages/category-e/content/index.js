@@ -10,7 +10,7 @@ module.exports = {
       licences: 'Category E PILs'
     },
     buttons: {
-      add: 'Add course details'
+      add: 'Add new course'
     },
     cannotUpdate: 'Only a person with establishment admin permissions or who' +
       ' has been assigned the NTCO role, can add courses and apply for' +

@@ -13,12 +13,14 @@ export const TableHeader = ({
     onHeaderClick,
     sortable,
     disabled,
-    label
+    label,
+    headerProps
 }) => {
     const isSortable = sortable !== false && column !== undefined && ascending !== undefined;
     return (
         <th
             aria-sort={ isSortable ? (column === id ? (ascending ? 'ascending' : 'descending') : 'none') : undefined }
+            {...(headerProps ?? {})}
         >
             {
                 isSortable
