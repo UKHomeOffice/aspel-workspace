@@ -28,9 +28,6 @@ const getSchema = createSelector([getSchemaVersion], version => schemaMap[versio
 const getProject = state => state.project;
 const getComments = state => state.comments;
 const getUser = state => state.application.user;
-
-
-
 const getFieldsBySubsection = createSelector(
   [getSchema, getProject],
   (schema, project) => {
