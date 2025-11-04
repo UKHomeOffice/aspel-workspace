@@ -24,10 +24,10 @@ const formatters = {
         : '-'
   },
   courseTitle: {
-    format: (title, task) => formatCourseTitle(title, task.trainingCourse.id)
+    format: (title, task) => formatCourseTitle(title, task.trainingCourse?.id)
   },
   startDate: {
-    format: (startDate, task) => formatCourseDateRange(startDate, task.trainingCourse.endDate)
+    format: (startDate, task) => formatCourseDateRange(startDate, task.trainingCourse?.endDate)
   },
   licenceDetails: {
     format: (_, task) => formatTaskDetails(task)

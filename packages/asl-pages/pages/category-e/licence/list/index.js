@@ -23,6 +23,7 @@ module.exports = settings => {
       const query = {
         taskStatus: '*',
         model: 'trainingPil',
+        action: 'grant',
         establishment: req.establishmentId,
         searchFields: [
           'data.modelData.profile.firstName',
