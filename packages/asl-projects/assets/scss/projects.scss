@@ -1137,7 +1137,15 @@ html.modal-open, html.modal-open body {
       h3:after {
         background: $plus-minus no-repeat top left;
       }
-    }
+
+      button.link span {
+        color: $white;
+
+        &:focus {
+          color: $black;
+        }
+      }
+  }
 
     .content {
       padding: $govuk-gutter;
@@ -1148,7 +1156,8 @@ html.modal-open, html.modal-open body {
     }
   }
 
-  .accordion > .expanding-panel {
+  .accordion, .sidebar-nav { 
+     & > .expanding-panel {
       header .govuk-button.link {
         width: 100%;
         text-align: left;
@@ -1157,6 +1166,7 @@ html.modal-open, html.modal-open body {
           top: 0
         }
       }
+    }
   }
 
   .document-header .page-title {

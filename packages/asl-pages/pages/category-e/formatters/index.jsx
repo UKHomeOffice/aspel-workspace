@@ -9,19 +9,23 @@ import { trainingCoursePurpose } from '@ukhomeoffice/asl-constants';
 export const formatDate = (date, formatSpec = dateFormat.medium) => date ? format(date, formatSpec) : '-';
 
 export const formatCourseTitle = (title, trainingCourseId) =>
-  <Link
-    page="categoryE.course.read"
-    trainingCourseId={trainingCourseId}
-    label={title}
-  />;
+  trainingCourseId
+    ? <Link
+      page="categoryE.course.read"
+      trainingCourseId={trainingCourseId}
+      label={title}
+    />
+    : (title ?? '-');
 
 export const formatProjectLicenceNumber = (licenceNumber, establishmentId, projectId) =>
-  <Link
-    page="project.read"
-    establishmentId={establishmentId}
-    projectId={projectId}
-    label={licenceNumber}
-  />;
+  projectId && establishmentId
+    ? <Link
+      page="project.read"
+      establishmentId={establishmentId}
+      projectId={projectId}
+      label={licenceNumber}
+    />
+    : (licenceNumber ?? '-');
 
 export const ucFirst = (str) => str.charAt(0).toLocaleUpperCase() + str.slice(1);
 export const formatSpecies = species =>
@@ -40,6 +44,8 @@ const getStartDateFormat = (startDate, endDate) => {
 };
 
 export const formatCourseDateRange = (startDate, endDate) => {
+  if (!startDate) return '-';
+
   return endDate
     ? `${formatDate(startDate, getStartDateFormat(startDate, endDate))} to ${formatDate(endDate, dateFormat.medium)}`
     : formatDate(startDate, dateFormat.medium);
@@ -53,13 +59,13 @@ export const formatProfile = (profileId, firstName, lastName, establishmentId) =
       establishmentId={establishmentId}
       label={`${firstName} ${lastName}`}
     />
-    : `${firstName} ${lastName}`;
+    : ([firstName, lastName].join(' ') || '-');
 
 export const formatTaskDetails = task => {
-  if (task.status !== 'resolved') {
+  if (task?.status !== 'resolved') {
     return <Link page="task.read" taskId={task.id} label="View task" />;
   }
-  if (task.modelStatus === 'active') {
+  if (task?.modelStatus === 'active') {
     return <Link
       page="categoryE.licence.read"
       trainingPilId={task.data.id}
@@ -81,7 +87,7 @@ export const formatTaskStatus = (status, task) => {
   const bad = ['expired', 'transferred', 'revoked'];
   const good = ['active'];
   const className = classnames({ badge: true, complete: good.includes(task.modelStatus), rejected: bad.includes(task.modelStatus) });
-  return <span className={ className }>{task.modelStatus.toUpperCase()}</span>;
+  return <span className={ className }>{task.modelStatus?.toUpperCase() ?? '-'}</span>;
 };
 
 export const formatTaskActions = task => {

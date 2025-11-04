@@ -16,7 +16,7 @@ module.exports = {
   ...baseContent,
   fields: {
     projectId: { label: 'Select a project licence' },
-    projectTitle: { label: 'Project licence' },
+    projectTitle: { label: 'Project title' },
     licenceNumber: { label: 'Project licence number' },
     expiryDate: { label: 'Project licence expiry date' },
     title: { label: 'Course title' },
