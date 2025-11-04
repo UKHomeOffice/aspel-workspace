@@ -24,6 +24,21 @@ export default function TrainingRecordModal({
     setActive(n);
   };
 
+  const certificateFields = [
+    { label: 'Certificate Number', field: 'certificateNumber' },
+    { label: 'Awarded On', field: 'passDate' },
+    { label: 'Awarded By', field: 'accreditingBody' }
+  ];
+
+  const renderDiffFields = (data, compareTo, side) => {
+    return certificateFields.map(({ label, field }) => (
+      <p key={field}>
+        {label}: {diffField(data[field], compareTo[field], side)}
+      </p>
+    ));
+  };
+
+
   const diffField = (prev = '', next = '', side = 'left') => {
     if (prev === next) return <span>{next || <em>{DEFAULT_LABEL}</em>}</span>;
     if (side === 'left') return prev ? <span className="diff removed">{prev}</span> : <span>-</span>;
@@ -74,12 +89,10 @@ export default function TrainingRecordModal({
       <div className="govuk-form-group">
         <strong>Details</strong>
         {data.isExemption ? (
-          <p className="preserve-whitespace">{data.exemptionReason || '-'}</p>
+          <p className="preserve-whitespace"> {diffField(data.exemptionReason, compareTo.exemptionReason, 'left') || '-'}</p>
         ) : (
           <>
-            <p>Certificate Number: {diffField(data.certificateNumber, compareTo.certificateNumber, 'left')}</p>
-            <p>Awarded On: {diffField(data.passDate, compareTo.passDate, 'left')}</p>
-            <p>Awarded By: {diffField(data.accreditingBody, compareTo.accreditingBody, 'left')}</p>
+            {renderDiffFields(data, compareTo, 'left')}
           </>
         )}
       </div>
@@ -99,12 +112,10 @@ export default function TrainingRecordModal({
       <div className="govuk-form-group">
         <strong>Details</strong>
         {data.isExemption ? (
-          <p className="preserve-whitespace">{data.exemptionReason || '-'}</p>
+          <p className="preserve-whitespace"> {diffField(data.exemptionReason, compareTo.exemptionReason, 'right') || '-'}</p>
         ) : (
           <>
-        <p>Certificate Number: {diffField(compareTo.certificateNumber, data.certificateNumber, 'right')}</p>
-        <p>Awarded On: {diffField(compareTo.passDate, data.passDate, 'right')}</p>
-        <p>Awarded By: {diffField(compareTo.accreditingBody, data.accreditingBody, 'right')}</p>
+            {renderDiffFields(compareTo, data, 'right')}
           </>
         )}
       </div>
