@@ -25,7 +25,7 @@ export const formatProjectLicenceNumber = (licenceNumber, establishmentId, proje
       projectId={projectId}
       label={licenceNumber}
     />
-    : (licenceNumber ?? ' ');
+    : (licenceNumber ?? '-');
 
 export const ucFirst = (str) => str.charAt(0).toLocaleUpperCase() + str.slice(1);
 export const formatSpecies = species =>
