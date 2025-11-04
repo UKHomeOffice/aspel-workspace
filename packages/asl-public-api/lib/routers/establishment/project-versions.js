@@ -184,7 +184,6 @@ router.get('/:versionId',
   fetchOpenTasks(req => req.version.projectId)
 );
 
-
 router.put('/:versionId/:action',
   perms('project.update'),
   validateAction,
