@@ -164,6 +164,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -278,6 +280,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -397,6 +401,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -506,6 +512,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -630,6 +638,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -748,6 +758,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -879,6 +891,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -997,6 +1011,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -1054,6 +1070,13 @@ steps:
         from_secret: github_token
     commands:
       - npm run build --workspace @asl/pages
+
+trigger:
+  event:
+    - push
+    - pull_request
+  branch:
+    - main
 
 ---
 
@@ -1172,6 +1195,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -1221,6 +1246,12 @@ steps:
     commands:
       - npm run test:unit --workspace @asl/projects
 
+trigger:
+  event:
+    - push
+    - pull_request
+  branch:
+    - main
 ---
 
 kind: pipeline
@@ -1344,6 +1375,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -1462,6 +1495,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -1580,6 +1615,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -1689,6 +1726,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -1747,6 +1786,12 @@ steps:
     commands:
       - npm audit --workspace=@asl/service --audit-level=high --omit=dev
 
+trigger:
+  event:
+    - push
+    - pull_request
+  branch:
+    - main
 ---
 
 kind: pipeline
@@ -1818,6 +1863,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -1975,6 +2022,8 @@ trigger:
     - push
     - pull_request
     - tag
+  branch:
+    - main
 
 ---
 
@@ -2114,6 +2163,8 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
 
 ---
 
@@ -2183,3 +2234,5 @@ trigger:
   event:
     - push
     - pull_request
+  branch:
+    - main
