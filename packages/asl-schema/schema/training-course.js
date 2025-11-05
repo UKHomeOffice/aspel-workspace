@@ -20,7 +20,9 @@ class TrainingCourse extends BaseModel {
           type: ['array', 'null'],
           items: { type: 'string' }
         },
+        duration: { type: ['string', 'null'], enum: ['one-day', 'multi-day'] },
         startDate: { type: ['string', 'null'], pattern: date.yearMonthDay },
+        endDate: { type: ['string', 'null'], pattern: date.yearMonthDay },
         title: { type: 'string' },
         coursePurpose: { type: 'string', enum: Object.keys(trainingCoursePurpose) },
         createdAt: { type: 'string', format: 'date-time' },

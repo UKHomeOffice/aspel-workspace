@@ -1,6 +1,7 @@
 const { page } = require('@asl/service/ui');
 const selectLicence = require('./routers/select-licence');
 const courseDetails = require('./routers/course-details');
+const confirm = require('./routers/confirm');
 const { form } = require('../../../common/routers');
 const schema = require('./schema');
 const { pickBy } = require('lodash');
@@ -122,7 +123,7 @@ module.exports = settings => {
 
   app.use('/select-licence', selectLicence());
   app.use('/course-details', courseDetails());
-  app.use('/confirm', courseDetails());
+  app.use('/confirm', confirm());
 
   return app;
 };
