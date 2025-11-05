@@ -959,3 +959,17 @@ dl.inline-wide {
     margin-bottom: 30px;
   }
 }
+
+
+.govuk-react-datatable {
+  // Keep ▲▼ together when header flows onto multiple lines
+  th[aria-sort] a:before {
+    top: initial;
+    bottom: 0.8em;
+  }
+
+  th {
+    vertical-align: bottom;
+  }
+}
+
