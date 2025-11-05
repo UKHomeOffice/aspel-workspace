@@ -41,7 +41,7 @@
     "express-session": "^1.15.6",
     "find-root": "^1.1.0",
     "glob": "^7.1.2",
-    "helmet": "^3.21.1",
+    "helmet": "^8.1.0",
     "helmet-csp": "^2.9.3",
     "hot-shots": "^6.8.2",
     "http-proxy": "^1.18.1",
