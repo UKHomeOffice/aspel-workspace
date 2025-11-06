@@ -1969,6 +1969,11 @@ steps:
         from_secret: art_auth_token
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
+      AWS_ACCESS_KEY_ID:
+        from_secret: toolbox_access_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: toolbox_access_key
+
     settings:
       access_key:
         from_secret: toolbox_access_id
