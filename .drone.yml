@@ -1973,7 +1973,6 @@ steps:
         from_secret: toolbox_access_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: toolbox_access_key
-
     settings:
       access_key:
         from_secret: toolbox_access_id
@@ -1983,7 +1982,7 @@ steps:
       repo: asl/toolbox
       registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
       build_args:
-        - MODULE_PATHS="$(cat .module-paths)"
+        - MODULE_PATHS="packages/asl-toolbox packages/asl-schema packages/asl-constants"
       secret_envs:
         - token=ART_AUTH_TOKEN
         - github_token=GITHUB_AUTH_TOKEN
