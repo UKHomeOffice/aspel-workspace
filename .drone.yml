@@ -1899,10 +1899,6 @@ steps:
       - git checkout $DRONE_TARGET_BRANCH
       - git merge $DRONE_COMMIT
       - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
-    when:
-      event:
-        exclude:
-          - tag
   - name: ci
     image: node:22.14.0
     environment:
@@ -1957,7 +1953,7 @@ steps:
       # wait for docker service to be up before running docker build
       - n=0; while [ "$n" -lt 60 ] && [[ ! $(docker stats --no-stream) ]]; do n=$(( n + 1 )); sleep 1; done
       - rm .dockerignore
-      - docker build -f ./packages/asl-toolbox/Dockerfile -t asl-toolbox . --no-cache
+      - docker build -f ./packages/asl-toolbox/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-toolbox .
   - name: scan-image
     pull: always
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/trivy/client:latest
@@ -1989,23 +1985,6 @@ steps:
         - push
       branch:
         - main
-  - name: docker tag
-    image: plugins/ecr
-    environment:
-      AWS_REGION: eu-west-2
-    settings:
-      access_key:
-        from_secret: aws_access_key_id
-      secret_key:
-        from_secret: aws_secret_access_key
-      dockerfile: packages/asl-toolbox/Dockerfile
-      repo: asl/toolbox
-      registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
-      tags:
-        - ${DRONE_TAG}
-    when:
-      ref:
-        - refs/tags/asl-toolbox/*
 
 services:
   - name: docker
@@ -2021,7 +2000,6 @@ trigger:
   event:
     - push
     - pull_request
-    - tag
   branch:
     - main
 
