@@ -33,9 +33,11 @@ FROM quay.io/ukhomeofficedigital/asl-base:v22.14.0
 RUN apk upgrade --no-cache && \
     apk add aws-cli ca-certificates postgresql16-client jq bash --no-cache
 
-COPY --from=builder --chown=app:app ./node_modules ./node_modules
-COPY --from=builder --chown=app:app ./packages/asl-toolbox/node_modules ./node_modules
-COPY --from=builder --chown=app:app ./packages/asl-toolbox/scripts ./
+WORKDIR /app
+
+COPY --from=builder --chown=app:app /app/node_modules /app/node_modules
+COPY --from=builder --chown=app:app /app/packages/asl-toolbox/node_modules /app/node_modules
+COPY --from=builder --chown=app:app /app/packages/asl-toolbox/scripts /app/
 
 USER 999
 
