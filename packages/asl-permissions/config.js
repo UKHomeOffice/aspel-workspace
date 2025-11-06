@@ -53,6 +53,9 @@ module.exports = {
       update: ['asru:*', 'establishment:admin', 'establishment:role:ntco'],
       relatedTasks: ['asru:*', 'establishment:admin', 'establishment:role:ntco']
     },
+    trainingPil: {
+      filterTasks: ['asru:*', 'establishment:admin', 'establishment:read', 'establishment:role:ntco']
+    },
     pil: {
       list: ['asru:*', 'establishment:admin', 'establishment:read', 'establishment:role:ntco'],
       read: ['pil:own', 'asru:*', 'establishment:admin', 'establishment:read', 'establishment:role:ntco'],
@@ -73,6 +76,7 @@ module.exports = {
       read: {
         all: ['asru:*', 'establishment:admin', 'establishment:read'],
         basic: ['asru:*', 'establishment:*'],
+        catE: ['asru:*', 'establishment:admin', 'establishment:role:ntco'],
         single: ['asru:*', 'holdingEstablishment:admin', 'holdingEstablishment:read', 'additionalEstablishment:admin', 'additionalEstablishment:read', 'project:own', 'project:collaborator']
       },
       manageAccess: ['holdingEstablishment:admin', 'project:own', 'asru:inspector', 'additionalEstablishment:admin'],
@@ -90,6 +94,7 @@ module.exports = {
       updateConditions: ['asru:*'],
       updateIssueDate: ['asru:inspector'],
       updateLicenceNumber: ['asru:inspector'],
+      replaceHBA: [], // ['asru:admin'],
       delete: ['holdingEstablishment:admin', 'project:own', 'asru:inspector'],
       revoke: ['asru:inspector', 'holdingEstablishment:admin', 'project:own'],
       suspend: ['asru:inspector'],
@@ -127,6 +132,12 @@ module.exports = {
     licenceFees: ['asru:*'],
     asruReporting: ['asru:*'],
     asruRops: ['asru:rops'],
-    enforcement: ['asru:*']
+    enforcement: ['asru:*'],
+    tasks: {
+      filter: {
+        all: ['asru:*'],
+        byEstablishment: ['establishment:admin']
+      }
+    }
   }
 };

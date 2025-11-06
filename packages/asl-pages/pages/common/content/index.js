@@ -17,6 +17,20 @@ module.exports = {
       suspend: 'Suspend establishment licence',
       reinstate: 'Reinstate establishment licence'
     },
+    categoryE: {
+      course: {
+        list: 'Courses and category E PILs',
+        read: '{{trainingCourse.title}}',
+        add: 'Add new course'
+      },
+      licence: {
+        list: 'Courses and category E PILs',
+        read: {
+          index: 'TODO: training PIL profile name',
+          revoke: 'Revoke'
+        }
+      }
+    },
     pil: {
       read: 'View personal licence',
       create: 'Apply for personal licence',
@@ -82,7 +96,9 @@ module.exports = {
       reinstate: 'Reinstate project licence',
       import: 'Import project',
       addUser: 'Give access to this PPL',
-      transferDraft: 'Transfer draft project'
+      transferDraft: 'Transfer draft project',
+      replaceHba: 'Replace harm benefit analysis file',
+      confirmReplaceHba: 'Confirm replacement HBA file'
     },
     projectVersion: {
       read: 'View',
@@ -136,6 +152,11 @@ module.exports = {
       },
       updatePassword: {
         base: 'Change your password'
+      }
+    },
+    categoryE: {
+      course: {
+        list: 'Courses and category E PILs'
       }
     },
     dashboard: {

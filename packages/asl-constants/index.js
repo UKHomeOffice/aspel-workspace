@@ -16,7 +16,6 @@ const species = require('./constants/species');
 const projectSpecies = require('./constants/project-species');
 const fees = require('./constants/fees');
 const trainingCoursePurpose = require('./constants/training-course-purpose');
-const featureFlags = require('./constants/feature-flags');
 const versions = require('./constants/versions');
 
 module.exports = {
@@ -38,6 +37,5 @@ module.exports = {
   species,
   fees,
   trainingCoursePurpose,
-  featureFlags,
   versions,
 };

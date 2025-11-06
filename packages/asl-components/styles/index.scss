@@ -94,3 +94,57 @@ $govuk-brand-colour: #8f23b3;
 .align-right {
   text-align: right;
 }
+
+.govuk-inset-text.flash-banner--success {
+  border-left-color: #00703c;
+  background-color: #c6ece9;
+  padding: 1rem;
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: black;
+  }
+
+  p {
+    margin: 0;
+    color: black;
+  }
+}
+
+.govuk-radios--small {
+  .govuk-radios__item {
+    margin-bottom: 0;
+  }
+
+  .govuk-radios__input + .govuk-radios__label {
+    padding-left: 1px;
+
+    &::before {
+      top: 7px;
+      left: 0;
+      width: 24px;
+      height: 24px;
+    }
+
+    &::after {
+      top: 14px;
+      left: 7px;
+      border-width: 5px;
+    }
+  }
+
+  .govuk-radios__item:hover .govuk-radios__input:not(:disabled) + .govuk-radios__label::before {
+    outline: 4px dashed transparent;
+    outline-offset: 1px;
+    box-shadow: 0 0 0 10px #b1b4b6;
+  }
+}
+
+td.govuk-radios--small {
+  padding: 2px 0 0 15px;
+
+  .govuk-radios__input + .govuk-radios__label {
+    width: 100%;
+  }
+}

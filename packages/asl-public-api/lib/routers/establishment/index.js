@@ -76,7 +76,7 @@ module.exports = (settings) => {
   router.use('/:establishment', permissions('establishment.read'));
 
   router.get('/:establishment', (req, res, next) => {
-    const { Establishment, PIL, Project } = req.models;
+    const { Establishment, PIL, Project, TrainingCourse } = req.models;
 
     Promise.resolve()
       .then(() => {
@@ -104,7 +104,12 @@ module.exports = (settings) => {
           })
           .as('activeProjectsCount');
 
-        query.select(activePilsQuery, activeProjectsQuery);
+        const trainingCoursesQuery = TrainingCourse.query()
+          .count('trainingCourses.id')
+          .where('establishmentId', req.establishment.id)
+          .as('trainingCoursesCount');
+
+        query.select(activePilsQuery, activeProjectsQuery, trainingCoursesQuery);
 
         return query;
       })

@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     commit-message:
       prefix: "⬆️ "
     pull-request-branch-name:
@@ -13,10 +13,12 @@ updates:
     labels:
       - "skip-release"
       - "dependencies"
+    cooldown:
+      default-days: 3
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     commit-message:
       prefix: "⬆️ "
     pull-request-branch-name:
@@ -24,5 +26,9 @@ updates:
     reviewers:
       - "UKHomeOffice/asl-devs"
     labels:
-      - "patch"
       - "dependencies"
+    ignore:
+      - update-types:
+          - version-update:semver-major
+    cooldown:
+      default-days: 3

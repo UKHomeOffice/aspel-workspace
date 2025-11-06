@@ -1,0 +1,309 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "ASPeL Public API",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "TrainingCourse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "establishmentId": { "type": "integer" },
+          "projectId": { "type": "string", "format": "uuid" },
+          "title": { "type": "string" },
+          "startDate": { "type": "string", "format": "date" },
+          "species": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "deleted": { "type": ["string", "null"], "format": "date-time" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "coursePurpose": {
+            "type": ["string", "null"],
+            "enum": ["higherEducation", "training", null]
+          },
+          "applications": { "type": "integer" },
+          "licences": { "type": "integer" },
+          "project": { "$ref": "#/components/schemas/Project" }
+        },
+        "required": [
+          "id",
+          "establishmentId",
+          "projectId",
+          "title",
+          "startDate",
+          "species",
+          "createdAt",
+          "updatedAt",
+          "coursePurpose",
+          "applications",
+          "licences",
+          "project"
+        ]
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "migratedId": { "type": ["string", "null"] },
+          "status": { "type": "string" },
+          "title": { "type": "string" },
+          "issueDate": { "type": "string", "format": "date-time" },
+          "expiryDate": { "type": "string", "format": "date-time" },
+          "revocationDate": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "licenceNumber": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "establishmentId": { "type": "integer" },
+          "licenceHolderId": { "type": "string", "format": "uuid" },
+          "deleted": { "type": ["string", "null"], "format": "date-time" },
+          "schemaVersion": { "type": "integer" },
+          "amendedDate": { "type": ["string", "null"], "format": "date-time" },
+          "isLegacyStub": { "type": "boolean" },
+          "transferredInDate": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "transferredOutDate": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "previousProjectId": { "type": ["string", "null"], "format": "uuid" },
+          "previousEstablishmentId": { "type": ["integer", "null"] },
+          "transferProjectId": { "type": ["string", "null"], "format": "uuid" },
+          "transferEstablishmentId": { "type": ["integer", "null"] },
+          "raDate": { "type": ["string", "null"], "format": "date-time" },
+          "species": {
+            "type": ["array", "null"],
+            "items": { "type": "string" }
+          },
+          "raGrantedDate": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "refusedDate": { "type": ["string", "null"], "format": "date-time" },
+          "suspendedDate": { "type": ["string", "null"], "format": "date-time" }
+        },
+        "required": [
+          "id",
+          "status",
+          "title",
+          "issueDate",
+          "expiryDate",
+          "licenceNumber",
+          "createdAt",
+          "updatedAt",
+          "establishmentId",
+          "licenceHolderId",
+          "schemaVersion",
+          "isLegacyStub"
+        ]
+      },
+      "EstablishmentSummary": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "status": { "type": "string" },
+          "revocationDate": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "issueDate": { "type": "string", "format": "date-time" },
+          "isTrainingEstablishment": { "type": "boolean" },
+          "corporateStatus": {
+            "type": ["string", "null"],
+            "enum": ["non-profit", "corporate"]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status",
+          "issueDate",
+          "isTrainingEstablishment"
+        ]
+      },
+      "CatEProject": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "projectTitle": { "type": "string" },
+          "licenceNumber": { "type": "string" },
+          "species": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "expiryDate": { "type": "string", "format": "date-time" }
+        },
+        "required": [
+          "id",
+          "projectTitle",
+          "licenceNumber",
+          "species",
+          "expiryDate"
+        ]
+      }
+    },
+    "parameters": {
+      "Sort": {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "column": {
+            "oneOf": [
+              {"type": "string"},
+              {"type": "array", "items": {"type": "string"}}
+            ]
+          },
+          "ascending": {"type": "boolean"}
+        },
+        "description": "Used by datatables to specify the column(s) to sort by, and the direction"
+      },
+      "Limit": {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": {"type": "integer", "minimum": 1},
+        "description": "Used by datatables to specify the page size when paginating"
+      },
+      "Offset": {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "schema": {"type": "integer", "minimum": 0},
+        "description": "Used by datatables to specify the page offset when paginating"
+      }
+    }
+  },
+  "paths": {
+    "/establishment/{establishmentId}/training-course": {
+      "get": {
+        "summary": "Get training courses for an establishment",
+        "tags": ["Courses and category E licences"],
+        "parameters": [
+          {
+            "name": "establishmentId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of training courses at the establishment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/TrainingCourse" }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total": { "type": "integer" },
+                        "count": { "type": "integer" },
+                        "establishment": {
+                          "$ref": "#/components/schemas/EstablishmentSummary"
+                        }
+                      },
+                      "required": ["total", "count", "establishment"]
+                    }
+                  },
+                  "required": ["data", "meta"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/establishment/{establishmentId}/projects/cat-e": {
+      "get": {
+        "summary": "List an establishment's project licences that are licenced for training and higher education",
+        "tags": ["Courses and category E licences"],
+        "parameters": [
+          {
+            "name": "establishmentId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          },
+          { "$ref": "#/components/parameters/Sort" },
+          { "$ref": "#/components/parameters/Limit" },
+          { "$ref": "#/components/parameters/Offset" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response containing the list of training and higher education project licences",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CatEProject"
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total": { "type": "integer" },
+                        "count": { "type": "integer" },
+                        "establishment": { "$ref": "#/components/schemas/EstablishmentSummary" }
+                      },
+                      "required": ["total", "count", "establishment"]
+                    }
+                  },
+                  "required": ["data", "meta"]
+                },
+                "examples": {
+                  "example-1": {
+                    "summary": "Sample response",
+                    "value": {
+                      "data": [
+                        {
+                          "id": "7a79e0ab-89da-471a-993b-1fd7cb4cff66",
+                          "projectTitle": "Training in complex procedures",
+                          "licenceNumber": "PPL1234567",
+                          "species": ["mice", "rats"],
+                          "expiryDate": "2026-12-31T23:59:59Z"
+                        },
+                        {
+                          "id": "467295a2-948a-4a34-a729-6d9a38448882",
+                          "projectTitle": "Training establishment project",
+                          "licenceNumber": "PPL7654321",
+                          "species": ["rats"],
+                          "expiryDate": "2025-06-30T23:59:59Z"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Courses and category E licences",
+      "description": "Category E licences are short term licences that permit a course participant to carry out regulated procedures during their course"
+    }
+  ]
+}

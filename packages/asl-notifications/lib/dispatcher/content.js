@@ -91,7 +91,18 @@ module.exports = {
     'inspector-rejected': 'Recommendation made',
     resolved: 'Approved',
     autoresolved: 'Approved',
-    rejected: 'Rejected'
+    rejected: 'Rejected',
+    'status:new:with-inspectorate': 'submitted',
+    'status:with-inspectorate:rejected': 'rejected',
+    'status:with-inspectorate:returned-to-applicant': 'returned',
+    'status:with-inspectorate:resolved': 'approved',
+    'status:resubmitted:with-inspectorate': 'submitted',
+    'status:returned-to-applicant:discarded-by-applicant': 'discarded',
+    'status:new:resolved': 'approved'
+  },
+  statusLine: {
+    'resolved': ' This is a PEL amendment.',
+    'with-inspectorate': ' This is a PEL amendment.'
   },
   subject: {
     'task-action': 'Action required {{licenceNumber}}',
@@ -117,6 +128,14 @@ module.exports = {
     'retrospective-assessment-due': 'Reminder: Retrospective assessment due {{when}} for {{projectStatus}} project licence {{licenceNumber}}',
     'condition-reminder': 'Reminder: {{modelType}} licence {{licenceNumber}} has a condition that is due {{when}}',
     'condition-reminder-overdue': 'Notification: {{modelType}} licence {{licenceNumber}} has a condition that was due yesterday',
-    'rop-reminder': `Reminder: Return of procedures due {{when}} for {{#status}}{{status}} {{/status}}project licence {{licenceNumber}}`
+    'rop-reminder': `Reminder: Return of procedures due {{when}} for {{#status}}{{status}} {{/status}}project licence {{licenceNumber}}`,
+    'training-due-reminder': 'Reminder: {{ fullNameInSubject }} {{ need }} to complete {{their}} {{type}}',
+    'task-with-asru2': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
+    'task-change2': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
+    'role-approved-subject': 'The {{ roleName }} role application for {{ name }} has been {{ status }}',
+    'role-removed': '{{ name }} has been removed from the role of {{ roleName }}',
+    'role-removed-returned': "The request to remove {{ name }}'s {{ roleName }} role has been returned",
+    'role-removed-refused': "The request to remove {{ name }}'s {{ roleName }} role has been refused",
+    'role-removed-subject': '{{ name }} has been removed from the role of {{ roleName }}'
   }
 };

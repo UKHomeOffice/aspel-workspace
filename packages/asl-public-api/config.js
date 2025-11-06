@@ -1,3 +1,4 @@
+const path = require('path');
 module.exports = {
   port: process.env.PORT || 8080,
   workflow: process.env.WORKFLOW_SERVICE,
@@ -20,5 +21,9 @@ module.exports = {
     application_name: 'public-api',
     maxConnections: parseInt(process.env.DATABASE_POOL_SIZE, 10) || 5
   },
-  bodySizeLimit: process.env.BODY_SIZE_LIMIT
+  bodySizeLimit: process.env.BODY_SIZE_LIMIT,
+  openApi: {
+    serveApiDocs: process.env.SERVE_API_DOCS === 'TRUE',
+    openApiSpec: path.resolve(path.join(__dirname, 'openapi.json'))
+  }
 };

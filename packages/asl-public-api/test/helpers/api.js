@@ -3,6 +3,7 @@ const data = require('../data');
 const Database = require('../helpers/db');
 const WithUser = require('../helpers/with-user');
 const Workflow = require('../helpers/workflow');
+const path = require('path');
 
 const settings = {
   database: process.env.DATABASE_NAME || 'asl-test',
@@ -20,7 +21,10 @@ module.exports = {
           auth: false,
           log: { level: 'error' },
           db: settings,
-          workflow: workflow.url
+          workflow: workflow.url,
+          openApi: {
+            openApiSpec: path.resolve(path.join(__dirname, '..', '..', 'openapi.json'))
+          }
         }, options));
         this.workflow = workflow;
         this.api = WithUser(api, {});

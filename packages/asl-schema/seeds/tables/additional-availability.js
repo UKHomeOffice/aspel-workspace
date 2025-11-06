@@ -1,4 +1,4 @@
-const projects = require('../data/projects.json');
+const projects = require('../data/projects.js');
 
 module.exports = {
   populate: knex => {

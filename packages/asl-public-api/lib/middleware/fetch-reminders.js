@@ -94,7 +94,7 @@ module.exports = modelType => async (req, res, next) => {
       break;
 
     case 'pil':
-      if (!req.pil || !isAsruOrLicenceHolder(req.user.profile, req.pil)) {
+      if (!req.pil?.id || !isAsruOrLicenceHolder(req.user.profile, req.pil)) {
         return next();
       }
 

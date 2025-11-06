@@ -15,7 +15,11 @@ const oldTemplateMap = {
   'task-closed': 'task-change',
   'task-with-asru': 'task-change',
   'profile-updated': 'task-change',
-  'task-action-required': 'task-action'
+  'task-action-required': 'task-action',
+  'task-role-deleted': 'task-change2',
+  'task-closed2': 'task-change2',
+  'task-action-required2': 'task-change2',
+  'licence-amended2': 'task-change2'
 };
 
 module.exports = ({ schema, notify, logger, publicUrl }) => async ({ task, notifications }) => {
@@ -48,6 +52,13 @@ module.exports = ({ schema, notify, logger, publicUrl }) => async ({ task, notif
       loginUrl: publicUrl,
       ...notification
     };
+
+    if (!templateVars.status) {
+      Object.assign(templateVars, {
+        status: get(content, `status[${task.event}]`, task.status),
+        statusLine: get(content, `statusLine[${task.status}]`, '')
+      });
+    }
 
     const subject = mustache.render(subjectTemplate, templateVars);
 

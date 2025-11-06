@@ -29,7 +29,7 @@ const getProject = state => state.project;
 const getComments = state => state.comments;
 const getUser = state => state.application.user;
 
-const getFieldsBySection = createSelector(
+const getFieldsBySubsection = createSelector(
   [getSchema, getProject],
   (schema, project) => {
     const includeReveals = true;
@@ -39,7 +39,10 @@ const getFieldsBySection = createSelector(
         ...obj,
         ...mapValues(
           subsections,
-          subsection => flattenReveals(getFields(subsection, includeReveals), project).map(field => field.name)
+          subsection => [
+            ...flattenReveals(getFields(subsection, includeReveals), project).map(field => field.name),
+            ...(subsection.hiddenFields ?? [])
+          ]
         )
       }), {});
   }
@@ -53,7 +56,7 @@ const getMappedProps = createSelector(
     getProject,
     getComments,
     getUser,
-    getFieldsBySection,
+    getFieldsBySubsection,
     getSchema,
     state => state.application.basename,
     state => state.application.project,
@@ -66,7 +69,7 @@ const getMappedProps = createSelector(
     project,
     comments,
     user,
-    fieldsBySection,
+    fieldsBySubsection,
     schema,
     basename,
     actualProject,
@@ -76,7 +79,7 @@ const getMappedProps = createSelector(
     showComments,
     showConditions,
     newComments: getNewComments(comments, user, project),
-    fieldsBySection,
+    fieldsBySubsection,
     legacy: schemaVersion === 0,
     values: project,
     sections: schema,
@@ -91,7 +94,17 @@ const ApplicationSummary = () => {
   const props = useSelector(getMappedProps);
   const { isSyncing } = useSelector(selector);
   const [submitted, setSubmitted] = useState(false);
-  const { legacy, values, readonly, sections, basename, fieldsBySection, newComments, project, showComments } = props;
+  const {
+    legacy,
+    values,
+    readonly,
+    sections,
+    basename,
+    fieldsBySubsection,
+    newComments,
+    project,
+    showComments
+  } = props;
   const [errors, setErrors] = useState(false);
   const ref = useRef(null);
 
@@ -185,7 +198,7 @@ const ApplicationSummary = () => {
   };
 
   const getCommentCount = key => {
-    const fields = fieldsBySection[key] || [];
+    const fields = fieldsBySubsection[key] || [];
     const getCommentsForKey = key => {
       const match = minimatch.filter(key);
       return Object.keys(newComments)
@@ -246,27 +259,30 @@ const ApplicationSummary = () => {
               {section.subtitle && <h3 className="section-heading">{section.subtitle}</h3>}
               <table className="govuk-table">
                 <tbody>
-                {subsections.map(key => {
-                  const subsection = section.subsections[key];
-                  const fields = Object.values(fieldsBySection[key] || []);
-                  if (key === 'protocols') fields.push('reusableSteps');
-                  if (subsection.repeats) fields.push(subsection.repeats);
+                  {
+                    subsections.map(key => {
+                      const subsection = section.subsections[key];
+                      const fields = Object.values(fieldsBySubsection[key] || []);
+                      if (subsection.repeats) {
+                        fields.push(subsection.repeats);
+                      }
 
-                  return (
-                    <tr key={key}>
-                      <td>
-                        <ErrorMessage title={subsection.title} isComplete={isComplete(subsection, key)}>
-                          <Link to={`/${key}`}>{subsection.title}</Link>
-                        </ErrorMessage>
-                      </td>
-                      <td className="controls">
-                        <Comments subsection={key} />
-                        <ChangedBadge fields={fields} />
-                        <CompleteBadge isComplete={isComplete(subsection, key)} />
-                      </td>
-                    </tr>
-                  );
-                })}
+                      return (
+                        <tr key={key}>
+                          <td>
+                            <ErrorMessage title={subsection.title} isComplete={isComplete(subsection, key)}>
+                              <Link to={`/${key}`}>{subsection.title}</Link>
+                            </ErrorMessage>
+                          </td>
+                          <td className="controls">
+                            <Comments subsection={key} />
+                            <ChangedBadge fields={fields} />
+                            <CompleteBadge isComplete={isComplete(subsection, key)} />
+                          </td>
+                        </tr>
+                      );
+                    })
+                  }
                 </tbody>
               </table>
             </Fragment>

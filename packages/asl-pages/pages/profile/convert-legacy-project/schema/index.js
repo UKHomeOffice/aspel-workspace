@@ -12,7 +12,7 @@ module.exports = {
     validate: [
       'required',
       'validDate',
-      'dateIsBefore'
+      {'dateIsBefore': 'now'}
     ]
   },
   duration: {

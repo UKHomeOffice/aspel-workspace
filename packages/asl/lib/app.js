@@ -81,6 +81,24 @@ module.exports = settings => {
     next();
   });
 
+  // Allow authenticated access to API for use in dev
+  if (settings.forwardApi) {
+    app.use('/api', async (req, res) => {
+      if (!req.api) {
+        return res.status(500).send('API handler not configured');
+      }
+
+      try {
+        const path = new URL(req.url, 'http://localhost').pathname;
+        const { json, status } = await req.api(path, { query: req.query });
+
+        return res.status(status).json(json);
+      } catch (err) {
+        res.status(500).json({message: err.message, ...err});
+      }
+    });
+  }
+
   mountRoutes({ app, routes, settings });
 
   return app;

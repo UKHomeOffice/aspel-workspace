@@ -45,6 +45,11 @@ module.exports = {
     breadcrumb: false,
     router: pages.unscopedPils
   },
+  categoryE: {
+    path: '/establishments/:establishmentId/category-e',
+    breadcrumb: false,
+    router: pages.categoryE
+  },
   globalProfile: {
     path: '/profile/:profileId',
     breadcrumb: false,

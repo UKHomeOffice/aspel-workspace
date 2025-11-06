@@ -177,6 +177,7 @@ class Step extends Component {
           prefix={changeFieldPrefix}
           editLink={`0#${this.props.prefix}`}
           protocolId={protocol.id}
+          stepId={values.id}
           readonly={!isReviewStep}
           additionalCommentFields={values.reusableStepId ? [`${this.props.prefix}title`] : []}
         />
@@ -224,6 +225,7 @@ class Step extends Component {
             editLink={`0#${this.props.prefix}`}
             readonly={!isReviewStep}
             protocolId={protocol.id}
+            stepId={values.id}
           />
           {
             !values.reusable && editable && !deleted && <a href="#" onClick={this.editStep}>Edit step</a>
@@ -448,7 +450,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
       // Create deep clones of reusable steps to ensure immutability
       const reusableSteps = steps
         .filter(step => step.reusable && (step.completed || step.saved))
-        .map(step => cloneDeep({
+        .map(step => ({
           ...cloneDeep(step),
           id: step.reusableStepId || step.id,
           saved: true
@@ -457,7 +459,6 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
       const mappedSteps = steps.map(step => {
         if (step.reusable && (step.completed || step.saved)) {
           return {
-            ...step,
             id: step.id,
             reusableStepId: step.reusableStepId || step.id
           };

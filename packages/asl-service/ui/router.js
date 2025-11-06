@@ -12,6 +12,7 @@ const { Writable } = require('stream');
 const { MemoryStore } = require('express-session');
 const homeOffice = require('@ukhomeoffice/frontend-toolkit');
 const session = require('@lennym/redis-session');
+const flashMiddleware = require('../lib/middleware/flash-middleware');
 const helmet = require('helmet');
 const getContentSecurityPolicy = require('../lib/get-content-security-policy');
 const sendResponse = require('../lib/send-response');
@@ -78,32 +79,40 @@ module.exports = settings => {
       );
 
       let html = '';
+      let called = false;
+
+      const safeCallback = (err, result) => {
+        if (!called) {
+          called = true;
+          callback(err, result);
+        }
+      };
+
       const stream = renderToPipeableStream(element, {
         onAllReady() {
           const writable = new Writable({
-            write(chunk, encoding, callback) {
+            write(chunk, encoding, cb) {
               html += chunk.toString();
-              callback();
+              cb();
             },
-            final(callback) {
-              // Do NOT call callback twice
-              callback();
+            final(cb) {
+              cb();
             }
           });
 
           stream.pipe(writable);
           writable.on('finish', () => {
-            callback(null, html);
+            safeCallback(null, html);
           });
         },
         onError(err) {
           console.error('SSR stream error:', err);
-          callback(err);
+          safeCallback(err);
         }
       });
     } catch (err) {
       console.error('JSX render error:', err);
-      callback(err);
+      callback(err); // still ok here because outer try/catch won't conflict
     }
   });
 
@@ -127,6 +136,8 @@ module.exports = settings => {
 
   if (settings.session) {
     app.use(session(settings.session));
+    app.use(flashMiddleware);
+
     app.use('/logout', (req, res, next) => {
       req.session.destroy(() => next());
     });
@@ -185,8 +196,7 @@ module.exports = settings => {
 
   app.use((req, res, next) => {
     req.breadcrumb = crumb => {
-      req.breadcrumbs = req.breadcrumbs || [];
-      req.breadcrumbs = [ ...req.breadcrumbs, crumb ];
+      req.breadcrumbs = [ ...(req.breadcrumbs || []), crumb ];
     };
     next();
   });

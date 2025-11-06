@@ -10,6 +10,7 @@ import Modal from './modal';
 import ReviewField from './review-field';
 import Tabs from './tabs';
 import { findArrayDifferences } from '../helpers/array-diff';
+import { getChanges, findSteps } from '../helpers/document-diff';
 import normaliseWhitespace from '../helpers/normalise-whitespace';
 
 const DEFAULT_LABEL = 'No answer provided';
@@ -45,12 +46,22 @@ const DiffWindow = (props) => {
 
   const dispatch = useDispatch();
 
-  const before = useSelector(state => get(state.questionVersions, `['${props.name}'].${versions[active]}.value`));
-  const changes = useSelector(state => {
-    if (props.type === 'keywords' && props.value.length > 0 && before) {
-      return findArrayDifferences(before, props.value);
+  const { before, changes } = useSelector(state => {
+    const before = get(state.questionVersions, `['${props.name}'].${versions[active]}.value`);
+
+    // dealing with protocol step when it was moved from normal to reusable
+    if (before === undefined && props.stepId && props.previousProtocols) {
+      const beforeSteps = findSteps(versions[active], props.previousProtocols, props.protocolId, props.stepId, props.fieldName);
+      if (beforeSteps) {
+        return { before: beforeSteps, changes: getChanges(props.value, beforeSteps) };
+      }
     }
-    return get(state.questionVersions, `['${props.name}'].${versions[active]}.diff`, { added: [], removed: [] });
+
+    const changes = props.type === 'keywords' && props.value.length > 0 && before
+      ? findArrayDifferences(before, props.value)
+      : get(state.questionVersions, `['${props.name}'].${versions[active]}.diff`, { added: [], removed: [] });
+
+    return { before, changes };
   });
 
   useEffect(() => {
@@ -130,7 +141,7 @@ const DiffWindow = (props) => {
             });
           });
 
-          start += text.text.length;
+          start += text.text.length + 1;
         }
 
       }
@@ -185,8 +196,8 @@ const DiffWindow = (props) => {
               <em>{DEFAULT_LABEL}</em>
             ) : (
               <span className={`diff ${parts.added ? 'added' : 'removed'}`}>
-            {booleanValue}
-          </span>
+                {booleanValue}
+              </span>
             )
           }
         </p>
@@ -238,7 +249,7 @@ const DiffWindow = (props) => {
 
       case 'checkbox':
       case 'location-selector':
-      case 'objective-selector':{
+      case 'objective-selector': {
         const beforeValue = before || [];
         const afterValue = props.value || [];
         return checkboxDiffDisplay({
@@ -247,14 +258,14 @@ const DiffWindow = (props) => {
           isBefore,
           DEFAULT_LABEL
         });
-    }
+      }
       case 'duration':
-        return  durationDiffDisplay({
-        before,
-        value,
-        isBefore,
-        DEFAULT_LABEL
-      });
+        return durationDiffDisplay({
+          before,
+          value,
+          isBefore,
+          DEFAULT_LABEL
+        });
       case 'additional-availability':
         return additionalAvailabilityDiff({
           before,
@@ -315,14 +326,14 @@ const DiffWindow = (props) => {
           );
       case 'animal-quantities':
         return animalQuantitiesDiff({
-        before,
-        value,
-        props,
-        currentValues,
-        isBefore,
+          before,
+          value,
+          props,
+          currentValues,
+          isBefore,
           getLabel,
           DEFAULT_LABEL
-      });
+        });
 
       default:
         return (

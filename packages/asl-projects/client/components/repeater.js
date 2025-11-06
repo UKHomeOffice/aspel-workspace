@@ -1,7 +1,6 @@
-/* eslint camelcase: ["error", {allow: ["^UNSAFE_"]}] */
-import React, { Component, Fragment } from 'react';
+import React, { Children, cloneElement, Fragment, useCallback, useMemo, useState } from 'react';
 import classnames from 'classnames';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Button } from '@ukhomeoffice/react-components';
 import { v4 as uuid } from 'uuid';
 import cloneDeep from 'lodash/cloneDeep';
@@ -9,70 +8,80 @@ import omitBy from 'lodash/omitBy';
 import isUndefined from 'lodash/isUndefined';
 import { throwError } from '../actions/messages';
 
-class Repeater extends Component {
-  static defaultProps = {
-    type: 'item',
-    singular: 'item',
-    addOnInit: true,
-    addAnother: true,
-    softDelete: false,
-    itemProps: {},
-    onBeforeAdd: () => Promise.resolve(),
-    onAfterAdd: () => Promise.resolve(),
-    onBeforeRemove: () => Promise.resolve(),
-    onAfterRemove: () => Promise.resolve(),
-    onBeforeDuplicate: items => Promise.resolve(items),
-    onAfterDuplicate: item => Promise.resolve(item)
-  };
+const noopPromise = () => Promise.resolve();
 
-  constructor(props) {
-    super(props);
-    this.addItem = this.addItem.bind(this);
-    this.updateItem = this.updateItem.bind(this);
-    this.removeItem = this.removeItem.bind(this);
-    this.restoreItem = this.restoreItem.bind(this);
-    this.duplicateItem = this.duplicateItem.bind(this);
-    this.moveUp = this.moveUp.bind(this);
-    this.moveDown = this.moveDown.bind(this);
-    this.update = this.update.bind(this);
-    this.save = this.save.bind(this);
-    this.state = {
-      items: this.props.items || []
-    };
-  }
+export default ({
+  children,
+  type = 'item',
+  prefix,
+  singular = 'item',
+  addOnInit = true,
+  addAnother = true,
+  addButtonBefore = false,
+  addButtonAfter = false,
+  addAnotherLabel,
+  addAnotherClassname,
+  softDelete = false,
+  itemProps,
+  expanded,
+  onSave = noopPromise,
+  onBeforeAdd = noopPromise,
+  onAfterAdd = noopPromise,
+  onBeforeRemove = noopPromise,
+  onAfterRemove = noopPromise,
+  onBeforeRestore = noopPromise,
+  onAfterRestore = noopPromise,
+  ...props
+}) => {
 
-  UNSAFE_componentWillReceiveProps({ items }) {
-    if (items) {
-      this.setState({ items });
-    }
-  }
+  const onBeforeDuplicate = useCallback(
+    (items, uuid) => props.onBeforeDuplicate ? props.onBeforeDuplicate(items, uuid) : Promise.resolve(items),
+    [props.onBeforeDuplicate]
+  );
 
-  componentDidMount() {
-    if (this.props.addOnInit && !this.state.items.length) {
-      this.addItem();
-    }
-  }
+  const onAfterDuplicate = useCallback(
+    (item, uuid) => props.onAfterDuplicate ? props.onAfterDuplicate(item, uuid) : Promise.resolve(item),
+    [props.onAfterDuplicate]
+  );
 
-  addItem() {
-    return Promise.resolve()
-      .then(this.props.onBeforeAdd)
-      .then(() => this.update([ ...this.state.items, { id: uuid(), ...this.props.itemProps } ]))
-      .then(this.props.onAfterAdd)
-      .catch(err => this.props.throwError(err.message || 'Error adding item'));
-  }
+  const [items, setItems] = useState(props.items ?? []);
+  useMemo(() => {
+    setItems(props.items ?? []);
+  }, [setItems, props.items]);
 
-  updateItem(index, updated) {
-    this.update(this.state.items.map((item, i) => index === i
+  const dispatch = useDispatch();
+  const dispatchError = useCallback((message) => {
+    throwError(message)(dispatch);
+  }, []);
+
+  const save = useCallback((newItems) => onSave(newItems ?? items), [onSave]);
+  const update = useCallback((newItems) =>
+    Promise.resolve()
+      .then(() => setItems(newItems))
+      .then(() => save(newItems))
+      .catch(err => dispatchError(err.message || 'Error updating items')),
+  [setItems, save, dispatchError]
+  );
+
+  const addItem = useCallback(() => {
+    Promise.resolve()
+      .then(onBeforeAdd)
+      .then(() => update([ ...items, { id: uuid(), ...(itemProps ?? {}) } ]))
+      .then(onAfterAdd)
+      .catch(err => dispatchError(err.message || 'Error adding item'));
+  }, [onBeforeAdd, update, items, itemProps, onAfterAdd, dispatchError]);
+
+  const updateItem = useCallback((index, updated) =>
+    update(items.map((item, i) => index === i
       ? omitBy({ ...item, ...updated }, isUndefined)
       : item
-    ));
-  }
+    )), [update, items]);
 
-  duplicateItem(index, event) {
+  const duplicateItem = useCallback((index, event) => {
     if (event) {
       event.preventDefault();
     }
-    const items = cloneDeep(this.state.items);
+
     const item = cloneDeep(items[index]);
 
     function updateIds(obj) {
@@ -87,43 +96,44 @@ class Repeater extends Component {
     }
 
     updateIds(item);
+    const withDuplicate = [...items.slice(0, index + 1), item, ...items.slice(index + 1)];
 
-    items.splice(index + 1, 0, item);
     return Promise.resolve()
-      .then(() => this.props.onBeforeDuplicate(items, item.id))
-      .then(items => this.update(items))
-      .then(() => this.props.onAfterDuplicate(item, item.id))
-      .catch(err => this.props.throwError(err.message || 'Error duplicating item'));
-  }
+      .then(() => onBeforeDuplicate(withDuplicate, item.id))
+      .then(items => update(items))
+      .then(() => onAfterDuplicate(item, item.id))
+      .catch(err => dispatchError(err.message || 'Error duplicating item'));
+  }, [items, onBeforeDuplicate, update, onAfterDuplicate, dispatchError]);
 
-  removeItem(index, event) {
+  const removeItem = useCallback((index, event) => {
     if (event) {
       event.preventDefault();
     }
     return Promise.resolve()
-      .then(this.props.onBeforeRemove)
+      .then(onBeforeRemove)
       .then(() => {
-        if (this.props.softDelete && !this.state.items[index].reusable) {
-          return this.update(this.state.items.map((item, i) => {
+        if (softDelete && !items[index].reusable) {
+          return update(items.map((item, i) => {
             if (index === i) {
               return { ...item, deleted: true };
             }
             return item;
           }));
+        } else {
+          return update(items.filter((item, i) => index !== i));
         }
-        this.update(this.state.items.filter((item, i) => index !== i));
       })
-      .then(this.props.onAfterRemove)
-      .catch(err => this.props.throwError(err.message || 'Error removing item'));
-  }
+      .then(onAfterRemove)
+      .catch(err => dispatchError(err.message || 'Error removing item'));
+  }, [onBeforeRemove, softDelete, items, update, onAfterRemove, dispatchError]);
 
-  restoreItem(index, event) {
+  const restoreItem = useCallback((index, event) => {
     if (event) {
       event.preventDefault();
     }
     return Promise.resolve()
-      .then(this.props.onBeforeRestore)
-      .then(() => this.update(this.state.items.map((item, i) => {
+      .then(onBeforeRestore)
+      .then(() => update(items.map((item, i) => {
         if (i === index) {
           return {
             ...item,
@@ -132,78 +142,75 @@ class Repeater extends Component {
         }
         return item;
       })))
-      .then(this.props.onAfterRestore)
-      .catch(err => this.props.throwError(err.message || 'Error restoring item'));
-  }
+      .then(onAfterRestore)
+      .catch(err => dispatchError(err.message || 'Error restoring item'));
+  }, [onBeforeRestore, update, items, onAfterRestore, dispatchError]);
 
-  update(items) {
-    return new Promise(resolve => this.setState({ items }, resolve))
-      .then(this.save)
-      .catch(err => this.props.throwError(err.message || 'Error updating item'));
-  }
-
-  save() {
-    this.props.onSave(this.state.items);
-  }
-
-  moveUp(index) {
+  const moveUp = useCallback((index) => {
     if (index > 0) {
-      const items = this.state.items;
-      const item = items[index];
-      const swap = items[index - 1];
-      items[index] = swap;
-      items[index - 1] = item;
-      this.update(items);
+      return update([
+        ...items.slice(0, index - 1),
+        items[index],
+        items[index - 1],
+        ...items.slice(index + 1)
+      ]);
     }
-  }
+  }, [update, items]);
 
-  moveDown(index) {
-    if (index + 1 < this.state.items.length) {
-      const items = this.state.items;
-      const item = items[index];
-      const swap = items[index + 1];
-      items[index] = swap;
-      items[index + 1] = item;
-      this.update(items);
+  const moveDown = useCallback((index) => {
+    if (index + 1 < items.length) {
+      return update([
+        ...items.slice(0, index),
+        items[index + 1],
+        items[index],
+        ...items.slice(index + 2)
+      ]);
     }
-  }
+  }, [update, items]);
 
-  render() {
-    const addButton = <Button className={classnames('block', 'add-another', this.props.addAnotherClassName || 'button-secondary')} onClick={this.addItem}>{this.props.addAnotherLabel || `Add another ${this.props.singular}`}</Button>;
-    return (
-      <Fragment>
-        {
-          this.props.addButtonBefore && this.props.addAnother && addButton
-        }
-        {
-          this.state.items.map((item, index) =>
-            React.Children.map(this.props.children, child => {
-              const updateItem = (child.updateItem || this.updateItem).bind(this, index);
-              return React.cloneElement(child, {
-                ...child.props,
-                index,
-                key: item.id,
-                updateItem,
-                removeItem: e => this.removeItem(index, e),
-                restoreItem: e => this.restoreItem(index, e),
-                duplicateItem: e => this.duplicateItem(index, e),
-                moveUp: () => this.moveUp(index),
-                moveDown: () => this.moveDown(index),
-                values: item,
-                prefix: `${this.props.prefix || ''}${this.props.type}.${item.id}.`,
-                length: this.state.items.length,
-                expanded: this.props.expanded && this.props.expanded[index],
-                number: index - (this.state.items.slice(0, index).filter(i => i.deleted) || []).length
-              });
-            })
-          )
-        }
-        {
-          (!this.props.addButtonBefore || this.props.addButtonAfter) && this.props.addAnother && addButton
-        }
-      </Fragment>
-    );
-  }
-}
+  useMemo(() => {
+    if (addOnInit && !items.length) {
+      addItem();
+    }
+  }, [] /* Only run on first render */);
 
-export default connect(null, { throwError })(Repeater);
+  const addButton =
+    <Button
+      className={classnames('block', 'add-another', addAnotherClassname || 'button-secondary')}
+      onClick={addItem}>
+      {addAnotherLabel || `Add another ${singular}`}
+    </Button>;
+
+  return (
+    <Fragment>
+      {
+        addButtonBefore && addAnother && addButton
+      }
+      {
+        items.map((item, index) =>
+          Children.map(children, child => {
+            return cloneElement(child, {
+              ...child.props,
+              index,
+              key: item.id,
+              updateItem: (child.updateItem || updateItem).bind(this, index),
+              removeItem: e => removeItem(index, e),
+              restoreItem: e => restoreItem(index, e),
+              duplicateItem: e => duplicateItem(index, e),
+              moveUp: () => moveUp(index),
+              moveDown: () => moveDown(index),
+              values: item,
+              prefix: `${prefix ?? ''}${type}.${item.id}.`,
+              length: items.length,
+              expanded: expanded && expanded[index],
+              number: index - (items.slice(0, index).filter(i => i.deleted) || []).length
+            });
+          })
+        )
+      }
+      {
+        (!addButtonBefore || addButtonAfter) && addAnother && addButton
+      }
+    </Fragment>
+  );
+};

@@ -10,13 +10,13 @@ const establishmentsKeys = [
   'transferToEstablishmentName',
   'other-establishments',
   'poles'
-]
+];
 
 const triggeringKeys = [
   'objectives',
   'species',
   'protocols',
-    ...establishmentsKeys
+  ...establishmentsKeys
 ];
 
 function changesShouldTriggerCleanup(changed) {
@@ -34,7 +34,7 @@ export default function cleanProtocols({ state, savedState, changed = {}, establ
     return project;
   }
 
-  if(!changesShouldTriggerCleanup(changed)) {
+  if (!changesShouldTriggerCleanup(changed)) {
     return project;
   }
 
@@ -63,14 +63,14 @@ export default function cleanProtocols({ state, savedState, changed = {}, establ
     }
   });
 
-  if(changed.protocols) {
+  if (changed.protocols) {
     project.protocols.forEach(protocol => {
-      protocol.speciesDetails.forEach(speciesDetail => {
-        if(!(speciesDetail.reuse || []).includes('this-protocol')) {
-          speciesDetail['maximum-times-used'] = "1";
+      (protocol.speciesDetails ?? []).forEach(speciesDetail => {
+        if (!(speciesDetail.reuse || []).includes('this-protocol')) {
+          speciesDetail['maximum-times-used'] = '1';
         }
-      })
-    })
+      });
+    });
   }
 
   return project;

@@ -1,3 +1,4 @@
+const dictionary = require('@ukhomeoffice/asl-dictionary');
 const { get } = require('lodash');
 const moment = require('moment');
 const taskHelper = require('../utils/task');
@@ -13,6 +14,8 @@ module.exports = async ({ schema, logger, task }) => {
   const action = get(task, 'data.action');
   const model = get(task, 'data.model');
   const dateFormat = 'D MMM YYYY';
+  let version = get(task, 'data.meta.version');
+  let subject;
 
   const allowedActions = {
     establishment: [
@@ -28,7 +31,7 @@ module.exports = async ({ schema, logger, task }) => {
       'condition-reminder-overdue'
     ],
     place: ['create', 'update', 'delete'],
-    role: ['create', 'delete']
+    role: ['create', 'delete', 'training-due-reminder']
   };
 
   if (!allowedActions[model].includes(action)) {
@@ -47,6 +50,11 @@ module.exports = async ({ schema, logger, task }) => {
   const admins = await Profile.query()
     .withGraphFetched('emailPreferences')
     .scopeToEstablishment('establishments.id', establishmentId, 'admin');
+
+  const ntcos = await Profile.query()
+    .scopeToEstablishment('establishments.id', establishmentId)
+    .leftJoinRelated('roles')
+    .where('roles.type', 'ntco');
 
   const notifyUser = (recipient, params) => {
     logger.verbose(`${params.logMsg}, notifying licence holder / applicant`);
@@ -108,10 +116,40 @@ module.exports = async ({ schema, logger, task }) => {
     });
   };
 
+  const notifyNTCOs = params => {
+    logger.verbose(`${params.logMsg}, notifying NTCOs`);
+    ntcos.forEach(ntco => notifications.set(ntco.id, { ...params, recipient: ntco }));
+  };
+
   const params = {
     establishmentId,
     licenceNumber: establishment.licenceNumber,
     applicant
+  };
+
+  const setRoleParams = async params => {
+    subject = await Profile.query().findById(task.data.data.profileId);
+    let type = get(task, 'data.data.type');
+    if (!type) {
+      type = get(task, 'data.modelData.type', '');
+    }
+    params.roleName = dictionary[type.toUpperCase()];
+    params.name = `${subject.firstName} ${subject.lastName}`;
+    params.addTaskTypeToSubject = false;
+  };
+
+  const roleFlow = async params => {
+    if (model === 'role' && (version || action === 'delete')) {
+      await setRoleParams(params);
+      if (version) {
+        params.emailTemplate += version;
+      }
+      notifyPelh(params);
+    } else {
+      notifyUser(applicant, params);
+    }
+    notifyAdmins(params);
+    return notifications;
   };
 
   if (applicant) {
@@ -187,41 +225,93 @@ module.exports = async ({ schema, logger, task }) => {
     return notifications;
   }
 
-  if (taskHelper.isWithApplicant(task)) {
-    const withApplicantParams = { ...params, emailTemplate: 'task-action-required', logMsg: 'task is with applicant' };
-
-    notifyUser(applicant, withApplicantParams);
-    notifyAdmins(withApplicantParams);
-
+  if (model === 'role' && action === 'delete' && taskHelper.isGranted(task)) {
+    const roleDeleteParams = { ...params, emailTemplate: 'role-removed', logMsg: 'role removed granted' };
+    await setRoleParams(roleDeleteParams);
+    notifyPelh(roleDeleteParams);
+    notifyAdmins(roleDeleteParams);
+    roleDeleteParams.emailTemplate = 'role-removed-subject';
+    notifyUser(subject, roleDeleteParams);
     return notifications;
   }
 
+  if (model === 'role' && action === 'training-due-reminder') {
+    const { firstName, lastName, name, type, completeDate } = task.data.data;
+    const typeUpper = type && type.toUpperCase();
+
+    if (typeUpper === 'NACWO' || typeUpper === 'NVS') {
+      const fullName = `${firstName} ${lastName}`;
+      const identifier = `${applicant.id}-${completeDate}-${action}`;
+
+      const trainingDueReminderParams = {
+        ...params,
+        fullName,
+        fullNameInSubject: fullName,
+        name,
+        their: 'their',
+        need: 'needs',
+        type: typeUpper === 'NACWO' ? `${typeUpper} mandatory training` : `${typeUpper} module`,
+        completeDate,
+        identifier,
+        emailTemplate: 'training-due-reminder',
+        logMsg: 'training due reminder sent',
+        addTaskTypeToSubject: false
+      };
+      notifyPelh(trainingDueReminderParams);
+      notifyAdmins(trainingDueReminderParams);
+      notifyNTCOs(trainingDueReminderParams);
+      notifyUser(applicant, {
+        ...trainingDueReminderParams,
+        ...{
+          fullName: 'Your',
+          fullNameInSubject: 'You',
+          their: 'your',
+          need: 'need'
+        }
+      });
+      return notifications;
+    }
+  }
+
+  if (taskHelper.isWithApplicant(task)) {
+    const withApplicantParams = { ...params, emailTemplate: 'task-action-required', logMsg: 'task is with applicant' };
+    if (model === 'role' && task.status === 'recalled-by-applicant') {
+      return notifications;
+    }
+    if (model === 'role' && action === 'delete') {
+      withApplicantParams.emailTemplate = 'role-removed-returned';
+    }
+    return roleFlow(withApplicantParams);
+  }
+
   if (taskHelper.isOverTheFence(task)) {
-    const overTheFenceParams = { ...params, emailTemplate: 'task-with-asru', logMsg: 'task is over the fence' };
-
-    notifyUser(applicant, overTheFenceParams);
-    notifyAdmins(overTheFenceParams);
-
-    return notifications;
+    if (model === 'role' && action === 'delete') {
+      return notifications;
+    }
+    let overTheFenceParams = { ...params, emailTemplate: 'task-with-asru', logMsg: 'task is over the fence' };
+    return roleFlow(overTheFenceParams);
   }
 
   if (taskHelper.isGranted(task)) {
     const emailTemplate = ['place', 'role'].includes(model) ? 'licence-amended' : 'licence-granted';
     const taskGrantedParams = { ...params, emailTemplate, logMsg: 'licence is granted' };
-
-    notifyUser(applicant, taskGrantedParams);
-    notifyAdmins(taskGrantedParams);
-
+    await roleFlow(taskGrantedParams);
+    if (model === 'role' && version) {
+      taskGrantedParams.emailTemplate = 'role-approved-subject';
+      notifyUser(subject, taskGrantedParams);
+    }
     return notifications;
   }
 
   if (taskHelper.isClosed(task)) {
     const taskClosedParams = { ...params, emailTemplate: 'task-closed', logMsg: 'task is closed' };
-
-    notifyUser(applicant, taskClosedParams);
-    notifyAdmins(taskClosedParams);
-
-    return notifications;
+    if (model === 'role' && task.status === 'discarded-by-applicant') {
+      return notifications;
+    }
+    if (model === 'role' && action === 'delete') {
+      taskClosedParams.emailTemplate = 'role-removed-refused';
+    }
+    return roleFlow(taskClosedParams);
   }
 
   return notifications;

@@ -3,7 +3,11 @@ const { open } = require('../flow');
 
 module.exports = (flow, settings) => {
   const { Task } = flow;
-  const { TrainingPil } = settings.models;
+  const {
+    Profile,
+    TrainingCourse,
+    TrainingPil
+  } = settings.models;
 
   return async task => {
     const id = task.data.id;
@@ -14,7 +18,12 @@ module.exports = (flow, settings) => {
       return task;
     }
 
+    const courseId = task.data.data?.trainingCourseId;
+    const profileId = task.data.modelData?.profile?.id;
+
     const trainingPil = await TrainingPil.query().findById(id).select('status');
+    const trainingCourse = courseId ? await TrainingCourse.query().findById(courseId) : undefined;
+    const profile = profileId ? await Profile.query().findById(profileId).select('pil_licence_number') : undefined;
 
     const revocationCount = await Task.query()
       .whereJsonSupersetOf('data', { id, action: 'revoke' })
@@ -25,12 +34,16 @@ module.exports = (flow, settings) => {
     const openRevocation = !!parseInt(revocationCount.count, 10);
 
     // if subject isn't set, copy it from the modelData sans nested pils (avoids excessive data duplication)
-    task.data.subject = task.data.subject || omit(get(task, 'data.modelData.profile'), 'trainingPils', 'pil');
+    task.data.subject = {
+      ...(task.data.subject || omit(get(task, 'data.modelData.profile'), 'trainingPils', 'pil')),
+      pilLicenceNumber: profile?.pilLicenceNumber
+    };
 
     return {
       ...task,
       openRevocation,
-      modelStatus: trainingPil && trainingPil.status
+      modelStatus: trainingPil && trainingPil.status,
+      trainingCourse
     };
   };
 

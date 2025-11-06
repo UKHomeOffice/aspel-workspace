@@ -3,6 +3,12 @@ import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkFlexibleMarkers from 'remark-flexible-markers';
 
+const INLINE_HTML_TAGS = [
+    'a', 'span', 'b', 'i', 'strong', 'em', 'mark', 'small', 'sub', 'sup', 'u',
+    'abbr', 'cite', 'code', 'dfn', 'kbd', 's', 'samp', 'time', 'var', 'q',
+    'wbr', 'img'
+];
+
 // Utility function to check for block-level elements
 function containsBlock(children) {
     return React.Children.toArray(children).some(child => {
@@ -14,12 +20,15 @@ function containsBlock(children) {
     });
 }
 
-function RenderLink({ href, children }) {
+function RenderLink({ href, children, linkTarget }) {
     if (containsBlock(children)) {
         return <>{children}</>;
     }
+
+    const linkProps = linkTarget ? { target: linkTarget, rel: 'noopener noreferrer' } : {};
+
     return (
-        <a href={href} target="_blank" rel="noopener noreferrer">
+        <a href={href} {...linkProps} >
             {children}
         </a>
     );
@@ -33,12 +42,49 @@ function RenderUnorderedList({ children }) {
     return <ul className="govuk-list govuk-list--bullet">{children}</ul>;
 }
 
-const ParagraphComponent = ({ unwrapSingleLine, paragraphProps, children, ...props }) => {
-    const childrenArray = React.Children.toArray(children);
-    const isSingleTextChild = childrenArray.length === 1 && typeof childrenArray[0] === 'string';
-    const hasVisibleLineBreaks = isSingleTextChild && childrenArray[0].includes('\n');
+function getTagName(reactElement) {
+    if(typeof reactElement.type === 'string') {
+        return reactElement.type;
+    }
 
-    if (unwrapSingleLine && isSingleTextChild && !hasVisibleLineBreaks) {
+    if(typeof reactElement.type === 'function' && typeof reactElement.type.name === 'string') {
+        return reactElement.type.name;
+    }
+
+    return '';
+}
+
+const ParagraphComponent = ({
+    unwrapSingleLine,
+    paragraphProps,
+    contentLength,
+    children,
+    node,
+    significantLineBreaks: _,
+    ...props
+}) => {
+    const { start, end } = node.position;
+    const isOnlyRootNode = contentLength && start.offset === 0 && end.offset === contentLength;
+    const childrenArray = React.Children.toArray(children);
+    const calculateInline = (
+        childrenArray => childrenArray.every(
+            child => {
+                if (typeof child === 'string') {
+                    return true;
+                }
+                else if (React.isValidElement(child) && INLINE_HTML_TAGS.includes(getTagName(child))) {
+                    return child.props && child.props.children
+                        ? calculateInline(React.Children.toArray(child.props.children))
+                        : true;
+                }
+                else {
+                    return false;
+                }
+            }
+        )
+    );
+    const isAllInline = calculateInline(childrenArray);
+    if (isOnlyRootNode && unwrapSingleLine && isAllInline) {
         return <span {...paragraphProps} {...props}>{children}</span>;
     }
 
@@ -46,7 +92,6 @@ const ParagraphComponent = ({ unwrapSingleLine, paragraphProps, children, ...pro
     const containsParagraph = childrenArray.some(child =>
         React.isValidElement(child) && child.type === 'p'
     );
-
     if (containsParagraph) {
         return <div {...paragraphProps} {...props}>{children}</div>;
     }
@@ -62,36 +107,39 @@ export default function Markdown({
     paragraphProps = {},
     source,
     // eslint-disable-next-line no-unused-vars
-    linkTarget = '_blank',
+    linkTarget,
     ...rest
 }) {
-    return (
+    const contents = source || children;
+    const contentLength = contents?.length ? contents.length : 0;
 
+    return (
         <ReactMarkdown
             components={{
                 ...(!links && {
-                    a: RenderLink,
+                    a: props => <RenderLink linkTarget={linkTarget} {...props} />,
                     linkReference: RenderLinkReference,
                     ul: RenderUnorderedList
                 }),
                 p: (props) => (
                     <ParagraphComponent
                         unwrapSingleLine={unwrapSingleLine}
+                        significantLineBreaks={significantLineBreaks}
+                        contentLength={contentLength}
                         paragraphProps={paragraphProps}
                         {...props}
                     />
                 ),
-                mark: ({ ...props }) => <mark {...props} />
+                mark: (props) => <mark {...props} />
             }}
             remarkPlugins={[
                 ...(significantLineBreaks ? [remarkBreaks] : []),
                 remarkFlexibleMarkers
             ]}
-            unwrapDisallowed={true}  // Prevents invalid HTML nesting
-            skipHtml={true}         // Avoids potential HTML parsing issues
+            //unwrapDisallowed={true}  // Prevents invalid HTML nesting
             {...rest}
         >
-            {source || children}
+            {contents}
         </ReactMarkdown>
     );
 }

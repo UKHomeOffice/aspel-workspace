@@ -1,6 +1,19 @@
-const { isUndefined, isNull, every, castArray, some } = require('lodash');
+const { isUndefined, isNull, every, castArray, some, zip } = require('lodash');
 const moment = require('moment');
 
+function normaliseDate(dateSpec, values, model) {
+  if (typeof dateSpec === 'function') {
+    return dateSpec(values, model);
+  } else if (dateSpec === 'now' || dateSpec == null) {
+    return moment();
+  } else {
+    return zip(dateSpec.split('-'), [4, 2, 2])
+      .map(([part, length]) => part.padStart(length, '0'))
+      .join('-');
+  }
+}
+
+// noinspection JSUnusedGlobalSymbols
 const validators = {
   type: (field, value, type) => {
     if (isUndefined(value) || isNull(value)) {
@@ -18,12 +31,16 @@ const validators = {
     }
     return false;
   },
-  required: (field, value, params, values, model) => {
-    if (params && params.valFromModel && !value) {
-      value = model[field];
-    }
+  required: (field, formValue, params, values, model, fieldSpec) => {
+    const value = params?.valFromModel && !formValue
+      ? model[field]
+      : formValue;
+
     if (Array.isArray(value)) {
       return !!value.length;
+    }
+    if (fieldSpec.inputType === 'inputDate') {
+      return value != null && value.toString().replaceAll(/[-0]/g, '').length > 0;
     }
     return value !== null && value !== '' && !isUndefined(value);
   },
@@ -61,26 +78,25 @@ const validators = {
     }
     return isNull(value) || moment(value, 'YYYY-MM-DD').isValid();
   },
-  dateIsBefore(field, value, isBefore) {
-    if (typeof isBefore === 'function') {
-      isBefore = isBefore();
-    }
-    if (isBefore === 'now') {
-      isBefore = moment();
-    }
-    return isNull(value) || moment(value, 'YYYY-MM-DD').isBefore(isBefore);
-  },
   lessThanOrEqualToMaxWordCount(fieldName, value, params, values, model, field) {
     return value?.split(/\s+/).filter(Boolean).length <= field.maxWordCount;
   },
-  dateIsAfter(field, value, isAfter) {
-    if (typeof isAfter === 'function') {
-      isAfter = isAfter();
-    }
-    if (isAfter === 'now') {
-      isAfter = moment();
-    }
-    return isNull(value) || moment(value, 'YYYY-MM-DD').isAfter(isAfter);
+  dateIsAfter(field, value, date, values, model) {
+    return isNull(value) ||
+      moment(value, 'YYYY-MM-DD').isAfter(normaliseDate(date, values, model));
+  },
+  dateIsSameOrAfter(field, value, date, values, model) {
+    return isNull(value) ||
+      moment(value, 'YYYY-MM-DD').isSameOrAfter(normaliseDate(date, values, model));
+  },
+  dateIsBefore(field, value, date, values, model) {
+    return isNull(value) ||
+      moment(value, 'YYYY-MM-DD').isBefore(normaliseDate(date, values, model));
+  },
+  dateIsSameOrBefore(field, value, date, values, model) {
+    const threshold = normaliseDate(date, values, model);
+    return isNull(value) ||
+      moment(value, 'YYYY-MM-DD').isSameOrBefore(threshold);
   },
   // file validation
   fileRequired(field, value) {

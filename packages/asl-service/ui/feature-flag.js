@@ -1,8 +1,15 @@
 const { useSelector } = require('react-redux');
 const { set } = require('lodash');
+const { useCallback } = require('react');
 
 const flags = {
-  FEATURE_NAMED_PERSON_MVP: 'feature-named-person-mvp'
+  FEATURE_FLAG_NAMED_PERSON_MVP: 'feature-named-person-mvp',
+  FEATURE_FLAG_CAT_E: 'feature-cat-e'
+};
+
+const useFeatureFlags = () => {
+  const roles = useSelector(state => state.static.keycloakRoles ?? []);
+  return useCallback(flag => roles.includes(flag), [roles]);
 };
 
 // noinspection JSUnusedGlobalSymbols
@@ -13,8 +20,8 @@ module.exports = {
     next();
   },
   useFeatureFlag(flag) {
-    const roles = useSelector(state => state.static.keycloakRoles ?? []);
-    return roles.includes(flag);
+    return useFeatureFlags()(flag);
   },
+  useFeatureFlags,
   ...flags
 };

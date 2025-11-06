@@ -1,8 +1,7 @@
 import React from 'react';
 import get from 'lodash/get';
-import {format as formatDate} from 'date-fns';
+import { Link, Utils } from '@ukhomeoffice/asl-components';
 import { dateFormat } from '@asl/pages/constants';
-import { Link } from '@ukhomeoffice/asl-components';
 
 export default {
   subject: {
@@ -55,7 +54,9 @@ export default {
   },
   date: {
     format: value => {
-      return <span className="date">{formatDate(value, dateFormat.medium)}</span>;
+      return <span className="date">{
+        Utils.formatDate(value, dateFormat.medium)
+      }</span>;
     }
   }
 };

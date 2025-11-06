@@ -220,7 +220,7 @@ const getCacheableVersion = (req, url) => {
     });
 };
 
-function normaliseDeletedSteps(protocol) {
+function normaliseSteps(protocol) {
   if (!protocol.steps) {
     return [];
   }
@@ -231,7 +231,13 @@ function normaliseDeletedSteps(protocol) {
   }
 
   return (Array.isArray(protocol.steps) ? protocol.steps : []).flatMap(
-    step => step?.deleted ? [] : [omit(step, 'deleted')]
+    step => {
+      // If step is not reusable, then it dont need reusableStepId, this is causing issues down the line
+      if (step?.reusableStepId && step?.hasOwnProperty('reusable') && step?.reusable === false) {
+        delete step.reusableStepId;
+      }
+      return step?.deleted ? [] : [omit(step, 'deleted')];
+    }
   );
 }
 
@@ -247,13 +253,16 @@ function normaliseDeletedSteps(protocol) {
 const normaliseDeletedProtocols = (versionData) => ({
   ...versionData,
   protocols: (Array.isArray(versionData.protocols) ? versionData.protocols : []).flatMap(
-    protocol => protocol?.deleted
-      ? []
-      : [{
-        ...omit(protocol, 'deleted'),
-        steps: normaliseDeletedSteps(protocol)
-      }]
-  )
+    protocol => {
+      // This was causing change badge to appear even though there are no other changes apart from marking it complete.
+      protocol.complete = true;
+      return protocol?.deleted
+        ? []
+        : [{
+          ...omit(protocol, 'deleted'),
+          steps: normaliseSteps(protocol)
+        }];
+    })
 });
 
 const normaliseData = (versionData, opts) => {

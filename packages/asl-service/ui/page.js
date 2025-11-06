@@ -16,15 +16,16 @@ const lookup = (...args) => {
 
 module.exports = ({
   root,
-  crumbs = [],
   paths = [],
   content = {},
-  contentPath = '../content'
+  contentPath = '../content',
+  index = true
 }) => {
   const app = Router({ mergeParams: true });
 
-  // always serve on slash
-  paths.unshift('/');
+  if (index) {
+    paths.unshift('/');
+  }
 
   const pagePath = path.relative(findRoot(root), root);
 
@@ -45,9 +46,10 @@ module.exports = ({
   }, {});
 
   const locals = (req, res, next) => {
-    const url = req.baseUrl === '/'
+    const baseUrl = req.baseUrl === '/'
       ? ''
       : req.baseUrl;
+    const url = `${baseUrl}${req.path === '/' ? '' : req.path}`;
 
     const filename = req.path.replace('/', '') || 'index';
 
@@ -56,20 +58,20 @@ module.exports = ({
       static: Object.assign(res.locals.static, {
         url,
         allowedActions: [],
-        content: merge({}, res.locals.static.content, pages[req.path].content, content),
+        content: merge({}, res.locals.static.content, pages[req.path]?.content ?? {}, content),
         ...req.params
       })
     });
 
     if (req.user && req.user.profile) {
-      const allowedActions = []
+      res.locals.static.allowedActions = []
         .concat(req.user.profile.allowedActions.global)
         .concat(req.user.profile.allowedActions[req.establishmentId])
         .filter(Boolean);
-      res.locals.static.allowedActions = allowedActions;
     }
     res.locals.pageTitle = res.locals.pageTitle || res.locals.static.content.pageTitle;
-    res.template = pages[req.path].template;
+    res.template = pages[req.path]?.template;
+    req.page = filename;
     return next();
   };
 

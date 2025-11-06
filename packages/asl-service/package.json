@@ -1,6 +1,6 @@
 {
   "name": "@asl/service",
-  "version": "11.0.6",
+  "version": "11.0.7",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,10 @@
     "@babel/register": "^7.23.7",
     "@lennym/redis-session": "^2.2.0",
     "@redux-devtools/extension": "^3.3.0",
+    "@reduxjs/toolkit": "^2.8.2",
+    "@testing-library/dom": "^10.4.1",
     "@ukhomeoffice/asl-components": "file:../asl-components",
+    "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@ukhomeoffice/frontend-toolkit": "^3.0.0",
     "aws-sdk": "^2.1370.0",
     "babel-plugin-transform-require-ignore": "^0.1.1",
@@ -63,19 +66,19 @@
     "redux-logger": "^4.0.0",
     "redux-thunk": "^3.1.0",
     "set-immediate-shim": "^2.0.0",
+    "swagger-ui-express": "^5.0.1",
     "terser-webpack-plugin": "^4.2.3",
     "url": "^0.11.0",
     "url-search-params": "^1.1.0",
     "uuid": "^8.3.2",
-    "@reduxjs/toolkit": "^2.8.2",
-    "winston": "^3.2.1"
+    "winston": "^3.18.3"
   },
   "devDependencies": {
     "@testing-library/react": "^16.0.0",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "eslint": "^8.26.0",
     "jsdom-global": "^3.0.2",
-    "mocha": "^11.1.0",
+    "mocha": "^11.7.1",
     "process": "^0.11.10",
     "redux-mock-store": "^1.5.5",
     "sinon": "^19.0.2"

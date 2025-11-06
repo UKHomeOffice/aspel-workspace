@@ -1,6 +1,6 @@
 {
   "name": "@asl/projects",
-  "version": "15.10.6",
+  "version": "15.10.7",
   "description": "ASL PPL prototype",
   "main": "client/external.js",
   "styles": "assets/scss/projects.scss",
@@ -61,6 +61,8 @@
     "redux-thunk": "^3.1.0",
     "remark-parse": "^9.0.0",
     "reselect": "^5.1.1",
+    "shasum": "^1.0.2",
+    "sha.js": "^2.4.12",
     "slate": "^0.47.8",
     "slate-react": "^0.22.10",
     "unified": "^9.2.2",
@@ -72,7 +74,7 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^7.32.0",
     "eslint-plugin-import": "^2.29.1",
-    "mocha": "^11.1.0",
+    "mocha": "^11.7.1",
     "process": "^0.11.10",
     "sinon": "19.0.2"
   },

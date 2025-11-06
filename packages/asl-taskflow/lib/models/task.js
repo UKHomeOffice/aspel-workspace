@@ -4,6 +4,17 @@ const { NotFoundError, InvalidRequestError, UnauthorisedError } = require('../er
 const { forOwn } = require('lodash');
 const normaliseComments = require('../activitylog/normalise-comments');
 
+function asJsonAccessor(field) {
+  const [, ...parts] = [...field.split('.')]
+    // these are json keys - limit char set to protect against injection
+    .filter(part => part.match(/^[a-zA-Z]+$/))
+    .map(part => `'${part}'`);
+
+  const last = parts.pop();
+
+  return `${['data', ...parts].join(' -> ')} ->> ${last}`;
+}
+
 class Task {
 
   constructor(model = {}, transaction) {
@@ -136,8 +147,8 @@ class Task {
     if (params.exclude) {
       query.andWhere(builder => {
         forOwn(params.exclude, (values, key) => {
-          values = Array.isArray(values) ? values : [values];
-          values.map(value => {
+          const valuesArr = Array.isArray(values) ? values : [values];
+          valuesArr.map(value => {
             builder.whereNot(key, value);
           });
         });
@@ -193,12 +204,11 @@ class Task {
 
   static paginate({ query, limit = 100, offset = 0 }) {
 
-    limit = parseInt(limit, 10);
-    offset = parseInt(offset, 10);
-    const page = offset / limit;
+    const limitInt = parseInt(limit, 10);
+    const offsetInt = parseInt(offset, 10);
+    const page = offsetInt / limitInt;
 
-    return query
-      .page(page, limit);
+    return query.page(page, limitInt);
   }
 
   static orderBy({ query, sort = {} }) {
@@ -208,8 +218,32 @@ class Task {
     if (typeof sort.ascending === 'string') {
       sort.ascending = sort.ascending === 'true';
     }
+
+    if (sort.column?.startsWith('data.')) {
+      const column = asJsonAccessor(sort.column);
+      return query.orderByRaw(`${column} ${sort.ascending ? 'ASC' : 'DESC'}`);
+    }
+
     return query
       .orderBy(sort.column, sort.ascending ? 'asc' : 'desc');
+  }
+
+  static filterBySearchTerm(query, term, fields) {
+    if (!term || !(fields?.length)) {
+      return query;
+    }
+
+    return query.andWhere(builder => {
+      const words = term.split(/\s+/);
+      fields.forEach(fieldSpec => {
+        if (fieldSpec.startsWith('data.')) {
+          const field = asJsonAccessor(fieldSpec);
+          words.forEach(word => builder.orWhereRaw(`${field} LIKE ?`, [`%${word}%`]));
+        } else {
+          words.forEach(word => builder.orWhere(fieldSpec, 'like', `%${word}%`));
+        }
+      });
+    });
   }
 
   comment(comment, { user, payload }) {

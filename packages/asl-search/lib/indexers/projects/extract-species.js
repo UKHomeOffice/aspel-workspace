@@ -1,5 +1,6 @@
 const { projectSpecies } = require('@ukhomeoffice/asl-constants');
 const { flatten, uniq } = require('lodash');
+const logger = require('../../logger');
 
 const legacy = {
   '2': 'Amphibians',
@@ -78,8 +79,8 @@ module.exports = (data, {schemaVersion, id}) => {
     }
     return uniq(extract(data));
   } catch (e) {
-    console.error(`Failed to extract species from project ${id}`);
-    console.error(e.stack);
+    logger.error(`Failed to extract species from project ${id}`);
+    logger.error(e.stack);
     return [];
   }
 };

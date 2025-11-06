@@ -1,6 +1,6 @@
 {
   "name": "asl-notifications",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -29,14 +29,15 @@
     "eslint": "^5.16.0",
     "eslint-plugin-undocumented-env": "^1.0.0",
     "knex": "^3.1.0",
-    "mocha": "^11.1.0",
+    "mocha": "^11.7.1",
     "mockdate": "^3.0.5",
-    "nodemon": "^3.1.9",
+    "nodemon": "^3.1.10",
     "pg": "^8.7.3"
   },
   "dependencies": {
     "@asl/schema": "file:../asl-schema",
     "@asl/service": "file:../asl-service",
+    "@ukhomeoffice/asl-dictionary": "file:../asl-dictionary",
     "hot-shots": "^8.3.1",
     "lodash": "^4.17.21",
     "minimist": "^1.2.6",
@@ -45,6 +46,6 @@
     "r2": "^2.0.1",
     "sinon": "^19.0.2",
     "uuid": "^8.3.2",
-    "winston": "^3.2.1"
+    "winston": "^3.18.3"
   }
 }

@@ -21,16 +21,16 @@ const checkExemptionDelay = (mandatoryTraining) => {
 
 const ExemptionRequest = () => {
   return (
-    <p>
+    <>
       <dt><Snippet>explanation.exemptionRequest</Snippet></dt>
-    </p>
+    </>
   );
 };
 
 const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
   const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
   return (
-    <>
+    <dl>
       {nvs.rcvsNumber && (
         <>
           <dt><Snippet>explanation.nvs.rcvsNumber</Snippet></dt>
@@ -50,7 +50,7 @@ const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
           <dd>{format(incompleteTraining.completeDate, dateFormat.long)}</dd>
         </>
       )}
-    </>
+    </dl>
   );
 };
 
@@ -83,6 +83,11 @@ export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, rol
     <>
       { role === 'nacwo' && <NACWORole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
       { role === 'nvs' && <NVSRole nvs={roleDetails} incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
+      { mandatoryTraining === 'yes' && (
+        <>
+          <dt><Snippet>explanation.trainingComplete</Snippet></dt>
+        </>
+      )}
     </>
   );
 };

@@ -21,7 +21,7 @@ npm run build
 ## Dependencies
 
 * `@asl/service/ui` provides the common ui boilerplate - auth, sessions, static asset serving, CSP etc.
-* `@asl/pages` provides the react components for the pages and layouts
+* `@asl/pages` provides the React components for the pages and layouts
 
 ## Configuration
 
@@ -49,6 +49,8 @@ The following environment variables can be optionally defined:
 * `REDIS_PASSWORD` - password of the redis server used for session storage - default `undefined`
 * `VERBOSE_ERRORS` - show verbose errors in client. Default `undefined`
 * `INTERNAL_URL` - the hostname of the internal facing ui - default `undefined`
+* `ENABLE_API_FORWARDING` - if true, then the `/api` endpoint will proxy requests to `asl-public-api`. This should only
+  be enabled in development environments.
 
 
 ## Connected services

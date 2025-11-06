@@ -7,7 +7,8 @@ module.exports = {
     cheese: 102,
     inactiveEstablishment: 999,
     revokedEstablishment1: 1000,
-    revokedEstablishment2: 1001
+    revokedEstablishment2: 1001,
+    trainingEstablishment: 2000
   },
   profiles: {
     linfordChristie: uuid(),
@@ -23,7 +24,8 @@ module.exports = {
     unverified: uuid(),
     aaProjectRemoved: uuid(),
     projectElsewhere: uuid(),
-    activeAA: uuid()
+    activeAA: uuid(),
+    trainingAdmin: uuid()
   },
   roles: {
     nacwoClive: uuid(),
@@ -70,6 +72,11 @@ module.exports = {
       nonRaProject: uuid(),
       raProject: uuid(),
       revokedRaProject: uuid()
+    },
+    trainingEstablishment: {
+      trainingWithRodents: uuid(),
+      trainingWithFish: uuid(),
+      notTraining: uuid()
     }
   },
   rops: {

@@ -15,6 +15,50 @@ router.get('/related', (req, res, next) => {
     .catch(next);
 });
 
+router.get('/filtered', (req, res, next) => {
+  const {
+    establishment,
+    establishmentId,
+    model,
+    action,
+    initiatedBy,
+    isAmendment,
+    schemaVersion,
+    sort,
+    limit,
+    offset,
+    taskStatus,
+    search,
+    searchFields = []
+  } = req.query;
+
+  const query = {
+    filters: {
+      status: taskStatus ?? 'resolved',
+      establishment: establishmentId ?? establishment,
+      model,
+      action,
+      initiatedBy,
+      isAmendment,
+      schemaVersion
+    },
+    search,
+    searchFields,
+    sort,
+    limit,
+    offset
+  };
+
+  return req.workflow.filtered({ query })
+    .then(response => {
+      res.response = response.json.data;
+      res.meta = response.json.meta;
+      // don't fall through to the routes below as they will capture 'related' as ':taskId'
+      return next('router');
+    })
+    .catch(next);
+});
+
 router.param('taskId', (req, res, next, taskId) => {
   if (!isUUID(taskId)) {
     throw new NotFoundError();
@@ -34,7 +78,7 @@ router.param('taskId', (req, res, next, taskId) => {
 
 router.use('/:taskId', async (req, res, next) => {
   const model = req.task.data.model;
-  let perm = '';
+  let perm;
   const params = {
     id: req.task.data.id,
     establishment: req.task.data.establishmentId
@@ -51,8 +95,11 @@ router.use('/:taskId', async (req, res, next) => {
     }
     const action = get(req.task, 'data.action');
     if (action === 'transfer') {
-      const rops = await req.models.Rop.query().select('year').where('project_id', params.id).andWhere('status', 'submitted');
-      req.task.data.rops = rops;
+      req.task.data.rops =
+        await req.models.Rop.query()
+          .select('year')
+          .where('project_id', params.id)
+          .andWhere('status', 'submitted');
     }
   } else if (model === 'role') {
     perm = 'establishment.read';
@@ -183,7 +230,11 @@ router.post('/:taskId/comment', (req, res, next) => {
 });
 
 router.put('/:taskId/comment/:commentId', (req, res, next) => {
-  return req.workflow.task(req.taskId).updateComment({ id: req.params.commentId, comment: req.body.comment, meta: req.body.meta })
+  return req.workflow.task(req.taskId).updateComment({
+    id: req.params.commentId,
+    comment: req.body.comment,
+    meta: req.body.meta
+  })
     .then(response => {
       res.response = response.json.data;
       next();

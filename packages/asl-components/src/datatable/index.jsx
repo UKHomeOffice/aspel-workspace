@@ -8,6 +8,7 @@ import pickBy from 'lodash/pickBy';
 import { getValue } from '../utils';
 import DatatableHeader from './header';
 import { Pagination } from '../';
+import Snippet from '../snippet';
 
 export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded }) {
     const rowExpands = expands(row);
@@ -34,7 +35,7 @@ export function Row({ row, schema, Expandable, Actions, expands, alwaysExpanded 
                 {
                     map(schema, (column, key) => {
                         const datum = getValue({ row, schema: column, key });
-                        return <td key={key} className={key}>
+                        return <td key={key} className={classnames(key, column.className)}>
                             { column.format ? column.format(datum, row) : datum }
                         </td>;
                     })
@@ -71,7 +72,9 @@ export function Datatable({
     schema: tableSchema,
     pagination,
     noDataWarning,
-    allowScroll = true
+    allowScroll = true,
+    caption,
+    tableProps
 }) {
     const schema = pickBy(merge({}, tableSchema, formatters), (item) => item.show);
     const RowComponent = CustomRow || Row;
@@ -93,7 +96,16 @@ export function Datatable({
     }, [isFetching]);
 
     return (
-        <table className={classnames('govuk-table', 'govuk-react-datatable', className, isFetching && 'loading')} ref={tableRef}>
+        <table
+            className={classnames('govuk-table', 'govuk-react-datatable', className, isFetching && 'loading')}
+            ref={tableRef}
+            {...(tableProps ?? {})}
+        >
+            {caption &&
+              <caption className='govuk-table__caption govuk-table__caption--m'>
+                  <Snippet>{caption}</Snippet>
+              </caption>
+            }
             <thead>
                 <tr>
                     {
@@ -129,7 +141,7 @@ export function Datatable({
                 }
             </tbody>
             {
-                !pagination?.hideUI &&
+                !(pagination?.hideUI || (pagination?.autoUI && pagination?.totalPages <= 1)) &&
           <tfoot>
               <tr>
                   <td colSpan={colSpan}>
@@ -155,6 +167,10 @@ function selector(state) {
 export default function ConnectedDatatable(props) {
 
     const globalProps = useSelector(selector, shallowEqual);
+    globalProps.pagination = {
+        ...(props.pagination ?? {}),
+        ...(globalProps.pagination ?? {}),
+    };
 
     return (
         <Datatable {...props} {...globalProps} />
