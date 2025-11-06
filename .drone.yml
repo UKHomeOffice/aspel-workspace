@@ -1937,15 +1937,6 @@ steps:
         from_secret: github_token
     commands:
       - npm audit --workspace=asl-toolbox --audit-level=high --omit=dev
-  - name: install
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm ci --workspace asl-toolbox --omit=dev
   - name: build
     pull: if-not-exists
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
@@ -1958,7 +1949,6 @@ steps:
       # wait for docker service to be up before running docker build
       - n=0; while [ "$n" -lt 60 ] && [[ ! $(docker stats --no-stream) ]]; do n=$(( n + 1 )); sleep 1; done
       - rm .dockerignore
-      - cat .module-paths
       - docker build -f ./packages/asl-toolbox/Dockerfile --build-arg MODULE_PATHS="$(cat .module-paths)" --secret id=token,env=ART_AUTH_TOKEN --secret id=github_token,env=GITHUB_AUTH_TOKEN -t asl-toolbox .
   - name: scan-image
     pull: always
