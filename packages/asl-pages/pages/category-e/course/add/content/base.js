@@ -37,7 +37,7 @@ module.exports = {
       hint: 'For example 14 8 2023'
     },
     endDate: {
-      label: 'Course start date',
+      label: 'Course end date',
       hint: 'For example 14 9 2023'
     },
     species: {
@@ -46,7 +46,8 @@ module.exports = {
       checkAnswerLabel: 'Animals used'
     },
     coursePurpose: {
-      label: 'Course Purpose',
+      label: 'Is it a higher education or training course?',
+      checkAnswerLabel: 'Course purpose',
       options: coursePurposeOptions
     }
   },
@@ -62,24 +63,24 @@ module.exports = {
     },
     courseDate: {
       required: 'Enter the course date',
-      validDate: 'Course date must be a real date and include a day,' +
+      validDate: 'The course date must be a real date and include a day,' +
         ' month and year. The year must include 4 numbers',
-      dateIsAfter: 'Course date must be in the future.',
-      dateIsSameOrBefore: 'Course date must be before the PPL expiry' +
+      dateIsAfter: 'The course date must be in the future.',
+      dateIsSameOrBefore: 'The course date must be before the PPL expiry' +
         ' date {{ project.formattedExpiryDate }}'
     },
     startDate: {
       required: 'Enter the course start date',
       validDate: 'Course start date must be a real date and include a day,' +
         ' month and year. The year must include 4 numbers',
-      dateIsAfter: 'Course start date must be in the future.'
+      dateIsAfter: 'The course start date must be in the future.'
     },
     endDate: {
       required: 'Enter the course end date',
-      validDate: 'Course end date must be a real date and include a day,' +
+      validDate: 'The course end date must be a real date and include a day,' +
         ' month and year. The year must include 4 numbers',
-      dateIsAfter: 'Course end date must be after the start date.',
-      dateIsSameOrBefore: 'Course end date must be before the PPL expiry' +
+      dateIsAfter: 'The course end date must be after the start date.',
+      dateIsSameOrBefore: 'The course end date must be before the PPL expiry' +
         ' date {{ project.formattedExpiryDate }}'
     },
     species: {

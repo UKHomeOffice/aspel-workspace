@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { formatProjectLicenceNumber, formatDate } from '../formatters';
+import { formatProjectLicenceNumber, formatDate } from '../../../formatters';
 import { Link, ModelSummary, Snippet } from '@ukhomeoffice/asl-components';
 
 const schema = {

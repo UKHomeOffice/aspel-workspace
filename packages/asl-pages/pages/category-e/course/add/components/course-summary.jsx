@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { formatCourseDateRange, formatCoursePurpose, ucFirst } from '../formatters';
+import { formatCourseDateRange, formatCoursePurpose, ucFirst } from '../../../formatters';
 import { Link, ModelSummary, Snippet } from '@ukhomeoffice/asl-components';
 
 const schema = {

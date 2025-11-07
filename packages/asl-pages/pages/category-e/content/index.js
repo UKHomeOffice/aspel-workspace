@@ -1,3 +1,5 @@
+const status = require('../../task/content/status');
+
 module.exports = {
   landingPage: {
     title: 'Courses and category E PILs',
@@ -20,5 +22,6 @@ module.exports = {
     revoke: 'Revoke',
     changeProjectLicence: 'Change project licence',
     changeCourseDetails: 'Change course details'
-  }
+  },
+  status
 };

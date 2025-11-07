@@ -6,7 +6,11 @@ import taskFormatters from '../../task/list/formatters';
 import classnames from 'classnames';
 import { trainingCoursePurpose } from '@ukhomeoffice/asl-constants';
 
-export const formatDate = (date, formatSpec = dateFormat.medium) => date ? format(date, formatSpec) : '-';
+export const formatDate = (date, formatSpec = dateFormat.medium) =>
+  // \u00A0 is non-breaking space to prevent tables flowing the dates onto multiple lines
+  date
+    ? format(date, formatSpec).replace(/ /g, '\u00A0')
+    : '-';
 
 export const formatCourseTitle = (title, trainingCourseId) =>
   trainingCourseId
@@ -33,22 +37,19 @@ export const formatSpecies = species =>
     ? '-'
     : species.map(ucFirst).sort().join(', ');
 
-const getStartDateFormat = (startDate, endDate) => {
-  if (endDate == null || getYear(startDate) !== getYear(endDate)) {
-    return dateFormat.medium;
-  } else if (getMonth(startDate) !== getMonth(endDate)) {
-    return 'd MMM';
-  } else {
-    return 'd';
-  }
-};
-
 export const formatCourseDateRange = (startDate, endDate) => {
-  if (!startDate) return '-';
-
-  return endDate
-    ? `${formatDate(startDate, getStartDateFormat(startDate, endDate))} to ${formatDate(endDate, dateFormat.medium)}`
-    : formatDate(startDate, dateFormat.medium);
+  if (!startDate) {
+    return '-';
+  } else if (!endDate) {
+    return formatDate(startDate, dateFormat.medium);
+  } else if (getYear(startDate) !== getYear(endDate)) {
+    return `${formatDate(startDate, dateFormat.medium)} to ${formatDate(endDate, dateFormat.medium)}`;
+  } else if (getMonth(startDate) !== getMonth(endDate)) {
+    return `${formatDate(startDate, 'd MMM')} to ${formatDate(endDate, dateFormat.medium)}`;
+  } else {
+    // in the case of 2 dates in one month, e.g. 1 to 2 Feb 2026, keep the whole range on a single line with nbsp.
+    return `${formatDate(startDate, 'd')}\u00A0to\u00A0${formatDate(endDate, dateFormat.medium)}`;
+  }
 };
 
 export const formatProfile = (profileId, firstName, lastName, establishmentId) =>
