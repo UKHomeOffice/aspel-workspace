@@ -1156,7 +1156,7 @@ html.modal-open, html.modal-open body {
     }
   }
 
-  .accordion, .sidebar-nav { 
+  .accordion, .sidebar-nav {
      & > .expanding-panel {
       header .govuk-button.link {
         width: 100%;
@@ -1822,10 +1822,10 @@ html.modal-open, html.modal-open body {
   color: blue;
 }
 
-span.govuk-tag.badge.created.gray,
-span.govuk-tag.badge.changed.gray,
-span.govuk-tag.badge.deleted.gray {
-  background: #6F777B !important;
+span.govuk-tag.badge.created.grey,
+span.govuk-tag.badge.changed.grey,
+span.govuk-tag.badge.deleted.grey {
+  background: #6F777B;
 }
 #ppl-drafting-tool .modal-trigger {
   margin-left: 0;

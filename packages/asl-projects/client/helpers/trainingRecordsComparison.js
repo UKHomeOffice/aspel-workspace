@@ -37,16 +37,16 @@ export function compareTrainingRecords(current = [], trainingHistory = []) {
   const prevIds = getIds(prevRecords);
   const firstIds = getIds(firstRecords);
 
-  // Added / Removed detection (pink = vs previous, gray = vs first)
+  // Added / Removed detection (pink = vs previous, grey = vs first)
   const addedPink = currentIds.filter(id => !prevIds.includes(id));
-  const addedGray = currentIds.filter(id => !firstIds.includes(id));
+  const addedGrey = currentIds.filter(id => !firstIds.includes(id));
   const removedPink = prevIds.filter(id => !currentIds.includes(id));
-  const removedGray = firstIds.filter(id => !currentIds.includes(id));
+  const removedGrey = firstIds.filter(id => !currentIds.includes(id));
 
   results.added.push({ color: 'pink', ids: addedPink });
-  results.added.push({ color: 'gray', ids: addedGray });
+  results.added.push({ color: 'grey', ids: addedGrey });
   results.removed.push({ color: 'pink', ids: removedPink });
-  results.removed.push({ color: 'gray', ids: removedGray });
+  results.removed.push({ color: 'grey', ids: removedGrey });
 
   /**
    * Helper: find record by ID.
@@ -81,29 +81,29 @@ export function compareTrainingRecords(current = [], trainingHistory = []) {
   };
 
   const changedPink = [];
-  const changedGray = [];
+  const changedGrey = [];
   const changedPinkDetails = {};
-  const changedGrayDetails = {};
+  const changedGreyDetails = {};
 
   currentRecords.forEach(cur => {
     const prev = findById(prevRecords, cur.trainingId);
     const first = findById(firstRecords, cur.trainingId);
 
     const diffPink = detectChanges(cur, prev);
-    const diffGray = detectChanges(cur, first);
+    const diffGrey = detectChanges(cur, first);
 
     if (diffPink) {
       changedPink.push(cur.trainingId);
       changedPinkDetails[cur.trainingId] = diffPink;
     }
-    if (diffGray) {
-      changedGray.push(cur.trainingId);
-      changedGrayDetails[cur.trainingId] = diffGray;
+    if (diffGrey) {
+      changedGrey.push(cur.trainingId);
+      changedGreyDetails[cur.trainingId] = diffGrey;
     }
   });
 
   results.changed.push({ color: 'pink', ids: changedPink, details: changedPinkDetails });
-  results.changed.push({ color: 'gray', ids: changedGray, details: changedGrayDetails });
+  results.changed.push({ color: 'grey', ids: changedGrey, details: changedGreyDetails });
 
   return results;
 }
@@ -113,7 +113,7 @@ export function compareTrainingRecords(current = [], trainingHistory = []) {
  *
  * @param {Array<Object>} groups - Array of change groups (added/removed/changed).
  * @param {string|number} id - Training record ID.
- * @returns {string|null} - The matching highlight colour (e.g., "pink" or "gray").
+ * @returns {string|null} - The matching highlight colour (e.g., "pink" or "grey").
  */
 export const findColor = (groups = [], id) => {
   if (!id || !Array.isArray(groups)) return null;

@@ -163,7 +163,7 @@ router.get('/:versionId',
         trainingHistory.push({
           version: index + 1, // version index (1-based index)
           projectVersionId: version.id || null,
-          trainingRecords: versionTrainingData // training data for the current version
+          trainingRecords: versionTrainingData
         });
       }
     }
@@ -177,7 +177,7 @@ router.get('/:versionId',
       req.version.data.transferToEstablishmentName = est.name;
     }
 
-    res.response = req.version; // Send response with the grouped training records per version
+    res.response = req.version;
     next();
   },
   fetchReminders('projectVersion'),

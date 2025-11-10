@@ -42,8 +42,8 @@ start({
     showConditions: state.static.showConditions,
     editConditions: state.static.editConditions,
     raCompulsory: state.model.raCompulsory,
-    training: state.static.training, // Load training data here from state
-    trainingHistory: state.static.trainingHistory, // Load training history data here
+    training: state.static.training,
+    trainingHistory: state.static.trainingHistory,
     licenceHolder: state.model.licenceHolder
   },
   static: {
