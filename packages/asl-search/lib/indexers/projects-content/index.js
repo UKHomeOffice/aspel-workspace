@@ -289,7 +289,7 @@ function createBatchProcessor(esClient) {
         lastLogged = processedCount;
       }
     } catch (error) {
-      logger.error('Failed to index batch:', error.message);
+      logger.error('Failed to index batch:', JSON.stringify(error));
     }
   };
 
