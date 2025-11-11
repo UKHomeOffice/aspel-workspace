@@ -6,7 +6,7 @@ const deleteIndex = require('../utils/delete-index');
 const logger = require('../../logger');
 
 const indexName = 'projects-content';
-const BATCH_SIZE = 500;
+const BATCH_SIZE = 100;
 
 const columnsToIndex = [
   'id', 'title', 'status', 'licenceNumber', 'expiryDate', 'issueDate',
