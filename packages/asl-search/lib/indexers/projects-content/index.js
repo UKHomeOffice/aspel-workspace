@@ -7,6 +7,7 @@ const logger = require('../../logger');
 
 const indexName = 'projects-content';
 const BATCH_SIZE = 100;
+const MAX_BATCH_BYTES = 5 * 1024 * 1024; // 5 MB
 
 const columnsToIndex = [
   'id', 'title', 'status', 'licenceNumber', 'expiryDate', 'issueDate',
@@ -255,6 +256,7 @@ function createBatchProcessor(esClient) {
   let batch = [];
   let processedCount = 0;
   let lastLogged = 0;
+  let batchSizeBytes = 0;
 
   const processBatch = async () => {
     if (batch.length === 0) return;
@@ -298,7 +300,16 @@ function createBatchProcessor(esClient) {
     highWaterMark: BATCH_SIZE * 2,
 
     async transform(doc, encoding, callback) {
+      const docSize = Buffer.byteLength(JSON.stringify(doc)); // measure actual bytes
+      if (batchSizeBytes + docSize > MAX_BATCH_BYTES) {
+        logger.debug(
+          `Flushing batch of ${batch.length} docs (${(batchSizeBytes / 1024 / 1024).toFixed(2)} MB)`
+        );
+        await processBatch();
+      }
+
       batch.push(doc);
+      batchSizeBytes += docSize;
 
       if (batch.length >= BATCH_SIZE) {
         await processBatch();
