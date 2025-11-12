@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormLayout, Header, Snippet } from '@ukhomeoffice/asl-components';
-import ProjectSummary from '../../../components/project-summary';
-import CourseSummary from '../../../components/course-summary';
+import ProjectSummary from '../components/project-summary';
+import CourseSummary from '../components/course-summary';
 
 export default function CourseDetailsPage() {
   return <>

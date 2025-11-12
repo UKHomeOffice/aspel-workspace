@@ -1157,6 +1157,13 @@ html.modal-open, html.modal-open body {
   }
 
   .accordion, .sidebar-nav {
+  .sidebar-nav > .expanding-panel header .govuk-button.link {
+    width: 100%;
+    text-align: left;
+    padding-right: 2em;
+  }
+
+  .accordion, .sidebar-nav { 
      & > .expanding-panel {
       header .govuk-button.link {
         width: 100%;
