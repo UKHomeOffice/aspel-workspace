@@ -23,8 +23,9 @@ export function compareTrainingRecords(current = [], trainingHistory = []) {
   }
 
   // Safely resolve reference versions
-  const currentVersion = trainingHistory.find(v => v?.version === 1) || trainingHistory[0] || {};
-  const previousVersion = trainingHistory.find(v => v?.version === 2) || trainingHistory[1] || {};
+  // const currentVersion = trainingHistory.find(v => v?.version === 1) || trainingHistory[0] || {};
+  // const previousVersion = trainingHistory.find(v => v?.version === 2) || trainingHistory[1] || {};
+  const [currentVersion, previousVersion] = trainingHistory;
   const firstVersion = trainingHistory[trainingHistory.length - 1] || {};
 
   const currentRecords = Array.isArray(currentVersion.trainingRecords) ? currentVersion.trainingRecords : [];
@@ -168,10 +169,14 @@ export const getStatus = (record, comparisons = {}) => {
 export const getTrainingRecord = (data = [], trainingId, versionType = 'current') => {
   if (!Array.isArray(data) || !trainingId) return null;
 
-  const versionsWithRecord = data.filter(
-    v => Array.isArray(v.trainingRecords) &&
-      v.trainingRecords.some(r => r.trainingId === trainingId)
-  );
+  const versionsWithRecord = data.map(v => {
+    const record = (v.trainingRecords ?? []).find(r => r.trainingId === trainingId);
+    return {
+      ...v,
+      trainingRecords: v.trainingRecords ?? [],
+      record: record || null
+    };
+  });
 
   if (!versionsWithRecord.length) return null;
 

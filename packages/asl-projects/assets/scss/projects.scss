@@ -1822,10 +1822,11 @@ html.modal-open, html.modal-open body {
   color: blue;
 }
 
-span.govuk-tag.badge.created.grey,
-span.govuk-tag.badge.changed.grey,
-span.govuk-tag.badge.deleted.grey {
-  background: #6F777B;
+#ppl-drafting-tool span.govuk-tag.badge.created.grey,
+#ppl-drafting-tool span.govuk-tag.badge.changed.grey,
+#ppl-drafting-tool span.govuk-tag.badge.deleted.grey {
+  background: #999;
+  display: table-caption;
 }
 #ppl-drafting-tool .modal-trigger {
   margin-left: 0;
@@ -1836,8 +1837,8 @@ span.govuk-tag.badge.deleted.grey {
   clear: both;
 }
 
-@media (max-width: 929px) {
-  span.changedText {
+@media (max-width: 900px) {
+  #ppl-drafting-tool span.changedText {
     padding-left: 32px;
   }
 }

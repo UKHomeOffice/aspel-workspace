@@ -11,8 +11,25 @@ export default function TrainingRecordModal({
                                               first = {},
                                               label = 'Training record changes'
                                             }) {
+
+  const hasChanges = (a = {}, b = {}) => {
+    const fieldsToCheck = ['modules', 'species', 'certificateNumber', 'passDate', 'accreditingBody', 'exemptionReason'];
+    return fieldsToCheck.some(key => {
+      const valA = Array.isArray(a[key]) ? [...a[key]].sort().join(',') : a[key];
+      const valB = Array.isArray(b[key]) ? [...b[key]].sort().join(',') : b[key];
+      return valA !== valB;
+    });
+  };
+
+  const hasPrevChanges = hasChanges(previous, current);
+  const hasFirstChanges = hasChanges(first, current);
+
   const [modalOpen, setModalOpen] = useState(false);
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(() => {
+    if (hasPrevChanges) return 0;
+    if (hasFirstChanges) return 1;
+    return 0;
+  });
 
   const toggleModal = e => {
     e.preventDefault();
@@ -140,12 +157,16 @@ export default function TrainingRecordModal({
             <div className="govuk-grid-column-one-half">
               <nav className="govuk-tabs">
                 <ul>
-                  <li className={active === 1 ? 'active' : ''}>
-                    <a href="#" onClick={selectTab(1)}>Initial submission</a>
-                  </li>
-                  <li className={active === 0 ? 'active' : ''}>
-                    <a href="#" onClick={selectTab(0)}>Previous version</a>
-                  </li>
+                  {hasFirstChanges && (
+                    <li className={active === 1 ? 'active' : ''}>
+                      <a href="#" onClick={selectTab(1)}>Initial submission</a>
+                    </li>
+                  )}
+                  {hasPrevChanges && (
+                    <li className={active === 0 ? 'active' : ''}>
+                      <a href="#" onClick={selectTab(0)}>Previous version</a>
+                    </li>
+                  )}
                 </ul>
               </nav>
 

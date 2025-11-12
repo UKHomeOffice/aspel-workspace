@@ -1,10 +1,10 @@
-import React, { Fragment, useRef } from 'react';
+import React, { Fragment, useMemo, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, shallowEqual } from 'react-redux';
 import { TrainingSummary } from '@ukhomeoffice/asl-components';
 import { Button } from '@ukhomeoffice/react-components';
 import { compareTrainingRecords } from '../../helpers/trainingRecordsComparison';
-import TrainingSummaryCustom from '../../components/training-summary-custom';
+import TrainingSummaryWithChangeHighlighting from '../../components/training-summary-custom';
 import Fieldset from '../../components/fieldset';
 import ReviewFields from '../../components/review-fields';
 import ChangedBadge from '../../components/changed-badge';
@@ -20,12 +20,16 @@ export default function Training(props) {
     return f.name === 'training-complete' ? { ...f, type: 'comments-only' } : f;
   });
 
-
-
-  const comparisons = compareTrainingRecords(
-    project.training, // version 0
-    project.trainingHistory // array of { version, trainingRecords }
+  const comparisons = useMemo(
+    () => compareTrainingRecords(
+      project.training,
+      project.trainingHistory
+    ),
+    [project.training, project.trainingHistory]
   );
+
+console.log(project.training);
+console.log(project.trainingHistory);
 
   function onSubmit(e) {
     e.preventDefault();
@@ -46,7 +50,7 @@ export default function Training(props) {
       {
         /* feature flag enabled  */
         trainingRecordHighlight ? (
-          <TrainingSummaryCustom
+          <TrainingSummaryWithChangeHighlighting
             certificates={readonly ? project.training : training}
             comparisons={comparisons}
             project={project}
