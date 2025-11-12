@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import classnames from 'classnames';
 import Modal from './modal';
-import { Warning } from '@ukhomeoffice/react-components';
 
 const DEFAULT_LABEL = 'No data available';
 
