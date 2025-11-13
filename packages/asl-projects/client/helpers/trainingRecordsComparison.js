@@ -22,9 +22,7 @@ export function compareTrainingRecords(current = [], trainingHistory = []) {
     return results;
   }
 
-  // Safely resolve reference versions
-  // const currentVersion = trainingHistory.find(v => v?.version === 1) || trainingHistory[0] || {};
-  // const previousVersion = trainingHistory.find(v => v?.version === 2) || trainingHistory[1] || {};
+  // Current and previous version of training record
   const [currentVersion, previousVersion] = trainingHistory;
   const firstVersion = trainingHistory[trainingHistory.length - 1] || {};
 

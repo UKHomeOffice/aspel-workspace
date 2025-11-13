@@ -15,7 +15,7 @@ export default function Training(props) {
   const form = useRef(null);
   const history = useHistory();
   const trainingComplete = project['training-complete'];
-  const trainingRecordHighlight = true; //useFeatureFlag(FEATURE_FLAG_TRAINING_RECORD);
+  const trainingRecordHighlight = useFeatureFlag(FEATURE_FLAG_TRAINING_RECORD);
   const fields = props.fields.map(f => {
     return f.name === 'training-complete' ? { ...f, type: 'comments-only' } : f;
   });
