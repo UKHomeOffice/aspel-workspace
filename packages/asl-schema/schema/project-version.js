@@ -24,7 +24,8 @@ class ProjectVersion extends BaseModel {
         raCompulsory: { type: 'boolean' },
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' },
-        deleted: { type: ['string', 'null'], format: 'date-time' }
+        deleted: { type: ['string', 'null'], format: 'date-time' },
+        hbaReplaced: { type: ['array', 'null'], items: { type: 'string', pattern: uuid.v4 } }
       }
     };
   }
