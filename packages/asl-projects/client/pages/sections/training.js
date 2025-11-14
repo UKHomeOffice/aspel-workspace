@@ -54,7 +54,12 @@ export default function Training(props) {
             readonly={readonly}
           />
         ) : (
-          <TrainingSummary certificates={readonly ? project.training : training} />
+          <TrainingSummaryWithChangeHighlighting
+            certificates={readonly ? project.training : training}
+            comparisons={comparisons}
+            project={project}
+            readonly={readonly}
+          />
         )
       }
 

@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import classnames from 'classnames';
 import Modal from './modal';
 
-const DEFAULT_LABEL = 'No data available';
+const DEFAULT_LABEL = '-';
 
 export default function TrainingRecordModal({
                                               current = {},
@@ -57,8 +57,8 @@ export default function TrainingRecordModal({
 
   const diffField = (prev = '', next = '', side = 'left') => {
     if (prev === next) return <span>{next || <em>{DEFAULT_LABEL}</em>}</span>;
-    if (side === 'left') return prev ? <span className="diff removed">{prev}</span> : <span>-</span>;
-    if (side === 'right') return next ? <span className="diff added">{next}</span> : <span>-</span>;
+    if (side === 'left') return prev ? <span className="diff removed">{prev}</span> : <span>{DEFAULT_LABEL}</span>;
+    if (side === 'right') return next ? <span className="diff added">{next}</span> : <span>{DEFAULT_LABEL}</span>;
   };
 
   const diffArray = (prevArr = [], nextArr = [], side = 'left') => {
@@ -73,21 +73,24 @@ export default function TrainingRecordModal({
 
     return (
       <ul>
-        {items.map(item => (
-          <li key={item}>
-            <span
-              className={classnames({
-                removed: side === 'left' && removed.includes(item),
-                added: side === 'right' && added.includes(item),
-                diff:
-                  (side === 'left' && removed.includes(item)) ||
-                  (side === 'right' && added.includes(item))
-              })}
-            >
-              {item}
-            </span>
-          </li>
-        ))}
+        {items.map(item => {
+          const isRemoved = side === 'left' && removed.includes(item);
+          const isAdded = side === 'right' && added.includes(item);
+
+          return (
+            <li key={item}>
+          <span
+            className={classnames({
+              removed: isRemoved,
+              added: isAdded,
+              diff: isRemoved || isAdded
+            })}
+          >
+            {item}
+          </span>
+            </li>
+          );
+        })}
       </ul>
     );
   };

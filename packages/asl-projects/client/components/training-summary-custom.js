@@ -43,7 +43,7 @@ export default function TrainingSummaryWithChangeHighlighting({
   const newOnes = certificates.filter(r => !previousIds.includes(r.trainingId || r.id));
 
   allRecords = [...allRecords, ...newOnes];
-
+console.log(allRecords);
 
   return (
     <div className="training-summary-custom">
@@ -69,9 +69,9 @@ export default function TrainingSummaryWithChangeHighlighting({
 
                     {status.label === 'CHANGED' && (
                       <TrainingRecordModal
-                        current={getTrainingRecord(project.trainingHistory, record.trainingId || record.id, 'current')}
-                        previous={getTrainingRecord(project.trainingHistory, record.trainingId || record.id, 'previous')}
-                        first={getTrainingRecord(project.trainingHistory, record.trainingId || record.id, 'first')}
+                        current={getTrainingRecord(project, record, 'current')}
+                        previous={getTrainingRecord(project, record, 'previous')}
+                        first={getTrainingRecord(project, record, 'first')}
                         comparisons={comparisons}
                         trainingHistory={project.trainingHistory}
                       />
