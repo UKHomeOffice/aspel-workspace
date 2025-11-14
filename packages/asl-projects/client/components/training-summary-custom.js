@@ -69,9 +69,9 @@ export default function TrainingSummaryWithChangeHighlighting({
 
                     {status.label === 'CHANGED' && (
                       <TrainingRecordModal
-                        current={getTrainingRecord(project, record, 'current')}
-                        previous={getTrainingRecord(project, record, 'previous')}
-                        first={getTrainingRecord(project, record, 'first')}
+                        current={getTrainingRecord(project.trainingHistory, record.trainingId || record.id, 'current')}
+                        previous={getTrainingRecord(project.trainingHistory, record.trainingId || record.id, 'previous')}
+                        first={getTrainingRecord(project.trainingHistory, record.trainingId || record.id, 'first')}
                         comparisons={comparisons}
                         trainingHistory={project.trainingHistory}
                       />
