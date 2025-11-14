@@ -146,6 +146,7 @@ const loadVersions = (req, res, next) => {
     )
     .select(ref('data:isLegacyStub').as('isLegacyStub'))
     .select(ref('data:duration').as('duration'))
+    .select(ref('data:training').as('training'))
     .where({ projectId: req.project.id })
     .withGraphFetched(
       `[licenceHolder(constrainLicenceHolderParams).establishments(constrainEstablishmentParams)]`
@@ -186,7 +187,10 @@ const loadVersions = (req, res, next) => {
         granted,
         draft,
         withdrawn,
-        versions
+        versions: versions.map(version => ({
+          ...version,
+          training: version.training
+        }))
       };
       next();
     });
