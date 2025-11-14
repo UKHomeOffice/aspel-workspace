@@ -58,15 +58,15 @@ export function compareTrainingRecords(current = [], trainingHistory = []) {
    * Helper: Detect field-level differences between two training record objects.
    * Returns `null` if identical, or a diff object showing added/removed fields.
    */
-  const detectChanges = (cur, old) => {
-    if (!cur || !old) return null;
+  const detectChanges = (current, previous) => {
+    if (!current || !previous) return null;
 
     const diff = {};
-    for (const key in cur) {
-      if (!Object.prototype.hasOwnProperty.call(cur, key) || key === 'trainingId') continue;
+    for (const key in current) {
+      if (!Object.prototype.hasOwnProperty.call(current, key) || key === 'trainingId') continue;
 
-      const a = cur[key];
-      const b = old[key];
+      const a = current[key];
+      const b = previous[key];
 
       if (Array.isArray(a) && Array.isArray(b)) {
         const added = a.filter(x => !b.includes(x));
@@ -156,42 +156,66 @@ export const getStatus = (record, comparisons = {}) => {
   return null;
 };
 
+
 /**
  * Retrieve a specific training record from versioned history.
  *
- * @param {Array<Object>} data - Array of version objects (each containing trainingRecords[]).
- * @param {string} trainingId - ID of the record to locate.
+ * @param {Object} project - The project object containing trainingHistory[].
+ * @param {Object} record - The record object that contains trainingId or id.
  * @param {'current'|'previous'|'first'} versionType - Which version to fetch from.
- * @returns {Object|null} - The training record object, or null if not found.
+ * @returns {Object|null}
  */
-export const getTrainingRecord = (data = [], trainingId, versionType = 'current') => {
-  if (!Array.isArray(data) || !trainingId) return null;
+export const getTrainingRecord = (
+  project = {},
+  record = {},
+  versionType = 'current'
+) => {
+  if (!project || !Array.isArray(project.trainingHistory) || !record) {
+    return null;
+  }
 
-  const versionsWithRecord = data.map(v => {
-    const record = (v.trainingRecords ?? []).find(r => r.trainingId === trainingId);
+  // Extract training history
+  const history = project.trainingHistory;
+
+  // Extract trainingId from record — this is the key change
+  const trainingId = record.trainingId || record.id;
+  if (!trainingId) {
+    return null;
+  }
+
+  // Build mapped versions
+  const versionsWithRecord = history.map(version => {
+    const rec = (version.trainingRecords ?? []).find(r => r.trainingId === trainingId);
     return {
-      ...v,
-      trainingRecords: v.trainingRecords ?? [],
-      record: record || null
+      ...version,
+      trainingRecords: version.trainingRecords ?? [],
+      record: rec || null
     };
   });
 
   if (!versionsWithRecord.length) return null;
 
+  // Determine which version to use
   let targetVersion;
   switch (versionType.toLowerCase()) {
     case 'first':
       targetVersion = versionsWithRecord[versionsWithRecord.length - 1];
       break;
     case 'previous':
-      targetVersion = versionsWithRecord.length > 1 ? versionsWithRecord[1] : versionsWithRecord[0];
+      targetVersion = versionsWithRecord.length > 1
+        ? versionsWithRecord[1]
+        : versionsWithRecord[0];
       break;
     default:
       targetVersion = versionsWithRecord[0];
   }
 
-  return targetVersion.trainingRecords.find(r => r.trainingId === trainingId) || null;
+  // Return the matching training record
+  return (
+    targetVersion.trainingRecords.find(r => r.trainingId === trainingId) || null
+  );
 };
+
 
 /**
  * Collects removed training records from all project versions for display or export.

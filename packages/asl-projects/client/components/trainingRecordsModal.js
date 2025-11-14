@@ -73,21 +73,24 @@ export default function TrainingRecordModal({
 
     return (
       <ul>
-        {items.map(item => (
-          <li key={item}>
-            <span
-              className={classnames({
-                removed: side === 'left' && removed.includes(item),
-                added: side === 'right' && added.includes(item),
-                diff:
-                  (side === 'left' && removed.includes(item)) ||
-                  (side === 'right' && added.includes(item))
-              })}
-            >
-              {item}
-            </span>
-          </li>
-        ))}
+        {items.map(item => {
+          const isRemoved = side === 'left' && removed.includes(item);
+          const isAdded = side === 'right' && added.includes(item);
+
+          return (
+            <li key={item}>
+          <span
+            className={classnames({
+              removed: isRemoved,
+              added: isAdded,
+              diff: isRemoved || isAdded
+            })}
+          >
+            {item}
+          </span>
+            </li>
+          );
+        })}
       </ul>
     );
   };
