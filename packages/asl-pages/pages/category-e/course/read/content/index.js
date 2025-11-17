@@ -17,7 +17,7 @@ module.exports = merge(
         label: 'Course purpose'
       },
       species: {
-        label: 'Animals'
+        label: 'Animals used'
       },
       projectTitle: {
         label: 'Project title'

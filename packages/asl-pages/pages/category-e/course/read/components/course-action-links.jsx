@@ -15,14 +15,14 @@ export default function CourseActionLinks() {
         trainingCourseId={trainingCourseId}
       >
         <Snippet>actions.updateCourse</Snippet>
-      </Link>{' '}
-      |{' '}
+      </Link>
+      {' | '}
       <Link page={'categoryE.course.remove'}
         establishmentId={establishmentId}
         trainingCourseId={trainingCourseId}
       >
         <Snippet>actions.deleteCourse</Snippet>
-      </Link>{' '}
+      </Link>
     </p>;
   }
 
