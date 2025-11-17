@@ -6,7 +6,7 @@ const deleteIndex = require('../utils/delete-index');
 const logger = require('../../logger');
 
 const indexName = 'projects-content';
-const BATCH_SIZE = 500;
+const BATCH_SIZE = 100;
 
 const columnsToIndex = [
   'id', 'title', 'status', 'licenceNumber', 'expiryDate', 'issueDate',
@@ -238,7 +238,7 @@ function createDocumentTransform() {
         callback(null, { id: project.id, document });
 
       } catch (error) {
-        logger.error(`Failed to transform project ${project.id}:`, error.message);
+        logger.error(`Failed to transform project ${project.id}: ${error.message ?? JSON.stringify(error)}`, error);
         // Don't re-throw, just skip this project and continue
         callback();
       }
@@ -289,7 +289,7 @@ function createBatchProcessor(esClient) {
         lastLogged = processedCount;
       }
     } catch (error) {
-      logger.error('Failed to index batch:', error.message);
+      logger.error(`Failed to index batch: ${error.message ?? JSON.stringify(error)}`, error);
     }
   };
 
@@ -359,7 +359,7 @@ module.exports = async (db, esClient, options = {}) => {
     });
 
   } catch (error) {
-    logger.error('Failed to index projects content:', error);
+    logger.error(`Failed to index projects content: ${error.message ?? JSON.stringify(error)}`, error);
     throw error;
   }
 };
