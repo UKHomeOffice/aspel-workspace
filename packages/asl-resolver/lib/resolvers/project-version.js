@@ -159,12 +159,18 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
   }
 
   if (action === 'replaceHba') {
-    const { projectVersionId, token, filename, attachmentId } = data;
+    const { projectVersionId, token, filename, attachmentId, hbaReplacementReason,
+      declaration } = data;
+
     if (projectVersionId && attachmentId) {
       const projectVersion = await ProjectVersion.query(transaction).findById(projectVersionId);
       const replaced = projectVersion.hbaReplaced || [];
-      if (!replaced.includes(attachmentId)) {
-        replaced.push(attachmentId);
+      if (!replaced.find(r => r.attachmentId === attachmentId)) {
+        replaced.push({
+          attachmentId,
+          hbaReplacementReason,
+          declaration
+        });
       }
 
       if (token) {

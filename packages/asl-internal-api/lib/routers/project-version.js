@@ -35,7 +35,8 @@ const update = () => (req, res, next) => {
 
 const replaceHba = async (req, res, next) => {
   try {
-    const { token, filename, attachmentId, projectId, projectVersionId } = req.body.data || {};
+    const { token, filename, attachmentId, hbaReplacementReason,
+      declaration, projectId, projectVersionId } = req.body.data || {};
     if (!token || !filename) {
       throw new BadRequestError('token and filename are required');
     }
@@ -48,6 +49,8 @@ const replaceHba = async (req, res, next) => {
         token,
         filename,
         attachmentId,
+        hbaReplacementReason,
+        declaration,
         projectVersionId,
         projectId,
         establishmentId: req.version.project.establishmentId
@@ -99,7 +102,8 @@ module.exports = () => {
 
   router.put('/:id/replace-hba',
     permissions('project.replaceHBA'),
-    whitelist('token', 'filename', 'attachmentId', 'projectVersionId', 'projectId', 'establishmentId'),
+    whitelist('token', 'filename', 'attachmentId', 'hbaReplacementReason',
+      'declaration', 'projectVersionId', 'projectId', 'establishmentId'),
     replaceHba
   );
 

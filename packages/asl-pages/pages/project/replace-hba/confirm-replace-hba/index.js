@@ -35,12 +35,12 @@ module.exports = (settings) => {
   );
 
   app.post('/', async (req, res, next) => {
-    const { confirmHba } = req.form.values;
+    const { confirmHbaDeclaration, hbaReplacementReason } = req.form.values;
     const hbaSession = req.session.form?.hba || {};
     const { token, filename } = hbaSession;
 
     try {
-      if (confirmHba === 'no') {
+      if (confirmHbaDeclaration === 'no') {
         if (token) {
           await axios.delete(`${settings.attachments}/${token}`);
           delete req.session.form;
@@ -48,7 +48,7 @@ module.exports = (settings) => {
         return res.redirect(req.buildRoute('project.replaceHba', { projectId: req.params.projectId }));
       }
 
-      if (confirmHba === 'yes') {
+      if (confirmHbaDeclaration === 'yes') {
         if (!token) {
           return next(new Error('Missing HBA token for replacement'));
         }
@@ -74,6 +74,8 @@ module.exports = (settings) => {
               token,
               filename,
               attachmentId,
+              hbaReplacementReason,
+              declaration: confirmHbaDeclaration,
               projectVersionId: req.project?.granted?.id || null,
               projectId: req.params.projectId
             }
