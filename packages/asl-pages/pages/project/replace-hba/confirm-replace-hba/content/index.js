@@ -14,6 +14,7 @@ module.exports = merge({
   buttons: {
     submit: 'Confirm file replacement'
   },
+  changeHba: 'Select a different file',
   errors: {
     confirmHbaDeclaration: {
       required: 'Select the checkbox to confirm you have the consent of the inspector who assessed this application'
