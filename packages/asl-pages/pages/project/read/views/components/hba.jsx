@@ -16,20 +16,22 @@ const HBA = ({ version, project, canReplaceHBA, hbaHeading }) => {
         </h3>
       )}
 
-      <p>
-        <a href={`/attachment/${version.hbaToken}`} download={version.hbaFilename}>
-          <Snippet>otherDocuments.links.hba</Snippet>
-        </a>
-
-        {canReplaceHBA && (
-          <Link
-            page="project.replaceHba"
-            project={project}
-            className="govuk-!-padding-left-3"
-            label={<Snippet>otherDocuments.links.replaceHba</Snippet>}
-          />
-        )}
-      </p>
+      <div>
+        <p>
+          <a href={`/attachment/${version.hbaToken}`} download={version.hbaFilename}>
+            <Snippet>otherDocuments.links.hba</Snippet>
+          </a>
+        </p>
+        <p>
+          {canReplaceHBA && (
+            <Link
+              page="project.replaceHba"
+              project={project}
+              label={<Snippet>otherDocuments.links.replaceHba</Snippet>}
+            />
+          )}
+        </p>
+      </div>
 
       {version.hbaReplaced && (
         <div className="govuk-hint">
