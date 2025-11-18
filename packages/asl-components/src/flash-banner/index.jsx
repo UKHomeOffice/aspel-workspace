@@ -1,6 +1,7 @@
 import React from 'react';
 import Inset from '../inset';
 import { useSelector } from 'react-redux';
+import { Markdown } from '../index';
 
 const FlashBanner = () => {
     const flash = useSelector(state => state.static.flash);
@@ -11,7 +12,7 @@ const FlashBanner = () => {
     return (
         <Inset className={`flash-banner--${flash.type || 'success'}`}>
             {flash.title && <h2>{flash.title}</h2>}
-            <p>{flash.body}</p>
+            <Markdown>{flash.body}</Markdown>
         </Inset>
     );
 };

@@ -5,6 +5,7 @@ const { canViewTransferredProject } = require('../middleware');
 const { enforcementFlags } = require('../../common/middleware');
 const { relatedTasks } = require('../../common/routers');
 const { ropsYears } = require('../../../constants');
+const { readFlashMiddleware } = require('@asl/service/lib/middleware/flash-middleware');
 
 module.exports = (settings) => {
   const app = page({
@@ -211,20 +212,7 @@ module.exports = (settings) => {
   });
 
   // Attach flash messages to res.locals so React can access them
-  app.use((req, res, next) => {
-    if (req.session.flash) {
-      res.locals.flash = { ...req.session.flash };
-      req.session.flash = {}; // remove after reading
-    } else {
-      res.locals.flash = {};
-    }
-    next();
-  });
-  // Attach flash to redux state
-  app.use((req, res, next) => {
-    res.locals.static.flash = res.locals.flash || {};
-    next();
-  });
+  app.use(readFlashMiddleware);
 
   return app;
 };
