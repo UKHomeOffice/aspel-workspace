@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link, Snippet, Inset } from '@ukhomeoffice/asl-components';
-import { formatDate } from '../../../../category-e/formatters';
+import { Link, Snippet, Inset, Utils } from '@ukhomeoffice/asl-components';
 
 const HBA = ({ version, project, canReplaceHBA }) => {
   if (!version?.hbaToken) {
@@ -44,7 +43,7 @@ const HBA = ({ version, project, canReplaceHBA }) => {
                     <strong style={{ width: '120px' }}>Date</strong>
                     <span>
                       {latest.uploadedAt
-                        ? formatDate(new Date(latest.uploadedAt))
+                        ? Utils.formatDate(new Date(latest.uploadedAt), Utils.DATE_FORMAT.medium)
                         : '-'}
                     </span>
                   </div>

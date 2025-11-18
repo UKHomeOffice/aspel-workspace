@@ -20,4 +20,9 @@ exports.down = async function(knex) {
   await knex.schema.table('project_versions', (table) => {
     table.dropColumn('hba_replaced');
   });
+
+  // restore column to projects table as last migration expected.
+  await knex.schema.table('projects', (table) => {
+    table.jsonb('hba_replaced').nullable();
+  });
 };
