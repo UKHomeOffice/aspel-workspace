@@ -47,8 +47,7 @@ start({
     licenceHolder: state.model.licenceHolder
   },
   static: {
-    urls: state.static.urls,
     imageRoot: '/attachment',
-    content: state.static.content
+    ...state.static
   }
 });
