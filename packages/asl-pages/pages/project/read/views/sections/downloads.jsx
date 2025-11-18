@@ -247,8 +247,6 @@ export default function Downloads() {
   const viewingAtAAEstablishment = useSelector(
     (state) => state.static.additionalAvailability
   );
-  const { canReplaceHBA } =
-    useSelector((state) => state.static);
 
   const latestVersion = project.versions[0];
   const grantedVersion = project.granted;
@@ -267,14 +265,14 @@ export default function Downloads() {
           {
             // latest version might be application, amendment or granted
             latestVersion && (latestIsGranted || !viewingAtAAEstablishment) && (
-              <DownloadSection project={project} version={latestVersion} canReplaceHBA={canReplaceHBA} />
+              <DownloadSection project={project} version={latestVersion} canReplaceHBA={true}/>
             )
           }
 
           {
             // if the latest version is not the granted version, show a section for the granted version
             grantedVersion && !latestIsGranted && (
-              <DownloadSection project={project} version={grantedVersion} canReplaceHBA={canReplaceHBA}/>
+              <DownloadSection project={project} version={grantedVersion} canReplaceHBA={true}/>
             )
           }
 
@@ -286,7 +284,7 @@ export default function Downloads() {
                 <Inset>
                   <h2>Previous licences</h2>
                   {supersededVersions.map((v) => (
-                    <DownloadSection key={v.id} project={project} version={v} canReplaceHBA={canReplaceHBA}/>
+                    <DownloadSection key={v.id} project={project} version={v} canReplaceHBA={false}/>
                   ))}
                 </Inset>
               </details>
