@@ -1,6 +1,6 @@
 const BaseModel = require('./base-model');
 const { uuid, date } = require('../lib/regex-validation');
-const { trainingCoursePurpose } = require('@ukhomeoffice/asl-constants');
+const { trainingCoursePurpose, trainingCourseDuration } = require('@ukhomeoffice/asl-constants');
 
 class TrainingCourse extends BaseModel {
   static get tableName() {
@@ -20,7 +20,7 @@ class TrainingCourse extends BaseModel {
           type: ['array', 'null'],
           items: { type: 'string' }
         },
-        duration: { type: ['string', 'null'], enum: ['one-day', 'multi-day'] },
+        courseDuration: { type: ['string', 'null'], enum: Object.values(trainingCourseDuration) },
         startDate: { type: ['string', 'null'], pattern: date.yearMonthDay },
         endDate: { type: ['string', 'null'], pattern: date.yearMonthDay },
         title: { type: 'string' },

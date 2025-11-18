@@ -115,9 +115,9 @@ module.exports = settings => {
       }
 
       const projectSpecies = project.species ?? [];
-
-      req.form.values.species = (req.form.values.species ?? [])
-        .filter(species => projectSpecies.includes(species));
+      if (Array.isArray(req.form.values.species)) {
+        req.form.values.species = req.form.values.species.filter(species => projectSpecies.includes(species));
+      }
     })
   }));
 

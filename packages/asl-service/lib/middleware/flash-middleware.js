@@ -15,5 +15,7 @@ module.exports = {
   readFlashMiddleware(req, res, next) {
     res.locals.static.flash = { ...(req.session.flash ?? {}) };
     req.session.flash = {}; // remove after reading
+
+    next();
   }
 };
