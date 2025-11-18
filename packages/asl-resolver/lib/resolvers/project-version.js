@@ -160,7 +160,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
 
   if (action === 'replaceHba') {
     const { projectVersionId, token, filename, attachmentId, hbaReplacementReason,
-      declaration } = data;
+      declaration, asruUser, uploadedAt } = data;
 
     if (projectVersionId && attachmentId) {
       const projectVersion = await ProjectVersion.query(transaction).findById(projectVersionId);
@@ -168,8 +168,10 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
       if (!replaced.find(r => r.attachmentId === attachmentId)) {
         replaced.push({
           attachmentId,
+          uploadedAt,
           hbaReplacementReason,
-          declaration
+          declaration,
+          asruUser
         });
       }
 

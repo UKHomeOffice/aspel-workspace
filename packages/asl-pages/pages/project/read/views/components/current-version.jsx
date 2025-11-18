@@ -84,7 +84,6 @@ export default function CurrentVersion() {
         version={version}
         project={project}
         canReplaceHBA={canReplaceHBA}
-        hbaHeading={true}
       />
 
     </Subsection>

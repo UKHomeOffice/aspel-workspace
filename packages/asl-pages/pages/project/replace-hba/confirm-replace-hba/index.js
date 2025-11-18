@@ -40,14 +40,6 @@ module.exports = (settings) => {
     const { token, filename } = hbaSession;
 
     try {
-      if (confirmHbaDeclaration === 'no') {
-        if (token) {
-          await axios.delete(`${settings.attachments}/${token}`);
-          delete req.session.form;
-        }
-        return res.redirect(req.buildRoute('project.replaceHba', { projectId: req.params.projectId }));
-      }
-
       if (confirmHbaDeclaration === 'yes') {
         if (!token) {
           return next(new Error('Missing HBA token for replacement'));
@@ -55,11 +47,13 @@ module.exports = (settings) => {
 
         const oldToken = req.project?.granted?.hbaToken;
         let attachmentId = null;
+        let uploadedAt = null;
 
         if (oldToken) {
           try {
             const { data } = await axios.get(`${settings.attachments}/attachment-id/${oldToken}`);
             attachmentId = data.id;
+            uploadedAt = data.uploadedAt;
             await axios.delete(`${settings.attachments}/${oldToken}`);
           } catch (err) {
             next(err);
@@ -74,6 +68,7 @@ module.exports = (settings) => {
               token,
               filename,
               attachmentId,
+              uploadedAt,
               hbaReplacementReason,
               declaration: confirmHbaDeclaration,
               projectVersionId: req.project?.granted?.id || null,
@@ -83,7 +78,10 @@ module.exports = (settings) => {
         };
 
         return req.api(`/project-versions/${req.project?.granted?.id}/replace-hba`, opts)
-          .then(() => res.setFlash('HBA file replaced', `${filename} is now attached to this licence.`, 'success'))
+          .then(() => {
+            delete req.session.form;
+            res.setFlash('HBA file replaced', `${filename} is now attached to this licence.`, 'success');
+          })
           .then(() => res.redirect(req.buildRoute('project.read', { projectId: req.params.projectId })))
           .catch(next);
       } else {
