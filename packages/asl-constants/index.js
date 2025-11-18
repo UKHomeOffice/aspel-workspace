@@ -15,6 +15,7 @@ const suitabilityCodes = require('./constants/suitability-codes');
 const species = require('./constants/species');
 const projectSpecies = require('./constants/project-species');
 const fees = require('./constants/fees');
+const trainingCourseDuration = require('./constants/training-course-duration');
 const trainingCoursePurpose = require('./constants/training-course-purpose');
 const versions = require('./constants/versions');
 
@@ -36,6 +37,7 @@ module.exports = {
   suitabilityCodes,
   species,
   fees,
+  trainingCourseDuration,
   trainingCoursePurpose,
   versions,
 };
