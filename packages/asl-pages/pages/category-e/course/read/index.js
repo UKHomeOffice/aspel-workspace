@@ -1,6 +1,7 @@
 const { page } = require('@asl/service/ui');
 const { datatable } = require('../../../common/routers');
 const schema = require('./schema');
+const { readFlashMiddleware } = require('@asl/service/lib/middleware/flash-middleware');
 
 module.exports = settings => {
   const app = page({ ...settings, root: __dirname });
@@ -22,6 +23,8 @@ module.exports = settings => {
       next();
     }
   })({ schema, defaultRowCount: 50 }));
+
+  app.get('/', readFlashMiddleware);
 
   app.get('/', (req, res) => res.sendResponse());
 
