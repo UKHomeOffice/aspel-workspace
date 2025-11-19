@@ -1961,26 +1961,26 @@ steps:
       IMAGE_NAME: asl-toolbox
       ALLOW_CVE_LIST_FILE: packages/asl-toolbox/cve-exceptions.txt
       TIMEOUT: 10m
-  - name: docker push latest
-    image: plugins/ecr
-    environment:
-      AWS_REGION: eu-west-2
-    settings:
-      access_key:
-        from_secret: toolbox_access_id
-      secret_key:
-        from_secret: toolbox_access_key
-      dockerfile: packages/asl-toolbox/Dockerfile
-      repo: asl/toolbox
-      registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
-      tags:
-        - latest
-        - ${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
+#  - name: docker push latest
+#    image: plugins/ecr
+#    environment:
+#      AWS_REGION: eu-west-2
+#    settings:
+#      access_key:
+#        from_secret: toolbox_access_id
+#      secret_key:
+#        from_secret: toolbox_access_key
+#      dockerfile: packages/asl-toolbox/Dockerfile
+#      repo: asl/toolbox
+#      registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
+#      tags:
+#        - latest
+#        - ${DRONE_COMMIT_SHA}
+#    when:
+#      event:
+#        - push
+#      branch:
+#        - main
 
 services:
   - name: docker
