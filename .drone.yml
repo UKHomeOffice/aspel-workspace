@@ -1965,6 +1965,14 @@ steps:
     image: plugins/ecr
     environment:
       AWS_REGION: eu-west-2
+      ART_AUTH_TOKEN:
+        from_secret: art_auth_token
+      GITHUB_AUTH_TOKEN:
+        from_secret: github_token
+      AWS_ACCESS_KEY_ID:
+        from_secret: toolbox_access_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: toolbox_access_key
     settings:
       access_key:
         from_secret: toolbox_access_id
@@ -1973,14 +1981,14 @@ steps:
       dockerfile: packages/asl-toolbox/Dockerfile
       repo: asl/toolbox
       registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
+      build_args:
+        - MODULE_PATHS="packages/asl-toolbox packages/asl-schema packages/asl-constants"
+      secret_envs:
+        - token=ART_AUTH_TOKEN
+        - github_token=GITHUB_AUTH_TOKEN
       tags:
         - latest
         - ${DRONE_COMMIT_SHA}
-    when:
-      event:
-        - push
-      branch:
-        - main
 
 services:
   - name: docker
