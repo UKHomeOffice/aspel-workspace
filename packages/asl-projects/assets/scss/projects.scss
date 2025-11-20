@@ -1155,26 +1155,25 @@ html.modal-open, html.modal-open body {
       }
     }
   }
+  .accordion,
+  .sidebar-nav {
+    .sidebar-nav > .expanding-panel header .govuk-button.link {
+      width: 100%;
+      text-align: left;
+      padding-right: 2em;
+    }
 
-  .sidebar-nav > .expanding-panel header .govuk-button.link {
-    width: 100%;
-    text-align: left;
-    padding-right: 2em;
-  }
-
-  .accordion, .sidebar-nav { 
-     & > .expanding-panel {
+    & > .expanding-panel {
       header .govuk-button.link {
         width: 100%;
         text-align: left;
 
         h3:after {
-          top: 0
+          top: 0;
         }
       }
     }
   }
-
   .document-header .page-title {
     h1 {
       margin-bottom: 5px;
@@ -1826,4 +1825,25 @@ html.modal-open, html.modal-open body {
   top: 8px;
   cursor: pointer;
   color: blue;
+}
+
+#ppl-drafting-tool span.govuk-tag.badge.created.grey,
+#ppl-drafting-tool span.govuk-tag.badge.changed.grey,
+#ppl-drafting-tool span.govuk-tag.badge.deleted.grey {
+  background: #999;
+  display: table-caption;
+}
+#ppl-drafting-tool .modal-trigger {
+  margin-left: 0;
+  float: left;
+  font-size: 16px;
+  margin-top: 10px;
+  display: block;
+  clear: both;
+}
+
+@media (max-width: 900px) {
+  #ppl-drafting-tool span.changedText {
+    padding-left: 32px;
+  }
 }
