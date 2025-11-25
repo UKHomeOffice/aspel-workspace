@@ -1,33 +1,21 @@
-const content = require('../content');
-const { getFromContentTemplate } = require('../../../../../lib/utils');
-
-const buildOptions = () => ['yes', 'no'].map((value) => {
-  return {
-    value,
-    label: getFromContentTemplate(
-      content,
-      [
-        `fields.confirmHba.options.${value}`,
-        `fields.confirmHba.options.${value}`
-      ]
-    )
-  };
-});
-
 module.exports = () => {
-  const options = buildOptions();
   const schema = {
-    confirmHba: {
-      inputType: 'radioGroup',
-      options,
-      nullValue: [],
-      validate: [
-        'required',
+    'hbaReplacementReason': {
+      meta: true,
+      inputType: 'textarea',
+      validate: ['required']
+    },
+    confirmHbaDeclaration: {
+      inputType: 'checkboxGroup',
+      validate: ['required'],
+      options: [
         {
-          definedValues: options.map((option) => option.value)
+          label: 'I have the consent of the inspector who assessed this application',
+          value: 'yes'
         }
       ]
     }
+
   };
 
   return schema;

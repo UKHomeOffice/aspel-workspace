@@ -39,6 +39,7 @@ const getSort = (column, state) => ({
 
 const DATE_FORMAT = {
     long: 'd MMMM yyyy',
+    medium: 'd MMM yyyy',
     short: 'd/M/yyyy'
 };
 

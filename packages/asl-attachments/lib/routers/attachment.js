@@ -108,7 +108,7 @@ module.exports = settings => {
       if (!attachment) {
         return next(new NotFoundError());
       }
-      return res.status(200).json({ id: attachment.id });
+      return res.status(200).json({ id: attachment.id, uploadedAt: attachment.createdAt });
     } catch (e) {
       next(e);
     }
