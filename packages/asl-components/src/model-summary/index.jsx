@@ -1,8 +1,9 @@
 import classnames from 'classnames';
 import React, { Fragment } from 'react';
-import map from 'lodash/map';
-import size from 'lodash/size';
 import get from 'lodash/get';
+import map from 'lodash/map';
+import omit from 'lodash/omit';
+import size from 'lodash/size';
 import { connect } from 'react-redux';
 import { Snippet } from '../';
 
@@ -51,8 +52,8 @@ function ModelProperty({ property, model, formatters, specification, formatNullV
     );
 }
 
-const ModelSummary = ({ model, schema, formatters = {}, className, formatNullValue }) => {
-    let fields = model;
+const ModelSummary = ({ model, schema, formatters = {}, className, formatNullValue, omit: omitFields = [] }) => {
+    let fields = omit(model, ...omitFields);
     if (size(schema)) {
         fields = {};
         Object.keys(schema).map(key => {

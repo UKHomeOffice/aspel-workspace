@@ -1,16 +1,15 @@
 import React from 'react';
-import { format, getMonth, getYear } from 'date-fns';
+import { getMonth, getYear } from 'date-fns';
 import { Link, Snippet } from '@ukhomeoffice/asl-components';
+import { formatDate as formatDateUtil } from '@ukhomeoffice/asl-components/src/utils';
 import { dateFormat } from '../../../constants';
 import taskFormatters from '../../task/list/formatters';
 import classnames from 'classnames';
-import { trainingCoursePurpose } from '@ukhomeoffice/asl-constants';
+import { trainingCourseDuration, trainingCoursePurpose } from '@ukhomeoffice/asl-constants';
 
 export const formatDate = (date, formatSpec = dateFormat.medium) =>
   // \u00A0 is non-breaking space to prevent tables flowing the dates onto multiple lines
-  date
-    ? format(date, formatSpec).replace(/ /g, '\u00A0')
-    : '-';
+  formatDateUtil(date, formatSpec).replace(/ /g, '\u00A0');
 
 export const formatCourseTitle = (title, trainingCourseId) =>
   trainingCourseId
@@ -37,6 +36,11 @@ export const formatSpecies = species =>
     ? '-'
     : species.map(ucFirst).sort().join(', ');
 
+export const formatSpeciesAsList = (species) =>
+  <ul className='govuk-list govuk-list--bullet'>
+    {(species ?? []).map(species => <li key={species}>{ucFirst(species)}</li>)}
+  </ul>;
+
 export const formatCourseDateRange = (startDate, endDate) => {
   if (!startDate) {
     return '-';
@@ -49,6 +53,15 @@ export const formatCourseDateRange = (startDate, endDate) => {
   } else {
     // in the case of 2 dates in one month, e.g. 1 to 2 Feb 2026, keep the whole range on a single line with nbsp.
     return `${formatDate(startDate, 'd')}\u00A0to\u00A0${formatDate(endDate, dateFormat.medium)}`;
+  }
+};
+
+export const formatCourseDuration = (duration, course) => {
+  switch (duration) {
+    case trainingCourseDuration.ONE_DAY:
+      return formatCourseDateRange(course.courseDate ?? course.startDate);
+    case trainingCourseDuration.MULTI_DAY:
+      return formatCourseDateRange(course.startDate, course.endDate);
   }
 };
 

@@ -4,8 +4,10 @@ module.exports = {
     hint: 'For your records'
   },
   coursePurpose: {
-    name: 'coursePurpose',
     label: 'Course purpose'
+  },
+  courseDuration: {
+    label: `Course date{{#trainingCourse.endDate}}s{{/trainingCourse.endDate}}`
   },
   startDate: {
     label: 'Course start date',
@@ -14,14 +16,14 @@ module.exports = {
 For example, 12 11 2020`
   },
   species: {
-    label: 'Animals to be used'
+    label: 'Animals used'
   },
   projectId: {
     label: 'Project licence number',
     hint: 'For a higher education and training project'
   },
   projectTitle: {
-    label: 'Project licence title'
+    label: 'Project title'
   },
   establishment: {
     label: 'Training establishment'
