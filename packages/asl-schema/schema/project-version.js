@@ -24,7 +24,21 @@ class ProjectVersion extends BaseModel {
         raCompulsory: { type: 'boolean' },
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' },
-        deleted: { type: ['string', 'null'], format: 'date-time' }
+        deleted: { type: ['string', 'null'], format: 'date-time' },
+        hbaReplaced: {
+          type: ['array', 'null'],
+          items: {
+            type: 'object',
+            properties: {
+              attachmentId: {
+                type: 'string',
+                pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$'
+              }
+            },
+            required: ['attachmentId'],
+            additionalProperties: true
+          }
+        }
       }
     };
   }
