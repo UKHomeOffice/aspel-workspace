@@ -1,6 +1,7 @@
 import React from 'react';
 import {getStatus, getTrainingRecord, getRemovedTrainingRecords } from '../helpers/trainingRecordsComparison';
 import TrainingRecordModal from './trainingRecordsModal';
+import { format } from 'date-fns';
 
 export default function TrainingSummaryWithChangeHighlighting({
                                                 certificates = [],
@@ -16,7 +17,7 @@ export default function TrainingSummaryWithChangeHighlighting({
   const firstVersion = history[history.length - 1] || {};
 
   const removedRecords = getRemovedTrainingRecords(comparisons, project);
-
+  const dateFormat = 'dd MMMM yyyy';
 // Map removed by ID for quick lookup
   const removedMap = removedRecords.reduce((map, r) => {
     map[r.trainingId || r.id] = r;
@@ -43,7 +44,6 @@ export default function TrainingSummaryWithChangeHighlighting({
   const newOnes = certificates.filter(r => !previousIds.includes(r.trainingId || r.id));
 
   allRecords = [...allRecords, ...newOnes];
-console.log(allRecords);
 
   return (
     <div className="training-summary-custom">
@@ -108,7 +108,7 @@ console.log(allRecords);
                     <span className="label">Certificate number: </span>
                     <span className="value">{record.certificateNumber || '-'}</span><br />
                     <span className="label">Awarded on: </span>
-                    <span className="value">{record.passDate || '-'}</span><br />
+                    <span className="value"> {record.passDate ? format(record.passDate, dateFormat) : '-'}</span><br />
                     <span className="label">Awarded by: </span>
                     <span className="value">{record.accreditingBody || '-'}</span>
                   </p>
