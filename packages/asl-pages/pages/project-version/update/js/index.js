@@ -31,6 +31,7 @@ start({
     newApplication: state.static.newApplication,
     previousProtocols: state.static.previousProtocols,
     previousAA: state.static.previousAA,
+    previousTraining: state.static.previousTraining,
     canTransfer: state.static.canTransfer,
     canUpdateTraining: state.static.canUpdateTraining,
     canSubmit: state.static.canSubmit,
@@ -43,11 +44,11 @@ start({
     editConditions: state.static.editConditions,
     raCompulsory: state.model.raCompulsory,
     training: state.static.training,
+    trainingHistory: state.static.trainingHistory,
     licenceHolder: state.model.licenceHolder
   },
   static: {
-    urls: state.static.urls,
     imageRoot: '/attachment',
-    content: state.static.content
+    ...state.static
   }
 });
