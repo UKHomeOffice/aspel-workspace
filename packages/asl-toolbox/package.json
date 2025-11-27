@@ -31,7 +31,7 @@
     "pg-query-stream": "^4.2.1"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
+    "@jest/globals": "^30.2.0",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "eslint": "^8.57.1",
     "jest": "^29.7.0",
