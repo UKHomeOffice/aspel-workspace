@@ -5,7 +5,9 @@ module.exports = merge({}, baseContent, {
   replacementHbaParagraph: `You can replace the current HBA file if there has been an admin error, for example:
 - section boxes have not been ticked
 - the form has not been signed
-- the wrong file has been uploaded by mistake`,
+- the wrong file has been uploaded by mistake
+\n
+Ensure you have the consent of the inspector who assessed this application.`,
   buttons: {
     submit: 'Continue'
   },

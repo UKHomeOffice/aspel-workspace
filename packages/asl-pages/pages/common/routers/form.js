@@ -127,10 +127,8 @@ const getConditionalRevealKeys = (schema) =>
 
 const flattenDetailsReveals = (schema) => {
   // if we don't clone the schema here it gets modified in place because object refs...
-  schema = cloneDeep(schema);
-
   return reduce(
-    schema,
+    cloneDeep(schema),
     (flattenedSchema, field, key) => {
       if (field.options) {
         field.options = map(field.options, (option) => {
@@ -170,10 +168,8 @@ const flattenDetailsReveals = (schema) => {
 
 const flattenFieldsets = (schema) => {
   // if we don't clone the schema here it gets modified in place because object refs...
-  schema = cloneDeep(schema);
-
   return reduce(
-    schema,
+    cloneDeep(schema),
     (flattenedSchema, field, key) => {
       if (field.fields) {
         return {
@@ -476,8 +472,9 @@ module.exports = ({
 
   const _locals = (req, res, next) => {
     const { values, validationErrors, schema } = req.form;
+    const filteredSchema = filterFieldProps(schema);
     Object.assign(res.locals.static, {
-      schema: filterFieldProps(schema),
+      schema: filteredSchema,
       errors: validationErrors,
       csrfToken: req.csrfToken
     });
