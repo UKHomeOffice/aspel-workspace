@@ -15,12 +15,6 @@ module.exports = settings => {
     root: __dirname
   });
 
-  app.get('/',
-    canComment(),
-    getAllChanges(),
-    getProjectEstablishment()
-  );
-
   app.get('/', (req, res, next) => {
     const { licenceHolderId } = req.project;
     const params = {
@@ -31,10 +25,17 @@ module.exports = settings => {
     req.api(`/establishment/${req.establishmentId}/profile/${licenceHolderId}/certificates`, params)
       .then(response => {
         res.locals.static.training = response.json.data;
+        req.version.data.training = response.json.data;
         next();
       })
       .catch(next);
   });
+
+  app.get('/',
+    canComment(),
+    getAllChanges(),
+    getProjectEstablishment()
+  );
 
   app.get('/', (req, res, next) => {
     Promise.all([
@@ -122,7 +123,7 @@ module.exports = settings => {
     res.json({ changes: res.locals.static.changes, checksum: req.version.checksum, checksumOmit: req.version.checksumOmit });
   });
 
-  app.use((req, res, next) => res.sendResponse());
+  app.use((req, res) => res.sendResponse());
 
   return app;
 };
