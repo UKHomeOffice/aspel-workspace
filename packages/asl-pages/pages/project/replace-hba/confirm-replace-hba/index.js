@@ -35,31 +35,25 @@ module.exports = (settings) => {
   );
 
   app.post('/', async (req, res, next) => {
-    const { confirmHba } = req.form.values;
+    const { confirmHbaDeclaration, hbaReplacementReason } = req.form.values;
     const hbaSession = req.session.form?.hba || {};
     const { token, filename } = hbaSession;
 
     try {
-      if (confirmHba === 'no') {
-        if (token) {
-          await axios.delete(`${settings.attachments}/${token}`);
-          delete req.session.form;
-        }
-        return res.redirect(req.buildRoute('project.replaceHba', { projectId: req.params.projectId }));
-      }
-
-      if (confirmHba === 'yes') {
+      if (confirmHbaDeclaration === 'yes') {
         if (!token) {
           return next(new Error('Missing HBA token for replacement'));
         }
 
         const oldToken = req.project?.granted?.hbaToken;
         let attachmentId = null;
+        let uploadedAt = null;
 
         if (oldToken) {
           try {
             const { data } = await axios.get(`${settings.attachments}/attachment-id/${oldToken}`);
             attachmentId = data.id;
+            uploadedAt = data.uploadedAt;
             await axios.delete(`${settings.attachments}/${oldToken}`);
           } catch (err) {
             next(err);
@@ -74,14 +68,20 @@ module.exports = (settings) => {
               token,
               filename,
               attachmentId,
+              uploadedAt,
+              hbaReplacementReason,
+              declaration: confirmHbaDeclaration,
               projectVersionId: req.project?.granted?.id || null,
               projectId: req.params.projectId
             }
           }
         };
 
-        return req.api(`/project/${req.params.projectId}/replace-hba`, opts)
-          .then(() => res.setFlash('HBA file replaced', `${filename} is now attached to this licence.`, 'success'))
+        return req.api(`/project-versions/${req.project?.granted?.id}/replace-hba`, opts)
+          .then(() => {
+            delete req.session.form;
+            res.setFlash('HBA file replaced', `${filename} is now attached to this licence.`, 'success');
+          })
           .then(() => res.redirect(req.buildRoute('project.read', { projectId: req.params.projectId })))
           .catch(next);
       } else {

@@ -6,6 +6,7 @@ import sortBy from 'lodash/sortBy';
 import { dateFormat } from '../../../../../constants';
 import { Link, Snippet, Inset } from '@ukhomeoffice/asl-components';
 import Subsection from '../components/subsection';
+import HBA from '../components/hba';
 
 function DownloadSection({ project, version, canReplaceHBA }) {
   const isApplication = project.status === 'inactive';
@@ -231,26 +232,11 @@ function DownloadSection({ project, version, canReplaceHBA }) {
         </div>
       )}
 
-      {version.hbaToken && (
-        <div>
-          <h3>
-            <Snippet>downloads.hba.heading</Snippet>
-          </h3>
-          <p>
-            <a href={`/attachment/${version.hbaToken}`} download={version.hbaFilename}>
-              <Snippet>downloads.hba.link</Snippet>
-            </a>
-            {canReplaceHBA && (
-              <Link
-                page="project.replaceHba"
-                project={project}
-                className="govuk-!-padding-left-3"
-                label={<Snippet>otherDocuments.links.replaceHba</Snippet>}
-              />
-            )}
-          </p>
-        </div>
-      )}
+      <HBA
+        version={version}
+        project={project}
+        canReplaceHBA={canReplaceHBA}
+      />
 
     </section>
   );
@@ -288,7 +274,7 @@ export default function Downloads() {
           {
             // if the latest version is not the granted version, show a section for the granted version
             grantedVersion && !latestIsGranted && (
-              <DownloadSection project={project} version={grantedVersion} />
+              <DownloadSection project={project} version={grantedVersion} canReplaceHBA={canReplaceHBA}/>
             )
           }
 
@@ -300,7 +286,7 @@ export default function Downloads() {
                 <Inset>
                   <h2>Previous licences</h2>
                   {supersededVersions.map((v) => (
-                    <DownloadSection key={v.id} project={project} version={v} />
+                    <DownloadSection key={v.id} project={project} version={v} canReplaceHBA={false}/>
                   ))}
                 </Inset>
               </details>
