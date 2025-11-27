@@ -1,6 +1,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { formatCourseDateRange, formatCoursePurpose, ucFirst } from '../../../formatters';
+import {
+  formatCourseDuration,
+  formatCoursePurpose,
+  formatSpeciesAsList
+} from '../../../formatters';
 import { Link, ModelSummary, Snippet } from '@ukhomeoffice/asl-components';
 
 const schema = {
@@ -12,22 +16,8 @@ const schema = {
 
 const formatters = {
   coursePurpose: { format: formatCoursePurpose },
-  courseDuration: {
-    format: (duration, course) => {
-      switch (duration) {
-        case 'one-day':
-          return formatCourseDateRange(course.courseDate);
-        case 'multi-day':
-          return formatCourseDateRange(course.startDate, course.endDate);
-      }
-    }
-  },
-  species: {
-    format: (species) =>
-      <ul className='govuk-list govuk-list--bullet'>
-        {(species ?? []).map(species => <li key={species}>{ucFirst(species)}</li>)}
-      </ul>
-  }
+  courseDuration: { format: formatCourseDuration },
+  species: { format: formatSpeciesAsList }
 };
 
 export default function CourseSummary() {
