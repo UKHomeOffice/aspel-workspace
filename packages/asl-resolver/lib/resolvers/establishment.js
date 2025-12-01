@@ -60,7 +60,6 @@ async function renameAdditionalAvailabilityName(ProjectVersion, transaction, est
   const updates = [];
 
   for (const {id: versionId, data} of versionData.rows) {
-    // Remove old and add new only where new establishment is a location, avoiding duplicates.
     const renamedEstablishment = data.establishments.find(establishment => establishment['establishment-id'] === establishmentId);
     renamedEstablishment.name = renameTo;
 
