@@ -41,6 +41,35 @@ async function renameProtocolLocation(ProjectVersion, transaction, establishment
   await Promise.all(updates);
 }
 
+async function renameAdditionalAvailabilityName(ProjectVersion, transaction, establishmentId, renameFrom, renameTo) {
+  // Find projects with additional availability
+  const versionData = await transaction.raw(
+    // language=PostgreSQL
+    `
+          SELECT DISTINCT pv.id, pv.data as data
+          FROM projects p
+               LEFT JOIN project_versions pv ON p.id = pv.project_id
+               LEFT JOIN project_establishments pe ON p.id = pe.project_id
+               CROSS JOIN JSONB_ARRAY_ELEMENTS(pv.data -> 'establishments') WITH ORDINALITY AS establishment(value, idx)
+          WHERE (p.establishment_id = :establishmentId OR pe.establishment_id = :establishmentId)
+            AND establishment.value->>'name' = :renameFrom;
+    `,
+    {establishmentId, renameFrom}
+  );
+
+  const updates = [];
+
+  for (const {id: versionId, data} of versionData.rows) {
+    // Remove old and add new only where new establishment is a location, avoiding duplicates.
+    const renamedEstablishment = data.establishments.find(establishment => establishment['establishment-id'] === establishmentId);
+    renamedEstablishment.name = renameTo;
+
+    updates.push(ProjectVersion.query(transaction).where({ id: versionId }).update({ data }));
+  }
+
+  await Promise.all(updates);
+}
+
 module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
   const { Establishment, Authorisation, Reminder, Role, ProjectVersion } = models;
 
@@ -101,6 +130,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
 
     if (existing.name !== establishment.name) {
       await renameProtocolLocation(ProjectVersion, transaction, id, existing.name, establishment.name);
+      await renameAdditionalAvailabilityName(ProjectVersion, transaction, id, existing.name, establishment.name);
     }
 
     if (reminder) {
