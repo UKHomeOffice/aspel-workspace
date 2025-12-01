@@ -54,7 +54,7 @@ export default function StepBadge(props) {
     }
     return (
       <>
-        <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} protocolId={props.protocolId}/>
+        <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} protocolId={props.protocolId} excludeSelf={true}/>
         {move}
       </>
     );
