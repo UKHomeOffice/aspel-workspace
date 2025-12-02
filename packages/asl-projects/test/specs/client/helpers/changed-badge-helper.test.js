@@ -32,7 +32,7 @@ describe('Changed Badge Helper', () => {
       assert.equal(result, false);
     });
 
-    it('excludeSelf=true: exact match should not count, sub-field change should count', () => {
+    it('ignoreExactMatch=true: exact match should not count, sub-field change should count', () => {
       const fields = ['protocols.123.steps.1'];
       const changes = ['protocols.123.steps.1'];
       const result1 = changedFrom(fields, changes, protocolId, true);
@@ -43,7 +43,7 @@ describe('Changed Badge Helper', () => {
       assert.equal(result2, true);
     });
 
-    it('excludeSelf=false: exact match should count', () => {
+    it('ignoreExactMatch=false: exact match should count', () => {
       const fields = ['protocols.123.steps.1'];
       const changes = ['protocols.123.steps.1'];
       const result = changedFrom(fields, changes, protocolId, false);
