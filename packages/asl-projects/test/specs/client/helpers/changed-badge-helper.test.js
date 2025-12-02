@@ -22,11 +22,11 @@ describe('Changed Badge Helper', () => {
     it('returns false when only config fields are present', () => {
       const fields = ['protocols.123.steps.1.title'];
       const changes = [
-        'usedInProtocols',
-        'reusedStep',
-        'reusableStepId',
-        'usedInProtocols.protocolId',
-        'usedInProtocols.protocolNumber',
+        'protocols.123.steps.1.usedInProtocols',
+        'protocols.123.steps.1.reusedStep',
+        'protocols.123.steps.1.reusableStepId',
+        'protocols.123.steps.1.usedInProtocols.protocolId',
+        'protocols.123.steps.1.usedInProtocols.protocolNumber',
       ];
       const result = changedFrom(fields, changes, protocolId, false);
       assert.equal(result, false);
@@ -95,19 +95,6 @@ describe('Changed Badge Helper', () => {
     it('empty fields: should return false regardless of changes', () => {
       const fields = [];
       const changes = ['protocols.123.title'];
-      const result = changedFrom(fields, changes, protocolId, false);
-      assert.equal(result, false);
-    });
-
-    it('protocolId set and all changes filtered out: returns false', () => {
-      const fields = ['protocols.123.steps.1.title'];
-      const changes = [
-        'usedInProtocols',
-        'reusedStep',
-        'reusableStepId',
-        'usedInProtocols.protocolId',
-        'usedInProtocols.protocolNumber',
-      ];
       const result = changedFrom(fields, changes, protocolId, false);
       assert.equal(result, false);
     });
