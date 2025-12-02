@@ -14,7 +14,7 @@ export const changedFrom = (fields, source, protocolId, excludeSelf = false) => 
     cleanedSource = cleanedSource.filter((item, _, arr) => {
       // Check if it ends with any of the fields
       const endsWithTarget = fields.some(
-        (field) => (excludeSelf ? item.endsWith(field) : field !== item && item.endsWith(field))
+        (field) => excludeSelf && item.endsWith(field)
       );
 
       // Check if this item is a substring of any other item in the array
