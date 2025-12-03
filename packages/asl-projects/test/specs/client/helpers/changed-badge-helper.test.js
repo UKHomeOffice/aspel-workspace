@@ -23,7 +23,7 @@ describe('Changed Badge Helper', () => {
         assert.equal(result, false);
       });
       
-      it.only('for a step', () => {
+      it('for a step', () => {
         const result = changedFrom(['protocols.123.steps.1'], changes, protocolId, false);
         assert.equal(result, true);
       });
