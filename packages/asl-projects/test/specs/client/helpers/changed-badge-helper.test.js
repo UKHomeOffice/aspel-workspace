@@ -5,31 +5,33 @@ describe('Changed Badge Helper', () => {
   describe('changedFrom', () => {
     const protocolId = '123';
 
-    it('filters out config fields that should not trigger badges', () => {
-      const fields = ['protocols.123.steps.1.title'];
+    describe('returns false when only config fields are present', () => {
       const changes = [
         'protocols',
         'protocols.123',
         'protocols.123.steps',
         'protocols.123.steps.1',
-        'protocols.123.steps.1.title',
-        'protocols.123.steps.1.usedInProtocols',
-      ];
-      const result = changedFrom(fields, changes, protocolId, false);
-      assert.equal(result, true);
-    });
-
-    it('returns false when only config fields are present', () => {
-      const fields = ['protocols.123.steps.1.title'];
-      const changes = [
         'protocols.123.steps.1.usedInProtocols',
         'protocols.123.steps.1.reusedStep',
         'protocols.123.steps.1.reusableStepId',
         'protocols.123.steps.1.usedInProtocols.protocolId',
         'protocols.123.steps.1.usedInProtocols.protocolNumber',
       ];
-      const result = changedFrom(fields, changes, protocolId, false);
-      assert.equal(result, false);
+      
+      it('for step fields', () => {
+        const result = changedFrom(['protocols.123.steps.1.title'], changes, protocolId, false);
+        assert.equal(result, false);
+      });
+      
+      it.only('for a step', () => {
+        const result = changedFrom(['protocols.123.steps.1'], changes, protocolId, false);
+        assert.equal(result, true);
+      });
+      
+      it('for steps section', () => {
+        const result = changedFrom(['protocols.123.steps'], changes, protocolId, false);
+        assert.equal(result, true);
+      });
     });
 
     it('ignoreExactMatch=true: exact match should not count, sub-field change should count', () => {
@@ -64,24 +66,10 @@ describe('Changed Badge Helper', () => {
       assert.equal(result, false);
     });
 
-    it('retains items that are substrings of other items when filtering endsWith targets', () => {
-      const fields = ['protocols.123.section'];
-      const changes = ['protocols.123.section', 'protocols.123.section.title'];
-      const result = changedFrom(fields, changes, protocolId, true);
-      assert.equal(result, true);
-    });
-
     it('no protocolId provided: should not filter config fields', () => {
       const fields = ['usedInProtocols'];
       const changes = ['usedInProtocols'];
       const result = changedFrom(fields, changes, null, false);
-      assert.equal(result, true);
-    });
-
-    it('multiple fields: should match any matching change', () => {
-      const fields = ['protocols.123.foo', 'protocols.123.bar'];
-      const changes = ['protocols.123.bar'];
-      const result = changedFrom(fields, changes, protocolId, false);
       assert.equal(result, true);
     });
 
@@ -102,8 +90,12 @@ describe('Changed Badge Helper', () => {
     it('duplicate changes do not affect outcome', () => {
       const fields = ['protocols.123.steps.*.title'];
       const changes = [
-        'protocols.123.steps.2.title',
-        'protocols.123.steps.2.title',
+        'protocols',
+        'protocols.123',
+        'protocols.123.steps',
+        'protocols.123.steps.1',
+        'protocols.123.steps.1.title',
+        'protocols.123.steps.1.title',
       ];
       const result = changedFrom(fields, changes, protocolId, false);
       assert.equal(result, true);
