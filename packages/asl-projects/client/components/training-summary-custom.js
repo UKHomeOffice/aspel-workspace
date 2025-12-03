@@ -11,13 +11,10 @@ export default function TrainingSummaryWithChangeHighlighting({
                                                                 readonly
 
                                                               }) {
-  // date format
   const dateFormat = 'dd MMMM yyyy';
-  // Access redux state
   const reduxState = useSelector(state => state);
   const trainingHistory = useSelector(state => state.static.previousTraining);
   const currentTraining = useSelector(state => state.static);
-  // Access versions
   const versions = useSelector(state => state.static.project.versions);
   const previousVersion = useSelector(state => state.static.previousTraining.previous);
   const firstVersion = useSelector(state => state.static.previousTraining.first);
@@ -50,7 +47,7 @@ export default function TrainingSummaryWithChangeHighlighting({
   );
   // check if this is first submission
   const trainingHistoryRecords = versions.length > 1;
-  // unset gray badge
+  // unset grey badge
   if (versions.length < 3) {
     comparisons.added[1].ids = [];
     comparisons.removed[1].ids = [];

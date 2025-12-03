@@ -36,7 +36,6 @@ export default function Training(props) {
     }
     form.current.submit();
   }
-  // Render
   return (
     <Fragment>
       {!readonly && <h1>Training</h1>}
