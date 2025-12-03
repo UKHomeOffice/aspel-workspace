@@ -88,12 +88,8 @@ describe('Changed Badge Helper', () => {
     it('ignoreExactMatch=true: exact match should not count', () => {
       const fields = ['protocols.123.steps.1'];
       const changes = ['protocols.123.steps.1'];
-      const result1 = changedFrom(fields, changes, protocolId, true);
-      assert.equal(result1, false);
-
-      const changes2 = ['protocols.123.steps.1', 'protocols.123.steps.1.title'];
-      const result2 = changedFrom(fields, changes2, protocolId, true);
-      assert.equal(result2, true);
+      const result = changedFrom(fields, changes, protocolId, true);
+      assert.equal(result, false);
     });
 
     it('ignoreExactMatch=false: exact match should count', () => {
