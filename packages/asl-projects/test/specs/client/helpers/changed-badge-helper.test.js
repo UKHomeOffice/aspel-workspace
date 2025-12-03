@@ -43,14 +43,16 @@ describe('Changed Badge Helper', () => {
         'protocols.123.steps.1.usedInProtocols.protocolNumber',
       ]);
 
-      const usedInProtocolsFields = ['protocols.123.steps.1.usedInProtocols'];
-      const reusableStepIdFields = ['protocols.123.steps.1.reusableStepId'];
+      function assertNoBadge(fields) {
+        const result = changedFrom(fields, changes, protocolId, false);
+        assert.equal(result, false);
+      }
 
-      const result1 = changedFrom(usedInProtocolsFields, changes, protocolId, false);
-      assert.equal(result1, false);
-
-      const result2 = changedFrom(reusableStepIdFields, changes, protocolId, false);
-      assert.equal(result2, false);
+      assertNoBadge(['protocols.123.steps.1.usedInProtocols']);
+      assertNoBadge(['protocols.123.steps.1.reusableStepId']);
+      assertNoBadge(['protocols.123.steps.1.reusedStep']);
+      assertNoBadge(['protocols.123.steps.1.usedInProtocols.protocolId']);
+      assertNoBadge(['protocols.123.steps.1.usedInProtocols.protocolNumber']);
     });
 
 
