@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import classnames from 'classnames';
 import Modal from './modal';
 
@@ -11,8 +11,21 @@ export default function TrainingRecordModal({
                                               label = 'Training record changes'
                                             }) {
 
-  const hasChanges = (a = {}, b = {}) => {
-    const fieldsToCheck = ['modules', 'species', 'certificateNumber', 'passDate', 'accreditingBody', 'exemptionReason'];
+  const normalise = obj => (obj && typeof obj === 'object' ? obj : {});
+
+  const hasChanges = (a, b) => {
+    a = normalise(a);
+    b = normalise(b);
+
+    const fieldsToCheck = [
+      'modules',
+      'species',
+      'certificateNumber',
+      'passDate',
+      'accreditingBody',
+      'exemptionReason'
+    ];
+
     return fieldsToCheck.some(key => {
       const valA = Array.isArray(a[key]) ? [...a[key]].sort().join(',') : a[key];
       const valB = Array.isArray(b[key]) ? [...b[key]].sort().join(',') : b[key];
@@ -20,14 +33,25 @@ export default function TrainingRecordModal({
     });
   };
 
-  const hasPrevChanges = hasChanges(previous, current);
-  const hasFirstChanges = hasChanges(first, current);
+// check if there is any training record in previous or first/granted
+  const isRealPrevRecord = previous && (previous.id || previous.trainingId);
+  const isRealFirstRecord = first && (first.id || first.trainingId);
 
+// Now determine change only if REAL record exists
+  const hasPrevChanges = isRealPrevRecord && hasChanges(previous, current);
+  const hasFirstChanges = isRealFirstRecord && hasChanges(first, current);
+  const showTabs = isRealPrevRecord && isRealFirstRecord;
+  const showPrevTab = showTabs && hasPrevChanges;
+  const showFirstTab = showTabs && hasFirstChanges;
+
+
+
+  // Decide initial active tab
   const [modalOpen, setModalOpen] = useState(false);
   const [active, setActive] = useState(() => {
-    if (hasPrevChanges) return 0;
-    if (hasFirstChanges) return 1;
-    return 0;
+    if (hasPrevChanges) return 'prev';
+    if (hasFirstChanges) return 'first';
+    return 'prev';
   });
 
   const toggleModal = e => {
@@ -35,9 +59,9 @@ export default function TrainingRecordModal({
     setModalOpen(!modalOpen);
   };
 
-  const selectTab = n => e => {
+  const selectTab = tab => e => {
     e.preventDefault();
-    setActive(n);
+    setActive(tab);
   };
 
   const certificateFields = [
@@ -46,19 +70,30 @@ export default function TrainingRecordModal({
     { label: 'Awarded By', field: 'accreditingBody' }
   ];
 
-  const renderDiffFields = (data, compareTo, side) => {
+  const diffField = (prev = '', next = '', side = 'left') => {
+    if (prev === next) {
+      return <span>{next || <em>{DEFAULT_LABEL}</em>}</span>;
+    }
+    if (side === 'left') {
+      return prev
+        ? <span className="diff removed">{prev}</span>
+        : <span>{DEFAULT_LABEL}</span>;
+    }
+    if (side === 'right') {
+      return next
+        ? <span className="diff added">{next}</span>
+        : <span>{DEFAULT_LABEL}</span>;
+    }
+  };
+
+  const renderDiffFields = (data = {}, compareTo = {}, side) => {
+    data = normalise(data);
+    compareTo = normalise(compareTo);
     return certificateFields.map(({ label, field }) => (
       <p key={field}>
         {label}: {diffField(data[field], compareTo[field], side)}
       </p>
     ));
-  };
-
-
-  const diffField = (prev = '', next = '', side = 'left') => {
-    if (prev === next) return <span>{next || <em>{DEFAULT_LABEL}</em>}</span>;
-    if (side === 'left') return prev ? <span className="diff removed">{prev}</span> : <span>{DEFAULT_LABEL}</span>;
-    if (side === 'right') return next ? <span className="diff added">{next}</span> : <span>{DEFAULT_LABEL}</span>;
   };
 
   const diffArray = (prevArr = [], nextArr = [], side = 'left') => {
@@ -69,7 +104,13 @@ export default function TrainingRecordModal({
     const added = nextArr.filter(x => !prevArr.includes(x));
     const items = side === 'left' ? prevArr : nextArr;
 
-    if (!items.length) return <p><em>{DEFAULT_LABEL}</em></p>;
+    if (!items.length) {
+      return (
+        <p>
+          <em>{DEFAULT_LABEL}</em>
+        </p>
+      );
+    }
 
     return (
       <ul>
@@ -79,15 +120,15 @@ export default function TrainingRecordModal({
 
           return (
             <li key={item}>
-          <span
-            className={classnames({
-              removed: isRemoved,
-              added: isAdded,
-              diff: isRemoved || isAdded
-            })}
-          >
-            {item}
-          </span>
+              <span
+                className={classnames({
+                  removed: isRemoved,
+                  added: isAdded,
+                  diff: isRemoved || isAdded
+                })}
+              >
+                {item}
+              </span>
             </li>
           );
         })}
@@ -95,51 +136,78 @@ export default function TrainingRecordModal({
     );
   };
 
-  const leftPanel = (data, compareTo) => (
+  const leftPanel = (data, compareTo) => {
+    data = normalise(data);
+    compareTo = normalise(compareTo);
+
+    return (
+    <div className="main-left-panel-wrapper">
+        <h3 className="diff-title">
+          {active === 'prev' ? 'Previous version' : 'Initial submission'}
+        </h3>
     <div className="panel light-grey before">
       <div className="govuk-form-group">
         <strong>Modules</strong>
-        {diffArray(data.modules, compareTo.modules, 'left')}
+          {diffArray(data.modules, compareTo.modules, 'left')}
+        </div>
+        <div className="govuk-form-group">
+          <strong>Species</strong>
+          {diffArray(data.species, compareTo.species, 'left')}
+        </div>
+        <div className="govuk-form-group">
+          <strong>Details</strong>
+          {data.isExemption ? (
+            <p className="preserve-whitespace">
+              {diffField(
+                data.exemptionReason,
+                compareTo.exemptionReason,
+                'left'
+              ) || '-'}
+            </p>
+          ) : (
+            <>
+              {renderDiffFields(data, compareTo, 'left')}
+            </>
+          )}
+        </div>
       </div>
-      <div className="govuk-form-group">
-        <strong>Species</strong>
-        {diffArray(data.species, compareTo.species, 'left')}
       </div>
-      <div className="govuk-form-group">
-        <strong>Details</strong>
-        {data.isExemption ? (
-          <p className="preserve-whitespace"> {diffField(data.exemptionReason, compareTo.exemptionReason, 'left') || '-'}</p>
-        ) : (
-          <>
-            {renderDiffFields(data, compareTo, 'left')}
-          </>
-        )}
-      </div>
-    </div>
-  );
+    );
+  };
 
-  const rightPanel = (data, compareTo) => (
-    <div className="panel light-grey after">
-      <div className="govuk-form-group">
-        <strong>Modules</strong>
-        {diffArray(compareTo.modules, data.modules, 'right')}
+  const rightPanel = (data, compareTo) => {
+    data = normalise(data);
+    compareTo = normalise(compareTo);
+
+    return (
+      <div className="panel light-grey after">
+        <div className="govuk-form-group">
+          <strong>Modules</strong>
+          {diffArray(compareTo.modules, data.modules, 'right')}
+        </div>
+        <div className="govuk-form-group">
+          <strong>Species</strong>
+          {diffArray(compareTo.species, data.species, 'right')}
+        </div>
+        <div className="govuk-form-group">
+          <strong>Details</strong>
+          {data.isExemption ? (
+            <p className="preserve-whitespace">
+              {diffField(
+                data.exemptionReason,
+                compareTo.exemptionReason,
+                'right'
+              ) || '-'}
+            </p>
+          ) : (
+            <>
+              {renderDiffFields(compareTo, data, 'right')}
+            </>
+          )}
+        </div>
       </div>
-      <div className="govuk-form-group">
-        <strong>Species</strong>
-        {diffArray(compareTo.species, data.species, 'right')}
-      </div>
-      <div className="govuk-form-group">
-        <strong>Details</strong>
-        {data.isExemption ? (
-          <p className="preserve-whitespace"> {diffField(data.exemptionReason, compareTo.exemptionReason, 'right') || '-'}</p>
-        ) : (
-          <>
-            {renderDiffFields(compareTo, data, 'right')}
-          </>
-        )}
-      </div>
-    </div>
-  );
+    );
+  };
 
   return modalOpen ? (
     <Modal onClose={toggleModal}>
@@ -157,30 +225,42 @@ export default function TrainingRecordModal({
           <div className="govuk-grid-row">
             {/* Left side with tabs */}
             <div className="govuk-grid-column-one-half">
-              <nav className="govuk-tabs">
-                <ul>
-                  {hasFirstChanges && (
-                    <li className={active === 1 ? 'active' : ''}>
-                      <a href="#" onClick={selectTab(1)}>Initial submission</a>
-                    </li>
-                  )}
-                  {hasPrevChanges && (
-                    <li className={active === 0 ? 'active' : ''}>
-                      <a href="#" onClick={selectTab(0)}>Previous version</a>
-                    </li>
-                  )}
-                </ul>
-              </nav>
+              {(showPrevTab || showFirstTab) && (
+                <nav className="govuk-tabs">
+                  <ul>
+                    {showPrevTab && (
+                      <li className={active === 'prev' ? 'active' : ''}>
+                        <a href="#" onClick={selectTab('prev')}>
+                          Previous version
+                        </a>
+                      </li>
+                    )}
+                    {showFirstTab && (
+                      <li className={active === 'first' ? 'active' : ''}>
+                        <a href="#" onClick={selectTab('first')}>
+                          Initial submission
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+                </nav>
+              )}
 
-              {active === 0
+              {active === 'prev' && showPrevTab
                 ? leftPanel(previous, current)
-                : leftPanel(first, current)}
+                : showFirstTab
+                  ? leftPanel(first, current)
+                  : leftPanel(previous, current)}
             </div>
 
-            {/* Right side always shows proposed */}
+            {/* Right side Proposed container */}
             <div className="govuk-grid-column-one-half">
               <h3>Proposed</h3>
-              {rightPanel(current, active === 0 ? previous : first)}
+              {active === 'prev' && showPrevTab
+                ? rightPanel(current, previous)
+                : showFirstTab
+                  ? rightPanel(current, first)
+                  : rightPanel(current, previous)}
             </div>
           </div>
         </div>

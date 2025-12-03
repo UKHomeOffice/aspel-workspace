@@ -1,73 +1,78 @@
 /**
- * @overview - of training records comparisons
- * Utility functions for comparing, detecting, and managing training record changes across project versions.
- * These helpers are designed to safely compute added, removed, and changed records,
- * extract record-level differences, and support consistent UI rendering.
- *
- * All functions are pure, side-effect-free, and validated for secure and reusable use across modules.
+ * Compare training records across versions and detect new, removals, and changes.
+ * Compare current version with previous - pink
+ * Compare current version with first/granted - grey
+ * badges -
+ *  new - newly added record
+ *  removed - removed record
+ *  changed - changed record
+ * @param {Array<Object>} current - Current training records (project.training)
+ * @param {Object} trainingHistory - New object-structured trainingHistory
+ * @returns {Object} results - { added: [], removed: [], changed: [] }
  */
-
-/**
- * Compare training records across versions and detect additions, removals, and field-level changes.
- *
- * @param {Array<Object>} current - The current list of training records.
- * @param {Array<Object>} trainingHistory - Array of versioned trainingHistory objects.
- * @returns {Object} results - An object containing `added`, `removed`, and `changed` arrays.
- */
-export function compareTrainingRecords(current = [], trainingHistory = []) {
+export function compareTrainingRecords(current = [], trainingHistory = {}) {
   const results = { added: [], removed: [], changed: [] };
 
-  // Early return for invalid or insufficient data
-  if (!Array.isArray(trainingHistory) || trainingHistory.length < 2) {
+  // validate data structure
+  if (!trainingHistory || typeof trainingHistory !== 'object') {
     return results;
   }
 
-  // Current and previous version of training record
-  const [currentVersion, previousVersion] = trainingHistory;
-  const firstVersion = trainingHistory[trainingHistory.length - 1] || {};
+  // extract record arrays using the NEW data shape
+  const currentRecords = Array.isArray(current) ? current : [];
+  const prevRecords = Array.isArray(trainingHistory.previous)
+    ? trainingHistory.previous
+    : [];
 
-  const currentRecords = Array.isArray(currentVersion.trainingRecords) ? currentVersion.trainingRecords : [];
-  const prevRecords = Array.isArray(previousVersion.trainingRecords) ? previousVersion.trainingRecords : [];
-  const firstRecords = Array.isArray(firstVersion.trainingRecords) ? firstVersion.trainingRecords : [];
+  // first = first IF present, OTHERWISE use granted
+  const firstRecords =
+    Array.isArray(trainingHistory.first) && trainingHistory.first.length
+      ? trainingHistory.first
+      : Array.isArray(trainingHistory.granted)
+        ? trainingHistory.granted
+        : [];
 
-  const getIds = arr => (Array.isArray(arr) ? arr.map(r => r.trainingId).filter(Boolean) : []);
+  // id extraction helper (supports id OR trainingId)
+  const getIds = arr =>
+    Array.isArray(arr)
+      ? arr
+        .map(r => r.id || r.trainingId)
+        .filter(Boolean)
+      : [];
 
   const currentIds = getIds(currentRecords);
   const prevIds = getIds(prevRecords);
   const firstIds = getIds(firstRecords);
 
-  // Added / Removed detection (pink = vs previous, grey = vs first)
+  // detect add or removed entries
   const addedPink = currentIds.filter(id => !prevIds.includes(id));
   const addedGrey = currentIds.filter(id => !firstIds.includes(id));
   const removedPink = prevIds.filter(id => !currentIds.includes(id));
-  const removedGrey = firstIds.filter(id => !currentIds.includes(id));
+  const removedGrey = firstIds.length ? firstIds.filter(id => !currentIds.includes(id)) : [];
 
+  // Organise training record ids as per color code
   results.added.push({ color: 'pink', ids: addedPink });
   results.added.push({ color: 'grey', ids: addedGrey });
   results.removed.push({ color: 'pink', ids: removedPink });
   results.removed.push({ color: 'grey', ids: removedGrey });
 
-  /**
-   * Helper: find record by ID.
-   * @param {Array<Object>} arr - Array of records.
-   * @param {string} id - Training ID to locate.
-   */
-  const findById = (arr, id) => (Array.isArray(arr) ? arr.find(r => r.trainingId === id) : null);
+  const findById = (arr, id) =>
+    Array.isArray(arr)
+      ? arr.find(r => (r.id || r.trainingId) === id)
+      : null;
 
-  /**
-   * Helper: Detect field-level differences between two training record objects.
-   * Returns `null` if identical, or a diff object showing added/removed fields.
-   */
   const detectChanges = (current, previous) => {
     if (!current || !previous) return null;
 
     const diff = {};
     for (const key in current) {
-      if (!Object.prototype.hasOwnProperty.call(current, key) || key === 'trainingId') continue;
+      if (!Object.prototype.hasOwnProperty.call(current, key)) continue;
+      if (key === 'trainingId' || key === 'id') continue;
 
       const a = current[key];
       const b = previous[key];
 
+      // array fields (modules, species)
       if (Array.isArray(a) && Array.isArray(b)) {
         const added = a.filter(x => !b.includes(x));
         const removed = b.filter(x => !a.includes(x));
@@ -79,33 +84,45 @@ export function compareTrainingRecords(current = [], trainingHistory = []) {
     return Object.keys(diff).length ? diff : null;
   };
 
+  // Detect CHANGED (pink = diff to previous, and first )
   const changedPink = [];
   const changedGrey = [];
   const changedPinkDetails = {};
   const changedGreyDetails = {};
 
   currentRecords.forEach(cur => {
-    const prev = findById(prevRecords, cur.trainingId);
-    const first = findById(firstRecords, cur.trainingId);
-
+    const id = cur.id || cur.trainingId;
+    const prev = findById(prevRecords, id);
+    const first = findById(firstRecords, id);
     const diffPink = detectChanges(cur, prev);
     const diffGrey = detectChanges(cur, first);
 
     if (diffPink) {
-      changedPink.push(cur.trainingId);
-      changedPinkDetails[cur.trainingId] = diffPink;
+      changedPink.push(id);
+      changedPinkDetails[id] = diffPink;
     }
+
     if (diffGrey) {
-      changedGrey.push(cur.trainingId);
-      changedGreyDetails[cur.trainingId] = diffGrey;
+      changedGrey.push(id);
+      changedGreyDetails[id] = diffGrey;
     }
   });
 
-  results.changed.push({ color: 'pink', ids: changedPink, details: changedPinkDetails });
-  results.changed.push({ color: 'grey', ids: changedGrey, details: changedGreyDetails });
+  results.changed.push({
+    color: 'pink',
+    ids: changedPink,
+    details: changedPinkDetails
+  });
+
+  results.changed.push({
+    color: 'grey',
+    ids: changedGrey,
+    details: changedGreyDetails
+  });
 
   return results;
 }
+
 
 /**
  * Safely find the highlight colour for a record ID within a group of change arrays.
@@ -142,7 +159,7 @@ export const getStatus = (record, comparisons = {}) => {
   const removedColor = findColor(removed, recordId);
   const changedColor = findColor(changed, recordId);
 
-  // Priority: changed > removed > added
+  // Priority: changed > removed > new
   if (changedColor) {
     return { label: 'CHANGED', class: `badge changed ${changedColor}` };
   }
@@ -163,69 +180,59 @@ export const getStatus = (record, comparisons = {}) => {
  * @param {Object} project - The project object containing trainingHistory[].
  * @param {Object} record - The record object that contains trainingId or id.
  * @param {'current'|'previous'|'first'} versionType - Which version to fetch from.
+ * @param {Object} trainingHistory - The record object that contains trainingId or id.
  * @returns {Object|null}
  */
-export const getTrainingRecord = (
-  project = {},
-  record = {},
-  versionType = 'current'
-) => {
-  if (!project || !Array.isArray(project.trainingHistory) || !record) {
-    return null;
+
+export const getTrainingRecord = (project = {}, record = {}, versionType = 'current', trainingHistory) => {
+  if (!project || !trainingHistory) {
+    return {};
   }
 
-  // Extract training history
-  const history = project.trainingHistory;
+  const history = trainingHistory;
+  const trainingId = record.id || record.trainingId;
 
-  // Extract trainingId from record — this is the key change
-  const trainingId = record.trainingId || record.id;
   if (!trainingId) {
-    return null;
+    return {};
   }
 
-  // Build mapped versions
-  const versionsWithRecord = history.map(version => {
-    const rec = (version.trainingRecords ?? []).find(r => r.trainingId === trainingId);
-    return {
-      ...version,
-      trainingRecords: version.trainingRecords ?? [],
-      record: rec || null
-    };
-  });
-
-  if (!versionsWithRecord.length) return null;
-
-  // Determine which version to use
-  let targetVersion;
-  switch (versionType.toLowerCase()) {
-    case 'first':
-      targetVersion = versionsWithRecord[versionsWithRecord.length - 1];
-      break;
-    case 'previous':
-      targetVersion = versionsWithRecord.length > 1
-        ? versionsWithRecord[1]
-        : versionsWithRecord[0];
-      break;
-    default:
-      targetVersion = versionsWithRecord[0];
+  // Current training comes directly from project.training
+  if (versionType === 'current') {
+    return Array.isArray(project.training)
+      ? (project.training.find(r => (r.id || r.trainingId) === trainingId) || {})
+      : {};
   }
 
-  // Return the matching training record
-  return (
-    targetVersion.trainingRecords.find(r => r.trainingId === trainingId) || null
-  );
+  // Previous = trainingHistory.previous
+  if (versionType === 'previous') {
+    return Array.isArray(history.previous)
+      ? (history.previous.find(r => (r.id || r.trainingId) === trainingId) || {})
+      : {};
+  }
+
+  // first = trainingHistory.first OR granted
+  if (versionType === 'first') {
+    if (Array.isArray(history.first) && history.first.length) {
+      return history.first.find(r => (r.id || r.trainingId) === trainingId) || {};
+    }
+    // fallback to granted
+    if (Array.isArray(history.granted)) {
+      return history.granted.find(r => (r.id || r.trainingId) === trainingId) || {};
+    }
+  }
+
+  return {};
 };
-
 
 /**
  * Collects removed training records from all project versions for display or export.
  *
  * @param {Object} comparisons - The result from compareTrainingRecords().
- * @param {Object} project - The project object containing trainingHistory[].
+ * @param {Object} trainingHistory - The project object containing trainingHistory[].
  * @returns {Array<Object>} - List of removed training records merged with previous/first version data.
  */
-export const getRemovedTrainingRecords = (comparisons = {}, project = {}) => {
-  if (!comparisons || typeof comparisons !== 'object' || !Array.isArray(project?.trainingHistory)) {
+export const getRemovedTrainingRecords = (comparisons = {}, trainingHistory = []) => {
+  if (!comparisons || typeof comparisons !== 'object' || !Array.isArray(trainingHistory)) {
     return [];
   }
 
@@ -233,17 +240,22 @@ export const getRemovedTrainingRecords = (comparisons = {}, project = {}) => {
     new Set((comparisons.removed || []).flatMap(r => Array.isArray(r.ids) ? r.ids : []))
   );
 
+  // Get the previous and first versions
+  const previousVersion = trainingHistory.find(version => version?.id === 'previous') || {};
+  const firstVersion = trainingHistory.find(version => version?.id === 'first') || {};
+
+  // Function to find the record by ID
+  const findRecordById = (version, id) => {
+    return version?.trainingRecords?.find(record => record.id === id || record.trainingId === id);
+  };
+
   return allRemovedIds
     .map(id => {
-      const allVersions = Array.isArray(project.trainingHistory) ? project.trainingHistory : [];
-      const previousVersion = allVersions[1] || allVersions[0] || {};
-      const firstVersion = allVersions[allVersions.length - 1] || {};
+      // Find the record in either previous or first versions
+      const prevRecord = findRecordById(previousVersion, id);
+      const firstRecord = findRecordById(firstVersion, id);
 
-      const prevRecord =
-        previousVersion?.trainingRecords?.find(r => r.trainingId === id) ||
-        firstVersion?.trainingRecords?.find(r => r.trainingId === id);
-
-      return prevRecord ? { ...prevRecord, id } : null;
+      return prevRecord || firstRecord ? { ...prevRecord || firstRecord, id } : null;
     })
     .filter(Boolean);
 };

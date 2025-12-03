@@ -136,41 +136,6 @@ router.get('/:versionId',
   perms('projectVersion.read'),
   async (req, res, next) => {
     req.version = normalise(req.version);
-
-    // Create an array to store training history from all versions
-    const trainingHistory = [];
-
-    // Loop through all versions and collect the correct training data for each version
-    for (let index = 0; index < req.version.project.versions.length; index++) {
-      const version = req.version.project.versions[index];
-
-      // Ensure to fetch training data only for the current version
-      if (version.training && version.training.length > 0) {
-        const versionTrainingData = version.training.map((training) => {
-          return {
-            trainingId: training.id,
-            isExemption: training.isExemption,
-            exemptionReason: training.exemptionReason,
-            modules: training.modules,
-            species: training.species,
-            passDate: training.passDate,
-            accreditingBody: training.accreditingBody,
-            certificateNumber: training.certificateNumber
-          };
-        });
-
-        // Add the training data for the current version
-        trainingHistory.push({
-          version: index + 1, // version index (1-based index)
-          projectVersionId: version.id || null,
-          trainingRecords: versionTrainingData
-        });
-      }
-    }
-
-    // Add trainingHistory to the response object (add as part of version data)
-    req.version.data.trainingHistory = trainingHistory;
-
     const transferToEstablishment = get(req.version, 'data.transferToEstablishment');
     if (transferToEstablishment && !get(req.version, 'data.transferToEstablishmentName')) {
       const est = await req.models.Establishment.query().findById(transferToEstablishment).select('name');

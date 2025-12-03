@@ -19,13 +19,14 @@ export default function Training(props) {
   const fields = props.fields.map(f => {
     return f.name === 'training-complete' ? { ...f, type: 'comments-only' } : f;
   });
+  const trainingHistory = useSelector(state => state.static.previousTraining);
 
   const comparisons = useMemo(
     () => compareTrainingRecords(
       project.training,
-      project.trainingHistory
+      trainingHistory
     ),
-    [project.training, project.trainingHistory]
+    [project.training, trainingHistory]
   );
 
   function onSubmit(e) {
@@ -35,7 +36,6 @@ export default function Training(props) {
     }
     form.current.submit();
   }
-
   // Render
   return (
     <Fragment>

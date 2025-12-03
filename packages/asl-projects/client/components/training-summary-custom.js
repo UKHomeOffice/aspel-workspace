@@ -1,50 +1,62 @@
 import React from 'react';
-import {getStatus, getTrainingRecord, getRemovedTrainingRecords } from '../helpers/trainingRecordsComparison';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getStatus, getTrainingRecord, getRemovedTrainingRecords } from '../helpers/trainingRecordsComparison';
 import TrainingRecordModal from './trainingRecordsModal';
 import { format } from 'date-fns';
-
+const DEFAULT_LABEL = '-';
 export default function TrainingSummaryWithChangeHighlighting({
-                                                certificates = [],
-                                                comparisons = {},
-                                                project = {},
-                                                readonly
+                                                                certificates = [],
+                                                                comparisons = {},
+                                                                project = {},
+                                                                readonly
 
-                                              }) {
-
-  // reordering the array
-  const history = project.trainingHistory || [];
-  const previousVersion = history[1] || history[0] || {};
-  const firstVersion = history[history.length - 1] || {};
-
-  const removedRecords = getRemovedTrainingRecords(comparisons, project);
+                                                              }) {
+  // date format
   const dateFormat = 'dd MMMM yyyy';
-// Map removed by ID for quick lookup
+  // Access redux state
+  const reduxState = useSelector(state => state);
+  const trainingHistory = useSelector(state => state.static.previousTraining);
+  const currentTraining = useSelector(state => state.static);
+  // Access versions
+  const versions = useSelector(state => state.static.project.versions);
+  const previousVersion = useSelector(state => state.static.previousTraining.previous);
+  const firstVersion = useSelector(state => state.static.previousTraining.first);
+  const grantedVersion = useSelector(state => state.static.previousTraining.granted);
+  const removedRecords = getRemovedTrainingRecords(comparisons, trainingHistory);
+
+  // Map removed by ID for quick lookup
   const removedMap = removedRecords.reduce((map, r) => {
     map[r.trainingId || r.id] = r;
     return map;
   }, {});
 
-// Map current by ID as well
+  // Map current by id's
   const currentMap = certificates.reduce((map, r) => {
     map[r.trainingId || r.id] = r;
     return map;
   }, {});
 
-// Build list preserving previous order
-  let allRecords = [];
-  if (Array.isArray(previousVersion.trainingRecords)) {
-    allRecords = previousVersion.trainingRecords.map(prev => {
-      const id = prev.trainingId || prev.id;
-      return currentMap[id] || removedMap[id] || prev;
-    });
+  // Combine all records from previous, first, granted, and current versions
+  const allRecords = [
+    ...(Array.isArray(previousVersion) ? previousVersion : []),
+    ...(Array.isArray(firstVersion) ? firstVersion : []),
+    ...(Array.isArray(grantedVersion) ? grantedVersion : []),
+    ...certificates
+  ];
+
+  // only keep unique records
+  const uniqueRecords = Array.from(
+    new Map(allRecords.map(record => [record.id || record.trainingId, record])).values()
+  );
+  // check if this is first submission
+  const trainingHistoryRecords = versions.length > 1;
+  // unset gray badge
+  if (versions.length < 3) {
+    comparisons.added[1].ids = [];
+    comparisons.removed[1].ids = [];
+    comparisons.changed[1].ids = [];
+
   }
-
-// Include any truly new ones not in previous
-  const previousIds = (previousVersion.trainingRecords || []).map(r => r.trainingId || r.id);
-  const newOnes = certificates.filter(r => !previousIds.includes(r.trainingId || r.id));
-
-  allRecords = [...allRecords, ...newOnes];
-
   return (
     <div className="training-summary-custom">
       <table className="govuk-table training">
@@ -57,47 +69,56 @@ export default function TrainingSummaryWithChangeHighlighting({
         </tr>
         </thead>
         <tbody>
-        {allRecords.map(record => {
+        {uniqueRecords.map(record => {
           const status = getStatus(record, comparisons);
           return (
             <tr key={record.trainingId || record.id} className="govuk-table__row">
               <td className="govuk-table__cell training-col-category">
                 <span>{record.isExemption ? 'Exemption' : 'Training certificate'}</span>
-                {status && (
+                <>
+                  {trainingHistoryRecords && status && (
                   <div className="badge-wrapper">
                     <span className={`govuk-tag ${status.class}`}>{status.label}</span>
-
                     {status.label === 'CHANGED' && (
                       <TrainingRecordModal
-                        current={getTrainingRecord(project, record, 'current')}
-                        previous={getTrainingRecord(project, record, 'previous')}
-                        first={getTrainingRecord(project, record, 'first')}
+                        current={getTrainingRecord(project, record, 'current', trainingHistory)}
+                        previous={getTrainingRecord(project, record, 'previous', trainingHistory)}
+                        first={getTrainingRecord(project, record, 'first', trainingHistory)}
                         comparisons={comparisons}
-                        trainingHistory={project.trainingHistory}
+                        trainingHistory={trainingHistory}
                       />
                     )}
                   </div>
                 )}
+              </>
               </td>
 
               <td className="govuk-table__cell">
                 {record.modules?.length ? (
                   <ul className="module-list">
                     {record.modules.map((mod, i) => (
-                      <li key={i}><span>{mod}</span></li>
+                      <li key={i}>
+                        <span>{mod}</span>
+                      </li>
                     ))}
                   </ul>
-                ) : '-'}
+                ) : (
+                  {DEFAULT_LABEL}
+                )}
               </td>
 
               <td className="govuk-table__cell">
                 {record.species?.length ? (
                   <ul className="species-list">
                     {record.species.map((sp, i) => (
-                      <li key={i}><span>{sp}</span></li>
+                      <li key={i}>
+                        <span>{sp}</span>
+                      </li>
                     ))}
                   </ul>
-                ) : '-'}
+                ) : (
+                  '-'
+                )}
               </td>
 
               <td className="govuk-table__cell">
@@ -106,9 +127,13 @@ export default function TrainingSummaryWithChangeHighlighting({
                 ) : (
                   <p className="certificate-details">
                     <span className="label">Certificate number: </span>
-                    <span className="value">{record.certificateNumber || '-'}</span><br />
+                    <span className="value">{record.certificateNumber || '-'}</span>
+                    <br />
                     <span className="label">Awarded on: </span>
-                    <span className="value"> {record.passDate ? format(record.passDate, dateFormat) : '-'}</span><br />
+                    <span className="value">
+                        {record.passDate ? format(record.passDate, dateFormat) : '-'}
+                      </span>
+                    <br />
                     <span className="label">Awarded by: </span>
                     <span className="value">{record.accreditingBody || '-'}</span>
                   </p>
