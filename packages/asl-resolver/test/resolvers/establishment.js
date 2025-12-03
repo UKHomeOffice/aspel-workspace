@@ -113,6 +113,13 @@ const insertProjectWithAdditionalAvailability = async (models, {
           { locations: [primaryEstablishmentName] },
           { locations: [additionalAvailabilityName] },
           { locations: [primaryEstablishmentName, additionalAvailabilityName] }
+        ],
+        establishments: [
+          {
+            id: uuid(),
+            name: additionalAvailabilityName,
+            'establishment-id': additionalAvailabilityId
+          }
         ]
       }
     });
@@ -830,6 +837,35 @@ describe('Establishment resolver', () => {
         assert.deepEqual(data.protocols[0].locations, ['Marvell Pharmaceutical'], `ID: ${versionId}, sole location is renamed`);
         assert.deepEqual(data.protocols[1].locations, ['Renamed'], `ID: ${versionId}, other location is unchanged`);
         assertIncludesInAnyOrder(data.protocols[2].locations, ['Renamed', 'Marvell Pharmaceutical'], `ID: ${versionId}`);
+      });
+
+      it('Renames establishments in version data when an additionally available establishment is renamed', async () => {
+        const projectId = '258fe896-b903-4efc-ba6c-4ed9e923733f';
+        const versionId = 'ab8bcf23-ec36-4c72-a7d1-05bc5fa9b570';
+
+        await insertProjectWithAdditionalAvailability(
+          this.models,
+          {
+            projectId,
+            versionIds: [versionId]
+          }
+        );
+
+        const opts = {
+          action: 'update',
+          id: 8201,
+          data: {
+            name: 'Renamed'
+          }
+        };
+
+        const transaction = await this.models.transaction();
+        await this.establishment(opts, transaction);
+        await transaction.commit();
+
+        const { data } = await this.models.ProjectVersion.query().findById(versionId);
+
+        assert.deepEqual(data.establishments[0].name, 'Renamed', `ID: ${versionId}, additional establishment is renamed`);
       });
     });
   });
