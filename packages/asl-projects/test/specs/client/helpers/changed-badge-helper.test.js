@@ -55,8 +55,37 @@ describe('Changed Badge Helper', () => {
       assertNoBadge(['protocols.123.steps.1.usedInProtocols.protocolNumber']);
     });
 
+    describe('step fields at different levels', () => {
+      const changes = [
+        'protocols',
+        'protocols.123',
+        'protocols.123.steps',
+        'protocols.123.steps.1',
+        'protocols.123.steps.1.usedInProtocols',
+        'protocols.123.steps.1.reusedStep',
+        'protocols.123.steps.1.reusableStepId',
+        'protocols.123.steps.1.usedInProtocols.protocolId',
+        'protocols.123.steps.1.usedInProtocols.protocolNumber',
+      ];
+      
+      it('for step fields', () => {
+        const result = changedFrom(['protocols.123.steps.1.title'], changes, protocolId, false);
+        assert.equal(result, false);
+      });
+      
+      it('for a step', () => {
+        const result = changedFrom(['protocols.123.steps.1'], changes, protocolId, false);
+        assert.equal(result, true);
+      });
+      
+      it('for steps section', () => {
+        const result = changedFrom(['protocols.123.steps'], changes, protocolId, false);
+        assert.equal(result, true);
+      });
+    });
 
-    it('ignoreExactMatch=true: exact match should not count, sub-field change should count', () => {
+
+    it('ignoreExactMatch=true: exact match should not count', () => {
       const fields = ['protocols.123.steps.1'];
       const changes = ['protocols.123.steps.1'];
       const result1 = changedFrom(fields, changes, protocolId, true);
