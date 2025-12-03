@@ -141,6 +141,7 @@ router.get('/:versionId',
       const est = await req.models.Establishment.query().findById(transferToEstablishment).select('name');
       req.version.data.transferToEstablishmentName = est.name;
     }
+
     res.response = req.version;
     next();
   },
