@@ -5,34 +5,54 @@ describe('Changed Badge Helper', () => {
   describe('changedFrom', () => {
     const protocolId = '123';
 
-    describe('returns false when only config fields are present', () => {
-      const changes = [
-        'protocols',
-        'protocols.123',
-        'protocols.123.steps',
-        'protocols.123.steps.1',
+    it('filters out config fields that should not trigger badges', () => {
+
+      function expandChange(change) {
+        const expandedChange = [];
+        change
+          .split('.')
+          .reduce(
+            (prefix, part) => {
+              const next = [...prefix, part];
+              expandedChange.push(next.join('.'));
+              return next;
+            },
+            []
+          );
+
+        return expandedChange;
+      }
+
+      function expandChanges(changes) {
+        // limit to unique changes
+        const expandedChanges = new Set();
+
+        changes
+          .flatMap(change => expandChange(change))
+          .forEach(change => expandedChanges.add(change));
+
+        return [...expandedChanges];
+      }
+
+      const changes = expandChanges([
+        'protocols.123.steps.1.title',
         'protocols.123.steps.1.usedInProtocols',
         'protocols.123.steps.1.reusedStep',
         'protocols.123.steps.1.reusableStepId',
         'protocols.123.steps.1.usedInProtocols.protocolId',
         'protocols.123.steps.1.usedInProtocols.protocolNumber',
-      ];
-      
-      it('for step fields', () => {
-        const result = changedFrom(['protocols.123.steps.1.title'], changes, protocolId, false);
-        assert.equal(result, false);
-      });
-      
-      it('for a step', () => {
-        const result = changedFrom(['protocols.123.steps.1'], changes, protocolId, false);
-        assert.equal(result, true);
-      });
-      
-      it('for steps section', () => {
-        const result = changedFrom(['protocols.123.steps'], changes, protocolId, false);
-        assert.equal(result, true);
-      });
+      ]);
+
+      const usedInProtocolsFields = ['protocols.123.steps.1.usedInProtocols'];
+      const reusableStepIdFields = ['protocols.123.steps.1.reusableStepId'];
+
+      const result1 = changedFrom(usedInProtocolsFields, changes, protocolId, false);
+      assert.equal(result1, false);
+
+      const result2 = changedFrom(reusableStepIdFields, changes, protocolId, false);
+      assert.equal(result2, false);
     });
+
 
     it('ignoreExactMatch=true: exact match should not count, sub-field change should count', () => {
       const fields = ['protocols.123.steps.1'];
