@@ -7,7 +7,8 @@ const {
   pickBy,
   isEmpty,
   castArray,
-  flow, omit
+  flow,
+  omit
 } = require('lodash');
 const isUUID = require('uuid-validate');
 const extractComments = require('../lib/extract-comments');
@@ -405,6 +406,13 @@ const getPreviousAA = (firstVersion, previousVersion, grantedVersion) => {
   return { first, previous, granted, showDeleted };
 };
 
+const getPreviousTraining = (firstVersion, previousVersion, grantedVersion) => {
+  const first = get(firstVersion, 'data.training', []);
+  const previous = get(previousVersion, 'data.training', []);
+  const granted = get(grantedVersion, 'data.training', []);
+  return { first, previous, granted };
+};
+
 const getAllChanges = (type = 'project-versions') => (req, res, next) => {
   const model = type === 'project-versions' ? 'version' : 'retrospectiveAssessment';
   Promise.all([
@@ -416,6 +424,7 @@ const getAllChanges = (type = 'project-versions') => (req, res, next) => {
       res.locals.static.changes = getVersionChanges(req[model], firstVersion, previousVersion, grantedVersion);
       res.locals.static.previousProtocols = getPreviousProtocols(firstVersion, previousVersion, grantedVersion);
       res.locals.static.previousAA = getPreviousAA(firstVersion, previousVersion, grantedVersion);
+      res.locals.static.previousTraining = getPreviousTraining(firstVersion, previousVersion, grantedVersion);
     })
     .then(() => next())
     .catch(next);

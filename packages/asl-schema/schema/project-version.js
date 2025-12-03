@@ -67,6 +67,7 @@ class ProjectVersion extends BaseModel {
       }
     };
   }
+
 }
 
 module.exports = ProjectVersion;
