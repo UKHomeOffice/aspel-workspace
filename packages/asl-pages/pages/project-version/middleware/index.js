@@ -440,8 +440,11 @@ const getChangedValues = (question, req, type = 'project-versions') => {
     first: getFirstVersion
   };
 
+  const validKeys = Object.keys(getVersion);
+  const versionKey = validKeys.includes(req.query.version) ? req.query.version : 'latest';
+
   return Promise.resolve()
-    .then(() => getVersion[req.query.version](req, type))
+    .then(() => getVersion[versionKey](req, type))
     .then(async (result) => {
       const value = result && getNode(result.data, question);
       const current = getNode(req[model].data, question);
