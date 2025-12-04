@@ -110,7 +110,11 @@ module.exports = () => {
         const activeProjectsQuery = Project.query()
           .count('projects.id')
           .where('status', 'active')
-          .andWhere('establishmentId', id)
+          .andWhere(builder => {
+            builder
+              .where('establishmentId', req.establishment.id)
+              .orWhere(b => b.whereHasActiveAdditionalAvailability(req.establishment.id));
+          })
           .as('activeProjectsCount');
 
         return query.select(activePilsQuery, activeProjectsQuery);
