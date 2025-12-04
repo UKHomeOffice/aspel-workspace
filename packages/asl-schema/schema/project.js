@@ -31,13 +31,12 @@ function isDraftRelationAndProject(builder) {
 function isActiveRelationAndProject(builder) {
   return (
     builder
-      // include removed as establishments need to retain visibility of these
       .whereIn('projectEstablishments.status', ['active'])
-      .whereIn('projects.status', ['active', 'expired', 'revoked'])
+      .whereIn('projects.status', ['active'])
   );
 }
 
-function hasRelationToActiveProject(builder) {
+function hasRelationToGrantedProject(builder) {
   return (
     builder
       // include removed as establishments need to retain visibility of these
@@ -49,7 +48,7 @@ function hasRelationToActiveProject(builder) {
 function canSeeProject(builder) {
   return builder
     .where(isDraftRelationAndProject)
-    .orWhere(hasRelationToActiveProject);
+    .orWhere(hasRelationToGrantedProject);
 }
 
 const hasAdditionalAvailability = (establishmentId) => (builder) => {
