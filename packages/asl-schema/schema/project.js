@@ -32,6 +32,15 @@ function isActiveRelationAndProject(builder) {
   return (
     builder
       // include removed as establishments need to retain visibility of these
+      .whereIn('projectEstablishments.status', ['active'])
+      .whereIn('projects.status', ['active', 'expired', 'revoked'])
+  );
+}
+
+function hasRelationToActiveProject(builder) {
+  return (
+    builder
+      // include removed as establishments need to retain visibility of these
       .whereIn('projectEstablishments.status', ['active', 'removed'])
       .whereIn('projects.status', ['active', 'expired', 'revoked'])
   );
@@ -40,13 +49,19 @@ function isActiveRelationAndProject(builder) {
 function canSeeProject(builder) {
   return builder
     .where(isDraftRelationAndProject)
-    .orWhere(isActiveRelationAndProject);
+    .orWhere(hasRelationToActiveProject);
 }
 
 const hasAdditionalAvailability = (establishmentId) => (builder) => {
   builder
     .where('projectEstablishments.establishmentId', establishmentId)
     .where(canSeeProject);
+};
+
+const hasActiveAdditionalAvailability = (establishmentId) => (builder) => {
+  builder
+    .where('projectEstablishments.establishmentId', establishmentId)
+    .where(isActiveRelationAndProject);
 };
 
 class ProjectQueryBuilder extends QueryBuilder {
@@ -83,6 +98,14 @@ class ProjectQueryBuilder extends QueryBuilder {
     return this.whereExists(
       Project.relatedQuery('projectEstablishments').where(
         hasAdditionalAvailability(establishmentId)
+      )
+    );
+  }
+
+  whereHasActiveAdditionalAvailability(establishmentId) {
+    return this.whereExists(
+      Project.relatedQuery('projectEstablishments').where(
+        hasActiveAdditionalAvailability(establishmentId)
       )
     );
   }
