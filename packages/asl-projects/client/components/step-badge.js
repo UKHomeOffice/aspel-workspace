@@ -62,7 +62,7 @@ export default function StepBadge(props) {
 
           Without this prop: The badge might appear as a "false positive" when nothing visible changed.
           With this prop: The system ignores the match on the Step's own ID/path and checks specifically for changes to its children. */}
-        <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} protocolId={props.protocolId} onlyChildFieldChanges={true} />
+        <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} protocolId={props.protocolId} excludeSelf={true} />
         {move}
       </>
     );
