@@ -54,7 +54,7 @@ export default function StepBadge(props) {
     }
     return (
       <>
-        {/* The prop onlyChildFieldChanges is intended to handle the following business case:
+        {/* The prop excludeSelf is intended to handle the following business case:
 
           "Show a 'Changed' badge only if specific properties of this Step have changed, but ignore it if the Step container itself is marked as 'changed'."
 

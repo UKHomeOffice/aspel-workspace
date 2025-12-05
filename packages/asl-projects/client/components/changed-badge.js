@@ -3,19 +3,19 @@ import { useSelector, shallowEqual } from 'react-redux';
 import minimatch from 'minimatch';
 import { changedFrom } from '../helpers/changed-badge-helper';
 
-export default function ChangedBadge({ fields = [], changedFromGranted, changedFromLatest, changedFromFirst, protocolId, noLabel, onlyChildFieldChanges = false }) {
+export default function ChangedBadge({ fields = [], changedFromGranted, changedFromLatest, changedFromFirst, protocolId, noLabel, excludeSelf = false }) {
   const latest = useSelector(state => state.changes?.latest || [], shallowEqual);
   const granted = useSelector(state => state.changes?.granted || [], shallowEqual);
   const first = useSelector(state => state.changes?.first || [], shallowEqual);
   const previousProtocols = useSelector(state => state.application?.previousProtocols || {}, shallowEqual);
 
-  if ((changedFromLatest || changedFrom(fields, latest, protocolId, onlyChildFieldChanges)) && (!protocolId || previousProtocols.previous?.includes(protocolId))) {
+  if ((changedFromLatest || changedFrom(fields, latest, protocolId, excludeSelf)) && (!protocolId || previousProtocols.previous?.includes(protocolId))) {
     return <span className="badge changed">{noLabel ? '' : 'changed'}</span>;
   }
-  if ((changedFromGranted || changedFrom(fields, granted, protocolId, onlyChildFieldChanges)) && (!protocolId || previousProtocols.granted?.includes(protocolId))) {
+  if ((changedFromGranted || changedFrom(fields, granted, protocolId, excludeSelf)) && (!protocolId || previousProtocols.granted?.includes(protocolId))) {
     return <span className="badge">{noLabel ? '' : 'amended'}</span>;
   }
-  if ((changedFromFirst || changedFrom(fields, first, protocolId, onlyChildFieldChanges)) && (!protocolId || previousProtocols.first?.includes(protocolId))) {
+  if ((changedFromFirst || changedFrom(fields, first, protocolId, excludeSelf)) && (!protocolId || previousProtocols.first?.includes(protocolId))) {
     return <span className="badge">{noLabel ? '' : 'changed'}</span>;
   }
 
