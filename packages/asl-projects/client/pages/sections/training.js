@@ -41,7 +41,7 @@ export default function Training(props) {
       {!readonly && <h1>Training</h1>}
       <p>{props.intro}</p>
 
-      <h2>Training records</h2>
+      <h2>Training record</h2>
       <ChangedBadge fields={['training']} />
       {
         /* feature flag enabled  */
