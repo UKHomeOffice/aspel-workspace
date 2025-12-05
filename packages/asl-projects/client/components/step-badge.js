@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import ChangedBadge from './changed-badge';
 
-const changeFields = (step, prefix) => step.reusable ? [ `reusableSteps.${step.reusableStepId}` ] : [ prefix.substr(0, prefix.length - 1) ];
+const changeFields = (step, prefix) => step.reusable ? [`reusableSteps.${step.reusableStepId}`] : [prefix.substr(0, prefix.length - 1)];
 
 export default function StepBadge(props) {
   const { previous, steps, firstSteps, grantedSteps } = useSelector(state => state.application.previousProtocols);
@@ -54,7 +54,7 @@ export default function StepBadge(props) {
     }
     return (
       <>
-        <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} protocolId={props.protocolId} ignoreExactMatch={true}/>
+        <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} protocolId={props.protocolId} ignoreExactMatch={true} />
         {move}
       </>
     );
