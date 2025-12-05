@@ -162,7 +162,7 @@ router.put('/:versionId/:action',
       .findById(req.version.id)
       .then(version => {
         res.response = normalise(version, req.models);
-        res.meta.checksumOmit = ['id', 'retrospectiveAssessment', 'conditions'];
+        res.meta.checksumOmit = ['id', 'retrospectiveAssessment', 'conditions', 'training'];
         res.meta.checksum = shasum(omit(res.response.data, ...res.meta.checksumOmit));
       })
       .then(() => next())
