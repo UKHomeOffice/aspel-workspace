@@ -71,14 +71,14 @@ describe('Changed Badge Helper', () => {
       });
     });
 
-    it('ignoreExactMatch=true: exact match should not count', () => {
+    it('onlyChildFieldChanges=true: exact match should not count', () => {
       const fields = ['protocols.123.steps.1'];
       const changes = ['protocols.123.steps.1'];
       const result = changedFrom(fields, changes, protocolId, true);
       assert.equal(result, false);
     });
 
-    it('ignoreExactMatch=false: exact match should count', () => {
+    it('onlyChildFieldChanges=false: exact match should count', () => {
       const fields = ['protocols.123.steps.1'];
       const changes = ['protocols.123.steps.1'];
       const result = changedFrom(fields, changes, protocolId, false);
