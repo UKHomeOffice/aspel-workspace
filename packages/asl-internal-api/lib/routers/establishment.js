@@ -112,8 +112,8 @@ module.exports = () => {
           .where('status', 'active')
           .andWhere(builder => {
             builder
-              .where('establishmentId', req.establishment.id)
-              .orWhere(b => b.whereHasActiveAdditionalAvailability(req.establishment.id));
+              .where('establishmentId', id)
+              .orWhere(b => b.whereHasActiveAdditionalAvailability(id));
           })
           .as('activeProjectsCount');
 
