@@ -4,44 +4,43 @@ import { changedFrom } from '../../../../client/helpers/changed-badge-helper';
 describe('Changed Badge Helper', () => {
   describe('changedFrom', () => {
     const protocolId = '123';
+    function expandChange(change) {
+      const expandedChange = [];
+      change
+        .split('.')
+        .reduce(
+          (prefix, part) => {
+            const next = [...prefix, part];
+            expandedChange.push(next.join('.'));
+            return next;
+          },
+          []
+        );
+
+      return expandedChange;
+    }
+
+    function expandChanges(changes) {
+      // limit to unique changes
+      const expandedChanges = new Set();
+
+      changes
+        .flatMap(change => expandChange(change))
+        .forEach(change => expandedChanges.add(change));
+
+      return [...expandedChanges];
+    }
+
+    const changes = expandChanges([
+      'protocols.123.steps.1.title',
+      'protocols.123.steps.1.usedInProtocols',
+      'protocols.123.steps.1.reusedStep',
+      'protocols.123.steps.1.reusableStepId',
+      'protocols.123.steps.1.usedInProtocols.protocolId',
+      'protocols.123.steps.1.usedInProtocols.protocolNumber',
+    ]);
 
     it('filters out config fields that should not trigger badges', () => {
-
-      function expandChange(change) {
-        const expandedChange = [];
-        change
-          .split('.')
-          .reduce(
-            (prefix, part) => {
-              const next = [...prefix, part];
-              expandedChange.push(next.join('.'));
-              return next;
-            },
-            []
-          );
-
-        return expandedChange;
-      }
-
-      function expandChanges(changes) {
-        // limit to unique changes
-        const expandedChanges = new Set();
-
-        changes
-          .flatMap(change => expandChange(change))
-          .forEach(change => expandedChanges.add(change));
-
-        return [...expandedChanges];
-      }
-
-      const changes = expandChanges([
-        'protocols.123.steps.1.title',
-        'protocols.123.steps.1.usedInProtocols',
-        'protocols.123.steps.1.reusedStep',
-        'protocols.123.steps.1.reusableStepId',
-        'protocols.123.steps.1.usedInProtocols.protocolId',
-        'protocols.123.steps.1.usedInProtocols.protocolNumber',
-      ]);
 
       function assertNoBadge(fields) {
         const result = changedFrom(fields, changes, protocolId, false);
@@ -56,34 +55,21 @@ describe('Changed Badge Helper', () => {
     });
 
     describe('step fields at different levels', () => {
-      const changes = [
-        'protocols',
-        'protocols.123',
-        'protocols.123.steps',
-        'protocols.123.steps.1',
-        'protocols.123.steps.1.usedInProtocols',
-        'protocols.123.steps.1.reusedStep',
-        'protocols.123.steps.1.reusableStepId',
-        'protocols.123.steps.1.usedInProtocols.protocolId',
-        'protocols.123.steps.1.usedInProtocols.protocolNumber',
-      ];
-      
       it('for step fields', () => {
-        const result = changedFrom(['protocols.123.steps.1.title'], changes, protocolId, false);
+        const result = changedFrom(['protocols.123.steps.1.title'], changes, protocolId, true);
         assert.equal(result, false);
       });
-      
+
       it('for a step', () => {
-        const result = changedFrom(['protocols.123.steps.1'], changes, protocolId, false);
+        const result = changedFrom(['protocols.123.steps.1'], changes, protocolId, true);
         assert.equal(result, true);
       });
-      
+
       it('for steps section', () => {
-        const result = changedFrom(['protocols.123.steps'], changes, protocolId, false);
+        const result = changedFrom(['protocols.123.steps'], changes, protocolId, true);
         assert.equal(result, true);
       });
     });
-
 
     it('ignoreExactMatch=true: exact match should not count', () => {
       const fields = ['protocols.123.steps.1'];
