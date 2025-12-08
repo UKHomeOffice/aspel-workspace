@@ -100,7 +100,7 @@ module.exports = (settings) => {
           .andWhere(builder => {
             builder
               .where('establishmentId', req.establishment.id)
-              .orWhere(b => b.whereHasAdditionalAvailability(req.establishment.id));
+              .orWhere(b => b.whereHasActiveAdditionalAvailability(req.establishment.id));
           })
           .as('activeProjectsCount');
 
