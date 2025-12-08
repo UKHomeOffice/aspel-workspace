@@ -221,6 +221,12 @@ const getCacheableVersion = (req, url) => {
     });
 };
 
+const REUSABLE_STEP_METADATA = [
+  'usedInProtocols',
+  'reusedStep',
+  'reusableStepId'
+];
+
 function normaliseSteps(protocol) {
   if (!protocol.steps) {
     return [];
@@ -237,7 +243,7 @@ function normaliseSteps(protocol) {
       if (step?.reusableStepId && step?.hasOwnProperty('reusable') && step?.reusable === false) {
         delete step.reusableStepId;
       }
-      return step?.deleted ? [] : [omit(step, 'deleted')];
+      return step?.deleted ? [] : [omit(step, 'deleted'), ...REUSABLE_STEP_METADATA];
     }
   );
 }
@@ -251,7 +257,7 @@ function normaliseSteps(protocol) {
  * @param versionData
  * @returns {*&{protocols: (*&{steps})[]}}
  */
-const normaliseDeletedProtocols = (versionData) => ({
+const normaliseProtocols = (versionData) => ({
   ...versionData,
   protocols: (Array.isArray(versionData.protocols) ? versionData.protocols : []).flatMap(
     protocol => {
@@ -269,7 +275,7 @@ const normaliseDeletedProtocols = (versionData) => ({
 const normaliseData = (versionData, opts) => {
   return flow([
     normaliseConditions(opts),
-    normaliseDeletedProtocols,
+    normaliseProtocols,
     deepRemoveEmpty
   ])(versionData);
 };
