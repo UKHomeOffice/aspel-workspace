@@ -449,7 +449,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
     onSave={steps => {
       // Create deep clones of reusable steps to ensure immutability
       const reusableSteps = steps
-        .filter(step => step.reusable && (step.completed || step.saved))
+        .filter(step => step.reusable && step.existingValues)
         .map(step => ({
           ...cloneDeep(step),
           id: step.reusableStepId || step.id,

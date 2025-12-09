@@ -243,7 +243,7 @@ function normaliseSteps(protocol) {
       if (step?.reusableStepId && step?.hasOwnProperty('reusable') && step?.reusable === false) {
         delete step.reusableStepId;
       }
-      return step?.deleted ? [] : [omit(step, 'deleted'), ...REUSABLE_STEP_METADATA];
+      return step?.deleted ? [] : [omit(step, 'deleted', ...REUSABLE_STEP_METADATA)];
     }
   );
 }
