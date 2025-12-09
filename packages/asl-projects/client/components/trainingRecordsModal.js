@@ -142,9 +142,6 @@ export default function TrainingRecordModal({
 
     return (
     <div className="main-left-panel-wrapper">
-        <h3 className="diff-title">
-          {active === 'prev' ? 'Previous version' : 'Initial submission'}
-        </h3>
     <div className="panel light-grey before">
       <div className="govuk-form-group">
         <strong>Modules</strong>
