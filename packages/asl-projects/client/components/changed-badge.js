@@ -26,7 +26,7 @@ export default function ChangedBadge({ fields = [], changedFromGranted, changedF
 
   const protocolAllowed = (list) => !protocolId || list?.includes(protocolId);
 
-  if ((changedFromLatest || hasMatchingChange(latest)) && protocolAllowed(previousProtocols.latest)) {
+  if ((changedFromLatest || hasMatchingChange(latest)) && protocolAllowed(previousProtocols.previous)) {
     return <span className="badge changed">{noLabel ? '' : 'changed'}</span>;
   }
   if ((changedFromGranted || hasMatchingChange(granted)) && protocolAllowed(previousProtocols.granted)) {
