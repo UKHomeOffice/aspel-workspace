@@ -7,7 +7,7 @@ import React from 'react';
 import useTaskStatic from './useTaskStatic';
 
 export function ProfileDetails({ task }) {
-  const { profile, isApplication } = useTaskStatic();
+  const { profile, isApplication } = useTaskStatic(task);
   const establishments = profile.establishments;
 
   return (

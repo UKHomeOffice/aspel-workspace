@@ -5,7 +5,7 @@ import React from 'react';
 import useTaskStatic from './useTaskStatic';
 
 export function EstablishmentDetails({ task }) {
-  const establishment = useTaskStatic();
+  const { establishment } = useTaskStatic(task);
   const showNprc = establishment.nprc && (!establishment.pelh || establishment.pelh.id !== establishment.nprc.id);
 
   return (

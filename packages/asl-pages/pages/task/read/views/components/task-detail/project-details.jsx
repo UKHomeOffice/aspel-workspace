@@ -7,7 +7,7 @@ import { ROPYear } from './rop-year';
 import useTaskStatic from './useTaskStatic';
 
 export function ProjectDetails({ task }) {
-  const { project, version, establishment, isApplication, profileType } = useTaskStatic();
+  const { project, version, establishment, isApplication, profileType } = useTaskStatic(task);
 
   const profile = isApplication
     ? project.licenceHolder

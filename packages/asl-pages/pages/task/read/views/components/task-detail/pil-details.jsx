@@ -9,7 +9,7 @@ import React from 'react';
 import useTaskStatic from './useTaskStatic';
 
 export function PilDetails({ task }) {
-  const { profile } = useTaskStatic();
+  const { profile } = useTaskStatic(task);
 
   const pil = profile.pil;
   const establishment = (pil && pil.establishment) ? pil.establishment : get(task, 'data.establishment');
