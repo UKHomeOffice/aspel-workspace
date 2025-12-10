@@ -24,13 +24,15 @@ export default function ChangedBadge({ fields = [], changedFromGranted, changedF
     return false;
   };
 
-  if ((changedFromLatest || hasMatchingChange(latest)) && (!protocolId || previousProtocols.previous?.includes(protocolId))) {
+  const protocolAllowed = (list) => !protocolId || list?.includes(protocolId);
+
+  if ((changedFromLatest || hasMatchingChange(latest)) && protocolAllowed(previousProtocols.latest)) {
     return <span className="badge changed">{noLabel ? '' : 'changed'}</span>;
   }
-  if ((changedFromGranted || hasMatchingChange(granted)) && (!protocolId || previousProtocols.granted?.includes(protocolId))) {
+  if ((changedFromGranted || hasMatchingChange(granted)) && protocolAllowed(previousProtocols.granted)) {
     return <span className="badge">{noLabel ? '' : 'amended'}</span>;
   }
-  if ((changedFromFirst || hasMatchingChange(first)) && (!protocolId || previousProtocols.first?.includes(protocolId))) {
+  if ((changedFromFirst || hasMatchingChange(first)) && protocolAllowed(previousProtocols.first)) {
     return <span className="badge">{noLabel ? '' : 'changed'}</span>;
   }
 
