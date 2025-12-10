@@ -1,14 +1,13 @@
-import { useSelector } from 'react-redux';
 import { ProfileLink } from './profile-link';
 import { Over18 } from './over-18';
 import { LicenceNumber } from './licence-number';
 import { Link } from '@ukhomeoffice/asl-components';
 import { EstablishmentsList } from './establishment-list';
 import React from 'react';
+import useTaskStatic from './useTaskStatic';
 
 export function ProfileDetails({ task }) {
-  const profile = useSelector(state => state.static.values);
-  const isApplication = task.type === 'application';
+  const { profile, isApplication } = useTaskStatic();
   const establishments = profile.establishments;
 
   return (

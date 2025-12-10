@@ -1,11 +1,11 @@
-import { useSelector } from 'react-redux';
 import { EstablishmentLink } from './establishment-link';
 import { LicenceNumber } from './licence-number';
 import { ProfileLink } from './profile-link';
 import React from 'react';
+import useTaskStatic from './useTaskStatic';
 
 export function EstablishmentDetails({ task }) {
-  const establishment = useSelector(state => state.static.establishment);
+  const establishment = useTaskStatic();
   const showNprc = establishment.nprc && (!establishment.pelh || establishment.pelh.id !== establishment.nprc.id);
 
   return (

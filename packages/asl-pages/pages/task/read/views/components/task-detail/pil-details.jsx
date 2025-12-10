@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import get from 'lodash/get';
 import { ProfileLink } from './profile-link';
 import { Over18 } from './over-18';
@@ -7,9 +6,11 @@ import { Link } from '@ukhomeoffice/asl-components';
 import { OrgAndQualificationDetails } from './org-and-qualification-details';
 import { EstablishmentLink } from './establishment-link';
 import React from 'react';
+import useTaskStatic from './useTaskStatic';
 
 export function PilDetails({ task }) {
-  const profile = useSelector(state => state.static.profile) || get(task, 'data.modelData.profile');
+  const { profile } = useTaskStatic();
+
   const pil = profile.pil;
   const establishment = (pil && pil.establishment) ? pil.establishment : get(task, 'data.establishment');
   const isApplication = task.type === 'application';
