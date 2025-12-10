@@ -3,7 +3,7 @@ import { ProfileLink } from './profile-link';
 import { LicenceNumber } from './licence-number';
 import { EstablishmentLink } from './establishment-link';
 import React from 'react';
-import { ROPYear } from './rop-year';
+import { RopYear } from './rop-year';
 import useTaskStatic from './useTaskStatic';
 
 export function ProjectDetails({ task }) {
@@ -19,7 +19,7 @@ export function ProjectDetails({ task }) {
       <ProfileLink profile={profile} establishment={establishment} type={profileType} />
       <LicenceNumber>{project.licenceNumber}</LicenceNumber>
       <EstablishmentLink establishment={establishment} />
-      { task.data.model === 'rop' && <ROPYear task={task} /> }
+      { task.data.model === 'rop' && <RopYear task={task} /> }
     </dl>
   );
 }

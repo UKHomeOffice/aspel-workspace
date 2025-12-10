@@ -1,10 +1,10 @@
 import React from 'react';
 import get from 'lodash/get';
 import { Snippet } from '@ukhomeoffice/asl-components';
-import { ProjectDetails } from './task-detail/project-details';
-import { PilDetails } from './task-detail/pil-details';
-import { ProfileDetails } from './task-detail/profile-details';
-import { EstablishmentDetails } from './task-detail/establishment-details';
+import { ProjectDetails } from './task-detail-components/project-details';
+import { PilDetails } from './task-detail-components/pil-details';
+import { ProfileDetails } from './task-detail-components/profile-details';
+import { EstablishmentDetails } from './task-detail-components/establishment-details';
 
 export default function TaskDetails({ task }) {
   const model = get(task, 'data.model');

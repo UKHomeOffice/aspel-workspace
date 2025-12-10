@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Snippet } from '@ukhomeoffice/asl-components';
-import { LogItem } from './activity-log/log-item';
+import { LogItem } from './activity-log-components/log-item';
 
 export default function ActivityLog({ task }) {
   const [open, setOpen] = useState(false);

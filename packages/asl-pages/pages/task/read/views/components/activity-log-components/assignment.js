@@ -1,4 +1,4 @@
-import { ProfileLink } from '../task-detail/profile-link';
+import { ProfileLink } from './profile-link';
 import React from 'react';
 
 export function Assignment({ item }) {

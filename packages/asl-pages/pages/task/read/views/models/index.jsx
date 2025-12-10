@@ -16,7 +16,7 @@ import Establishment from './establishment';
 import PIL from './pil';
 import Place from './place';
 import Profile from './profile';
-import Project from './project';
+import Project from './project-components';
 import Role from './role';
 import Rop from './rop';
 import TrainingPil from './training-pil';

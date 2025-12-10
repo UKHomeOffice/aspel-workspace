@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import React, { Fragment } from 'react';
 
-export function ROPYear({ task }) {
+export function RopYear({ task }) {
   if (task.data.model !== 'rop') {
     return null;
   }

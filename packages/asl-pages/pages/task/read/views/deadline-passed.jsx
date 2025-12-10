@@ -1,8 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import get from 'lodash/get';
-import { Form, Snippet, Header } from '@ukhomeoffice/asl-components';
-import { formatDate } from '../../../../lib/utils';
+import { Form, Snippet, Header, Utils } from '@ukhomeoffice/asl-components';
 
 export default function DeadlinePassedReason() {
   const task = useSelector(state => state.static.task);
@@ -15,7 +14,7 @@ export default function DeadlinePassedReason() {
         <Form>
           <Header title={<Snippet>deadline.passed.title</Snippet>} />
           <p>
-            <Snippet date={formatDate(deadlineDate)}>deadline.passed.summary</Snippet>
+            <Snippet date={Utils.formatDate(deadlineDate)}>deadline.passed.summary</Snippet>
           </p>
         </Form>
       </div>
