@@ -251,7 +251,7 @@ function normaliseSteps(protocol) {
  * @param versionData
  * @returns {*&{protocols: (*&{steps})[]}}
  */
-const normaliseDeletedProtocols = (versionData) => ({
+const normaliseProtocols = (versionData) => ({
   ...versionData,
   protocols: (Array.isArray(versionData.protocols) ? versionData.protocols : []).flatMap(
     protocol => {
@@ -269,7 +269,7 @@ const normaliseDeletedProtocols = (versionData) => ({
 const normaliseData = (versionData, opts) => {
   return flow([
     normaliseConditions(opts),
-    normaliseDeletedProtocols,
+    normaliseProtocols,
     deepRemoveEmpty
   ])(versionData);
 };
