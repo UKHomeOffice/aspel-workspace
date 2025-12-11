@@ -1,9 +1,7 @@
 import get from 'lodash/get';
 import { useSelector } from 'react-redux';
 import { isTrueish } from '../../../../../../lib/utils';
-import { Link, Snippet } from '@ukhomeoffice/asl-components';
-import { format } from 'date-fns';
-import { dateFormat } from '../../../../../../constants';
+import { Link, Snippet, Utils } from '@ukhomeoffice/asl-components';
 import React, { Fragment } from 'react';
 
 const actionPerformedByAdmin = (item) => {
@@ -58,7 +56,7 @@ export function ExtraProjectMeta({ item, task }) {
             establishmentId={establishmentId}
             projectId={projectId}
             label={
-              <Snippet date={format(item.createdAt, dateFormat.long)}>
+              <Snippet date={Utils.formatDate(item.createdAt, Utils.DATE_FORMAT.long)}>
                 view.granted
               </Snippet>
             }
@@ -71,7 +69,7 @@ export function ExtraProjectMeta({ item, task }) {
             establishmentId={establishmentId}
             projectId={projectId}
             label={
-              <Snippet date={format(item.createdAt, dateFormat.long)}>
+              <Snippet date={Utils.formatDate(item.createdAt, Utils.DATE_FORMAT.long)}>
                 view.nts
               </Snippet>
             }
@@ -102,7 +100,7 @@ export function ExtraProjectMeta({ item, task }) {
               establishmentId={establishmentId}
               projectId={projectId}
               label={
-                <Snippet date={format(item.createdAt, dateFormat.long)}>
+                <Snippet date={Utils.formatDate(item.createdAt, Utils.DATE_FORMAT.long)}>
                   view.version
                 </Snippet>
               }

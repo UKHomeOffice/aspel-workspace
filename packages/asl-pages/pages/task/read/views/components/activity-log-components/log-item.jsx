@@ -2,11 +2,9 @@ import get from 'lodash/get';
 import React from 'react';
 import { isDeadlineExtension, isDeadlineReinstate, isDeadlineRemove } from '../../../../../../lib/utils';
 import { Comment } from './comment';
-import { format } from 'date-fns';
-import { dateFormat } from '../../../../../../constants';
 import { Action } from './action';
 import { versions } from '@ukhomeoffice/asl-constants';
-import { Snippet } from '@ukhomeoffice/asl-components';
+import { Snippet, Utils } from '@ukhomeoffice/asl-components';
 import { InspectorRecommendation } from './inspector-recommendation';
 import { DeadlineDetails } from './deadline-details';
 import { AwerbDate } from './awerb-date';
@@ -41,7 +39,7 @@ export function LogItem({ item, task }) {
   }
   return (
     <div className="log-item" id={item.id}>
-      <span className="date">{format(item.createdAt, dateFormat.long)}</span>
+      <span className="date">{Utils.formatDate(item.createdAt, Utils.DATE_FORMAT.long)}</span>
       <Action
         task={task}
         action={action}

@@ -1,6 +1,5 @@
 import get from 'lodash/get';
-import { format } from 'date-fns';
-import { dateFormat } from '../../../../../../constants';
+import { Utils } from '@ukhomeoffice/asl-components';
 import React from 'react';
 
 export function AwerbDate({ item }) {
@@ -14,7 +13,7 @@ export function AwerbDate({ item }) {
     <p>
       Date of the most recent AWERB review
       <br />
-      {format(awerb, dateFormat.long)}
+      {Utils.formatDate(awerb, Utils.DATE_FORMAT.long)}
     </p>
   );
 }

@@ -7,11 +7,10 @@ import {
   Utils
 } from '@ukhomeoffice/asl-components';
 import userSchema from '../../../../user/update/schema';
-import { dateFormat } from '../../../../../constants';
 
 const formatters = {
   dob: {
-    format: date => Utils.formatDate(date, dateFormat.short)
+    format: date => Utils.formatDate(date, Utils.DATE_FORMAT.short)
   }
 };
 

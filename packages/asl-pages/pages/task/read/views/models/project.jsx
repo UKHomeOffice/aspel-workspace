@@ -3,13 +3,11 @@ import { StaticRouter } from 'react-router';
 import { useSelector, shallowEqual } from 'react-redux';
 import pick from 'lodash/pick';
 import get from 'lodash/get';
-import { Link, StickyNavAnchor, Snippet, Diff } from '@ukhomeoffice/asl-components';
+import { Link, StickyNavAnchor, Snippet, Diff, Utils } from '@ukhomeoffice/asl-components';
 import EstablishmentLinks from '../components/establishment-links';
 
 // need unconnected ReviewFields component and not default
 import { ReviewFields } from '@asl/projects/client/components/review-fields';
-import { format } from 'date-fns';
-import { dateFormat } from '../../../../../constants';
 import PplDeclarations from '../components/ppl-declarations';
 import experience from '../../../../project/update-licence-holder/schema/experience-fields';
 import { schema as projectSchema } from '../../../../project/schema';
@@ -78,7 +76,7 @@ export default function Project({ task }) {
           {
             isAsru
               ? <p><Snippet>ra.content</Snippet></p>
-              : <p><Snippet date={format(project.raDate, dateFormat.long)}>ra.due</Snippet></p>
+              : <p><Snippet date={Utils.formatDate(project.raDate, Utils.DATE_FORMAT.long)}>ra.due</Snippet></p>
           }
           <Link
             page="retrospectiveAssessment.update"
@@ -146,7 +144,7 @@ export default function Project({ task }) {
             }
             {
               isDiscarded
-                ? <p><Snippet date={format(version.deleted, dateFormat.long)}>versions.submitted.discarded</Snippet></p>
+                ? <p><Snippet date={Utils.formatDate(version.deleted, Utils.DATE_FORMAT.long)}>versions.submitted.discarded</Snippet></p>
                 : (
                   <Fragment>
                     <p><Snippet>versions.submitted.text</Snippet></p>

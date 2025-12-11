@@ -3,9 +3,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import get from 'lodash/get';
 import { differenceInCalendarDays, isSameDay, isBefore } from 'date-fns';
 import { ReviewFields } from '@asl/projects/client/components/review-fields';
-import { Details, Link, Snippet } from '@ukhomeoffice/asl-components';
-import { dateFormat } from '../../../../../constants';
-import { formatDate } from '../../../../../lib/utils';
+import { Details, Link, Snippet, Utils } from '@ukhomeoffice/asl-components';
 
 function DaysSince({ date }) {
   if (isSameDay(date, new Date())) {
@@ -53,7 +51,7 @@ export default function Deadline({ task }) {
     <div className="deadline">
       {
         isAsru &&
-        <h2><Snippet date={formatDate(activeDeadlineDate, dateFormat.long)}>deadline.processBy</Snippet></h2>
+        <h2><Snippet date={Utils.formatDate(activeDeadlineDate, Utils.DATE_FORMAT.long)}>deadline.processBy</Snippet></h2>
       }
       <dl className="inline-wide">
 
@@ -61,7 +59,7 @@ export default function Deadline({ task }) {
           <Fragment>
             <dt><Snippet>deadline.internal</Snippet></dt>
             <dd>
-              {formatDate(internalDeadlineDate, dateFormat.long)}
+              {Utils.formatDate(internalDeadlineDate, Utils.DATE_FORMAT.long)}
               <DaysSince date={internalDeadlineDate} />
             </dd>
           </Fragment>
@@ -71,7 +69,7 @@ export default function Deadline({ task }) {
           <Fragment>
             <dt><Snippet>{`deadline.statutory.${statutoryDeadline.isExtended ? 'extended' : 'standard'}`}</Snippet></dt>
             <dd>
-              {formatDate(statutoryDeadlineDate, dateFormat.long)}
+              {Utils.formatDate(statutoryDeadlineDate, Utils.DATE_FORMAT.long)}
               <DaysSince date={statutoryDeadlineDate} />
 
               {
@@ -140,7 +138,7 @@ export default function Deadline({ task }) {
                             { item['expiry-date'] &&
                               <Fragment>
                                 <br />
-                                <Snippet expiry={formatDate(item['expiry-date'], dateFormat.medium)}>continuation.expiry</Snippet>
+                                <Snippet expiry={Utils.formatDate(item['expiry-date'], Utils.DATE_FORMAT.medium)}>continuation.expiry</Snippet>
                               </Fragment>
                             }
                           </Fragment>
