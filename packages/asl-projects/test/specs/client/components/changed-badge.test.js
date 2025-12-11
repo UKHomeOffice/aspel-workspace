@@ -1,31 +1,5 @@
-/** @jest-environment jsdom */
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import ChangedBadge, { hasMatchingChange } from '../../../../client/components/changed-badge';
+import { hasMatchingChange } from '../../../../client/components/changed-badge';
 import assert from 'assert';
-
-const makeStore = (overrides = {}) => {
-  const initialState = {
-    changes: {
-      latest: [],
-      granted: [],
-      first: [],
-      ...overrides.changes
-    },
-    application: {
-      previousProtocols: {
-        previous: overrides.previousAllowed?.previous ?? [],
-        granted: overrides.previousAllowed?.granted ?? [],
-        first: overrides.previousAllowed?.first ?? []
-      }
-    }
-  };
-
-  const reducer = (state = initialState, action) => state;
-  return configureStore({ reducer });
-};
 
 describe('ChangedBadge', () => {
 
