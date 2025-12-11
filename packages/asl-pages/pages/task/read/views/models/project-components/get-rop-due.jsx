@@ -1,5 +1,5 @@
 import { getYear, isBefore } from 'date-fns';
-import { ropsYears } from '../../../../../../constants';
+import { ropsYears } from '../../../../../../constants/index';
 
 export default function getRopDue(project, task) {
   // Draft projects don't need to submit rops
