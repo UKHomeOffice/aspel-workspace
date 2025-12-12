@@ -20,7 +20,6 @@ import Project from './project';
 import Role from './role';
 import Rop from './rop';
 import TrainingPil from './training-pil';
-
 import TaskDetails from '../components/task-details';
 import TaskStatus from '../components/task-status';
 import ActivityLog from '../components/activity-log';
