@@ -450,7 +450,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
       // Create deep clones of reusable steps to ensure immutability
       const reusableSteps = steps
         // Changed from previous commit to fix issue where all reusable steps in protocol are getting flagged as changed even though they haven't been modified
-        .filter(step => step.reusable && step.existingValues)
+        .filter(step => step.reusable && (step.completed || step.saved))
         .map(step => ({
           ...cloneDeep(step),
           id: step.reusableStepId || step.id,

@@ -4,38 +4,40 @@ import assert from 'assert';
 describe('ChangedBadge', () => {
 
   describe('hasMatchingChange', () => {
-    it('returns false if changes list is empty', () => {
-      assert.equal(hasMatchingChange(['field1'], []), false);
-      assert.equal(hasMatchingChange(['field1'], null), false);
-      assert.equal(hasMatchingChange(['field1'], undefined), false);
+    it('returns false when changes list is empty or undefined', () => {
+      assert.strictEqual(hasMatchingChange(['field1'], []), false);
+      assert.strictEqual(hasMatchingChange(['field1'], null), false);
+      assert.strictEqual(hasMatchingChange(['field1'], undefined), false);
     });
 
-    it('returns false if fields list is empty', () => {
-      assert.equal(hasMatchingChange([], ['field1']), false);
-      assert.equal(hasMatchingChange(null, ['field1']), false);
-      assert.equal(hasMatchingChange(undefined, ['field1']), false);
+    it('returns false when fields list is empty or undefined', () => {
+      assert.strictEqual(hasMatchingChange([], ['field1']), false);
+      assert.strictEqual(hasMatchingChange(null, ['field1']), false);
+      assert.strictEqual(hasMatchingChange(undefined, ['field1']), false);
     });
 
-    it('returns true if there is an exact match', () => {
-      const fields = ['field1', 'field2'];
-      const changes = ['field2', 'field3'];
-      assert.equal(hasMatchingChange(fields, changes), true);
+    it('matches exact field with reusableStepId sub-key', () => {
+      const fields = ['field2.reusableStepId'];
+      const changes = ['field2.reusableStepId'];
+      assert.strictEqual(hasMatchingChange(fields, changes), true);
     });
 
-    it('returns true if there is a wildcard match', () => {
-      const fields = ['protocols.*.title'];
+    it('matches wildcard field against nested change path ending with reusableStepId', () => {
+      const fields = ['protocols.*.title.*'];
+      const changes = ['protocols.123.title.reusableStepId'];
+      assert.strictEqual(hasMatchingChange(fields, changes), true);
+    });
+
+    it('does not match when reusableStepId is absent even if pattern matches', () => {
+      const fields = ['protocols.*.title.*'];
       const changes = ['protocols.123.title'];
-      assert.equal(hasMatchingChange(fields, changes), true);
+      assert.strictEqual(hasMatchingChange(fields, changes), false);
     });
 
-    it('returns false if there are no matches', () => {
-      const fields = ['field1', 'field2'];
-      const changes = ['field3', 'field4'];
-      assert.equal(hasMatchingChange(fields, changes), false);
-
-      const fields2 = ['protocols.123.title'];
-      const changes2 = ['protocols.*.description'];
-      assert.equal(hasMatchingChange(fields2, changes2), false);
+    it('does not match when no fields align with changes', () => {
+      const fields = ['field1', 'field2.*'];
+      const changes = ['field3.reusableStepId'];
+      assert.strictEqual(hasMatchingChange(fields, changes), false);
     });
   });
 });
