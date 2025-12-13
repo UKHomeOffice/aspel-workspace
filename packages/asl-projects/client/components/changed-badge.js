@@ -2,26 +2,37 @@ import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import minimatch from 'minimatch';
 
-export const hasMatchingChange = (fields, changes, applicationStatus) => {
-  if (!changes?.length || !fields?.length) {
+// returns true if a string looks like it contains a UUID
+const hasUuid = str => /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(str);
+
+function stripPrefixItemsKeepingFirstTwo(arr) {
+  if (arr.length <= 2) return arr;
+
+  const head = arr.slice(0, 2);
+  const tail = arr.slice(2);
+
+  let lastNonUuidIndex = -1;
+  tail.forEach((item, idx) => {
+    if (!hasUuid(item)) lastNonUuidIndex = idx;
+  });
+
+  if (lastNonUuidIndex === -1) return arr;
+
+  const cleanedTail = tail.slice(lastNonUuidIndex + 1);
+  return head.concat(cleanedTail);
+}
+
+export const hasMatchingChange = (fields, changes) => {
+  if (!fields?.length || !changes?.length) {
     return false;
   }
 
-  for (const field of fields) {
-    for (const change of changes) {
-      if (applicationStatus = "granted") {
-        if (minimatch(change, field)) {
-        return true;
-        }
-      } else {
-        if (minimatch(change, field) && change.includes("reusableStepId")) {
-          return true;
-        }
-      }
-    }
-  }
-
-  return false;
+  return fields.some(field => {
+    const cleaned = stripPrefixItemsKeepingFirstTwo(changes);
+    return cleaned.some(item => {
+      return minimatch(item, field);
+    });
+  });
 };
 
 export default function ChangedBadge({ fields = [], changedFromGranted, changedFromLatest, changedFromFirst, protocolId, noLabel }) {
@@ -35,7 +46,7 @@ export default function ChangedBadge({ fields = [], changedFromGranted, changedF
   if ((changedFromLatest || hasMatchingChange(fields, latest)) && protocolAllowed(previousProtocols.previous)) {
     return <span className="badge changed">{noLabel ? '' : 'changed'}</span>;
   }
-  if ((changedFromGranted || hasMatchingChange(fields, granted, applicationStatus = "granted")) && protocolAllowed(previousProtocols.granted)) {
+  if ((changedFromGranted || hasMatchingChange(fields, granted, 'granted')) && protocolAllowed(previousProtocols.granted)) {
     return <span className="badge">{noLabel ? '' : 'amended'}</span>;
   }
   if ((changedFromFirst || hasMatchingChange(fields, first)) && protocolAllowed(previousProtocols.first)) {
