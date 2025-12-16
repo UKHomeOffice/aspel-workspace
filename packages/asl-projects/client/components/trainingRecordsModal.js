@@ -8,7 +8,7 @@ export default function TrainingRecordModal({
                                               current = {},
                                               previous = {},
                                               first = {},
-                                              label = 'Training record changes'
+                                              label = 'Training or exemption change'
                                             }) {
 
   const normalise = obj => (obj && typeof obj === 'object' ? obj : {});

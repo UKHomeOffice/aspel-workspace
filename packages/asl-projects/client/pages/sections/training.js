@@ -42,7 +42,6 @@ export default function Training(props) {
       <p>{props.intro}</p>
 
       <h2>Training record</h2>
-      <ChangedBadge fields={['training']} />
       {
         /* feature flag enabled  */
         trainingRecordHighlight ? (
