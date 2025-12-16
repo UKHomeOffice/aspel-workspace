@@ -1840,8 +1840,8 @@ html.modal-open, html.modal-open body {
   margin-top: 10px;
   display: block;
   clear: both;
+  width: 100%;
 }
-
 @media (max-width: 900px) {
   #ppl-drafting-tool span.changedText {
     padding-left: 32px;
