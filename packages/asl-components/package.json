@@ -34,7 +34,7 @@
     "classnames": "^2.2.6",
     "date-fns": "^3.6.0",
     "diff": "^4.0.1",
-    "govuk-frontend": "^5.8.0",
+    "govuk-frontend": "^5.13.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "mustache": "^3.0.1",
