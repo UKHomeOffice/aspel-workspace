@@ -233,19 +233,28 @@ Select all that apply`,
       summary: 'Definitions of self-sustaining colonies',
       details: `**Marmosets, tamarins and other new world primates**
 
-A self-sustaining colony is a colony that contains no wild caught animals, is kept in a way that ensures animals are used to humans, and is sustained using animals sourced from within or from other self-sustaining colonies.
+  A colony is a self-sustaining colony if all the following apply:
+
+  1. it is kept in captivity in a way that ensures the animals are accustomed to humans
+  2. it contains only animals bred in captivity
+  3. it is sustained only by breeding animals within the colony or sourcing them from other colonies
 
 **Macaques and other old world primates**
 
-A self-sustaining colony is a colony that no longer sources animals from the wild (it may contain some existing wild caught animals) and is sustained using only captive bred animals.`
+A colony is a self-sustaining colony if all the following apply:
+
+1. it is kept in captivity in a way that ensures the animals are accustomed to humans
+2. it contains only animals bred in captivity, or no F0 (wild caught) animals have been added to the colony after 1 August 2025
+3. it is sustained only by breeding animals within the colony or sourcing them from other colonies that meet the requirements in (1) and (2)
+`
     },
     nhpsGeneration: {
       label: 'What was their generation (maternal line)?',
       hint: 'Select all that apply',
       options: {
         f0: 'F0 (wild caught)',
-        f1: 'F1 (progeny of wild caught females)',
-        f2: 'F2 or greater (progeny of captive bred females)'
+        f1: 'F1 (first generation bred in captivity where either the mother or father is wild caught)',
+        f2: 'F2 or greater (second generation bred in captivity, who are offspring of primates bred in captivity where both the mother and father are F1 or higher)'
       }
     },
     ga: {
