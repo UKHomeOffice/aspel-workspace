@@ -1834,13 +1834,10 @@ html.modal-open, html.modal-open body {
   display: table-caption;
 }
 #ppl-drafting-tool .modal-trigger {
-  margin-left: 0;
-  float: left;
+  margin-left: 0.5rem;
   font-size: 16px;
   margin-top: 10px;
-  display: block;
-  clear: both;
-  width: 100%;
+  display: inline-block;
 }
 @media (max-width: 900px) {
   #ppl-drafting-tool span.changedText {
