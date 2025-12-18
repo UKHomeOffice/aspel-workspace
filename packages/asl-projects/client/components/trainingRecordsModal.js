@@ -186,7 +186,7 @@ export default function TrainingRecordModal({
           <strong>Species</strong>
           {diffArray(compareTo.species, data.species, 'right')}
         </div>
-        <div className="govuk-form-group rightPanelDetailsBlock">
+        <div className="govuk-form-group">
           <strong>Details</strong>
           {data.isExemption ? (
             <p className="preserve-whitespace">
@@ -222,8 +222,9 @@ export default function TrainingRecordModal({
           <div className="govuk-grid-row">
             {/* Left side with tabs */}
             <div className="govuk-grid-column-one-half">
-              {!showPrevTab && !showFirstTab && <h3>Previous version</h3>}
-              {(showPrevTab || showFirstTab) && (
+              {!(showPrevTab || showFirstTab) ? (
+                <h3>Previous version</h3>
+              ) : (
                 <nav className="govuk-tabs">
                   <ul>
                     {showPrevTab && (
