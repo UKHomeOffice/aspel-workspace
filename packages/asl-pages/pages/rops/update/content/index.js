@@ -231,7 +231,7 @@ Select all that apply`,
         'non-self-sustaining': 'Non self-sustaining colony'
       },
       summary: 'Definitions of self-sustaining colonies',
-      details: `**Marmosets, tamarins and other new world primates**
+      details: `### Marmosets, tamarins and other new world primates
 
   A colony is a self-sustaining colony if all the following apply:
 
@@ -239,7 +239,7 @@ Select all that apply`,
   2. it contains only animals bred in captivity
   3. it is sustained only by breeding animals within the colony or sourcing them from other colonies
 
-**Macaques and other old world primates**
+### Macaques and other old world primates
 
 A colony is a self-sustaining colony if all the following apply:
 
