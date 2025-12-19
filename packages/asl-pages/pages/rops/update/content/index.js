@@ -224,7 +224,7 @@ Select all that apply`,
       }
     },
     nhpsColonyStatus: {
-      label: 'Where were they sourced from?',
+      label: 'What type of colony were they sourced from?',
       hint: 'Select all that apply',
       options: {
         'self-sustaining': 'Self-sustaining colony',
