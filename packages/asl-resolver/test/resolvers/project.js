@@ -3669,9 +3669,7 @@ describe('Project resolver', () => {
       const conversionTitle = 'Digitised Paper Licence';
       const expectedExpiryYear = moment(issueDate).add(4, 'years').add(6, 'months').format('YYYY');
       const expectedExpiryDate = `${expectedExpiryYear}-11-14T22:59:59.999Z`;
-      const expectedRaDate = moment(expectedExpiryDate)
-        .add(6, 'months')
-        .toISOString();
+      const expectedRaDate = moment(expectedExpiryDate).add(6, 'months').toISOString();
 
       return Promise.resolve()
         .then(() =>
