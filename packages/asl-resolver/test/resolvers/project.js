@@ -20,6 +20,10 @@ const uuid =
 
 const establishmentId = 8201;
 
+const issueYear = moment().subtract(2, 'year').format('YYYY');
+const amendYear = moment().subtract(1, 'year').format('YYYY');
+const expiryYear = moment().add(3, 'year').format('YYYY');
+
 const isNowish = (date) => {
   return moment(date).isBetween(
     moment().subtract(5, 'seconds'),
@@ -92,8 +96,8 @@ describe('Project resolver', () => {
               id: projectId,
               status: 'active',
               title: 'Hypoxy and angiogenesis in cancer therapy',
-              issueDate: new Date('2019-07-11').toISOString(),
-              expiryDate: new Date('2022-07-10').toISOString(),
+              issueDate: new Date(`${issueYear}-07-11`).toISOString(),
+              expiryDate: new Date(`${expiryYear}-07-10`).toISOString(),
               licenceNumber: 'PP-627808',
               establishmentId: 8201,
               licenceHolderId: profileId
@@ -107,42 +111,42 @@ describe('Project resolver', () => {
               projectId,
               data: {},
               status: 'draft',
-              createdAt: new Date('2019-07-04').toISOString()
+              createdAt: new Date(`${issueYear}-07-04`).toISOString()
             },
             {
               id: '68d79bb1-3573-4402-ac08-7ac27dcbb39e',
               projectId,
               data: {},
               status: 'submitted',
-              createdAt: new Date('2019-07-03').toISOString()
+              createdAt: new Date(`${issueYear}-07-03`).toISOString()
             },
             {
               id: 'ee871d64-cc87-470a-82d9-4a326c9c08dc',
               projectId,
               data: {},
               status: 'draft',
-              createdAt: new Date('2019-07-02').toISOString()
+              createdAt: new Date(`${issueYear}-07-02`).toISOString()
             },
             {
               id: '574266e5-ef34-4e34-bf75-7b6201357e75',
               projectId,
               data: {},
               status: 'granted',
-              createdAt: new Date('2019-07-01').toISOString()
+              createdAt: new Date(`${issueYear}-07-01`).toISOString()
             },
             {
               id: 'b497b05a-f1e0-4596-8b02-60e129e2ab49',
               projectId,
               data: {},
               status: 'submitted',
-              createdAt: new Date('2019-06-04').toISOString()
+              createdAt: new Date(`${issueYear}-06-04`).toISOString()
             },
             {
               id: '71e25eca-e0aa-4555-b09b-62f55b83e890',
               projectId,
               data: {},
               status: 'granted',
-              createdAt: new Date('2019-06-03').toISOString()
+              createdAt: new Date(`${issueYear}-06-03`).toISOString()
             }
           ])
         );
@@ -196,8 +200,8 @@ describe('Project resolver', () => {
             title: 'Granted project',
             establishmentId: 8201,
             licenceHolderId: profileId,
-            createdAt: new Date('2019-07-11').toISOString(),
-            updatedAt: new Date('2019-07-11').toISOString()
+            createdAt: new Date(`${issueYear}-07-11`).toISOString(),
+            updatedAt: new Date(`${issueYear}-07-11`).toISOString()
           })
         )
         .then(() =>
@@ -325,8 +329,8 @@ describe('Project resolver', () => {
             title: 'New project',
             establishmentId: 8201,
             licenceHolderId: profileId,
-            createdAt: new Date('2019-07-11').toISOString(),
-            updatedAt: new Date('2019-07-11').toISOString(),
+            createdAt: new Date(`${issueYear}-07-11`).toISOString(),
+            updatedAt: new Date(`${issueYear}-07-11`).toISOString(),
             schemaVersion: 1
           },
           {
@@ -335,11 +339,11 @@ describe('Project resolver', () => {
             title: 'Active project',
             establishmentId: 8201,
             licenceHolderId: profileId,
-            createdAt: new Date('2019-07-11').toISOString(),
-            updatedAt: new Date('2019-07-11').toISOString(),
+            createdAt: new Date(`${issueYear}-07-11`).toISOString(),
+            updatedAt: new Date(`${issueYear}-07-11`).toISOString(),
             schemaVersion: 1,
-            issueDate: new Date('2019-07-11').toISOString(),
-            expiryDate: new Date('2022-07-10').toISOString(),
+            issueDate: new Date(`${issueYear}-07-11`).toISOString(),
+            expiryDate: new Date(`${expiryYear}-07-10`).toISOString(),
             licenceNumber: 'PP-627808'
           },
           {
@@ -348,8 +352,8 @@ describe('Project resolver', () => {
             title: 'Legacy draft',
             establishmentId: 8201,
             licenceHolderId: profileId,
-            createdAt: new Date('2019-07-11').toISOString(),
-            updatedAt: new Date('2019-07-11').toISOString(),
+            createdAt: new Date(`${issueYear}-07-11`).toISOString(),
+            updatedAt: new Date(`${issueYear}-07-11`).toISOString(),
             schemaVersion: 0
           }
         ])
@@ -476,32 +480,32 @@ describe('Project resolver', () => {
             title: 'New project',
             establishmentId: 8201,
             licenceHolderId: profileId,
-            createdAt: new Date('2019-07-11').toISOString(),
-            updatedAt: new Date('2019-07-11').toISOString(),
+            createdAt: new Date(`${issueYear}-07-11`).toISOString(),
+            updatedAt: new Date(`${issueYear}-07-11`).toISOString(),
             schemaVersion: 1
           },
           {
             id: projectId2,
             status: 'active',
             title: 'Active project to be updated',
-            issueDate: new Date('2019-07-11').toISOString(),
-            expiryDate: new Date('2022-07-10').toISOString(),
+            issueDate: new Date(`${issueYear}-07-11`).toISOString(),
+            expiryDate: new Date(`${expiryYear}-07-10`).toISOString(),
             establishmentId: 8201,
             licenceHolderId: profileId,
-            createdAt: new Date('2019-07-11').toISOString(),
-            updatedAt: new Date('2019-07-11').toISOString(),
+            createdAt: new Date(`${issueYear}-07-11`).toISOString(),
+            updatedAt: new Date(`${issueYear}-07-11`).toISOString(),
             schemaVersion: 1
           },
           {
             id: legacyProject,
             status: 'active',
             title: 'Legacy project',
-            issueDate: new Date('2019-07-11').toISOString(),
-            expiryDate: new Date('2022-07-10').toISOString(),
+            issueDate: new Date(`${issueYear}-07-11`).toISOString(),
+            expiryDate: new Date(`${expiryYear}-07-10`).toISOString(),
             establishmentId: 8201,
             licenceHolderId: profileId,
-            createdAt: new Date('2019-07-11').toISOString(),
-            updatedAt: new Date('2019-07-11').toISOString(),
+            createdAt: new Date(`${issueYear}-07-11`).toISOString(),
+            updatedAt: new Date(`${issueYear}-07-11`).toISOString(),
             schemaVersion: 0
           }
         ])
@@ -1328,7 +1332,7 @@ describe('Project resolver', () => {
             modelType: 'project',
             modelId: projectId,
             establishmentId: 8201,
-            deadline: '2022-07-01',
+            deadline: `${expiryYear}-07-01`,
             conditionKey: 'non-purpose-bred-sched-2',
             status: 'pending'
           },
@@ -1336,7 +1340,7 @@ describe('Project resolver', () => {
             modelType: 'project',
             modelId: projectId,
             establishmentId: 8201,
-            deadline: '2022-08-01',
+            deadline: `${expiryYear}-08-01`,
             conditionKey: 'code-of-practice',
             status: 'pending'
           }
@@ -1392,7 +1396,7 @@ describe('Project resolver', () => {
             modelType: 'project',
             modelId: projectId,
             establishmentId: 8201,
-            deadline: '2022-07-01',
+            deadline: `${expiryYear}-07-01`,
             conditionKey: 'non-purpose-bred-sched-2',
             status: 'active'
           },
@@ -1400,7 +1404,7 @@ describe('Project resolver', () => {
             modelType: 'project',
             modelId: projectId,
             establishmentId: 8201,
-            deadline: '2022-08-01',
+            deadline: `${expiryYear}-08-01`,
             conditionKey: 'code-of-practice',
             status: 'active'
           }
@@ -1493,13 +1497,13 @@ describe('Project resolver', () => {
           projectId,
           status: 'submitted',
           data: {},
-          createdAt: new Date('2019-12-15').toISOString()
+          createdAt: new Date(`${issueYear}-12-15`).toISOString()
         },
         {
           projectId,
           status: 'granted',
           data: {},
-          createdAt: new Date('2019-12-16').toISOString()
+          createdAt: new Date(`${issueYear}-12-16`).toISOString()
         }
       ];
 
@@ -1529,13 +1533,13 @@ describe('Project resolver', () => {
           projectId,
           status: 'submitted',
           data: {},
-          createdAt: new Date('2019-12-15').toISOString()
+          createdAt: new Date(`${issueYear}-12-15`).toISOString()
         },
         {
           projectId,
           status: 'draft',
           data: {},
-          createdAt: new Date('2019-12-16').toISOString()
+          createdAt: new Date(`${issueYear}-12-16`).toISOString()
         }
       ];
 
@@ -1687,7 +1691,7 @@ describe('Project resolver', () => {
               months: 0
             }
           },
-          createdAt: new Date('2019-12-17').toISOString()
+          createdAt: new Date(`${issueYear}-12-17`).toISOString()
         },
         {
           projectId: projectId2,
@@ -1698,7 +1702,7 @@ describe('Project resolver', () => {
               months: 0
             }
           },
-          createdAt: new Date('2019-12-18').toISOString()
+          createdAt: new Date(`${issueYear}-12-18`).toISOString()
         }
       ];
       return Promise.resolve()
@@ -1734,8 +1738,8 @@ describe('Project resolver', () => {
               months: 0
             }
           },
-          createdAt: new Date('2019-07-11').toISOString(),
-          updatedAt: new Date('2019-07-11').toISOString()
+          createdAt: new Date(`${issueYear}-07-11`).toISOString(),
+          updatedAt: new Date(`${issueYear}-07-11`).toISOString()
         },
         {
           projectId: projectId2,
@@ -1746,8 +1750,8 @@ describe('Project resolver', () => {
               months: 0
             }
           },
-          createdAt: new Date('2019-10-11').toISOString(),
-          updatedAt: new Date('2019-10-11').toISOString()
+          createdAt: new Date(`${issueYear}-10-11`).toISOString(),
+          updatedAt: new Date(`${issueYear}-10-11`).toISOString()
         }
       ];
       return Promise.resolve()
@@ -1782,8 +1786,8 @@ describe('Project resolver', () => {
               months: 0
             }
           },
-          createdAt: new Date('2019-10-11').toISOString(),
-          updatedAt: new Date('2019-10-11').toISOString()
+          createdAt: new Date(`${issueYear}-10-11`).toISOString(),
+          updatedAt: new Date(`${issueYear}-10-11`).toISOString()
         }
       ];
       return Promise.resolve()
@@ -1863,8 +1867,8 @@ describe('Project resolver', () => {
               ],
               'other-establishments': true
             },
-            createdAt: new Date('2019-10-11').toISOString(),
-            updatedAt: new Date('2019-10-11').toISOString()
+            createdAt: new Date(`${issueYear}-10-11`).toISOString(),
+            updatedAt: new Date(`${issueYear}-10-11`).toISOString()
           },
           {
             id: versionToGrant,
@@ -1879,8 +1883,8 @@ describe('Project resolver', () => {
               ],
               'other-establishments': true
             },
-            createdAt: new Date('2020-10-11').toISOString(),
-            updatedAt: new Date('2020-10-11').toISOString()
+            createdAt: new Date(`${issueYear}-10-11`).toISOString(),
+            updatedAt: new Date(`${issueYear}-10-11`).toISOString()
           }
         ];
         return Promise.resolve()
@@ -1933,8 +1937,8 @@ describe('Project resolver', () => {
               ],
               'other-establishments': true
             },
-            createdAt: new Date('2019-10-11').toISOString(),
-            updatedAt: new Date('2019-10-11').toISOString()
+            createdAt: new Date(`${issueYear}-10-11`).toISOString(),
+            updatedAt: new Date(`${issueYear}-10-11`).toISOString()
           },
           {
             id: generateUuid(),
@@ -1948,8 +1952,8 @@ describe('Project resolver', () => {
               ],
               'other-establishments': false
             },
-            createdAt: new Date('2020-10-11').toISOString(),
-            updatedAt: new Date('2020-10-11').toISOString()
+            createdAt: new Date(`${amendYear}-10-11`).toISOString(),
+            updatedAt: new Date(`${amendYear}-10-11`).toISOString()
           }
         ];
         return Promise.resolve()
@@ -1987,8 +1991,8 @@ describe('Project resolver', () => {
             data: {
               establishments: []
             },
-            createdAt: new Date('2019-10-11').toISOString(),
-            updatedAt: new Date('2019-10-11').toISOString()
+            createdAt: new Date(`${issueYear}-10-11`).toISOString(),
+            updatedAt: new Date(`${issueYear}-10-11`).toISOString()
           },
           {
             id: generateUuid(),
@@ -2002,8 +2006,8 @@ describe('Project resolver', () => {
               ],
               'other-establishments': true
             },
-            createdAt: new Date('2020-10-11').toISOString(),
-            updatedAt: new Date('2020-10-11').toISOString()
+            createdAt: new Date(`${amendYear}-10-11`).toISOString(),
+            updatedAt: new Date(`${amendYear}-10-11`).toISOString()
           }
         ];
         return Promise.resolve()
@@ -2559,7 +2563,7 @@ describe('Project resolver', () => {
             modelType: 'project',
             modelId: projectId,
             establishmentId: 8201,
-            deadline: '2022-07-01',
+            deadline: `${expiryYear}-07-01`,
             conditionKey: 'non-purpose-bred-sched-2',
             status: 'active'
           },
@@ -2567,7 +2571,7 @@ describe('Project resolver', () => {
             modelType: 'project',
             modelId: projectId,
             establishmentId: 8201,
-            deadline: '2022-08-01',
+            deadline: `${expiryYear}-08-01`,
             conditionKey: 'code-of-practice',
             status: 'active'
           }
@@ -2811,7 +2815,7 @@ describe('Project resolver', () => {
           modelType: 'project',
           modelId: projectId2,
           establishmentId: 8201,
-          deadline: '2022-07-01',
+          deadline: `${expiryYear}-07-01`,
           conditionKey: 'non-purpose-bred-sched-2',
           status: 'pending'
         },
@@ -2819,7 +2823,7 @@ describe('Project resolver', () => {
           modelType: 'project',
           modelId: projectId2,
           establishmentId: 8201,
-          deadline: '2022-08-01',
+          deadline: `${expiryYear}-08-01`,
           conditionKey: 'code-of-practice',
           status: 'pending'
         },
@@ -2827,7 +2831,7 @@ describe('Project resolver', () => {
           modelType: 'project',
           modelId: projectId2,
           establishmentId: 8201,
-          deadline: '2022-09-01',
+          deadline: `${expiryYear}-09-01`,
           conditionKey: 'nmbas',
           status: 'active'
         }
@@ -2885,8 +2889,8 @@ describe('Project resolver', () => {
               id: expiredProjectId,
               status: 'expired',
               title: 'Expired project',
-              issueDate: moment('2015-07-01').toISOString(),
-              expiryDate: moment('2020-07-01').toISOString(),
+              issueDate: moment(`${issueYear}-07-01`).toISOString(),
+              expiryDate: moment(`${issueYear}-06-30`).toISOString(),
               establishmentId: 8201,
               licenceHolderId: profileId
             }
@@ -3193,8 +3197,8 @@ describe('Project resolver', () => {
 
   describe('update-issue-date', () => {
     beforeEach(() => {
-      const originalIssueDate = new Date('2020-01-17').toISOString();
-      const originalExpiryDate = new Date('2025-01-17').toISOString();
+      const originalIssueDate = new Date(`${issueYear}-01-17`).toISOString();
+      const originalExpiryDate = new Date(`${expiryYear}-01-17`).toISOString();
       const duration = { years: 5, months: 0 };
 
       return Promise.resolve()
@@ -3227,8 +3231,8 @@ describe('Project resolver', () => {
     });
 
     it('can change the issue date of a project', () => {
-      const newIssueDate = new Date('2018-08-15').toISOString();
-      const expectedExpiryDate = new Date('2023-08-14').toISOString().split('T')[0];
+      const newIssueDate = new Date(`${issueYear}-08-15`).toISOString();
+      const expectedExpiryDate = new Date(`${expiryYear}-08-14`).toISOString().split('T')[0];
 
       const opts = {
         action: 'update-issue-date',
@@ -3266,8 +3270,8 @@ describe('Project resolver', () => {
               status: 'active',
               title: 'Active project stub wrong licence number',
               licenceNumber: 'ABC-123',
-              issueDate: new Date('2020-01-17').toISOString(),
-              expiryDate: new Date('2025-01-17').toISOString(),
+              issueDate: new Date(`${issueYear}-01-17`).toISOString(),
+              expiryDate: new Date(`${expiryYear}-01-17`).toISOString(),
               establishmentId: 8201,
               licenceHolderId: profileId,
               isLegacyStub: true
@@ -3283,7 +3287,7 @@ describe('Project resolver', () => {
                 duration: { years: 5, months: 0 }
               },
               status: 'granted',
-              createdAt: new Date('2020-01-17').toISOString()
+              createdAt: new Date(`${issueYear}-01-17`).toISOString()
             }
           ])
         );
@@ -3352,9 +3356,9 @@ describe('Project resolver', () => {
               status: 'active',
               title: 'Licence to change',
               licenceNumber: 'ABC-123',
-              issueDate: new Date('2020-01-17').toISOString(),
-              expiryDate: new Date('2025-01-17').toISOString(),
-              amendedDate: new Date('2021-01-17').toISOString(),
+              issueDate: new Date(`${issueYear}-01-17`).toISOString(),
+              expiryDate: new Date(`${expiryYear}-01-17`).toISOString(),
+              amendedDate: new Date(`${amendYear}-01-17`).toISOString(),
               establishmentId: 8201,
               licenceHolderId: profileId
             },
@@ -3376,7 +3380,7 @@ describe('Project resolver', () => {
                 'experience-knowledge': 'Previous applicant experience'
               },
               status: 'granted',
-              createdAt: new Date('2020-01-17').toISOString()
+              createdAt: new Date(`${issueYear}-01-17`).toISOString()
             },
             {
               id: '574266e5-ef34-4e34-bf75-7b6201357e76',
@@ -3385,7 +3389,7 @@ describe('Project resolver', () => {
                 'experience-knowledge': 'Previous applicant experience'
               },
               status: 'draft',
-              createdAt: new Date('2020-01-17').toISOString()
+              createdAt: new Date(`${issueYear}-01-17`).toISOString()
             }
           ])
         );
@@ -3482,8 +3486,8 @@ describe('Project resolver', () => {
     it('can create a project stub for a legacy licence', () => {
       const title = 'Digitised Paper Licence Stub';
       const licenceNumber = 'XXX-123-XXX';
-      const issueDate = new Date('2020-12-20').toISOString();
-      const expectedExpiryDate = '2025-12-19T22:59:59.999Z';
+      const issueDate = new Date(`${issueYear}-12-20`).toISOString();
+      const expectedExpiryDate = `${expiryYear}-12-19T22:59:59.999Z`;
       const duration = {
         years: 5,
         months: 0
@@ -3658,12 +3662,12 @@ describe('Project resolver', () => {
     it('can convert a project stub into a standard legacy licence', () => {
       const title = 'Digitised Paper Licence Stub';
       const licenceNumber = 'XXX-123-XXX';
-      const issueDate = new Date('2018-05-15').toISOString();
-      const initialExpiryDate = new Date('2023-08-15 12:00:00').toISOString();
-      const draftDate = new Date('2020-02-28 12:00:00').toISOString();
+      const issueDate = new Date(`${issueYear}-05-15`).toISOString();
+      const initialExpiryDate = new Date(`${expiryYear}-08-15 12:00:00`).toISOString();
+      const draftDate = new Date(`${amendYear}-02-28 12:00:00`).toISOString();
 
       const conversionTitle = 'Digitised Paper Licence';
-      const expectedExpiryDate = '2022-11-14T22:59:59.999Z';
+      const expectedExpiryDate = moment(initialExpiryDate).add(4, 'years').add(6, 'months').toISOString();
       const expectedRaDate = moment(expectedExpiryDate)
         .add(6, 'months')
         .toISOString();
@@ -3795,8 +3799,8 @@ describe('Project resolver', () => {
 
     it('can delete a project stub', () => {
       const title = 'Digitised Paper Licence Stub';
-      const issueDate = new Date('2018-08-15 12:00:00').toISOString();
-      const expiryDate = new Date('2023-08-15 12:00:00').toISOString();
+      const issueDate = new Date(`${issueYear}-08-15 12:00:00`).toISOString();
+      const expiryDate = new Date(`${expiryYear}-08-15 12:00:00`).toISOString();
 
       return Promise.resolve()
         .then(() =>
