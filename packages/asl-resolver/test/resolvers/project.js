@@ -3667,7 +3667,13 @@ describe('Project resolver', () => {
       const draftDate = new Date(`${amendYear}-02-28 12:00:00`).toISOString();
 
       const conversionTitle = 'Digitised Paper Licence';
-      const expectedExpiryDate = moment(issueDate).add(4, 'years').add(6, 'months').toISOString();
+      const expectedExpiryDate =
+        moment(issueDate)
+          .add(4, 'years')
+          .add(6, 'months')
+          .subtract(1, 'hour')
+          .subtract(1, 'millisecond')
+          .toISOString();
       const expectedRaDate = moment(expectedExpiryDate)
         .add(6, 'months')
         .toISOString();
