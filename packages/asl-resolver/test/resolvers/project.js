@@ -1883,8 +1883,8 @@ describe('Project resolver', () => {
               ],
               'other-establishments': true
             },
-            createdAt: new Date(`${issueYear}-10-11`).toISOString(),
-            updatedAt: new Date(`${issueYear}-10-11`).toISOString()
+            createdAt: new Date(`${amendYear}-10-11`).toISOString(),
+            updatedAt: new Date(`${amendYear}-10-11`).toISOString()
           }
         ];
         return Promise.resolve()
@@ -3667,7 +3667,7 @@ describe('Project resolver', () => {
       const draftDate = new Date(`${amendYear}-02-28 12:00:00`).toISOString();
 
       const conversionTitle = 'Digitised Paper Licence';
-      const expectedExpiryDate = moment(initialExpiryDate).add(4, 'years').add(6, 'months').toISOString();
+      const expectedExpiryDate = moment(issueDate).add(4, 'years').add(6, 'months').toISOString();
       const expectedRaDate = moment(expectedExpiryDate)
         .add(6, 'months')
         .toISOString();
