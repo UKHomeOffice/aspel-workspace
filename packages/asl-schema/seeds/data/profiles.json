@@ -3659,5 +3659,75 @@
         "role": "basic"
       }
     ]
+  },
+  {
+    "id": "12170e4c-8640-4b6b-9300-71f9f8522e50",
+    "userId": "2d928415-4dcf-4ec2-a187-a699ee95a8d3",
+    "title": "Ms",
+    "firstName": "holc",
+    "lastName": "sp",
+    "dob": "1970-04-23",
+    "position": "University Vice-Chancellor",
+    "qualifications": "BLib",
+    "certifications": "",
+    "address": "Lunar House\nSydenham Road,\nCroydon\nLondon",
+    "postcode": "CR0 2YF",
+    "email": "holc-sp@localhost.com",
+    "telephone": "01840 345 678",
+    "notes": "",
+    "certificates": [
+      {
+        "modules": [
+          "PILA (theory)",
+          "PILA (skills)"
+        ],
+        "species": [
+          "Mice",
+          "Rats"
+        ],
+        "passDate": "2015-06-04",
+        "accreditingBody": "Royal Society of Biology",
+        "certificateNumber": "12345",
+        "createdAt": "2020-09-10T10:40:30.000Z"
+      },
+      {
+        "modules": [
+          "L"
+        ],
+        "species": null,
+        "passDate": "2015-06-05",
+        "accreditingBody": "Royal Society of Biology",
+        "certificateNumber": "1234567890",
+        "createdAt": "2020-09-10T10:45:30.000Z"
+      }
+    ],
+    "roles": [
+      {
+        "establishmentId": 8201,
+        "type": "holc"
+      },
+      {
+        "establishmentId": 8202,
+        "type": "holc"
+      },
+      {
+        "establishmentId": 54321,
+        "type": "holc"
+      }
+    ],
+    "permissions": [
+      {
+        "establishmentId": 8201,
+        "role": "admin"
+      },
+      {
+        "establishmentId": 8202,
+        "role": "admin"
+      },
+      {
+        "establishmentId": 54321,
+        "role": "admin"
+      }
+    ]
   }
 ]

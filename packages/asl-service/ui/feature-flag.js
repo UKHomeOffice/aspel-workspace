@@ -5,7 +5,8 @@ const { useCallback } = require('react');
 const flags = {
   FEATURE_FLAG_NAMED_PERSON_MVP: 'feature-named-person-mvp',
   FEATURE_FLAG_CAT_E: 'feature-cat-e',
-  FEATURE_FLAG_TRAINING_RECORD: 'feature-training-record-highlight'
+  FEATURE_FLAG_TRAINING_RECORD: 'feature-training-record-highlight',
+  FEATURE_FLAG_STANDARD_PROTOCOLS: 'feature-standard-protocols'
 };
 
 const useFeatureFlags = () => {
