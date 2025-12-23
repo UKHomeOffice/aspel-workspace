@@ -10,6 +10,7 @@ import RaSidePanel from '../components/ra-side-panel';
 import RAHint from '../components/ra-hint';
 import Readonly from './readonly';
 import { getSubsections } from '../schema';
+import { FEATURE_FLAG_STANDARD_PROTOCOLS, useFeatureFlag } from '@asl/service/ui/feature-flag';
 
 const mapStateToProps = (
   {
@@ -28,7 +29,14 @@ const mapStateToProps = (
     }
   }
 ) => {
-  const section = getSubsections(schemaVersion)[params.section];
+  let selection = params.section;
+  const standardProtocolsEnabled = useFeatureFlag(FEATURE_FLAG_STANDARD_PROTOCOLS);
+
+  if (standardProtocolsEnabled && selection === 'protocols') {
+    selection = 'standardProtocols';
+  }
+
+  const section = getSubsections(schemaVersion)[selection];
 
   section.fields = section.fields || [];
 
@@ -72,6 +80,7 @@ class Section extends React.Component {
 
     const Component = this.props.component || DefaultSection;
     const { fields, title, step, section, ...rest } = this.props;
+
 
     if (this.props.actualProject.isLegacyStub && this.props.section === 'additional-conditions') {
       return <StaticSection section={this.props.options} { ...rest } />;
