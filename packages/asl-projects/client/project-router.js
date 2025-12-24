@@ -8,6 +8,7 @@ import SyncHandler from './components/sync-handler';
 import Section from './pages/section';
 import Project from './pages/project';
 import ProtocolSummary from './pages/sections/protocols/summary-table';
+import StandardProtocols from './pages/sections/standard-protocols';
 
 import { formatDate } from './helpers';
 import { DATE_FORMAT } from './constants';
@@ -216,6 +217,7 @@ const ProjectRouter = () => {
 
         <Switch>
           <Route path="/protocol-summary" component={ProtocolSummary} />
+          <Route path="/standard-protocol" component={StandardProtocols} />
           <Route path="/:section/:step?" render={props => <Section { ...props } drafting={drafting} />} />
           <Route path="/" component={Project} />
         </Switch>
