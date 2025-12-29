@@ -13,6 +13,7 @@ import { DATE_FORMAT } from '../../../constants';
 import { filterSpeciesByActive } from '../../../pages/sections/protocols/animals';
 import protocolConditions from '../../../constants/protocol-conditions';
 import { getRepeatedFromProtocolIndex, hydrateSteps } from '../../../helpers/steps';
+import Mustache from 'mustache';
 
 export default (application, sections, values, updateImageDimensions) => {
   const document = new Document();
@@ -649,10 +650,13 @@ export default (application, sections, values, updateImageDimensions) => {
       return renderDeclaration(doc, field, values, value);
     }
 
-    doc.createParagraph(field.review || field.label).style('Question');
+    const context = { ...field, values };
+    const renderedLabel = Mustache.render(field.review || field.label || '', context);
+    doc.createParagraph(renderedLabel).style('Question');
 
     if (field.hint) {
-      doc.createParagraph(field.hint).style('aside');
+      const renderedHint = Mustache.render(field.hint, context);
+      renderMarkdown(doc, renderedHint, 'aside');
     }
 
     switch (field.type) {
@@ -744,7 +748,7 @@ export default (application, sections, values, updateImageDimensions) => {
     });
   };
 
-  const renderMarkdown = (doc, markdown) => {
+  const renderMarkdown = (doc, markdown, style = 'body') => {
     // if we ever use slate >= 0.5 this function can be replaced with
     // return renderTextEditor(doc, unified().use(remarkParse).use(remarkSlate).parse(markdown))
 
@@ -762,7 +766,7 @@ export default (application, sections, values, updateImageDimensions) => {
         case 'paragraph':
           doc.createParagraph(
             stripInvalidXmlChars(node.children.find(c => c.type === 'text').value)
-          ).style('body');
+          ).style(style);
           break;
 
         case 'list':
@@ -770,7 +774,7 @@ export default (application, sections, values, updateImageDimensions) => {
           node.children.forEach(listItem => {
             const text = stripInvalidXmlChars(get(listItem, 'children[0].children[0].value').trim());
             p = new Paragraph(text);
-            p.style('body');
+            p.style(style);
             p.bullet(0);
             doc.addParagraph(p);
           });
@@ -813,7 +817,15 @@ export default (application, sections, values, updateImageDimensions) => {
       case 'animals':
         return filterSpeciesByActive(values, project).forEach(speciesValues => {
           doc.createParagraph(speciesValues.name).heading4();
-          renderFields(doc, section, speciesValues, section.fields.filter(f => f.name !== 'species'));
+          renderFields(
+            doc,
+            section,
+            {
+              ...speciesValues,
+              speciesLabel: speciesValues.value?.replace(/-/g, ' ') ?? speciesValues.name?.toLowerCase()
+            },
+            section.fields.filter(f => f.name !== 'species')
+          );
         });
       case 'legacy-animals':
         return (values.species || []).forEach((speciesValues, index) => {
