@@ -217,7 +217,10 @@ const ProjectRouter = () => {
 
         <Switch>
           <Route path="/protocol-summary" component={ProtocolSummary} />
-          <Route path="/standard-protocol" component={StandardProtocols} />
+          <Route path="/standard-protocol" render={(props) => (
+              <StandardProtocols {...props} />
+            )}
+          />
           <Route path="/:section/:step?" render={props => <Section { ...props } drafting={drafting} />} />
           <Route path="/" component={Project} />
         </Switch>

@@ -36,7 +36,6 @@ import confirmProtocolsAffected from '../../helpers/confirm-protocols-affected';
 import { isTrainingLicence, markdownLink, getCurrentURLForFateOfAnimals } from '../../helpers';
 import NTSFateOfAnimalFields from '../../helpers/nts-field';
 import { trainingSummaryRenderer } from '../../components/download-link/components/training-summary-renderer.mjs';
-import StandardProtocols from '../../pages/sections/standard-protocols';
 
 export default () => {
   return ({
@@ -2204,45 +2203,6 @@ Select each that applies`,
               }
             }
           }
-        }
-      }
-    },
-    standardProtocols: {
-      title: 'Add a protocol',
-      subsections: {
-        standardProtocols: {
-          title: 'Standard protocols',
-          name: 'standardProtocols',
-          component: StandardProtocols,
-          fields: [
-            {
-              name: 'standardProtocolsField',
-              label: 'Question 1',
-              type: 'texteditor'
-            },
-            {
-              name: 'what type is it',
-              label: 'type of protocol',
-              hint: 'bingo',
-              type: 'radio',
-              className: 'smaller',
-              inline: true,
-              options: [
-                {
-                  label: 'Yes',
-                  value: true,
-                },
-                {
-                  label: 'No',
-                  value: false,
-                },
-                {
-                  label: 'NA',
-                  value: null,
-                }
-              ]
-            },
-            ]
         }
       }
     },
