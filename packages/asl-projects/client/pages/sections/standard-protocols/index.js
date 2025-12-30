@@ -134,7 +134,7 @@ export default function StandardProtocols({ ...props }) {
                   <input
                     className="govuk-radios__input"
                     type="radio"
-                    name="protocol-kind"
+                    name="select-protocol-type"
                     id={value}
                     value={value}
                     checked={selection === value}
