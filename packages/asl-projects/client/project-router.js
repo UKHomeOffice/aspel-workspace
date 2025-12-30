@@ -8,9 +8,13 @@ import SyncHandler from './components/sync-handler';
 import Section from './pages/section';
 import Project from './pages/project';
 import ProtocolSummary from './pages/sections/protocols/summary-table';
+import StandardProtocols from './pages/sections/standard-protocols';
 
 import { formatDate } from './helpers';
 import { DATE_FORMAT } from './constants';
+
+import { useFeatureFlag, FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
+
 
 const selector = ({
   project: version,
@@ -131,6 +135,8 @@ const ProjectRouter = () => {
       label="read guidance notes for project licence applications (opens in new tab)"/>.
     </>;
 
+  const standardProtocolsEnabled = useFeatureFlag(FEATURE_FLAG_STANDARD_PROTOCOLS);
+
   return (
     <BrowserRouter basename={basename}>
       <ScrollToTop>
@@ -216,6 +222,12 @@ const ProjectRouter = () => {
 
         <Switch>
           <Route path="/protocol-summary" component={ProtocolSummary} />
+          {standardProtocolsEnabled && (
+            <Route path="/standard-protocol" render={(props) => (
+                <StandardProtocols {...props} />
+              )}
+            />)
+          }
           <Route path="/:section/:step?" render={props => <Section { ...props } drafting={drafting} />} />
           <Route path="/" component={Project} />
         </Switch>
