@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { gaBreadingData } from './ga-breading-data';
 import { clearProtocolSelection, selectProtocol } from '../../../../actions/protocols';
+import SectionsLink from '../../../../components/sections-link';
 
 const GABreedingProtocolForm = ({
                                   onContinue,
@@ -63,6 +64,7 @@ const GABreedingProtocolForm = ({
         });
       }
     }
+    history.push('/protocols');
   };
 
   const handleCancel = (event) => {
@@ -78,6 +80,7 @@ const GABreedingProtocolForm = ({
 
   return (
     <div className="govuk-form-group">
+      <SectionsLink />
       <form onSubmit={handleSubmit}>
         <fieldset className="govuk-fieldset" aria-describedby="standard-protocols-hint">
           <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
@@ -91,9 +94,11 @@ const GABreedingProtocolForm = ({
           </p>
 
           {error && (
-            <p className="govuk-error-message">
-              <span className="govuk-visually-hidden">Error:</span> {error}
-            </p>
+            <div className="govuk-form-group--error">
+                <span className="govuk-error-message govuk-visually-hidden">
+                     {error}
+                </span>
+            </div>
           )}
 
           {/* First group - Mice and rats */}
