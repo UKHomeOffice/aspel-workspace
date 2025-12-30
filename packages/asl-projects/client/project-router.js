@@ -8,12 +8,13 @@ import SyncHandler from './components/sync-handler';
 import Section from './pages/section';
 import Project from './pages/project';
 import ProtocolSummary from './pages/sections/protocols/summary-table';
-import StandardProtocols from './pages/sections/standard-protocols';
 
 import { formatDate } from './helpers';
 import { DATE_FORMAT } from './constants';
 
 import { useFeatureFlag, FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
+import GABreeding from './pages/sections/standard-protocols/ga-breading';
+import StandardProtocols from './pages/sections/standard-protocols';
 
 
 const selector = ({
@@ -223,11 +224,17 @@ const ProjectRouter = () => {
         <Switch>
           <Route path="/protocol-summary" component={ProtocolSummary} />
           {standardProtocolsEnabled && (
-            <Route path="/standard-protocol" render={(props) => (
-                <StandardProtocols {...props} />
+              <Route path="/standard-protocol" render={(props) => (
+                  <StandardProtocols {...props} />
+                )}
+              />
               )}
-            />)
-          }
+          {standardProtocolsEnabled && (
+              <Route path="/ga-breeding" render={(props) => (
+                <GABreeding {...props} />
+              )}
+              />
+            )}
           <Route path="/:section/:step?" render={props => <Section { ...props } drafting={drafting} />} />
           <Route path="/" component={Project} />
         </Switch>

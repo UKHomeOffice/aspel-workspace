@@ -19,7 +19,7 @@ export default function StandardProtocols({ ...props }) {
         history.push('/protocols');
         break;
       case 'standard':
-        console.log(props);
+        history.push('/ga-breeding');
         break;
       case 'editable':
         alert("This feature is coming soon");
