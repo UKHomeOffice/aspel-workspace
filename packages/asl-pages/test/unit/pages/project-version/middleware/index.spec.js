@@ -93,6 +93,22 @@ describe('Versions', () => {
       expect(granted).toBe(versions[2]);
     });
 
+    it('can find the correct versions for a granted amendment without revisions', () => {
+      const versions = [
+        { 'id': 'current', 'status': 'granted', createdAt: '2025-12-31T12:34:45.000Z' },
+        { 'id': 'previous', 'status': 'granted', createdAt: '2025-12-29T12:34:45.000Z' },
+        { 'id': 'first', 'status': 'granted', createdAt: '2025-12-28T12:34:45.000Z' }
+      ];
+
+      const { previous, first, granted } = getVersionsForDiff(
+        buildProjectVersionsReq(versions, 'current')
+      );
+
+      expect(previous).toBe(versions[1]);
+      expect(first).toBeUndefined();
+      expect(granted).toBeUndefined();
+    });
+
     it('can find the correct versions for an archived task once a project is granted', () => {
       const versions = [
         { 'id': 'newer-granted', 'status': 'granted', createdAt: '2026-01-02T12:34:45.000Z' },

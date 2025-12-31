@@ -165,6 +165,11 @@ const getVersionsForDiff = (req, type = 'project-versions') => {
   const previousVersions = dropWhile(versions, version => version.id !== versionId).slice(1);
 
   const previous = previousVersions.shift();
+
+  if (previous?.status === 'granted') {
+    return { previous };
+  }
+
   const granted = previousVersions.find(version => version.status === 'granted');
   const first = granted ? undefined : previousVersions.pop();
 
