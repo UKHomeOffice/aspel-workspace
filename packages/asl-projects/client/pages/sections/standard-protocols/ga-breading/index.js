@@ -40,9 +40,10 @@ const GABreedingProtocolForm = ({
       .find(protocol => protocol.value === value)?.data;
 
     if (protocolData) {
-      selectProtocolAction(value, protocolData);
+      selectProtocolAction('standard', value, protocolData); // <-- add 'standard' as journey
     }
   };
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -59,7 +60,8 @@ const GABreedingProtocolForm = ({
     if (protocolData) {
       if (onContinue) {
         onContinue({
-          protocolValue: localSelection,
+          protocolType: 'standard', // type of protocol journey
+          protocolId: localSelection,
           protocolData: protocolData.data
         });
       }

@@ -14,6 +14,7 @@ export default function protocolsReducer(state = initialState, action) {
         ...state,
         selectedProtocol: action.payload.protocolId,
         protocolData: action.payload.protocolData,
+        protocolType: action.payload.protocolType,
         isDirty: true
       };
     case CLEAR_PROTOCOL_SELECTION:
