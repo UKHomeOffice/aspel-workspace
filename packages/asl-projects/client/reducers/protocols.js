@@ -3,6 +3,7 @@ import { CLEAR_PROTOCOL_SELECTION, SAVE_PROTOCOL_DATA, SELECT_PROTOCOL } from '.
 const initialState = {
   selectedProtocol: null,
   protocolData: null,
+  protocolType: null,
   userInput: {},
   isDirty: false
 };

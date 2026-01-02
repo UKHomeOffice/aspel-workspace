@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { connect } from 'react-redux';
 import { gaBreadingData } from './ga-breading-data';
 import { clearProtocolSelection, selectProtocol } from '../../../../actions/protocols';
@@ -53,20 +54,38 @@ const GABreedingProtocolForm = ({
       return;
     }
 
-    const protocolData = gaBreadingData.groups
+    const protocolTemplate = gaBreadingData.groups
       .flatMap(group => group.protocols)
       .find(protocol => protocol.value === localSelection);
 
-    if (protocolData) {
+    if (protocolTemplate) {
+      const protocolId = uuidv4(); // Generate unique ID
+
+      // Create complete protocol data matching your structure
+      const protocolData = {
+        ...protocolTemplate.data,
+        id: protocolId, // Use UUID, not template value
+        complete: false,
+        steps: protocolTemplate.data.steps || [{ id: uuidv4() }],
+        locations: protocolTemplate.data.locations || [],
+        conditions: protocolTemplate.data.conditions || []
+      };
+
+      // Store in Redux for Protocols component to pick up
+      selectProtocolAction('standard', protocolId, protocolData, true); // isNew = true
+
+      // Call onContinue if parent component needs it
       if (onContinue) {
         onContinue({
-          protocolType: 'standard', // type of protocol journey
-          protocolId: localSelection,
-          protocolData: protocolData.data
+          protocolType: 'standard',
+          protocolId: protocolId,
+          protocolData: protocolData
         });
       }
+
+      // Navigate
+      history.push('/protocols');
     }
-    history.push('/protocols');
   };
 
   const handleCancel = (event) => {
@@ -79,6 +98,7 @@ const GABreedingProtocolForm = ({
       history.push('/standard-protocol');
     }
   };
+
 
   return (
     <div className="govuk-form-group">

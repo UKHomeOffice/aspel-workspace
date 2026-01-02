@@ -177,24 +177,34 @@ const ProtocolSections = ({ sections, protocolState, editable, newComments, ...p
     sectionNames = sectionNames.sort(sortGranted(sections));
   }
   return (
-    <Accordion open={getOpenSection(protocolState, editable, sections)} toggleAll={!props.pdf} pdf={props.pdf}>
-      {
-        sectionNames.map((section, sectionIndex) => (
-          <ExpandingPanel
-            key={section}
-            title={<Title {...props} section={sections[section]} newComments={newComments} />}
-            className={section.toLowerCase()}
-            closeLabel={`Close ${lowerFirst(sections[section].title)}`}
-            pdf={props.pdf}
-          >
-            {
-              getSection(section, { ...props, protocolState, editable, ...sections[section], sectionsLength: size(sections), sectionIndex, newComments })
-            }
-          </ExpandingPanel>
-        ))
-      }
-    </Accordion>
-  );
+    <div className="playback">
+      <Accordion open={getOpenSection(protocolState, editable, sections)} toggleAll={!props.pdf} pdf={props.pdf}>
+        {
+          sectionNames.map((section, sectionIndex) => (
+            <ExpandingPanel
+              key={section}
+              title={<Title {...props} section={sections[section]} newComments={newComments} />}
+              className={section.toLowerCase()}
+              closeLabel={`Close ${lowerFirst(sections[section].title)}`}
+              pdf={props.pdf}
+            >
+              {
+                getSection(section, {
+                  ...props,
+                  protocolState,
+                  editable, ...sections[section],
+                  sectionsLength: size(sections),
+                  sectionIndex,
+                  newComments
+                })
+              }
+            </ExpandingPanel>
+          ))
+        }
+</Accordion>
+    </div>
+)
+  ;
 };
 
 const mapStateToProps = ({

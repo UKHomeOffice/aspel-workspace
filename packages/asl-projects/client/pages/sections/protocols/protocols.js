@@ -11,6 +11,7 @@ import Controls from '../../../components/controls';
 import { getNewComments } from '../../../helpers';
 import { renderFieldsInProtocol } from '../../../helpers/render-fields-in-protocol';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
+import { getEnhancedProtocols } from '../../../selectors/protocols';
 
 const Form = ({
   number,
@@ -194,7 +195,8 @@ const mapStateToProps = ({
     schemaVersion
   }
 }) => ({
-  protocols: project.protocols,
+  // protocols: project.protocols,
+  protocols: getEnhancedProtocols(state),
   newComments: getNewComments(comments, user, project),
   readonly,
   previousProtocols,
