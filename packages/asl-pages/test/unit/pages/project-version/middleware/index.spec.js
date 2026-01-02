@@ -10,6 +10,20 @@ describe('Versions', () => {
       };
     };
 
+    it('doesn\'t include any version history for an unrevised licence', () => {
+      const versions = [
+        { 'id': 'current', 'status': 'granted', createdAt: '2025-12-31T12:34:45.000Z' }
+      ];
+
+      const { previous, first, granted } = getVersionsForDiff(
+        buildProjectVersionsReq(versions, 'current')
+      );
+
+      expect(previous).toBeUndefined();
+      expect(first).toBeUndefined();
+      expect(granted).toBeUndefined();
+    });
+
     it('can find the correct of two versions before a project is granted', () => {
       const versions = [
         { 'id': 'current', 'status': 'draft', createdAt: '2025-12-31T12:34:45.000Z' },
@@ -112,7 +126,7 @@ describe('Versions', () => {
     it('can find the correct versions for an archived task once a project is granted', () => {
       const versions = [
         { 'id': 'newer-granted', 'status': 'granted', createdAt: '2026-01-02T12:34:45.000Z' },
-        { 'id': 'newer-submitted', 'status': 'submitted', createdAt: '2026-01-02T12:34:45.000Z' },
+        { 'id': 'newer-submitted', 'status': 'submitted', createdAt: '2026-01-01T12:34:45.000Z' },
         { 'id': 'current', 'status': 'granted', createdAt: '2025-12-31T12:34:45.000Z' },
         { 'id': 'previous', 'status': 'submitted', createdAt: '2025-12-30T12:34:45.000Z' },
         { 'id': 'older', 'status': 'submitted', createdAt: '2025-12-29T12:34:45.000Z' },
@@ -131,7 +145,7 @@ describe('Versions', () => {
     it('can find the correct versions for an archived task once an amendment is granted', () => {
       const versions = [
         { 'id': 'newer-granted', 'status': 'granted', createdAt: '2026-01-02T12:34:45.000Z' },
-        { 'id': 'newer-submitted', 'status': 'submitted', createdAt: '2026-01-02T12:34:45.000Z' },
+        { 'id': 'newer-submitted', 'status': 'submitted', createdAt: '2026-01-01T12:34:45.000Z' },
         { 'id': 'current', 'status': 'granted', createdAt: '2025-12-31T12:34:45.000Z' },
         { 'id': 'previous', 'status': 'submitted', createdAt: '2025-12-30T12:34:45.000Z' },
         { 'id': 'previous-granted', 'status': 'granted', createdAt: '2025-12-29T12:34:45.000Z' },
