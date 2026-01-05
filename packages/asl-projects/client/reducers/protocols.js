@@ -1,4 +1,11 @@
-import { CLEAR_PROTOCOL_SELECTION, SAVE_PROTOCOL_DATA, SELECT_PROTOCOL } from '../actions/types';
+import {
+  CREATE_PROTOCOL,
+  SELECT_PROTOCOL,
+  CLEAR_PROTOCOL_SELECTION,
+  SAVE_PROTOCOL_DATA,
+  UPDATE_PROTOCOL,
+  ADD_PROTOCOL
+} from '../actions/types';
 
 const initialState = {
   selectedProtocol: null,
@@ -18,14 +25,41 @@ export default function protocolsReducer(state = initialState, action) {
         protocolType: action.payload.protocolType,
         isDirty: true
       };
-    case CLEAR_PROTOCOL_SELECTION:
-      return initialState;
-    case SAVE_PROTOCOL_DATA:
+
+    case CREATE_PROTOCOL:
       return {
         ...state,
-        userInput: action.payload,
+        createdProtocols: [...state.createdProtocols, action.payload],
+        selectedProtocol: action.payload.id,
+        protocolData: action.payload,
+        protocolType: action.payload._protocolType || 'experimental',
         isDirty: true
       };
+
+    case UPDATE_PROTOCOL: {
+      const { id, updates } = action.payload;
+      return {
+        ...state,
+        allProtocols: {
+          ...state.allProtocols,
+          [id]: {
+            ...state.allProtocols[id],
+            ...updates,
+            updatedAt: new Date().toISOString()
+          }
+        }
+      };
+    }
+
+    case CLEAR_PROTOCOL_SELECTION:
+      return {
+        ...state,
+        selectedProtocolId: null
+      };
+
+    case SAVE_PROTOCOL_DATA:
+      return state;
+
     default:
       return state;
   }

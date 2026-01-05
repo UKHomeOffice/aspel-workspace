@@ -16,13 +16,21 @@ export default function StandardProtocols({ ...props }) {
 
     switch (selection) {
       case 'experimental':
-        history.push('/protocols');
+        history.push('/protocols', {
+          createProtocolType: selection
+        });
         break;
+
       case 'standard':
-        history.push('/ga-breeding');
+        history.push('/ga-breeding',{
+          createProtocolType: selection
+        });
+
         break;
       case 'editable':
-        alert("This feature is coming soon");
+        history.push('/protocols', {
+          createProtocolType: selection
+        });
         break;
       default:
     }
