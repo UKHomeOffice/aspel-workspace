@@ -1,15 +1,16 @@
+// reducers/protocols.js - STORE ALL PROTOCOLS
 import {
-  CREATE_PROTOCOL,
-  SELECT_PROTOCOL,
   CLEAR_PROTOCOL_SELECTION,
   SAVE_PROTOCOL_DATA,
-  UPDATE_PROTOCOL,
-  ADD_PROTOCOL
+  SELECT_PROTOCOL,
+  CREATE_PROTOCOL
 } from '../actions/types';
 
 const initialState = {
+  // Store ALL created protocols here
+  allProtocols: {}, // protocolId -> protocolData
+  // Current selection
   selectedProtocol: null,
-  protocolData: null,
   protocolType: null,
   userInput: {},
   isDirty: false
@@ -18,47 +19,49 @@ const initialState = {
 export default function protocolsReducer(state = initialState, action) {
   switch (action.type) {
     case SELECT_PROTOCOL:
+      const { protocolType, protocolId, protocolData } = action.payload;
+
+      // DEEP COPY protocolData
+      const safeProtocolData = protocolData ? JSON.parse(JSON.stringify(protocolData)) : null;
+
       return {
         ...state,
-        selectedProtocol: action.payload.protocolId,
-        protocolData: action.payload.protocolData,
-        protocolType: action.payload.protocolType,
+        // Add to allProtocols
+        allProtocols: {
+          ...state.allProtocols,
+          [protocolId]: safeProtocolData
+        },
+        selectedProtocol: protocolId,
+        protocolType: protocolType,
         isDirty: true
       };
 
     case CREATE_PROTOCOL:
-      return {
-        ...state,
-        createdProtocols: [...state.createdProtocols, action.payload],
-        selectedProtocol: action.payload.id,
-        protocolData: action.payload,
-        protocolType: action.payload._protocolType || 'experimental',
-        isDirty: true
-      };
-
-    case UPDATE_PROTOCOL: {
-      const { id, updates } = action.payload;
+      const newProtocol = action.payload;
       return {
         ...state,
         allProtocols: {
           ...state.allProtocols,
-          [id]: {
-            ...state.allProtocols[id],
-            ...updates,
-            updatedAt: new Date().toISOString()
-          }
-        }
+          [newProtocol.id]: newProtocol
+        },
+        selectedProtocol: newProtocol.id,
+        protocolType: newProtocol.protocolType || 'experimental',
+        isDirty: true
       };
-    }
 
     case CLEAR_PROTOCOL_SELECTION:
       return {
         ...state,
-        selectedProtocolId: null
+        selectedProtocol: null,
+        protocolType: null
       };
 
     case SAVE_PROTOCOL_DATA:
-      return state;
+      return {
+        ...state,
+        userInput: action.payload,
+        isDirty: true
+      };
 
     default:
       return state;
