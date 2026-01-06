@@ -167,7 +167,7 @@ const getVersionsForDiff = (req, type = 'project-versions') => {
   const previous = previousVersions.shift();
 
   if (previous?.status === 'granted') {
-    return { previous };
+    return { previous, granted: previous };
   }
 
   const granted = previousVersions.find(version => version.status === 'granted');
