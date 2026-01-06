@@ -120,7 +120,7 @@ describe('Versions', () => {
 
       expect(previous).toBe(versions[1]);
       expect(first).toBeUndefined();
-      expect(granted).toBeUndefined();
+      expect(granted).toBe(versions[1]);
     });
 
     it('can find the correct versions for an archived task once a project is granted', () => {
