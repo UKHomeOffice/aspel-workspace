@@ -34,8 +34,5 @@ start({
     schemaVersion: 'RA',
     licenceHolder: state.static.project.licenceHolder
   },
-  static: {
-    urls: state.static.urls,
-    content: state.static.content
-  }
+  static: cloneDeep(state.static)
 });
