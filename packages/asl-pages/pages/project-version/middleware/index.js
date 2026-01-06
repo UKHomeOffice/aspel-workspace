@@ -423,6 +423,11 @@ const getAllChanges = (type = 'project-versions') => (req, res, next) => {
     getGrantedVersion(req, type)
   ])
     .then(([firstVersion, previousVersion, grantedVersion]) => {
+      res.locals.static.versionsForComparison = {
+        firstId: firstVersion?.id,
+        previousId: previousVersion?.id,
+        grantedId: grantedVersion?.id
+      };
       res.locals.static.changes = getVersionChanges(req[model], firstVersion, previousVersion, grantedVersion);
       res.locals.static.previousProtocols = getPreviousProtocols(firstVersion, previousVersion, grantedVersion);
       res.locals.static.previousAA = getPreviousAA(firstVersion, previousVersion, grantedVersion);
