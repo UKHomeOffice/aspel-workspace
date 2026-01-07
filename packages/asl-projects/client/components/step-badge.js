@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import ChangedBadge from './changed-badge';
 
-const changeFields = (step, prefix) => step.reusable ? [ `reusableSteps.${step.reusableStepId}` ] : [ prefix.substr(0, prefix.length - 1) ];
+const changeFields = (step, prefix) => step.reusable ? [`reusableSteps.${step.reusableStepId}`] : [prefix.substr(0, prefix.length - 1)];
 
 export default function StepBadge(props) {
   const { previous, steps, firstSteps, grantedSteps } = useSelector(state => state.application.previousProtocols);
@@ -54,7 +54,15 @@ export default function StepBadge(props) {
     }
     return (
       <>
-        <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} protocolId={props.protocolId}/>
+        {/* The prop excludeSelf is intended to handle the following business case:
+
+          "Show a 'Changed' badge only if specific properties of this Step have changed, but ignore it if the Step container itself is marked as 'changed'."
+
+          In the audit logs/change history, sometimes a parent object (like a Step) is flagged as "modified" just because it was saved or reordered, even if the user didn't type new text into its fields.
+
+          Without this prop: The badge might appear as a "false positive" when nothing visible changed.
+          With this prop: The system ignores the match on the Step's own ID/path and checks specifically for changes to its children. */}
+        <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} protocolId={props.protocolId} excludeSelf={true} />
         {move}
       </>
     );
