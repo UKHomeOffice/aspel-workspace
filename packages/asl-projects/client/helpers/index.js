@@ -4,13 +4,13 @@ import castArray from 'lodash/castArray';
 import pickBy from 'lodash/pickBy';
 import mapValues from 'lodash/mapValues';
 import map from 'lodash/map';
-import {format as dateFormatter} from 'date-fns';
-import {JSONPath} from 'jsonpath-plus';
+import { format as dateFormatter } from 'date-fns';
+import { JSONPath } from 'jsonpath-plus';
 import LEGACY_SPECIES from '../constants/legacy-species';
-import {projectSpecies as SPECIES} from '@ukhomeoffice/asl-constants';
+import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 import CONDITIONS from '../constants/conditions';
-import React, {Fragment} from "react";
-import classnames from "classnames";
+import React, { Fragment } from 'react';
+import classnames from 'classnames';
 
 export const formatDate = (date, format) => {
   try {
@@ -342,12 +342,13 @@ export const getLegacySpeciesLabel = species => {
  *   `ignorePreserveHierarchy` should be true so that all fields are included
  *   regardless of the resulting display hierarchy.
  *
- * @param {[*]} fields the list of fields to be flattened
- * @param {[*]} values the field values, to determine which reveals are active
+ * @param {object[]} fields the list of fields to be flattened
+ * @param {object} values the field values, to determine which reveals are active
  * @param {boolean} ignorePreserveHierarchy whether to respect the schema's preserveHierarchy flag
- * @return {*}
+ * @return {object[]}
  */
 export const flattenReveals = (fields, values, ignorePreserveHierarchy = false) => {
+  // noinspection JSValidateTypes https://youtrack.jetbrains.com/issue/IDEA-384329/
   return fields.reduce((arr, item) => {
     const reveals = [];
     if (item.options && (ignorePreserveHierarchy || !item.preserveHierarchy)) {
