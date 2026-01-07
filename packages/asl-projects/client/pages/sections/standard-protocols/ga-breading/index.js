@@ -48,10 +48,7 @@ const GABreedingProtocolForm = ({
         locations: protocolTemplate.data.locations || [],
         conditions: protocolTemplate.data.conditions || [],
         animals: protocolTemplate.data.animals || {},
-        speciesDetails: protocolTemplate.data.speciesDetails || [],
-        _isStandardProtocol: true,
-        _standardProtocolType: 'ga-breeding',
-        _templateUsed: selectedTemplate
+        speciesDetails: protocolTemplate.data.speciesDetails || []
       };
 
       // Update project with new protocol

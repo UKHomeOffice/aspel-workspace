@@ -11,6 +11,8 @@ export const gaBreadingData = {
           label: "Superovulation (mild)",
           data: {
             title: "Superovulation",
+            isStandardProtocol: true,
+            standardProtocolType: 'ga-breeding',
             severity: "mild",
             species: ["mice"],
             speciesDetails: [
@@ -74,6 +76,8 @@ export const gaBreadingData = {
           label: "Breeding and maintenance of genetically altered rodents (mild)",
           data: {
             title: "Breeding and maintenance of genetically altered rodents",
+            isStandardProtocol: true,
+            standardProtocolType: 'ga-breeding',
             severity: "mild",
             species: ["mice"],
             speciesDetails: [
@@ -136,6 +140,8 @@ export const gaBreadingData = {
           value: "rodent-breeding-moderate",
           label: "Breeding and maintenance of genetically altered rodents (moderate)",
           data: {
+            isStandardProtocol: true,
+            standardProtocolType: 'ga-breeding',
             title: "Breeding and maintenance of genetically altered rodents",
             severity: "moderate",
             species: ["mice"],
@@ -205,6 +211,7 @@ export const gaBreadingData = {
           label: "Breeding and maintenance of genetically altered zebrafish (mild)",
           data: {
             title: "Breeding and maintenance of genetically altered zebrafish",
+            isStandardProtocol: true,
             severity: "mild",
             species: ["zebrafish"],
             speciesDetails: [
