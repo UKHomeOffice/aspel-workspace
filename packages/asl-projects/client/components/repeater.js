@@ -7,6 +7,8 @@ import cloneDeep from 'lodash/cloneDeep';
 import omitBy from 'lodash/omitBy';
 import isUndefined from 'lodash/isUndefined';
 import { throwError } from '../actions/messages';
+import { FEATURE_FLAG_STANDARD_PROTOCOLS, useFeatureFlag } from '@asl/service/ui/feature-flag';
+import { useHistory } from 'react-router-dom';
 
 const noopPromise = () => Promise.resolve();
 
@@ -33,6 +35,9 @@ export default ({
   onAfterRestore = noopPromise,
   ...props
 }) => {
+
+  const history = useHistory();
+  const standardProtocolsEnabled = useFeatureFlag(FEATURE_FLAG_STANDARD_PROTOCOLS);
 
   const onBeforeDuplicate = useCallback(
     (items, uuid) => props.onBeforeDuplicate ? props.onBeforeDuplicate(items, uuid) : Promise.resolve(items),
@@ -64,6 +69,11 @@ export default ({
   );
 
   const addItem = useCallback(() => {
+    if (standardProtocolsEnabled) {
+      history.push('/standard-protocol');
+      return;
+    }
+
     Promise.resolve()
       .then(onBeforeAdd)
       .then(() => update([ ...items, { id: uuid(), ...(itemProps ?? {}) } ]))

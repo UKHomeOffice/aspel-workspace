@@ -1,96 +1,90 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { connect } from 'react-redux';
 import { gaBreadingData } from './ga-breading-data';
-import { clearProtocolSelection, selectProtocol } from '../../../../actions/protocols';
 import SectionsLink from '../../../../components/sections-link';
+import { ajaxSync, updateProject } from '../../../../actions/projects';
 
 const GABreedingProtocolForm = ({
                                   onContinue,
                                   onCancel,
-                                  selectedProtocol,
-                                  projectData,
-                                  selectProtocolAction,
-                                  clearProtocolSelectionAction,
+                                  project,
+                                  updateProjectAction,
+                                  ajaxSyncAction,
                                   history,
                                   match
                                 }) => {
   const [error, setError] = useState('');
-  const [localSelection, setLocalSelection] = useState(selectedProtocol || '');
-
-  useEffect(() => {
-    if (selectedProtocol) {
-      setLocalSelection(selectedProtocol);
-    }
-  }, [selectedProtocol]);
-
-  useEffect(() => {
-    if (projectData && projectData.protocol && !selectedProtocol) {
-      const existingProtocol = projectData.protocol.value;
-      setLocalSelection(existingProtocol);
-    }
-  }, [projectData, selectedProtocol]);
+  const [selectedTemplate, setSelectedTemplate] = useState('');
 
   const handleProtocolChange = (event) => {
     const value = event.target.value;
-    setLocalSelection(value);
+    setSelectedTemplate(value);
     setError('');
-
-    const protocolData = gaBreadingData.groups
-      .flatMap(group => group.protocols)
-      .find(protocol => protocol.value === value)?.data;
-
-    if (protocolData) {
-      selectProtocolAction('standard', value, protocolData); // <-- add 'standard' as journey
-    }
   };
-
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!localSelection) {
+    if (!selectedTemplate) {
       setError('Please select a protocol');
       return;
     }
 
     const protocolTemplate = gaBreadingData.groups
       .flatMap(group => group.protocols)
-      .find(protocol => protocol.value === localSelection);
+      .find(protocol => protocol.value === selectedTemplate);
 
     if (protocolTemplate) {
-      const protocolId = uuidv4(); // Generate unique ID
+      const protocolId = uuidv4();
 
-      // Create complete protocol data matching your structure
-      const protocolData = {
+      // Create protocol matching your project structure
+      const newProtocol = {
         ...protocolTemplate.data,
-        id: protocolId, // Use UUID, not template value
+        id: protocolId,
+        title: protocolTemplate.label,
         complete: false,
-        steps: protocolTemplate.data.steps || [{ id: uuidv4() }],
+        steps: protocolTemplate.data.steps || [{ id: uuidv4(), title: 'Step 1', description: '' }],
         locations: protocolTemplate.data.locations || [],
-        conditions: protocolTemplate.data.conditions || []
+        conditions: protocolTemplate.data.conditions || [],
+        animals: protocolTemplate.data.animals || {},
+        speciesDetails: protocolTemplate.data.speciesDetails || [],
+        _isStandardProtocol: true,
+        _standardProtocolType: 'ga-breeding',
+        _templateUsed: selectedTemplate
       };
 
-      // Store in Redux for Protocols component to pick up
-      selectProtocolAction('standard', protocolId, protocolData, true); // isNew = true
+      // Update project with new protocol
+      const updatedProject = {
+        ...project,
+        protocols: [
+          ...(project.protocols || []),
+          newProtocol
+        ]
+      };
 
-      // Call onContinue if parent component needs it
+      // Dispatch to update project state
+      updateProjectAction(updatedProject);
+
+      // Trigger sync to save to server
+      ajaxSyncAction(['protocols']);
+
+      // Call onContinue if needed
       if (onContinue) {
         onContinue({
           protocolType: 'standard',
           protocolId: protocolId,
-          protocolData: protocolData
+          protocolData: newProtocol
         });
       }
 
-      // Navigate
+      // Navigate to protocols page
       history.push('/protocols');
     }
   };
 
   const handleCancel = (event) => {
     event.preventDefault();
-    clearProtocolSelectionAction();
 
     if (onCancel) {
       onCancel();
@@ -98,7 +92,6 @@ const GABreedingProtocolForm = ({
       history.push('/standard-protocol');
     }
   };
-
 
   return (
     <div className="govuk-form-group">
@@ -117,9 +110,9 @@ const GABreedingProtocolForm = ({
 
           {error && (
             <div className="govuk-form-group--error">
-                <span className="govuk-error-message govuk-visually-hidden">
-                     {error}
-                </span>
+              <span className="govuk-error-message">
+                {error}
+              </span>
             </div>
           )}
 
@@ -135,7 +128,7 @@ const GABreedingProtocolForm = ({
                   name="standard-protocols"
                   type="radio"
                   value={protocol.value}
-                  checked={localSelection === protocol.value}
+                  checked={selectedTemplate === protocol.value}
                   onChange={handleProtocolChange}
                 />
                 <label
@@ -160,7 +153,7 @@ const GABreedingProtocolForm = ({
                   name="standard-protocols"
                   type="radio"
                   value={protocol.value}
-                  checked={localSelection === protocol.value}
+                  checked={selectedTemplate === protocol.value}
                   onChange={handleProtocolChange}
                 />
                 <label
@@ -181,7 +174,7 @@ const GABreedingProtocolForm = ({
               Continue
             </button>
 
-            <a href='#' onClick={handleCancel}>Cancel</a>
+            <a href="#" onClick={handleCancel}>Cancel</a>
           </div>
         </fieldset>
       </form>
@@ -189,16 +182,15 @@ const GABreedingProtocolForm = ({
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
-    selectedProtocol: state.protocols?.selectedProtocol || '',
-    projectData: state.project?.data || null
+    project: state.project
   };
 };
 
 const mapDispatchToProps = {
-  selectProtocolAction: selectProtocol,
-  clearProtocolSelectionAction: clearProtocolSelection
+  updateProjectAction: updateProject,
+  ajaxSyncAction: ajaxSync
 };
 
 export default connect(

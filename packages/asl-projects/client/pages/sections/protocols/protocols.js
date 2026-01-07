@@ -11,7 +11,6 @@ import Controls from '../../../components/controls';
 import { getNewComments } from '../../../helpers';
 import { renderFieldsInProtocol } from '../../../helpers/render-fields-in-protocol';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
-import { getEnhancedProtocols } from '../../../selectors/protocols';
 
 const Form = ({
                 number,
@@ -202,16 +201,18 @@ class Protocols extends PureComponent {
   }
 }
 
-// Protocols.js - FIXED mapStateToProps
 const mapStateToProps = (state, ownProps) => {
-  console.log('🔄 Protocols mapStateToProps state:', {
-    project: state.project,
-    protocolsState: state.protocols, // ← Should NOT be undefined
-    hasProtocolsReducer: 'protocols' in state // ← Check if reducer exists
-  });
+  // For debugging only - remove in production
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Protocols selector state check:', {
+      projectProtocolsCount: state.project?.protocols?.length || 0,
+      hasProject: !!state.project
+    });
+  }
 
   return {
-    protocols: getEnhancedProtocols(state),
+    protocols: state.project?.protocols || [], // Direct access instead of selector
+    project: state.project, // Added missing project prop
     newComments: getNewComments(state.comments, state.application.user, state.project),
     readonly: state.application.readonly,
     previousProtocols: state.application.previousProtocols,
