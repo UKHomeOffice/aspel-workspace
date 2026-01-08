@@ -12,9 +12,7 @@ export default function TrainingSummaryWithChangeHighlighting({
 
                                                               }) {
   const dateFormat = 'dd MMMM yyyy';
-  const reduxState = useSelector(state => state);
   const trainingHistory = useSelector(state => state.static.previousTraining);
-  const currentTraining = useSelector(state => state.static);
   const versions = useSelector(state => state.static.project.versions);
   const previousVersion = useSelector(state => state.static.previousTraining.previous);
   const firstVersion = useSelector(state => state.static.previousTraining.first);

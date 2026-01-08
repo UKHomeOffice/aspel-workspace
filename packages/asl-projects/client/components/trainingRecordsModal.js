@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import Modal from './modal';
+import { useSelector } from 'react-redux';
 
 const DEFAULT_LABEL = '-';
 
@@ -36,7 +37,11 @@ export default function TrainingRecordModal({
 // check if there is any training record in previous or first/granted
   const isRealPrevRecord = previous && (previous.id || previous.trainingId);
   const isRealFirstRecord = first && (first.id || first.trainingId);
-
+  const grantedVersion = useSelector(state => state);
+  const modalLevel =
+    grantedVersion?.application?.project?.granted !== undefined
+      ? 'Current Licence'
+      : 'Initial Submission';
 // Now determine change only if REAL record exists
   const hasPrevChanges = isRealPrevRecord && hasChanges(previous, current);
   const hasFirstChanges = isRealFirstRecord && hasChanges(first, current);
@@ -237,7 +242,7 @@ export default function TrainingRecordModal({
                     {showFirstTab && (
                       <li className={active === 'first' ? 'active' : ''}>
                         <a href="#" onClick={selectTab('first')}>
-                          Initial submission
+                          {modalLevel}
                         </a>
                       </li>
                     )}
