@@ -8,14 +8,15 @@ const logger = Logger(config);
 
 const handleMessage = require('./lib/worker')({ ...config, logger });
 
+const isLocal = config.sqs.endpoint.includes('localhost') || config.sqs.endpoint.includes('localstack');
+
 // Create SQS client using AWS SDK v3
 const sqsClient = new SQSClient({
   region: config.sqs.region,
-  credentials: {
-    accessKeyId: config.sqs.accessKey,
-    secretAccessKey: config.sqs.secret
-  },
-  useQueueUrlAsEndpoint: false
+  accessKeyId: config.sqs.accessKey,
+  secretAccessKey: config.sqs.secret,
+  endpoint: config.sqs.endpoint,
+  sslEnabled: !isLocal
 });
 
 // Initialize SQS consumer

@@ -1,24 +1,22 @@
 const { SQSClient, SendMessageCommand } = require('@aws-sdk/client-sqs');
-const { fromStatic } = require('@aws-sdk/credential-providers');
 
-module.exports = (settings) => {
-  const sqsClient = new SQSClient({
+module.exports = settings => {
+  const sqs = new SQSClient({
     region: settings.region,
-    credentials: fromStatic({
+    credentials: {
       accessKeyId: settings.accessKey,
       secretAccessKey: settings.secret
-    })
+    }
   });
 
-  return async (key) => {
+  return async key => {
     const params = {
       QueueUrl: settings.url,
       MessageBody: JSON.stringify({ key })
     };
 
     try {
-      const command = new SendMessageCommand(params);
-      return await sqsClient.send(command);
+      return await sqs.send(new SendMessageCommand(params));
     } catch (err) {
       throw err;
     }

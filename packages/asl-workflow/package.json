@@ -32,7 +32,7 @@
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@ukhomeoffice/asl-taskflow": "file:../asl-taskflow",
     "@aws-sdk/client-sqs": "^3.528.0",
-    "@aws-sdk/credential-providers": "^3.528.0",
+    "@aws-sdk/client-s3": "^3.528.0",
     "deep-diff": "^1.0.2",
     "express": "^4.19.2",
     "lodash": "^4.17.21",
