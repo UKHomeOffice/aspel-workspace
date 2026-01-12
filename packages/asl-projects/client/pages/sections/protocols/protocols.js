@@ -13,13 +13,13 @@ import { renderFieldsInProtocol } from '../../../helpers/render-fields-in-protoc
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
 
 const Form = ({
-                number,
-                updateItem,
-                exit,
-                toggleActive,
-                prefix = '',
-                ...props
-              }) => (
+  number,
+  updateItem,
+  exit,
+  toggleActive,
+  prefix = '',
+  ...props
+}) => (
   <div className={classnames('protocol', 'panel')}>
     <h2>{`Protocol ${number + 1}`}</h2>
     <Fieldset
@@ -33,6 +33,7 @@ const Form = ({
 );
 
 class Protocol extends PureComponent {
+
   state = {
     active: !this.props.values.title,
     complete: false
@@ -69,7 +70,6 @@ class Protocol extends PureComponent {
 
   render() {
     const { editable, sections, project } = this.props;
-
     // Safely get sections with fallback
     const safeSections = sections || {};
 
@@ -177,7 +177,7 @@ class Protocols extends PureComponent {
             if (item.id === id) {
               return {
                 ...item,
-                title: `${item.title || 'Untitled'} (Copy)`,
+                title: `${item.title} (Copy)`,
                 complete: false
               };
             }
@@ -201,18 +201,10 @@ class Protocols extends PureComponent {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  // For debugging only - remove in production
-  if (process.env.NODE_ENV === 'development') {
-    console.log('Protocols selector state check:', {
-      projectProtocolsCount: state.project?.protocols?.length || 0,
-      hasProject: !!state.project
-    });
-  }
-
+const mapStateToProps = (state) => {
   return {
-    protocols: state.project?.protocols || [], // Direct access instead of selector
-    project: state.project, // Added missing project prop
+    protocols: state.project?.protocols || [],
+    project: state.project,
     newComments: getNewComments(state.comments, state.application.user, state.project),
     readonly: state.application.readonly,
     previousProtocols: state.application.previousProtocols,

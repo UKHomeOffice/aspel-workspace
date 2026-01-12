@@ -177,7 +177,7 @@ const ProtocolSections = ({ sections, protocolState, editable, newComments, ...p
     sectionNames = sectionNames.sort(sortGranted(sections));
   }
   return (
-    <div className={`playback ${props.values.isStandardProtocol ? 'playback standard-protocol' : ''}`}>
+    <div className={`${props.values.isStandardProtocol ? 'playback standard-protocol' : ''}`}>
       <Accordion open={getOpenSection(protocolState, editable, sections)} toggleAll={!props.pdf} pdf={props.pdf}>
         {
           sectionNames.map((section, sectionIndex) => (
@@ -207,9 +207,9 @@ const ProtocolSections = ({ sections, protocolState, editable, newComments, ...p
 };
 
 const mapStateToProps = ({
-                           application: {
-                             schemaVersion,
-                             showConditions,
+  application: {
+    schemaVersion,
+    showConditions,
     isGranted,
     isFullApplication
   },
