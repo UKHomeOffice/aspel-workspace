@@ -12,6 +12,11 @@ import ProtocolSummary from './pages/sections/protocols/summary-table';
 import { formatDate } from './helpers';
 import { DATE_FORMAT } from './constants';
 
+import { useFeatureFlag, FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
+import GABreeding from './pages/sections/standard-protocols/ga-breading';
+import StandardProtocols from './pages/sections/standard-protocols';
+
+
 const selector = ({
   project: version,
   application: {
@@ -131,6 +136,8 @@ const ProjectRouter = () => {
       label="read guidance notes for project licence applications (opens in new tab)"/>.
     </>;
 
+  const standardProtocolsEnabled = useFeatureFlag(FEATURE_FLAG_STANDARD_PROTOCOLS);
+
   return (
     <BrowserRouter basename={basename}>
       <ScrollToTop>
@@ -216,6 +223,18 @@ const ProjectRouter = () => {
 
         <Switch>
           <Route path="/protocol-summary" component={ProtocolSummary} />
+          {standardProtocolsEnabled && (
+              <Route path="/standard-protocol" render={(props) => (
+                  <StandardProtocols {...props} />
+                )}
+              />
+              )}
+          {standardProtocolsEnabled && (
+              <Route path="/ga-breeding" render={(props) => (
+                <GABreeding {...props} />
+              )}
+              />
+            )}
           <Route path="/:section/:step?" render={props => <Section { ...props } drafting={drafting} />} />
           <Route path="/" component={Project} />
         </Switch>

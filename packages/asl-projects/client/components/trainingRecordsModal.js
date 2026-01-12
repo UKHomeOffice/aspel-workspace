@@ -8,7 +8,7 @@ export default function TrainingRecordModal({
                                               current = {},
                                               previous = {},
                                               first = {},
-                                              label = 'Training record changes'
+                                              label = 'Training or exemption change'
                                             }) {
 
   const normalise = obj => (obj && typeof obj === 'object' ? obj : {});
@@ -222,7 +222,9 @@ export default function TrainingRecordModal({
           <div className="govuk-grid-row">
             {/* Left side with tabs */}
             <div className="govuk-grid-column-one-half">
-              {(showPrevTab || showFirstTab) && (
+              {!(showPrevTab || showFirstTab) ? (
+                <h3>Previous version</h3>
+              ) : (
                 <nav className="govuk-tabs">
                   <ul>
                     {showPrevTab && (

@@ -74,6 +74,7 @@ class Review extends React.Component {
           showDiffWindow && (
             <DiffWindow
               {...this.props}
+              label={displayedLabel}
               name={`${this.props.prefix}${this.props.name}`}
             />
           )
