@@ -69,9 +69,9 @@ export default ({
   );
 
   const addItem = useCallback(() => {
-    if (standardProtocolsEnabled) {
+    if (type === 'protocols' && standardProtocolsEnabled) {
       history.push('/standard-protocol');
-      return;
+      return Promise.resolve();
     }
 
     Promise.resolve()

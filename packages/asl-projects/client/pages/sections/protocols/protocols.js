@@ -13,13 +13,13 @@ import { renderFieldsInProtocol } from '../../../helpers/render-fields-in-protoc
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
 
 const Form = ({
-  number,
-  updateItem,
-  exit,
-  toggleActive,
-  prefix = '',
-  ...props
-}) => (
+                number,
+                updateItem,
+                exit,
+                toggleActive,
+                prefix = '',
+                ...props
+              }) => (
   <div className={classnames('protocol', 'panel')}>
     <h2>{`Protocol ${number + 1}`}</h2>
     <Fieldset
@@ -70,6 +70,7 @@ class Protocol extends PureComponent {
 
   render() {
     const { editable, sections, project } = this.props;
+
     // Safely get sections with fallback
     const safeSections = sections || {};
 
@@ -177,7 +178,7 @@ class Protocols extends PureComponent {
             if (item.id === id) {
               return {
                 ...item,
-                title: `${item.title} (Copy)`,
+                title: `${item.title || 'Untitled'} (Copy)`,
                 complete: false
               };
             }
@@ -201,10 +202,18 @@ class Protocols extends PureComponent {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  // For debugging only - remove in production
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Protocols selector state check:', {
+      projectProtocolsCount: state.project?.protocols?.length || 0,
+      hasProject: !!state.project
+    });
+  }
+
   return {
-    protocols: state.project?.protocols || [],
-    project: state.project,
+    protocols: state.project?.protocols || [], // Direct access instead of selector
+    project: state.project, // Added missing project prop
     newComments: getNewComments(state.comments, state.application.user, state.project),
     readonly: state.application.readonly,
     previousProtocols: state.application.previousProtocols,

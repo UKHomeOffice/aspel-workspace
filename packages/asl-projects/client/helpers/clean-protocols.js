@@ -4,7 +4,7 @@ import omitBy from 'lodash/omitBy';
 import isUndefined from 'lodash/isUndefined';
 import getLocations from './get-locations';
 
-const establishmentsKeys = [
+const ESTABLISHMENTS_KEYS = [
   'establishments',
   'polesList',
   'transferToEstablishmentName',
@@ -12,77 +12,211 @@ const establishmentsKeys = [
   'poles'
 ];
 
-const triggeringKeys = [
+const TRIGGERING_KEYS = [
   'objectives',
   'species',
   'protocols',
-  ...establishmentsKeys
+  ...ESTABLISHMENTS_KEYS
 ];
 
-function changesShouldTriggerCleanup(changed) {
-  return intersection(Object.keys(changed), triggeringKeys).length > 0;
-}
+const shouldTriggerCleanup = (changed) =>
+  intersection(Object.keys(changed), TRIGGERING_KEYS).length > 0;
 
-function changesShouldTriggerEstablishmentCleanup(changed) {
-  return intersection(Object.keys(changed), establishmentsKeys).length > 0;
-}
+const shouldTriggerEstablishmentCleanup = (changed) =>
+  intersection(Object.keys(changed), ESTABLISHMENTS_KEYS).length > 0;
 
-export default function cleanProtocols({ state, savedState, changed = {}, establishment, schemaVersion }) {
+const filterProtocolSpecies = (protocol, removedSpecies) => {
+  if (!Array.isArray(protocol.species) || removedSpecies.length === 0) {
+    return protocol; // Return original if no change
+  }
+
+  const filtered = protocol.species.filter(species => !removedSpecies.includes(species));
+
+  // Only return new object if species array actually changed
+  if (filtered.length === protocol.species.length) {
+    return protocol;
+  }
+
+  return {
+    ...protocol,
+    species: filtered
+  };
+};
+
+const updateProtocolObjectives = (protocol, projectObjectives) => {
+  if (!Array.isArray(protocol.objectives)) {
+    return protocol;
+  }
+
+  const objectiveTitles = (projectObjectives || []).map(o => o.title || o);
+  const updatedObjectives = intersection(protocol.objectives, objectiveTitles);
+
+  // Only return new object if objectives actually changed
+  if (updatedObjectives.length === protocol.objectives.length) {
+    return protocol;
+  }
+
+  return {
+    ...protocol,
+    objectives: updatedObjectives
+  };
+};
+
+const updateProtocolLocations = (protocol, project, establishment) => {
+  if (!Array.isArray(protocol.locations)) {
+    return protocol;
+  }
+
+  const validLocations = getLocations(project, establishment);
+  const updatedLocations = intersection(protocol.locations, validLocations);
+
+  // Only return new object if locations actually changed
+  if (updatedLocations.length === protocol.locations.length) {
+    return protocol;
+  }
+
+  return {
+    ...protocol,
+    locations: updatedLocations
+  };
+};
+
+const updateProtocolSpeciesDetails = (protocol) => {
+  if (!Array.isArray(protocol.speciesDetails)) {
+    return protocol;
+  }
+
+  // Check if any speciesDetail needs 'maximum-times-used' update
+  const needsUpdate = protocol.speciesDetails.some(detail =>
+    !(detail.reuse || []).includes('this-protocol')
+  );
+
+  if (!needsUpdate) {
+    return protocol;
+  }
+
+  const updatedSpeciesDetails = protocol.speciesDetails.map(detail => {
+    // Only create new object if this detail needs updating
+    if (!detail.reuse.includes('this-protocol')) {
+      return {
+        ...detail,
+        'maximum-times-used': '1',
+        lifeStages: detail.lifeStages ? [...detail.lifeStages] : [],
+        reuse: detail.reuse ? [...detail.reuse] : []
+      };
+    }
+    return detail; // Return original if no change
+  });
+
+  // Check if speciesDetails actually changed
+  const hasChanged = updatedSpeciesDetails.some((newDetail, index) => {
+    const oldDetail = protocol.speciesDetails[index];
+    return newDetail['maximum-times-used'] !== oldDetail['maximum-times-used'];
+  });
+
+  if (!hasChanged) {
+    return protocol;
+  }
+
+  return {
+    ...protocol,
+    speciesDetails: updatedSpeciesDetails
+  };
+};
+
+export default function cleanProtocols({
+                                         state,
+                                         savedState,
+                                         changed = {},
+                                         establishment,
+                                         schemaVersion
+                                       }) {
   const project = omitBy({ ...state, ...changed }, isUndefined);
 
   if (schemaVersion === 0) {
     return project;
   }
 
-  if (!changesShouldTriggerCleanup(changed)) {
+  if (!shouldTriggerCleanup(changed)) {
     return project;
   }
 
   project.protocols = project.protocols || [];
 
-  if (changed.species) {
-    const removedProjectSpecies = difference(savedState.species, changed.species);
+  const changedKeys = Object.keys(changed);
+  const hasRelevantChanges = changedKeys.some(key =>
+    TRIGGERING_KEYS.includes(key)
+  );
 
-    project.protocols.forEach(protocol => {
-      if (!Array.isArray(protocol.species)) {
-        return;
-      }
-      protocol.species = protocol.species.filter(species => !removedProjectSpecies.includes(species));
-    });
+  if (!hasRelevantChanges) {
+    return project;
   }
 
-  const locations = getLocations(project, establishment);
-  const objectives = (project.objectives || []).map(o => o.title);
+  const removedSpecies = changed.species
+    ? difference(savedState.species, changed.species)
+    : [];
 
-  project.protocols.forEach(protocol => {
+  const objectives = project.objectives || [];
+  const shouldUpdateLocations = shouldTriggerEstablishmentCleanup(changed);
+
+  let protocolsChanged = false;
+  const updatedProtocols = project.protocols.map(protocol => {
+    let transformed = protocol;
+
+    let needsClone = false;
+
+    // Check each transformation to see if it will modify
+    if (removedSpecies.length > 0 && Array.isArray(protocol.species)) {
+      const wouldChange = protocol.species.some(s => removedSpecies.includes(s));
+      if (wouldChange) needsClone = true;
+    }
+
+    if (changed.objectives && Array.isArray(protocol.objectives)) {
+      const objectiveTitles = objectives.map(o => o.title || o);
+      const wouldChange = protocol.objectives.some(obj => !objectiveTitles.includes(obj));
+      if (wouldChange) needsClone = true;
+    }
+
+    if (shouldUpdateLocations && Array.isArray(protocol.locations)) {
+      needsClone = true;
+    }
+
+    if (changed.protocols && Array.isArray(protocol.speciesDetails)) {
+      const wouldChange = protocol.speciesDetails.some(detail =>
+        !detail.reuse.includes('this-protocol')
+      );
+      if (wouldChange) needsClone = true;
+    }
+
+    if (needsClone) {
+      transformed = { ...protocol };
+      protocolsChanged = true;
+    }
+
+    if (removedSpecies.length > 0) {
+      transformed = filterProtocolSpecies(transformed, removedSpecies);
+    }
+
     if (changed.objectives) {
-      protocol.objectives = intersection(protocol.objectives, objectives);
+      transformed = updateProtocolObjectives(transformed, objectives);
     }
-    if (changesShouldTriggerEstablishmentCleanup(changed)) {
-      protocol.locations = intersection(protocol.locations, locations);
+
+    if (shouldUpdateLocations) {
+      transformed = updateProtocolLocations(transformed, project, establishment);
     }
+
+    if (changed.protocols) {
+      transformed = updateProtocolSpeciesDetails(transformed);
+    }
+
+    return transformed;
   });
 
-  if (changed.protocols) {
-    project.protocols.forEach(protocol => {
-      // Check if we need to update any speciesDetails
-      const needsUpdate = (protocol.speciesDetails ?? []).some(speciesDetail =>
-        !(speciesDetail.reuse || []).includes('this-protocol')
-      );
-
-      if (needsUpdate) {
-        // Only create new array if we need to update
-        protocol.speciesDetails = (protocol.speciesDetails ?? []).map(speciesDetail => {
-          if (!(speciesDetail.reuse || []).includes('this-protocol')) {
-            return {
-              ...speciesDetail,
-              'maximum-times-used': '1'
-            };
-          }
-          return { ...speciesDetail };
-        });
-      }
-    });
+  if (protocolsChanged) {
+    return {
+      ...project,
+      protocols: updatedProtocols
+    };
   }
 
   return project;
