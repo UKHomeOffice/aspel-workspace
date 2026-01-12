@@ -10,7 +10,8 @@ module.exports = (settings) => {
   };
 
   if (settings.s3.localstackUrl) {
-    config.forcePathStyle = true; // renamed from s3ForcePathStyle in v3
+    // force the client to use path based URLs instead of subdomains, e.g. http://localhost/bucket instead of http://bucket.localhost
+    config.forcePathStyle = true;
     config.endpoint = settings.s3.localstackUrl;
   }
 
