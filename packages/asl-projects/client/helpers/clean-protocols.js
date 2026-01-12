@@ -65,11 +65,23 @@ export default function cleanProtocols({ state, savedState, changed = {}, establ
 
   if (changed.protocols) {
     project.protocols.forEach(protocol => {
-      (protocol.speciesDetails ?? []).forEach(speciesDetail => {
-        if (!(speciesDetail.reuse || []).includes('this-protocol')) {
-          speciesDetail['maximum-times-used'] = '1';
-        }
-      });
+      // Check if we need to update any speciesDetails
+      const needsUpdate = (protocol.speciesDetails ?? []).some(speciesDetail =>
+        !(speciesDetail.reuse || []).includes('this-protocol')
+      );
+
+      if (needsUpdate) {
+        // Only create new array if we need to update
+        protocol.speciesDetails = (protocol.speciesDetails ?? []).map(speciesDetail => {
+          if (!(speciesDetail.reuse || []).includes('this-protocol')) {
+            return {
+              ...speciesDetail,
+              'maximum-times-used': '1'
+            };
+          }
+          return { ...speciesDetail };
+        });
+      }
     });
   }
 
