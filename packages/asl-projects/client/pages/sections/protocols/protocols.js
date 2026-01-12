@@ -11,6 +11,7 @@ import Controls from '../../../components/controls';
 import { getNewComments } from '../../../helpers';
 import { renderFieldsInProtocol } from '../../../helpers/render-fields-in-protocol';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
+import { getEnhancedProtocols } from '../../../selectors/protocols';
 
 const Form = ({
                 number,
@@ -212,8 +213,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 
   return {
-    protocols: state.project?.protocols || [], // Direct access instead of selector
-    project: state.project, // Added missing project prop
+    protocols: getEnhancedProtocols(state),
     newComments: getNewComments(state.comments, state.application.user, state.project),
     readonly: state.application.readonly,
     previousProtocols: state.application.previousProtocols,
