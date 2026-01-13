@@ -38,7 +38,7 @@ export default function TrainingRecordModal({
   const isRealPrevRecord = previous && (previous.id || previous.trainingId);
   const isRealFirstRecord = first && (first.id || first.trainingId);
   const grantedVersion = useSelector(state => state);
-  const modalLevel =
+  const modalLabel =
     grantedVersion?.application?.project?.granted !== undefined
       ? 'Current Licence'
       : 'Initial Submission';
@@ -242,7 +242,7 @@ export default function TrainingRecordModal({
                     {showFirstTab && (
                       <li className={active === 'first' ? 'active' : ''}>
                         <a href="#" onClick={selectTab('first')}>
-                          {modalLevel}
+                          {modalLabel}
                         </a>
                       </li>
                     )}

@@ -23,7 +23,6 @@ export default function TrainingSummaryWithChangeHighlighting({
     grantedVersion !== undefined &&
     Object.keys(grantedVersion).length > 0;
 
-  console.log('Test', grantedVersion);
   // Map removed by ID for quick lookup
   const removedMap = removedRecords.reduce((map, r) => {
     map[r.trainingId || r.id] = r;
