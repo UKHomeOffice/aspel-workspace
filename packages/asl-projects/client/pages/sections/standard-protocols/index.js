@@ -17,7 +17,6 @@ export default function StandardProtocols({ ...props }) {
     switch (selection) {
       case 'experimental':
         history.push('/protocols', {
-          createProtocolType: selection
         });
         break;
 
