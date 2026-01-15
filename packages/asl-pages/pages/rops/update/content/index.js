@@ -228,7 +228,7 @@ Select all that apply`,
       hint: 'Select all that apply',
       options: {
         'self-sustaining': 'Self-sustaining colony',
-        'non-self-sustaining': 'Non self-sustaining colony'
+        'non-self-sustaining': 'Non-self-sustaining colony'
       },
       summary: 'Definitions of self-sustaining colonies',
       details: `### Marmosets, tamarins and other new world primates
