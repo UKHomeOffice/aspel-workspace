@@ -8,7 +8,9 @@ const {
   isEmpty,
   castArray,
   flow,
-  omit
+  omit,
+  dropWhile,
+  reverse
 } = require('lodash');
 const isUUID = require('uuid-validate');
 const extractComments = require('../lib/extract-comments');
@@ -151,21 +153,36 @@ const canViewVersion = req => version => {
   return (req.user.profile.asruUser === version.asruVersion) || version.status !== 'draft' || version.id === req.versionId;
 };
 
-const getFirstVersion = (req, type = 'project-versions') => {
+const getVersionsForDiff = (req, type = 'project-versions') => {
   if (!req.project) {
-    return Promise.resolve();
+    return {};
   }
-  // no first submission for granted projects
-  if (type === 'project-versions' && req.project.granted) {
-    return Promise.resolve();
-  }
+
   const key = type === 'project-versions' ? 'versions' : 'retrospectiveAssessments';
-  const versions = req.project[key];
-  // if there are only one or two versions then the first version will be the same as current or previous
-  if (versions.length < 3) {
+  const versions = reverse(sortBy(req.project[key], 'createdAt'));
+  const versionId = type === 'project-versions' ? req.versionId : req.raId;
+
+  const previousVersions = dropWhile(versions, version => version.id !== versionId).slice(1);
+
+  const previous = previousVersions.shift();
+
+  if (previous?.status === 'granted') {
+    return { previous, granted: previous };
+  }
+
+  const granted = previousVersions.find(version => version.status === 'granted');
+  const first = granted ? undefined : previousVersions.pop();
+
+  return { previous, first, granted };
+};
+
+const getFirstVersion = (req, type = 'project-versions') => {
+  const { first } = getVersionsForDiff(req, type);
+
+  if (!first) {
     return Promise.resolve();
   }
-  const first = sortBy(versions, 'createdAt')[0];
+
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${first.id}`)
     // swallow error as this will return 403 for receiving establishment viewing a project transfer version
     // eslint-disable-next-line handle-callback-err
@@ -173,19 +190,12 @@ const getFirstVersion = (req, type = 'project-versions') => {
 };
 
 const getPreviousVersion = (req, type = 'project-versions') => {
-  if (!req.project) {
-    return Promise.resolve();
-  }
-  const key = type === 'project-versions' ? 'versions' : 'retrospectiveAssessments';
-  const model = type === 'project-versions' ? 'version' : 'retrospectiveAssessment';
-  const granted = req.project[key].find(v => v.status === 'granted');
-  const previous = req.project[key]
-    .filter(version => granted ? version.createdAt >= granted.createdAt : true)
-    .find(version => version.createdAt < req[model].createdAt);
+  const { previous } = getVersionsForDiff(req, type);
 
   if (!previous) {
     return Promise.resolve();
   }
+
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${previous.id}`)
     // swallow error as this will return 403 for receiving establishment viewing a project transfer version
     // eslint-disable-next-line handle-callback-err
@@ -193,22 +203,14 @@ const getPreviousVersion = (req, type = 'project-versions') => {
 };
 
 const getGrantedVersion = (req, type = 'project-versions') => {
-  const key = type === 'project-versions' ? 'versions' : 'retrospectiveAssessments';
-  const model = type === 'project-versions' ? 'version' : 'retrospectiveAssessment';
-
-  if (!req.project || !req.project[key]) {
-    return Promise.resolve();
-  }
-
-  const granted = req.project[key]
-    .find(version => version.createdAt < req[model].createdAt && version.status === 'granted');
+  const { granted } = getVersionsForDiff(req, type);
 
   if (!granted) {
     return Promise.resolve();
   }
 
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${granted.id}`)
-    // swallow error as this will return 403 for receiving establishment viewing a project transfer
+    // swallow error as this will return 403 for receiving establishment viewing a project transfer version
     // eslint-disable-next-line handle-callback-err
     .catch(() => {});
 };
@@ -421,6 +423,11 @@ const getAllChanges = (type = 'project-versions') => (req, res, next) => {
     getGrantedVersion(req, type)
   ])
     .then(([firstVersion, previousVersion, grantedVersion]) => {
+      res.locals.static.versionsForComparison = {
+        firstId: firstVersion?.id,
+        previousId: previousVersion?.id,
+        grantedId: grantedVersion?.id
+      };
       res.locals.static.changes = getVersionChanges(req[model], firstVersion, previousVersion, grantedVersion);
       res.locals.static.previousProtocols = getPreviousProtocols(firstVersion, previousVersion, grantedVersion);
       res.locals.static.previousAA = getPreviousAA(firstVersion, previousVersion, grantedVersion);
@@ -514,6 +521,7 @@ module.exports = {
   getPreviousVersion,
   getGrantedVersion,
   getAllChanges,
+  getVersionsForDiff,
   getChangedValues,
   getProjectEstablishment,
   loadRa
