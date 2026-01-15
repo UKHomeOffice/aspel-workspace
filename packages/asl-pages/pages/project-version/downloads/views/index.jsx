@@ -53,6 +53,7 @@ const ProjectDownloads = () => {
           <h3><Snippet>nts.heading</Snippet></h3>
           <Fragment>
             <p><Link page="projectVersion.ntsPdf" label={<Snippet>nts.link</Snippet>} /></p>
+            <p><Link page="projectVersion.ntsDocx" label={<Snippet>nts.linkDocx</Snippet>} /></p>
             <p className="govuk-hint"><Snippet>nts.hint</Snippet></p>
           </Fragment>
 
