@@ -17,6 +17,7 @@ export default ({
   type = 'item',
   prefix,
   singular = 'item',
+  addProtocol = false,
   addOnInit = true,
   addAnother = true,
   addButtonBefore = false,
@@ -60,6 +61,7 @@ export default ({
   }, []);
 
   const save = useCallback((newItems) => onSave(newItems ?? items), [onSave]);
+
   const update = useCallback((newItems) =>
     Promise.resolve()
       .then(() => setItems(newItems))
@@ -69,7 +71,7 @@ export default ({
   );
 
   const addItem = useCallback(() => {
-    if (type === 'protocols' && standardProtocolsEnabled) {
+    if (!addProtocol && type === 'protocols' && standardProtocolsEnabled) {
       history.push('/standard-protocol');
       return Promise.resolve();
     }
@@ -179,7 +181,7 @@ export default ({
   }, [update, items]);
 
   useMemo(() => {
-    if (addOnInit && !items.length) {
+    if (addProtocol || (addOnInit && !items.length)) {
       addItem();
     }
   }, [] /* Only run on first render */);

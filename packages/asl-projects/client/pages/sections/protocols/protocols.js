@@ -157,12 +157,16 @@ class Protocols extends PureComponent {
       steps: isLegacy ? undefined : []
     };
 
+    const searchParams = new URLSearchParams(window.location.search);
+    const addProtocol = searchParams.get('addProtocol') === 'true';
+
     return (
       <Repeater
         type="protocols"
         singular="protocol"
         items={items}
         onSave={this.save}
+        addProtocol={addProtocol}
         addAnother={editable}
         addButtonBefore={safeProtocols.length > 0 && safeProtocols[0]?.title}
         addButtonAfter={true}
@@ -204,14 +208,6 @@ class Protocols extends PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  // For debugging only - remove in production
-  if (process.env.NODE_ENV === 'development') {
-    console.log('Protocols selector state check:', {
-      projectProtocolsCount: state.project?.protocols?.length || 0,
-      hasProject: !!state.project
-    });
-  }
-
   return {
     protocols: getEnhancedProtocols(state),
     newComments: getNewComments(state.comments, state.application.user, state.project),
