@@ -91,11 +91,12 @@ const getFieldKeys = (section, values) => {
   return flattenedFields.map(f => `protocols.${values.id}.${f.name}`);
 };
 
-const getBadges = (section, newComments, values, project) => {
+const getBadges = (section, newComments, values) => {
   let relevantComments;
   if (section.repeats) {
     const re = new RegExp(`^${section.repeats}\\.`);
-    relevantComments = section.title !== 'Steps' ? pickBy(newComments, (value, key) => key.match(re))
+    relevantComments = section.title !== 'Steps'
+      ? pickBy(newComments, (value, key) => key.match(re))
       : pickBy(newComments, (value, key) => key.match(re) || key.match('^reusableSteps\\.'));
   } else {
     relevantComments = pick(newComments, flattenReveals(section.fields, values).map(field => field.name));
@@ -107,7 +108,7 @@ const getBadges = (section, newComments, values, project) => {
   // Initialise groups for fields with and without values
   const fieldsWithValues = [];
 
-  section.fields?.forEach((field, index) => {
+  section.fields?.forEach((field) => {
 
     // Attempt to retrieve the value from the values object
     const rawValue = field.name.includes('.')

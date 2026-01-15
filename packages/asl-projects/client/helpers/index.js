@@ -4,13 +4,13 @@ import castArray from 'lodash/castArray';
 import pickBy from 'lodash/pickBy';
 import mapValues from 'lodash/mapValues';
 import map from 'lodash/map';
-import {format as dateFormatter} from 'date-fns';
-import {JSONPath} from 'jsonpath-plus';
+import { format as dateFormatter } from 'date-fns';
+import { JSONPath } from 'jsonpath-plus';
 import LEGACY_SPECIES from '../constants/legacy-species';
-import {projectSpecies as SPECIES} from '@ukhomeoffice/asl-constants';
+import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 import CONDITIONS from '../constants/conditions';
-import React, {Fragment} from "react";
-import classnames from "classnames";
+import React, { Fragment } from 'react';
+import classnames from 'classnames';
 
 export const formatDate = (date, format) => {
   try {
@@ -197,7 +197,7 @@ export function durationDiffDisplay({ before, value, isBefore, DEFAULT_LABEL }) 
   );
 }
 
-export function additionalAvailabilityDiff({ before, value, props, isBefore, DEFAULT_LABEL }) {
+export function additionalAvailabilityDiff({ value, props, isBefore, DEFAULT_LABEL }) {
   let beforeValue = value != null ? value : DEFAULT_LABEL;
   let afterValue = props?.values?.name != null ? props.values.name : DEFAULT_LABEL;
 
@@ -303,7 +303,7 @@ function aliasReusableStepCommentsToReferringSteps(newComments, reusableStepMapp
  * Filter comments to only those flagged as new that are from other users.
  * @param comments
  * @param user
- * @param project Optional - if provided any reusable step comments will be aliassed to the steps that reference them
+ * @param project Optional - if provided any reusable step comments will be aliased to the steps that reference them
  * @return A record of field paths mapped to comments that apply to that field
  */
 export const getNewComments = (comments, user, project) => {
@@ -327,10 +327,31 @@ export const getLegacySpeciesLabel = species => {
   return label;
 };
 
-export const flattenReveals = (fields, values) => {
+/**
+ * Where a radio/checkbox group field has nested fields revealed for certain
+ * options, flatten that field into a list of the field and relevant revealed
+ * fields.
+ *
+ * There are two use cases for this function, controlled by
+ * `ignorePreserveHierarchy`.
+ *
+ * * Rendering the nested fields as a list of answers. In this case
+ *   `ignorePreserveHierarchy` should be false to allow the schema to control
+ *   if the answers should be rendered nested within the option or not
+ * * Querying relevant fields, e.g. for comment badges. In this case
+ *   `ignorePreserveHierarchy` should be true so that all fields are included
+ *   regardless of the resulting display hierarchy.
+ *
+ * @param {object[]} fields the list of fields to be flattened
+ * @param {object} values the field values, to determine which reveals are active
+ * @param {boolean} ignorePreserveHierarchy whether to respect the schema's preserveHierarchy flag
+ * @return {object[]}
+ */
+export const flattenReveals = (fields, values, ignorePreserveHierarchy = false) => {
+  // noinspection JSValidateTypes https://youtrack.jetbrains.com/issue/IDEA-384329/
   return fields.reduce((arr, item) => {
     const reveals = [];
-    if (item.options && !item.preserveHierarchy) {
+    if (item.options && (ignorePreserveHierarchy || !item.preserveHierarchy)) {
       item.options.forEach(option => {
         if (option.reveal) {
           // fixes ASL-4119 where the user has already clicked the hidden checkbox
