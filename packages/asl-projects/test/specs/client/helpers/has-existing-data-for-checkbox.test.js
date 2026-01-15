@@ -1,5 +1,5 @@
 import assert from 'assert';
-import hasExistingDataForCheckbox from '../../../client/helpers/has-existing-data-for-checkbox';
+import hasExistingDataForCheckbox from '../../../../client/helpers/has-existing-data-for-checkbox';
 import cloneDeep from 'lodash/cloneDeep';
 import set from 'lodash/set';
 
