@@ -190,7 +190,7 @@ export default async function ntsDocxRenderer(opts) {
 
       default:
         if (node.text) {
-          renderNode(parent, { object: 'block', type: 'paragraph', nodes: [ node ] }, depth, paragraph);
+          renderNode(parent, { object: 'block', type: 'paragraph', nodes: [node] }, depth, paragraph);
         }
     }
   };
@@ -324,7 +324,7 @@ export default async function ntsDocxRenderer(opts) {
       const activeDetails = (protocol?.species ?? [])
         .map(speciesKey => protocol?.speciesDetails?.find(d => (d.value ?? d.name) === speciesKey))
         .filter(Boolean)
-        .map(details => ({...details, value: details.value ?? details.name}))
+        .map(details => ({ ...details, value: details.value ?? details.name }))
         .filter(Boolean);
       activeDetails.forEach(details => {
         const existing = species.find(s => s.value === details.value);
