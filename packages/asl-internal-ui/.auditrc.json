@@ -2,11 +2,13 @@
   "comments": [
     "GHSA-776f-qx25-q3cc: xml2js is vulnerable to prototype pollution",
     "GHSA-52f5-9888-hmc6: tmp allows arbitrary temporary file / directory write via symbolic link `dir` parameter",
-    "GHSA-j965-2qgj-vjmq: aws-sdk - WIP migrating to v3"
+    "GHSA-j965-2qgj-vjmq: aws-sdk - WIP migrating to v3",
+    "GHSA-73rr-hh4g-fpgx: jsdiff has a Denial of Service vulnerability in parsePatch and applyPatch"
   ],
   "allowlist": [
     "GHSA-776f-qx25-q3cc",
     "GHSA-52f5-9888-hmc6",
-    "GHSA-j965-2qgj-vjmq"
+    "GHSA-j965-2qgj-vjmq",
+    "GHSA-73rr-hh4g-fpgx"
   ]
 }
