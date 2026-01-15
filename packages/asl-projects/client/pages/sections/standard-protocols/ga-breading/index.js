@@ -171,7 +171,7 @@ const GABreedingProtocolForm = ({
               Continue
             </button>
 
-            <a href="#" onClick={handleCancel}>Cancel</a>
+            <a href="#" onClick={handleCancel}>List of sections</a>
           </div>
         </fieldset>
       </form>
