@@ -12,14 +12,16 @@ export default function TrainingSummaryWithChangeHighlighting({
 
                                                               }) {
   const dateFormat = 'dd MMMM yyyy';
-  const reduxState = useSelector(state => state);
   const trainingHistory = useSelector(state => state.static.previousTraining);
-  const currentTraining = useSelector(state => state.static);
   const versions = useSelector(state => state.static.project.versions);
   const previousVersion = useSelector(state => state.static.previousTraining.previous);
   const firstVersion = useSelector(state => state.static.previousTraining.first);
   const grantedVersion = useSelector(state => state.static.previousTraining.granted);
   const removedRecords = getRemovedTrainingRecords(comparisons, trainingHistory);
+  const applicationGrantedStatus =
+    grantedVersion !== null &&
+    grantedVersion !== undefined &&
+    Object.keys(grantedVersion).length > 0;
 
   // Map removed by ID for quick lookup
   const removedMap = removedRecords.reduce((map, r) => {
@@ -67,7 +69,7 @@ export default function TrainingSummaryWithChangeHighlighting({
         </thead>
         <tbody>
         {uniqueRecords.map(record => {
-          const status = getStatus(record, comparisons);
+          const status = getStatus(record, comparisons,applicationGrantedStatus);
           return (
             <tr key={record.trainingId || record.id} className="govuk-table__row">
               <td className="govuk-table__cell training-col-category">
@@ -76,7 +78,7 @@ export default function TrainingSummaryWithChangeHighlighting({
                   {trainingHistoryRecords && status && (
                   <div className="badge-wrapper">
                     <span className={`govuk-tag ${status.class}`}>{status.label}</span>
-                    {status.label === 'CHANGED' && (
+                    {['CHANGED', 'AMENDED'].includes(status.label) && (
                       <TrainingRecordModal
                         current={getTrainingRecord(project, record, 'current', trainingHistory)}
                         previous={getTrainingRecord(project, record, 'previous', trainingHistory)}
