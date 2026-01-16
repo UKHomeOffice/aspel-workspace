@@ -98,7 +98,8 @@ const ApplicationSummary = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const getSubsectionLink = key => {
-    if (standardProtocolsEnabled && key === 'protocols') {
+    const hasNoProtocol = !props.values?.protocols?.length;
+    if (standardProtocolsEnabled && hasNoProtocol && key === 'protocols') {
       return '/standard-protocol';
     }
     return `/${key}`;

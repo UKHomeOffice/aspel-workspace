@@ -16,6 +16,7 @@ import { filterSpeciesByActive } from './animals';
 
 import { keepAlive } from '../../../actions/session';
 import { reusableStepFieldKeys } from '../../../helpers/steps';
+import StandardProtocolBadge from '../../../components/standard-protocol-badge';
 
 class ProtocolSections extends PureComponent {
   state = {
@@ -84,6 +85,8 @@ class ProtocolSections extends PureComponent {
 
     const speciesDetails = filterSpeciesByActive(values, project);
 
+    const isStandardProtocol = values.isStandardProtocol || false;
+
     const noAnswer = <em>No answer provided</em>;
 
     const title = values.title || 'Untitled protocol';
@@ -97,6 +100,7 @@ class ProtocolSections extends PureComponent {
         {
           !values.deleted && (
             <Fragment>
+              <StandardProtocolBadge values={values} />
               <NewProtocolBadge id={values.id} />
               <ReorderedBadge id={values.id} />
               <ChangedBadge fields={[`protocols.${values.id}`, ...reusableStepFieldKeys(values)]} protocolId={values.id} />
@@ -126,7 +130,7 @@ class ProtocolSections extends PureComponent {
             {
               values.gaas && <p>This protocol uses genetically altered (GA) animals</p>
             }
-            {
+            { !isStandardProtocol &&
               speciesDetails && !!speciesDetails.length && (
                 <table className="govuk-table">
                   <thead>
