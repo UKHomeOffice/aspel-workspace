@@ -212,6 +212,13 @@ function DownloadSection({ project, version, canReplaceHBA }) {
             versionId={version.id}
           />
         </p>
+        <p>
+          <Link
+            page="projectVersion.ntsDocx"
+            label={<Snippet>{`downloads.${ntsSnippet}.linkDocx`}</Snippet>}
+            versionId={version.id}
+          />
+        </p>
       </div>
 
       {!isLegacy && (
