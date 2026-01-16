@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { findArrayDifferences } from '../../../client/helpers/array-diff';
+import { findArrayDifferences } from '../../../../client/helpers/array-diff';
 
 const before = ['cancer', 'stem cells', 'therapy', 'other research'];
 

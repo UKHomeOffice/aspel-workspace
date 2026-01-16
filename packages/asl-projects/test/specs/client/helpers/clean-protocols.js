@@ -1,5 +1,5 @@
 import assert from 'assert';
-import cleanProtocols from '../../../client/helpers/clean-protocols';
+import cleanProtocols from '../../../../client/helpers/clean-protocols';
 
 describe('clean-protocols', () => {
 

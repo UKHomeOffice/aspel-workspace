@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {getCurrentURLForFateOfAnimals, markdownLink} from '../../../client/helpers';
+import {getCurrentURLForFateOfAnimals, markdownLink} from '../../../../client/helpers';
 
 // Mock window object
 let prevWindow = null;

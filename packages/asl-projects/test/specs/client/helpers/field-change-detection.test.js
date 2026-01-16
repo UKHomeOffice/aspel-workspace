@@ -1,6 +1,6 @@
 // field-change-detection.test.js
 import assert from 'assert';
-import { hasDatabaseChange } from '../../../client/helpers/field-change-detection';
+import { hasDatabaseChange } from '../../../../client/helpers/field-change-detection';
 
 /**
  * Test coverage:
