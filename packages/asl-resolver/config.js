@@ -4,7 +4,8 @@ module.exports = {
     region: process.env.SQS_REGION,
     accessKey: process.env.SQS_ACCESS_KEY,
     secret: process.env.SQS_SECRET,
-    url: process.env.SQS_URL
+    url: process.env.SQS_URL,
+    endpoint: process.env.SQS_ENDPOINT
   },
   s3: {
     region: process.env.S3_REGION,
