@@ -11,15 +11,16 @@ import Controls from '../../../components/controls';
 import { getNewComments } from '../../../helpers';
 import { renderFieldsInProtocol } from '../../../helpers/render-fields-in-protocol';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
+import { getEnhancedProtocols } from '../../../selectors/protocols';
 
 const Form = ({
-  number,
-  updateItem,
-  exit,
-  toggleActive,
-  prefix = '',
-  ...props
-}) => (
+                number,
+                updateItem,
+                exit,
+                toggleActive,
+                prefix = '',
+                ...props
+              }) => (
   <div className={classnames('protocol', 'panel')}>
     <h2>{`Protocol ${number + 1}`}</h2>
     <Fieldset
@@ -69,7 +70,10 @@ class Protocol extends PureComponent {
   }
 
   render() {
-    const { editable } = this.props;
+    const { editable, sections, project } = this.props;
+
+    // Safely get sections with fallback
+    const safeSections = sections || {};
 
     const newComments = mapKeys(
       pickBy(this.props.newComments, (comments, key) => {
@@ -82,16 +86,22 @@ class Protocol extends PureComponent {
     const protocolState = this.getProtocolState();
     const isActive = this.isActive(protocolState);
 
-    if (editable) {
-      const conditionalFateOfAnimalFields = renderFieldsInProtocol(this.props.project['fate-of-animals']);
-      // Ensure options array exists and is initialized properly
-      _.set(this.props.sections, 'fate.fields[0].options', _.get(this.props.sections, 'fate.fields[0].options', []));
-      // Update the options array with unique fields
-      this.props.sections.fate.fields[0].options = conditionalFateOfAnimalFields;
-    } else {
-      // Ensure options array exists and is initialized properly
-      _.set(this.props.sections, 'fate.fields[0].options', _.get(this.props.sections, 'fate.fields[0].options', []));
-      this.props.sections.fate.fields[0].options = Object.values(NTSFateOfAnimalFields());
+    // Safely modify sections if they exist
+    if (editable && safeSections.fate && Array.isArray(safeSections.fate.fields)) {
+      try {
+        const conditionalFateOfAnimalFields = renderFieldsInProtocol(project?.['fate-of-animals']);
+        _.set(safeSections, 'fate.fields[0].options', _.get(safeSections, 'fate.fields[0].options', []));
+        safeSections.fate.fields[0].options = conditionalFateOfAnimalFields;
+      } catch (error) {
+        console.error('Error setting fate fields:', error);
+      }
+    } else if (safeSections.fate && Array.isArray(safeSections.fate.fields)) {
+      try {
+        _.set(safeSections, 'fate.fields[0].options', _.get(safeSections, 'fate.fields[0].options', []));
+        safeSections.fate.fields[0].options = Object.values(NTSFateOfAnimalFields());
+      } catch (error) {
+        console.error('Error setting NTS fields:', error);
+      }
     }
 
     return editable && this.state.active
@@ -101,6 +111,7 @@ class Protocol extends PureComponent {
       />
       : <ProtocolSections
         {...this.props}
+        sections={safeSections}
         newComments={newComments}
         protocolState={isActive && protocolState}
         onToggleActive={this.toggleActive}
@@ -123,14 +134,20 @@ class Protocols extends PureComponent {
   }
 
   render() {
-    const { protocols, editable, previousProtocols, isLegacy } = this.props;
+    const { protocols, editable, previousProtocols, isLegacy, project } = this.props;
 
-    const items = (protocols || []).filter(p => {
+    // Ensure protocols is always an array
+    const safeProtocols = Array.isArray(protocols) ? protocols : [];
+
+    const items = safeProtocols.filter(p => {
+      if (!p || typeof p !== 'object') {
+        return false;
+      }
       if (editable) {
         return true;
       }
       if (p.deleted === true) {
-        return !!previousProtocols.showDeleted.includes(p.id);
+        return !!previousProtocols?.showDeleted?.includes(p.id);
       }
       return true;
     });
@@ -140,14 +157,18 @@ class Protocols extends PureComponent {
       steps: isLegacy ? undefined : []
     };
 
+    const searchParams = new URLSearchParams(window.location.search);
+    const addProtocol = searchParams.get('addProtocol') === 'true';
+
     return (
       <Repeater
         type="protocols"
         singular="protocol"
         items={items}
         onSave={this.save}
+        addProtocol={addProtocol}
         addAnother={editable}
-        addButtonBefore={protocols && protocols.length > 0 && protocols[0].title}
+        addButtonBefore={safeProtocols.length > 0 && safeProtocols[0]?.title}
         addButtonAfter={true}
         softDelete={true}
         itemProps={itemProps}
@@ -162,7 +183,7 @@ class Protocols extends PureComponent {
             if (item.id === id) {
               return {
                 ...item,
-                title: `${item.title} (Copy)`,
+                title: `${item.title || 'Untitled'} (Copy)`,
                 complete: false
               };
             }
@@ -172,33 +193,28 @@ class Protocols extends PureComponent {
         onAfterDuplicate={(item, id) => {
           const index = items.findIndex(i => i.id === id);
           const protocol = document.querySelectorAll('.protocols-section .protocol')[index];
-          window.scrollTo({
-            top: protocol.offsetTop,
-            left: 0
-          });
+          if (protocol) {
+            window.scrollTo({
+              top: protocol.offsetTop,
+              left: 0
+            });
+          }
         }}
       >
-        <Protocol {...this.props} />
+        <Protocol {...this.props} project={project} />
       </Repeater>
     );
   }
 }
 
-const mapStateToProps = ({
-  comments,
-  project,
-  application: {
-    user,
-    readonly,
-    previousProtocols,
-    schemaVersion
-  }
-}) => ({
-  protocols: project.protocols,
-  newComments: getNewComments(comments, user, project),
-  readonly,
-  previousProtocols,
-  isLegacy: schemaVersion === 0
-});
+const mapStateToProps = (state, ownProps) => {
+  return {
+    protocols: getEnhancedProtocols(state),
+    newComments: getNewComments(state.comments, state.application.user, state.project),
+    readonly: state.application.readonly,
+    previousProtocols: state.application.previousProtocols,
+    isLegacy: state.application.schemaVersion === 0
+  };
+};
 
 export default connect(mapStateToProps)(Protocols);
