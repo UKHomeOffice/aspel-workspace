@@ -1,13 +1,12 @@
 import React from 'react';
-import { format as formatDate, addDays } from 'date-fns';
+import { addDays } from 'date-fns';
 import classnames from 'classnames';
-import { Inset, Markdown, Snippet } from '@ukhomeoffice/asl-components';
-import { dateFormat } from '../../../../../constants';
+import { Inset, Markdown, Snippet, Utils } from '@ukhomeoffice/asl-components';
 
 export default function RefusalNotice({ project, licenceHolder, inspector, refusalReason, editUrl, dateOfNotice = new Date() }) {
   const respondBy = addDays(dateOfNotice, 28);
-  const respondByDate = formatDate(respondBy, dateFormat.long);
-  const noticeDate = formatDate(dateOfNotice, dateFormat.long);
+  const respondByDate = Utils.formatDate(respondBy, Utils.DATE_FORMAT.long);
+  const noticeDate = Utils.formatDate(dateOfNotice, Utils.DATE_FORMAT.long);
   const licenceHolderName = `${licenceHolder.firstName} ${licenceHolder.lastName}`;
   const inspectorName = `${inspector.firstName} ${inspector.lastName}`;
 
