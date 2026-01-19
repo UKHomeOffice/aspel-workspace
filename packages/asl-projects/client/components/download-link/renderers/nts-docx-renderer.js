@@ -13,7 +13,7 @@ import schemaVersions from '@asl/projects/client/schema';
 import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
-import { addStyles, numbering, renderHorizontalRule, abstract, addPageNumbers } from './helpers/styles-helper'
+import { addStyles, numbering, renderHorizontalRule, abstract, addPageNumbers } from './helpers/docx-render-helper'
 
 export default async function ntsDocxRenderer(opts) {
   const {

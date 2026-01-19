@@ -14,7 +14,7 @@ import { filterSpeciesByActive } from '../../../pages/sections/protocols/animals
 import protocolConditions from '../../../constants/protocol-conditions';
 import { getRepeatedFromProtocolIndex, hydrateSteps } from '../../../helpers/steps';
 import Mustache from 'mustache';
-import { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers } from './helpers/styles-helper'
+import { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers } from './helpers/docx-render-helper'
 
 export default (application, sections, values, updateImageDimensions) => {
   const document = new Document();
