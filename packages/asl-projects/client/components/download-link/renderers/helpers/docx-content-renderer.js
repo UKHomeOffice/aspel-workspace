@@ -1,4 +1,5 @@
 import { Paragraph, TextRun, Indent } from 'docx';
+import { numbering, abstract } from './docx-style-helper'
 import unified from 'unified';
 import remarkParse from 'remark-parse';
 import get from 'lodash/get';
@@ -65,3 +66,112 @@ const renderText = (doc, value, { applyTextFilter, separator } = {}) => {
 };
 
 export { renderMarkdown, renderLabel, renderNull, renderText };
+ 
+// Shared Slate node renderer with minimal assumptions.
+// Signature mirrors existing renderers to minimize callsite changes.
+const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options = {}) => {
+    const { applyTextFilter, customNodeRenderers } = options;
+
+    const getContent = input => {
+        const raw = get(input, 'nodes[0].leaves[0].text', get(input, 'nodes[0].text', ''));
+        const text = (typeof raw === 'string' ? raw : '').trim();
+        return applyFilter(text, applyTextFilter);
+    };
+
+    // Allow caller to override specific node types
+    const renderer = customNodeRenderers?.[node.type];
+    if (typeof renderer === 'function') {
+        const renderNext = (p, n, d = depth, pg = paragraph, num = numbers, i = index) =>
+            renderNode(p, n, d, pg, num, i, options);
+
+        const context = { depth, paragraph, numbers, index, renderNext };
+        return renderer(parent, node, context);
+    }
+
+    let text;
+    let p;
+    let addToDoc;
+
+    switch (node.type) {
+        case 'list-item': {
+            p = new Paragraph();
+            p.style('body');
+            numbers ? p.setNumbering(numbers, depth) : p.bullet(depth);
+            parent.addParagraph(p);
+            (node.nodes || []).forEach((n, idx) => renderNode(parent, n, depth + 1, p, null, idx, options));
+            break;
+        }
+        case 'heading-one':
+            parent.createParagraph(getContent(node)).heading1();
+            break;
+        case 'heading-two':
+            parent.createParagraph(getContent(node)).heading2();
+            break;
+        case 'block-quote':
+            parent.createParagraph(getContent(node)).style('aside');
+            break;
+        case 'paragraph':
+        case 'block': {
+            if (node.nodes && node.nodes.length === 1 && !getContent(node)) {
+                return;
+            }
+            addToDoc = !paragraph;
+            paragraph = paragraph || new Paragraph();
+            (node.nodes || []).forEach((childNode, childNodeIndex) => {
+                const leaves = childNode.leaves || [childNode];
+                leaves.forEach(leaf => {
+                    text = new TextRun(applyFilter(String(leaf.text || ''), applyTextFilter));
+                    (leaf.marks || []).forEach(mark => {
+                        switch (mark.type) {
+                            case 'bold':
+                                text.bold();
+                                break;
+                            case 'italic':
+                                text.italics();
+                                break;
+                            case 'underlined':
+                                text.underline();
+                                break;
+                            case 'subscript':
+                                text.subScript();
+                                break;
+                            case 'superscript':
+                                text.superScript();
+                                break;
+                        }
+                    });
+                    if (!addToDoc && (index > 0) && childNodeIndex === 0) {
+                        text.break().break();
+                    }
+                    paragraph.style('body');
+                    paragraph.addRun(text);
+                });
+            });
+            if (addToDoc) {
+                parent.addParagraph(paragraph);
+            }
+            break;
+        }
+        case 'numbered-list': {
+            if (abstract && numbering) {
+                abstract
+                    .createLevel(depth, 'decimal', '%2.', 'start')
+                    .addParagraphProperty(new Indent(720 * (depth + 1), 0));
+                const concrete = numbering.createConcreteNumbering(abstract);
+                (node.nodes || []).forEach(item => renderNode(parent, item, depth, paragraph, concrete, undefined, options));
+            } else {
+                (node.nodes || []).forEach(item => renderNode(parent, item, depth, paragraph, undefined, undefined, options));
+            }
+            break;
+        }
+        case 'bulleted-list':
+            (node.nodes || []).forEach(item => renderNode(parent, item, depth, paragraph, undefined, undefined, options));
+            break;
+        default:
+            if (node.text) {
+                renderNode(parent, { object: 'block', type: 'paragraph', nodes: [node] }, depth, paragraph, numbers, index, options);
+            }
+    }
+};
+
+export { renderNode };

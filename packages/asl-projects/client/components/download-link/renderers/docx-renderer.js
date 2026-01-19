@@ -13,7 +13,7 @@ import protocolConditions from '../../../constants/protocol-conditions';
 import { getRepeatedFromProtocolIndex, hydrateSteps } from '../../../helpers/steps';
 import Mustache from 'mustache';
 import { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers } from './helpers/docx-style-helper'
-import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderNull as renderNullShared } from './helpers/docx-content-renderer'
+import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderNull as renderNullShared, renderNode as renderNodeShared } from './helpers/docx-content-renderer'
 
 export default (application, sections, values, updateImageDimensions) => {
   const document = new Document();
@@ -139,124 +139,31 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const renderNode = (parent, node, depth = 0, paragraph, numbers, index) => {
-    let text;
-    let p;
-    let addToDoc;
-
-    const getContent = input => {
-      return get(input, 'nodes[0].leaves[0].text', get(input, 'nodes[0].text')).trim();
-    };
-
-    switch (node.type) {
-      case 'list-item':
-        p = new Paragraph();
-        p.style('body');
-
-        numbers
-          ? p.setNumbering(numbers, depth)
-          : p.bullet(depth);
-
-        parent.addParagraph(p);
-        node.nodes.forEach((n, index) => renderNode(parent, n, depth + 1, p, null, index));
-        break;
-
-      case 'heading-one':
-        parent.createParagraph(getContent(node)).heading1();
-        break;
-
-      case 'heading-two':
-        parent.createParagraph(getContent(node)).heading2();
-        break;
-
-      case 'block-quote':
-        parent.createParagraph(getContent(node)).style('aside');
-        break;
-
-      case 'table-cell':
-        node.nodes.forEach(part => renderNode(parent, part));
-        break;
-
-      case 'table':
-        renderTable(parent, node);
-        break;
-
-      case 'numbered-list': {
-        abstract.createLevel(depth, 'decimal', '%2.', 'start').addParagraphProperty(new Indent(720 * (depth + 1), 0));
-        const concrete = numbering.createConcreteNumbering(abstract);
-        node.nodes.forEach(item => renderNode(parent, item, depth, paragraph, concrete));
-        break;
+    const customNodeRenderers = {
+      'table-cell': (p, n, ctx) => {
+        (n.nodes || []).forEach(part => renderNodeShared(p, part, depth, paragraph, numbers, index, {
+          applyTextFilter: stripInvalidXmlChars,
+          customNodeRenderers
+        }));
+      },
+      'table': (p, n) => {
+        renderTable(p, n);
+      },
+      'image': (p, n, ctx = {}) => {
+        const pg = ctx.paragraph || new Paragraph();
+        pg.addImage(Media.addImage(document, n.data.src, n.data.width, n.data.height));
+        p.addParagraph(pg);
+      },
+      'error': (p, n) => {
+        const raw = get(n, 'nodes[0].leaves[0].text', get(n, 'nodes[0].text', ''));
+        const content = stripInvalidXmlChars((raw || '').trim());
+        p.createParagraph(content).style('error');
       }
-
-      case 'bulleted-list':
-        node.nodes.forEach(item => renderNode(parent, item, depth, paragraph));
-        break;
-
-      case 'paragraph':
-      case 'block':
-        if (node.nodes.length === 1 && !getContent(node)) {
-          return;
-        }
-        addToDoc = !paragraph;
-        paragraph = paragraph || new Paragraph();
-        node.nodes.forEach((childNode, childNodeIndex) => {
-          const leaves = childNode.leaves || [childNode];
-          leaves.forEach(leaf => {
-            text = new TextRun(stripInvalidXmlChars(leaf.text));
-            if (text) {
-              (leaf.marks || []).forEach(mark => {
-                switch (mark.type) {
-                  case 'bold':
-                    text.bold();
-                    break;
-
-                  case 'italic':
-                    text.italics();
-                    break;
-
-                  case 'underlined':
-                    text.underline();
-                    break;
-
-                  case 'subscript':
-                    text.subScript();
-                    break;
-
-                  case 'superscript':
-                    text.superScript();
-                    break;
-                }
-              });
-              if (!addToDoc && (index > 0) && childNodeIndex === 0) {
-                text.break().break();
-              }
-              paragraph.style('body');
-              paragraph.addRun(text);
-            }
-          });
-        });
-        if (addToDoc) {
-          parent.addParagraph(paragraph);
-        }
-        break;
-
-      case 'image':
-        paragraph = paragraph || new Paragraph();
-        paragraph.addImage(Media.addImage(document, node.data.src, node.data.width, node.data.height));
-        parent.addParagraph(paragraph);
-        break;
-
-      case 'error':
-        parent.createParagraph(getContent(node)).style('error');
-        break;
-
-      default:
-        // if there is no matching type then it's probably a denormalised text node with no wrapping paragraph
-        // attempt to render with the node wrapped in a paragraph
-        if (node.text) {
-          renderNode(parent, { object: 'block', type: 'paragraph', nodes: [ node ] }, depth, paragraph);
-        }
-
-    }
+    };
+    return renderNodeShared(parent, node, depth, paragraph, numbers, index, {
+      applyTextFilter: stripInvalidXmlChars,
+      customNodeRenderers
+    });
   };
 
   const renderTextEditor = (doc, value, noSeparator) => {
