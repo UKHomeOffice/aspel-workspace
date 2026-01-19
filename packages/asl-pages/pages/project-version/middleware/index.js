@@ -296,10 +296,10 @@ const removeReusableSteps = (versionData) => ({
   reusableSteps: []
 });
 
-const normaliseData = (versionData, opts, uuid) => {
+const normaliseData = (versionData, opts) => {
   return flow([
     normaliseConditions(opts),
-    normaliseProtocols(uuid),
+    normaliseProtocols,
     // Must be called after normaliseProtocols which uses this data
     removeReusableSteps,
     deepRemoveEmpty
