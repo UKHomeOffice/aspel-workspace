@@ -85,8 +85,6 @@ class ProtocolSections extends PureComponent {
 
     const speciesDetails = filterSpeciesByActive(values, project);
 
-    const isStandardProtocol = values.isStandardProtocol || false;
-
     const noAnswer = <em>No answer provided</em>;
 
     const title = values.title || 'Untitled protocol';
@@ -130,7 +128,7 @@ class ProtocolSections extends PureComponent {
             {
               values.gaas && <p>This protocol uses genetically altered (GA) animals</p>
             }
-            { !isStandardProtocol &&
+            {
               speciesDetails && !!speciesDetails.length && (
                 <table className="govuk-table">
                   <thead>
