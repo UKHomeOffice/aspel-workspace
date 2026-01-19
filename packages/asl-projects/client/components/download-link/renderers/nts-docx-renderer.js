@@ -1,6 +1,4 @@
-import { Document, Paragraph, TextRun, Table, Numbering, Indent, Media } from 'docx';
-import unified from 'unified';
-import remarkParse from 'remark-parse';
+import { Document, Paragraph, TextRun, Table, Indent } from 'docx';
 import get from 'lodash/get';
 import uniq from 'lodash/uniq';
 import concat from 'lodash/concat';
@@ -14,6 +12,7 @@ import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
 import { addStyles, numbering, renderHorizontalRule, abstract, addPageNumbers } from './helpers/docx-render-helper'
+import { renderMarkdown as renderMarkdownContent, renderLabel as renderLabelShared, renderText as renderTextShared } from './helpers/docx-content-renderer'
 
 export default async function ntsDocxRenderer(opts) {
   const {
@@ -29,32 +28,7 @@ export default async function ntsDocxRenderer(opts) {
   const document = new Document();
 
   const renderMarkdown = (markdown, style = 'body') => {
-    const tree = unified().use(remarkParse).parse(markdown);
-
-    (tree.children || []).forEach(node => {
-      switch (node.type) {
-        case 'heading': {
-          const text = node.children.find(c => c.type === 'text')?.value || '';
-          document.createParagraph(text).style(`Heading${node.depth}`);
-          break;
-        }
-        case 'paragraph': {
-          const text = node.children.find(c => c.type === 'text')?.value || '';
-          document.createParagraph(text).style(style);
-          break;
-        }
-        case 'list': {
-          node.children.forEach(listItem => {
-            const text = get(listItem, 'children[0].children[0].value', '').trim();
-            const p = new Paragraph(text);
-            p.style(style);
-            p.bullet(0);
-            document.addParagraph(p);
-          });
-          break;
-        }
-      }
-    });
+    renderMarkdownContent(document, markdown, style);
   };
 
   const renderNode = (parent, node, depth = 0, paragraph, numbers, index) => {
@@ -179,23 +153,10 @@ export default async function ntsDocxRenderer(opts) {
     document.createParagraph('\n').style('body');
   };
 
-  const renderLabel = (text) => {
-    if (!text) { return; }
-    document.createParagraph(text).style('Question');
-  };
+  const renderLabel = (text) => renderLabelShared(document, text);
 
   const renderText = (value) => {
-    if (typeof value === 'boolean') {
-      document.createParagraph(value ? 'Yes' : 'No').style('body');
-    } else if (value == null || value === '') {
-      const p = new Paragraph();
-      p.style('body');
-      p.addRun(new TextRun('No answer provided').italics());
-      document.addParagraph(p);
-    } else {
-      document.createParagraph(String(value)).style('body');
-    }
-    renderHorizontalRule(document);
+    return renderTextShared(document, value, { separator: doc => renderHorizontalRule(doc) });
   };
 
   const renderDuration = () => {

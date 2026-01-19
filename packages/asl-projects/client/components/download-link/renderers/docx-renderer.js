@@ -1,6 +1,4 @@
 import { Document, Paragraph, TextRun, Indent, Table, Media } from 'docx';
-import unified from 'unified';
-import remarkParse from 'remark-parse';
 import flatten from 'lodash/flatten';
 import isUndefined from 'lodash/isUndefined';
 import isNull from 'lodash/isNull';
@@ -15,6 +13,7 @@ import protocolConditions from '../../../constants/protocol-conditions';
 import { getRepeatedFromProtocolIndex, hydrateSteps } from '../../../helpers/steps';
 import Mustache from 'mustache';
 import { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers } from './helpers/docx-render-helper'
+import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderNull as renderNullShared } from './helpers/docx-content-renderer'
 
 export default (application, sections, values, updateImageDimensions) => {
   const document = new Document();
@@ -426,17 +425,10 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const renderText = (doc, value, noSeparator) => {
-    if (typeof value === 'boolean') {
-      value
-        ? doc.createParagraph('Yes').style('body')
-        : doc.createParagraph('No').style('body');
-    } else {
-      doc.createParagraph(stripInvalidXmlChars(value)).style('body');
-    }
-
-    if (!noSeparator) {
-      renderHorizontalRule(doc);
-    }
+    return renderTextShared(doc, value, {
+      applyTextFilter: stripInvalidXmlChars,
+      separator: noSeparator ? null : d => renderHorizontalRule(d)
+    });
   };
 
   const renderDeclaration = (/*doc, field, values, value*/) => {
@@ -460,14 +452,9 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const renderNull = (doc, noSeparator) => {
-    const paragraph = new Paragraph();
-    paragraph.style('body');
-    paragraph.addRun(new TextRun('No answer provided').italics());
-    doc.addParagraph(paragraph);
-    if (!noSeparator) {
-      renderHorizontalRule(doc);
-    }
-
+    return renderNullShared(doc, {
+      separator: noSeparator ? null : d => renderHorizontalRule(d)
+    });
   };
 
   const renderAnimalQuantities = (doc, values, noSeparator) => {
@@ -619,38 +606,7 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const renderMarkdown = (doc, markdown, style = 'body') => {
-    // if we ever use slate >= 0.5 this function can be replaced with
-    // return renderTextEditor(doc, unified().use(remarkParse).use(remarkSlate).parse(markdown))
-
-    const tree = unified().use(remarkParse).parse(markdown);
-    let p;
-
-    (tree.children || []).forEach(node => {
-      switch (node.type) {
-        case 'heading':
-          doc.createParagraph(
-            stripInvalidXmlChars(node.children.find(c => c.type === 'text').value)
-          ).style(`Heading${node.depth}`);
-          break;
-
-        case 'paragraph':
-          doc.createParagraph(
-            stripInvalidXmlChars(node.children.find(c => c.type === 'text').value)
-          ).style(style);
-          break;
-
-        case 'list':
-          // only single-level bulleted lists presently
-          node.children.forEach(listItem => {
-            const text = stripInvalidXmlChars(get(listItem, 'children[0].children[0].value').trim());
-            p = new Paragraph(text);
-            p.style(style);
-            p.bullet(0);
-            doc.addParagraph(p);
-          });
-          break;
-      }
-    });
+    renderMarkdownContent(doc, markdown, style, { applyTextFilter: stripInvalidXmlChars });
   };
 
   const renderProtocolConditions = doc => {
