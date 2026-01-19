@@ -12,7 +12,7 @@ import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
 import { addStyles, numbering, renderHorizontalRule, abstract, addPageNumbers } from './helpers/docx-style-helper'
-import { renderMarkdown as renderMarkdownContent, renderLabel as renderLabelShared, renderText as renderTextShared, renderNode as renderNodeShared } from './helpers/docx-content-renderer'
+import { renderMarkdown as renderMarkdownContent, renderLabel as renderLabelShared, renderText as renderTextShared, renderNode as renderNodeShared, renderTextEditor as renderTextEditorShared } from './helpers/docx-content-renderer'
 
 export default async function ntsDocxRenderer(opts) {
   const {
@@ -36,23 +36,11 @@ export default async function ntsDocxRenderer(opts) {
   };
 
   const renderTextEditor = (value) => {
-    let content = value;
-    if (typeof value === 'string') {
-      try {
-        content = JSON.parse(value);
-      } catch (e) {
-        return renderText(value);
-      }
-    }
-    const nodes = get(content, 'document.nodes', []);
-    nodes.forEach(node => {
-      try {
-        renderNode(document, node);
-      } catch (e) {
-        document.createParagraph('There was a problem rendering this content').style('aside');
-      }
+    return renderTextEditorShared(document, value, {
+      onStringFallback: (doc, val) => renderText(val),
+      onError: (doc) => doc.createParagraph('There was a problem rendering this content').style('aside'),
+      separator: doc => renderHorizontalRule(doc)
     });
-    renderHorizontalRule(document);
   };
 
   const renderTitleBlock = () => {

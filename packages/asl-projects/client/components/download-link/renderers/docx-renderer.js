@@ -13,7 +13,7 @@ import protocolConditions from '../../../constants/protocol-conditions';
 import { getRepeatedFromProtocolIndex, hydrateSteps } from '../../../helpers/steps';
 import Mustache from 'mustache';
 import { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers } from './helpers/docx-style-helper'
-import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderNull as renderNullShared, renderNode as renderNodeShared } from './helpers/docx-content-renderer'
+import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared, renderNull as renderNullShared, renderNode as renderNodeShared } from './helpers/docx-content-renderer'
 
 export default (application, sections, values, updateImageDimensions) => {
   const document = new Document();
@@ -167,28 +167,15 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const renderTextEditor = (doc, value, noSeparator) => {
-    let content = value;
-    if (typeof value === 'string') {
-      try {
-        content = JSON.parse(value);
-      } catch (e) {
-        return renderText(doc, value, noSeparator);
-      }
-    }
-    const nodes = content.document.nodes;
-
-    nodes.forEach(node => {
-      try {
-        renderNode(doc, node);
-      } catch (e) {
-        doc.createParagraph(`There was a problem rendering this content (${node.type})`).style('error');
-        doc.createParagraph(e.stack).style('error');
-      }
+    return renderTextEditorShared(doc, value, {
+      onStringFallback: (d, val) => renderText(d, val, noSeparator),
+      applyTextFilter: stripInvalidXmlChars,
+      onError: (d, err, node) => {
+        d.createParagraph(`There was a problem rendering this content (${node.type})`).style('error');
+        d.createParagraph(err.stack).style('error');
+      },
+      separator: noSeparator ? null : d => renderHorizontalRule(d)
     });
-
-    if (!noSeparator) {
-      renderHorizontalRule(doc);
-    }
   };
 
   const renderRadio = (doc, field, values, value, noSeparator) => {

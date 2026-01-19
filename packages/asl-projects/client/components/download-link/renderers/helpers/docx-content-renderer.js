@@ -64,11 +64,7 @@ const renderText = (doc, value, { applyTextFilter, separator } = {}) => {
     }
     if (separator) { separator(doc); }
 };
-
-export { renderMarkdown, renderLabel, renderNull, renderText };
  
-// Shared Slate node renderer with minimal assumptions.
-// Signature mirrors existing renderers to minimize callsite changes.
 const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options = {}) => {
     const { applyTextFilter, customNodeRenderers } = options;
 
@@ -174,4 +170,35 @@ const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options 
     }
 };
 
-export { renderNode };
+const renderTextEditor = (doc, value, { onStringFallback, onError, separator } = {}) => {
+    let content = value;
+    if (typeof value === 'string') {
+        try {
+            content = JSON.parse(value);
+        } catch (e) {
+            if (typeof onStringFallback === 'function') {
+                onStringFallback(doc, value);
+            }
+            return;
+        }
+    }
+
+    const nodes = get(content, 'document.nodes', []);
+    nodes.forEach(node => {
+        try {
+            renderNode(doc, node);
+        } catch (err) {
+            if (typeof onError === 'function') {
+                onError(doc, err, node);
+            } else {
+                doc.createParagraph('There was a problem rendering this content').style('aside');
+            }
+        }
+    });
+
+    if (typeof separator === 'function') {
+        separator(doc);
+    }
+};
+
+export { renderMarkdown, renderLabel, renderNull, renderText, renderTextEditor, renderNode };
