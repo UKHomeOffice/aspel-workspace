@@ -13,6 +13,7 @@ import schemaVersions from '@asl/projects/client/schema';
 import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
+import { addStyles, numbering, renderHorizontalRule, abstract, addPageNumbers } from './helpers/styles-helper'
 
 export default async function ntsDocxRenderer(opts) {
   const {
@@ -26,46 +27,6 @@ export default async function ntsDocxRenderer(opts) {
   } = opts;
 
   const document = new Document();
-
-  const addStyles = () => {
-    document.Styles.createParagraphStyle('Question', 'Question')
-      .basedOn('Normal').next('Normal').quickFormat()
-      .size(24).indent(800).bold().color('#3B3B3B').font('Helvetica')
-      .spacing({ before: 200, after: 50 });
-
-    document.Styles.createParagraphStyle('SectionTitle', 'Section Title')
-      .basedOn('Normal').next('Normal').quickFormat()
-      .size(44).bold().color('#8F23B3').font('Helvetica')
-      .spacing({ before: 500, after: 300 });
-
-    document.Styles.createParagraphStyle('Heading1', 'Heading 1')
-      .basedOn('Normal').next('Normal').quickFormat()
-      .size(52).bold().font('Helvetica')
-      .spacing({ before: 360, after: 400 });
-
-    document.Styles.createParagraphStyle('Heading2', 'Heading 2')
-      .basedOn('Normal').next('Normal').quickFormat()
-      .size(44).bold().font('Helvetica')
-      .spacing({ before: 400, after: 300 });
-
-    document.Styles.createParagraphStyle('Heading3', 'Heading 3')
-      .basedOn('Normal').next('Normal').quickFormat()
-      .size(36).bold().font('Helvetica')
-      .spacing({ before: 400, after: 200 });
-
-    document.Styles.createParagraphStyle('body', 'Body')
-      .basedOn('Normal').next('Normal').quickFormat()
-      .size(24).font('Helvetica')
-      .spacing({ before: 200, after: 200 });
-
-    document.Styles.createParagraphStyle('aside', 'Aside')
-      .basedOn('Body').next('Body').quickFormat()
-      .size(24).color('999999').italics();
-  };
-
-  const renderHorizontalRule = () => {
-    document.createParagraph('___________________________________________________________________');
-  };
 
   const renderMarkdown = (markdown, style = 'body') => {
     const tree = unified().use(remarkParse).parse(markdown);
@@ -95,9 +56,6 @@ export default async function ntsDocxRenderer(opts) {
       }
     });
   };
-
-  const numbering = new Numbering();
-  const abstract = numbering.createAbstractNumbering();
 
   const renderNode = (parent, node, depth = 0, paragraph, numbers, index) => {
     let text;
@@ -212,7 +170,7 @@ export default async function ntsDocxRenderer(opts) {
         document.createParagraph('There was a problem rendering this content').style('aside');
       }
     });
-    renderHorizontalRule();
+    renderHorizontalRule(document);
   };
 
   const renderTitleBlock = () => {
@@ -237,7 +195,7 @@ export default async function ntsDocxRenderer(opts) {
     } else {
       document.createParagraph(String(value)).style('body');
     }
-    renderHorizontalRule();
+    renderHorizontalRule(document);
   };
 
   const renderDuration = () => {
@@ -249,7 +207,7 @@ export default async function ntsDocxRenderer(opts) {
     if (months > 12) { months = 0; }
     if (years >= 5 || (!months && !years)) { years = 5; months = 0; }
     document.createParagraph(`${years} years ${months} months`).style('body');
-    renderHorizontalRule();
+    renderHorizontalRule(document);
   };
 
   const renderKeywords = () => {
@@ -262,7 +220,7 @@ export default async function ntsDocxRenderer(opts) {
     } else {
       document.createParagraph(list.join(', ')).style('body');
     }
-    renderHorizontalRule();
+    renderHorizontalRule(document);
   };
 
   const renderPurpose = (schemaVersion) => {
@@ -271,7 +229,7 @@ export default async function ntsDocxRenderer(opts) {
       p.style('body').bullet();
       p.addRun(new TextRun('(f) Higher education and training'));
       document.addParagraph(p);
-      renderHorizontalRule();
+      renderHorizontalRule(document);
       return;
     }
     const purposeOptions = schemaVersion === 0
@@ -287,7 +245,7 @@ export default async function ntsDocxRenderer(opts) {
       p.addRun(new TextRun(opt ? opt.label : String(val)));
       document.addParagraph(p);
     });
-    renderHorizontalRule();
+    renderHorizontalRule(document);
   };
 
   const speciesLabels = flatten(values(SPECIES));
@@ -315,7 +273,7 @@ export default async function ntsDocxRenderer(opts) {
       }
     };
     speciesUsed.forEach(s => renderItem(s));
-    renderHorizontalRule();
+    renderHorizontalRule(document);
   };
 
   const lifeStageOptions = schemaV1().protocols.subsections.protocols.sections.animals.fields.find(f => f.name === 'life-stages').options;
@@ -356,7 +314,7 @@ export default async function ntsDocxRenderer(opts) {
       table.getCell(i + 1, 1).addParagraph(new Paragraph((s.lifeStages || []).join(', ')));
     });
     document.addTable(table);
-    renderHorizontalRule();
+    renderHorizontalRule(document);
   };
 
   const renderRetrospectiveDecision = () => {
@@ -374,7 +332,7 @@ export default async function ntsDocxRenderer(opts) {
         document.addParagraph(p);
       });
     }
-    renderHorizontalRule();
+    renderHorizontalRule(document);
   };
 
   const renderRetrospectivePlaceholder = (field) => {
@@ -386,7 +344,7 @@ export default async function ntsDocxRenderer(opts) {
     const raDate = hasRaDate ? application.raDate : null;
     const content = Mustache.render(field.content, { raDate, hasRaDate });
     renderMarkdown(content, 'aside');
-    renderHorizontalRule();
+    renderHorizontalRule(document);
   };
 
   const renderRaSummary = (fieldNames) => {
@@ -470,7 +428,8 @@ export default async function ntsDocxRenderer(opts) {
     });
   };
 
-  addStyles();
+  addStyles(document);
   renderDocument();
+  addPageNumbers(document);
   return document;
 }

@@ -1,4 +1,4 @@
-import { Document, Paragraph, TextRun, Numbering, Indent, Table, Media } from 'docx';
+import { Document, Paragraph, TextRun, Indent, Table, Media } from 'docx';
 import unified from 'unified';
 import remarkParse from 'remark-parse';
 import flatten from 'lodash/flatten';
@@ -14,136 +14,10 @@ import { filterSpeciesByActive } from '../../../pages/sections/protocols/animals
 import protocolConditions from '../../../constants/protocol-conditions';
 import { getRepeatedFromProtocolIndex, hydrateSteps } from '../../../helpers/steps';
 import Mustache from 'mustache';
+import { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers } from './helpers/styles-helper'
 
 export default (application, sections, values, updateImageDimensions) => {
   const document = new Document();
-  const numbering = new Numbering();
-  const abstract = numbering.createAbstractNumbering();
-
-  const addStyles = () => {
-
-    document.Styles.createParagraphStyle('Question', 'Question')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(24)
-      .indent(800)
-      .bold()
-      .color('#3B3B3B')
-      .font('Helvetica')
-      .spacing({ before: 200, after: 50 });
-
-    document.Styles.createParagraphStyle('SectionTitle', 'Section Title')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(44)
-      .bold()
-      .color('#8F23B3')
-      .font('Helvetica')
-      .spacing({ before: 500, after: 300 });
-
-    document.Styles.createParagraphStyle('ProtocolSectionTitle', 'Protocol Section Title')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(34)
-      .bold()
-      .color('#005EA5')
-      .font('Helvetica')
-      .spacing({ before: 500, after: 300 });
-
-    document.Styles.createParagraphStyle('Heading1', 'Heading 1')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(52)
-      .bold()
-      .font('Helvetica')
-      .spacing({ before: 360, after: 400 });
-
-    document.Styles.createParagraphStyle('Heading2', 'Heading 2')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(44)
-      .bold()
-      .font('Helvetica')
-      .spacing({ before: 400, after: 300 });
-
-    document.Styles.createParagraphStyle('Heading3', 'Heading 3')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(36)
-      .bold()
-      .font('Helvetica')
-      .spacing({ before: 400, after: 200 });
-
-    document.Styles.createParagraphStyle('Heading4', 'Heading 4')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(32)
-      .bold()
-      .font('Helvetica')
-      .spacing({ before: 400, after: 200 });
-
-    document.Styles.createParagraphStyle('Heading5', 'Heading 5')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(24)
-      .bold()
-      .font('Helvetica')
-      .spacing({ before: 200, after: 50 });
-
-    document.Styles.createParagraphStyle('body', 'Body')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(24)
-      .font('Helvetica')
-      .spacing({ before: 200, after: 200 });
-
-    document.Styles.createParagraphStyle('ListParagraph', 'List Paragraph')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(24)
-      .font('Helvetica')
-      .spacing({ before: 100, after: 100 });
-
-    document.Styles.createParagraphStyle('aside', 'Aside')
-      .basedOn('Body')
-      .next('Body')
-      .quickFormat()
-      .size(24)
-      .color('999999')
-      .italics();
-
-    document.Styles.createParagraphStyle('footerText', 'Footer Text')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .font('Helvetica')
-      .size(20);
-
-    document.Styles.createParagraphStyle('error', 'Error')
-      .basedOn('Body')
-      .next('Body')
-      .quickFormat()
-      .color('FF0000')
-      .bold();
-  };
-
-  const addPageNumbers = () => {
-    document.Footer.createParagraph()
-      .addRun(new TextRun('Page ').pageNumber())
-      .addRun(new TextRun(' of ').numberOfTotalPages())
-      .style('footerText')
-      .right();
-  };
 
   const tableToMatrix = table => {
     const rows = table.nodes;
@@ -596,10 +470,6 @@ export default (application, sections, values, updateImageDimensions) => {
 
   };
 
-  const renderHorizontalRule = doc => {
-    doc.createParagraph('___________________________________________________________________');
-  };
-
   const renderAnimalQuantities = (doc, values, noSeparator) => {
     const species = [
       ...flatten((values.species || []).map(s => {
@@ -1003,8 +873,8 @@ export default (application, sections, values, updateImageDimensions) => {
 
   return Promise.resolve()
     .then(() => addImageDimensions(values))
-    .then(() => addStyles())
+    .then(() => addStyles(document))
     .then(() => renderDocument(sections, values))
-    .then(() => addPageNumbers())
+    .then(() => addPageNumbers(document))
     .then(() => document);
 };
