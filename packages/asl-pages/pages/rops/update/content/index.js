@@ -228,7 +228,7 @@ Select all that apply`,
       hint: 'Select all that apply',
       options: {
         'self-sustaining': 'Self-sustaining colony',
-        'non-self-sustaining': 'Non self-sustaining colony'
+        'non-self-sustaining': 'Non-self-sustaining colony'
       },
       summary: 'Definitions of self-sustaining colonies',
       details: `### Marmosets, tamarins and other new world primates
@@ -249,7 +249,7 @@ A colony is a self-sustaining colony if all the following apply:
 `
     },
     nhpsGeneration: {
-      label: 'What was their generation (maternal line)?',
+      label: 'What was their generation (maternal or paternal line)?',
       hint: 'Select all that apply',
       options: {
         f0: 'F0 (wild caught)',
@@ -595,10 +595,10 @@ Crossing a genetically altered animal with a wild type animal will not normally 
       required: 'Select the place of birth for non-human primates used in procedures in {{year}}'
     },
     nhpsColonyStatus: {
-      required: 'Select where the non-human primates were sourced from'
+      required: 'Select the type of colony they were sourced from'
     },
     nhpsGeneration: {
-      required: 'Select the generation (maternal line) of non-human primates'
+      required: 'Select their generation (maternal or paternal line)'
     },
     ga: {
       required: 'Select if genetically altered animals were used in procedures in {{year}}'
