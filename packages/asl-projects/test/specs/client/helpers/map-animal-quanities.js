@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { mapAnimalQuantities } from '../../../client/helpers';
+import { mapAnimalQuantities } from '../../../../client/helpers';
 
 describe('mapAnimalQuantities', () => {
 

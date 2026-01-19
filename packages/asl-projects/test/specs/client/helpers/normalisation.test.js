@@ -1,4 +1,4 @@
-import { normaliseValue } from '../../../client/helpers/normalisation';
+import { normaliseValue } from '../../../../client/helpers/normalisation';
 const assert = require('assert');
 
 describe('normaliseValue', () => {
@@ -29,7 +29,32 @@ describe('normaliseValue', () => {
         ]
       }
     };
-    assert.strictEqual(normaliseValue(richText), 'Hello\nWorld');
+    assert.strictEqual(normaliseValue(richText), 'Hello World');
+  });
+
+  it('normalises a Slate.js rich text object with paragraphs', () => {
+    const richText = {
+      "object": "value",
+      "document": {
+        "data": {},
+        "nodes": [
+          {
+            "data": {},
+            "type": "paragraph",
+            "nodes": [
+              {
+                "text": "Text",
+                "marks": [],
+                "object": "text"
+              }
+            ],
+            "object": "block"
+          }
+        ],
+        "object": "document"
+      }
+    };
+    assert.strictEqual(normaliseValue(richText), 'Text');
   });
 
   it('converts numbers and booleans to string', () => {
