@@ -155,9 +155,9 @@ class Step extends Component {
       readonly,
       expanded,
       onToggleExpanded,
-      number
+      number,
+      prefix
     } = this.props;
-    const changeFieldPrefix = values.reusableStepId ? `reusableSteps.${values.reusableStepId}.` : this.props.prefix;
 
     const re = new RegExp(`^(reusable)?S?s?teps.${values.id}\\.`);
 
@@ -174,12 +174,12 @@ class Step extends Component {
         <ReviewFields
           fields={[fields.find(f => f.name === 'title')]}
           values={{ title: values.title }}
-          prefix={changeFieldPrefix}
+          prefix={prefix}
           editLink={`0#${this.props.prefix}`}
           protocolId={protocol.id}
           stepId={values.id}
           readonly={!isReviewStep}
-          additionalCommentFields={values.reusableStepId ? [`${this.props.prefix}title`] : []}
+          additionalCommentFields={values.reusableStepId ? [`${prefix}title`] : []}
         />
       )
     }
@@ -188,13 +188,13 @@ class Step extends Component {
         ? <Fragment>
           {!editingReusableStep ? <Fieldset
             fields={fields}
-            prefix={changeFieldPrefix}
+            prefix={prefix}
             onFieldChange={(key, value) => updateItem({ [key]: value })}
             values={values}
           /> : <Fragment>
             <Fieldset
               fields={fields.filter(f => f.name !== 'reusable')}
-              prefix={changeFieldPrefix}
+              prefix={prefix}
               onFieldChange={(key, value) => updateItem({ [key]: value })}
               values={values}
             />
@@ -221,7 +221,7 @@ class Step extends Component {
           <ReviewFields
             fields={fields.filter(f => f.name !== 'title')}
             values={values}
-            prefix={changeFieldPrefix}
+            prefix={prefix}
             editLink={`0#${this.props.prefix}`}
             readonly={!isReviewStep}
             protocolId={protocol.id}
@@ -249,7 +249,7 @@ class Step extends Component {
       >
         <NewComments comments={relevantComments} />
         {
-          !values.deleted && <StepBadge fields={values} changeFieldPrefix={changeFieldPrefix} protocolId={protocol.id} position={index}/>
+          !values.deleted && <StepBadge fields={values} changeFieldPrefix={prefix} protocolId={protocol.id} position={index}/>
         }
         <Fragment>
           {
@@ -392,7 +392,7 @@ const StepSelector = ({reusableSteps, values, onSaveSelection, length, onCancel}
     className: 'smaller',
     options: options
   }];
-  const saveSelectionHandler = (e) => {
+  const saveSelectionHandler = () => {
     onSaveSelection(selectedSteps);
   };
 
@@ -491,7 +491,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
 export default function Steps({project, values, ...props}) {
   const isReviewStep = parseInt(useParams().step, 10) === 1;
   const [ allSteps, reusableSteps ] = hydrateSteps(project.protocols, values.steps, project.reusableSteps || {});
-  let steps = allSteps;
+  let steps;
   if (props.pdf) {
     steps = allSteps.filter(step => !step.deleted);
   } else {

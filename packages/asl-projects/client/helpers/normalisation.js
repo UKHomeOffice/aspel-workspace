@@ -41,14 +41,13 @@ export function normaliseValue(value) {
  * @returns {string} - Extracted plain text.
  */
 function extractText(richTextObject) {
-  if (!richTextObject?.document?.nodes) {
-    return '';
-  }
+  const textFromNode = (node => [
+    ...(node.text ? [node.text] : []),
+    ...(node.nodes?.flatMap(textFromNode) ?? [])
+  ]);
 
-  return richTextObject.document.nodes
-    .map(block =>
-      block.nodes?.map(node => node.text || '').join(' ') || ''
-    )
-    .join('\n')
+  return (richTextObject.document.nodes ?? [])
+    .flatMap(textFromNode)
+    .join(' ')
     .trim();
 }
