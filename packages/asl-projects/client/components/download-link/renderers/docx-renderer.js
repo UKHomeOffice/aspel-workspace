@@ -12,7 +12,7 @@ import { filterSpeciesByActive } from '../../../pages/sections/protocols/animals
 import protocolConditions from '../../../constants/protocol-conditions';
 import { getRepeatedFromProtocolIndex, hydrateSteps } from '../../../helpers/steps';
 import Mustache from 'mustache';
-import { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers } from './helpers/docx-render-helper'
+import { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers } from './helpers/docx-style-helper'
 import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderNull as renderNullShared } from './helpers/docx-content-renderer'
 
 export default (application, sections, values, updateImageDimensions) => {
