@@ -1,7 +1,6 @@
 const { Consumer } = require('sqs-consumer');
 const { SQSClient } = require('@aws-sdk/client-sqs');
 const config = require('./config');
-
 const Logger = require('./lib/utils/logger');
 
 const logger = Logger(config);
@@ -13,7 +12,6 @@ const configParams = {
   accessKeyId: config.sqs.accessKey,
   secretAccessKey: config.sqs.secret
 };
-
 if (config.s3.localstackUrl) {
   configParams.endpoint = config.s3.localstackUrl;
   configParams.sslEnabled = false;

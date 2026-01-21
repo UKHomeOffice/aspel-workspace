@@ -1,13 +1,20 @@
 const { SQSClient, SendMessageCommand } = require('@aws-sdk/client-sqs');
 
 module.exports = settings => {
-  const sqs = new SQSClient({
+  const configParams = {
     region: settings.region,
-    credentials: {
-      accessKeyId: settings.accessKey,
-      secretAccessKey: settings.secret
-    }
-  });
+    accessKeyId: settings.accessKey,
+    secretAccessKey: settings.secret
+  };
+  const isLocal = settings.url.includes('localhost') || settings.url.endpoint.includes('localstack');
+  if (isLocal) {
+    const url = new URL(settings.url);
+    configParams.endpoint = `${url.protocol}//${url.host}`;
+    configParams.sslEnabled = false;
+  }
+
+  // Create SQS client using AWS SDK v3
+  const sqs = new SQSClient(configParams);
 
   return async key => {
     const params = {
@@ -18,6 +25,7 @@ module.exports = settings => {
     try {
       return await sqs.send(new SendMessageCommand(params));
     } catch (err) {
+      console.log(`Error Sending message to SQS queue: ${err}`);
       throw err;
     }
   };

@@ -11,7 +11,7 @@ module.exports = (settings, logger) => {
       Key: key,
       Bucket: settings.bucket
     };
-
+    logger.verbose(`Retrieving message with key: ${key} from bucket: ${settings.bucket}`);
     // --- GET OBJECT ---
     const response = await s3Client.send(new GetObjectCommand(params));
     const body = await response.Body.transformToString('utf8');
