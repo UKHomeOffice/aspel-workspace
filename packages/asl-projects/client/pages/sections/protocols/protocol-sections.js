@@ -10,7 +10,6 @@ import Complete from '../../../components/complete';
 import NewComments from '../../../components/new-comments';
 import Sections from './sections';
 import ChangedBadge from '../../../components/changed-badge';
-import NewProtocolBadge from '../../../components/new-protocol-badge';
 import ReorderedBadge from '../../../components/reordered-badge';
 import { filterSpeciesByActive } from './animals';
 
@@ -99,7 +98,6 @@ class ProtocolSections extends PureComponent {
           !values.deleted && (
             <Fragment>
               <StandardProtocolBadge values={values} />
-              <NewProtocolBadge id={values.id} />
               <ReorderedBadge id={values.id} />
               <ChangedBadge fields={[`protocols.${values.id}`, ...reusableStepFieldKeys(values)]} protocolId={values.id} />
             </Fragment>

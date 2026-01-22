@@ -13,11 +13,27 @@ start({
     id: state.model.id
   }),
   comments: state.static.comments,
-  changes: {
-    first: (state.static.changes && state.static.changes.first) || [],
-    latest: (state.static.changes && state.static.changes.latest) || [],
-    granted: (state.static.changes && state.static.changes.granted) || []
-  },
+  changes: (state.static.isGranted || state.static.legacyGranted)
+    ? {}
+    : {
+      first: state.static.changes?.first ?? [],
+      latest: state.static.changes?.latest ?? [],
+      granted: state.static.changes?.granted ?? []
+    },
+  added: (state.static.isGranted || state.static.legacyGranted)
+    ? {}
+    : {
+      first: state.static.added?.first ?? [],
+      latest: state.static.added?.latest ?? [],
+      granted: state.static.added?.granted ?? []
+    },
+  removed: (state.static.isGranted || state.static.legacyGranted)
+    ? {}
+    : {
+      first: state.static.removed?.first ?? [],
+      latest: state.static.removed?.latest ?? [],
+      granted: state.static.removed?.granted ?? []
+    },
   application: {
     commentable: state.static.commentable,
     establishment: state.static.establishment,
