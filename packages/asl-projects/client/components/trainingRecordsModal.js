@@ -232,17 +232,17 @@ export default function TrainingRecordModal({
               ) : (
                 <nav className="govuk-tabs">
                   <ul>
-                    {showPrevTab && (
-                      <li className={active === 'prev' ? 'active' : ''}>
-                        <a href="#" onClick={selectTab('prev')}>
-                          Previous version
-                        </a>
-                      </li>
-                    )}
                     {showFirstTab && (
                       <li className={active === 'first' ? 'active' : ''}>
                         <a href="#" onClick={selectTab('first')}>
                           {modalLabel}
+                        </a>
+                      </li>
+                    )}
+                    {showPrevTab && (
+                      <li className={active === 'prev' ? 'active' : ''}>
+                        <a href="#" onClick={selectTab('prev')}>
+                          Previous version
                         </a>
                       </li>
                     )}
