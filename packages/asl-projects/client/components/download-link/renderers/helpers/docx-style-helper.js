@@ -98,7 +98,7 @@ const addStyles = (document) => {
         .next('Body')
         .quickFormat()
         .size(24)
-        .color('999999')
+        .color('#999999')
         .italics();
 
     document.Styles.createParagraphStyle('footerText', 'Footer Text')
@@ -112,7 +112,7 @@ const addStyles = (document) => {
         .basedOn('Body')
         .next('Body')
         .quickFormat()
-        .color('FF0000')
+        .color('#FF0000')
         .bold();
 };
 

@@ -48,13 +48,13 @@ module.exports = {
   },
   ntsRa: {
     heading: 'Non-technical summary and retrospective assessment',
-      link: 'Non-technical summary and retrospective assessment (PDF)',
-      linkDocx: 'Non-technical summary and retrospective assessment (DOCX)'
+    link: 'Non-technical summary and retrospective assessment (PDF)',
+    linkDocx: 'Non-technical summary and retrospective assessment (DOCX)'
   },
   ntsDraftRa: {
     heading: 'Non-technical summary and draft retrospective assessment',
-      link: 'Non-technical summary and draft retrospective assessment (PDF)',
-      linkDocx: 'Non-technical summary and draft retrospective assessment (DOCX)'
+    link: 'Non-technical summary and draft retrospective assessment (PDF)',
+    linkDocx: 'Non-technical summary and draft retrospective assessment (DOCX)'
   },
   template: {
     heading: 'Template',
