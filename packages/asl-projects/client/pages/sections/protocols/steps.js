@@ -348,7 +348,7 @@ class Step extends Component {
             values.deleted && <span className="badge deleted">removed</span>
           }
           {
-            !values.deleted && !pdf && <StepBadge fields={values} changeFieldPrefix={changeFieldPrefix} protocolId={protocol.id} position={index} />
+            !values.deleted && !pdf && <StepBadge fields={values} changeFieldPrefix={prefix} protocolId={protocol.id} position={index} />
           }
           <Expandable expanded={expanded} onHeaderClick={() => onToggleExpanded(index)}>
             <Fragment>

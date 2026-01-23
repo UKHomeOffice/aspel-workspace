@@ -267,6 +267,13 @@ function normaliseSteps(protocol, reusableSteps) {
  * `deleted: true`, and hiding the deleted flag when false so that adding the
  * flag, then setting it to false doesn't count as a change.
  *
+ * `isStandardProtocol` can't change for a protocol, excluding as it may change
+ * from undefined => false.
+ *
+ * `displayTitle` is generated from title, so changes are already accounted for
+ * in title, also displayTitle doesn't have an underlying field with associated
+ * badge
+ *
  * @param versionData
  * @returns {*&{protocols: (*&{steps})[]}}
  */
@@ -279,7 +286,7 @@ const normaliseProtocols = (versionData) => ({
       return protocol?.deleted
         ? []
         : [{
-          ...omit(protocol, 'deleted'),
+          ...omit(protocol, 'deleted', 'isStandardProtocol', 'displayTitle'),
           steps: normaliseSteps(protocol, versionData.reusableSteps ?? {})
         }];
     })
@@ -296,10 +303,10 @@ const removeReusableSteps = (versionData) => ({
   reusableSteps: []
 });
 
-const normaliseData = (versionData, opts, uuid) => {
+const normaliseData = (versionData, opts) => {
   return flow([
     normaliseConditions(opts),
-    normaliseProtocols(uuid),
+    normaliseProtocols,
     // Must be called after normaliseProtocols which uses this data
     removeReusableSteps,
     deepRemoveEmpty
@@ -483,8 +490,12 @@ const getChangedValues = (question, req, type = 'project-versions') => {
   return Promise.resolve()
     .then(() => getVersion[req.query.version](req, type))
     .then(async (result) => {
-      const value = result && getNode(result.data, question);
-      const current = getNode(req[model].data, question);
+      const normalisationOptions = { isSubmitted: req[model].data.status !== 'draft' };
+      const before = result ? normaliseData(result.data, normalisationOptions) : undefined;
+      const after = normaliseData(req[model].data, normalisationOptions);
+
+      const value = before && getNode(before, question);
+      const current = getNode(after, question);
       return {
         value,
         diff: await diff(value, current, { type: req.query.type })
