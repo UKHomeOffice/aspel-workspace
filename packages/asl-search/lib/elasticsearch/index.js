@@ -11,8 +11,12 @@ const createESClient = async (options) => {
       secretAccessKey: options.aws.credentials.secret
     });
 
-    const awsCredentials = await awsGetCredentials({ credentials, region: options.aws.region });
-    const AWSConnection = createAWSConnection(awsCredentials);
+    const awsCredentials = await awsGetCredentials();
+    const AWSConnection = createAWSConnection({
+      ...awsCredentials,
+      region: options.aws.region,
+      credentials
+    });
 
     return new Client({
       ...options.aws.client,

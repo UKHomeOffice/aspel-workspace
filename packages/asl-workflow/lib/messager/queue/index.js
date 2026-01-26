@@ -8,8 +8,7 @@ module.exports = settings => {
   };
   const isLocal = settings.url.includes('localhost') || settings.url.endpoint.includes('localstack');
   if (isLocal) {
-    const url = new URL(settings.url);
-    configParams.endpoint = `${url.protocol}//${url.host}`;
+    configParams.endpoint = new URL(settings.url).origin;
     configParams.sslEnabled = false;
   }
 

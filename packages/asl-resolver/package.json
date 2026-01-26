@@ -29,6 +29,7 @@
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@aws-sdk/client-sqs": "^3.528.0",
     "@aws-sdk/credential-providers": "^3.528.0",
+    "@aws-sdk/client-s3": "^3.528.0",
     "hot-shots": "^6.8.2",
     "jsondiffpatch": "^0.7.3",
     "jsonwebtoken": "^9.0.0",
