@@ -25,6 +25,7 @@ export const REFRESH_COMMENTS = 'REFRESH_COMMENTS';
 
 export const ADD_CHANGE = 'ADD_CHANGE';
 export const SET_CHANGES = 'SET_CHANGES';
+export const SET_ADDED = 'SET_ADDED';
 export const LOAD_QUESTION_VERSIONS = 'LOAD_QUESTION_VERSIONS';
 export const ERROR = 'ERROR';
 
