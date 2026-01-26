@@ -1,4 +1,4 @@
-import { Document, Paragraph, TextRun, Table, Indent } from 'docx';
+import { Document, Paragraph, TextRun, Table } from 'docx';
 import get from 'lodash/get';
 import uniq from 'lodash/uniq';
 import concat from 'lodash/concat';
@@ -11,8 +11,8 @@ import schemaVersions from '@asl/projects/client/schema';
 import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
-import { addStyles, numbering, renderHorizontalRule, abstract, addPageNumbers } from './helpers/docx-style-helper'
-import { renderMarkdown as renderMarkdownContent, renderLabel as renderLabelShared, renderText as renderTextShared, renderNode as renderNodeShared, renderTextEditor as renderTextEditorShared } from './helpers/docx-content-renderer'
+import { addStyles, renderHorizontalRule, addPageNumbers } from './helpers/docx-style-helper'
+import { renderMarkdown as renderMarkdownContent, renderLabel as renderLabelShared, renderText as renderTextShared, renderTextEditor as renderTextEditorShared } from './helpers/docx-content-renderer'
 
 export default async function ntsDocxRenderer(opts) {
   const {
@@ -31,9 +31,6 @@ export default async function ntsDocxRenderer(opts) {
     renderMarkdownContent(document, markdown, style);
   };
 
-  const renderNode = (parent, node, depth = 0, paragraph, numbers, index) => {
-    return renderNodeShared(parent, node, depth, paragraph, numbers, index);
-  };
 
   const renderTextEditor = (value) => {
     return renderTextEditorShared(document, value, {
