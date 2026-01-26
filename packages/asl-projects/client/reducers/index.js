@@ -8,6 +8,7 @@ import message from './message';
 import settings from './settings';
 import comments from './comments';
 import changes from './changes';
+import added from './added';
 import questionVersions from './question-versions';
 import staticData from './static';
 
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   settings,
   comments,
   changes,
+  added,
   questionVersions,
   static: staticData
 });
