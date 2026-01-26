@@ -15,8 +15,7 @@ import Animals from './animals';
 import LegacyAnimals from './legacy-animals';
 import Conditions from '../../../components/conditions/protocol-conditions';
 import ChangedBadge from '../../../components/changed-badge';
-import {reusableStepFieldKeys} from '../../../helpers/steps';
-import { normaliseValue } from '../../../helpers/normalisation';
+import { reusableStepFieldKeys } from '../../../helpers/steps';
 
 const getSection = (section, props) => {
 
@@ -82,7 +81,7 @@ const getFieldKeys = (section, values) => {
     const additionalReusableStepKeys = section.repeats === 'steps' ? reusableStepFieldKeys(values) : [];
     return [`protocols.${values.id}.${section.repeats}`, ...additionalReusableStepKeys];
   }
-  const flattenedFields = flattenReveals(section.fields || [], values);
+  const flattenedFields = flattenReveals(section.fields || [], values, true);
   if (section.repeats) {
     return (values[section.repeats] || []).filter(Boolean).reduce((list, repeater) => {
       return list.concat(flattenedFields.map(f => `protocols.${values.id}.${section.repeats}.${repeater.id}.${f.name}`));
@@ -105,46 +104,13 @@ const getBadges = (section, newComments, values) => {
 
   const fields = getFieldKeys(section, values);
 
-  // Initialise groups for fields with and without values
-  const fieldsWithValues = [];
-
-  section.fields?.forEach((field) => {
-
-    // Attempt to retrieve the value from the values object
-    const rawValue = field.name.includes('.')
-      ? field.name.split('.').reduce((acc, key) => acc?.[key], values)
-      : values?.[field.name];
-
-    let fieldValue;
-
-    if (typeof rawValue === 'object' && rawValue !== null) {
-      if (Array.isArray(rawValue)) {
-        fieldValue = rawValue.join(', ');
-      } else {
-        fieldValue = normaliseValue(rawValue);
-      }
-    } else {
-      fieldValue = rawValue || null;
-    }
-
-    // Group fields based on whether they have values or not
-    if (fieldValue) {
-      fieldsWithValues.push({
-        name: field.name,
-        label: field.label,
-        type: field.type,
-        value: fieldValue
-      });
-    }
-  });
-
   return (
     <Fragment>
       {
         !!numberOfNewComments && <NewComments comments={numberOfNewComments} />
       }
       {
-        fieldsWithValues.length > 0 && (
+        fields.length > 0 && (
           <ChangedBadge fields={fields} protocolId={values.id} />
         )
       }
@@ -178,23 +144,32 @@ const ProtocolSections = ({ sections, protocolState, editable, newComments, ...p
     sectionNames = sectionNames.sort(sortGranted(sections));
   }
   return (
-    <Accordion open={getOpenSection(protocolState, editable, sections)} toggleAll={!props.pdf} pdf={props.pdf}>
-      {
-        sectionNames.map((section, sectionIndex) => (
-          <ExpandingPanel
-            key={section}
-            title={<Title {...props} section={sections[section]} newComments={newComments} />}
-            className={section.toLowerCase()}
-            closeLabel={`Close ${lowerFirst(sections[section].title)}`}
-            pdf={props.pdf}
-          >
-            {
-              getSection(section, { ...props, protocolState, editable, ...sections[section], sectionsLength: size(sections), sectionIndex, newComments })
-            }
-          </ExpandingPanel>
-        ))
-      }
-    </Accordion>
+    <div className={`${props.values.isStandardProtocol ? 'playback standard-protocol' : ''}`}>
+      <Accordion open={getOpenSection(protocolState, editable, sections)} toggleAll={!props.pdf} pdf={props.pdf}>
+        {
+          sectionNames.map((section, sectionIndex) => (
+            <ExpandingPanel
+              key={section}
+              title={<Title {...props} section={sections[section]} newComments={newComments} />}
+              className={section.toLowerCase()}
+              closeLabel={`Close ${lowerFirst(sections[section].title)}`}
+              pdf={props.pdf}
+            >
+              {
+                getSection(section, {
+                  ...props,
+                  protocolState,
+                  editable, ...sections[section],
+                  sectionsLength: size(sections),
+                  sectionIndex,
+                  newComments
+                })
+              }
+            </ExpandingPanel>
+          ))
+        }
+      </Accordion>
+    </div>
   );
 };
 

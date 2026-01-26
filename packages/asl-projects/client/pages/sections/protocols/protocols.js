@@ -11,6 +11,7 @@ import Controls from '../../../components/controls';
 import { getNewComments } from '../../../helpers';
 import { renderFieldsInProtocol } from '../../../helpers/render-fields-in-protocol';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
+import { getEnhancedProtocols } from '../../../selectors/protocols';
 
 const Form = ({
   number,
@@ -124,8 +125,8 @@ class Protocols extends PureComponent {
 
   render() {
     const { protocols, editable, previousProtocols, isLegacy } = this.props;
-
-    const items = (protocols || []).filter(p => {
+    const safeProtocols = Array.isArray(protocols) ? protocols : [];
+    const items = safeProtocols.filter(p => {
       if (editable) {
         return true;
       }
@@ -140,14 +141,18 @@ class Protocols extends PureComponent {
       steps: isLegacy ? undefined : []
     };
 
+    const searchParams = new URLSearchParams(window.location.search);
+    const addProtocol = searchParams.get('addProtocol') === 'true';
+
     return (
       <Repeater
         type="protocols"
         singular="protocol"
         items={items}
         onSave={this.save}
+        addProtocol={addProtocol}
         addAnother={editable}
-        addButtonBefore={protocols && protocols.length > 0 && protocols[0].title}
+        addButtonBefore={safeProtocols.length > 0 && safeProtocols[0]?.title}
         addButtonAfter={true}
         softDelete={true}
         itemProps={itemProps}
@@ -194,7 +199,7 @@ const mapStateToProps = ({
     schemaVersion
   }
 }) => ({
-  protocols: project.protocols,
+  protocols: getEnhancedProtocols(project),
   newComments: getNewComments(comments, user, project),
   readonly,
   previousProtocols,

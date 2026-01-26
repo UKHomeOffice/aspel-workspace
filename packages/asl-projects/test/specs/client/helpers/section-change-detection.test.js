@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { hasSectionChanged } from '../../../client/helpers/section-change-detection';
+import { hasSectionChanged } from '../../../../client/helpers/section-change-detection';
 
 describe('hasSectionChanged (ASPeL)', () => {
   // Mock versions of application states for testing

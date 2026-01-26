@@ -16,6 +16,7 @@ import { filterSpeciesByActive } from './animals';
 
 import { keepAlive } from '../../../actions/session';
 import { reusableStepFieldKeys } from '../../../helpers/steps';
+import StandardProtocolBadge from '../../../components/standard-protocol-badge';
 
 class ProtocolSections extends PureComponent {
   state = {
@@ -97,6 +98,7 @@ class ProtocolSections extends PureComponent {
         {
           !values.deleted && (
             <Fragment>
+              <StandardProtocolBadge values={values} />
               <NewProtocolBadge id={values.id} />
               <ReorderedBadge id={values.id} />
               <ChangedBadge fields={[`protocols.${values.id}`, ...reusableStepFieldKeys(values)]} protocolId={values.id} />

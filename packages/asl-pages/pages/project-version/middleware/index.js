@@ -223,7 +223,7 @@ const getCacheableVersion = (req, url) => {
     });
 };
 
-function normaliseSteps(protocol) {
+function normaliseSteps(protocol, reusableSteps) {
   if (!protocol.steps) {
     return [];
   }
@@ -235,11 +235,28 @@ function normaliseSteps(protocol) {
 
   return (Array.isArray(protocol.steps) ? protocol.steps : []).flatMap(
     step => {
-      // If step is not reusable, then it dont need reusableStepId, this is causing issues down the line
-      if (step?.reusableStepId && step?.hasOwnProperty('reusable') && step?.reusable === false) {
-        delete step.reusableStepId;
-      }
-      return step?.deleted ? [] : [omit(step, 'deleted')];
+      const normalisedStep = {
+        ...(
+          step && step.reusableStepId && step.reusable !== false
+            ? reusableSteps?.[step.reusableStepId] ?? {}
+            : {}
+        ),
+        ...(step ?? {})
+      };
+
+      return normalisedStep?.deleted
+        ? []
+        : [omit(
+          normalisedStep, [
+            'deleted',
+            'saved',
+            'completed',
+            'reusableStepId',
+            'reusedStep',
+            'reusable',
+            'usedInProtocols'
+          ]
+        )];
     }
   );
 }
@@ -250,10 +267,17 @@ function normaliseSteps(protocol) {
  * `deleted: true`, and hiding the deleted flag when false so that adding the
  * flag, then setting it to false doesn't count as a change.
  *
+ * `isStandardProtocol` can't change for a protocol, excluding as it may change
+ * from undefined => false.
+ *
+ * `displayTitle` is generated from title, so changes are already accounted for
+ * in title, also displayTitle doesn't have an underlying field with associated
+ * badge
+ *
  * @param versionData
  * @returns {*&{protocols: (*&{steps})[]}}
  */
-const normaliseDeletedProtocols = (versionData) => ({
+const normaliseProtocols = (versionData) => ({
   ...versionData,
   protocols: (Array.isArray(versionData.protocols) ? versionData.protocols : []).flatMap(
     protocol => {
@@ -262,16 +286,29 @@ const normaliseDeletedProtocols = (versionData) => ({
       return protocol?.deleted
         ? []
         : [{
-          ...omit(protocol, 'deleted'),
-          steps: normaliseSteps(protocol)
+          ...omit(protocol, 'deleted', 'isStandardProtocol', 'displayTitle'),
+          steps: normaliseSteps(protocol, versionData.reusableSteps ?? {})
         }];
     })
+});
+
+/**
+ * Reusable step data is normalised into protocol steps, so we don't need to
+ * compare changes in them
+ * @param {object} versionData
+ * @return {object}
+ */
+const removeReusableSteps = (versionData) => ({
+  ...versionData,
+  reusableSteps: []
 });
 
 const normaliseData = (versionData, opts) => {
   return flow([
     normaliseConditions(opts),
-    normaliseDeletedProtocols,
+    normaliseProtocols,
+    // Must be called after normaliseProtocols which uses this data
+    removeReusableSteps,
     deepRemoveEmpty
   ])(versionData);
 };
@@ -330,15 +367,15 @@ const getChanges = (current, version) => {
 
   const added = cvKeys.difference(pvKeys);
   const removed = pvKeys.difference(cvKeys);
-  const changed = cvKeys.values().flatMap(
+  const changed = new Set(cvKeys.values().flatMap(
     key => {
       const pvNode = getNode(before, key);
       const cvNode = getNode(after, key);
       return hasChanged(pvNode, cvNode, key) ? [key] : [];
     }
-  );
+  ));
 
-  return [...added, ...removed, ...changed];
+  return [...added.union(removed).union(changed)];
 };
 
 const ignoreEmptyArrayProps = obj => {
@@ -359,7 +396,10 @@ const hasChanged = (before, after, key) => {
       return !isEqual(ignoreEmptyArrayProps(before[idx]), ignoreEmptyArrayProps(after[idx]));
     });
   } else if (/^protocols\.[a-f0-9-]+$/.test(key)) { // individual protocol
-    return !isEqual(ignoreEmptyArrayProps(before), ignoreEmptyArrayProps(after));
+    const ignoreEmptyArrayPropsBefore = ignoreEmptyArrayProps(before);
+    const ignoreEmptyArrayPropsAfter = ignoreEmptyArrayProps(after);
+    const equal = isEqual(ignoreEmptyArrayPropsBefore, ignoreEmptyArrayPropsAfter);
+    return !equal;
   }
   const valueChanged = !isEqual(before, after);
 
@@ -450,8 +490,12 @@ const getChangedValues = (question, req, type = 'project-versions') => {
   return Promise.resolve()
     .then(() => getVersion[req.query.version](req, type))
     .then(async (result) => {
-      const value = result && getNode(result.data, question);
-      const current = getNode(req[model].data, question);
+      const normalisationOptions = { isSubmitted: req[model].data.status !== 'draft' };
+      const before = result ? normaliseData(result.data, normalisationOptions) : undefined;
+      const after = normaliseData(req[model].data, normalisationOptions);
+
+      const value = before && getNode(before, question);
+      const current = getNode(after, question);
       return {
         value,
         diff: await diff(value, current, { type: req.query.type })
