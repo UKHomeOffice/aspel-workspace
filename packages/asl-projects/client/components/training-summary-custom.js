@@ -83,6 +83,7 @@ export default function TrainingSummaryWithChangeHighlighting({
                         current={getTrainingRecord(project, record, 'current', trainingHistory)}
                         previous={getTrainingRecord(project, record, 'previous', trainingHistory)}
                         first={getTrainingRecord(project, record, 'first', trainingHistory)}
+                        granted={getTrainingRecord(project, record, 'granted', trainingHistory)}
                         comparisons={comparisons}
                         trainingHistory={trainingHistory}
                       />
