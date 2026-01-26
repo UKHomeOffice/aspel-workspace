@@ -10,7 +10,6 @@ export default function TrainingRecordModal({
                                               previous = {},
                                               first = {},
                                               granted = {},
-                                              trainingHistory={},
                                               label = 'Training or exemption change'
                                             }) {
 
@@ -46,7 +45,6 @@ export default function TrainingRecordModal({
       ? 'Current licence'
       : 'Initial submission';
   const projectVersion =  grantedVersion?.application?.project?.granted !== undefined ? granted : first
- //console.log(grantedVersion);
 // Now determine change only if REAL record exists
   const hasPrevChanges = isRealPrevRecord && hasChanges(previous, current);
   const hasFirstChanges = isRealFirstRecord && hasChanges(first, current);
