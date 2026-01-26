@@ -233,11 +233,11 @@ export default function TrainingRecordModal({
           <div className="govuk-grid-row">
             {/* Left side with tabs */}
             <div className="govuk-grid-column-one-half">
-              {!(showPrevTab || showFirstTab) ? (
-                <h3> {previousLabel}</h3>
+              {!(showPrevTab && showFirstTab) ? (
+                <h3>{active === 'first' ? modalLabel : previousLabel}</h3>
               ) : (
                 <nav className="govuk-tabs">
-                  <ul>
+                <ul>
                     {showFirstTab && (
                       <li className={active === 'first' ? 'active' : ''}>
                         <a href="#" onClick={selectTab('first')}>
