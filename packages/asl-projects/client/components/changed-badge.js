@@ -17,15 +17,22 @@ export default function ChangedBadge({ fields = [], changedFromGranted, changedF
     });
   };
 
+  // Extract the protocol and step uuids if they are part of the prefix of this
+  // field, but not if they are an exact match for the field name. This way
+  // the new badge still shows for the actual step or protocol that has been
+  // added, but is hidden for nested fields.
   const protocolId = fields.find(f => /^protocols\.[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}\./.test(f))?.split('.')[1];
   const stepId = fields.find(f => /^protocols\.[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}\.steps\.[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}\./.test(f))?.split('.')[3];
 
-  const parentAddedFrom = (source) => {
-    return source.includes(`protocols.${protocolId}`) || source.includes(`protocols.${protocolId}.steps.${stepId}`);
+  // If a protocol or step are new, a new/added badge is displayed at the
+  // protocol or step level, and nested fields do not show a badge.
+  const isParentProtocolOrStepInAdditions = (source) => {
+    return (protocolId &&source.includes(`protocols.${protocolId}`))
+      || (stepId && source.includes(`protocols.${protocolId}.steps.${stepId}`));
   };
 
   if (changedFromLatest || sourceIncludes(latestChanges)) {
-    if (parentAddedFrom(latestAdded)) {
+    if (isParentProtocolOrStepInAdditions(latestAdded)) {
       return null
     } else if (sourceIncludes(latestAdded)) {
       return <span className="badge changed">{noLabel ? '' : 'new'}</span>;
@@ -35,7 +42,7 @@ export default function ChangedBadge({ fields = [], changedFromGranted, changedF
   }
 
   if (changedFromGranted || sourceIncludes(grantedChanges)) {
-    if (parentAddedFrom(grantedAdded)) {
+    if (isParentProtocolOrStepInAdditions(grantedAdded)) {
       return null
     } else if (sourceIncludes(grantedAdded)) {
       return <span className="badge">{noLabel ? '' : 'added'}</span>;
@@ -45,7 +52,7 @@ export default function ChangedBadge({ fields = [], changedFromGranted, changedF
   }
 
   if (changedFromFirst || sourceIncludes(firstChanges)) {
-    if (parentAddedFrom(firstAdded)) {
+    if (isParentProtocolOrStepInAdditions(firstAdded)) {
       return null
     } else if (sourceIncludes(firstAdded)) {
       return <span className="badge">{noLabel ? '' : 'added'}</span>;

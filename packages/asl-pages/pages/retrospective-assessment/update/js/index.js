@@ -3,6 +3,14 @@ import cloneDeep from 'lodash/cloneDeep';
 
 const state = window.INITIAL_STATE;
 
+function getVersionedData(field) {
+  return {
+    first: state.static[field]?.first ?? [],
+    latest: state.static[field]?.latest ?? [],
+    granted: state.static[field]?.granted ?? []
+  };
+}
+
 start({
   project: {
     ...state.model.data,
@@ -13,27 +21,14 @@ start({
     id: state.model.id
   }),
   comments: state.static.comments,
-  changes: (state.static.isGranted || state.static.legacyGranted)
-    ? {}
+  ...((state.static.isGranted || state.static.legacyGranted)
+    ? { changes: {}, added: {}, removed: {} }
     : {
-      first: state.static.changes?.first ?? [],
-      latest: state.static.changes?.latest ?? [],
-      granted: state.static.changes?.granted ?? []
-    },
-  added: (state.static.isGranted || state.static.legacyGranted)
-    ? {}
-    : {
-      first: state.static.added?.first ?? [],
-      latest: state.static.added?.latest ?? [],
-      granted: state.static.added?.granted ?? []
-    },
-  removed: (state.static.isGranted || state.static.legacyGranted)
-    ? {}
-    : {
-      first: state.static.removed?.first ?? [],
-      latest: state.static.removed?.latest ?? [],
-      granted: state.static.removed?.granted ?? []
-    },
+      changes: getVersionedData('changes'),
+      added: getVersionedData('added'),
+      removed: getVersionedData('removed')
+    }
+  ),
   application: {
     commentable: state.static.commentable,
     establishment: state.static.establishment,
