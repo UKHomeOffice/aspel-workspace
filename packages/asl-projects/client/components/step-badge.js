@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import classnames from 'classnames';
 import ChangedBadge from './changed-badge';
 
 const changeFields = (step, prefix) => [ prefix.substr(0, prefix.length - 1) ];
@@ -54,13 +53,11 @@ export default function StepBadge(props) {
     }
     return (
       <>
-        <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} protocolId={props.protocolId}/>
+        <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} />
         {move}
       </>
     );
-  } else if (previous.includes(props.protocolId)) {
-    return <span className={classnames('badge created')}>new</span>;
   } else {
-    return <></>;
+    return <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} />;
   }
 }
