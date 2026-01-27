@@ -85,16 +85,16 @@ const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options 
     }
 
     let text;
-    let p;
+    let pg;
     let addToDoc;
 
     switch (node.type) {
         case 'list-item': {
-            p = new Paragraph();
-            p.style('body');
-            numbers ? p.setNumbering(numbers, depth) : p.bullet(depth);
-            parent.addParagraph(p);
-            (node.nodes || []).forEach((n, idx) => renderNode(parent, n, depth + 1, p, null, idx, options));
+            pg = new Paragraph();
+            pg.style('body');
+            numbers ? pg.setNumbering(numbers, depth) : pg.bullet(depth);
+            parent.addParagraph(pg);
+            (node.nodes || []).forEach((n, idx) => renderNode(parent, n, depth + 1, pg, null, idx, options));
             break;
         }
         case 'heading-one':
