@@ -77,8 +77,8 @@ const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options 
     // Allow caller to override specific node types
     const renderer = customNodeRenderers?.[node.type];
     if (typeof renderer === 'function') {
-        const renderNext = (p, n, d = depth, pg = paragraph, num = numbers, i = index) =>
-            renderNode(p, n, d, pg, num, i, options);
+        const renderNext = (nextParent, nextNode, nextDepth = depth, nextParagraph = paragraph, nextNumbers = numbers, nextIndex = index) =>
+            renderNode(nextParent, nextNode, nextDepth, nextParagraph, nextNumbers, nextIndex, options);
 
         const context = { depth, paragraph, numbers, index, renderNext };
         return renderer(parent, node, context);
