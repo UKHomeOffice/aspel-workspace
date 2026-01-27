@@ -41,6 +41,10 @@ module.exports = {
     path: '/docx',
     router: docx
   },
+  ntsDocx: {
+    path: '/docx/nts',
+    router: docx
+  },
   ppl: {
     path: '/ppl',
     router: ppl
