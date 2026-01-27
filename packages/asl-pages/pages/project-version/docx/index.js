@@ -65,7 +65,7 @@ const loadImages = attachmentHost => async node => {
   }
 };
 
-const buildApplication = (req) => {
+const buildDocxContent = (req) => {
   const values = req.version.data || {};
   const application = {
     ...req.project,
@@ -90,7 +90,7 @@ module.exports = (settings) => {
 
   app.get('/', (req, res, next) => {
     const sections = Object.values(schema[req.project.schemaVersion]());
-    const { values, application } = buildApplication(req);
+    const { values, application } = buildDocxContent(req);
 
     renderer(application, sections, values, loadImages(settings.attachments))
       .then(pack)
@@ -103,7 +103,7 @@ module.exports = (settings) => {
   });
 
   app.get('/nts', loadRa, (req, res, next) => {
-    const { values, application } = buildApplication(req);
+    const { values, application } = buildDocxContent(req);
     const includeDraftRa = req.query.draftRa === 'true';
     const isTrainingLicence = !!values['training-licence'];
     const ntsSections = getNtsSchema(req.project.schemaVersion);
