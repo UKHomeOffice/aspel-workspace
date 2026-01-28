@@ -1,8 +1,6 @@
 import React, { Fragment } from 'react';
 import get from 'lodash/get';
-import { Markdown, Snippet } from '@ukhomeoffice/asl-components';
-import { format } from 'date-fns';
-import { dateFormat } from '../../../../../constants';
+import { Markdown, Snippet, Utils } from '@ukhomeoffice/asl-components';
 import { isTrueish } from '../../../../../lib/utils';
 
 function yn(val) {
@@ -73,14 +71,14 @@ export default function PplDeclarations({ task }) {
                   : 'AWERB review date:'
               }
             </dt>
-            <dd>{format(primaryAwerb.date, dateFormat.long)}</dd>
+            <dd>{Utils.formatDate(primaryAwerb.date, Utils.DATE_FORMAT.long)}</dd>
           </dl>
       }
       {
         receivingAwerb &&
           <dl className="inline-wide">
             <dt>{receivingAwerb.name} AWERB review date:</dt>
-            <dd>{format(receivingAwerb.date, dateFormat.long)}</dd>
+            <dd>{Utils.formatDate(receivingAwerb.date, Utils.DATE_FORMAT.long)}</dd>
           </dl>
       }
       {
@@ -95,7 +93,7 @@ export default function PplDeclarations({ task }) {
                 aaAwerbs.map(awerb => (
                   <Fragment key={awerb.id}>
                     <dt>{awerb.name} AWERB review date:</dt>
-                    <dd>{format(awerb.date, dateFormat.long)}</dd>
+                    <dd>{Utils.formatDate(awerb.date, Utils.DATE_FORMAT.long)}</dd>
                   </Fragment>
                 ))
               }

@@ -1,15 +1,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import get from 'lodash/get';
-import { format as formatDate } from 'date-fns';
-import { dateFormat } from '../../../../../constants';
 import { Warning } from '@ukhomeoffice/react-components';
-import { Snippet } from '@ukhomeoffice/asl-components';
+import { Snippet, Utils } from '@ukhomeoffice/asl-components';
 
 export default function RefusalNoticeWarning({ task }) {
   const { isAsru } = useSelector(state => state.static);
   const intentionToRefuse = get(task, 'data.intentionToRefuse');
-  const today = formatDate(new Date(), 'yyyy-MM-dd');
+  const today = Utils.formatDate(new Date(), 'yyyy-MM-dd');
 
   if (task.status === 'refused' || !intentionToRefuse || !intentionToRefuse.deadline) {
     return null;
@@ -23,7 +21,7 @@ export default function RefusalNoticeWarning({ task }) {
     );
   }
 
-  const respondBy = formatDate(intentionToRefuse.deadline, dateFormat.long);
+  const respondBy = Utils.formatDate(intentionToRefuse.deadline, Utils.DATE_FORMAT.long);
 
   return (
     <Warning>
