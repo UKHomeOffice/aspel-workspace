@@ -9,6 +9,7 @@ export default function TrainingRecordModal({
                                               current = {},
                                               previous = {},
                                               first = {},
+                                              granted = {},
                                               label = 'Training or exemption change'
                                             }) {
 
@@ -37,19 +38,24 @@ export default function TrainingRecordModal({
 // check if there is any training record in previous or first/granted
   const isRealPrevRecord = previous && (previous.id || previous.trainingId);
   const isRealFirstRecord = first && (first.id || first.trainingId);
+  const isRealFirstGrantedRecord = granted && (granted.id || granted.trainingId);
   const grantedVersion = useSelector(state => state);
   const modalLabel =
     grantedVersion?.application?.project?.granted !== undefined
-      ? 'Current Licence'
-      : 'Initial Submission';
+      ? 'Current licence'
+      : 'Initial submission';
+  const projectVersion =  grantedVersion?.application?.project?.granted !== undefined ? granted : first
 // Now determine change only if REAL record exists
   const hasPrevChanges = isRealPrevRecord && hasChanges(previous, current);
   const hasFirstChanges = isRealFirstRecord && hasChanges(first, current);
-  const showTabs = isRealPrevRecord && isRealFirstRecord;
+  const hasGrantedChanges = isRealFirstGrantedRecord && hasChanges(granted, previous);
+  const showTabs = isRealPrevRecord && (isRealFirstRecord || isRealFirstGrantedRecord);
   const showPrevTab = showTabs && hasPrevChanges;
-  const showFirstTab = showTabs && hasFirstChanges;
-
-
+  const previousLabel =
+    (hasGrantedChanges === true || hasFirstChanges === true)
+      ? 'Previous version'
+      : modalLabel;
+  const showFirstTab = showTabs && (hasFirstChanges || hasGrantedChanges);
 
   // Decide initial active tab
   const [modalOpen, setModalOpen] = useState(false);
@@ -227,22 +233,22 @@ export default function TrainingRecordModal({
           <div className="govuk-grid-row">
             {/* Left side with tabs */}
             <div className="govuk-grid-column-one-half">
-              {!(showPrevTab || showFirstTab) ? (
-                <h3>Previous version</h3>
+              {!(showPrevTab && showFirstTab) ? (
+                <h3>{active === 'first' ? modalLabel : previousLabel}</h3>
               ) : (
                 <nav className="govuk-tabs">
-                  <ul>
-                    {showPrevTab && (
-                      <li className={active === 'prev' ? 'active' : ''}>
-                        <a href="#" onClick={selectTab('prev')}>
-                          Previous version
-                        </a>
-                      </li>
-                    )}
+                <ul>
                     {showFirstTab && (
                       <li className={active === 'first' ? 'active' : ''}>
                         <a href="#" onClick={selectTab('first')}>
                           {modalLabel}
+                        </a>
+                      </li>
+                    )}
+                    {showPrevTab && (
+                      <li className={active === 'prev' ? 'active' : ''}>
+                        <a href="#" onClick={selectTab('prev')}>
+                          {previousLabel}
                         </a>
                       </li>
                     )}
@@ -253,7 +259,7 @@ export default function TrainingRecordModal({
               {active === 'prev' && showPrevTab
                 ? leftPanel(previous, current)
                 : showFirstTab
-                  ? leftPanel(first, current)
+                  ? leftPanel(projectVersion, current)
                   : leftPanel(previous, current)}
             </div>
 
@@ -263,7 +269,7 @@ export default function TrainingRecordModal({
               {active === 'prev' && showPrevTab
                 ? rightPanel(current, previous)
                 : showFirstTab
-                  ? rightPanel(current, first)
+                  ? rightPanel(current, projectVersion)
                   : rightPanel(current, previous)}
             </div>
           </div>

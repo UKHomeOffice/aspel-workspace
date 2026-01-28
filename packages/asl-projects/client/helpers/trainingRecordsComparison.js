@@ -192,7 +192,7 @@ export const getStatus = (record, comparisons = {}, grantedStatus= {}) => {
  *
  * @param {Object} project - The project object containing trainingHistory[].
  * @param {Object} record - The record object that contains trainingId or id.
- * @param {'current'|'previous'|'first'} versionType - Which version to fetch from.
+ * @param {'current'|'previous'|'first' | 'granted'} versionType - Which version to fetch from.
  * @param {Object} trainingHistory - The record object that contains trainingId or id.
  * @returns {Object|null}
  */
@@ -228,10 +228,15 @@ export const getTrainingRecord = (project = {}, record = {}, versionType = 'curr
     if (Array.isArray(history.first) && history.first.length) {
       return history.first.find(r => (r.id || r.trainingId) === trainingId) || {};
     }
-    // fallback to granted
-    if (Array.isArray(history.granted)) {
+
+  }
+
+  // first = trainingHistory.first OR granted
+  if (versionType === 'granted') {
+    if (Array.isArray(history.granted) && history.granted.length) {
       return history.granted.find(r => (r.id || r.trainingId) === trainingId) || {};
     }
+
   }
 
   return {};
