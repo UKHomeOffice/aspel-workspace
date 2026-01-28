@@ -1,6 +1,4 @@
-import { Document, Paragraph, TextRun, Numbering, Indent, Table, Media } from 'docx';
-import unified from 'unified';
-import remarkParse from 'remark-parse';
+import { Document, Paragraph, TextRun, Indent, Table, Media } from 'docx';
 import flatten from 'lodash/flatten';
 import isUndefined from 'lodash/isUndefined';
 import isNull from 'lodash/isNull';
@@ -14,136 +12,11 @@ import { filterSpeciesByActive } from '../../../pages/sections/protocols/animals
 import protocolConditions from '../../../constants/protocol-conditions';
 import { getRepeatedFromProtocolIndex, hydrateSteps } from '../../../helpers/steps';
 import Mustache from 'mustache';
+import { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers } from './helpers/docx-style-helper'
+import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared, renderNull as renderNullShared, renderNode as renderNodeShared } from './helpers/docx-content-renderer'
 
 export default (application, sections, values, updateImageDimensions) => {
   const document = new Document();
-  const numbering = new Numbering();
-  const abstract = numbering.createAbstractNumbering();
-
-  const addStyles = () => {
-
-    document.Styles.createParagraphStyle('Question', 'Question')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(24)
-      .indent(800)
-      .bold()
-      .color('#3B3B3B')
-      .font('Helvetica')
-      .spacing({ before: 200, after: 50 });
-
-    document.Styles.createParagraphStyle('SectionTitle', 'Section Title')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(44)
-      .bold()
-      .color('#8F23B3')
-      .font('Helvetica')
-      .spacing({ before: 500, after: 300 });
-
-    document.Styles.createParagraphStyle('ProtocolSectionTitle', 'Protocol Section Title')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(34)
-      .bold()
-      .color('#005EA5')
-      .font('Helvetica')
-      .spacing({ before: 500, after: 300 });
-
-    document.Styles.createParagraphStyle('Heading1', 'Heading 1')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(52)
-      .bold()
-      .font('Helvetica')
-      .spacing({ before: 360, after: 400 });
-
-    document.Styles.createParagraphStyle('Heading2', 'Heading 2')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(44)
-      .bold()
-      .font('Helvetica')
-      .spacing({ before: 400, after: 300 });
-
-    document.Styles.createParagraphStyle('Heading3', 'Heading 3')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(36)
-      .bold()
-      .font('Helvetica')
-      .spacing({ before: 400, after: 200 });
-
-    document.Styles.createParagraphStyle('Heading4', 'Heading 4')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(32)
-      .bold()
-      .font('Helvetica')
-      .spacing({ before: 400, after: 200 });
-
-    document.Styles.createParagraphStyle('Heading5', 'Heading 5')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(24)
-      .bold()
-      .font('Helvetica')
-      .spacing({ before: 200, after: 50 });
-
-    document.Styles.createParagraphStyle('body', 'Body')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(24)
-      .font('Helvetica')
-      .spacing({ before: 200, after: 200 });
-
-    document.Styles.createParagraphStyle('ListParagraph', 'List Paragraph')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .size(24)
-      .font('Helvetica')
-      .spacing({ before: 100, after: 100 });
-
-    document.Styles.createParagraphStyle('aside', 'Aside')
-      .basedOn('Body')
-      .next('Body')
-      .quickFormat()
-      .size(24)
-      .color('999999')
-      .italics();
-
-    document.Styles.createParagraphStyle('footerText', 'Footer Text')
-      .basedOn('Normal')
-      .next('Normal')
-      .quickFormat()
-      .font('Helvetica')
-      .size(20);
-
-    document.Styles.createParagraphStyle('error', 'Error')
-      .basedOn('Body')
-      .next('Body')
-      .quickFormat()
-      .color('FF0000')
-      .bold();
-  };
-
-  const addPageNumbers = () => {
-    document.Footer.createParagraph()
-      .addRun(new TextRun('Page ').pageNumber())
-      .addRun(new TextRun(' of ').numberOfTotalPages())
-      .style('footerText')
-      .right();
-  };
 
   const tableToMatrix = table => {
     const rows = table.nodes;
@@ -266,149 +139,43 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const renderNode = (parent, node, depth = 0, paragraph, numbers, index) => {
-    let text;
-    let p;
-    let addToDoc;
-
-    const getContent = input => {
-      return get(input, 'nodes[0].leaves[0].text', get(input, 'nodes[0].text')).trim();
-    };
-
-    switch (node.type) {
-      case 'list-item':
-        p = new Paragraph();
-        p.style('body');
-
-        numbers
-          ? p.setNumbering(numbers, depth)
-          : p.bullet(depth);
-
-        parent.addParagraph(p);
-        node.nodes.forEach((n, index) => renderNode(parent, n, depth + 1, p, null, index));
-        break;
-
-      case 'heading-one':
-        parent.createParagraph(getContent(node)).heading1();
-        break;
-
-      case 'heading-two':
-        parent.createParagraph(getContent(node)).heading2();
-        break;
-
-      case 'block-quote':
-        parent.createParagraph(getContent(node)).style('aside');
-        break;
-
-      case 'table-cell':
-        node.nodes.forEach(part => renderNode(parent, part));
-        break;
-
-      case 'table':
-        renderTable(parent, node);
-        break;
-
-      case 'numbered-list': {
-        abstract.createLevel(depth, 'decimal', '%2.', 'start').addParagraphProperty(new Indent(720 * (depth + 1), 0));
-        const concrete = numbering.createConcreteNumbering(abstract);
-        node.nodes.forEach(item => renderNode(parent, item, depth, paragraph, concrete));
-        break;
+    const customNodeRenderers = {
+      'table-cell': (p, n, ctx) => {
+        (n.nodes || []).forEach(part => renderNodeShared(p, part, depth, paragraph, numbers, index, {
+          applyTextFilter: stripInvalidXmlChars,
+          customNodeRenderers
+        }));
+      },
+      'table': (p, n) => {
+        renderTable(p, n);
+      },
+      'image': (p, n, ctx = {}) => {
+        const pg = ctx.paragraph || new Paragraph();
+        pg.addImage(Media.addImage(document, n.data.src, n.data.width, n.data.height));
+        p.addParagraph(pg);
+      },
+      'error': (p, n) => {
+        const raw = get(n, 'nodes[0].leaves[0].text', get(n, 'nodes[0].text', ''));
+        const content = stripInvalidXmlChars((raw || '').trim());
+        p.createParagraph(content).style('error');
       }
-
-      case 'bulleted-list':
-        node.nodes.forEach(item => renderNode(parent, item, depth, paragraph));
-        break;
-
-      case 'paragraph':
-      case 'block':
-        if (node.nodes.length === 1 && !getContent(node)) {
-          return;
-        }
-        addToDoc = !paragraph;
-        paragraph = paragraph || new Paragraph();
-        node.nodes.forEach((childNode, childNodeIndex) => {
-          const leaves = childNode.leaves || [childNode];
-          leaves.forEach(leaf => {
-            text = new TextRun(stripInvalidXmlChars(leaf.text));
-            if (text) {
-              (leaf.marks || []).forEach(mark => {
-                switch (mark.type) {
-                  case 'bold':
-                    text.bold();
-                    break;
-
-                  case 'italic':
-                    text.italics();
-                    break;
-
-                  case 'underlined':
-                    text.underline();
-                    break;
-
-                  case 'subscript':
-                    text.subScript();
-                    break;
-
-                  case 'superscript':
-                    text.superScript();
-                    break;
-                }
-              });
-              if (!addToDoc && (index > 0) && childNodeIndex === 0) {
-                text.break().break();
-              }
-              paragraph.style('body');
-              paragraph.addRun(text);
-            }
-          });
-        });
-        if (addToDoc) {
-          parent.addParagraph(paragraph);
-        }
-        break;
-
-      case 'image':
-        paragraph = paragraph || new Paragraph();
-        paragraph.addImage(Media.addImage(document, node.data.src, node.data.width, node.data.height));
-        parent.addParagraph(paragraph);
-        break;
-
-      case 'error':
-        parent.createParagraph(getContent(node)).style('error');
-        break;
-
-      default:
-        // if there is no matching type then it's probably a denormalised text node with no wrapping paragraph
-        // attempt to render with the node wrapped in a paragraph
-        if (node.text) {
-          renderNode(parent, { object: 'block', type: 'paragraph', nodes: [ node ] }, depth, paragraph);
-        }
-
-    }
+    };
+    return renderNodeShared(parent, node, depth, paragraph, numbers, index, {
+      applyTextFilter: stripInvalidXmlChars,
+      customNodeRenderers
+    });
   };
 
   const renderTextEditor = (doc, value, noSeparator) => {
-    let content = value;
-    if (typeof value === 'string') {
-      try {
-        content = JSON.parse(value);
-      } catch (e) {
-        return renderText(doc, value, noSeparator);
-      }
-    }
-    const nodes = content.document.nodes;
-
-    nodes.forEach(node => {
-      try {
-        renderNode(doc, node);
-      } catch (e) {
-        doc.createParagraph(`There was a problem rendering this content (${node.type})`).style('error');
-        doc.createParagraph(e.stack).style('error');
-      }
+    return renderTextEditorShared(doc, value, {
+      onStringFallback: (d, val) => renderText(d, val, noSeparator),
+      applyTextFilter: stripInvalidXmlChars,
+      onError: (d, err, node) => {
+        d.createParagraph(`There was a problem rendering this content (${node.type})`).style('error');
+        d.createParagraph(err.stack).style('error');
+      },
+      separator: noSeparator ? null : d => renderHorizontalRule(d)
     });
-
-    if (!noSeparator) {
-      renderHorizontalRule(doc);
-    }
   };
 
   const renderRadio = (doc, field, values, value, noSeparator) => {
@@ -552,17 +319,10 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const renderText = (doc, value, noSeparator) => {
-    if (typeof value === 'boolean') {
-      value
-        ? doc.createParagraph('Yes').style('body')
-        : doc.createParagraph('No').style('body');
-    } else {
-      doc.createParagraph(stripInvalidXmlChars(value)).style('body');
-    }
-
-    if (!noSeparator) {
-      renderHorizontalRule(doc);
-    }
+    return renderTextShared(doc, value, {
+      applyTextFilter: stripInvalidXmlChars,
+      separator: noSeparator ? null : d => renderHorizontalRule(d)
+    });
   };
 
   const renderDeclaration = (/*doc, field, values, value*/) => {
@@ -586,18 +346,9 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const renderNull = (doc, noSeparator) => {
-    const paragraph = new Paragraph();
-    paragraph.style('body');
-    paragraph.addRun(new TextRun('No answer provided').italics());
-    doc.addParagraph(paragraph);
-    if (!noSeparator) {
-      renderHorizontalRule(doc);
-    }
-
-  };
-
-  const renderHorizontalRule = doc => {
-    doc.createParagraph('___________________________________________________________________');
+    return renderNullShared(doc, {
+      separator: noSeparator ? null : d => renderHorizontalRule(d)
+    });
   };
 
   const renderAnimalQuantities = (doc, values, noSeparator) => {
@@ -749,38 +500,7 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const renderMarkdown = (doc, markdown, style = 'body') => {
-    // if we ever use slate >= 0.5 this function can be replaced with
-    // return renderTextEditor(doc, unified().use(remarkParse).use(remarkSlate).parse(markdown))
-
-    const tree = unified().use(remarkParse).parse(markdown);
-    let p;
-
-    (tree.children || []).forEach(node => {
-      switch (node.type) {
-        case 'heading':
-          doc.createParagraph(
-            stripInvalidXmlChars(node.children.find(c => c.type === 'text').value)
-          ).style(`Heading${node.depth}`);
-          break;
-
-        case 'paragraph':
-          doc.createParagraph(
-            stripInvalidXmlChars(node.children.find(c => c.type === 'text').value)
-          ).style(style);
-          break;
-
-        case 'list':
-          // only single-level bulleted lists presently
-          node.children.forEach(listItem => {
-            const text = stripInvalidXmlChars(get(listItem, 'children[0].children[0].value').trim());
-            p = new Paragraph(text);
-            p.style(style);
-            p.bullet(0);
-            doc.addParagraph(p);
-          });
-          break;
-      }
-    });
+    renderMarkdownContent(doc, markdown, style, { applyTextFilter: stripInvalidXmlChars });
   };
 
   const renderProtocolConditions = doc => {
@@ -1003,8 +723,8 @@ export default (application, sections, values, updateImageDimensions) => {
 
   return Promise.resolve()
     .then(() => addImageDimensions(values))
-    .then(() => addStyles())
+    .then(() => addStyles(document))
     .then(() => renderDocument(sections, values))
-    .then(() => addPageNumbers())
+    .then(() => addPageNumbers(document))
     .then(() => document);
 };
