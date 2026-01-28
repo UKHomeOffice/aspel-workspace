@@ -53,11 +53,11 @@ export default function StepBadge(props) {
     }
     return (
       <>
-        <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} />
+        <ChangedBadge primaryField={props.changeFieldPrefix} fields={changeFields(props.fields, props.changeFieldPrefix)} />
         {move}
       </>
     );
   } else {
-    return <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} />;
+    return <ChangedBadge primaryField={props.changeFieldPrefix} fields={changeFields(props.fields, props.changeFieldPrefix)} />;
   }
 }

@@ -68,7 +68,7 @@ class Review extends React.Component {
         }
         {
           showChanges && (
-            <ChangedBadge fields={[ fieldPath ]} />
+            <ChangedBadge primaryField={fieldPath} />
           )
         }
         {

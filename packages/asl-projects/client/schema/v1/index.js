@@ -1540,7 +1540,6 @@ export default () => {
               type: 'text'
             }
           ],
-          hiddenFields: ['reusableSteps'],
           sections: {
             details: {
               title: 'Protocol details',
