@@ -5,6 +5,9 @@ const imageSize = require('image-size');
 const filenamify = require('filenamify');
 const fetch = require('node-fetch');
 const renderer = require('@asl/projects/client/components/download-link/renderers/docx-renderer').default;
+const ntsRenderer = require('@asl/projects/client/components/download-link/renderers/nts-docx-renderer').default;
+const { loadRa } = require('../middleware');
+const getNtsSchema = require('../nts/schema');
 const schema = require('@asl/projects/client/schema').default;
 
 const MAX_IMAGE_WIDTH = 600;
@@ -62,34 +65,63 @@ const loadImages = attachmentHost => async node => {
   }
 };
 
+const buildDocxContent = (req) => {
+  const values = req.version.data || {};
+  const application = {
+    ...req.project,
+    licenceHolder: req.version.licenceHolder,
+    establishment: req.project.establishment,
+    establishments: [
+      pick(req.project.establishment, 'id', 'name')
+    ]
+  };
+
+  const task = get(req.project, 'openTasks[0]');
+  if (task && task.data.action === 'transfer') {
+    const receivingEstablishment = get(task, 'data.meta.establishment.to');
+    application.establishments.push(pick(receivingEstablishment, 'id', 'name'));
+  }
+
+  return { values, application };
+};
+
 module.exports = (settings) => {
   const app = Router();
 
   app.get('/', (req, res, next) => {
-    const values = req.version.data || {};
     const sections = Object.values(schema[req.project.schemaVersion]());
-
-    const application = {
-      ...req.project,
-      licenceHolder: req.version.licenceHolder,
-      establishment: req.project.establishment,
-      establishments: [
-        pick(req.project.establishment, 'id', 'name')
-      ]
-    };
-
-    const task = get(req.project, 'openTasks[0]');
-
-    if (task && task.data.action === 'transfer') {
-      const receivingEstablishment = get(task, 'data.meta.establishment.to');
-      application.establishments.push(pick(receivingEstablishment, 'id', 'name'));
-    }
+    const { values, application } = buildDocxContent(req);
 
     renderer(application, sections, values, loadImages(settings.attachments))
       .then(pack)
       .then(buffer => {
         const isAmendment = req.project.status === 'active' && req.version.status !== 'granted';
         res.attachment(`${filenamify(values.title || 'Untitled project')} (${isAmendment ? 'amendment' : 'application'}).docx`);
+        res.end(Buffer.from(buffer));
+      })
+      .catch(next);
+  });
+
+  app.get('/nts', loadRa, (req, res, next) => {
+    const { values, application } = buildDocxContent(req);
+    const includeDraftRa = req.query.draftRa === 'true';
+    const isTrainingLicence = !!values['training-licence'];
+    const ntsSections = getNtsSchema(req.project.schemaVersion);
+
+    ntsRenderer({
+      application,
+      version: values,
+      ntsSections,
+      includeDraftRa,
+      ra: includeDraftRa ? req.project.draftRa : req.project.grantedRa,
+      raReasons: req.project.raReasons,
+      isTrainingLicence,
+      attachmentsHost: settings.attachments
+    })
+      .then(pack)
+      .then(buffer => {
+        const title = filenamify(values.title || 'Untitled project');
+        res.attachment(`${title} (non-technical summary).docx`);
         res.end(Buffer.from(buffer));
       })
       .catch(next);
