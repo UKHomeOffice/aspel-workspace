@@ -97,7 +97,7 @@ const main = () => {
       },
     }
   })
-  
+
   if (values.help) {
     help();
     process.exit(0);
@@ -126,7 +126,11 @@ const main = () => {
   log(`Source commit: ${SOURCE_COMMIT}`);
   log(`Build event: ${BUILD_EVENT}`);
 
-  const paths = [...collectModulesPaths(values.modules), ...values.paths];
+  const paths = [
+    ...collectModulesPaths(values.modules),
+    ...values.paths,
+    './package-lock.json'
+  ];
 
   const shouldBuildRun = (() => {
     switch (BUILD_EVENT) {
