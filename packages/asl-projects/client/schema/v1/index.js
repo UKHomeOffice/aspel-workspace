@@ -1685,6 +1685,7 @@ export default () => {
             animals: {
               title: 'Animals used in this protocol',
               repeats: 'speciesDetails',
+              hiddenFields: [],
               fields: [
                 {
                   name: 'species',

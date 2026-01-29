@@ -115,7 +115,7 @@ const mapStateToProps = (state, ownProps) => {
   const {
     application: { readonly = false, isGranted = false, previousProtocols = {} } = {},
     changes: { first = [], latest = [], granted = [] } = {},
-    added: {first: firstAdded = [], latest: latestAdded = [], granted: gratedAdded = []}
+    added: {first: firstAdded = [], latest: latestAdded = [], granted: gratedAdded = []} = {}
   } = state;
 
   const key = `${ownProps.prefix || ''}${ownProps.name}`;

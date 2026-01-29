@@ -1,16 +1,17 @@
 const {
-  get,
-  isEqual,
-  uniq,
-  mapValues,
-  sortBy,
-  pickBy,
-  isEmpty,
   castArray,
-  flow,
-  omit,
   dropWhile,
-  reverse
+  filter,
+  flow,
+  get,
+  isEmpty,
+  isEqual,
+  mapValues,
+  omit,
+  pickBy,
+  reverse,
+  sortBy,
+  uniq
 } = require('lodash');
 const isUUID = require('uuid-validate');
 const extractComments = require('../lib/extract-comments');
@@ -287,6 +288,7 @@ const normaliseProtocols = (versionData) => ({
         ? []
         : [{
           ...omit(protocol, 'deleted', 'isStandardProtocol', 'displayTitle'),
+          speciesDetails: filter(protocol.speciesDetails ?? [], ({value}) => (protocol.species ?? []).includes(value)),
           steps: normaliseSteps(protocol, versionData.reusableSteps ?? {})
         }];
     })
