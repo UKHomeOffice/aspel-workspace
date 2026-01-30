@@ -1540,7 +1540,6 @@ export default () => {
               type: 'text'
             }
           ],
-          hiddenFields: ['reusableSteps'],
           sections: {
             details: {
               title: 'Protocol details',
@@ -1686,6 +1685,7 @@ export default () => {
             animals: {
               title: 'Animals used in this protocol',
               repeats: 'speciesDetails',
+              hiddenFields: [],
               fields: [
                 {
                   name: 'species',

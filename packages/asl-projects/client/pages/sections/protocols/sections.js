@@ -111,7 +111,7 @@ const getBadges = (section, newComments, values) => {
       }
       {
         fields.length > 0 && (
-          <ChangedBadge fields={fields} protocolId={values.id} />
+          <ChangedBadge primaryField={`protocol.${values.id}.`} fields={fields} protocolId={values.id} />
         )
       }
     </Fragment>

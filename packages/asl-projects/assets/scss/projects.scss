@@ -633,6 +633,14 @@ html.modal-open, html.modal-open body {
     }
   }
 
+  button.link span.badge {
+    text-decoration: none;
+  }
+
+  .expanding-panel header .govuk-button.link {
+    text-decoration: none;
+  }
+
   .import-active {
     border: 3px dashed $mid-grey;
     padding: 12px;
