@@ -353,7 +353,7 @@ const removeHiddenChangeKeys = (keys, prevTree, currTree) => {
 
 const getChanges = (current, version) => {
   if (!current || !version) {
-    return [];
+    return {changed: [], added: [], removed: []};
   }
   const normalisationOptions = { isSubmitted: current.status !== 'draft' };
   const before = normaliseData(version.data, normalisationOptions);
@@ -375,7 +375,11 @@ const getChanges = (current, version) => {
     }
   ));
 
-  return [...added.union(removed).union(changed)];
+  return {
+    added: [...added],
+    removed: [...removed],
+    changed: [...added.union(removed).union(changed)]
+  };
 };
 
 const ignoreEmptyArrayProps = obj => {
@@ -468,7 +472,10 @@ const getAllChanges = (type = 'project-versions') => (req, res, next) => {
         previousId: previousVersion?.id,
         grantedId: grantedVersion?.id
       };
-      res.locals.static.changes = getVersionChanges(req[model], firstVersion, previousVersion, grantedVersion);
+      const versionChanges = getVersionChanges(req[model], firstVersion, previousVersion, grantedVersion);
+      res.locals.static.changes = mapValues(versionChanges, changeSet => changeSet.changed);
+      res.locals.static.added = mapValues(versionChanges, changeSet => changeSet.added);
+      res.locals.static.removed = mapValues(versionChanges, changeSet => changeSet.removed);
       res.locals.static.previousProtocols = getPreviousProtocols(firstVersion, previousVersion, grantedVersion);
       res.locals.static.previousAA = getPreviousAA(firstVersion, previousVersion, grantedVersion);
       res.locals.static.previousTraining = getPreviousTraining(firstVersion, previousVersion, grantedVersion);
