@@ -6,7 +6,7 @@ module.exports = settings => {
     accessKeyId: settings.accessKey,
     secretAccessKey: settings.secret
   };
-  const isLocal = settings.url.includes('localhost') || settings.url.endpoint.includes('localstack');
+  const isLocal = settings.url?.includes('localhost') || settings.url?.includes('localstack');
   if (isLocal) {
     configParams.endpoint = new URL(settings.url).origin;
     configParams.sslEnabled = false;
