@@ -286,7 +286,7 @@ const ApplicationSummary = () => {
                           </td>
                           <td className="controls">
                             <Comments subsection={key} />
-                            <ChangedBadge fields={fields} />
+                            <ChangedBadge primaryField={key} fields={fields} />
                             <CompleteBadge isComplete={isComplete(subsection, key)} />
                           </td>
                         </tr>
