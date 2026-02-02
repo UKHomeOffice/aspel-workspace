@@ -26,10 +26,10 @@
   "devDependencies": {
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "dotenv": "^6.2.0",
-    "eslint": "^5.16.0",
+    "eslint": "^9.39.2",
     "eslint-plugin-undocumented-env": "^1.0.0",
     "knex": "^3.1.0",
-    "mocha": "^11.7.1",
+    "mocha": "^11.3.0",
     "mockdate": "^3.0.5",
     "nodemon": "^3.1.10",
     "pg": "^8.7.3"
@@ -38,13 +38,16 @@
     "@asl/schema": "file:../asl-schema",
     "@asl/service": "file:../asl-service",
     "@ukhomeoffice/asl-dictionary": "file:../asl-dictionary",
+    "aws-sdk": "^1.18.0",
     "hot-shots": "^8.3.1",
+    "keycloak-connect": "^3.3.0",
     "lodash": "^4.17.21",
     "minimist": "^1.2.6",
     "moment": "^2.30.1",
     "mustache": "^4.2.0",
     "r2": "^2.0.1",
-    "sinon": "^19.0.2",
+    "sinon": "^21.0.1",
+    "sqs-consumer": "^14.0.1",
     "uuid": "^8.3.2",
     "winston": "^3.18.3"
   }

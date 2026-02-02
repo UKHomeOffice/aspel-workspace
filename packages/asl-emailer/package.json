@@ -22,15 +22,18 @@
   "homepage": "https://github.com/UKHomeOffice/asl-emailer#readme",
   "dependencies": {
     "@asl/service": "file:../asl-service",
+    "aws-sdk": "^1.18.0",
+    "keycloak-connect": "^3.3.0",
     "mustache": "^4.0.1",
-    "notifications-node-client": "^7.0.0"
+    "notifications-node-client": "^7.0.0",
+    "sqs-consumer": "^14.0.1"
   },
   "devDependencies": {
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "dotenv": "^6.0.0",
-    "eslint": "^5.16.0",
-    "mocha": "^11.7.1",
+    "eslint": "^9.39.2",
+    "mocha": "^11.3.0",
     "nodemon": "^3.1.10",
-    "sinon": "^19.0.2"
+    "sinon": "^21.0.1"
   }
 }

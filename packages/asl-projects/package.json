@@ -34,6 +34,7 @@
     "@ukhomeoffice/asl-slate-edit-list": "0.0.8",
     "@ukhomeoffice/frontend-toolkit": "^3.0.0",
     "@ukhomeoffice/react-components": "^1.6.4",
+    "aws-sdk": "^1.18.0",
     "classnames": "^2.2.6",
     "date-fns": "^3.6.0",
     "details-element-polyfill": "^2.3.0",
@@ -44,6 +45,7 @@
     "is-hotkey": "^0.2.0",
     "jsondiffpatch": "^0.7.3",
     "jsonpath-plus": "^10.0.1",
+    "keycloak-connect": "^3.3.0",
     "lodash": "^4.17.21",
     "mdn-polyfills": "^5.15.0",
     "minimatch": "^3.0.4",
@@ -61,10 +63,11 @@
     "redux-thunk": "^3.1.0",
     "remark-parse": "^9.0.0",
     "reselect": "^5.1.1",
-    "shasum": "^1.0.2",
     "sha.js": "^2.4.12",
+    "shasum": "^1.0.2",
     "slate": "^0.47.8",
     "slate-react": "^0.22.10",
+    "sqs-consumer": "^14.0.1",
     "unified": "^9.2.2",
     "uuid": "^8.3.2"
   },
@@ -72,11 +75,11 @@
     "@babel/register": "^7.8.3",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "babel-eslint": "^10.0.1",
-    "eslint": "^7.32.0",
+    "eslint": "^9.39.2",
     "eslint-plugin-import": "^2.29.1",
-    "mocha": "^11.7.1",
+    "mocha": "^11.3.0",
     "process": "^0.11.10",
-    "sinon": "19.0.2"
+    "sinon": "^21.0.1"
   },
   "files": [
     "client/*",

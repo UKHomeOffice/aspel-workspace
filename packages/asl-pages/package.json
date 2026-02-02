@@ -35,6 +35,7 @@
     "@ukhomeoffice/frontend-toolkit": "^3.0.0",
     "@ukhomeoffice/react-components": "^1.6.4",
     "@x-govuk/govuk-prototype-components": "^3.0.9",
+    "aws-sdk": "^1.18.0",
     "axios": "^1.7.4",
     "body-parser": "^1.18.3",
     "classnames": "^2.2.5",
@@ -48,7 +49,9 @@
     "form-data": "^4.0.0",
     "govuk-frontend": "^5.8.0",
     "image-size": "^0.7.4",
+    "keycloak-connect": "^3.3.0",
     "lodash": "^4.17.21",
+    "mocha": "11.3.0",
     "moment": "^2.29.4",
     "moment-business-time": "^0.7.1",
     "multer": "^1.4.5-lts.1",
@@ -66,6 +69,7 @@
     "redux-thunk": "^3.1.0",
     "semver": "^7.6.0",
     "slate": "^0.47.8",
+    "sqs-consumer": "^14.0.1",
     "striptags": "^3.2.0",
     "uuid": "^8.3.2",
     "uuid-validate": "0.0.3"
@@ -82,7 +86,7 @@
     "@testing-library/react": "^14.0.0",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "cheerio": "1.0.0-rc.10",
-    "eslint": "^8.24.0",
+    "eslint": "^9.39.2",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "mockdate": "^3.0.5",
@@ -90,7 +94,7 @@
     "redux-mock-store": "^1.5.4",
     "reqres": "^2.1.0",
     "sass": "^1.50.1",
-    "sinon": "^19.0.2",
+    "sinon": "^21.0.1",
     "supertest": "^7.1.1"
   },
   "publishConfig": {

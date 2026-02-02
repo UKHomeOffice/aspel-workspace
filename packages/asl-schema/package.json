@@ -27,10 +27,12 @@
   "homepage": "https://github.com/UKHomeOffice/asl-schema#readme",
   "dependencies": {
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
+    "aws-sdk": "^1.18.0",
     "csv-stringify": "^5.4.3",
     "deep-diff": "^1.0.2",
     "glob": "^7.1.7",
     "immutable": "^4.0.0-rc.12",
+    "keycloak-connect": "^3.3.0",
     "knex": "^3.1.0",
     "lodash": "^4.17.21",
     "minimist": "^1.2.6",
@@ -41,6 +43,7 @@
     "pg-tsquery": "^8.2.0",
     "sinon": "^9.0.2",
     "slate": "^0.47.8",
+    "sqs-consumer": "^14.0.1",
     "uuid": "^3.3.2"
   },
   "publishConfig": {
@@ -50,9 +53,9 @@
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "chai": "^4.1.2",
     "dotenv": "^6.0.0",
-    "eslint": "^5.16.0",
+    "eslint": "^9.39.2",
     "faker": "^5.1.0",
-    "mocha": "^11.7.1",
+    "mocha": "^11.3.0",
     "nyc": "^15.1.0",
     "uuid-validate": "0.0.3"
   }

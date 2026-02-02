@@ -28,22 +28,25 @@
     "@asl/service": "file:../asl-service",
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "apicache": "^1.6.3",
+    "aws-sdk": "^1.18.0",
+    "keycloak-connect": "^3.3.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.2",
     "objection": "^3.1.5",
     "redis": "^3.1.1",
+    "sqs-consumer": "^14.0.1",
     "uuid": "^7.0.3"
   },
   "devDependencies": {
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "dotenv": "^6.0.0",
-    "eslint": "^5.16.0",
+    "eslint": "^9.39.2",
     "eslint-plugin-undocumented-env": "^1.0.0",
     "express": "^4.21.2",
     "knex": "^3.1.0",
-    "mocha": "^11.7.1",
+    "mocha": "^11.3.0",
     "nodemon": "^3.1.10",
-    "sinon": "^19.0.2",
+    "sinon": "^21.0.1",
     "supertest": "^3.1.0"
   }
 }

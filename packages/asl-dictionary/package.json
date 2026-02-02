@@ -24,6 +24,9 @@
     "@ukhomeoffice:registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
-    "eslint": "^8.27.0"
+    "eslint": "^9.39.2"
+  },
+  "dependencies": {
+    "aws-sdk": "^1.18.0"
   }
 }
