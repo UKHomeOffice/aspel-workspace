@@ -6,10 +6,10 @@ const createESClient = async (options) => {
   if (options.aws.credentials.key) {
     console.log('creating AWS client');
 
-    const credentials = fromStatic({
+    const credentials = {
       accessKeyId: options.aws.credentials.key,
       secretAccessKey: options.aws.credentials.secret
-    });
+    };
 
     const awsCredentials = await awsGetCredentials();
     const AWSConnection = createAWSConnection({
