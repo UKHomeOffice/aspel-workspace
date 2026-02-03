@@ -1,4 +1,3 @@
-const { fromStatic } = require('@aws-sdk/credential-providers');
 const { Client } = require('@elastic/elasticsearch');
 const { createAWSConnection, awsGetCredentials } = require('@acuris/aws-es-connection');
 
