@@ -149,6 +149,10 @@ class Field extends Component {
     if (this.props.type === 'animal-quantities') {
       return <AnimalQuantities {...this.props} value={value} label={label} hint={hint} />;
     }
+    if (this.props.type === 'paragraph') {
+      return <p className="govuk-body">{value}</p>;
+    }
+
     if (this.props.type === 'species-selector') {
       return <SpeciesSelector
         {...this.props}

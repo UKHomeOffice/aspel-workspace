@@ -26,48 +26,8 @@ export const gaBreadingData = {
                 reuse: ["no"]
               }
             ],
-            description: {
-              object: "value",
-              document: {
-                object: "document",
-                data: {},
-                nodes: [
-                  {
-                    object: "block",
-                    type: "paragraph",
-                    data: {},
-                    nodes: [
-                      {
-                        object: "text",
-                        text: "Standard superovulation protocol for mice.",
-                        marks: []
-                      }
-                    ]
-                  }
-                ]
-              }
-            },
-            "severity-details": {
-              object: "value",
-              document: {
-                object: "document",
-                data: {},
-                nodes: [
-                  {
-                    object: "block",
-                    type: "paragraph",
-                    data: {},
-                    nodes: [
-                      {
-                        object: "text",
-                        text: "Mild severity procedure for superovulation.",
-                        marks: []
-                      }
-                    ]
-                  }
-                ]
-              }
-            }
+            description: "Standard superovulation protocol for mice.",
+            "severity-details":  "Mild severity procedure for superovulation."
           }
         },
         {
@@ -91,48 +51,8 @@ export const gaBreadingData = {
                 reuse: ["no"]
               }
             ],
-            description: {
-              object: "value",
-              document: {
-                object: "document",
-                data: {},
-                nodes: [
-                  {
-                    object: "block",
-                    type: "paragraph",
-                    data: {},
-                    nodes: [
-                      {
-                        object: "text",
-                        text: "Standard breeding protocol for genetically altered mice.",
-                        marks: []
-                      }
-                    ]
-                  }
-                ]
-              }
-            },
-            "severity-details": {
-              object: "value",
-              document: {
-                object: "document",
-                data: {},
-                nodes: [
-                  {
-                    object: "block",
-                    type: "paragraph",
-                    data: {},
-                    nodes: [
-                      {
-                        object: "text",
-                        text: "Mild severity breeding protocol.",
-                        marks: []
-                      }
-                    ]
-                  }
-                ]
-              }
-            }
+            description: "Standard breeding protocol for genetically altered mice.",
+            "severity-details": "Mild severity breeding protocol."
           }
         },
         {
@@ -156,48 +76,8 @@ export const gaBreadingData = {
                 reuse: ["no"]
               }
             ],
-            description: {
-              object: "value",
-              document: {
-                object: "document",
-                data: {},
-                nodes: [
-                  {
-                    object: "block",
-                    type: "paragraph",
-                    data: {},
-                    nodes: [
-                      {
-                        object: "text",
-                        text: "Moderate severity breeding protocol for genetically altered mice.",
-                        marks: []
-                      }
-                    ]
-                  }
-                ]
-              }
-            },
-            "severity-details": {
-              object: "value",
-              document: {
-                object: "document",
-                data: {},
-                nodes: [
-                  {
-                    object: "block",
-                    type: "paragraph",
-                    data: {},
-                    nodes: [
-                      {
-                        object: "text",
-                        text: "Moderate severity breeding protocol with additional monitoring requirements.",
-                        marks: []
-                      }
-                    ]
-                  }
-                ]
-              }
-            }
+            description: "Moderate severity breeding protocol for genetically altered mice.",
+            "severity-details": "Moderate severity breeding protocol with additional monitoring requirements."
           }
         }
       ]
@@ -225,48 +105,8 @@ export const gaBreadingData = {
                 reuse: ["no"]
               }
             ],
-            description: {
-              object: "value",
-              document: {
-                object: "document",
-                data: {},
-                nodes: [
-                  {
-                    object: "block",
-                    type: "paragraph",
-                    data: {},
-                    nodes: [
-                      {
-                        object: "text",
-                        text: "Standard breeding protocol for genetically altered zebrafish.",
-                        marks: []
-                      }
-                    ]
-                  }
-                ]
-              }
-            },
-            "severity-details": {
-              object: "value",
-              document: {
-                object: "document",
-                data: {},
-                nodes: [
-                  {
-                    object: "block",
-                    type: "paragraph",
-                    data: {},
-                    nodes: [
-                      {
-                        object: "text",
-                        text: "Mild severity zebrafish breeding protocol.",
-                        marks: []
-                      }
-                    ]
-                  }
-                ]
-              }
-            }
+            description: "Standard breeding protocol for genetically altered zebrafish.",
+            "severity-details": "Mild severity zebrafish breeding protocol."
           }
         }
       ]

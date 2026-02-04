@@ -1548,7 +1548,7 @@ export default () => {
                   name: 'description',
                   label: values => values.isStandardProtocol ? 'Describe the purposes of this protocol?' : 'Briefly describe the purposes of this protocol',
                   hint: 'Ensure that you state any relevant regulatory guidelines.',
-                  type: values => values.isStandardProtocol ? 'text' : 'texteditor'
+                  type: values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 },
                 {
                   name: 'severity',
@@ -1577,12 +1577,12 @@ export default () => {
                 {
                   name: 'severity-proportion',
                   label: 'What proportion of animals will experience this severity?',
-                  type: 'texteditor'
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 },
                 {
                   name: 'severity-details',
                   label: 'Why are you proposing this severity category?',
-                  type: 'texteditor'
+                  type: values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 },
                 {
                   name: 'locations',
@@ -1619,7 +1619,7 @@ export default () => {
                   name: 'training-responsible-for-animals',
                   show: values => isTrainingLicence(values),
                   label: 'Who will be responsible for the animals used in this protocol?',
-                  type: 'texteditor'
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 },
                 {
                   name: 'training-regulated-procedures',
@@ -1662,7 +1662,7 @@ export default () => {
                   name: 'training-participant-pre-course-training',
                   show: values => isTrainingLicence(values),
                   label: 'What training will participants receive before they can use protected animals?',
-                  type: 'texteditor'
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 }
               ]
             },
@@ -1700,7 +1700,7 @@ export default () => {
                   name: 'maximum-animals',
                   label: 'What is the maximum number of {{ values.speciesLabel }} that will be used in this protocol?',
                   hint: 'Only enter numerals, for example 40',
-                  type: 'text',
+                  type: values => values.isStandardProtocol ? 'paragraph' : 'text',
                   inputMode: 'numeric',
                   className: 'govuk-input--width-5'
                 },
@@ -1778,7 +1778,7 @@ Select each that applies`,
                         {
                           name: 'reuse-details',
                           label: 'Describe the procedures that have been applied to them and why you are choosing to re-use them',
-                          type: 'texteditor'
+                          type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                         }
                       ]
                     },
@@ -1790,7 +1790,7 @@ Select each that applies`,
                           name: 'maximum-times-used',
                           label: 'What is the maximum number of times an animal will be used in this protocol?',
                           hint: 'Only enter numerals, for example 40',
-                          type: 'text',
+                          type:  values => values.isStandardProtocol ? 'paragraph' : 'text',
                           inputMode: 'numeric',
                           className: 'govuk-input--width-5'
                         }
@@ -1829,7 +1829,7 @@ Select each that applies`,
                         {
                           name: 'gaas-types',
                           label: 'Which general types or strains will you be using and why?',
-                          type: 'texteditor'
+                          type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                         },
                         {
                           name: 'gaas-harmful',
@@ -1845,13 +1845,13 @@ Select each that applies`,
                                 {
                                   name: 'gaas-harmful-justification',
                                   label: 'Why are each of these harmful phenotypes necessary?',
-                                  type: 'texteditor'
+                                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                                 },
                                 {
                                   name: 'gaas-harmful-control',
                                   label: 'How will you minimise the harms associated with these phenotypes?',
                                   hint: 'Ensure that you include any humane endpoints that you will use.',
-                                  type: 'texteditor'
+                                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                                 }
                               ]
                             },
@@ -1891,13 +1891,13 @@ Select each that applies`,
               fields: [
                 {
                   name: 'title',
-                  type: 'texteditor',
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor',
                   label: 'Describe the procedures that will be carried out during this step.',
                   hint: 'Explain where one or more steps are repeated in one experiment, list any alternative techniques within a step (e.g. dosing routes), and include all procedures performed under terminal anaesthesia.\n\nWhen describing the technical aspects of a step, be broad enough to be flexible when the variation does not impact on animal welfare (e.g. use "antibiotic" instead of "penicillin"). Finally, avoid specifying volumes and frequencies when they do not impact on animal welfare.'
                 },
                 {
                   name: 'reference',
-                  type: 'text',
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'text',
                   label: 'Step reference',
                   hint: 'Provide a short reference for this step, e.g. \'Blood sampling\' or \'Transgene induction\'',
                   show: props => {
@@ -1937,19 +1937,19 @@ Select each that applies`,
                           name: 'adverse-effects',
                           label: 'What are the likely adverse effects of this step?',
                           hint: 'State the expected adverse effect, including the likely incidence, and the anticipated degree and duration of suffering.',
-                          type: 'texteditor'
+                          type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                         },
                         {
                           name: 'prevent-adverse-effects',
                           label: 'How will you monitor for, control, and limit any of these adverse effects?',
                           hint: 'If adverse effects can\'t be prevented, how will you attempt to ameliorate their initial signs?',
-                          type: 'texteditor'
+                          type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                         },
                         {
                           name: 'endpoints',
                           label: 'What are the humane endpoints for this step?',
                           hint: 'This would be the point at which you would kill the animal to prevent further suffering.',
-                          type: 'texteditor'
+                          type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                         }
                       ]
                     },
@@ -2007,13 +2007,13 @@ Select each that applies`,
                   name: 'experience-summary',
                   label: 'Summarise the typical experience or end-to-end scenario for an animal being used in this protocol.',
                   hint: 'Consider the cumulative effect of any combinations of procedures that you may carry out.',
-                  type: 'texteditor'
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 },
                 {
                   name: 'experience-endpoints',
                   label: 'Describe the general humane endpoints that you will apply during the protocol.',
                   hint: 'These will be in addition to the endpoints stated for each step.',
-                  type: 'texteditor'
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 }
               ]
             },
@@ -2028,13 +2028,13 @@ Select each that applies`,
                   show: values => !isTrainingLicence(values),
                   label: 'What outputs are expected to arise from this protocol?',
                   hint: 'For example, test results, phenotypic information, or products.',
-                  type: 'texteditor'
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 },
                 {
                   name: 'training-outputs',
                   show: values => isTrainingLicence(values),
                   label: 'What learning outcomes are expected to arise from this protocol?',
-                  type: 'texteditor'
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 },
                 {
                   name: 'quantitative-data',
@@ -2060,7 +2060,7 @@ Select each that applies`,
                               reveal: {
                                 name: 'quantitative-data-guideline-refined',
                                 label: 'How will you ensure that you are using the most refined methodology?',
-                                type: 'texteditor'
+                                type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                               }
                             },
                             {
@@ -2070,40 +2070,40 @@ Select each that applies`,
                                 {
                                   name: 'quantitative-data-pilot-studies-how',
                                   label: 'Where relevant, explain how and when pilot studies will be used.',
-                                  type: 'texteditor'
+                                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                                 },
                                 {
                                   name: 'quantitative-data-experimental-groups',
                                   label: 'How will you choose different experimental groups?',
                                   hint: 'For example, controls, dose levels, satellites etc.',
-                                  type: 'texteditor'
+                                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                                 },
                                 {
                                   name: 'control-groups',
                                   label: 'How will you choose control groups?',
                                   hint: 'Provide a robust scientific justification for controls with significant suffering such as sham surgery controls or untreated infected controls.',
-                                  type: 'texteditor'
+                                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                                 },
                                 {
                                   name: 'randomised',
                                   label: 'How will experiments and data analysis be randomised and blinded?',
-                                  type: 'texteditor'
+                                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                                 },
                                 {
                                   name: 'reproducibility',
                                   label: 'How will you minimise variables to ensure reproducibility?',
-                                  type: 'texteditor'
+                                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                                 },
                                 {
                                   name: 'control-groups-size',
                                   label: 'How will you determine group sizes?',
                                   hint: 'You should reference POWER calculations you have made, if relevant.',
-                                  type: 'texteditor'
+                                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                                 },
                                 {
                                   name: 'maximize-effectiveness',
                                   label: 'How will you maximise the data output from the animals you use on this protocol?',
-                                  type: 'texteditor'
+                                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                                 }
                               ]
                             }
@@ -2129,27 +2129,27 @@ Select each that applies`,
                 {
                   name: 'most-appropriate',
                   label: 'a) the most appropriate scientific approach?',
-                  type: 'texteditor'
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 },
                 {
                   name: 'most-refined',
                   label: 'b) the most refined for the purpose?',
-                  type: 'texteditor'
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 },
                 {
                   name: 'scientific-endpoints',
                   label: 'For each model and/or method, what is the scientific need for the expected clinical signs?',
-                  type: 'texteditor'
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 },
                 {
                   name: 'scientific-suffering',
                   label: 'Why scientifically do the animals need to suffer to this degree?',
-                  type: 'texteditor'
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 },
                 {
                   name: 'scientific-endpoints-justification',
                   label: 'Why can\'t you achieve your scientific outputs with an earlier humane endpoint, or without animals showing any clinical signs?',
-                  type: 'texteditor'
+                  type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                 },
                 {
                   name: 'justification-substances',
@@ -2166,13 +2166,13 @@ Select each that applies`,
                           name: 'substances-suitibility',
                           label: 'How will you assess the suitability of these substances, and minimise the unnecessary harms arising from their administration given the particular strain or type of animal you will be using?',
                           hint: 'When assessing suitability, state how you will consider toxicity, efficacy, and sterility.',
-                          type: 'texteditor'
+                          type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                         },
                         {
                           name: 'dosing-regimen',
                           label: 'How will you determine an appropriate dosing regimen?',
                           hint: 'Include routes, dosage volumes, frequencies, and durations.',
-                          type: 'texteditor'
+                          type:  values => values.isStandardProtocol ? 'paragraph' : 'texteditor'
                         }
                       ]
                     },
