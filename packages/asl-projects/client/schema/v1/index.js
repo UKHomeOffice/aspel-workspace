@@ -1546,7 +1546,7 @@ export default () => {
               fields: [
                 {
                   name: 'description',
-                  label: 'Briefly describe the purposes of this protocol',
+                  label: values => values.isStandardProtocol ? 'Describe the purposes of this protocol?' : 'Briefly describe the purposes of this protocol',
                   hint: 'Ensure that you state any relevant regulatory guidelines.',
                   type: values => values.isStandardProtocol ? 'text' : 'texteditor'
                 },

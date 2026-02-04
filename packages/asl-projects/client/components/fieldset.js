@@ -3,51 +3,60 @@ import ToggleEdit from './toggle-edit';
 import Field from './field';
 
 const Fieldset = ({ fields, onFieldChange, values, noComments, altLabels, prefix = '', updateItem }) => {
-    return (
-      <fieldset>
-        {
-          fields.map(f => {
-            const resolvedType =
-              typeof f.type === 'function'
-                ? f.type(values)
-                : f.type;
+  const resolve = (prop) => (typeof prop === 'function' ? prop(values) : prop);
 
-            const field = (
-              <Field
-                { ...f }
-                type={resolvedType}   // 👈 override here
-                key={ f.name }
-                name={ `${prefix}${f.name}` }
-                value={ values && values[f.name] }
-                values={ values }
-                prefix={ prefix }
-                onChange={ value => onFieldChange(f.name, value) }
-                updateItem={updateItem}
-                onFieldChange={onFieldChange}
-                noComments={noComments}
-                altLabels={altLabels}
-              />
+  return (
+    <fieldset>
+      {
+        fields.map(f => {
+          // Don't render if show is false
+          if (f.show && !resolve(f.show)) {
+            return null;
+          }
+
+          const resolved = {
+            ...f,
+            type: resolve(f.type),
+            label: resolve(f.label),
+            hint: resolve(f.hint),
+            name: resolve(f.name)
+          };
+
+          const field = (
+            <Field
+              {...resolved}
+              key={resolved.name}
+              name={`${prefix}${resolved.name}`}
+              value={values && values[resolved.name]}
+              values={values}
+              prefix={prefix}
+              onChange={value => onFieldChange(resolved.name, value)}
+              updateItem={updateItem}
+              onFieldChange={onFieldChange}
+              noComments={noComments}
+              altLabels={altLabels}
+            />
+          );
+
+          if (resolved.toggleEdit) {
+            return (
+              <ToggleEdit
+                label={resolved.label}
+                value={values && values[resolved.name]}
+                values={values}
+                confirmEdit={resolved.confirmEdit}
+                key={resolved.name}
+              >
+                {field}
+              </ToggleEdit>
             );
+          }
 
-            if (f.toggleEdit) {
-              return (
-                <ToggleEdit
-                  label={f.label}
-                  value={values && values[f.name]}
-                  values={values}
-                  confirmEdit={f.confirmEdit}
-                  key={f.name}
-                >
-                  {field}
-                </ToggleEdit>
-              );
-            }
-
-            return field;
-          })
-        }
-      </fieldset>
-    );
-  };
+          return field;
+        })
+      }
+    </fieldset>
+  );
+};
 
 export default Fieldset;
