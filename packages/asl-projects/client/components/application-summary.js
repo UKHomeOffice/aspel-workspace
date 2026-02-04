@@ -20,8 +20,6 @@ import Submit from './submit';
 import { selector } from './sync-handler';
 import HoldingPage from './holding-page';
 
-import { useFeatureFlag, FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
-
 /** ----- MEMOIZED SELECTORS ----- */
 
 const getSchemaVersion = state => state.application.schemaVersion;
@@ -92,18 +90,9 @@ const getMappedProps = createSelector(
 /** ----- COMPONENT ----- */
 
 const ApplicationSummary = () => {
-  const standardProtocolsEnabled = useFeatureFlag(FEATURE_FLAG_STANDARD_PROTOCOLS);
   const props = useSelector(getMappedProps);
   const { isSyncing } = useSelector(selector);
   const [submitted, setSubmitted] = useState(false);
-
-  const getSubsectionLink = key => {
-    const hasNoProtocol = !props.values?.protocols?.length;
-    if (standardProtocolsEnabled && hasNoProtocol && key === 'protocols') {
-      return '/standard-protocol';
-    }
-    return `/${key}`;
-  };
 
   const {
     legacy,
@@ -281,7 +270,7 @@ const ApplicationSummary = () => {
                         <tr key={key}>
                           <td>
                             <ErrorMessage title={subsection.title} isComplete={isComplete(subsection, key)}>
-                              <Link to={getSubsectionLink(key)}>{subsection.title}</Link>
+                              <Link to={`/${key}`}>{ subsection.title }</Link>
                             </ErrorMessage>
                           </td>
                           <td className="controls">

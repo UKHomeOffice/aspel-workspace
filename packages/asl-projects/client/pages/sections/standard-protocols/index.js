@@ -43,7 +43,6 @@ export default function StandardProtocols({ ...props }) {
 
   return (
     <div className="govuk-grid-column-full">
-      <SectionsLink />
       <h1 className="govuk-heading-l govuk-!-margin-bottom-6">Add a protocol</h1>
 
       <div className="govuk-!-margin-bottom-8">

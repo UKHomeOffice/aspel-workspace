@@ -10,6 +10,9 @@ import RaSidePanel from '../components/ra-side-panel';
 import RAHint from '../components/ra-hint';
 import Readonly from './readonly';
 import { getSubsections } from '../schema';
+import { FEATURE_FLAG_STANDARD_PROTOCOLS, useFeatureFlag } from '@asl/service/ui/feature-flag';
+import StandardProtocols from './sections/standard-protocols';
+import getProtocolsSchema from '../schema/v1/protocols';
 
 const mapStateToProps = (
   {
@@ -28,9 +31,27 @@ const mapStateToProps = (
     }
   }
 ) => {
-  const section = getSubsections(schemaVersion)[params.section];
+  const standardProtocolsEnabled = useFeatureFlag(
+    FEATURE_FLAG_STANDARD_PROTOCOLS
+  );
 
-  section.fields = section.fields || [];
+  const subsections = getSubsections(schemaVersion);
+
+
+  const schemaSectionKey = (standardProtocolsEnabled && params.section === 'standard-protocol')
+    ? 'protocols'
+    : params.section;
+
+  const section = subsections[schemaSectionKey] || {};
+
+  const component = (standardProtocolsEnabled && params.section === 'standard-protocol')
+    ? StandardProtocols
+    : section.component;
+
+  // Keep section name as 'protocol' for UI
+  const sectionName = (standardProtocolsEnabled && params.section === 'standard-protocol')
+    ? 'protocol'
+    : params.section;
 
   return {
     isLegacy: schemaVersion === 0,
@@ -39,11 +60,12 @@ const mapStateToProps = (
     establishment,
     readonly,
     step: parseInt(params.step, 10) || 0,
-    section: params.section,
+    section: sectionName,
     ...section,
     options: section,
     isGranted,
-    actualProject
+    actualProject,
+    component,
   };
 };
 
@@ -76,7 +98,7 @@ class Section extends React.Component {
     if (this.props.actualProject.isLegacyStub && this.props.section === 'additional-conditions') {
       return <StaticSection section={this.props.options} { ...rest } />;
     }
-
+    console.log('Rendering section props:', this.props);
     return (
       <Fragment>
         <SectionsLink />
@@ -93,7 +115,7 @@ class Section extends React.Component {
               <Component
                 { ...this.props }
                 title={ title }
-                section={ section }
+                section={ section}
                 save={(data, value) => {
                   if (typeof data === 'string') {
                     data = { [data]: value };

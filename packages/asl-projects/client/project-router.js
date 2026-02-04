@@ -224,12 +224,6 @@ const ProjectRouter = () => {
         <Switch>
           <Route path="/protocol-summary" component={ProtocolSummary} />
           {standardProtocolsEnabled && (
-              <Route path="/standard-protocol" render={(props) => (
-                  <StandardProtocols {...props} />
-                )}
-              />
-              )}
-          {standardProtocolsEnabled && (
               <Route path="/ga-breeding" render={(props) => (
                 <GABreeding {...props} />
               )}
