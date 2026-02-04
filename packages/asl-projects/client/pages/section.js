@@ -12,7 +12,6 @@ import Readonly from './readonly';
 import { getSubsections } from '../schema';
 import { FEATURE_FLAG_STANDARD_PROTOCOLS, useFeatureFlag } from '@asl/service/ui/feature-flag';
 import StandardProtocols from './sections/standard-protocols';
-import getProtocolsSchema from '../schema/v1/protocols';
 
 const mapStateToProps = (
   {
