@@ -7,8 +7,11 @@ import { dateFormat } from '../../../../../constants';
 import { Link, Snippet, Inset } from '@ukhomeoffice/asl-components';
 import Subsection from '../components/subsection';
 import HBA from '../components/hba';
+import { useFeatureFlag, FEATURE_FLAG_NTS_DOCX } from '@asl/service/ui/feature-flag';
 
 function DownloadSection({ project, version, canReplaceHBA }) {
+  const hasNtsDocxFlag = useFeatureFlag(FEATURE_FLAG_NTS_DOCX);
+
   const isApplication = project.status === 'inactive';
   const isAmendment =
     project.status === 'active' && version.status !== 'granted';
@@ -212,13 +215,15 @@ function DownloadSection({ project, version, canReplaceHBA }) {
             versionId={version.id}
           />
         </p>
-        <p>
-          <Link
-            page="projectVersion.ntsDocx"
-            label={<Snippet>{`downloads.${ntsSnippet}.linkDocx`}</Snippet>}
-            versionId={version.id}
-          />
-        </p>
+        {hasNtsDocxFlag &&
+          <p>
+            <Link
+              page="projectVersion.ntsDocx"
+              label={<Snippet>{`downloads.${ntsSnippet}.linkDocx`}</Snippet>}
+              versionId={version.id}
+            />
+          </p>
+        }
       </div>
 
       {!isLegacy && (
