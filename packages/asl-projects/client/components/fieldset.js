@@ -19,13 +19,15 @@ const Fieldset = ({ fields, onFieldChange, values, noComments, altLabels, prefix
             type: resolve(f.type),
             label: resolve(f.label),
             hint: resolve(f.hint),
-            name: resolve(f.name)
+            name: resolve(f.name),
+            classname: resolve(f.classname)
           };
 
           const field = (
             <Field
               {...resolved}
               key={resolved.name}
+              className={resolved.classname}
               name={`${prefix}${resolved.name}`}
               value={values && values[resolved.name]}
               values={values}

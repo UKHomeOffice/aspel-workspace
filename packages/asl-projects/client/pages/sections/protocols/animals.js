@@ -103,7 +103,7 @@ class Animals extends Component {
   }
 
   getItems = () => {
-    const { project } = this.props;
+    const { project, values: protocol } = this.props;
     const speciesDetails = (this.props.values.speciesDetails || []).filter(Boolean);
     let species = this.props.values.species || [];
 
@@ -128,7 +128,15 @@ class Animals extends Component {
       speciesDetails.push({ name: item, id: uuid(), value });
     });
 
-    return filterSpeciesByActive({ speciesDetails, species }, project);
+    const { isStandardProtocol = false, standardProtocolType = '' } = protocol;
+
+    const items =  filterSpeciesByActive({ speciesDetails, species }, project);
+
+    return items.map(item => ({
+      ...item,
+      isStandardProtocol,
+      standardProtocolType
+    }));
   }
 
   render() {

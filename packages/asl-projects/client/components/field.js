@@ -149,8 +149,32 @@ class Field extends Component {
     if (this.props.type === 'animal-quantities') {
       return <AnimalQuantities {...this.props} value={value} label={label} hint={hint} />;
     }
+
+    const renderRichText = (value) => {
+      if (!value) return null;
+
+      // If value is a string, just render it
+      if (typeof value === 'string') return value;
+
+      // If value is an object with keys `object` and `document` (rich text)
+      if (value.object === 'document' && value.content) {
+        // Simple: concatenate all text nodes
+        return value.content
+          .map(block => block.content?.map(node => node.text).join('') || '')
+          .join('\n\n');
+      }
+
+      return null;
+    };
     if (this.props.type === 'paragraph') {
-      return <p className="govuk-body">{value}</p>;
+      return (
+        <div className={this.props.className}>
+          {this.props.label && <label className="govuk-label">{this.props.label}</label>}
+          {this.props.hint && <span className="govuk-hint">{this.props.hint}</span>}
+          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
+          <p className="govuk-body">{renderRichText(value)}</p>
+        </div>
+      )
     }
 
     if (this.props.type === 'species-selector') {

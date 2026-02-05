@@ -14,20 +14,91 @@ export const gaBreadingData = {
             isStandardProtocol: true,
             standardProtocolType: 'ga-breeding',
             severity: "mild",
+            "severity-proportion": "All animals may experience mild discomfort during hormone administration.",
+            "severity-details": "Mild severity due to transient discomfort from hormone injections and surgical procedures.",
+
+            // Protocol details
+            description: "Standard superovulation protocol for production of multiple oocytes from female mice for embryo collection and genetic modification.",
+            locations: [
+              {
+                establishmentId: "est-lab-001",
+                establishmentName: "University Genetics Lab",
+                poles: ["Pole A", "Pole B"]
+              }
+            ],
+            objectives: ["obj-breeding-001", "obj-ga-mice-002"],
+
+            // Animals section
             species: ["mice"],
             speciesDetails: [
               {
                 id: "superovulation-mice-1",
                 name: "Mice",
                 value: "mice",
-                lifeStages: ["adult", "juvenile"],
+                species: ["mice"],
+                speciesLabel: "mice",
+                lifeStages: ["embryo", "adult", "pregnant"],
                 maximumAnimals: "10",
-                maximumTimesUsed: "1",
-                reuse: ["no"]
+                "maximum-animals": "10",
+                "life-stages": ["embryo", "adult", "pregnant"],
+                "continued-use": false,
+                "continued-use-sourced": "",
+                reuse: ["no"],
+                "maximum-times-used": "",
+                "reuse-details": ""
               }
             ],
-            description: "Standard superovulation protocol for mice.",
-            "severity-details":  "Mild severity procedure for superovulation."
+
+            // GAA section
+            gaas: true,
+            "gaas-types": "Will use wild-type mice for superovulation to produce oocytes for subsequent genetic modification procedures.",
+            "gaas-harmful": false,
+            "gaas-harmful-justification": "",
+            "gaas-harmful-control": "",
+
+            // Steps section
+            steps: [
+              {
+                id: "step-superov-1",
+                title: "Hormone administration via intraperitoneal injection",
+                reference: "Hormone injection",
+                optional: false,
+                adverse: true,
+                "adverse-effects": "Mild abdominal discomfort post-injection, transient.",
+                "prevent-adverse-effects": "Use aseptic technique, appropriate needle size, gentle handling.",
+                endpoints: "Signs of persistent distress, infection at injection site.",
+                reusable: true
+              },
+              {
+                id: "step-superov-2",
+                title: "Euthanasia and oocyte collection",
+                reference: "Oocyte collection",
+                optional: false,
+                adverse: false,
+                reusable: true
+              }
+            ],
+
+            // Fate of animals
+            fate: ["killed", "tissue-taken"],
+
+            // Animal experience
+            "experience-summary": "Females receive hormone injections, mate with males, then are euthanized for oocyte collection. Entire process completed within 5 days.",
+            "experience-endpoints": "Humane endpoints include signs of severe distress post-injection or during mating. Animals euthanized by schedule 1 method.",
+
+            // Experimental design
+            outputs: "Multiple oocytes for in vitro fertilization and genetic modification.",
+            "quantitative-data": false,
+
+            // Protocol justification
+            "most-appropriate": "Superovulation maximizes oocyte yield from minimal number of donor females, reducing overall animal use.",
+            "most-refined": "Using established hormone regimens and gentle handling techniques to minimize stress.",
+            "scientific-endpoints": "Oocyte quality requires specific timing of collection post-hormone administration.",
+            "scientific-suffering": "Minimal suffering necessary to obtain viable oocytes for genetic studies.",
+            "scientific-endpoints-justification": "Earlier endpoints would prevent collection of mature oocytes required for successful genetic modification.",
+            "justification-substances": true,
+            "substances-suitibility": "Hormones assessed for purity and biological activity. Doses based on established protocols for mouse strain.",
+            "dosing-regimen": "Pregnant mare serum gonadotropin (5IU) followed 48h later by human chorionic gonadotropin (5IU), both IP."
           }
         },
         {
