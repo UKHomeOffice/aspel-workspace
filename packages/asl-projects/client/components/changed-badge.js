@@ -36,7 +36,7 @@ export default function ChangedBadge({ primaryField, fields = [primaryField], ch
   if (changedFromLatest || sourceIncludes(latestChanges)) {
     if (isParentProtocolOrStepInAdditions(latestAdded)) {
       return null
-    } else if (sourceIncludes(latestAdded, primaryField)) {
+    } else if (primaryField && sourceIncludes(latestAdded, primaryField)) {
       return <span className="badge changed">{noLabel ? '' : 'new'}</span>;
     } else {
       return <span className="badge changed">{noLabel ? '' : 'changed'}</span>;
@@ -46,7 +46,7 @@ export default function ChangedBadge({ primaryField, fields = [primaryField], ch
   if (changedFromGranted || sourceIncludes(grantedChanges)) {
     if (isParentProtocolOrStepInAdditions(grantedAdded)) {
       return null
-    } else if (sourceIncludes(grantedAdded, primaryField)) {
+    } else if (primaryField && sourceIncludes(grantedAdded, primaryField)) {
       return <span className="badge">{noLabel ? '' : 'added'}</span>;
     } else {
       return <span className="badge">{noLabel ? '' : 'amended'}</span>;
@@ -56,7 +56,7 @@ export default function ChangedBadge({ primaryField, fields = [primaryField], ch
   if (changedFromFirst || sourceIncludes(firstChanges)) {
     if (isParentProtocolOrStepInAdditions(firstAdded)) {
       return null
-    } else if (sourceIncludes(firstAdded, primaryField)) {
+    } else if (primaryField && sourceIncludes(firstAdded, primaryField)) {
       return <span className="badge">{noLabel ? '' : 'added'}</span>;
     } else {
       return <span className="badge">{noLabel ? '' : 'changed'}</span>;
