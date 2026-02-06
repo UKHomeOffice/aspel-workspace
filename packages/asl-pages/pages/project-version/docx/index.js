@@ -9,6 +9,8 @@ const ntsRenderer = require('@asl/projects/client/components/download-link/rende
 const { loadRa } = require('../middleware');
 const getNtsSchema = require('../nts/schema');
 const schema = require('@asl/projects/client/schema').default;
+const { NotFoundError } = require('@asl/service/errors');
+const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
 
 const MAX_IMAGE_WIDTH = 600;
 const MAX_IMAGE_HEIGHT = 800;
@@ -103,6 +105,9 @@ module.exports = (settings) => {
   });
 
   app.get('/nts', loadRa, (req, res, next) => {
+    if (!req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
+      throw new NotFoundError('NTS DOCX download requires a feature flag');
+    }
     const { values, application } = buildDocxContent(req);
     const includeDraftRa = req.query.draftRa === 'true';
     const isTrainingLicence = !!values['training-licence'];
