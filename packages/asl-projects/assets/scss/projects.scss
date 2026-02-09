@@ -1174,26 +1174,23 @@ html.modal-open, html.modal-open body {
     }
   }
 
-  .review,
-  .accordion,
-  .sidebar-nav {
-    .sidebar-nav > .expanding-panel header .govuk-button.link {
-      width: 100%;
-      text-align: left;
-      padding-right: 2em;
-    }
 
-    & > .expanding-panel {
-      header .govuk-button.link {
-        width: 100%;
-        text-align: left;
+  .sidebar-nav > .expanding-panel header .govuk-button.link {
+    width: 100%;
+    text-align: left;
+    padding-right: 2em;
+  }
 
-        h3:after {
-          top: 0;
-        }
-      }
+  .expanding-panel header .govuk-button.link {
+    width: 100%;
+    text-align: left;
+
+    h3:after {
+      top: 0;
     }
   }
+
+
   .document-header .page-title {
     h1 {
       margin-bottom: 5px;
