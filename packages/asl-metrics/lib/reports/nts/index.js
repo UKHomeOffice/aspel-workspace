@@ -1,8 +1,12 @@
 module.exports = ({ db, query: params }) => {
 
   const query = () => {
+    const year = String(params.year);
+    if (!/^\d{4}$/.test(year)) {
+      throw new Error('Invalid year parameter');
+    }
 
-    if (!params || !params.year) {
+    if (!params || !year) {
       return db.asl('projects')
         .select(db.asl.raw(`date_part('year', projects.issue_date) AS year`))
         .count()
@@ -25,7 +29,7 @@ module.exports = ({ db, query: params }) => {
       )
       .leftJoin('establishments', 'projects.establishment_id', 'establishments.id')
       .whereIn('projects.status', ['active', 'expired', 'revoked'])
-      .where(db.asl.raw(`date_part('year', projects.issue_date) = '${params.year}'`));
+      .where(db.asl.raw(`date_part('year', projects.issue_date) = ?`), [year]);
   };
 
   const parse = project => {
