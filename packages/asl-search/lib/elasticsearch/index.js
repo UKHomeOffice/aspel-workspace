@@ -1,4 +1,3 @@
-const AWS = require('aws-sdk');
 const { Client } = require('@elastic/elasticsearch');
 const { createAWSConnection, awsGetCredentials } = require('@acuris/aws-es-connection');
 
@@ -6,13 +5,17 @@ const createESClient = async (options) => {
   if (options.aws.credentials.key) {
     console.log('creating AWS client');
 
-    AWS.config.update({
-      credentials: new AWS.Credentials(options.aws.credentials.key, options.aws.credentials.secret),
-      region: options.aws.region
-    });
+    const credentials = {
+      accessKeyId: options.aws.credentials.key,
+      secretAccessKey: options.aws.credentials.secret
+    };
 
     const awsCredentials = await awsGetCredentials();
-    const AWSConnection = createAWSConnection(awsCredentials);
+    const AWSConnection = createAWSConnection({
+      ...awsCredentials,
+      region: options.aws.region,
+      credentials
+    });
 
     return new Client({
       ...options.aws.client,
