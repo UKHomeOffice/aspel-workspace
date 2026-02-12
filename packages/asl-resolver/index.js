@@ -9,8 +9,10 @@ const handleMessage = require('./lib/worker')({ ...config, logger });
 
 const configParams = {
   region: config.sqs.region,
-  accessKeyId: config.sqs.accessKey,
-  secretAccessKey: config.sqs.secret
+  credentials: {
+    accessKeyId: config.sqs.accessKey,
+    secretAccessKey: config.sqs.secret
+  }
 };
 if (config.s3.localstackUrl) {
   configParams.endpoint = config.s3.localstackUrl;
