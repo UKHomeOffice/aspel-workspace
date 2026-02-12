@@ -33,7 +33,12 @@ import permissiblePurpose from './permissible-purpose';
 
 import confirmProtocolsAffected from '../../helpers/confirm-protocols-affected';
 
-import { isTrainingLicence, markdownLink, getCurrentURLForFateOfAnimals } from '../../helpers';
+import {
+  isTrainingLicence,
+  markdownLink,
+  getCurrentURLForFateOfAnimals,
+  calculateProtocolContext
+} from '../../helpers';
 import NTSFateOfAnimalFields from '../../helpers/nts-field';
 import { trainingSummaryRenderer } from '../../components/download-link/components/training-summary-renderer.mjs';
 
@@ -1546,9 +1551,9 @@ export default () => {
               fields: [
                 {
                   name: 'description',
-                  label: values => values?.isStandardProtocol ? 'Describe the purposes of this protocol?' : 'Briefly describe the purposes of this protocol',
-                  hint: 'Ensure that you state any relevant regulatory guidelines.',
-                  type: values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  label: values => calculateProtocolContext(values, 'Briefly describe the purposes of this protocol', 'What are the purposes of this protocol?', 'Purposes of protocol '),
+                  hint: values => calculateProtocolContext(values, 'Ensure that you state any relevant regulatory guidelines.', 'Ensure that you state any relevant regulatory guidelines.', ''),
+                  type: values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph')
                 },
                 {
                   name: 'severity',

@@ -439,3 +439,24 @@ export const getCurrentURLForFateOfAnimals = () => {
 export const markdownLink = (linkText, url) => {
   return url ? `[${linkText}](${url})` : linkText;
 };
+
+export const calculateProtocolContext = (
+  values = {},
+  defaultValue,
+  editableProtocol,
+  standardProtocol
+) => {
+  console.log('values:', values);
+  const isStandard = values?.isStandardProtocol;
+  const typeOfProtocol = values?.standardProtocolType;
+
+  if (isStandard && typeOfProtocol === 'standard-ga-breeding') {
+    return standardProtocol;
+  }
+
+  if (!isStandard && typeOfProtocol === 'editable-ga-breeding') {
+    return editableProtocol;
+  }
+
+  return defaultValue;
+};

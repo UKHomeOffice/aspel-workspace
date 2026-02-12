@@ -12,7 +12,7 @@ export const gaBreadingData = (isStandard = true) => ({
           data: {
             title: "Superovulation",
             isStandardProtocol: isStandard,
-            standardProtocolType: 'ga-breeding',
+            standardProtocolType: isStandard ? 'standard-ga-breeding' : 'editable-ga-breeding',
             severity: "mild",
             "severity-proportion": "All animals may experience mild discomfort during hormone administration.",
             "severity-details": "Mild severity due to transient discomfort from hormone injections and surgical procedures.",
@@ -108,7 +108,7 @@ export const gaBreadingData = (isStandard = true) => ({
           data: {
             title: "Breeding and maintenance of genetically altered rodents",
             isStandardProtocol: isStandard,
-            standardProtocolType: 'ga-breeding',
+            standardProtocolType: isStandard ? 'standard-ga-breeding' : 'editable-ga-breeding',
             severity: "mild",
             species: ["mice"],
             speciesDetails: [
@@ -132,7 +132,7 @@ export const gaBreadingData = (isStandard = true) => ({
           label: "Breeding and maintenance of genetically altered rodents (moderate)",
           data: {
             isStandardProtocol: isStandard,
-            standardProtocolType: 'ga-breeding',
+            standardProtocolType: isStandard ? 'standard-ga-breeding' : 'editable-ga-breeding',
             title: "Breeding and maintenance of genetically altered rodents",
             severity: "moderate",
             species: ["mice"],
@@ -163,6 +163,7 @@ export const gaBreadingData = (isStandard = true) => ({
           data: {
             title: "Breeding and maintenance of genetically altered zebrafish",
             isStandardProtocol: isStandard,
+            standardProtocolType: isStandard ? 'standard-ga-breeding' : 'editable-ga-breeding',
             severity: "mild",
             species: ["zebrafish"],
             speciesDetails: [
