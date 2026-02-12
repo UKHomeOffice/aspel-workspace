@@ -1557,8 +1557,10 @@ export default () => {
                 },
                 {
                   name: 'severity',
-                  label: 'Given the controls and limitations in place, what is the highest severity that an animal could experience in this protocol?',
-                  type: values => values?.isStandardProtocol ? 'paragraph' : 'radio',
+                  label: values => calculateProtocolContext(values,'Given the controls and limitations in place, what is the highest severity that an animal could experience in this protocol?',
+                    'What is the highest level of suffering an animal could experience in this protocol?', 'Highest level of suffering an animal could experience in this protocol '),
+                  hint: values => calculateProtocolContext(values, null,  'This determines the severity category for the protocol', 'This determines the severity category for the protocol'),
+                  type: values => calculateProtocolContext(values, 'radio', 'radio',  'paragraph'),
                   options: [
                     {
                       label: 'Mild',
@@ -1582,12 +1584,12 @@ export default () => {
                 {
                   name: 'severity-proportion',
                   label: 'What proportion of animals will experience this severity?',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph'),
                 },
                 {
                   name: 'severity-details',
                   label: 'Why are you proposing this severity category?',
-                  type: values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  type: values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph'),
                 },
                 {
                   name: 'locations',
@@ -1624,7 +1626,7 @@ export default () => {
                   name: 'training-responsible-for-animals',
                   show: values => isTrainingLicence(values),
                   label: 'Who will be responsible for the animals used in this protocol?',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph'),
                 },
                 {
                   name: 'training-regulated-procedures',
