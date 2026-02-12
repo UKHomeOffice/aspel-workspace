@@ -3,8 +3,10 @@ const { SQSClient, SendMessageCommand } = require('@aws-sdk/client-sqs');
 module.exports = settings => {
   const configParams = {
     region: settings.region,
-    accessKeyId: settings.accessKey,
-    secretAccessKey: settings.secret
+    credentials: {
+      accessKeyId: settings.accessKey,
+      secretAccessKey: settings.secret
+    }
   };
   const isLocal = settings.url?.includes('localhost') || settings.url?.includes('localstack');
   if (isLocal) {
