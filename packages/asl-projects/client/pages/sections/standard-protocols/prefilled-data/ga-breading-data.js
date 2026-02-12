@@ -1,4 +1,4 @@
-export const gaBreadingData = {
+export const gaBreadingData = (isStandard = true) => ({
   title: "Add a standard GA breeding protocol",
   description: "Select a protocol",
   groups: [
@@ -11,7 +11,7 @@ export const gaBreadingData = {
           label: "Superovulation (mild)",
           data: {
             title: "Superovulation",
-            isStandardProtocol: true,
+            isStandardProtocol: isStandard,
             standardProtocolType: 'ga-breeding',
             severity: "mild",
             "severity-proportion": "All animals may experience mild discomfort during hormone administration.",
@@ -107,7 +107,7 @@ export const gaBreadingData = {
           label: "Breeding and maintenance of genetically altered rodents (mild)",
           data: {
             title: "Breeding and maintenance of genetically altered rodents",
-            isStandardProtocol: true,
+            isStandardProtocol: isStandard,
             standardProtocolType: 'ga-breeding',
             severity: "mild",
             species: ["mice"],
@@ -131,7 +131,7 @@ export const gaBreadingData = {
           value: "rodent-breeding-moderate",
           label: "Breeding and maintenance of genetically altered rodents (moderate)",
           data: {
-            isStandardProtocol: true,
+            isStandardProtocol: isStandard,
             standardProtocolType: 'ga-breeding',
             title: "Breeding and maintenance of genetically altered rodents",
             severity: "moderate",
@@ -162,7 +162,7 @@ export const gaBreadingData = {
           label: "Breeding and maintenance of genetically altered zebrafish (mild)",
           data: {
             title: "Breeding and maintenance of genetically altered zebrafish",
-            isStandardProtocol: true,
+            isStandardProtocol: isStandard,
             severity: "mild",
             species: ["zebrafish"],
             speciesDetails: [
@@ -183,42 +183,4 @@ export const gaBreadingData = {
       ]
     }
   ]
-};
-
-// Helper to match the exact structure of existing protocols
-export const getProtocolData = (protocolValue, generateId = false) => {
-  for (const group of gaBreadingData.groups) {
-    const protocol = group.protocols.find(p => p.value === protocolValue);
-    if (protocol) {
-      const data = { ...protocol.data };
-
-      // Add required fields that exist in real protocols
-      data.complete = false;
-      data.locations = ["University of Croydon"]; // Default location
-      data.conditions = [];
-      data.steps = [{ id: `step-${Date.now()}` }]; // Placeholder step
-
-      // Generate new ID if requested (for new protocols)
-      if (generateId) {
-        data.id = `standard-protocol-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      }
-
-      return data;
-    }
-  }
-  return null;
-};
-
-// Alternative: Factory function to create protocol with proper structure
-export const createStandardProtocol = (protocolValue, customizations = {}) => {
-  const baseData = getProtocolData(protocolValue, true);
-  if (!baseData) return null;
-
-  return {
-    ...baseData,
-    ...customizations,
-    _standardProtocol: true,
-    _source: protocolValue,
-    _created: new Date().toISOString()
-  };
-};
+});

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import SectionsLink from '../../../components/sections-link';
 
 export default function StandardProtocols({ ...props }) {
   const history = useHistory();
@@ -27,7 +26,7 @@ export default function StandardProtocols({ ...props }) {
 
         break;
       case 'editable':
-        history.push('/protocols', {
+        history.push('/editable-ga-breeding', {
           createProtocolType: selection
         });
         break;

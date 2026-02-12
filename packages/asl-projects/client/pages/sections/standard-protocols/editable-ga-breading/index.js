@@ -5,19 +5,17 @@ import { gaBreadingData } from '../prefilled-data/ga-breading-data';
 import SectionsLink from '../../../../components/sections-link';
 import { ajaxSync, updateProject } from '../../../../actions/projects';
 
-const GABreedingProtocolForm = ({
+const EditableGABreedingProtocolForm = ({
                                   onContinue,
                                   onCancel,
                                   project,
                                   updateProjectAction,
                                   ajaxSyncAction,
-                                  history,
-                                  match
+                                  history
                                 }) => {
   const [error, setError] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState('');
-  const gaBreading = gaBreadingData(true);
-
+  const gaBreading = gaBreadingData(false);
   const handleProtocolChange = (event) => {
     const value = event.target.value;
     setSelectedTemplate(value);
@@ -86,7 +84,7 @@ const GABreedingProtocolForm = ({
     if (onCancel) {
       onCancel();
     } else {
-      history.push('/standard-protocol');
+      history.push('/protocols');
     }
   };
 
@@ -97,7 +95,7 @@ const GABreedingProtocolForm = ({
         <fieldset className="govuk-fieldset" aria-describedby="standard-protocols-hint">
           <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
             <h1 className="govuk-fieldset__heading">
-              Add a standard GA breeding protocol
+              Add a editable GA breeding protocol
             </h1>
           </legend>
 
@@ -122,7 +120,7 @@ const GABreedingProtocolForm = ({
                 <input
                   className="govuk-radios__input"
                   id={protocol.id}
-                  name="standard-protocols"
+                  name="editable-protocols"
                   type="radio"
                   value={protocol.value}
                   checked={selectedTemplate === protocol.value}
@@ -147,7 +145,7 @@ const GABreedingProtocolForm = ({
                 <input
                   className="govuk-radios__input"
                   id={protocol.id}
-                  name="standard-protocols"
+                  name="editable-protocols"
                   type="radio"
                   value={protocol.value}
                   checked={selectedTemplate === protocol.value}
@@ -193,4 +191,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(GABreedingProtocolForm);
+)(EditableGABreedingProtocolForm);
