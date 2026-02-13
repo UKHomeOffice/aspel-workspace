@@ -76,7 +76,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
-    "@jest/globals": "^29.7.0",
+    "@jest/globals": "^30.2.0",
     "@reduxjs/toolkit": "^2.8.2",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^14.0.0",
