@@ -136,8 +136,26 @@ class Field extends Component {
 
     let { label, hint } = this.props.altLabels ? this.props.alt : this.props;
 
-    label = typeof label === 'string' ? Mustache.render(label, this.props) : label;
-    hint = typeof hint === 'string' ? Mustache.render(hint, this.props) : hint;
+    label = typeof label === 'function' ? label(this.props) : label;
+    hint = typeof hint === 'function' ? hint(this.props) : hint;
+
+    // Create enhanced context for Mustache
+    const mustacheContext = {
+      ...this.props,
+      // Flatten values to root level
+      ...(this.props.values || {}),
+      // Also keep values nested
+      values: this.props.values
+    };
+
+    // Only render Mustache for strings, preserve other types (React elements, null, etc.)
+    if (typeof label === 'string') {
+      label = Mustache.render(label, mustacheContext);
+    }
+
+    if (typeof hint === 'string') {
+      hint = Mustache.render(hint, mustacheContext);
+    }
 
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;

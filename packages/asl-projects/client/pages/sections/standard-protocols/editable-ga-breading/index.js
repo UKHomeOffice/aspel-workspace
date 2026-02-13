@@ -15,7 +15,8 @@ const EditableGABreedingProtocolForm = ({
                                 }) => {
   const [error, setError] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState('');
-  const gaBreading = gaBreadingData(false);
+  const gaBreading = gaBreadingData(false, true);
+
   const handleProtocolChange = (event) => {
     const value = event.target.value;
     setSelectedTemplate(value);
@@ -46,7 +47,12 @@ const EditableGABreedingProtocolForm = ({
         locations: protocolTemplate.data.locations || [],
         conditions: protocolTemplate.data.conditions || [],
         animals: protocolTemplate.data.animals || {},
-        speciesDetails: protocolTemplate.data.speciesDetails || []
+        speciesDetails: protocolTemplate.data.speciesDetails
+          ? protocolTemplate.data.speciesDetails.map(species => ({
+            ...species,
+            id: uuidv4()
+          }))
+          : []
       };
 
       // Update project with new protocol
@@ -136,30 +142,31 @@ const EditableGABreedingProtocolForm = ({
             ))}
           </div>
 
+          {/*todo same as standard-ga...*/}
           {/* Second group - Zebrafish */}
-          <h2 className="govuk-heading-m" style={{ marginTop: '30px' }}>GA zebrafish breeding protocols</h2>
+          {/*<h2 className="govuk-heading-m" style={{ marginTop: '30px' }}>GA zebrafish breeding protocols</h2>*/}
 
-          <div className="govuk-radios" data-module="govuk-radios">
-            {gaBreading.groups[1].protocols.map((protocol) => (
-              <div className="govuk-radios__item" key={protocol.id}>
-                <input
-                  className="govuk-radios__input"
-                  id={protocol.id}
-                  name="editable-protocols"
-                  type="radio"
-                  value={protocol.value}
-                  checked={selectedTemplate === protocol.value}
-                  onChange={handleProtocolChange}
-                />
-                <label
-                  className="govuk-label govuk-radios__label"
-                  htmlFor={protocol.id}
-                >
-                  {protocol.label}
-                </label>
-              </div>
-            ))}
-          </div>
+          {/*<div className="govuk-radios" data-module="govuk-radios">*/}
+          {/*  {gaBreading.groups[1].protocols.map((protocol) => (*/}
+          {/*    <div className="govuk-radios__item" key={protocol.id}>*/}
+          {/*      <input*/}
+          {/*        className="govuk-radios__input"*/}
+          {/*        id={protocol.id}*/}
+          {/*        name="editable-protocols"*/}
+          {/*        type="radio"*/}
+          {/*        value={protocol.value}*/}
+          {/*        checked={selectedTemplate === protocol.value}*/}
+          {/*        onChange={handleProtocolChange}*/}
+          {/*      />*/}
+          {/*      <label*/}
+          {/*        className="govuk-label govuk-radios__label"*/}
+          {/*        htmlFor={protocol.id}*/}
+          {/*      >*/}
+          {/*        {protocol.label}*/}
+          {/*      </label>*/}
+          {/*    </div>*/}
+          {/*  ))}*/}
+          {/*</div>*/}
 
           <div className="govuk-button-group govuk-!-margin-top-8">
             <button

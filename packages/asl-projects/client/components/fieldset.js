@@ -3,7 +3,22 @@ import ToggleEdit from './toggle-edit';
 import Field from './field';
 
 const Fieldset = ({ fields, onFieldChange, values, noComments, altLabels, prefix = '', updateItem }) => {
-  const resolve = (prop) => (typeof prop === 'function' ? prop(values) : prop);
+  // This function resolves field properties that might be functions
+  // It DOES NOT convert everything to strings - it preserves React elements, numbers, etc.
+  const resolve = (prop) => {
+    // If the property is a function, call it with the current values
+    if (typeof prop === 'function') {
+      return prop(values);
+    }
+    // Otherwise, return the value exactly as-is
+    // This could be:
+    // - a string (like "Hello {{ speciesLabel }}")
+    // - a React element (like from raPlayback)
+    // - a number (like 5)
+    // - null or undefined
+    // - boolean (true/false)
+    return prop;
+  };
 
   return (
     <fieldset>

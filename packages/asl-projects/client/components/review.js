@@ -35,11 +35,39 @@ class Review extends React.Component {
     } = this.props;
     let hint = initialHint;
 
+    const mustacheContext = {
+      ...this.props,
+      // Flatten values to root level
+      ...(this.props.values || {}),
+      // Also keep values nested for backward compatibility
+      values: this.props.values
+    };
+
+    // RESOLVE FUNCTIONS TO STRINGS BEFORE MUSTACHE
+    let template = review || label || '';
+
+    // If it's a function, call it with the context
+    if (typeof template === 'function') {
+      template = template(this.props);
+    }
+
+    // Ensure it's a string for Mustache
+    if (typeof template !== 'string') {
+      template = String(template);
+    }
+
+    const displayedLabel = Mustache.render(template, mustacheContext);
+
+    // Handle hint - also resolve functions
+    if (typeof hint === 'function') {
+      hint = hint(this.props);
+    }
+
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
     } else if (hint && !React.isValidElement(hint)) {
       if(typeof hint === 'string') {
-        hint = Mustache.render(hint, this.props);
+        hint = Mustache.render(hint, mustacheContext);
       }
       hint = <Markdown links={true} paragraphProps={{ className: 'grey' }}>{hint}</Markdown>;
     } else if (hint) {
@@ -58,8 +86,6 @@ class Review extends React.Component {
     if (this.props.type === 'comments-only' && showComments) {
       return <Comments field={`${this.props.prefix || ''}${this.props.name}`} collapsed={!this.props.readonly} />;
     }
-
-    const displayedLabel = Mustache.render(review || label || '', this.props);
 
     return (
       <div className={classnames('review', this.props.className)}>

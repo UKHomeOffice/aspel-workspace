@@ -1552,7 +1552,7 @@ export default () => {
                 {
                   name: 'description',
                   label: values => calculateProtocolContext(values, 'Briefly describe the purposes of this protocol', 'What are the purposes of this protocol?', 'Purposes of protocol '),
-                  hint: values => calculateProtocolContext(values, 'Ensure that you state any relevant regulatory guidelines.', 'Ensure that you state any relevant regulatory guidelines.', ''),
+                  hint: values => calculateProtocolContext(values, 'Ensure that you state any relevant regulatory guidelines.', 'Ensure that you state any relevant regulatory guidelines.', null),
                   type: values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph')
                 },
                 {
@@ -1583,25 +1583,38 @@ export default () => {
                 },
                 {
                   name: 'severity-proportion',
-                  label: 'What proportion of animals will experience this severity?',
-                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph'),
+                  label: values =>
+                    calculateProtocolContext(
+                      values,
+                      'What proportion of animals will experience this severity?',
+                      'What proportion of animals could experience this level of suffering?',
+                      'Proportion of animals that could experience this level of suffering '
+                    ),
+                  type: values =>
+                    calculateProtocolContext(
+                      values,
+                      'texteditor',
+                      'texteditor',
+                      'paragraph'
+                    )
                 },
                 {
                   name: 'severity-details',
-                  label: 'Why are you proposing this severity category?',
-                  type: values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph'),
+                  label: values => calculateProtocolContext(values, 'Why are you proposing this severity category?', 'What is the reason for this level of suffering?', 'Reason for level of suffering'),
+                    type: values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph'),
                 },
                 {
                   name: 'locations',
-                  label: 'Select the establishments and POLEs where this protocol will be carried out.',
+                  label: values => calculateProtocolContext(values, 'Select the establishments and POLEs where this protocol will be carried out.', 'Where will you carry out this protocol?', 'Where will you carry out this protocol?'),
                   review: 'Locations where this protocol can be carried out',
-                  hint: 'Select all that apply.',
+                  hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply', 'Select all that apply'),
+                  // todo: instead of paragraph show list.
                   type: 'location-selector'
                 },
                 {
                   name: 'objectives',
                   label: 'Which of your objectives will this protocol address?',
-                  hint: 'Select all that apply.',
+                  hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply', 'Select all that apply'),
                   type: 'objective-selector'
                 },
                 {
@@ -1696,25 +1709,27 @@ export default () => {
               fields: [
                 {
                   name: 'species',
-                  label: 'Which types of animals would you like to add to this protocol?',
-                  hint: 'Select all that apply.',
-                  type: values => values?.isStandardProtocol ? 'paragraph' : 'checkbox',
+                  label: values => calculateProtocolContext(values, 'Which types of animals would you like to add to this protocol?', 'Which types of animals would you like to add to this protocol?','Which animal types will you be using in this protocol?'),
+                  hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply', 'Select all that apply'),
+                  type: 'checkbox',
                   className: 'smaller',
                   inline: true,
                   section: 'intro'
                 },
                 {
                   name: 'maximum-animals',
-                  label: 'What is the maximum number of {{ values.speciesLabel }} that will be used in this protocol?',
-                  hint: 'Only enter numerals, for example 40',
-                  type: values => values?.isStandardProtocol ? 'paragraph' : 'text',
-                  inputMode: 'numeric',
-                  className: values => values?.isStandardProtocol ? 'smaller' : 'govuk-input--width-5'
+                  label: values => {
+                    const species = values?.speciesLabel ?? 'animals';
+                    return calculateProtocolContext(values, `What is the maximum number of ${species} that will be used in this protocol?`, `What is the maximum number of ${species}  that will be used in this protocol?`, `Maximum number of ${species} to be used`)},
+                  hint: values => calculateProtocolContext(values, 'Only enter numerals, for example 40', 'This should be a maximum and not estimated', 'This should be a maximum and not estimated'),
+                  type: values => calculateProtocolContext(values,  'text', 'text', 'paragraph'),
+                  inputMode: values => calculateProtocolContext(values, 'numeric', 'numeric', null),
+                  className: values => calculateProtocolContext(values,   'govuk-input--width-5', 'govuk-input--width-5', 'smaller')
                 },
                 {
                   name: 'life-stages',
-                  label: 'Which life stages will be used in this protocol?',
-                  hint: 'Select all that apply',
+                  label: values => calculateProtocolContext(values, 'Which life stages will be used in this protocol?', 'Which life stages will be used in this protocol?', 'Life stages permitted'),
+                  hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply.', null),
                   type: 'checkbox',
                   className: 'smaller',
                   options: [

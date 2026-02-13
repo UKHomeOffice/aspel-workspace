@@ -1,4 +1,7 @@
-export const gaBreadingData = (isStandard = true) => ({
+import { v4 as uuid } from 'uuid';
+import { slateFormat } from '../../../../helpers/slate-format';
+
+export const gaBreadingData = (isStandard = true, isExperimental = false) => ({
   title: "Add a standard GA breeding protocol",
   description: "Select a protocol",
   groups: [
@@ -13,21 +16,16 @@ export const gaBreadingData = (isStandard = true) => ({
             title: "Breeding and maintenance of genetically altered rodents",
             isStandardProtocol: isStandard,
             standardProtocolType: isStandard ? 'standard-ga-breeding' : 'editable-ga-breeding',
-            severity: "Mild",
-            species: ["mice"],
+            severity: isStandard ? "Mild" : "mild",
+            'severity-proportion': isStandard ? 'Most animals will experience mild harms.' : slateFormat('Most animals will experience mild harms.'),
+            "severity-details": "The phenotypes are subthreshold or mild. Tissue sampling is only expected to cause transient discomfort but no lasting harm.",
             speciesDetails: [
               {
-                id: "breeding-mice-1",
-                name: "Mice",
-                value: "mice",
-                lifeStages: ["embryo", "neonate", "juvenile", "adult", "pregnant", "aged"],
-                maximumAnimals: "20",
-                maximumTimesUsed: "1",
-                reuse: ["no"]
+                lifeStages: ["embryo", "neonate", "juvenile", "adult", "pregnant"],
               }
             ],
             description: "To produce, maintain and provide genetically altered (GA) mice and/or rats",
-            "severity-details": "Mild severity breeding protocol."
+
           }
         },
       ]

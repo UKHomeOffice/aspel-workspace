@@ -199,7 +199,7 @@ const mapStateToProps = ({
     schemaVersion
   }
 }) => ({
-  protocols: getEnhancedProtocols(project),
+  protocols:  project.protocols || [],
   newComments: getNewComments(comments, user, project),
   readonly,
   previousProtocols,
