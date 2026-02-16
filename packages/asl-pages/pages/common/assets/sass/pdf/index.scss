@@ -292,20 +292,11 @@ h3.steps {
   }
 
     table {
-      border-collapse: collapse;
-  
-      th,
-      td {
-        border-top: 1px solid black;
-        border-bottom: 1px solid black;
+    tr {
+      page-break-inside: avoid;
       }
-  
-      tbody,
-      tr {
-        break-inside: avoid;
-        page-break-inside: avoid;
       }
-    }
+
   .animals h3.title {
     font-size: 24px;
     border-bottom: 1px solid $dark-grey;
