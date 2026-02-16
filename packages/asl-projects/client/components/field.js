@@ -32,6 +32,7 @@ import Comments from './comments';
 import ErrorBoundary from './error-boundary';
 import NtsCheckBoxWithModal from './checkbox';
 import without from 'lodash/without';
+import StandardLocationSelector from './standard-location-selector';
 
 /**
  * Where an option in a checkbox group is marked as exclusive, this handles
@@ -215,6 +216,9 @@ class Field extends Component {
     }
     if (this.props.type === 'location-selector') {
       return <LocationSelector {...this.props} value={value} label={label} hint={hint} />;
+    }
+    if (this.props.type === 'standard-location-selector') {
+      return <StandardLocationSelector {...this.props} value={value} label={label} hint={hint} />;
     }
     if (this.props.type === 'objective-selector') {
       return <ObjectiveSelector {...this.props} value={value} label={label} hint={hint} />;

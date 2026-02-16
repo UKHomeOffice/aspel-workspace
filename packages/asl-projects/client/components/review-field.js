@@ -268,28 +268,44 @@ class ReviewField extends React.Component {
       return <TextEditor {...this.props} readOnly={true} />;
     }
 
+    const getTextFromNodes = (nodes = []) =>
+      nodes
+        .map(node => {
+          if (node.text) {
+            return node.text;
+          }
+          if (node.nodes) {
+            return getTextFromNodes(node.nodes);
+          }
+          return '';
+        })
+        .join('');
+
     const renderRichText = (value) => {
-      if (!value) return null;
+      if (!value) {
+        return null;
+      }
 
-      // If it's already a string, return it
-      if (typeof value === 'string') return value;
+      if (typeof value === 'string') {
+        return value;
+      }
 
-      // If it's a rich text document object
-      if (value.object === 'document' && value.content) {
-        return value.content
-          .map(block => block.content?.map(node => node.text).join('') || '')
+      // Slate 0.47 Value object
+      if (value.object === 'value' && value.document?.nodes) {
+        return value.document.nodes
+          .map(block => getTextFromNodes(block.nodes))
           .join('\n\n');
       }
 
-      // Fallback
-      return String(value);
+      return '';
     };
+
 
     if (!isUndefined(value) && !isNull(value) && value !== '') {
       return (
         <Fragment>
           <p>{renderRichText(value.review || value.label || value)}</p>
-          { additionalInfo && <ReactMarkdown>{ additionalInfo }</ReactMarkdown> }
+          {additionalInfo && <ReactMarkdown>{additionalInfo}</ReactMarkdown>}
           {
             this.props.preserveHierarchy && <RevealChildren value={value} options={options} {...this.props} />
           }
@@ -299,7 +315,7 @@ class ReviewField extends React.Component {
 
     return (
       <p>
-        <em>{this.props.nullValue || 'No answer provided.'}</em>
+      <em>{this.props.nullValue || 'No answer provided.'}</em>
       </p>
     );
   }

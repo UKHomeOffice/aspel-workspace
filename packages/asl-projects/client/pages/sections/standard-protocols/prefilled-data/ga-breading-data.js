@@ -17,7 +17,7 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => ({
             isStandardProtocol: isStandard,
             standardProtocolType: isStandard ? 'standard-ga-breeding' : 'editable-ga-breeding',
             severity: isStandard ? "Mild" : "mild",
-            'severity-proportion': isStandard ? 'Most animals will experience mild harms.' : slateFormat('Most animals will experience mild harms.'),
+            'severity-proportion': isStandard ? 'Most animals will experience mild harms.' : 'Most animals will experience mild harms.',
             "severity-details": "The phenotypes are subthreshold or mild. Tissue sampling is only expected to cause transient discomfort but no lasting harm.",
             speciesDetails: [
               {

@@ -1608,8 +1608,7 @@ export default () => {
                   label: values => calculateProtocolContext(values, 'Select the establishments and POLEs where this protocol will be carried out.', 'Where will you carry out this protocol?', 'Where will you carry out this protocol?'),
                   review: 'Locations where this protocol can be carried out',
                   hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply', 'Select all that apply'),
-                  // todo: instead of paragraph show list.
-                  type: 'location-selector'
+                  type:  values => calculateProtocolContext(values, 'location-selector', 'location-selector', 'standard-location-selector')
                 },
                 {
                   name: 'objectives',
