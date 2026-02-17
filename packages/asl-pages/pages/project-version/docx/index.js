@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { get, pick } = require('lodash');
-const { Packer } = require('@joefitter/docx');
+const { Packer } = require('docx');
 const imageSize = require('image-size');
 const filenamify = require('filenamify');
 const fetch = require('node-fetch');
@@ -16,8 +16,7 @@ const MAX_IMAGE_WIDTH = 600;
 const MAX_IMAGE_HEIGHT = 800;
 
 const pack = doc => {
-  const packer = new Packer(doc);
-  return packer.toBuffer(doc);
+  return Packer.toBuffer(doc);
 };
 
 const scaleAndPreserveAspectRatio = (srcWidth, srcHeight, maxWidth, maxHeight) => {
