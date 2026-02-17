@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import minimatch from 'minimatch';
 
-export default function ChangedBadge({ fields = [], changedFromGranted, changedFromLatest, changedFromFirst, noLabel }) {
+export default function ChangedBadge({ primaryField, fields = [primaryField], changedFromGranted, changedFromLatest, changedFromFirst, noLabel }) {
   const latestChanges = useSelector(state => state.changes?.latest || [], shallowEqual);
   const grantedChanges = useSelector(state => state.changes?.granted || [], shallowEqual);
   const firstChanges = useSelector(state => state.changes?.first || [], shallowEqual);
@@ -11,8 +11,10 @@ export default function ChangedBadge({ fields = [], changedFromGranted, changedF
   const grantedAdded = useSelector(state => state.added?.granted || [], shallowEqual);
   const firstAdded = useSelector(state => state.added?.first || [], shallowEqual);
 
-  const sourceIncludes = source => {
-    return source.length && fields.some(field => {
+  const sourceIncludes = (source, fieldOverride) => {
+    const fieldsToCheck = fieldOverride ? [fieldOverride] : fields;
+
+    return source.length && fieldsToCheck.some(field => {
       return source.some(change => minimatch(change, field));
     });
   };
@@ -34,7 +36,7 @@ export default function ChangedBadge({ fields = [], changedFromGranted, changedF
   if (changedFromLatest || sourceIncludes(latestChanges)) {
     if (isParentProtocolOrStepInAdditions(latestAdded)) {
       return null
-    } else if (sourceIncludes(latestAdded)) {
+    } else if (primaryField && sourceIncludes(latestAdded, primaryField)) {
       return <span className="badge changed">{noLabel ? '' : 'new'}</span>;
     } else {
       return <span className="badge changed">{noLabel ? '' : 'changed'}</span>;
@@ -44,7 +46,7 @@ export default function ChangedBadge({ fields = [], changedFromGranted, changedF
   if (changedFromGranted || sourceIncludes(grantedChanges)) {
     if (isParentProtocolOrStepInAdditions(grantedAdded)) {
       return null
-    } else if (sourceIncludes(grantedAdded)) {
+    } else if (primaryField && sourceIncludes(grantedAdded, primaryField)) {
       return <span className="badge">{noLabel ? '' : 'added'}</span>;
     } else {
       return <span className="badge">{noLabel ? '' : 'amended'}</span>;
@@ -54,7 +56,7 @@ export default function ChangedBadge({ fields = [], changedFromGranted, changedF
   if (changedFromFirst || sourceIncludes(firstChanges)) {
     if (isParentProtocolOrStepInAdditions(firstAdded)) {
       return null
-    } else if (sourceIncludes(firstAdded)) {
+    } else if (primaryField && sourceIncludes(firstAdded, primaryField)) {
       return <span className="badge">{noLabel ? '' : 'added'}</span>;
     } else {
       return <span className="badge">{noLabel ? '' : 'changed'}</span>;

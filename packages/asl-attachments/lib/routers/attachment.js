@@ -6,6 +6,8 @@ const sharp = require('sharp');
 
 const { S3 } = require('@asl/service/clients');
 const { NotFoundError } = require('@asl/service/errors');
+const { Upload } = require('@aws-sdk/lib-storage');
+const { GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 module.exports = settings => {
 
@@ -20,19 +22,25 @@ module.exports = settings => {
     const transform = sharp().resize(1200, undefined, { withoutEnlargement: true });
     try {
       const file = await new Promise((resolve, reject) => {
-        busboy.on('file', (field, Body, file) => {
+        busboy.on('file', (field, stream, file) => {
+          let bodyStream = stream;
           if (file.mimeType.match(/^image\//)) {
-            Body = Body.pipe(transform);
+            bodyStream = stream.pipe(transform);
           }
-          s3.upload({
-            Bucket: settings.s3.bucket,
-            Key: id,
-            Body,
-            ServerSideEncryption: settings.s3.kms ? 'aws:kms' : undefined,
-            SSEKMSKeyId: settings.s3.kms
-          }, (err, result) => {
-            err ? reject(err) : resolve(file);
+          const uploader = new Upload({
+            client: s3,
+            params: {
+              Bucket: settings.s3.bucket,
+              Key: id,
+              Body: bodyStream,
+              ServerSideEncryption: settings.s3.kms ? 'aws:kms' : undefined,
+              SSEKMSKeyId: settings.s3.kms
+            }
           });
+
+          uploader.done()
+            .then(() => resolve(file))
+            .catch(reject);
         });
         req.pipe(busboy);
       });
@@ -54,12 +62,15 @@ module.exports = settings => {
         return next(new NotFoundError());
       }
 
-      const params = {
-        Key: attachment.id,
-        Bucket: settings.s3.bucket
-      };
+      const command = new GetObjectCommand({
+        Bucket: settings.s3.bucket,
+        Key: attachment.id
+      });
 
-      const stream = s3.getObject(params).createReadStream();
+      const result = await s3.send(command);
+
+      // result.Body is a Node.js Readable stream
+      const stream = result.Body;
       stream.on('error', e => {
         if (e.code === 'NoSuchKey') {
           return next(new NotFoundError());
@@ -85,10 +96,10 @@ module.exports = settings => {
       }
 
       // Delete from S3
-      await s3.deleteObject({
+      await s3.send(new DeleteObjectCommand({
         Bucket: settings.s3.bucket,
         Key: attachment.id
-      }).promise();
+      }));
 
       // Delete from DB
       await Attachment.query().deleteById(attachment.id);

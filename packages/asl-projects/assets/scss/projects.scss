@@ -633,6 +633,14 @@ html.modal-open, html.modal-open body {
     }
   }
 
+  button.link span.badge {
+    text-decoration: none;
+  }
+
+  .expanding-panel header .govuk-button.link {
+    text-decoration: none;
+  }
+
   .import-active {
     border: 3px dashed $mid-grey;
     padding: 12px;
@@ -1165,25 +1173,24 @@ html.modal-open, html.modal-open body {
       }
     }
   }
-  .accordion,
-  .sidebar-nav {
-    .sidebar-nav > .expanding-panel header .govuk-button.link {
-      width: 100%;
-      text-align: left;
-      padding-right: 2em;
-    }
 
-    & > .expanding-panel {
-      header .govuk-button.link {
-        width: 100%;
-        text-align: left;
 
-        h3:after {
-          top: 0;
-        }
-      }
+  .sidebar-nav > .expanding-panel header .govuk-button.link {
+    width: 100%;
+    text-align: left;
+    padding-right: 2em;
+  }
+
+  .expanding-panel header .govuk-button.link {
+    width: 100%;
+    text-align: left;
+
+    h3:after {
+      top: 0;
     }
   }
+
+
   .document-header .page-title {
     h1 {
       margin-bottom: 5px;

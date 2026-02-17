@@ -75,6 +75,21 @@
     "asruRops": false
   },
   {
+    "id": "ef038eef-a0bd-41c8-bf20-0b4cb35dc2d8",
+    "userId": "6d67a2c2-05a0-40f9-b691-ec5c0c8183a4",
+    "title": "Dr",
+    "firstName": "Xavier",
+    "lastName": "Enteyes",
+    "dob": "1985-09-24",
+    "email": "inspector-nts-docs@example.com",
+    "asruUser": true,
+    "asruAdmin": false,
+    "asruInspector": true,
+    "asruLicensing": false,
+    "asruSupport": false,
+    "asruRops": false
+  },
+  {
     "id": "3d4a07a0-2b12-4794-a148-37e0b8ed0acb",
     "userId": "c0b58d83-6636-495c-bb31-372fb1428eaa",
     "title": "Dr",

@@ -1,6 +1,6 @@
 {
   "name": "@asl/service",
-  "version": "11.0.7",
+  "version": "11.0.8",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -32,7 +32,8 @@
     "@ukhomeoffice/asl-components": "file:../asl-components",
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@ukhomeoffice/frontend-toolkit": "^3.0.0",
-    "aws-sdk": "^2.1370.0",
+    "@aws-sdk/client-s3": "^3.528.0",
+    "@aws-sdk/credential-providers": "^3.528.0",
     "babel-plugin-transform-require-ignore": "^0.1.1",
     "body-parser": "^1.18.3",
     "buffer": "^6.0.3",
