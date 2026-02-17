@@ -1612,9 +1612,9 @@ export default () => {
                 },
                 {
                   name: 'objectives',
-                  label: 'Which of your objectives will this protocol address?',
+                  label: values => calculateProtocolContext(values, 'Which of your objectives will this protocol address?','Which objectives will this protocol address?', 'Which objectives will this protocol address?'),
                   hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply', 'Select all that apply'),
-                  type: 'objective-selector'
+                  type: values => calculateProtocolContext(values, 'objective-selector', 'objective-selector', 'standard-objective-selector')
                 },
                 {
                   name: 'training-used-for',
