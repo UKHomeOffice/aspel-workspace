@@ -166,7 +166,7 @@ export const getStatus = (record, comparisons = {}, grantedStatus= {}) => {
       ? 'AMENDED'
       : 'CHANGED';
   const newLabel =
-    grantedStatus === true && addedColor === 'grey'
+    addedColor === 'grey'
       ? 'ADDED'
       : 'NEW';
   const removedLabel = 'REMOVED';
