@@ -1,22 +1,46 @@
-const AWS = require('aws-sdk');
 const { Client } = require('@elastic/elasticsearch');
-const { createAWSConnection, awsGetCredentials } = require('@acuris/aws-es-connection');
+const { Connection } = require('@elastic/elasticsearch');
+const { request } = require('http');
+const { sign } = require('aws4');
+
+/**
+ * Replacement for createAWSConnection (acuris)
+ * Implements AWS SigV4 signing using explicit credentials
+ */
+const createESConnection = (credentials) =>
+  class AWSConnection extends Connection {
+    constructor(opts) {
+      super(opts);
+
+      this.makeRequest = (reqParams) => {
+        const signed = sign(
+          {
+            ...reqParams,
+            service: 'es',
+            region: credentials.region
+          },
+          {
+            accessKeyId: credentials.key,
+            secretAccessKey: credentials.secret
+          }
+        );
+
+        return request(signed);
+      };
+    }
+  };
 
 const createESClient = async (options) => {
-  if (options.aws.credentials.key) {
-    console.log('creating AWS client');
-
-    AWS.config.update({
-      credentials: new AWS.Credentials(options.aws.credentials.key, options.aws.credentials.secret),
+  if (options.aws?.credentials?.key) {
+    const credentials = {
+      key: options.aws.credentials.key,
+      secret: options.aws.credentials.secret,
       region: options.aws.region
-    });
-
-    const awsCredentials = await awsGetCredentials();
-    const AWSConnection = createAWSConnection(awsCredentials);
+    };
 
     return new Client({
       ...options.aws.client,
-      ...AWSConnection
+      Connection: createESConnection(credentials)
     });
   }
 
