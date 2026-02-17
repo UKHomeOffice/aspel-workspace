@@ -28,7 +28,7 @@
   "dependencies": {
     "@asl/projects": "file:../asl-projects",
     "@asl/service": "file:../asl-service",
-    "@joefitter/docx": "^4.7.0",
+    "docx": "^9.5.3",
     "@ukhomeoffice/asl-components": "file:../asl-components",
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@ukhomeoffice/asl-dictionary": "file:../asl-dictionary",

@@ -22,7 +22,7 @@ const config = merge(
         {
           test: /\.jsx?$/,
           exclude: p => p.match(/node_modules/) &&
-            !p.match(/@joefitter\/docx/) &&
+            !p.match(/docx/) &&
             !p.match(/@asl/) &&
             !p.match(/bpk-/) &&
             !p.match(/@ukhomeoffice/),
