@@ -19,4 +19,4 @@ packages/*/.env
 .history/*
 packages/.DS_Store
 .DS_Store
-.github/*
+.github/copilot-instructions.md
