@@ -171,7 +171,6 @@ export const getStatus = (record, comparisons = {}, grantedStatus= {}) => {
       : 'NEW';
   const removedLabel = 'REMOVED';
 
-
   // Priority: changed > removed > new
   if (changedColor) {
     return { label: changeLabel, class: `badge changed ${changedColor}` };
