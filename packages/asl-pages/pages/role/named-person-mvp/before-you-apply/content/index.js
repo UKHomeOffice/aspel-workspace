@@ -1,9 +1,8 @@
 module.exports = {
-  title: 'Before you nominate someone for a role',
+  title: 'Before you nominate someone for a {{roleType}} role',
   supportingGuidanceTitle: 'Supporting guidance on GOV.UK',
-  subtitle: 'Before you nominate someone for a role you must ensure:',
   beforeYouNominateIntro: `\
-### Before you nominate someone for a role you must ensure:
+### Before you nominate someone for a {{roleType}} role you must ensure:
 
 * they have agreed to be nominated
 * you have added them as an ASPeL user
