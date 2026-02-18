@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import classnames from 'classnames';
+import uniqBy from 'lodash/uniqBy';
 import some from 'lodash/some';
 import partition from 'lodash/partition';
 import { Button } from '@ukhomeoffice/react-components';
@@ -32,7 +33,7 @@ const Comments = ({ field, collapsed, additionalCommentFields = [] }) => {
         allComments = [].concat(state.comments[name]).concat(state.comments[field]).filter(Boolean);
       }
     }
-    return allComments || [];
+    return uniqBy(allComments || [], 'id');
   }, shallowEqual);
 
   const { commentable, showComments } = useSelector(state => state.application);
