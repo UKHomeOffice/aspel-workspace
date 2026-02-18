@@ -14,11 +14,13 @@ const Page = () => {
         <div className="govuk-grid-column-two-thirds">
           <Form cancelLink="profile.read">
             <Header title={<Snippet>title</Snippet>}/>
-            {roleType === 'NACWO' ? (
-              <p className="govuk-body">{<Snippet>beforeYouNominateIntroNACWO</Snippet>}</p>
-            ) : (
-              <p className="govuk-body">{<Snippet>beforeYouNominateIntro</Snippet>}</p>
-            )}
+            <p className="govuk-body">
+              {
+                <Snippet fallback="beforeYouNominateIntro.default">
+                  {`beforeYouNominateIntro.${roleType}`}
+                </Snippet>
+              }
+            </p>
           </Form>
         </div>
 
