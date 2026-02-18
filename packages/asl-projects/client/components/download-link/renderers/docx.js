@@ -7,9 +7,7 @@ const MAX_IMAGE_WIDTH = 600;
 const MAX_IMAGE_HEIGHT = 800;
 
 const pack = (doc, filename) => {
-  const packer = new Packer(doc);
-
-  packer.toBlob(doc).then(blob => {
+  Packer.toBlob(doc).then(blob => {
     saveAs(blob, filename);
   });
 };
