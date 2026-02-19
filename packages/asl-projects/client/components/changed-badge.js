@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import minimatch from 'minimatch';
+import { minimatch } from 'minimatch';
 
 export default function ChangedBadge({ primaryField, fields = [primaryField], changedFromGranted, changedFromLatest, changedFromFirst, noLabel }) {
   const latestChanges = useSelector(state => state.changes?.latest || [], shallowEqual);
