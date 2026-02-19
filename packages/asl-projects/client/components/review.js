@@ -31,7 +31,9 @@ class Review extends React.Component {
       parentAddedFromLatest,
       parentAddedFromGranted,
       hideChanges,
-      hint: initialHint
+      hint: initialHint,
+      commentKey,
+      additionalCommentFields
     } = this.props;
     let hint = initialHint;
 
@@ -56,7 +58,11 @@ class Review extends React.Component {
     const showDiffWindow = this.props.readonly && showChanges
 
     if (this.props.type === 'comments-only' && showComments) {
-      return <Comments field={`${this.props.prefix || ''}${this.props.name}`} collapsed={!this.props.readonly} />;
+      return <Comments
+        field={commentKey ?? `${this.props.prefix || ''}${this.props.name}`}
+        collapsed={!this.props.readonly}
+        additionalCommentFields={additionalCommentFields}
+      />;
     }
 
     const displayedLabel = Mustache.render(review || label || '', this.props);
@@ -86,9 +92,9 @@ class Review extends React.Component {
         }
         {
           showComments && <Comments
-            field={`${this.props.prefix || ''}${this.props.name}`}
+            field={commentKey ?? `${this.props.prefix || ''}${this.props.name}`}
             collapsed={!this.props.readonly}
-            additionalCommentFields={this.props.additionalCommentFields ?? []}
+            additionalCommentFields={additionalCommentFields ?? []}
           />
         }
         {

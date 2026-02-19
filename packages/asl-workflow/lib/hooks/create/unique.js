@@ -1,5 +1,5 @@
 const { get } = require('lodash');
-const match = require('minimatch');
+const { minimatch } = require('minimatch');
 const { BadRequestError } = require('@asl/service/errors');
 
 const { Task } = require('@ukhomeoffice/asl-taskflow');
@@ -28,7 +28,7 @@ module.exports = settings => {
       '*.reinstate'
     ];
 
-    if (nopes.some(str => match(`${type}.${action}`, str))) {
+    if (nopes.some(str => minimatch(`${type}.${action}`, str))) {
       return;
     }
 
@@ -70,8 +70,7 @@ module.exports = settings => {
                   .then(() => {
                     if (type === 'project' && conflictAction === 'grant') {
                       // preserve establishment id on project tasks
-                      const establishmentId = get(task.toJSON(), 'data.data.establishmentId');
-                      data.establishmentId = establishmentId;
+                      data.establishmentId = get(task.toJSON(), 'data.data.establishmentId');
                     }
                     return task.patch({ data }, model.meta);
                   })
