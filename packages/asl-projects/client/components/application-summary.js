@@ -5,7 +5,7 @@ import map from 'lodash/map';
 import pickBy from 'lodash/pickBy';
 import some from 'lodash/some';
 import mapValues from 'lodash/mapValues';
-import minimatch from 'minimatch';
+import { minimatch } from 'minimatch';
 import { createSelector } from 'reselect';
 
 import { INCOMPLETE, PARTIALLY_COMPLETE, COMPLETE } from '../constants/completeness';
