@@ -1,5 +1,5 @@
 const { get } = require('lodash');
-const match = require('minimatch');
+const { minimatch } = require('minimatch');
 const { BadRequestError } = require('@asl/service/errors');
 
 const { Task } = require('@ukhomeoffice/asl-taskflow');
@@ -28,7 +28,7 @@ module.exports = settings => {
       '*.reinstate'
     ];
 
-    if (nopes.some(str => match(`${type}.${action}`, str))) {
+    if (nopes.some(str => minimatch(`${type}.${action}`, str))) {
       return;
     }
 
