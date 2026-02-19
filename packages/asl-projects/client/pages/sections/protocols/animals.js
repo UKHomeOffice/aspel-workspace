@@ -33,14 +33,13 @@ function getProjectSpecies(project) {
 function normaliseValues(speciesDetails) {
   return speciesDetails.map(details => {
     if (details.value) {
-      return details;
+      return { ...details };
     }
-    // if there's a species with a label matching the name use that
     const match = allSpecies.find(sp => sp.label === details.name);
     if (match) {
       return { ...details, value: match.value };
     }
-    return details;
+    return { ...details };
   });
 }
 
@@ -104,7 +103,9 @@ class Animals extends Component {
 
   getItems = () => {
     const { project, values: protocol } = this.props;
-    const speciesDetails = (this.props.values.speciesDetails || []).filter(Boolean);
+    let speciesDetails = (this.props.values.speciesDetails || [])
+      .filter(Boolean)
+      .map(sd => ({ ...sd }));
     let species = this.props.values.species || [];
 
     species.forEach(item => {
@@ -117,7 +118,14 @@ class Animals extends Component {
         const matchingValue = speciesDetails.find(sd => sd.value === value);
         // item is already in list - make sure it has the right label
         if (matchingValue) {
-          matchingValue.name = item;
+          const index = speciesDetails.findIndex(sd => sd.value === value);
+          if (index > -1) {
+            speciesDetails[index] = {
+              ...speciesDetails[index],
+              name: item
+            };
+            return;
+          }
           return;
         }
       }
@@ -125,7 +133,10 @@ class Animals extends Component {
       if (some(speciesDetails, sd => sd.name === item)) {
         return;
       }
-      speciesDetails.push({ name: item, id: uuid(), value });
+      speciesDetails = [
+        ...speciesDetails,
+        { name: item, id: uuid(), value }
+      ];
     });
 
     const { isStandardProtocol = false, standardProtocolType = '' } = protocol;

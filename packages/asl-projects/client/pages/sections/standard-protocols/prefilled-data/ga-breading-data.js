@@ -21,7 +21,7 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => ({
             "severity-details": "The phenotypes are subthreshold or mild. Tissue sampling is only expected to cause transient discomfort but no lasting harm.",
             speciesDetails: [
               {
-                lifeStages: ["embryo", "neonate", "juvenile", "adult", "pregnant"],
+                'life-stages': ["embryo", "neonate", "juvenile", "adult", "pregnant"],
               }
             ],
             description: "To produce, maintain and provide genetically altered (GA) mice and/or rats",

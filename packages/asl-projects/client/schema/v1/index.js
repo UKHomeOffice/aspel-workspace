@@ -1608,13 +1608,13 @@ export default () => {
                   label: values => calculateProtocolContext(values, 'Select the establishments and POLEs where this protocol will be carried out.', 'Where will you carry out this protocol?', 'Where will you carry out this protocol?'),
                   review: 'Locations where this protocol can be carried out',
                   hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply', 'Select all that apply'),
-                  type:  values => calculateProtocolContext(values, 'location-selector', 'location-selector', 'standard-location-selector')
+                  type:  'location-selector'
                 },
                 {
                   name: 'objectives',
                   label: values => calculateProtocolContext(values, 'Which of your objectives will this protocol address?','Which objectives will this protocol address?', 'Which objectives will this protocol address?'),
                   hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply', 'Select all that apply'),
-                  type: values => calculateProtocolContext(values, 'objective-selector', 'objective-selector', 'standard-objective-selector')
+                  type: 'objective-selector'
                 },
                 {
                   name: 'training-used-for',
@@ -1721,9 +1721,9 @@ export default () => {
                     const species = values?.speciesLabel ?? 'animals';
                     return calculateProtocolContext(values, `What is the maximum number of ${species} that will be used in this protocol?`, `What is the maximum number of ${species}  that will be used in this protocol?`, `Maximum number of ${species} to be used`)},
                   hint: values => calculateProtocolContext(values, 'Only enter numerals, for example 40', 'This should be a maximum and not estimated', 'This should be a maximum and not estimated'),
-                  type: values => calculateProtocolContext(values,  'text', 'text', 'paragraph'),
-                  inputMode: values => calculateProtocolContext(values, 'numeric', 'numeric', null),
-                  className: values => calculateProtocolContext(values,   'govuk-input--width-5', 'govuk-input--width-5', 'smaller')
+                  type: 'text',
+                  inputMode: 'numeric',
+                  className: 'govuk-input--width-5'
                 },
                 {
                   name: 'life-stages',

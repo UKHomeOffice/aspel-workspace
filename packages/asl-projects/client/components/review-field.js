@@ -315,7 +315,7 @@ class ReviewField extends React.Component {
 
     return (
       <p>
-      <em>{this.props.nullValue || 'No answer provided.'}</em>
+        <em>{this.props.nullValue || 'No answer provided.'}</em>
       </p>
     );
   }

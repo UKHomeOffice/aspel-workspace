@@ -446,7 +446,7 @@ export const calculateProtocolContext = (
   editableProtocol,
   standardProtocol
 ) => {
-  console.log('values:', values);
+
   const isStandard = values?.isStandardProtocol;
   const typeOfProtocol = values?.standardProtocolType;
 

@@ -14,7 +14,6 @@ import { DATE_FORMAT } from './constants';
 
 import { useFeatureFlag, FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
 import GABreeding from './pages/sections/standard-protocols/ga-breading';
-import StandardProtocols from './pages/sections/standard-protocols';
 import EditableGaBreading from './pages/sections/standard-protocols/editable-ga-breading';
 
 
