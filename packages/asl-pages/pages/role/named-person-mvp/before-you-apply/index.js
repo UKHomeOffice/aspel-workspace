@@ -1,6 +1,5 @@
 const { page } = require('@asl/service/ui');
 const { form } = require('../../../common/routers');
-const { set } = require('lodash');
 
 module.exports = (settings) => {
   const app = page({
