@@ -17,13 +17,12 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => ({
               : 'editable-ga-breeding',
 
             severity: 'Mild',
-            'severity-proportion':
-              'Most animals will experience mild harms.',
-            'severity-details':
-              'The phenotypes are subthreshold or mild. Tissue sampling is only expected to cause transient discomfort but no lasting harm.',
 
-            description:
-              'To produce, maintain and provide genetically altered (GA) mice and/or rats',
+            'severity-proportion': 'Most animals will experience mild harms.',
+
+            'severity-details': 'The phenotypes are subthreshold or mild. Tissue sampling is only expected to cause transient discomfort but no lasting harm.',
+
+            description: 'To produce, maintain and provide genetically altered (GA) mice and/or rats',
 
             // ✅ TEMPLATE DEFINES LIFE STAGES
             speciesDetails: [
@@ -45,8 +44,6 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => ({
                   '• another mild protocol in this licence\n' +
                   '• a moderate protocol in this licence, unless they are showing harmful phenotypes\n' +
                   '• other project licences authorised to breed and maintain the same animal type and provide them for use on other projects',
-
-
               },
             ],
             'reuse-details':

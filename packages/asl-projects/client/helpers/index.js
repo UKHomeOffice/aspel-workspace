@@ -446,17 +446,21 @@ export const calculateProtocolContext = (
   editableProtocol,
   standardProtocol
 ) => {
+  // Normalize protocol context
+  const context =
+    values.isStandardProtocol ? values : values.values
 
-  const isStandard = values?.isStandardProtocol;
-  const typeOfProtocol = values?.standardProtocolType;
+  const isStandard = context?.isStandardProtocol;
+  const typeOfProtocol = context?.standardProtocolType;
 
-  if (isStandard && typeOfProtocol === 'standard-ga-breeding') {
+  if (isStandard === true && typeOfProtocol === 'standard-ga-breeding') {
     return standardProtocol;
   }
 
-  if (!isStandard && typeOfProtocol === 'editable-ga-breeding') {
+  if (isStandard === false && typeOfProtocol === 'editable-ga-breeding') {
     return editableProtocol;
   }
 
   return defaultValue;
 };
+
