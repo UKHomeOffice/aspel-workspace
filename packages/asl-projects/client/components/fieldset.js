@@ -2,18 +2,24 @@ import React from 'react';
 import ToggleEdit from './toggle-edit';
 import Field from './field';
 
-const Fieldset = ({ fields, onFieldChange, values, noComments, altLabels, prefix = '', updateItem }) => {
+const Fieldset = ({ fields, onFieldChange, values, noComments, altLabels, prefix = '', commentPrefix, updateItem, additionalCommentFields = [] }) => {
   return (
     <fieldset>
       {
         fields.map(f => {
+          const fullName = `${prefix}${f.name}`;
           const field = <Field
             { ...f }
             key={ f.name }
-            name={ `${prefix}${f.name}` }
+            name={ fullName }
             value={ values && values[f.name] }
             values={ values }
             prefix={ prefix }
+            commentKey={ commentPrefix ? `${commentPrefix}${f.name}` : fullName }
+            additionalCommentFields={[
+              ...additionalCommentFields,
+              ...(commentPrefix ? [fullName] : [])
+            ]}
             onChange={ value => onFieldChange(f.name, value) }
             updateItem={updateItem}
             onFieldChange={onFieldChange}
