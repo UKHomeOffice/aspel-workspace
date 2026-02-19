@@ -9,8 +9,11 @@ export const BuildProtocol = (protocolTemplate, project) => {
   const protocolId = uuidv4();
   const data = protocolTemplate.data || {};
 
-  // Lookup species metadata
   const allSpecies = flatten(values(SPECIES));
+
+  // life stages from template (fallback-safe)
+  const templateLifeStages =
+    data.speciesDetails?.[0]?.['life-stages'] || [];
 
   const createSpeciesDetail = (speciesValue) => {
     const match = allSpecies.find(s => s.value === speciesValue);
@@ -22,26 +25,19 @@ export const BuildProtocol = (protocolTemplate, project) => {
       name: match.label,
       isStandardProtocol: !!data.isStandardProtocol,
       standardProtocolType: data.standardProtocolType || '',
-      'life-stages': [
-        'embryo',
-        'neonate',
-        'juvenile',
-        'adult',
-        'pregnant',
-        'aged'
-      ],
-      reuse: ['other-protocol', 'this-protocol']
+      'life-stages': templateLifeStages,
+      'use-continued': data.speciesDetails?.[0]?.['continued-use'] || false,
+      reuse: data.speciesDetails?.[0]?.reuse || [],
+      'reuse-details': data.speciesDetails?.[0]?.['reuse-details'] || ''
     };
   };
 
-  // ✅ Species from project → checkbox source of truth
+  // checkbox source of truth
   const species = castArray(project.species || []);
 
-  // ✅ SpeciesDetails derived from species
+  // wraps animals: {Object}
   const speciesDetails = uniqBy(
-    species
-      .map(createSpeciesDetail)
-      .filter(Boolean),
+    species.map(createSpeciesDetail).filter(Boolean),
     sd => sd.value
   );
 
@@ -73,12 +69,8 @@ export const BuildProtocol = (protocolTemplate, project) => {
     objectives: data.objectives ? [...data.objectives] : [],
     animals: data.animals ? { ...data.animals } : {},
 
-    // ✅ REQUIRED FOR CHECKBOX
     species,
-
-    // ✅ REQUIRED FOR DETAILS UI
     speciesDetails,
-
     steps
   };
 };

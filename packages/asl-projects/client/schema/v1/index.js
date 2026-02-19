@@ -1764,8 +1764,9 @@ export default () => {
                 },
                 {
                   name: 'continued-use',
-                  label: 'Will any {{ values.speciesLabel }} coming onto this protocol be classed as ‘continued use’?',
-                  hint: '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use or animals that have had procedures applied to them in order to be prepared for use in this protocol.',
+                  label: values => calculateProtocolContext(values, 'Will any {{ values.speciesLabel }} coming onto this protocol be classed as ‘continued use’?', 'Will any animals coming this protocol be classed as ‘continued use’?', 'Continued use coming onto the protocol'),
+                  hint: values => calculateProtocolContext(values,'‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use or animals that have had procedures applied to them in order to be prepared for use in this protocol.',
+                    '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use, or animals that have had procedures applied to them to prepare them for use in this protocol', '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use, or animals that have had procedures applied to them to prepare them for use in this protocol'),
                   type: 'radio',
                   options: [
                     {
@@ -1773,8 +1774,8 @@ export default () => {
                       value: true,
                       reveal: {
                         name: 'continued-use-sourced',
-                        label: 'How did these animals start their use?',
-                        hint: 'Describe the procedures that have been applied to animals that will continue their use on to this protocol.',
+                        label: values => calculateProtocolContext(values,'How did these animals start their use?', 'How did these animals start their use? ', 'Where these animals may be obtained from'),
+                        hint: values => calculateProtocolContext(values,'Describe the procedures that have been applied to animals that will continue their use on to this protocol.', 'Describe the procedures that have been applied to animals that will continue their use onto this protocol.', null),
                         type: values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
                       }
                     },
@@ -1789,10 +1790,10 @@ export default () => {
                 {
                   name: 'reuse',
                   label: 'Are you re-using any {{ values.speciesLabel }}?',
-                  hint: `\
+                  hint: values => calculateProtocolContext(values,`\
 ‘Re-use’ describes using an animal for a new experiment when you could equally use a naive animal to get the same results.
 
-Select each that applies`,
+Select each that applies`, 'Re-use’ describes using an animal for a new experiment when you could equally use a naive animal to get the same results.', '‘Re-use’ describes using animals again for a new experiment when you could equally use a naïve animal to get the same results'),
                   type: 'checkbox',
                   preserveHierarchy: true,
                   options: [
@@ -1802,8 +1803,8 @@ Select each that applies`,
                       reveal: [
                         {
                           name: 'reuse-details',
-                          label: 'Describe the procedures that have been applied to them and why you are choosing to re-use them',
-                          type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                          label:  values => calculateProtocolContext(values,'Describe the procedures that have been applied to them and why you are choosing to re-use them', 'Describe any procedure that may have been applied to these animals, and why you are choosing to re-use them.', 'Procedures that have been applied to these animals, and why you are choosing to re-use them'),
+                          type:  values => calculateProtocolContext(values,'texteditor', 'texteditor', 'paragraph')
                         }
                       ]
                     },
@@ -1815,7 +1816,7 @@ Select each that applies`,
                           name: 'maximum-times-used',
                           label: 'What is the maximum number of times an animal will be used in this protocol?',
                           hint: 'Only enter numerals, for example 40',
-                          type:  values => values?.isStandardProtocol ? 'paragraph' : 'text',
+                          type:  'text',
                           inputMode: 'numeric',
                           className: 'govuk-input--width-5'
                         }
