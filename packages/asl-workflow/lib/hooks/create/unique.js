@@ -70,8 +70,7 @@ module.exports = settings => {
                   .then(() => {
                     if (type === 'project' && conflictAction === 'grant') {
                       // preserve establishment id on project tasks
-                      const establishmentId = get(task.toJSON(), 'data.data.establishmentId');
-                      data.establishmentId = establishmentId;
+                      data.establishmentId = get(task.toJSON(), 'data.data.establishmentId');
                     }
                     return task.patch({ data }, model.meta);
                   })
