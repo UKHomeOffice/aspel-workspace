@@ -26,9 +26,10 @@ export const BuildProtocol = (protocolTemplate, project) => {
       isStandardProtocol: !!data.isStandardProtocol,
       standardProtocolType: data.standardProtocolType || '',
       'life-stages': templateLifeStages,
-      'use-continued': data.speciesDetails?.[0]?.['continued-use'] || false,
+      'continued-use': data.speciesDetails?.[0]?.['continued-use'] || false,
       reuse: data.speciesDetails?.[0]?.reuse || [],
-      'reuse-details': data.speciesDetails?.[0]?.['reuse-details'] || ''
+      'reuse-details': data.speciesDetails?.[0]?.['reuse-details'] || '',
+      'continued-use-sourced': data.speciesDetails?.[0]?.['continued-use-sourced'] || ''
     };
   };
 

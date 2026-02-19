@@ -1764,7 +1764,7 @@ export default () => {
                 },
                 {
                   name: 'continued-use',
-                  label: values => calculateProtocolContext(values, 'Will any {{ values.speciesLabel }} coming onto this protocol be classed as ‘continued use’?', 'Will any animals coming this protocol be classed as ‘continued use’?', 'Continued use coming onto the protocol'),
+                  label: values => calculateProtocolContext(values, 'Will any {{ values.speciesLabel }} coming onto this protocol be classed as ‘continued use’?', 'Will any {{ values.speciesLabel }}  coming this protocol be classed as ‘continued use’?', 'Continued use coming onto the protocol'),
                   hint: values => calculateProtocolContext(values,'‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use or animals that have had procedures applied to them in order to be prepared for use in this protocol.',
                     '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use, or animals that have had procedures applied to them to prepare them for use in this protocol', '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use, or animals that have had procedures applied to them to prepare them for use in this protocol'),
                   type: 'radio',
@@ -1776,7 +1776,7 @@ export default () => {
                         name: 'continued-use-sourced',
                         label: values => calculateProtocolContext(values,'How did these animals start their use?', 'How did these animals start their use? ', 'Where these animals may be obtained from'),
                         hint: values => calculateProtocolContext(values,'Describe the procedures that have been applied to animals that will continue their use on to this protocol.', 'Describe the procedures that have been applied to animals that will continue their use onto this protocol.', null),
-                        type: values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                        type: values => calculateProtocolContext(values,'texteditor', 'texteditor', 'paragraph')
                       }
                     },
                     {

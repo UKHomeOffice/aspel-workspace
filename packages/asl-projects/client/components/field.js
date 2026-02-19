@@ -171,18 +171,34 @@ class Field extends Component {
     const renderRichText = (value) => {
       if (!value) return null;
 
-      // If value is a string, just render it
-      if (typeof value === 'string') return value;
+      let text = '';
 
-      // If value is an object with keys `object` and `document` (rich text)
-      if (value.object === 'document' && value.content) {
-        // Simple: concatenate all text nodes
-        return value.content
+      // Flatten rich text into a single string
+      if (typeof value === 'string') {
+        text = value;
+      } else if (value.object === 'document' && value.content) {
+        text = value.content
           .map(block => block.content?.map(node => node.text).join('') || '')
           .join('\n\n');
       }
 
-      return null;
+      // Split into lines and trim
+      const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+
+      // Separate bullets from regular text
+      const bullets = lines.filter(line => line.startsWith('•')).map(line => line.replace(/^•\s*/, ''));
+      const paragraphs = lines.filter(line => !line.startsWith('•'));
+
+      return (
+        <div>
+          {paragraphs.map((p, i) => <p key={`p-${i}`} className="govuk-body">{p}</p>)}
+          {bullets.length > 0 && (
+            <ul className="govuk-list govuk-list--bullet">
+              {bullets.map((b, i) => <li key={`b-${i}`}>{b}</li>)}
+            </ul>
+          )}
+        </div>
+      );
     };
     if (this.props.type === 'paragraph') {
       return (

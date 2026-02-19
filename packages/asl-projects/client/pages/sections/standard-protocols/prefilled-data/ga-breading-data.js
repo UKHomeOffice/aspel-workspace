@@ -38,17 +38,17 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => ({
                 ],
                 'continued-use': true,
                 reuse: isStandard ? ['no'] : undefined,
-                'reuse-details': 'Animals will not be used more than once within this protocol.'
+                'reuse-details': 'Animals will not be used more than once within this protocol.',
+
+                'continued-use-sourced':
+                  'GA animals for use in this protocol (with or without associated wild types) may be obtained from:\n' +
+                  '• another mild protocol in this licence\n' +
+                  '• a moderate protocol in this licence, unless they are showing harmful phenotypes\n' +
+                  '• other project licences authorised to breed and maintain the same animal type and provide them for use on other projects',
+
+
               },
             ],
-
-            'continued-use-sourced': `
-GA animals for use in this protocol (with or without associated wild types) may be obtained from:
-• another mild protocol in this licence
-• a moderate protocol in this licence, unless they are showing harmful phenotypes
-• other project licences authorised to breed and maintain the same animal type and provide them for use on other projects
-            `,
-
             'reuse-details':
               'Animals that have come from another protocol in this project or another project will not be re-used in this protocol.'
           }
