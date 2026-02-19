@@ -1618,7 +1618,8 @@ export default () => {
                 },
                 {
                   name: 'training-used-for',
-                  show: values => isTrainingLicence(values),
+                  show: values => values?.isStandardProtocol !== true &&
+                    isTrainingLicence(values),
                   label: 'What will this protocol be used for?',
                   hint: 'If your purpose isn’t listed you can leave this blank.',
                   type: 'checkbox',
@@ -1636,13 +1637,15 @@ export default () => {
                 },
                 {
                   name: 'training-responsible-for-animals',
-                  show: values => isTrainingLicence(values),
+                  show: values =>values?.isStandardProtocol !== true &&
+                    isTrainingLicence(values),
                   label: 'Who will be responsible for the animals used in this protocol?',
                   type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph'),
                 },
                 {
                   name: 'training-regulated-procedures',
-                  show: values => isTrainingLicence(values),
+                  show: values =>values?.isStandardProtocol !== true &&
+                    isTrainingLicence(values),
                   label: 'Will students carry out regulated procedures under this protocol?',
                   type: 'radio',
                   className: 'smaller',
@@ -1679,7 +1682,8 @@ export default () => {
                 },
                 {
                   name: 'training-participant-pre-course-training',
-                  show: values => isTrainingLicence(values),
+                  show: values =>values?.isStandardProtocol !== true &&
+                    isTrainingLicence(values),
                   label: 'What training will participants receive before they can use protected animals?',
                   type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
                 }
