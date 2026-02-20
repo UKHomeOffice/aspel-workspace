@@ -191,12 +191,13 @@ class Step extends Component {
             fields={fields}
             prefix={prefix}
             onFieldChange={(key, value) => updateItem({ [key]: value })}
+            commentPrefix={commentPrefix}
             values={values}
           /> : <Fragment>
             <Fieldset
               fields={fields.filter(f => f.name !== 'reusable')}
               prefix={prefix}
-              commentPrefix={`reusableSteps.${values.reusableStepId}.`}
+              commentPrefix={commentPrefix}
               onFieldChange={(key, value) => updateItem({ [key]: value })}
               values={values}
             />
@@ -225,7 +226,7 @@ class Step extends Component {
             fields={fields.filter(f => f.name !== 'title')}
             values={values}
             prefix={prefix}
-            commentPrefix={values.reusableStepId ? `reusableSteps.${values.reusableStepId}.` : undefined}
+            commentPrefix={commentPrefix}
             editLink={`0#${this.props.prefix}`}
             readonly={!isReviewStep}
             protocolId={protocol.id}
