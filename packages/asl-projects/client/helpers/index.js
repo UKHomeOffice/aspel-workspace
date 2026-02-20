@@ -453,6 +453,8 @@ export const calculateProtocolContext = (
   const isStandard = context?.isStandardProtocol;
   const typeOfProtocol = context?.standardProtocolType;
 
+  console.log('calculateProtocolContext', { isStandard, typeOfProtocol, values });
+
   if (isStandard === true && typeOfProtocol === 'standard-ga-breeding') {
     return standardProtocol;
   }

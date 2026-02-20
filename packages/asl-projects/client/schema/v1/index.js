@@ -1733,7 +1733,8 @@ export default () => {
                   name: 'life-stages',
                   label: values => calculateProtocolContext(values, 'Which life stages will be used in this protocol?', 'Which life stages will be used in this protocol?', 'Life stages permitted'),
                   hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply.', null),
-                  type: 'checkbox',
+                  type: values => calculateProtocolContext(values, 'checkbox', 'checkbox', 'standard-list'),
+
                   className: 'smaller',
                   options: [
                     {
@@ -1742,15 +1743,18 @@ export default () => {
                     },
                     {
                       label: 'Neonate',
-                      value: 'neonate'
+                      value: 'neonate',
+                      hint: values => calculateProtocolContext(values, null, null, 'The animal is not self-supporting - typically up to 10 days post-birth')
                     },
                     {
                       label: 'Juvenile',
-                      value: 'juvenile'
+                      value: 'juvenile',
+                      hint: values => calculateProtocolContext(values,null, null, 'The animal is self-supporting, and is moving towards sexual maturity and adult weight')
                     },
                     {
                       label: 'Adult',
-                      value: 'adult'
+                      value: 'adult',
+                      hint: values => calculateProtocolContext(values, null, null, 'The animal has reached sexual maturity and adult weight')
                     },
                     {
                       label: 'Pregnant adult',
@@ -1767,7 +1771,7 @@ export default () => {
                   label: values => calculateProtocolContext(values, 'Will any {{ values.speciesLabel }} coming onto this protocol be classed as ‘continued use’?', 'Will any {{ values.speciesLabel }}  coming this protocol be classed as ‘continued use’?', 'Continued use coming onto the protocol'),
                   hint: values => calculateProtocolContext(values,'‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use or animals that have had procedures applied to them in order to be prepared for use in this protocol.',
                     '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use, or animals that have had procedures applied to them to prepare them for use in this protocol', '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use, or animals that have had procedures applied to them to prepare them for use in this protocol'),
-                  type: 'radio',
+                  type: values => calculateProtocolContext(values, 'radio', 'radio', 'paragraph'),
                   options: [
                     {
                       label: 'Yes',

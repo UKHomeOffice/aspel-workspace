@@ -11,9 +11,7 @@ export const BuildProtocol = (protocolTemplate, project) => {
 
   const allSpecies = flatten(values(SPECIES));
 
-  // life stages from template (fallback-safe)
-  const templateLifeStages =
-    data.speciesDetails?.[0]?.['life-stages'] || [];
+  const templateSpeciesDetail = data.speciesDetails?.[0] ?? {};
 
   const createSpeciesDetail = (speciesValue) => {
     const match = allSpecies.find(s => s.value === speciesValue);
@@ -25,11 +23,11 @@ export const BuildProtocol = (protocolTemplate, project) => {
       name: match.label,
       isStandardProtocol: !!data.isStandardProtocol,
       standardProtocolType: data.standardProtocolType || '',
-      'life-stages': templateLifeStages,
-      'continued-use': data.speciesDetails?.[0]?.['continued-use'] || false,
-      reuse: data.speciesDetails?.[0]?.reuse || [],
-      'reuse-details': data.speciesDetails?.[0]?.['reuse-details'] || '',
-      'continued-use-sourced': data.speciesDetails?.[0]?.['continued-use-sourced'] || ''
+      'life-stages': templateSpeciesDetail['life-stages'] ?? [],
+      'continued-use': templateSpeciesDetail['continued-use'] ?? false,
+      reuse: templateSpeciesDetail.reuse ?? [],
+      'reuse-details': templateSpeciesDetail['reuse-details'] ?? '',
+      'continued-use-sourced': templateSpeciesDetail['continued-use-sourced'] ?? ''
     };
   };
 

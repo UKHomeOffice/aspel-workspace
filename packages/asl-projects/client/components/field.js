@@ -168,8 +168,65 @@ class Field extends Component {
       return <AnimalQuantities {...this.props} value={value} label={label} hint={hint} />;
     }
 
+    const getSelectedOptions = (value, options = []) => {
+      const values = castArray(value || []);
+
+      return options
+        .filter(opt => values.includes(opt.value))
+        .map(opt => ({
+          ...opt,
+
+          label: typeof opt.label === 'function' ? opt.label(this.props) : opt.label,
+
+          hint: typeof opt.hint === 'function' ? opt.hint(this.props) : opt.hint
+        }));
+    }
+    if (this.props.type === 'standard-list') {
+      const options = this.mapOptions(this.props.options || []);
+      const selected = getSelectedOptions(value, options);
+
+      return (
+        <div className={this.props.className}>
+          {label && <label className="govuk-label">{label}</label>}
+          {hint && <span className="govuk-hint">{hint}</span>}
+          {this.props.error && (
+            <span className="govuk-error-message">{this.props.error}</span>
+          )}
+
+          {selected.length > 0 && (
+            <ul className="govuk-list govuk-list--bullet">
+              {selected.map((opt, i) => (
+                <li key={i}>
+                  <strong className="govuk-body">{opt.label}</strong>
+
+                  {opt.hint && (
+                    <div className="govuk-hint govuk-!-margin-top-1">
+                      {opt.hint}
+                    </div>
+                  )}
+
+                  {opt.reveal}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      );
+    }
+
     const renderRichText = (value) => {
       if (!value) return null;
+
+      // Handle arrays as bullet lists
+      if (Array.isArray(value)) {
+        return (
+          <ul className="govuk-list govuk-list--bullet">
+            {value.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        );
+      }
 
       let text = '';
 
@@ -178,23 +235,39 @@ class Field extends Component {
         text = value;
       } else if (value.object === 'document' && value.content) {
         text = value.content
-          .map(block => block.content?.map(node => node.text).join('') || '')
+          .map(
+            block =>
+              block.content?.map(node => node.text).join('') || ''
+          )
           .join('\n\n');
       }
 
       // Split into lines and trim
-      const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+      const lines = text
+        .split('\n')
+        .map(line => line.trim())
+        .filter(Boolean);
 
       // Separate bullets from regular text
-      const bullets = lines.filter(line => line.startsWith('•')).map(line => line.replace(/^•\s*/, ''));
+      const bullets = lines
+        .filter(line => line.startsWith('•'))
+        .map(line => line.replace(/^•\s*/, ''));
+
       const paragraphs = lines.filter(line => !line.startsWith('•'));
 
       return (
         <div>
-          {paragraphs.map((p, i) => <p key={`p-${i}`} className="govuk-body">{p}</p>)}
+          {paragraphs.map((p, i) => (
+            <p key={`p-${i}`} className="govuk-body">
+              {p}
+            </p>
+          ))}
+
           {bullets.length > 0 && (
             <ul className="govuk-list govuk-list--bullet">
-              {bullets.map((b, i) => <li key={`b-${i}`}>{b}</li>)}
+              {bullets.map((b, i) => (
+                <li key={`b-${i}`}>{b}</li>
+              ))}
             </ul>
           )}
         </div>
@@ -220,6 +293,7 @@ class Field extends Component {
         onChange={ this.onFieldChange }
       />;
     }
+
     if (this.props.type === 'establishment-selector') {
       return <EstablishmentSelector {...this.props} value={value} label={label} hint={hint} />;
     }

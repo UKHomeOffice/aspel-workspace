@@ -32,8 +32,7 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => ({
                   'neonate',
                   'juvenile',
                   'adult',
-                  'pregnant',
-                  'aged'
+                  'pregnant'
                 ],
                 'continued-use': true,
                 reuse: isStandard ? ['no'] : undefined,
