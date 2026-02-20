@@ -496,8 +496,11 @@ const getChangedValues = (question, req, type = 'project-versions') => {
     first: getFirstVersion
   };
 
+  const validKeys = Object.keys(getVersion);
+  const versionKey = validKeys.includes(req.query.version) ? req.query.version : 'latest';
+
   return Promise.resolve()
-    .then(() => getVersion[req.query.version](req, type))
+    .then(() => getVersion[versionKey](req, type))
     .then(async (result) => {
       const normalisationOptions = { isSubmitted: req[model].data.status !== 'draft' };
       const before = result ? normaliseData(result.data, normalisationOptions) : undefined;
