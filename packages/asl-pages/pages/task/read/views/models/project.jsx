@@ -3,51 +3,18 @@ import { StaticRouter } from 'react-router';
 import { useSelector, shallowEqual } from 'react-redux';
 import pick from 'lodash/pick';
 import get from 'lodash/get';
-import { Link, StickyNavAnchor, Snippet, Diff } from '@ukhomeoffice/asl-components';
+import { Link, StickyNavAnchor, Snippet, Diff, Utils } from '@ukhomeoffice/asl-components';
 import EstablishmentLinks from '../components/establishment-links';
 
 // need unconnected ReviewFields component and not default
 import { ReviewFields } from '@asl/projects/client/components/review-fields';
-import { format, getYear, isBefore } from 'date-fns';
-import { dateFormat, ropsYears } from '../../../../../constants';
 import PplDeclarations from '../components/ppl-declarations';
 import experience from '../../../../project/update-licence-holder/schema/experience-fields';
 import { schema as projectSchema } from '../../../../project/schema';
 import { getAdditionalEstablishments } from '../../../../project-version/helpers/project';
 import {Warning} from '../../../../common/components/warning';
-
-function EstablishmentDiff({ task }) {
-  const isComplete = !task.isOpen;
-  const { to, from } = task.data.meta.establishment;
-  return (
-    <table className="govuk-table compare">
-      <thead>
-        <tr>
-          <th>
-            {
-              isComplete
-                ? <Snippet>establishment.previous</Snippet>
-                : <Snippet>establishment.current</Snippet>
-            }
-          </th>
-          <th>
-            {
-              isComplete
-                ? <Snippet>establishment.new</Snippet>
-                : <Snippet>establishment.proposed</Snippet>
-            }
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{from.name}</td>
-          <td><span className="highlight">{to.name}</span></td>
-        </tr>
-      </tbody>
-    </table>
-  );
-}
+import getRopDue from './project-components/get-rop-due';
+import EstablishmentDiff from './project-components/establishment-diff';
 
 export default function Project({ task }) {
   const { project, establishment, version, ra, values, isAsru, allowedActions, url, isAdmin, isHolc } = useSelector(state => state.static, shallowEqual);
@@ -61,31 +28,7 @@ export default function Project({ task }) {
   const isCorrectVersion = get(project, 'versions[0].id') === get(task, 'data.data.version');
   const isRejected = task.status === 'rejected';
   const canReopenTask = isRejected && isCorrectVersion && allowedActions.includes('project.recoverTask');
-  const ropDue = useMemo(getRopDue, [project, task.data.rops]);
-
-  function getRopDue() {
-    // Draft projects don't need to submit rops
-    if (task.data.rops === undefined || !project.issueDate) {
-      return '';
-    }
-
-    const grantedYear = getYear(project.issueDate);
-    const endDate = project.revocationDate ?? project.expiryDate;
-    const currentYear = getYear(new Date());
-    const thisYearsRopsOverdue = !isBefore(new Date(`${currentYear}-02-01`), new Date());
-
-    return ropsYears
-      // Was the project active?
-      .filter(year => grantedYear <= year && (endDate ? getYear(endDate) : true))
-      // Are rops for the year overdue?
-      .filter(year => year < currentYear || (year === currentYear && thisYearsRopsOverdue))
-      // Is the rop for this year not submitted
-      .filter(year => !task.data.rops.find(ar => ar.year === year))
-      .reverse()
-      .join(', ')
-      // replace last comma with or
-      .replace(/,(?=[^,]*$)/, ' or');
-  }
+  const ropDue = useMemo(() => getRopDue(project, task), [project, task?.data?.rops]);
 
   function onReopen(e) {
     if (window.confirm('Are you sure you want to reopen this task?')) {
@@ -133,7 +76,7 @@ export default function Project({ task }) {
           {
             isAsru
               ? <p><Snippet>ra.content</Snippet></p>
-              : <p><Snippet date={format(project.raDate, dateFormat.long)}>ra.due</Snippet></p>
+              : <p><Snippet date={Utils.formatDate(project.raDate, Utils.DATE_FORMAT.long)}>ra.due</Snippet></p>
           }
           <Link
             page="retrospectiveAssessment.update"
@@ -201,7 +144,7 @@ export default function Project({ task }) {
             }
             {
               isDiscarded
-                ? <p><Snippet date={format(version.deleted, dateFormat.long)}>versions.submitted.discarded</Snippet></p>
+                ? <p><Snippet date={Utils.formatDate(version.deleted, Utils.DATE_FORMAT.long)}>versions.submitted.discarded</Snippet></p>
                 : (
                   <Fragment>
                     <p><Snippet>versions.submitted.text</Snippet></p>
