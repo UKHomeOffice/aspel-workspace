@@ -104,7 +104,7 @@ module.exports = (settings) => {
     );
     if (rolesWithRequirements.includes(type)) {
       return res.redirect(
-        req.buildRoute('role.namedPersonMvp.mandatoryTraining')
+        req.buildRoute('role.namedPersonMvp.beforeYouApply')
       );
     } else {
       return res.redirect(req.buildRoute('role.namedPersonMvp.confirm'));

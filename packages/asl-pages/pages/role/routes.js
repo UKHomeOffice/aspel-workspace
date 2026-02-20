@@ -14,6 +14,6 @@ module.exports = {
   namedPersonMvp: {
     path: '/named-person-mvp',
     router: namedPersonMvp,
-    breadcrumb: 'role.namedPersonMvp.beforeYouApply'
+    breadcrumb: 'role.namedPersonMvp.create'
   }
 };

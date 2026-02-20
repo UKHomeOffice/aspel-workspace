@@ -1,6 +1,5 @@
 const { page } = require('@asl/service/ui');
 const { form } = require('../../../common/routers');
-const { set } = require('lodash');
 
 module.exports = (settings) => {
   const app = page({
@@ -11,11 +10,10 @@ module.exports = (settings) => {
   app.use(
     form({
       locals: (req, res, next) => {
-        set(
-          res.locals,
-          'static.trainingDashboardUrl',
-          req.buildRoute('training.dashboard')
-        );
+        Object.assign(res.locals.static, {
+          roleType: req.session.form[`${req.profile.id}-new-role-named-person`].values.type.toUpperCase(),
+          trainingDashboardUrl: req.buildRoute('training.dashboard')
+        });
         next();
       }
     })

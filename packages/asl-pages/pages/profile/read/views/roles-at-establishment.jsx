@@ -6,7 +6,7 @@ import { useFeatureFlag, FEATURE_FLAG_NAMED_PERSON_MVP } from '@asl/service/ui/f
 
 function RolesAtEstablishment({ establishment, estRoles, rcvsNumber, allowedActions, profile }) {
   const namedPersonFeatureFlag = useFeatureFlag(FEATURE_FLAG_NAMED_PERSON_MVP);
-  const addRoleLink = namedPersonFeatureFlag ? 'role.namedPersonMvp.beforeYouApply' : 'role.create';
+  const addRoleLink = namedPersonFeatureFlag ? 'role.namedPersonMvp.create' : 'role.create';
 
   return (
     <section className="profile-section">
