@@ -6,79 +6,98 @@ import uniqBy from 'lodash/uniqBy';
 import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 
 export const BuildProtocol = (protocolTemplate, project) => {
+  // Safe defaults with immutability in mind
   const protocolId = uuidv4();
-  const data = protocolTemplate.data ?? {};
+  const data = protocolTemplate?.data ? { ...protocolTemplate.data } : {};
 
-  // Flatten species constants once
-  const allSpecies = flatten(values(SPECIES));
+  // Get all species (safe, immutable)
+  const allSpecies = flatten(values(SPECIES ?? {})) ?? [];
 
-  // Always treat species as an array
-  const species = castArray(project.species ?? []);
+  // Project species - create new array, don't mutate original
+  const projectSpecies = castArray(project?.species ?? []).slice();
 
-  const getSpeciesTemplate = (speciesValue) =>
-    data.speciesDetails?.find(sd => sd.species === speciesValue) ?? null;
+  // Template species details - create new array of copied objects
+  const templateSpeciesDetails = Array.isArray(data.speciesDetails)
+    ? data.speciesDetails.map(sd => ({ ...sd }))
+    : [];
 
-  const createSpeciesDetail = (speciesValue) => {
-    const match = allSpecies.find(s => s.value === speciesValue);
+  // Create species details for each project species
+  const speciesDetails = projectSpecies
+    .map(speciesValue => {
+      // Find species match (if possible)
+      const speciesMatch = allSpecies.find(s => s?.value === speciesValue);
 
-    if (!match) {
-      console.warn('Unknown species:', speciesValue);
-      return null;
-    }
+      // Find matching template - create fresh object
+      const matchingTemplate = templateSpeciesDetails.find(sd => sd?.species === speciesValue)
+        || templateSpeciesDetails[0]
+        || {};
 
-    const template = getSpeciesTemplate(speciesValue);
+      // Return a brand new object every time
+      return {
+        id: uuidv4(),
+        species: speciesValue,
+        name: speciesMatch?.label ?? speciesValue,
 
-    return {
-      id: uuidv4(),
-      species: speciesValue,
-      name: match.label,
+        // Global settings
+        isStandardProtocol: Boolean(data.isStandardProtocol),
+        standardProtocolType: data.standardProtocolType ?? '',
 
-      isStandardProtocol: !!data.isStandardProtocol,
-      standardProtocolType: data.standardProtocolType || '',
+        // Species-specific data - always new arrays/strings
+        'life-stages': Array.isArray(matchingTemplate.lifeStages)
+          ? [...matchingTemplate.lifeStages]  // New array
+          : [],
+        'continued-use': Boolean(matchingTemplate.continuedUse),
+        'continued-use-sourced': matchingTemplate.continuedUseSourced ?? '',
+        'reuse': Array.isArray(matchingTemplate.reuse)
+          ? [...matchingTemplate.reuse]  // New array
+          : [],
+        'reuse-details': matchingTemplate.reuseDetails ?? ''
+      };
+    })
+    // Remove duplicates by species - creates new array
+    .filter((sd, index, self) =>
+      index === self.findIndex(s => s.species === sd.species)
+    );
 
-      'life-stages': template?.lifeStages ?? [],
-      'continued-use': template?.continuedUse ?? false,
-      'continued-use-sourced': template?.continuedUseSourced ?? '',
-      reuse: template?.reuse ?? [],
-      'reuse-details': template?.reuseDetails ?? ''
-    };
-  };
+  // Create steps - each step is a new object with new arrays
+  const steps = (Array.isArray(data.steps) ? [...data.steps] : [])
+    .map(step => {
+      const stepObj = step || {};
+      return {
+        id: uuidv4(),
+        title: stepObj.title ?? '',
+        reference: stepObj.reference ?? '',
+        optional: Boolean(stepObj.optional),
+        adverse: Boolean(stepObj.adverse),
+        'adverse-effects': stepObj['adverse-effects'] ?? '',
+        'prevent-adverse-effects': stepObj['prevent-adverse-effects'] ?? '',
+        endpoints: stepObj.endpoints ?? '',
+        reusable: Boolean(stepObj.reusable)
+      };
+    });
 
-  const speciesDetails = uniqBy(
-    species.map(createSpeciesDetail).filter(Boolean),
-    sd => sd.species
-  );
-
-  const steps = (data.steps ?? []).map(step => ({
-    id: uuidv4(),
-    title: step.title || '',
-    reference: step.reference || '',
-    optional: step.optional ?? false,
-    adverse: step.adverse ?? false,
-    'adverse-effects': step['adverse-effects'] || '',
-    'prevent-adverse-effects': step['prevent-adverse-effects'] || '',
-    endpoints: step.endpoints || '',
-    reusable: step.reusable ?? false
-  }));
-
+  // Build and return the protocol - ALL NEW OBJECTS, no references to input
   return {
     id: protocolId,
-    title: protocolTemplate.label || 'Untitled Protocol',
+    title: protocolTemplate?.label ?? 'Untitled Protocol',
     complete: false,
 
-    // === Metadata ===
-    isStandardProtocol: !!data.isStandardProtocol,
-    standardProtocolType: data.standardProtocolType || '',
-    description: data.description || '',
-    severity: data.severity || '',
-    'severity-proportion': data.severityProportion || '',
-    'severity-details': data.severityDetails || '',
-    locations: data.locations ? [...data.locations] : [],
-    objectives: data.objectives ? [...data.objectives] : [],
+    // Metadata - all new primitives or copies
+    isStandardProtocol: Boolean(data.isStandardProtocol),
+    standardProtocolType: data.standardProtocolType ?? '',
+    description: data.description ?? '',
+    severity: data.severity ?? '',
+    'severity-proportion': data.severityProportion ?? '',
+    'severity-details': data.severityDetails ?? '',
+
+    // Collections - always new arrays/objects
+    locations: Array.isArray(data.locations) ? [...data.locations] : [],
+    objectives: Array.isArray(data.objectives) ? [...data.objectives] : [],
     animals: data.animals ? { ...data.animals } : {},
 
-    species,
-    speciesDetails,
-    steps
+    // Species data - new arrays with new objects
+    species: [...projectSpecies],  // New array
+    speciesDetails: [...speciesDetails],  // New array
+    steps: [...steps]  // New array
   };
 };

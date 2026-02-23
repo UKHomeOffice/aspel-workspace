@@ -36,7 +36,7 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => ({
                 ],
                 continuedUse: isStandard,
                 reuse: isStandard ? ['no'] : undefined,
-                'reuse-details': 'Animals will not be used more than once within this protocol.',
+                reuseDetails: 'Animals will not be used more than once within this protocol.',
 
                 continuedUseSourced:
                   'GA animals for use in this protocol (with or without associated wild types) may be obtained from:\n' +
