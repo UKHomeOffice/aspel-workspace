@@ -13,11 +13,19 @@ module.exports = (settings, logger) => {
     };
     logger.verbose(`Retrieving message with key: ${key} from bucket: ${settings.bucket}`);
     // --- GET OBJECT ---
-    const response = await s3Client.send(new GetObjectCommand(params));
-    const body = await response.Body.transformToString('utf8');
-    let data = JSON.parse(body);
-
-    logger.verbose(`Message with key: ${key} retrieved`);
+    let data;
+    try {
+      const response = await s3Client.send(new GetObjectCommand(params));
+      const body = await response.Body.transformToString('utf8');
+      data = JSON.parse(body);
+      logger.verbose(`Message with key: ${key} retrieved`);
+    } catch (err) {
+      if (err.name === 'NoSuchKey') {
+        logger.warn(`Key ${key} missing — already processed`);
+        return null; // idempotent behavior
+      }
+      throw err;
+    }
 
     // --- DELETE OBJECT (fire-and-forget) ---
     Promise.resolve()
