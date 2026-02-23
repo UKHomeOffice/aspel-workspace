@@ -7,40 +7,49 @@ import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 
 export const BuildProtocol = (protocolTemplate, project) => {
   const protocolId = uuidv4();
-  const data = protocolTemplate.data || {};
+  const data = protocolTemplate.data ?? {};
 
+  // Flatten species constants once
   const allSpecies = flatten(values(SPECIES));
 
-  const templateSpeciesDetail = data.speciesDetails?.[0] ?? {};
+  // Always treat species as an array
+  const species = castArray(project.species ?? []);
+
+  const getSpeciesTemplate = (speciesValue) =>
+    data.speciesDetails?.find(sd => sd.species === speciesValue) ?? null;
 
   const createSpeciesDetail = (speciesValue) => {
     const match = allSpecies.find(s => s.value === speciesValue);
-    if (!match) return null;
+
+    if (!match) {
+      console.warn('Unknown species:', speciesValue);
+      return null;
+    }
+
+    const template = getSpeciesTemplate(speciesValue);
 
     return {
       id: uuidv4(),
-      value: speciesValue,
+      species: speciesValue,
       name: match.label,
+
       isStandardProtocol: !!data.isStandardProtocol,
       standardProtocolType: data.standardProtocolType || '',
-      'life-stages': templateSpeciesDetail['life-stages'] ?? [],
-      'continued-use': templateSpeciesDetail['continued-use'] ?? false,
-      reuse: templateSpeciesDetail.reuse ?? [],
-      'reuse-details': templateSpeciesDetail['reuse-details'] ?? '',
-      'continued-use-sourced': templateSpeciesDetail['continued-use-sourced'] ?? ''
+
+      'life-stages': template?.lifeStages ?? [],
+      'continued-use': template?.continuedUse ?? false,
+      'continued-use-sourced': template?.continuedUseSourced ?? '',
+      reuse: template?.reuse ?? [],
+      'reuse-details': template?.reuseDetails ?? ''
     };
   };
 
-  // checkbox source of truth
-  const species = castArray(project.species || []);
-
-  // wraps animals: {Object}
   const speciesDetails = uniqBy(
     species.map(createSpeciesDetail).filter(Boolean),
-    sd => sd.value
+    sd => sd.species
   );
 
-  const steps = (data.steps || []).map(step => ({
+  const steps = (data.steps ?? []).map(step => ({
     id: uuidv4(),
     title: step.title || '',
     reference: step.reference || '',
@@ -62,8 +71,8 @@ export const BuildProtocol = (protocolTemplate, project) => {
     standardProtocolType: data.standardProtocolType || '',
     description: data.description || '',
     severity: data.severity || '',
-    'severity-proportion': data['severity-proportion'] || '',
-    'severity-details': data['severity-details'] || '',
+    'severity-proportion': data.severityProportion || '',
+    'severity-details': data.severityDetails || '',
     locations: data.locations ? [...data.locations] : [],
     objectives: data.objectives ? [...data.objectives] : [],
     animals: data.animals ? { ...data.animals } : {},
