@@ -168,6 +168,7 @@ class Step extends Component {
     const completed = !editable || values.completed;
     const editingReusableStep = !completed && values.existingValues && values.reusableStepId && values.saved;
     const stepEditable = editingReusableStep ? (values.existingValues.id === values.id) : !completed;
+    const commentPrefix = values.reusableStepId ? `reusableSteps.${values.reusableStepId}.` : undefined;
 
     const stepContent = <>{
       !stepEditable && values.title && (
@@ -179,7 +180,7 @@ class Step extends Component {
           protocolId={protocol.id}
           stepId={values.id}
           readonly={!isReviewStep}
-          additionalCommentFields={values.reusableStepId ? [`${prefix}title`] : []}
+          commentPrefix={commentPrefix}
         />
       )
     }
@@ -190,11 +191,13 @@ class Step extends Component {
             fields={fields}
             prefix={prefix}
             onFieldChange={(key, value) => updateItem({ [key]: value })}
+            commentPrefix={commentPrefix}
             values={values}
           /> : <Fragment>
             <Fieldset
               fields={fields.filter(f => f.name !== 'reusable')}
               prefix={prefix}
+              commentPrefix={commentPrefix}
               onFieldChange={(key, value) => updateItem({ [key]: value })}
               values={values}
             />
@@ -203,6 +206,7 @@ class Step extends Component {
               value={values.existingValues.reusable}
               readonly={true}
               className="reusable"
+              commentKey={commentPrefix ? `${commentPrefix}reusable` : undefined}
             />
             <Warning>You cannot change this answer when editing reusable steps.</Warning>
           </Fragment>
@@ -222,6 +226,7 @@ class Step extends Component {
             fields={fields.filter(f => f.name !== 'title')}
             values={values}
             prefix={prefix}
+            commentPrefix={commentPrefix}
             editLink={`0#${this.props.prefix}`}
             readonly={!isReviewStep}
             protocolId={protocol.id}

@@ -102,7 +102,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl --audit-level=high --omit=dev
+      - npm audit --workspace=asl --audit-level=critical --omit=dev
   - name: compile
     image: node:22.14.0
     environment:
@@ -222,7 +222,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-attachments --audit-level=high --omit=dev
+      - npm audit --workspace=asl-attachments --audit-level=critical --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -342,7 +342,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-data-exports --audit-level=high --omit=dev
+      - npm audit --workspace=asl-data-exports --audit-level=critical --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -459,7 +459,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-emailer --audit-level=high --omit=dev
+      - npm audit --workspace=asl-emailer --audit-level=critical --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -580,7 +580,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-internal-api --audit-level=high --omit=dev
+      - npm audit --workspace=asl-internal-api --audit-level=critical --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -696,7 +696,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-internal-ui --audit-level=high --omit=dev
+      - npm audit --workspace=asl-internal-ui --audit-level=critical --omit=dev
   - name: compile
     image: node:22.14.0
     environment:
@@ -833,7 +833,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-metrics --audit-level=high --omit=dev
+      - npm audit --workspace=asl-metrics --audit-level=critical --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -953,7 +953,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-notifications --audit-level=high --omit=dev
+      - npm audit --workspace=asl-notifications --audit-level=critical --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -1137,7 +1137,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-permissions --audit-level=high --omit=dev
+      - npm audit --workspace=asl-permissions --audit-level=critical --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -1317,7 +1317,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-public-api --audit-level=high --omit=dev
+      - npm audit --workspace=asl-public-api --audit-level=critical --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -1437,7 +1437,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-resolver --audit-level=high --omit=dev
+      - npm audit --workspace=asl-resolver --audit-level=critical --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -1557,7 +1557,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=@asl/schema --audit-level=high --omit=dev
+      - npm audit --workspace=@asl/schema --audit-level=critical --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -1673,7 +1673,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-search --audit-level=high --omit=dev
+      - npm audit --workspace=asl-search --audit-level=critical --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -1784,7 +1784,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=@asl/service --audit-level=high --omit=dev
+      - npm audit --workspace=@asl/service --audit-level=critical --omit=dev
 
 trigger:
   event:
@@ -1850,7 +1850,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=@ukhomeoffice/asl-taskflow --audit-level=high --omit=dev
+      - npm audit --workspace=@ukhomeoffice/asl-taskflow --audit-level=critical --omit=dev
 
 services:
   - name: postgres
@@ -1936,7 +1936,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-toolbox --audit-level=high --omit=dev
+      - npm audit --workspace=asl-toolbox --audit-level=critical --omit=dev
   - name: build
     pull: if-not-exists
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
@@ -2079,7 +2079,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=asl-workflow --audit-level=high --omit=dev
+      - npm audit --workspace=asl-workflow --audit-level=critical --omit=dev
   - name: docker build
     image: docker:dind
     environment:
@@ -2202,7 +2202,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm audit --workspace=@ukhomeoffice/asl-components --audit-level=high --omit=dev
+      - npm audit --workspace=@ukhomeoffice/asl-components --audit-level=critical --omit=dev
 
 trigger:
   event:

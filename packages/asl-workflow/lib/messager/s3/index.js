@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const { v4 } = require('uuid');
 const { S3 } = require('@asl/service/clients');
+const { PutObjectCommand } = require('@aws-sdk/client-s3');
 
 module.exports = settings => {
   const s3Client = S3({ s3: settings });
@@ -29,11 +30,9 @@ module.exports = settings => {
           ServerSideEncryption: settings.kms ? 'aws:kms' : undefined,
           SSEKMSKeyId: settings.kms
         };
-        return new Promise((resolve, reject) => {
-          s3Client.putObject(params, function (err, response) {
-            return err ? reject(err) : resolve(key);
-          });
-        });
+        return s3Client
+          .send(new PutObjectCommand(params))
+          .then(() => key);
       });
   };
 };
