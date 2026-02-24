@@ -6,18 +6,24 @@ module.exports = (settings, logger) => {
   const s3Client = S3({ s3: settings });
 
   return async key => {
-    logger.verbose(`Fetching message with key: ${key} from s3`);
     const params = {
       Key: key,
       Bucket: settings.bucket
     };
     logger.verbose(`Retrieving message with key: ${key} from bucket: ${settings.bucket}`);
     // --- GET OBJECT ---
-    const response = await s3Client.send(new GetObjectCommand(params));
-    const body = await response.Body.transformToString('utf8');
-    let data = JSON.parse(body);
-
-    logger.verbose(`Message with key: ${key} retrieved`);
+    let data;
+    try {
+      const response = await s3Client.send(new GetObjectCommand(params));
+      const body = await response.Body.transformToString('utf8');
+      data = JSON.parse(body);
+      logger.verbose(`Message with key: ${key} retrieved`);
+    } catch (err) {
+      if (err.name === 'NoSuchKey') {
+        return null; // idempotent behavior
+      }
+      throw err;
+    }
 
     // --- DELETE OBJECT (fire-and-forget) ---
     Promise.resolve()
