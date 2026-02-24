@@ -6,7 +6,6 @@ module.exports = (settings, logger) => {
   const s3Client = S3({ s3: settings });
 
   return async key => {
-    logger.verbose(`Fetching message with key: ${key} from s3`);
     const params = {
       Key: key,
       Bucket: settings.bucket
@@ -21,7 +20,6 @@ module.exports = (settings, logger) => {
       logger.verbose(`Message with key: ${key} retrieved`);
     } catch (err) {
       if (err.name === 'NoSuchKey') {
-        logger.warn(`Key ${key} missing — already processed`);
         return null; // idempotent behavior
       }
       throw err;

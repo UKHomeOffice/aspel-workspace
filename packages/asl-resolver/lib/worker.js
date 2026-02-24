@@ -39,7 +39,7 @@ module.exports = settings => {
       if (!body) {
         // Already processed / NoSuchKey
         logger.warn(`Skipping processing for key ${data.key} — already processed`);
-        return;
+        return message;
       }
 
       message.body = pick(body, 'model', 'action', 'id', 'changedBy');
@@ -70,6 +70,7 @@ module.exports = settings => {
       statsd.increment('asl-resolver.processed', 1);
 
       logger.info('Processed message', { ...message.body, time });
+      return message;
 
     } catch (err) {
       try {
