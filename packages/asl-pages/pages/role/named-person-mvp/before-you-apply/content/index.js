@@ -1,3 +1,5 @@
+const { PELH } = require("@ukhomeoffice/asl-dictionary");
+
 module.exports = {
   title: 'Before you nominate someone for a {{roleType}} role',
   supportingGuidanceTitle: 'Supporting guidance on GOV.UK',
@@ -27,6 +29,11 @@ You will need to describe how they demonstrate the recommended skills and experi
 ### Conflict of interest declaration
 
 You must ensure the nominee has no significant conflict of interest, and their declaration form is held on record at the establishment.`,
+    PELH: `\
+### Before you nominate someone for a {{roleType}} role you must ensure:
+
+* you can describe why they are suitable for the role
+* they have no significant conflict of interest, and you have sent the declaration form to ASRU Licensing: [ASRULicensing@homeoffice.gov.uk](mailto:ASRULicensing@homeoffice.gov.uk)`,
     default: `\
 ### Before you nominate someone for a {{roleType}} role you must ensure:
 
