@@ -19,7 +19,8 @@ module.exports = taskflow => {
           builder.whereJsonSupersetOf('data', { id: req.modelId });
           builder.orWhereJsonSupersetOf('data', { id: req.modelId.toString() });
         })
-          .whereIn('status', open());
+          .whereIn('status', open())
+          .limit(100);
       })
       .then(cases => {
         const end = process.hrtime(start);
