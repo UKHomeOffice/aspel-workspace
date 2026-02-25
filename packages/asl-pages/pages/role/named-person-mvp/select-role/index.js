@@ -98,17 +98,9 @@ module.exports = (settings) => {
   );
 
   app.post('/', (req, res, next) => {
-    const { type } = req.session.form[req.model.id].values;
-    const rolesWithRequirements = Object.keys(
-      mandatoryTrainingRequirementsForRoles
-    );
-    if (rolesWithRequirements.includes(type)) {
-      return res.redirect(
+    return res.redirect(
         req.buildRoute('role.namedPersonMvp.beforeYouApply')
-      );
-    } else {
-      return res.redirect(req.buildRoute('role.namedPersonMvp.confirm'));
-    }
+    );
   });
 
   return app;
