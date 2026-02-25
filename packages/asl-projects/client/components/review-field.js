@@ -173,6 +173,7 @@ class ReviewField extends React.Component {
       }
       return <p><em>None selected</em></p>;
     }
+
     if (this.props.type === 'checkbox' ||
       this.props.type === 'species-selector' ||
       this.props.type === 'location-selector' ||
@@ -288,6 +289,35 @@ class ReviewField extends React.Component {
 
       if (typeof value === 'string') {
         return value;
+      }
+
+      if(typeof value === 'boolean') {
+        return value ? 'Yes' : 'No';
+      }
+
+      if (Array.isArray(value)) {
+        if (!value.length) {
+          return (
+            <p>
+              <em>None selected</em>
+            </p>
+          );
+        }
+
+        return (
+          <ul>
+            {
+              value.map(v => {
+                const option = this.props.options?.find(o => o.value === v);
+                return (
+                  <li key={v}>
+                    {option ? option.label : v}
+                  </li>
+                );
+              })
+            }
+          </ul>
+        );
       }
 
       // Slate 0.47 Value object

@@ -168,21 +168,22 @@ class Field extends Component {
       return <AnimalQuantities {...this.props} value={value} label={label} hint={hint} />;
     }
 
-    const getSelectedOptions = (value, options = []) => {
-      const values = castArray(value || []);
-
-      return options
-        .filter(opt => values.includes(opt.value))
-        .map(opt => ({
-          ...opt,
-
-          label: typeof opt.label === 'function' ? opt.label(this.props) : opt.label,
-
-          hint: typeof opt.hint === 'function' ? opt.hint(this.props) : opt.hint
-        }));
-    }
     if (this.props.type === 'standard-list') {
       const options = this.mapOptions(this.props.options || []);
+      const getSelectedOptions = (value, options = []) => {
+        const values = castArray(value || []);
+
+        return options
+          .filter(opt => values.includes(opt.value))
+          .map(opt => ({
+            ...opt,
+
+            label: typeof opt.label === 'function' ? opt.label(this.props) : opt.label,
+
+            hint: typeof opt.hint === 'function' ? opt.hint(this.props) : opt.hint
+          }));
+      }
+
       const selected = getSelectedOptions(value, options);
 
       return (
