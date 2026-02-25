@@ -11,7 +11,7 @@ module.exports = (settings) => {
     form({
       locals: (req, res, next) => {
         Object.assign(res.locals.static, {
-          roleType: req.session.form[`${req.profile.id}-new-role-named-person`].values.type.toUpperCase(),
+          roleType: req.session?.form?.[`${req.profile.id}-new-role-named-person`]?.values?.type?.toUpperCase() || 'UNKNOWN',
           trainingDashboardUrl: req.buildRoute('training.dashboard')
         });
         next();

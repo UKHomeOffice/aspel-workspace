@@ -1,5 +1,3 @@
-const { PELH } = require("@ukhomeoffice/asl-dictionary");
-
 module.exports = {
   supportingGuidanceTitle: 'Supporting guidance on GOV.UK',
   beforeYouNominateText: {
