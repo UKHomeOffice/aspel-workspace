@@ -1771,7 +1771,7 @@ export default () => {
                   label: values => calculateProtocolContext(values, 'Will any {{ values.speciesLabel }} coming onto this protocol be classed as ‘continued use’?', 'Will any {{ values.speciesLabel }}  coming this protocol be classed as ‘continued use’?', 'Continued use coming onto the protocol'),
                   hint: values => calculateProtocolContext(values,'‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use or animals that have had procedures applied to them in order to be prepared for use in this protocol.',
                     '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use, or animals that have had procedures applied to them to prepare them for use in this protocol', '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use, or animals that have had procedures applied to them to prepare them for use in this protocol'),
-                  type: values => calculateProtocolContext(values, 'radio', 'radio', 'paragraph'),
+                  type: values => calculateProtocolContext(values, 'radio', 'radio', 'standard-radio'),
                   options: [
                     {
                       label: 'Yes',
