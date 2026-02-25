@@ -6,7 +6,7 @@ const listOfRoles = require('../../content/named-roles');
 module.exports = Object.entries(listOfRoles).reduce((acc, [key, value]) => {
   // 'pelh' role may need to be removed from the list of roles for named person but is not decided yet, so keeping it in the list for now. Once the decision is made, the code can be uncommented to remove 'pelh' role from the list of roles.
   // if (key !== 'pelh') {
-    acc[key] = value;
+  acc[key] = value;
   // }
   return acc;
 }, {});

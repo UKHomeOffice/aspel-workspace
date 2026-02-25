@@ -27,11 +27,11 @@ You will need to describe how they demonstrate the recommended skills and experi
 
 ### Conflict of interest declaration
 
-You must ensure the nominee has no significant conflict of interest, and their declaration form is held on record at the establishment.`,
+You must ensure the nominee has no significant conflict of interest, and their declaration form is held on record at the establishment.`
     },
     PELH: {
       title: 'Before you nominate someone for the PEL holder role',
-      desc:`\
+      desc: `\
 ### Before you nominate someone for the PEL holder role you must ensure:
 
 * you can describe why they are suitable for the role

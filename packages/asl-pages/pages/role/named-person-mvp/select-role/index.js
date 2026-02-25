@@ -5,7 +5,6 @@ const { clearSessionIfNotFromTask } = require('../../../common/middleware');
 const getSchema = require('./schema');
 const { buildModel } = require('../../../../lib/utils');
 const { PELH_OR_NPRC_ROLES } = require('../../helper');
-const mandatoryTrainingRequirementsForRoles = require('../mandatory-training/content/mandatory-training-requirements-for-roles');
 
 module.exports = (settings) => {
   const app = page({
@@ -99,7 +98,7 @@ module.exports = (settings) => {
 
   app.post('/', (req, res, next) => {
     return res.redirect(
-        req.buildRoute('role.namedPersonMvp.beforeYouApply')
+      req.buildRoute('role.namedPersonMvp.beforeYouApply')
     );
   });
 
