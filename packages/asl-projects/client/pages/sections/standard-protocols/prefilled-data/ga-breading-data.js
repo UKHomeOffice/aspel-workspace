@@ -45,8 +45,12 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => ({
                   '• other project licences authorised to breed and maintain the same animal type and provide them for use on other projects',
               },
             ],
-            reuseDetails:
-              'Animals that have come from another protocol in this project or another project will not be re-used in this protocol.'
+            reuseDetails: 'Animals that have come from another protocol in this project or another project will not be re-used in this protocol.',
+            gaas: true,
+            gaasTypes: 'Only strains experiencing mild severity phenotypes will be used in this protocol. ',
+            gaasHarmful: false
+
+
           }
         }
       ]

@@ -96,8 +96,11 @@ export const BuildProtocol = (protocolTemplate, project) => {
     animals: data.animals ? { ...data.animals } : {},
 
     // Species data - new arrays with new objects
-    species: [...projectSpecies],  // New array
-    speciesDetails: [...speciesDetails],  // New array
-    steps: [...steps]  // New array
+    species: [...projectSpecies],
+    speciesDetails: [...speciesDetails],
+    steps: [...steps],
+    gaas: Boolean(data.gaas),
+    'gaas-types': data.gaasTypes ?? '',
+    'gaas-harmful': Boolean(data.gaasHarmful)
   };
 };

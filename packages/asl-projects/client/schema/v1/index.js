@@ -1847,8 +1847,8 @@ Select each that applies`, 'Re-use’ describes using an animal for a new experi
               fields: [
                 {
                   name: 'gaas',
-                  label: 'Will this protocol use any genetically altered animals?',
-                  type: 'radio',
+                  label: values => calculateProtocolContext(values, 'Will this protocol use any genetically altered animals?', 'Will this protocol use any genetically altered animals?', 'Use of GA animals in this protocol'),
+                  type: values => calculateProtocolContext(values, 'radio', 'radio', 'standard-radio'),
                   className: 'smaller',
                   inline: true,
                   options: [
@@ -1858,13 +1858,16 @@ Select each that applies`, 'Re-use’ describes using an animal for a new experi
                       reveal: [
                         {
                           name: 'gaas-types',
-                          label: 'Which general types or strains will you be using and why?',
-                          type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                          label: values => calculateProtocolContext(values,'Which general types or strains will you be using and why?', 'Which general types or strains will you be using?', 'General types or strains to be used'),
+                          type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph')
                         },
                         {
                           name: 'gaas-harmful',
-                          label: 'Do you expect any of these GAAs to show a harmful phenotype with welfare consequences?',
-                          type: 'radio',
+                          label: values => calculateProtocolContext(values, 'Do you expect any of these GAAs to show a harmful phenotype with welfare consequences?', 'Do you expect any of these GA animals to show a harmful phenotype with welfare consequences?',
+                            'Expected harmful phenotype with welfare consequences'),
+                          type: values => calculateProtocolContext(values, 'radio', 'radio', 'standard-radio'),
+                          hint: values => calculateProtocolContext(values, null, 'If control measures prevent the harmful phenotype, you should answer ‘No’ - for example, if you are housing immunodeficient animals in a barrier environment',
+                            'If control measures prevent the harmful phenotype, you should answer ‘No’ - for example, if you are housing immunodeficient animals in a barrier environment'),
                           className: 'smaller',
                           inline: true,
                           options: [
@@ -1875,13 +1878,13 @@ Select each that applies`, 'Re-use’ describes using an animal for a new experi
                                 {
                                   name: 'gaas-harmful-justification',
                                   label: 'Why are each of these harmful phenotypes necessary?',
-                                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph')
                                 },
                                 {
                                   name: 'gaas-harmful-control',
-                                  label: 'How will you minimise the harms associated with these phenotypes?',
+                                  label: values => calculateProtocolContext(values, 'How will you minimise the harms associated with these phenotypes?', 'How will you minimise the harms associated with these phenotypes?', 'What control measures and humane endpoints will you use to minimise suffering due to the adverse phenotypes? '),
                                   hint: 'Ensure that you include any humane endpoints that you will use.',
-                                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph')
                                 }
                               ]
                             },
