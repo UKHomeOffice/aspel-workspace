@@ -496,16 +496,20 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
 export default function Steps({project, values, ...props}) {
   const isReviewStep = parseInt(useParams().step, 10) === 1;
   const [ allSteps, reusableSteps ] = hydrateSteps(project.protocols, values.steps, project.reusableSteps || {});
-  let steps;
-  if (props.pdf) {
-    steps = allSteps.filter(step => !step.deleted);
-  } else {
-    steps = removeNewDeleted(allSteps, props.previousProtocols.steps);
-    if (!props.editable && props.previousProtocols.steps.length > props.index) {
-      steps = addDeletedReusableSteps(steps, props.previousProtocols.steps[props.index], reusableSteps);
-    }
-  }
-  const [expanded, setExpanded] = useState(steps.map(() => false));
+  // project.protocols is an array. Get protocol-level flags from the current protocol `values`.
+  const { isStandardProtocol = false, standardProtocolType = '' } = values || {};
+   let steps;
+   if (props.pdf) {
+     steps = allSteps.filter(step => !step.deleted);
+   } else {
+     steps = removeNewDeleted(allSteps, props.previousProtocols.steps);
+     if (!props.editable && props.previousProtocols.steps.length > props.index) {
+       steps = addDeletedReusableSteps(steps, props.previousProtocols.steps[props.index], reusableSteps);
+     }
+   }
+   // Attach protocol flags to each step so components can access them via step.isStandardProtocol etc.
+   steps = (steps || []).map(step => ({ ...step, isStandardProtocol, standardProtocolType }));
+   const [expanded, setExpanded] = useState(steps.map(() => false));
 
   const setAllExpanded = (e) => {
     e.preventDefault();

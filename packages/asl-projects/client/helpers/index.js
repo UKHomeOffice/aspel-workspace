@@ -448,10 +448,13 @@ export const calculateProtocolContext = (
 ) => {
   // Normalize protocol context
   const context =
-    values.isStandardProtocol ? values : values.values
+    values?.isStandardProtocol !== undefined
+      ? values
+      : values?.values ?? values;
 
   const isStandardProtocol = context?.isStandardProtocol;
   const standardProtocolType = context?.standardProtocolType;
+console.log('context: ', context);
 
   if (isStandardProtocol === true && standardProtocolType === 'standard-ga-breeding') {
     console.log('calculateProtocolContext',  standardProtocol);

@@ -1924,9 +1924,26 @@ Select each that applies`, 'Re-use’ describes using an animal for a new experi
               fields: [
                 {
                   name: 'title',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor',
-                  label: 'Describe the procedures that will be carried out during this step.',
-                  hint: 'Explain where one or more steps are repeated in one experiment, list any alternative techniques within a step (e.g. dosing routes), and include all procedures performed under terminal anaesthesia.\n\nWhen describing the technical aspects of a step, be broad enough to be flexible when the variation does not impact on animal welfare (e.g. use "antibiotic" instead of "penicillin"). Finally, avoid specifying volumes and frequencies when they do not impact on animal welfare.'
+                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph'),
+                  label: values => calculateProtocolContext(values, 'Describe the procedures that will be carried out during this step.', 'Describe the procedures that will be carried out during this step', 'Permitted procedures for this step'),
+                  hint: values =>
+                    calculateProtocolContext(
+                      values,
+                      `Explain where one or more steps are repeated in one experiment, list any alternative techniques within a step (e.g. dosing routes), and include all procedures performed under terminal anaesthesia.
+
+When describing the technical aspects of a step, be broad enough to be flexible when the variation does not impact on animal welfare (e.g. use "antibiotic" instead of "penicillin"). Finally, avoid specifying volumes and frequencies when they do not impact on animal welfare.`,
+
+                      `You should: \n
+• explain where one or more steps are repeated in one experiment \n
+• list any alternative techniques within a step (for example dosing routes) \n
+• include all procedures performed under terminal anaesthesia \n
+
+When describing the technical aspects of a step, be broad enough to be flexible when the variation does not affect animal welfare (for example, use 'antibiotic' instead of 'penicillin').
+
+Avoid specifying volumes and frequencies when they do not affect animal welfare.`,
+
+                      null
+                    )
                 },
                 {
                   name: 'reference',
