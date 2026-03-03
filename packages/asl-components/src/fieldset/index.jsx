@@ -254,7 +254,7 @@ function Field({
     }
 
     return <Component
-        label={!labelAsLegend ? <Label name={name} snippetProps={snippetProps} label={label}/> : null}
+        label={!labelAsLegend && label ? <Label name={name} snippetProps={snippetProps} label={label}/> : null}
         hint={isUndefined(hint) ? <Snippet optional {...snippetProps}>{`fields.${name}.hint`}</Snippet> : hint}
         error={error && <Error name={name} renderers={props.renderers} error={error} snippetProps={snippetProps} />}
         value={fieldValue}
