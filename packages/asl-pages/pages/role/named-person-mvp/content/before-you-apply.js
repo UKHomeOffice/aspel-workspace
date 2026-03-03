@@ -1,4 +1,8 @@
-module.exports = {
+const { merge } = require('lodash');
+const baseContent = require('./index');
+
+module.exports = merge({}, baseContent, {
+  title: 'Before you nominate someone for a {{roleType}} role',
   supportingGuidanceTitle: 'Supporting guidance on GOV.UK',
   beforeYouNominateText: {
     NACWO: {
@@ -36,8 +40,10 @@ You must ensure the nominee has no significant conflict of interest, and their d
 
 * you can describe why they are suitable for the role
 * they have no significant conflict of interest, and you have sent the declaration form to ASRU Licensing: [ASRULicensing@homeoffice.gov.uk](mailto:ASRULicensing@homeoffice.gov.uk)`},
-    default: `\
-### Before you nominate someone for a {{roleType}} role you must ensure:
+    default: {
+      title: 'Before you nominate someone for a named person role',
+      desc: `\
+  ### Before you nominate someone for a named person role you must ensure:
 
 * they have agreed to be nominated
 * you have added them as an ASPeL user
@@ -59,9 +65,10 @@ There are mandatory training requirements for NACWO and NVS/SQP roles. Ensure th
 For NACWO and NVS/SQP, ensure the declaration form has been completed and a record kept at the establishment. You do not need to send the declaration form to ASRU.
 
 For PEL holder/NPRC, you need to send the form to ASRU Licensing: [ASRULicensing@homeoffice.gov.uk](mailto:ASRULicensing@homeoffice.gov.uk)`
+    }
   },
   buttons: {
     submit: 'Continue',
     cancel: 'Cancel'
   }
-};
+});

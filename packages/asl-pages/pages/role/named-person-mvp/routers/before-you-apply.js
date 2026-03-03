@@ -1,17 +1,16 @@
-const { page } = require('@asl/service/ui');
+const { Router } = require('express');
 const { form } = require('../../../common/routers');
 
-module.exports = (settings) => {
-  const app = page({
-    root: __dirname,
-    ...settings
-  });
+const FORM_ID = 'new-role-named-person';
+
+module.exports = () => {
+  const app = Router({ mergeParams: true });
 
   app.use(
     form({
       locals: (req, res, next) => {
         Object.assign(res.locals.static, {
-          roleType: req.session?.form?.[`${req.profile.id}-new-role-named-person`]?.values?.type?.toUpperCase() || 'UNKNOWN',
+          roleType: req.session?.form?.[FORM_ID]?.values?.type?.toUpperCase() || 'default',
           trainingDashboardUrl: req.buildRoute('training.dashboard')
         });
         next();
