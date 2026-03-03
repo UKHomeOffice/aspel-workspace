@@ -1,4 +1,3 @@
-const { omit } = require('lodash');
 const { Router } = require('express');
 const { clearSessionIfNotFromTask } = require('../../../common/middleware');
 const { buildModel } = require('../../../../lib/utils');

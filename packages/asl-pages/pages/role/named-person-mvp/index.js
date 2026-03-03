@@ -47,7 +47,6 @@ module.exports = (settings) => {
     next();
   });
 
-
   app.use('/:page', form({
     configure: (req, res, next) => {
       const rolesHeld = req.profile.roles
@@ -101,4 +100,3 @@ module.exports = (settings) => {
 };
 
 // module.exports.routes = routes;
-
