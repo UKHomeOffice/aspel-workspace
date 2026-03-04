@@ -27,7 +27,10 @@ import Expandable from '../../../components/expandable';
 import cloneDeep from 'lodash/cloneDeep';
 
 function isNewStep(step) {
-  return step && (isEqual(Object.keys(step).filter(a => a !== 'addExisting'), ['id']) || !isUndefined(step.addExisting));
+  const result = !step ||
+    isEqual(Object.keys(step).filter(a => a !== 'addExisting' && a !== 'isStandardProtocol' && a !== 'standardProtocolType'), ['id']) ||
+    !isUndefined(step.addExisting);
+  return result;
 }
 
 function renderUsedInProtocols(protocolIndexes) {
@@ -262,7 +265,7 @@ class Step extends Component {
               <div className="float-right">
                 {
                   length > 1 && (
-                    <span>Reorder: <a href="#" disabled={index === 0} onClick={this.moveUp}>Up</a> <a href="#" disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
+                    <span>Reorder: <a href="#" aria-disabled={index === 0} onClick={this.moveUp}>Up</a> <a href="#" aria-disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
                   )
                 }
                 {
@@ -294,7 +297,8 @@ class Step extends Component {
       </section>
     </>;
 
-    if (editable && isNewStep(values) && reusableSteps.length > 0) {
+    console.log(editable, isNewStep(values));
+    if (editable && isNewStep(values)) {
       const onSaveSelection = (selectedSteps) => {
         // Replace current step with selected
         const mappedSteps = flatMap(this.props.protocol.steps || [], step => {
@@ -438,7 +442,10 @@ const EditStepWarning = ({ editingReusableStep, protocol, step, completed }) => 
 };
 
 const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReviewStep, steps, reusableSteps, ...props }) => {
-  const lastStepIsNew = isNewStep(steps[steps.length - 1]);
+  // ensure steps is always an array inside the repeater
+  const safeSteps = steps || [];
+  // if there are no steps, lastStepIsNew should be false so add button is shown
+  const lastStepIsNew = safeSteps.length === 0 ? false : isNewStep(safeSteps[safeSteps.length - 1]);
   //By default, reusable steps are updated always, but this is not true, hence adding ability to turn off when not needed
   const [updateReusable, setUpdateReusable] = useState(true);
 
@@ -446,7 +453,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
     type="steps"
     singular="step"
     prefix={prefix}
-    items={steps}
+    items={safeSteps}
     softDelete={true}
     onBeforeAdd={() => {
       setUpdateReusable(false);
@@ -499,17 +506,25 @@ export default function Steps({project, values, ...props}) {
   // project.protocols is an array. Get protocol-level flags from the current protocol `values`.
   const { isStandardProtocol = false, standardProtocolType = '' } = values || {};
    let steps;
+   const prevProtocolsSteps = (props.previousProtocols && props.previousProtocols.steps) ? props.previousProtocols.steps : [];
    if (props.pdf) {
      steps = allSteps.filter(step => !step.deleted);
    } else {
-     steps = removeNewDeleted(allSteps, props.previousProtocols.steps);
-     if (!props.editable && props.previousProtocols.steps.length > props.index) {
-       steps = addDeletedReusableSteps(steps, props.previousProtocols.steps[props.index], reusableSteps);
+     // use prevProtocolsSteps (guarded) rather than accessing props.previousProtocols directly
+     steps = removeNewDeleted(allSteps, prevProtocolsSteps);
+     if (!props.editable && prevProtocolsSteps.length > props.index) {
+       steps = addDeletedReusableSteps(steps, prevProtocolsSteps[props.index], reusableSteps);
      }
    }
-   // Attach protocol flags to each step so components can access them via step.isStandardProtocol etc.
-   steps = (steps || []).map(step => ({ ...step, isStandardProtocol, standardProtocolType }));
-   const [expanded, setExpanded] = useState(steps.map(() => false));
+
+   // Attach protocol flags only when steps has content
+   if (steps && steps.length > 0) {
+     steps = steps.map(step => ({ ...step, isStandardProtocol, standardProtocolType }));
+   }
+
+   // ensure steps is always an array for downstream map usage
+   const safeSteps = steps || [];
+   const [expanded, setExpanded] = useState(safeSteps.map(() => false));
 
   const setAllExpanded = (e) => {
     e.preventDefault();
