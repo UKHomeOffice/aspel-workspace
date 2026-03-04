@@ -1947,7 +1947,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                 },
                 {
                   name: 'reference',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'text',
+                  type:  values => calculateProtocolContext(values, 'text', 'text','paragraph'),
                   label: 'Step reference',
                   hint: 'Provide a short reference for this step, e.g. \'Blood sampling\' or \'Transgene induction\'',
                   show: props => {
@@ -1973,9 +1973,13 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                 },
                 {
                   name: 'adverse',
-                  label: 'Do you expect this step to have adverse effects for the animals that are more than mild and transient?',
-                  hint: 'Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.',
-                  type: 'radio',
+                  label: values => calculateProtocolContext(values, 'Do you expect this step to have adverse effects for the animals that are more than mild and transient?', 'Do you expect this step to have adverse effects that are more than mild and short-term and not listed in General constraints? [links to General constraints section]',
+                    'Expected adverse effects that are more than mild and short-term and not listed in General constraints [links to General constraints section]'),
+                  hint: values => calculateProtocolContext(values, 'Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.',
+                    `Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.\n' +
+                    '\n' +
+                    '[Remove injection example as not appropriate - advice needed]`, null),
+                  type: values => calculateProtocolContext(values, 'radio', 'radio', 'standard-radio'),
                   inline: true,
                   className: 'smaller',
                   options: [
@@ -1987,19 +1991,19 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                           name: 'adverse-effects',
                           label: 'What are the likely adverse effects of this step?',
                           hint: 'State the expected adverse effect, including the likely incidence, and the anticipated degree and duration of suffering.',
-                          type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                          type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph'),
                         },
                         {
                           name: 'prevent-adverse-effects',
                           label: 'How will you monitor for, control, and limit any of these adverse effects?',
                           hint: 'If adverse effects can\'t be prevented, how will you attempt to ameliorate their initial signs?',
-                          type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                          type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph'),
                         },
                         {
                           name: 'endpoints',
                           label: 'What are the humane endpoints for this step?',
                           hint: 'This would be the point at which you would kill the animal to prevent further suffering.',
-                          type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                          type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph'),
                         }
                       ]
                     },
@@ -2012,7 +2016,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                 {
                   name: 'reusable',
                   label: 'Do you want to be able to use this step on other protocols?',
-                  type: 'radio',
+                  type: values => calculateProtocolContext(values, 'radio', 'radio', 'standard-radio'),
                   inline: true,
                   className: 'smaller',
                   options: [
