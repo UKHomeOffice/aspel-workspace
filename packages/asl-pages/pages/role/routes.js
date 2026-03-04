@@ -13,6 +13,7 @@ module.exports = {
   },
   namedPersonMvp: {
     path: '/named-person-mvp',
-    router: namedPersonMvp
+    router: namedPersonMvp,
+    breadcrumb: 'role.namedPersonMvp.selectRole'
   }
 };

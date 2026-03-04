@@ -83,7 +83,7 @@ module.exports = {
       confirm: 'Confirm',
       success: 'Success',
       namedPersonMvp: {
-        create: 'Add role'
+        selectRole: 'Add role'
       }
     },
     project: {

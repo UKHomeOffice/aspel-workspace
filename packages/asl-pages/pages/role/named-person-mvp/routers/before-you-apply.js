@@ -19,7 +19,7 @@ module.exports = () => {
   );
 
   app.post('/', (req, res, next) => {
-    return res.redirect(req.buildRoute('role.namedPersonMvp.create'));
+    return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'select-role' }));
   });
 
   return app;

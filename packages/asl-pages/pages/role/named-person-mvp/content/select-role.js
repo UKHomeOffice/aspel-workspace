@@ -1,5 +1,5 @@
 const { merge } = require('lodash');
-const baseContent = require('./index');
+const baseContent = require('../../../profile/content');
 
 module.exports = merge({}, baseContent, {
   title: 'Add role',

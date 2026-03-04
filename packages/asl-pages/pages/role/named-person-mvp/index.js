@@ -5,7 +5,7 @@ const schema = require('./schema');
 const { form } = require('../../common/routers');
 const { buildModel } = require('../../../lib/utils');
 const { omit } = require('lodash');
-
+const { PELH_OR_NPRC_ROLES } = require('../helper');
 const FORM_ID = 'new-role-named-person';
 
 const paths = {
@@ -47,15 +47,51 @@ module.exports = (settings) => {
     next();
   });
 
+  app.use('/', (req, res, next) => {
+    const query = {
+      model: 'establishment',
+      modelId: req.establishmentId,
+      onlyOpen: true,
+      action: 'replace'
+    };
+    req
+      .api('/tasks/related', { query })
+      .then((response) => {
+        return response.json.data || [];
+      })
+      .then((data) => {
+        res.locals.static = res.locals.static || {};
+        res.locals.static.pelhOrNprcTasks = data
+          .filter((task) => PELH_OR_NPRC_ROLES.includes(task.data.data.type))
+          .map((task) => ({
+            id: task.id,
+            type: task.data.data.type
+          }));
+        next();
+      })
+      .catch(next);
+  });
+
   app.use('/:page', form({
     configure: (req, res, next) => {
       const rolesHeld = req.profile.roles
         .filter((role) => role.establishmentId === req.establishmentId)
         .map((role) => role.type);
 
-      const addRoleTasks = res.locals.static.addRoleTasks || [];
+      const addRoleTasks = req.profile.openTasks
+        .filter(
+          (task) =>
+            task.data.model === 'role' && task.data.action === 'create'
+        )
+        .map((task) => ({
+          id: task.id,
+          type: task.data.data.type
+        }));
+
+      const pelOrNprcTasks = res.locals.static.pelhOrNprcTasks || [];
       const rolesRequested = addRoleTasks
-        .map((task) => task.type);
+        .map((task) => task.type)
+        .concat(pelOrNprcTasks.length > 0 ? PELH_OR_NPRC_ROLES : []);
 
       req.form.schema = {
         ...schema.selectRole(rolesHeld.concat(rolesRequested), req.establishment),
@@ -82,12 +118,6 @@ module.exports = (settings) => {
       next();
     }
   }));
-
-  app.post(paths.selectRole, (req, res) => {
-    return res.redirect(
-      req.buildRoute('role.namedPersonMvp', { suffix: 'before-you-apply' })
-    );
-  });
 
   app.use(paths.selectRole, router.selectRole());
   app.use(paths.beforeYouApply, router.beforeYouApply());
