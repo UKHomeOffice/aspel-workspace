@@ -262,7 +262,7 @@ class Step extends Component {
             stepId={values.id}
           />
           {
-            !values.reusable && editable && !deleted && <a href="#" onClick={this.editStep}>Edit step</a>
+            values.isStandardProtocol ? null : !values.reusable && editable && !deleted && <a href="#" onClick={this.editStep}>Edit step</a>
           }
           {
             values.reusable && editable && !deleted && (

@@ -93,6 +93,8 @@ class Review extends React.Component {
       />;
     }
 
+    console.log('reviewJS to see Editlink:',[label, this.props.values?.isStandardProtocol]);
+
     return (
       <div className={classnames('review', this.props.className)}>
         {
@@ -125,7 +127,7 @@ class Review extends React.Component {
         }
         {
           // repeaters have edit links on the individual fields
-          !this.props.readonly && this.props.type !== 'repeater' && (
+          this.props.values?.isStandardProtocol ? null : !this.props.readonly && this.props.type !== 'repeater' && (
             <Fragment>
               <p>
                 <Link
