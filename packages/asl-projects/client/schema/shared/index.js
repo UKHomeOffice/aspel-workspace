@@ -1,7 +1,7 @@
 export const transferOfAnimals = {
   title: 'Transfer and movement of animals',
   show: values => {
-    const hasAdditionalEstablishments = values['other-establishments'] && values.establishments && values.establishments.length;
+    const hasAdditionalEstablishments = !!values['other-establishments'];
     const isTransfer = !!values['transferToEstablishment'];
     return hasAdditionalEstablishments || isTransfer;
   },

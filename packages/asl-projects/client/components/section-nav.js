@@ -21,13 +21,14 @@ export default function SectionNav() {
   const project = useSelector(state => state.project);
   const location = useLocation();
   const sectionName = location.pathname.replace('/', '');
+  const navValues = { ...application, ...project };
   let subsections = isGranted ? getGrantedSubsections(schemaVersion) : getSubsections(schemaVersion);
 
   subsections = pickBy(subsections, s => {
     if (isGranted) {
-      return !s.granted.show || s.granted.show({ ...project, ...application });
+      return !s.granted.show || s.granted.show(navValues);
     }
-    return !s.show || s.show({ ...project, ...application });
+    return !s.show || s.show(navValues);
   });
 
   let subsectionKeys = Object.keys(subsections);
