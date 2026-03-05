@@ -2029,7 +2029,16 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                       value: false
                     }
                   ],
-                  show: props => !props.readonly
+                  show: props => {
+                    const readonly = props.readonly ?? false;
+                    if (readonly) {
+                      return false;
+                    }
+                    if (props.isStandardProtocol) {
+                      return true;
+                    }
+                    return true;
+                  }
                 }
               ]
             },

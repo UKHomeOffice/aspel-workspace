@@ -483,6 +483,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
   // Determine whether the last step is the "new placeholder" safely.
   const lastStep = safeRepeaterSteps.length ? safeRepeaterSteps[safeRepeaterSteps.length - 1] : null;
   const lastStepIsNew = lastStep ? isNewStep(lastStep) : false;
+
   //By default, reusable steps are updated always, but this is not true, hence adding ability to turn off when not needed
   const [updateReusable, setUpdateReusable] = useState(true);
 
