@@ -71,7 +71,7 @@ export const BuildProtocol = (protocolTemplate, project) => {
         'adverse-effects': stepObj['adverse-effects'] ?? '',
         'prevent-adverse-effects': stepObj['prevent-adverse-effects'] ?? '',
         completed: Boolean(stepObj.completed),
-        isStandard: Boolean(stepObj.isStandard),
+        isStandardProtocol: Boolean(stepObj.isStandardProtocol),
         standardProtocolType: stepObj.standardProtocolType ?? '',
         endpoints: stepObj.endpoints ?? '',
         readonly: Boolean(stepObj.readonly),

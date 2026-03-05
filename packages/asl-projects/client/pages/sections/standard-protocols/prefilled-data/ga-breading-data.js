@@ -9,7 +9,7 @@ const generatePrefilledSteps = (isStandard = false) => [
     completed: isStandard,
     'adverse-effects': '',
     'prevent-adverse-effects': '',
-    isStandard: isStandard,
+    isStandardProtocol: isStandard,
     standardProtocolType: isStandard ? 'standard' : 'editable',
     endpoints: '',
     readonly: isStandard,
@@ -27,7 +27,7 @@ const generatePrefilledSteps = (isStandard = false) => [
     optional: true,
     adverse: false,
     completed: isStandard,
-    isStandard: isStandard,
+    isStandardProtocol: isStandard,
     standardProtocolType: isStandard ? 'standard' : 'editable',
     'adverse-effects': '',
     'prevent-adverse-effects': '',
@@ -41,7 +41,7 @@ const generatePrefilledSteps = (isStandard = false) => [
     optional: false,
     adverse: false,
     completed: isStandard,
-    isStandard: isStandard,
+    isStandardProtocol: isStandard,
     standardProtocolType: isStandard ? 'standard' : 'editable',
     'adverse-effects': '',
     'prevent-adverse-effects': '',
@@ -58,7 +58,7 @@ const generatePrefilledSteps = (isStandard = false) => [
     optional: false,
     adverse: false,
     completed: isStandard,
-    isStandard: isStandard,
+    isStandardProtocol: isStandard,
     standardProtocolType: isStandard ? 'standard' : 'editable',
     'adverse-effects': '',
     'prevent-adverse-effects': '',
@@ -74,7 +74,7 @@ const generatePrefilledSteps = (isStandard = false) => [
     optional: true,
     adverse: false,
     completed: isStandard,
-    isStandard: isStandard,
+    isStandardProtocol: isStandard,
     standardProtocolType: isStandard ? 'standard' : 'editable',
     'adverse-effects': '',
     'prevent-adverse-effects': '',
@@ -144,4 +144,5 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => {
     ]
   };
 }
+
 

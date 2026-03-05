@@ -456,12 +456,12 @@ export const calculateProtocolContext = (
   const standardProtocolType = context?.standardProtocolType;
 console.log('context: ', context);
 
-  if (isStandardProtocol === true && standardProtocolType === 'standard-ga-breeding') {
+  if (isStandardProtocol === true && standardProtocolType === 'standard') {
     console.log('calculateProtocolContext',  standardProtocol);
     return standardProtocol;
   }
 
-  if (isStandardProtocol === false && standardProtocolType === 'editable-ga-breeding') {
+  if (isStandardProtocol === false && standardProtocolType === 'editable') {
     console.log('calculateProtocolContext',  editableProtocol);
     return editableProtocol;
   }
