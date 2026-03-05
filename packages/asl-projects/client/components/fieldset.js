@@ -21,6 +21,8 @@ const Fieldset = ({
     return prop;
   };
 
+  console.log('Rendering Fieldset with values:', values);
+
   return (
     <fieldset>
       {fields.map(f => {
