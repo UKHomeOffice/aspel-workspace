@@ -10,7 +10,6 @@ import RaSidePanel from '../components/ra-side-panel';
 import RAHint from '../components/ra-hint';
 import Readonly from './readonly';
 import { getSubsections } from '../schema';
-import { FEATURE_FLAG_STANDARD_PROTOCOLS, useFeatureFlag } from '@asl/service/ui/feature-flag';
 import StandardProtocols from './sections/standard-protocols';
 
 const mapStateToProps = (
