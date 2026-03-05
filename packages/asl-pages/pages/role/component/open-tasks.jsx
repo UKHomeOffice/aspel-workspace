@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, Snippet } from '@ukhomeoffice/asl-components';
 import namedRoles from '../content/named-roles';
 
-const OpenTasks = ({ roleTasks }) => {
+const OpenTasks = ({ roleTasks = [] }) => {
   const tasks = Array.isArray(roleTasks) ? roleTasks : [];
 
   if (tasks.length < 1) {

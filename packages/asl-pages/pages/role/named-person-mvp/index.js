@@ -8,6 +8,11 @@ const { omit } = require('lodash');
 const { PELH_OR_NPRC_ROLES } = require('../helper');
 const FORM_ID = 'new-role-named-person';
 
+const getRoleSchema = (roles = [], establishment) => ({
+  ...schema.selectRole(roles, establishment),
+  rcvsNumber: {}
+});
+
 const paths = {
   beforeYouApply: '/before-you-apply',
   selectRole: '/select-role',
@@ -42,7 +47,7 @@ module.exports = (settings) => {
   app.use((req, res, next) => {
     req.model = {
       id: FORM_ID,
-      ...buildModel(schema)
+      ...buildModel(getRoleSchema([], req.establishment))
     };
     next();
   });
@@ -93,10 +98,7 @@ module.exports = (settings) => {
         .map((task) => task.type)
         .concat(pelOrNprcTasks.length > 0 ? PELH_OR_NPRC_ROLES : []);
 
-      req.form.schema = {
-        ...schema.selectRole(rolesHeld.concat(rolesRequested), req.establishment),
-        rcvsNumber: {}
-      };
+      req.form.schema = getRoleSchema(rolesHeld.concat(rolesRequested), req.establishment);
 
       req.model.openTasks = []; // hide the open tasks warning on role forms as it is not applicable
 
