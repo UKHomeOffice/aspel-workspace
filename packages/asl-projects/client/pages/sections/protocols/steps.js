@@ -56,11 +56,7 @@ function isNewStep(step) {
   }
 
   // Backwards compatible: if addExisting is defined treat as placeholder
-  if (!isUndefined(step.addExisting)) {
-    return true;
-  }
-
-  return false;
+  return !isUndefined(step.addExisting);
 }
 
 function renderUsedInProtocols(protocolIndexes) {
