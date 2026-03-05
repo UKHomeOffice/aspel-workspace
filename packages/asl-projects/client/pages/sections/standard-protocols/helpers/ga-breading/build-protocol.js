@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 import flatten from 'lodash/flatten';
 import values from 'lodash/values';
 import castArray from 'lodash/castArray';
-import uniqBy from 'lodash/uniqBy';
 import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 
 export const BuildProtocol = (protocolTemplate, project) => {
@@ -71,7 +70,11 @@ export const BuildProtocol = (protocolTemplate, project) => {
         adverse: Boolean(stepObj.adverse),
         'adverse-effects': stepObj['adverse-effects'] ?? '',
         'prevent-adverse-effects': stepObj['prevent-adverse-effects'] ?? '',
+        completed: Boolean(stepObj.completed),
+        isStandard: Boolean(stepObj.isStandard),
+        standardProtocolType: stepObj.standardProtocolType ?? '',
         endpoints: stepObj.endpoints ?? '',
+        readonly: Boolean(stepObj.readonly),
         reusable: Boolean(stepObj.reusable)
       };
     });
@@ -98,7 +101,7 @@ export const BuildProtocol = (protocolTemplate, project) => {
     // Species data - new arrays with new objects
     species: [...projectSpecies],
     speciesDetails: [...speciesDetails],
-    // steps: [...steps],
+    steps: [...steps],
     gaas: Boolean(data.gaas),
     'gaas-types': data.gaasTypes ?? '',
     'gaas-harmful': Boolean(data.gaasHarmful)

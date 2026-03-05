@@ -2030,7 +2030,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                     }
                   ],
                   show: props => {
-                    const readonly = props.readonly ?? false;
+                    const readonly = props.readonly;
                     if (readonly) {
                       return false;
                     }
