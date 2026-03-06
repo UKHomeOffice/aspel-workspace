@@ -312,17 +312,18 @@ class Step extends Component {
             )
           }
           <h3>
-            Step { !values.deleted && number + 1 }
-            {
-              <a href="#" className={classnames('inline-block', { restore: values.deleted })} onClick={this.props.restoreItem}>{values.deleted ? ' Restore' : ''}</a>
-            }
-            {(pdf || readonly) && values.reference && (<Fragment>: { values.reference }</Fragment>)}
+            Step {!values.deleted && `${number + 1}: ${values.reference ? ` ${values.reference}` : ''}`}
+
+            <a href="#" className={classnames('inline-block', { restore: values.deleted })} onClick={this.props.restoreItem}>{values.deleted ? ' Restore' : ''}</a>
+
+            {(pdf || readonly) && values.reference && (
+              <Fragment>: {values.reference}</Fragment>)}
             {
               completed && !isUndefined(values.optional) &&
               <span className="light smaller">{` (${values.optional === true ? 'optional' : 'mandatory'})`}</span>
             }
             {
-              !pdf && readonly && repeatedFrom && <div className="light smaller">{`Repeated from protocol ${repeatedFrom}`}</div>
+              !pdf && readonly && repeatedFrom && (<div className="light smaller">{`Repeated from protocol ${repeatedFrom}`}</div>)
             }
           </h3>
           {
