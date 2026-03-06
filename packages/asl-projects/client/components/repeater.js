@@ -1,4 +1,4 @@
-import React, { Children, cloneElement, Fragment, useCallback, useMemo, useState } from 'react';
+import React, { Children, cloneElement, Fragment, useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import classnames from 'classnames';
 import { useDispatch } from 'react-redux';
 import { Button } from '@ukhomeoffice/react-components';
@@ -13,32 +13,32 @@ import { useHistory } from 'react-router-dom';
 const noopPromise = () => Promise.resolve();
 
 export default ({
-  children,
-  type = 'item',
-  prefix,
-  singular = 'item',
-  addProtocol = false,
-  addOnInit = true,
-  addAnother = true,
-  addButtonBefore = false,
-  addButtonAfter = false,
-  addAnotherLabel,
-  addAnotherClassname,
-  softDelete = false,
-  itemProps,
-  expanded,
-  onSave = noopPromise,
-  onBeforeAdd = noopPromise,
-  onAfterAdd = noopPromise,
-  onBeforeRemove = noopPromise,
-  onAfterRemove = noopPromise,
-  onBeforeRestore = noopPromise,
-  onAfterRestore = noopPromise,
-  ...props
-}) => {
-
+                  children,
+                  type = 'item',
+                  prefix,
+                  singular = 'item',
+                  addProtocol = false,
+                  addOnInit = true,
+                  addAnother = true,
+                  addButtonBefore = false,
+                  addButtonAfter = false,
+                  addAnotherLabel,
+                  addAnotherClassname,
+                  softDelete = false,
+                  itemProps,
+                  expanded,
+                  onSave = noopPromise,
+                  onBeforeAdd = noopPromise,
+                  onAfterAdd = noopPromise,
+                  onBeforeRemove = noopPromise,
+                  onAfterRemove = noopPromise,
+                  onBeforeRestore = noopPromise,
+                  onAfterRestore = noopPromise,
+                  ...props
+                }) => {
   const history = useHistory();
   const standardProtocolsEnabled = useFeatureFlag(FEATURE_FLAG_STANDARD_PROTOCOLS);
+  const addProtocolHandled = useRef(false);
 
   const onBeforeDuplicate = useCallback(
     (items, uuid) => props.onBeforeDuplicate ? props.onBeforeDuplicate(items, uuid) : Promise.resolve(items),
@@ -51,23 +51,23 @@ export default ({
   );
 
   const [items, setItems] = useState(props.items ?? []);
-  useMemo(() => {
+  useEffect(() => {
     setItems(props.items ?? []);
-  }, [setItems, props.items]);
+  }, [props.items]);
 
   const dispatch = useDispatch();
   const dispatchError = useCallback((message) => {
     throwError(message)(dispatch);
-  }, []);
+  }, [dispatch]);
 
-  const save = useCallback((newItems) => onSave(newItems ?? items), [onSave]);
+  const save = useCallback((newItems) => onSave(newItems ?? items), [onSave, items]);
 
   const update = useCallback((newItems) =>
-    Promise.resolve()
-      .then(() => setItems(newItems))
-      .then(() => save(newItems))
-      .catch(err => dispatchError(err.message || 'Error updating items')),
-  [setItems, save, dispatchError]
+      Promise.resolve()
+        .then(() => setItems(newItems))
+        .then(() => save(newItems))
+        .catch(err => dispatchError(err.message || 'Error updating items')),
+    [save, dispatchError]
   );
 
   const addItem = useCallback(() => {
@@ -76,12 +76,35 @@ export default ({
       return Promise.resolve();
     }
 
-    Promise.resolve()
+    return Promise.resolve()
       .then(onBeforeAdd)
-      .then(() => update([ ...items, { id: uuid(), ...(itemProps ?? {}) } ]))
+      .then(() => update([...items, { id: uuid(), ...(itemProps ?? {}) }]))
       .then(onAfterAdd)
       .catch(err => dispatchError(err.message || 'Error adding item'));
-  }, [onBeforeAdd, update, items, itemProps, onAfterAdd, dispatchError]);
+  }, [addProtocol, type, standardProtocolsEnabled, history, onBeforeAdd, update, items, itemProps, onAfterAdd, dispatchError]);
+
+  // Handle addProtocol flag - only run when addProtocol becomes true
+  useEffect(() => {
+    if (addProtocol && !addProtocolHandled.current) {
+      addProtocolHandled.current = true;
+      addItem();
+    }
+  }, [addProtocol, addItem]);
+
+  // Reset the handled flag when addProtocol becomes false
+  useEffect(() => {
+    if (!addProtocol) {
+      addProtocolHandled.current = false;
+    }
+  }, [addProtocol]);
+
+  // Handle addOnInit for empty items
+  useEffect(() => {
+    if (addOnInit && items.length === 0 && !addProtocolHandled.current) {
+      addProtocolHandled.current = true;
+      addItem();
+    }
+  }, [addOnInit, items.length, addItem]);
 
   const updateItem = useCallback((index, updated) =>
     update(items.map((item, i) => index === i
@@ -179,12 +202,6 @@ export default ({
       ]);
     }
   }, [update, items]);
-
-  useMemo(() => {
-    if (addProtocol || (addOnInit && !items.length)) {
-      addItem();
-    }
-  }, [] /* Only run on first render */);
 
   const addButton =
     <Button

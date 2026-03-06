@@ -8,7 +8,13 @@ import { getLegacySpeciesLabel } from '../../../helpers';
 import { filterSpeciesByActive } from '../protocols/animals';
 
 function uppercaseFirst(str) {
-  return `${str.charAt(0).toUpperCase()}${str.substring(1)}`;
+  const value = Array.isArray(str) ? str[0] : str;
+
+  if (typeof value !== 'string') {
+    return '';
+  }
+
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 export function Protocol({ protocol, number, sections, isLegacy, project, children, className }) {
