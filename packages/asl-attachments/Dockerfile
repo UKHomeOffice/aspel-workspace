@@ -26,8 +26,9 @@ RUN --mount=type=secret,id=token \
     ART_AUTH_TOKEN=`cat /run/secrets/token` \
     GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` \
     npm update npm \
-    npm ci --omit=dev --ignore-scripts --loglevel=verbose \
-    npm install sharp
+    npm ci --omit=dev --ignore-scripts --loglevel=verbose
+
+RUN npm rebuild sharp --force
 
 FROM quay.io/ukhomeofficedigital/asl-base:v22.22.0
 
