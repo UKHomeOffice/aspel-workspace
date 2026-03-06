@@ -28,6 +28,8 @@ RUN --mount=type=secret,id=token \
     npm update npm \
     npm ci --omit=dev --ignore-scripts --loglevel=verbose
 
+RUN npm rebuild sharp --force
+
 FROM quay.io/ukhomeofficedigital/asl-base:v22.22.0
 
 RUN apk upgrade --no-cache
