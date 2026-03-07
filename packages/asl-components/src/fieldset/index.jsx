@@ -131,6 +131,7 @@ function Field({
     error,
     inputType,
     value,
+    schema,
     label,
     hint,
     formatHint,
@@ -253,8 +254,13 @@ function Field({
         label = getLabelFromRenderers(props.renderers, name, 'label')?.label;
     }
 
+    let hideLbl = false;
+    if (schema && name) {
+        hideLbl = schema[name]?.hideLabel;
+    }
+
     return <Component
-        label={!labelAsLegend ? <Label name={name} snippetProps={snippetProps} label={label} /> : null}
+        label={!labelAsLegend && !hideLbl ? <Label name={name} snippetProps={snippetProps} label={label} /> : null}
         hint={isUndefined(hint) ? <Snippet optional {...snippetProps}>{`fields.${name}.hint`}</Snippet> : hint}
         error={error && <Error name={name} renderers={props.renderers} error={error} snippetProps={snippetProps} />}
         value={fieldValue}
@@ -287,6 +293,7 @@ export default function Fieldset({ schema, errors = {}, formatters = {}, model, 
                                 {...field}
                                 key={key}
                                 values={model}
+                                schema={schema}
                                 value={model[fieldName]}
                                 error={errors[fieldName]}
                                 errors={errors}

@@ -4,6 +4,7 @@ module.exports = {
   isExemption: {
     inputType: 'radioGroup',
     format: toBoolean,
+    hideLabel: true,
     options: [
       {
         label: 'Add a training certificate',
