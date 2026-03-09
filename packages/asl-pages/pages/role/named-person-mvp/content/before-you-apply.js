@@ -106,10 +106,10 @@ module.exports = merge({}, baseContent, {
 * the establishment licence (PEL) holder (or legally accountable person) supports the nomination
 * you can describe why they are suitable for the role
 * you have added them as an ASPeL user`
-    },
-    buttons: {
-      submit: 'Continue',
-      cancel: 'Cancel'
     }
+  },
+  buttons: {
+    submit: 'Continue',
+    cancel: 'Cancel'
   }
 });
