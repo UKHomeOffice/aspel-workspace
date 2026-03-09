@@ -5,10 +5,10 @@ import { Snippet, Header, Form, SupportingLinks } from '@ukhomeoffice/asl-compon
 const Page = () => {
 
   const { content, profile, roleType } = useSelector(state => state.static, shallowEqual);
-  const roleGuide = content.beforeYouNominateText.roleGuides[roleType] || {};
-  const isSharedTemplateRole = !!Object.keys(roleGuide).length;
-  const titleKey = isSharedTemplateRole ? 'beforeYouNominateText.shared.title' : `beforeYouNominateText.${roleType}.title`;
-  const descKey = isSharedTemplateRole ? 'beforeYouNominateText.shared.desc' : `beforeYouNominateText.${roleType}.desc`;
+  const templateRole = content.beforeYouNominateText.templateRoles[roleType] || {};
+  const templateKey = templateRole.contentKey;
+  const titleKey = templateKey ? `beforeYouNominateText.${templateKey}.title` : `beforeYouNominateText.${roleType}.title`;
+  const descKey = templateKey ? `beforeYouNominateText.${templateKey}.desc` : `beforeYouNominateText.${roleType}.desc`;
 
   return (
     <div>
@@ -19,14 +19,14 @@ const Page = () => {
           <Form cancelLink="profile.read">
             <Header
               title={
-                <Snippet fallback="beforeYouNominateText.default.title" {...roleGuide}>
+                <Snippet {...templateRole}>
                   {titleKey}
                 </Snippet>
               }
             />
             <div className="govuk-body">
               {
-                <Snippet fallback="beforeYouNominateText.default.desc" {...roleGuide}>
+                <Snippet {...templateRole}>
                   {descKey}
                 </Snippet>
               }

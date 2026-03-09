@@ -33,45 +33,50 @@ You will need to describe how they demonstrate the recommended skills and experi
 You must ensure the nominee has no significant conflict of interest, and their declaration form is held on record at the establishment.`
 };
 
+const sharedRoleGuideNominationText = {
+  title: 'Before you nominate someone for an {{roleType}} role',
+  desc: `\
+### Before you nominate someone for an {{roleType}} role you must ensure:
+
+* they have agreed to be nominated
+* the establishment licence (PEL) holder (or legally accountable person) supports the nomination
+* you can describe how they demonstrate the recommended skills and experience set out in the [{{roleGuideLabel}}]({{roleGuideUrl}})
+* you have added them as an ASPeL user`
+};
+
 module.exports = merge({}, baseContent, {
   title: 'Before you nominate someone for a {{roleType}} role',
   supportingGuidanceTitle: 'Supporting guidance on GOV.UK',
   beforeYouNominateText: {
     shared: sharedNamedPersonNominationText,
-    roleGuides: {
+    sharedRoleGuide: sharedRoleGuideNominationText,
+    templateRoles: {
       NACWO: {
+        contentKey: 'shared',
         roleGuideLabel: 'NACWO role guide',
         roleGuideUrl: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-animal-care-and-welfare-officer-role'
       },
       NVS: {
+        contentKey: 'shared',
         roleGuideLabel: 'NVS role guide',
         roleGuideUrl: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-veterinary-surgeon-role'
       },
       SQP: {
+        contentKey: 'shared',
         roleGuideLabel: 'SQP role guide',
         roleGuideUrl: 'https://www.gov.uk/guidance/nominate-someone-for-a-suitably-qualified-person-role',
         requiresVetAvailabilityCheck: true
+      },
+      NIO: {
+        contentKey: 'sharedRoleGuide',
+        roleGuideLabel: 'NIO role guide',
+        roleGuideUrl: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-information-officer-role'
+      },
+      NTCO: {
+        contentKey: 'sharedRoleGuide',
+        roleGuideLabel: 'NTCO role guide',
+        roleGuideUrl: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-training-and-competency-officer-role'
       }
-    },
-    NIO: {
-      title: 'Before you nominate someone for an NIO role',
-      desc: `\
-### Before you nominate someone for a NIO role you must ensure:
-
-* they have agreed to be nominated
-* the establishment licence (PEL) holder (or legally accountable person) supports the nomination
-* you can describe how they demonstrate the recommended skills and experience set out in the [NIO role guide](https://www.gov.uk/guidance/nominate-someone-for-a-named-information-officer-role)
-* you have added them as an ASPeL user`
-    },
-    NTCO: {
-      title: 'Before you nominate someone for an NTCO role',
-      desc: `\
-### Before you nominate someone for an NTCO role you must ensure:
-
-* they have agreed to be nominated
-* the establishment licence (PEL) holder (or legally accountable person) supports the nomination
-* you can describe how they demonstrate the recommended skills and experience set out in the [NTCO role guide](https://www.gov.uk/guidance/nominate-someone-for-a-named-training-and-competency-officer-role)
-* you have added them as an ASPeL user`
     },
     NPRC: {
       title: 'Before you nominate someone for an NPRC role',

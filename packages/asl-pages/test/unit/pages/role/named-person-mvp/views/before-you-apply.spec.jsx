@@ -66,6 +66,16 @@ describe('Before you apply page', () => {
     );
   });
 
+  test('renders shared NIO content with the NIO role guide link', () => {
+    renderPage('NIO');
+
+    expect(screen.getByText('Before you nominate someone for an NIO role')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'NIO role guide' })).toHaveAttribute(
+      'href',
+      'https://www.gov.uk/guidance/nominate-someone-for-a-named-information-officer-role'
+    );
+  });
+
   test('renders explicit PELH content without the shared role guide template', () => {
     renderPage('PELH');
 
