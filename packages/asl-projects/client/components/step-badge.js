@@ -8,38 +8,49 @@ export default function StepBadge(props) {
     return null;
   }
 
-  let stepIds = [];
-  let previousIndex = -1;
-  steps.forEach(protocol => {
-    protocol.forEach((step, i) => {
-      if (step.id === props.fields.id && props.position !== i) {
-        previousIndex = i;
-      }
-      stepIds.push(step.id);
-    });
-  });
+  const collectSteps = (protocols = []) => {
+    console.log('collectSteps input protocols:', protocols);
 
-  let grantedIndex = -1;
-  let grantedStepIds = [];
-  grantedSteps.forEach(protocol => {
-    protocol.forEach((step, i) => {
-      if (step.id === props.fields.id && props.position !== i) {
-        grantedIndex = i;
-      }
-      grantedStepIds.push(step.id);
-    });
-  });
+    let index = -1;
+    const ids = [];
 
-  let firstIndex = -1;
-  let firstStepIds = [];
-  firstSteps.forEach(protocol => {
-    protocol.forEach((step, i) => {
-      if (step.id === props.fields.id && props.position !== i) {
-        firstIndex = i;
+    if (!Array.isArray(protocols)) {
+      console.warn('protocols is not an array:', protocols);
+      return { index, ids };
+    }
+
+    protocols.forEach((protocol, protocolIndex) => {
+      console.log(`protocol[${protocolIndex}] value:`, protocol);
+
+      if (!Array.isArray(protocol)) {
+        console.warn(`protocol[${protocolIndex}] is not an array:`, protocol);
+        return;
       }
-      firstStepIds.push(step.id);
+
+      protocol.forEach((step, i) => {
+        console.log(`step at protocol[${protocolIndex}][${i}]`, step);
+
+        if (step?.id === props.fields.id && props.position !== i) {
+          console.log('Matched step id:', step.id, 'index:', i);
+          index = i;
+        }
+
+        if (step?.id) {
+          ids.push(step.id);
+        } else {
+          console.warn('Step without id:', step);
+        }
+      });
     });
-  });
+
+    console.log('collectSteps result:', { index, ids });
+
+    return { index, ids };
+  };
+
+  const { index: previousIndex, ids: stepIds } = collectSteps(steps);
+  const { index: grantedIndex, ids: grantedStepIds } = collectSteps(grantedSteps);
+  const { index: firstIndex, ids: firstStepIds } = collectSteps(firstSteps);
 
   const field = props.changeFieldPrefix.substr(0, props.changeFieldPrefix.length - 1)
 
