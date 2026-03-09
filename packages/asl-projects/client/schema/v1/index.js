@@ -1979,7 +1979,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                     `Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.\n' +
                     '\n' +
                     '[Remove injection example as not appropriate - advice needed]`, null),
-                  type: values => calculateProtocolContext(values, 'radio', 'radio', 'standard-radio'),
+                  type: 'standard-radio',
                   inline: true,
                   className: 'smaller',
                   options: [
@@ -2016,7 +2016,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                 {
                   name: 'reusable',
                   label: 'Do you want to be able to use this step on other protocols?',
-                  type: values => calculateProtocolContext(values, 'radio', 'radio', 'standard-radio'),
+                  type: 'standard-radio',
                   inline: true,
                   className: 'smaller',
                   options: [
@@ -2030,14 +2030,8 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                     }
                   ],
                   show: props => {
-                    const readonly = props.readonly;
-                    if (readonly) {
-                      return false;
-                    }
-                    if (props.isStandardProtocol) {
-                      return true;
-                    }
-                    return true;
+                    const { readonly, isStandardProtocol } = props;
+                    return !(readonly || isStandardProtocol);
                   }
                 }
               ]
