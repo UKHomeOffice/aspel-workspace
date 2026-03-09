@@ -254,10 +254,7 @@ function Field({
         label = getLabelFromRenderers(props.renderers, name, 'label')?.label;
     }
 
-    let hideLbl = false;
-    if (schema && name) {
-        hideLbl = schema[name]?.hideLabel;
-    }
+    const hideLabel = schema?.[name]?.hideLabel;
 
     return <Component
         label={!labelAsLegend && !hideLbl ? <Label name={name} snippetProps={snippetProps} label={label} /> : null}
