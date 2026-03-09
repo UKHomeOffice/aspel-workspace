@@ -273,13 +273,17 @@ class Step extends Component {
     }</>;
 
     const repeatedFrom = getRepeatedFromProtocolIndex(values, protocol.id);
+
     const canReorder =
       !values.isStandardProtocol &&
       editable &&
       completed &&
       !deleted &&
       !values.deleted;
-    const isOptional = (values.optional === true);
+
+    const isMandatory =
+      values?.optional === false &&
+      ['standard', 'editable'].includes(values?.standardProtocolType);
 
     const step = <>
       {
@@ -313,9 +317,9 @@ class Step extends Component {
                     </span>
                   )
                 }
-                {
-                  !isOptional ? null : length > 1 && <span> | <a href="#" onClick={this.removeItem}>Remove</a></span>
-                }
+                {!isMandatory  && length > 1 && (
+                  <span> | <a href="#" onClick={this.removeItem}>Remove</a></span>
+                )}
               </div>
             )
           }
@@ -328,7 +332,7 @@ class Step extends Component {
               <Fragment>: {values.reference}</Fragment>)}
             {
               completed && !isUndefined(values.optional) &&
-              <span className="light smaller">{` (${isOptional ? 'optional' : 'mandatory'})`}</span>
+              <span className="light smaller">{` (${values.optional === true ? 'optional' : 'mandatory'})`}</span>
             }
             {
               !pdf && readonly && repeatedFrom && (<div className="light smaller">{`Repeated from protocol ${repeatedFrom}`}</div>)
