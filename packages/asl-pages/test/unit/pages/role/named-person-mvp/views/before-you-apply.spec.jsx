@@ -66,6 +66,21 @@ describe('Before you apply page', () => {
     );
   });
 
+  test('renders shared SQP content with the vet availability check and SQP role guide link', () => {
+    renderPage('SQP');
+
+    expect(screen.getByText('Before you nominate someone for a SQP role')).toBeInTheDocument();
+    expect(screen.getByText('there is no vet available with the right expertise')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'SQP role guide' })).toHaveAttribute(
+      'href',
+      'https://www.gov.uk/guidance/nominate-someone-for-a-suitably-qualified-person-role'
+    );
+    expect(screen.getByRole('link', { name: 'training record in ASPeL' })).toHaveAttribute(
+      'href',
+      '/training/dashboard'
+    );
+  });
+
   test('renders shared NIO content with the NIO role guide link', () => {
     renderPage('NIO');
 
@@ -76,6 +91,29 @@ describe('Before you apply page', () => {
     );
   });
 
+  test('renders shared NTCO content without the mandatory training section', () => {
+    renderPage('NTCO');
+
+    expect(screen.getByText('Before you nominate someone for an NTCO role')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'NTCO role guide' })).toHaveAttribute(
+      'href',
+      'https://www.gov.uk/guidance/nominate-someone-for-a-named-training-and-competency-officer-role'
+    );
+    expect(screen.queryByRole('link', { name: 'training record in ASPeL' })).not.toBeInTheDocument();
+  });
+
+  test('renders explicit NPRC content without the shared role guide template', () => {
+    renderPage('NPRC');
+
+    expect(screen.getByRole('heading', { name: 'Before you nominate someone for an NPRC role you must ensure:' })).toBeInTheDocument();
+    expect(screen.getByText('the legally accountable person supports the nomination')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'ASRULicensing@homeoffice.gov.uk' })).toHaveAttribute(
+      'href',
+      'mailto:ASRULicensing@homeoffice.gov.uk'
+    );
+    expect(screen.queryByRole('link', { name: 'NPRC role guide' })).not.toBeInTheDocument();
+  });
+
   test('renders explicit PELH content without the shared role guide template', () => {
     renderPage('PELH');
 
@@ -83,5 +121,14 @@ describe('Before you apply page', () => {
     expect(screen.queryByRole('link', { name: 'NACWO role guide' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'NVS role guide' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'SQP role guide' })).not.toBeInTheDocument();
+  });
+
+  test('renders explicit HOLC content without the shared role guide template', () => {
+    renderPage('HOLC');
+
+    expect(screen.getByRole('heading', { name: 'Before you nominate someone for a HOLC role you must ensure:' })).toBeInTheDocument();
+    expect(screen.getByText('you can describe why they are suitable for the role')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'HOLC role guide' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'training record in ASPeL' })).not.toBeInTheDocument();
   });
 });
