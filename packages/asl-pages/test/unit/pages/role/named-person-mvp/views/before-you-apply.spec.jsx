@@ -69,8 +69,9 @@ describe('Before you apply page', () => {
   test('renders explicit PELH content without the shared role guide template', () => {
     renderPage('PELH');
 
-    expect(screen.getByText('Before you nominate someone for the PEL holder role')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Before you nominate someone for the PEL holder role you must ensure:' })).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'NACWO role guide' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'NVS role guide' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'SQP role guide' })).not.toBeInTheDocument();
   });
 });
