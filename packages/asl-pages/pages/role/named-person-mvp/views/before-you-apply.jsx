@@ -4,7 +4,11 @@ import { Snippet, Header, Form, SupportingLinks } from '@ukhomeoffice/asl-compon
 
 const Page = () => {
 
-  const { profile, roleType } = useSelector(state => state.static, shallowEqual);
+  const { content, profile, roleType } = useSelector(state => state.static, shallowEqual);
+  const templateRole = content.beforeYouNominateText.templateRoles[roleType] || {};
+  const templateKey = templateRole.contentKey;
+  const titleKey = templateKey ? `beforeYouNominateText.${templateKey}.title` : `beforeYouNominateText.${roleType}.title`;
+  const descKey = templateKey ? `beforeYouNominateText.${templateKey}.desc` : `beforeYouNominateText.${roleType}.desc`;
 
   return (
     <div>
@@ -15,18 +19,18 @@ const Page = () => {
           <Form cancelLink="profile.read">
             <Header
               title={
-                <Snippet fallback="beforeYouNominateText.default.title">
-                  {`beforeYouNominateText.${roleType}.title`}
+                <Snippet {...templateRole}>
+                  {titleKey}
                 </Snippet>
               }
             />
-            <p className="govuk-body">
+            <div className="govuk-body">
               {
-                <Snippet fallback="beforeYouNominateText.default.desc">
-                  {`beforeYouNominateText.${roleType}.desc`}
+                <Snippet {...templateRole}>
+                  {descKey}
                 </Snippet>
               }
-            </p>
+            </div>
           </Form>
         </div>
 
