@@ -9,7 +9,7 @@ const datatableSchema = {
   expiryDate: {show: true}
 };
 
-module.exports = () => {
+module.exports = ({baseRoute}) => {
   const app = Router({ mergeParams: true });
 
   app.use(datatable({
@@ -26,7 +26,9 @@ module.exports = () => {
   app.get('/', (req, res) => res.sendResponse());
 
   app.post('/', (req, res) => {
-    return res.redirect(req.buildRoute('categoryE.course.add', {suffix: 'course-details'}));
+    return res.redirect(
+      req.buildRoute(baseRoute, {suffix: 'course-details', trainingCourseId: req.trainingCourseId})
+    );
   });
 
   return app;

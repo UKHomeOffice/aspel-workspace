@@ -4,13 +4,33 @@ const courseDetails = require('./routers/course-details');
 const confirm = require('./routers/confirm');
 const { form } = require('../../../common/routers');
 const schema = require('./schema');
-const { pickBy } = require('lodash');
+const { pickBy, omit } = require('lodash');
 const { buildModel } = require('../../../../lib/utils');
 const { formatDate, ucFirst } = require('../../formatters');
 
-const FORM_ID = 'new-category-e-course';
+const getFormId = ({ trainingCourseId }) => trainingCourseId ?? 'new-category-e-course';
 
-module.exports = settings => {
+function getFormDates(trainingCourse) {
+  if (trainingCourse?.courseDuration === 'one-day') {
+    return {
+      courseDate: trainingCourse.startDate,
+      startDate: null,
+      endDate: null
+    };
+  }
+
+  if (trainingCourse?.courseDuration === 'multi-day') {
+    return {
+      courseDate: null,
+      startDate: trainingCourse.startDate,
+      endDate: trainingCourse.endDate
+    };
+  }
+
+  return { courseDate: null, startDate: null, endDate: null };
+}
+
+module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
   const app = page({
     ...settings,
     root: __dirname,
@@ -23,29 +43,53 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res) => {
+    const formId = getFormId(req);
+
     // A user being linked to the index is starting a new form, clear out session data and redirect to the first page.
-    if (req.session.form?.[FORM_ID]) {
-      delete req.session.form[FORM_ID];
+    if (req.session.form?.[formId]) {
+      delete req.session.form[formId];
     }
-    return res.redirect(req.buildRoute('categoryE.course.add', {suffix: 'select-licence'}));
+    if (req.trainingCourse) {
+      return res.redirect(
+        req.buildRoute(
+          baseRoute,
+          { suffix: 'course-details', trainingCourseId: req.trainingCourseId }
+        )
+      );
+    } else {
+      return res.redirect(req.buildRoute(baseRoute, { suffix: 'select-licence' }));
+    }
   });
 
   app.use((req, res, next) => {
-    res.locals.pageTitle = `${res.locals.static.content.pageTitle} - ${res.locals.static.content.breadcrumbs.categoryE.course.add}`;
+    const mode = req.trainingCourseId ? 'update' : 'add';
+
+    res.locals.pageTitle = [
+      res.locals.static.content.pageTitle[mode] ?? res.locals.static.content.pageTitle,
+      res.locals.static.content.breadcrumbs.categoryE.course[mode]
+    ].join(' - ');
+
     next();
   });
 
   app.use((req, res, next) => {
-    req.model = {
-      id: FORM_ID,
-      ...buildModel(schema)
-    };
+    req.model =
+      req.trainingCourse
+        ? {
+          ...omit(req.trainingCourse, 'startDate', 'endDate'),
+          ...getFormDates(req.trainingCourse)
+        }
+        : {
+          id: getFormId(req),
+          ...buildModel(schema)
+        };
+
     next();
   });
 
   const buildFetchProjectMiddleware = (onProject) => (req, res, next) => {
     const projectId = req.form.values?.projectId ??
-      req.session.form?.[FORM_ID]?.values?.projectId ??
+      req.session.form?.[getFormId(req)]?.values?.projectId ??
       res.locals.model?.projectId;
     if (!projectId) {
       return next();
@@ -62,7 +106,7 @@ module.exports = settings => {
   };
 
   function setSchemaSpeciesOptions(project, req, res) {
-    const speciesOptions = project.species.map(species => ({
+    const speciesOptions = (project.species ?? []).map(species => ({
       value: species,
       label: ucFirst(species)
     }));
@@ -121,9 +165,9 @@ module.exports = settings => {
     })
   }));
 
-  app.use('/select-licence', selectLicence());
-  app.use('/course-details', courseDetails());
-  app.use('/confirm', confirm());
+  app.use('/select-licence', selectLicence({baseRoute}));
+  app.use('/course-details', courseDetails({baseRoute}));
+  app.use('/confirm', confirm({baseRoute}));
 
   return app;
 };

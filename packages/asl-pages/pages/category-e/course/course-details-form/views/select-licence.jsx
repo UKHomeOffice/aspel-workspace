@@ -66,13 +66,17 @@ const Description = ({establishmentId}) =>
 
 export default function SelectProjectLicencePage() {
   const { establishment } = useSelector(state => state.static);
+  const trainingCourseId = useSelector((state) => state.static.trainingCourseId);
   const hasData = useSelector(state => state.datatable.data.rows.length) > 0;
   const formatters = useMemo(() => formFormatters(establishment.id), [establishment.id]);
+
+  const cancelLink = `categoryE.course.${trainingCourseId ? 'read' : 'list'}`;
 
   return hasData
     ? <FormLayout
       fullWidth
-      cancelLink={'categoryE.course.list'}
+      cancelLink={cancelLink}
+      traininCourseId={trainingCourseId}
       formatters={formatters}
       formProps={{'aria-describedby': 'projectId-description'}}
     />

@@ -20,15 +20,18 @@ const formatters = {
 
 export default function ProjectSummary() {
   const project = useSelector(state => state.static.project);
+  const trainingCourseId = useSelector((state) => state.static.trainingCourseId);
+  const mode = trainingCourseId ? 'update' : 'add';
 
   return project
     ? <>
       <ModelSummary schema={schema} formatters={formatters} model={project} />
       <p>
         <Link
-          page="categoryE.course.add"
+          page={`categoryE.course.${mode}`}
           suffix="/select-licence"
           establishmentId={project.establishmentId}
+          trainingCourseId={trainingCourseId}
         >
           <Snippet>actions.changeProjectLicence</Snippet>
         </Link>
