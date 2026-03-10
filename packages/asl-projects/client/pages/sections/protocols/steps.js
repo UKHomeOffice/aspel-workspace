@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { Button, Warning } from '@ukhomeoffice/react-components';
 
 import isUndefined from 'lodash/isUndefined';
-import { flatMap, isEqual, pickBy, uniqBy } from 'lodash';
+import { flatMap, pickBy, uniqBy } from 'lodash';
 
 import ReviewFields from '../../../components/review-fields';
 import Repeater from '../../../components/repeater';
@@ -332,7 +332,7 @@ class Step extends Component {
               <Fragment>: {values.reference}</Fragment>)}
             {
               completed && !isUndefined(values.optional) &&
-              <span className="light smaller">{` (${values.optional === true ? 'optional' : 'mandatory'})`}</span>
+              <span className="light smaller">{` (${isMandatory ? 'mandatory': 'optional'})`}</span>
             }
             {
               !pdf && readonly && repeatedFrom && (<div className="light smaller">{`Repeated from protocol ${repeatedFrom}`}</div>)
@@ -535,7 +535,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
       updateItem({ steps: mappedSteps });
       setUpdateReusable(true); // Always reset this after save
     }}
-    addAnother={!props.pdf && !values.deleted && editable && !lastStepIsNew}
+    addAnother={!values.isStandardProtocol && !props.pdf && !values.deleted && editable && !lastStepIsNew}
     {...props}
   >
     <Step
