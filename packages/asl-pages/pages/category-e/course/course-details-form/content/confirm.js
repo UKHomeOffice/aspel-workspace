@@ -7,7 +7,7 @@ module.exports = merge(
   {
     pageTitle: 'Check course details',
     buttons: {
-      submit: 'Submit new course',
+      submit: '{{^trainingCourseId}}Submit new course{{/trainingCourseId}}{{#trainingCourseId}}Save changes{{/trainingCourseId}}',
       cancel: 'Cancel'
     }
   }

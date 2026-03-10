@@ -22,14 +22,17 @@ const formatters = {
 
 export default function CourseSummary() {
   const establishmentId = useSelector(state => state.static.establishmentId);
+  const trainingCourseId = useSelector((state) => state.static.trainingCourseId);
+  const mode = trainingCourseId ? 'update' : 'add';
 
   return <>
     <ModelSummary schema={schema} formatters={formatters} />
     <p>
       <Link
-        page="categoryE.course.add"
+        page={`categoryE.course.${mode}`}
         suffix="/course-details"
         establishmentId={establishmentId}
+        trainingCourseId={trainingCourseId}
       >
         <Snippet>actions.changeCourseDetails</Snippet>
       </Link>

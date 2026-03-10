@@ -1,7 +1,6 @@
-const add = require('./add');
+const add = require('./course-details-form');
 const list = require('./list');
 const read = require('./read');
-const update = require('./update');
 const remove = require('./remove');
 const reschedule = require('./reschedule');
 const addParticipant = require('./add-participant');
@@ -15,7 +14,7 @@ module.exports = {
   add: {
     path: '/add',
     permissions: 'trainingCourse.update',
-    router: add
+    router: add({})
   },
   read: {
     path: '/:trainingCourseId',
@@ -25,7 +24,7 @@ module.exports = {
   update: {
     path: '/:trainingCourseId/update',
     permissions: 'trainingCourse.update',
-    router: update
+    router: add({baseRoute: 'categoryE.course.update'})
   },
   remove: {
     path: '/:trainingCourseId/remove',
