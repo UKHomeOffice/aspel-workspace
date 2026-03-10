@@ -2,18 +2,20 @@ import React from 'react';
 import { Link, Snippet } from '@ukhomeoffice/asl-components';
 import namedRoles from '../content/named-roles';
 
-const OpenTasks = ({ roleTasks }) => {
-  if (roleTasks.length < 1) {
+const OpenTasks = ({ roleTasks = [] }) => {
+  const tasks = Array.isArray(roleTasks) ? roleTasks : [];
+
+  if (tasks.length < 1) {
     return null;
   }
 
   return (
     <div className="open-role-tasks">
       <h3><Snippet>openTasks.title</Snippet></h3>
-      <p><Snippet>{`openTasks.description.${roleTasks.length === 1 ? 'single' : 'multiple'}`}</Snippet></p>
+      <p><Snippet>{`openTasks.description.${tasks.length === 1 ? 'single' : 'multiple'}`}</Snippet></p>
       <ul>
         {
-          roleTasks.map(task => (
+          tasks.map(task => (
             <li key={task.type}>
               {namedRoles[task.type]} <Link page="task.read" taskId={task.id} label={<Snippet>openTasks.link</Snippet>} />
             </li>

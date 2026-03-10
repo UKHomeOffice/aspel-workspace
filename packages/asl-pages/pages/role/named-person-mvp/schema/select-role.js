@@ -1,5 +1,5 @@
-const namedRoles = require('../../content/named-roles');
-const hintText = require('../../../content/hint-text');
+const namedRoles = require('../content/named-roles');
+const hintText = require('../../content/hint-text');
 
 const excludedRoles = {
   corporate: ['pelh'],
