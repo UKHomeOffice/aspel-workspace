@@ -158,7 +158,7 @@ class ProtocolSections extends PureComponent {
               onFieldChange={(key, value) => updateItem({ [key]: value })}
             />
             {
-              editable && !values.deleted && (
+              !values.isStandardProtocol && editable && !values.deleted && (
                 <Fragment>
                   <Complete
                     type="protocol"
