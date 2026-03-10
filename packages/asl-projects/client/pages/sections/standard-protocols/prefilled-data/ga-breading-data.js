@@ -134,6 +134,15 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => {
               gaasHarmful: false,
 
               steps: generatePrefilledSteps(isStandard),
+              fate: [
+                "killed",
+                "continued-use",
+                "continued-use-2",
+                "set-free",
+                "rehomed",
+                "kept-alive"
+              ],
+              nonSchedule1: false
             }
           }
         ]

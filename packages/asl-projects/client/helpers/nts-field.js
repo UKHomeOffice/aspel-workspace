@@ -1,3 +1,6 @@
+import { calculateProtocolContext } from './index';
+
+
 export default function NTSFateOfAnimalFields() {
   return {
     'killed': {
@@ -5,9 +8,9 @@ export default function NTSFateOfAnimalFields() {
       value: 'killed',
       hint: 'Ensure you describe the methods of killing to be used in the final step of this protocol.',
       reveal: {
-        label: 'Will you be using non-schedule 1 killing methods on a conscious animal?',
+        label: values => calculateProtocolContext(values,'Will you be using non-schedule 1 killing methods on a conscious animal?', 'Will you be using non-schedule 1 killing methods on a conscious animal?', 'Non-schedule 1 killing methods on a conscious animal'),
         name: 'non-schedule-1',
-        type: 'radio',
+        type: values => calculateProtocolContext(values,'radio', 'radio', 'standard-radio'),
         className: 'smaller',
         inline: true,
         options: [
@@ -33,7 +36,11 @@ export default function NTSFateOfAnimalFields() {
       reveal: {
         name: 'continued-use-relevant-project',
         label: 'Please state the relevant protocol.',
-        type: 'texteditor'
+        type: 'texteditor',
+        show: values => {
+          console.log('continued-use', values);
+          return true;
+        }
       }
     },
     'continued-use-2': {

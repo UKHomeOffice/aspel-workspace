@@ -35,7 +35,8 @@ const ProtocolFormBase = ({
 
     updateProjectAction({
       ...project,
-      protocols: [...(project.protocols || []), newProtocol]
+      protocols: [...(project.protocols || []), newProtocol],
+      fate: protocolTemplate?.data?.fate || project.fate
     });
 
     ajaxSyncAction(['protocols']);

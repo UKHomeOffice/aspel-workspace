@@ -104,6 +104,8 @@ export const BuildProtocol = (protocolTemplate, project) => {
     steps: [...steps],
     gaas: Boolean(data.gaas),
     'gaas-types': data.gaasTypes ?? '',
-    'gaas-harmful': Boolean(data.gaasHarmful)
+    'gaas-harmful': Boolean(data.gaasHarmful),
+    fate: Array.isArray(data.fate) ? [...data.fate] : [],
+    'non-schedule-1': Boolean(data.nonSchedule1),
   };
 };

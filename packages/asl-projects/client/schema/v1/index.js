@@ -1976,9 +1976,8 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                   label: values => calculateProtocolContext(values, 'Do you expect this step to have adverse effects for the animals that are more than mild and transient?', 'Do you expect this step to have adverse effects that are more than mild and short-term and not listed in General constraints? [links to General constraints section]',
                     'Expected adverse effects that are more than mild and short-term and not listed in General constraints [links to General constraints section]'),
                   hint: values => calculateProtocolContext(values, 'Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.',
-                    `Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.\n' +
-                    '\n' +
-                    '[Remove injection example as not appropriate - advice needed]`, null),
+                    `Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.
+                    \n [Remove injection example as not appropriate - advice needed]`, null),
                   type: 'radio',
                   inline: true,
                   className: 'smaller',
