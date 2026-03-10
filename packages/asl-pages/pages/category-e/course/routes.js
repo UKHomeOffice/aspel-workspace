@@ -1,4 +1,4 @@
-const add = require('./add');
+const add = require('./course-details-form');
 const list = require('./list');
 const read = require('./read');
 const remove = require('./remove');

@@ -4,11 +4,31 @@ const courseDetails = require('./routers/course-details');
 const confirm = require('./routers/confirm');
 const { form } = require('../../../common/routers');
 const schema = require('./schema');
-const { pickBy } = require('lodash');
+const { pickBy, omit } = require('lodash');
 const { buildModel } = require('../../../../lib/utils');
 const { formatDate, ucFirst } = require('../../formatters');
 
 const getFormId = ({ trainingCourseId }) => trainingCourseId ?? 'new-category-e-course';
+
+function getFormDates(trainingCourse) {
+  if (trainingCourse?.courseDuration === 'one-day') {
+    return {
+      courseDate: trainingCourse.startDate,
+      startDate: null,
+      endDate: null
+    };
+  }
+
+  if (trainingCourse?.courseDuration === 'multi-day') {
+    return {
+      courseDate: null,
+      startDate: trainingCourse.startDate,
+      endDate: trainingCourse.endDate
+    };
+  }
+
+  return { courseDate: null, startDate: null, endDate: null };
+}
 
 module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
   const app = page({
@@ -30,8 +50,6 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
       delete req.session.form[formId];
     }
     if (req.trainingCourse) {
-      req.session.form[formId] = {...req.trainingCourse};
-
       return res.redirect(
         req.buildRoute(
           baseRoute,
@@ -55,10 +73,17 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
   });
 
   app.use((req, res, next) => {
-    req.model = req.trainingCourse ?? {
-      id: getFormId(req),
-      ...buildModel(schema)
-    };
+    req.model =
+      req.trainingCourse
+        ? {
+          ...omit(req.trainingCourse, 'startDate', 'endDate'),
+          ...getFormDates(req.trainingCourse)
+        }
+        : {
+          id: getFormId(req),
+          ...buildModel(schema)
+        };
+
     next();
   });
 
