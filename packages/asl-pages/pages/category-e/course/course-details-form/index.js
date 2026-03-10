@@ -4,31 +4,11 @@ const courseDetails = require('./routers/course-details');
 const confirm = require('./routers/confirm');
 const { form } = require('../../../common/routers');
 const schema = require('./schema');
-const { pickBy, omit } = require('lodash');
-const { buildModel } = require('../../../../lib/utils');
+const { pickBy } = require('lodash');
 const { formatDate, ucFirst } = require('../../formatters');
+const { modelFromCourse } = require('../middleware/model-from-course');
 
 const getFormId = ({ trainingCourseId }) => trainingCourseId ?? 'new-category-e-course';
-
-function getFormDates(trainingCourse) {
-  if (trainingCourse?.courseDuration === 'one-day') {
-    return {
-      courseDate: trainingCourse.startDate,
-      startDate: null,
-      endDate: null
-    };
-  }
-
-  if (trainingCourse?.courseDuration === 'multi-day') {
-    return {
-      courseDate: null,
-      startDate: trainingCourse.startDate,
-      endDate: trainingCourse.endDate
-    };
-  }
-
-  return { courseDate: null, startDate: null, endDate: null };
-}
 
 module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
   const app = page({
@@ -72,20 +52,7 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
     next();
   });
 
-  app.use((req, res, next) => {
-    req.model =
-      req.trainingCourse
-        ? {
-          ...omit(req.trainingCourse, 'startDate', 'endDate'),
-          ...getFormDates(req.trainingCourse)
-        }
-        : {
-          id: getFormId(req),
-          ...buildModel(schema)
-        };
-
-    next();
-  });
+  app.use(modelFromCourse(schema));
 
   const buildFetchProjectMiddleware = (onProject) => (req, res, next) => {
     const projectId = req.form.values?.projectId ??

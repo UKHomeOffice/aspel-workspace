@@ -9,6 +9,7 @@ module.exports = [
     'establishmentId': 54321,
     'title': 'Training course with expired PIL-E',
     'startDate': `${lastYear}-04-01`,
+    'coursePurpose': 'higherEducation',
     'species': ['Mice'],
     'projectId': '56763107-6430-43a1-841d-ad2ecf4196ad',
     'participants': [
@@ -26,6 +27,7 @@ module.exports = [
     'establishmentId': 54321,
     'title': 'Training course with active PIL-Es',
     'startDate': `${lastYear}-04-01`,
+    'coursePurpose': 'training',
     'species': ['Mice'],
     'projectId': '56763107-6430-43a1-841d-ad2ecf4196ad',
     'participants': [
@@ -65,6 +67,7 @@ module.exports = [
     'establishmentId': 54321,
     'title': 'Training course to delete',
     'startDate': `${nextYear}-01-01`,
+    'coursePurpose': 'training',
     'species': ['Mice'],
     'projectId': '56763107-6430-43a1-841d-ad2ecf4196ad'
   },
@@ -72,6 +75,7 @@ module.exports = [
     'establishmentId': 54321,
     'title': 'Training course to add participants to',
     'startDate': `${nextYear}-01-01`,
+    'coursePurpose': 'training',
     'species': [
       'Mice',
       'Rats'

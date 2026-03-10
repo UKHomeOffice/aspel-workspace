@@ -32,7 +32,7 @@ module.exports = {
     router: remove
   },
   reschedule: {
-    path: '/:trainingCourseId/change-course-dates',
+    path: '/:trainingCourseId/course-dates',
     permissions: 'trainingCourse.update',
     router: reschedule
   },
