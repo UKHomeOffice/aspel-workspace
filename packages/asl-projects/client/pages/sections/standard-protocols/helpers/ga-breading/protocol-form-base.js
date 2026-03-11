@@ -33,13 +33,23 @@ const ProtocolFormBase = ({
 
     const newProtocol = BuildProtocol(protocolTemplate, project);
 
+    const mergedConditions = [
+      ...(project.conditions || []),
+      ...(protocolTemplate?.conditions || [])
+    ].filter(
+      (cond, index, arr) =>
+        index === arr.findIndex(c => c.key === cond.key)
+    );
+
     updateProjectAction({
       ...project,
       protocols: [...(project.protocols || []), newProtocol],
-      fate: protocolTemplate?.data?.fate || project.fate
+      "fate-of-animals": protocolTemplate?.data?.fate || project.fate,
+      "fate-of-animals-complete": true,
+      conditions: mergedConditions
     });
 
-    ajaxSyncAction(['protocols']);
+    ajaxSyncAction(['protocols', 'conditions', 'fate-of-animals', 'fate-of-animals-complete']);
 
     onContinue?.({
       protocolType: 'standard',

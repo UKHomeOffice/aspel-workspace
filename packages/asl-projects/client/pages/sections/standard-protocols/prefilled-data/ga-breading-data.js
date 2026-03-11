@@ -143,12 +143,24 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => {
                 "kept-alive"
               ],
               nonSchedule1: false
-            }
+            },
+            conditions: [
+              {
+                "autoAdded": true,
+                "key": "rehoming",
+                "path": "rehoming.versions.1",
+                "type": "authorisation"
+              },
+              {
+                "autoAdded": true,
+                "key": "setting-free",
+                "path": "setting-free.versions.1",
+                "type": "authorisation"
+              },
+            ]
           }
         ]
       }
     ]
   };
 }
-
-
