@@ -64,7 +64,7 @@ export default function SideNav(props) {
             if (section.subsections) {
               const open = !!(activeSection && section.subsections[activeSection]);
               const title = <Fragment>
-                <ChangedBadge fields={fieldsForSection} noLabel />
+                <ChangedBadge primaryField={key} fields={fieldsForSection} noLabel />
                 <span className="indent">{section.subtitle || section.title}</span>
               </Fragment>;
               return (
@@ -82,7 +82,7 @@ export default function SideNav(props) {
             }
             return (
               <NavLink key={key} to={`/${key}`}>
-                <ChangedBadge fields={fieldsForSection} notLabel />
+                <ChangedBadge primaryField={key} fields={fieldsForSection} notLabel />
                 <h3>
                   {
                     isGranted

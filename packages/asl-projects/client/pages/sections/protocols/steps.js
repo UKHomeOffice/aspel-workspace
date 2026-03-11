@@ -155,9 +155,9 @@ class Step extends Component {
       readonly,
       expanded,
       onToggleExpanded,
-      number
+      number,
+      prefix
     } = this.props;
-    const changeFieldPrefix = values.reusableStepId ? `reusableSteps.${values.reusableStepId}.` : this.props.prefix;
 
     const re = new RegExp(`^(reusable)?S?s?teps.${values.id}\\.`);
 
@@ -168,18 +168,19 @@ class Step extends Component {
     const completed = !editable || values.completed;
     const editingReusableStep = !completed && values.existingValues && values.reusableStepId && values.saved;
     const stepEditable = editingReusableStep ? (values.existingValues.id === values.id) : !completed;
+    const commentPrefix = values.reusableStepId ? `reusableSteps.${values.reusableStepId}.` : undefined;
 
     const stepContent = <>{
       !stepEditable && values.title && (
         <ReviewFields
           fields={[fields.find(f => f.name === 'title')]}
           values={{ title: values.title }}
-          prefix={changeFieldPrefix}
+          prefix={prefix}
           editLink={`0#${this.props.prefix}`}
           protocolId={protocol.id}
           stepId={values.id}
           readonly={!isReviewStep}
-          additionalCommentFields={values.reusableStepId ? [`${this.props.prefix}title`] : []}
+          commentPrefix={commentPrefix}
         />
       )
     }
@@ -188,13 +189,15 @@ class Step extends Component {
         ? <Fragment>
           {!editingReusableStep ? <Fieldset
             fields={fields}
-            prefix={changeFieldPrefix}
+            prefix={prefix}
             onFieldChange={(key, value) => updateItem({ [key]: value })}
+            commentPrefix={commentPrefix}
             values={values}
           /> : <Fragment>
             <Fieldset
               fields={fields.filter(f => f.name !== 'reusable')}
-              prefix={changeFieldPrefix}
+              prefix={prefix}
+              commentPrefix={commentPrefix}
               onFieldChange={(key, value) => updateItem({ [key]: value })}
               values={values}
             />
@@ -203,6 +206,7 @@ class Step extends Component {
               value={values.existingValues.reusable}
               readonly={true}
               className="reusable"
+              commentKey={commentPrefix ? `${commentPrefix}reusable` : undefined}
             />
             <Warning>You cannot change this answer when editing reusable steps.</Warning>
           </Fragment>
@@ -221,7 +225,8 @@ class Step extends Component {
           <ReviewFields
             fields={fields.filter(f => f.name !== 'title')}
             values={values}
-            prefix={changeFieldPrefix}
+            prefix={prefix}
+            commentPrefix={commentPrefix}
             editLink={`0#${this.props.prefix}`}
             readonly={!isReviewStep}
             protocolId={protocol.id}
@@ -249,7 +254,7 @@ class Step extends Component {
       >
         <NewComments comments={relevantComments} />
         {
-          !values.deleted && <StepBadge fields={values} changeFieldPrefix={changeFieldPrefix} protocolId={protocol.id} position={index}/>
+          !values.deleted && <StepBadge fields={values} changeFieldPrefix={prefix} protocolId={protocol.id} position={index}/>
         }
         <Fragment>
           {
@@ -348,7 +353,7 @@ class Step extends Component {
             values.deleted && <span className="badge deleted">removed</span>
           }
           {
-            !values.deleted && !pdf && <StepBadge fields={values} changeFieldPrefix={changeFieldPrefix} protocolId={protocol.id} position={index} />
+            !values.deleted && !pdf && <StepBadge fields={values} changeFieldPrefix={prefix} protocolId={protocol.id} position={index} />
           }
           <Expandable expanded={expanded} onHeaderClick={() => onToggleExpanded(index)}>
             <Fragment>
@@ -392,7 +397,7 @@ const StepSelector = ({reusableSteps, values, onSaveSelection, length, onCancel}
     className: 'smaller',
     options: options
   }];
-  const saveSelectionHandler = (e) => {
+  const saveSelectionHandler = () => {
     onSaveSelection(selectedSteps);
   };
 
@@ -491,7 +496,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
 export default function Steps({project, values, ...props}) {
   const isReviewStep = parseInt(useParams().step, 10) === 1;
   const [ allSteps, reusableSteps ] = hydrateSteps(project.protocols, values.steps, project.reusableSteps || {});
-  let steps = allSteps;
+  let steps;
   if (props.pdf) {
     steps = allSteps.filter(step => !step.deleted);
   } else {

@@ -3,6 +3,14 @@ import cloneDeep from 'lodash/cloneDeep';
 
 const state = window.INITIAL_STATE;
 
+function getVersionedData(field) {
+  return {
+    first: state.static[field]?.first ?? [],
+    latest: state.static[field]?.latest ?? [],
+    granted: state.static[field]?.granted ?? []
+  };
+}
+
 start({
   project: {
     ...state.model.data,
@@ -13,11 +21,14 @@ start({
     id: state.model.id
   }),
   comments: state.static.comments,
-  changes: {
-    first: (state.static.changes && state.static.changes.first) || [],
-    latest: (state.static.changes && state.static.changes.latest) || [],
-    granted: (state.static.changes && state.static.changes.granted) || []
-  },
+  ...((state.static.isGranted || state.static.legacyGranted)
+    ? { changes: {}, added: {}, removed: {} }
+    : {
+      changes: getVersionedData('changes'),
+      added: getVersionedData('added'),
+      removed: getVersionedData('removed')
+    }
+  ),
   application: {
     commentable: state.static.commentable,
     establishment: state.static.establishment,

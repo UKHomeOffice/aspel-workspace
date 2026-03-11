@@ -147,9 +147,10 @@ export const findColor = (groups = [], id) => {
  *
  * @param {Object} record - The training record object (with `trainingId` or `id`).
  * @param {Object} comparisons - The comparison result object (from compareTrainingRecords()).
+ * @param {boolean} grantedStatus - Indicates whether the application has been granted.
  * @returns {Object|null} - Badge data { label, class } or null if unchanged.
  */
-export const getStatus = (record, comparisons = {}) => {
+export const getStatus = (record, comparisons = {}, grantedStatus= {}) => {
   if (!record || typeof record !== 'object') return null;
 
   const { added = [], removed = [], changed = [] } = comparisons;
@@ -159,15 +160,26 @@ export const getStatus = (record, comparisons = {}) => {
   const removedColor = findColor(removed, recordId);
   const changedColor = findColor(changed, recordId);
 
+  // Text level
+  const changeLabel =
+    grantedStatus === true && changedColor === 'grey'
+      ? 'AMENDED'
+      : 'CHANGED';
+  const newLabel =
+    addedColor === 'grey'
+      ? 'ADDED'
+      : 'NEW';
+  const removedLabel = 'REMOVED';
+
   // Priority: changed > removed > new
   if (changedColor) {
-    return { label: 'CHANGED', class: `badge changed ${changedColor}` };
+    return { label: changeLabel, class: `badge changed ${changedColor}` };
   }
   if (removedColor) {
-    return { label: 'REMOVED', class: `badge deleted ${removedColor}` };
+    return { label: removedLabel, class: `badge deleted ${removedColor}` };
   }
   if (addedColor) {
-    return { label: 'NEW', class: `badge created ${addedColor}` };
+    return { label: newLabel, class: `badge created ${addedColor}` };
   }
 
   return null;
@@ -179,7 +191,7 @@ export const getStatus = (record, comparisons = {}) => {
  *
  * @param {Object} project - The project object containing trainingHistory[].
  * @param {Object} record - The record object that contains trainingId or id.
- * @param {'current'|'previous'|'first'} versionType - Which version to fetch from.
+ * @param {'current'|'previous'|'first' | 'granted'} versionType - Which version to fetch from.
  * @param {Object} trainingHistory - The record object that contains trainingId or id.
  * @returns {Object|null}
  */
@@ -215,10 +227,15 @@ export const getTrainingRecord = (project = {}, record = {}, versionType = 'curr
     if (Array.isArray(history.first) && history.first.length) {
       return history.first.find(r => (r.id || r.trainingId) === trainingId) || {};
     }
-    // fallback to granted
-    if (Array.isArray(history.granted)) {
+
+  }
+
+  // first = trainingHistory.first OR granted
+  if (versionType === 'granted') {
+    if (Array.isArray(history.granted) && history.granted.length) {
       return history.granted.find(r => (r.id || r.trainingId) === trainingId) || {};
     }
+
   }
 
   return {};

@@ -120,7 +120,12 @@ module.exports = settings => {
   });
 
   app.put('/', getAllChanges(), (req, res) => {
-    res.json({ changes: res.locals.static.changes, checksum: req.version.checksum, checksumOmit: req.version.checksumOmit });
+    res.json({
+      changes: res.locals.static.changes,
+      added: res.locals.static.added,
+      checksum: req.version.checksum,
+      checksumOmit: req.version.checksumOmit
+    });
   });
 
   app.use((req, res) => res.sendResponse());

@@ -65,7 +65,10 @@ class Animal extends Component {
   render() {
     const { prefix, fields, values, updateItem, editable, deleted } = this.props;
     const { expanded } = this.state;
-    const valuesWithLabel = { ...values, speciesLabel: values.value ?? values.name.toLowerCase() };
+    const valuesWithLabel = {
+      ...values,
+      speciesLabel: values.value?.replace(/-/g, ' ') ?? values.name.toLowerCase()
+    };
     return (
       <Expandable className="no-bg" onHeaderClick={this.toggleExpanded} expanded={expanded}>
         <h3 className="title">{values.name}</h3>

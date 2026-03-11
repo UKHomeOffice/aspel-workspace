@@ -5,7 +5,7 @@ import map from 'lodash/map';
 import pickBy from 'lodash/pickBy';
 import some from 'lodash/some';
 import mapValues from 'lodash/mapValues';
-import minimatch from 'minimatch';
+import { minimatch } from 'minimatch';
 import { createSelector } from 'reselect';
 
 import { INCOMPLETE, PARTIALLY_COMPLETE, COMPLETE } from '../constants/completeness';
@@ -19,6 +19,8 @@ import PreviewLicence from './preview-licence';
 import Submit from './submit';
 import { selector } from './sync-handler';
 import HoldingPage from './holding-page';
+
+import { useFeatureFlag, FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
 
 /** ----- MEMOIZED SELECTORS ----- */
 
@@ -90,9 +92,19 @@ const getMappedProps = createSelector(
 /** ----- COMPONENT ----- */
 
 const ApplicationSummary = () => {
+  const standardProtocolsEnabled = useFeatureFlag(FEATURE_FLAG_STANDARD_PROTOCOLS);
   const props = useSelector(getMappedProps);
   const { isSyncing } = useSelector(selector);
   const [submitted, setSubmitted] = useState(false);
+
+  const getSubsectionLink = key => {
+    const hasNoProtocol = !props.values?.protocols?.length;
+    if (standardProtocolsEnabled && hasNoProtocol && key === 'protocols') {
+      return '/standard-protocol';
+    }
+    return `/${key}`;
+  };
+
   const {
     legacy,
     values,
@@ -269,7 +281,7 @@ const ApplicationSummary = () => {
                         <tr key={key}>
                           <td>
                             <ErrorMessage title={subsection.title} isComplete={isComplete(subsection, key)}>
-                              <Link to={`/${key}`}>{subsection.title}</Link>
+                              <Link to={getSubsectionLink(key)}>{subsection.title}</Link>
                             </ErrorMessage>
                           </td>
                           <td className="controls">

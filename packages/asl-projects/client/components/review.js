@@ -23,11 +23,17 @@ class Review extends React.Component {
       isGranted,
       showGrantedLabel = true,
       review,
+      fieldPath,
       changedFromFirst,
       changedFromLatest,
       changedFromGranted,
+      parentAddedFromFirst,
+      parentAddedFromLatest,
+      parentAddedFromGranted,
       hideChanges,
-      hint: initialHint
+      hint: initialHint,
+      commentKey,
+      additionalCommentFields
     } = this.props;
     let hint = initialHint;
 
@@ -45,12 +51,18 @@ class Review extends React.Component {
     }
 
     const showComments = !this.props.noComments && this.props.type !== 'repeater';
-    const changed = changedFromFirst || changedFromLatest || changedFromGranted;
+    const changed = (changedFromFirst && !parentAddedFromFirst)
+      || (changedFromLatest && !parentAddedFromLatest)
+      || (changedFromGranted && !parentAddedFromGranted);
     const showChanges = !hideChanges && changed;
     const showDiffWindow = this.props.readonly && showChanges
 
     if (this.props.type === 'comments-only' && showComments) {
-      return <Comments field={`${this.props.prefix || ''}${this.props.name}`} collapsed={!this.props.readonly} />;
+      return <Comments
+        field={commentKey ?? `${this.props.prefix || ''}${this.props.name}`}
+        collapsed={!this.props.readonly}
+        additionalCommentFields={additionalCommentFields}
+      />;
     }
 
     const displayedLabel = Mustache.render(review || label || '', this.props);
@@ -62,12 +74,7 @@ class Review extends React.Component {
         }
         {
           showChanges && (
-            <ChangedBadge
-              changedFromFirst={changedFromFirst}
-              changedFromLatest={changedFromLatest}
-              changedFromGranted={changedFromGranted}
-              protocolId={this.props.protocolId}
-            />
+            <ChangedBadge primaryField={fieldPath} />
           )
         }
         {
@@ -85,9 +92,9 @@ class Review extends React.Component {
         }
         {
           showComments && <Comments
-            field={`${this.props.prefix || ''}${this.props.name}`}
+            field={commentKey ?? `${this.props.prefix || ''}${this.props.name}`}
             collapsed={!this.props.readonly}
-            additionalCommentFields={this.props.additionalCommentFields ?? []}
+            additionalCommentFields={additionalCommentFields ?? []}
           />
         }
         {
@@ -113,7 +120,8 @@ class Review extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const {
     application: { readonly = false, isGranted = false, previousProtocols = {} } = {},
-    changes: { first = [], latest = [], granted = [] } = {}
+    changes: { first = [], latest = [], granted = [] } = {},
+    added: {first: firstAdded = [], latest: latestAdded = [], granted: gratedAdded = []} = {}
   } = state;
 
   const key = `${ownProps.prefix || ''}${ownProps.name}`;
@@ -121,6 +129,23 @@ const mapStateToProps = (state, ownProps) => {
   const changedFromGranted = granted.includes(key);
   const changedFromLatest = latest.includes(key);
   const changedFromFirst = first.includes(key);
+
+  const protocolRegex = /^protocols\.(?<protocolId>[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})\./;
+  const stepRegex = /^protocols\.[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}\.steps\.(?<stepId>[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})\./;
+
+  const protocolId = protocolRegex.exec(key)?.groups?.protocolId
+  const stepId = stepRegex.exec(key)?.groups?.stepId
+
+  const parentAddedFromFirst =
+    (protocolId && firstAdded.includes(`protocols.${protocolId}`)) ||
+    (protocolId && stepId && firstAdded.includes(`protocols.${protocolId}.steps.${stepId}`));
+  const parentAddedFromLatest =
+    (protocolId && latestAdded.includes(`protocols.${protocolId}`)) ||
+    (protocolId && stepId && latestAdded.includes(`protocols.${protocolId}.steps.${stepId}`));
+  const parentAddedFromGranted =
+    (protocolId && gratedAdded.includes(`protocols.${protocolId}`)) ||
+    (protocolId && stepId && gratedAdded.includes(`protocols.${protocolId}.steps.${stepId}`));
+
   const storedValue = (state.databaseValues && state.databaseValues[key]) || null;
   const currentValue = ownProps.value || null;
   const latestSubmittedValue = (state.latestSubmittedValues && state.latestSubmittedValues[key]) || null;
@@ -132,6 +157,9 @@ const mapStateToProps = (state, ownProps) => {
     changedFromFirst,
     changedFromLatest,
     changedFromGranted,
+    parentAddedFromFirst,
+    parentAddedFromLatest,
+    parentAddedFromGranted,
     isGranted,
     previousProtocols,
     storedValue,
@@ -139,6 +167,7 @@ const mapStateToProps = (state, ownProps) => {
     latestSubmittedValue,
     firstSubmittedValue,
     grantedValue,
+    fieldPath: key,
     fieldName: ownProps.name
   };
 };

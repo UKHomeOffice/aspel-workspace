@@ -1,9 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import classnames from 'classnames';
 import ChangedBadge from './changed-badge';
-
-const changeFields = (step, prefix) => step.reusable ? [ `reusableSteps.${step.reusableStepId}` ] : [ prefix.substr(0, prefix.length - 1) ];
 
 export default function StepBadge(props) {
   const { previous, steps, firstSteps, grantedSteps } = useSelector(state => state.application.previousProtocols);
@@ -43,6 +40,9 @@ export default function StepBadge(props) {
       firstStepIds.push(step.id);
     });
   });
+
+  const field = props.changeFieldPrefix.substr(0, props.changeFieldPrefix.length - 1)
+
   if (stepIds.includes(props.fields.id) || grantedStepIds.includes(props.fields.id) || firstStepIds.includes(props.fields.id)) {
     let move;
     if (previousIndex !== -1) {
@@ -52,15 +52,14 @@ export default function StepBadge(props) {
     } else if (!grantedSteps.length && firstIndex >= 0) {
       move = <span className="badge">{firstIndex > props.position ? 'Moved up' : 'Moved down'}</span>;
     }
+
     return (
       <>
-        <ChangedBadge fields={changeFields(props.fields, props.changeFieldPrefix)} protocolId={props.protocolId}/>
+        <ChangedBadge primaryField={field} />
         {move}
       </>
     );
-  } else if (previous.includes(props.protocolId)) {
-    return <span className={classnames('badge created')}>new</span>;
   } else {
-    return <></>;
+    return <ChangedBadge primaryField={field} />;
   }
 }

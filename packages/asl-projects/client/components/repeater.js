@@ -7,6 +7,8 @@ import cloneDeep from 'lodash/cloneDeep';
 import omitBy from 'lodash/omitBy';
 import isUndefined from 'lodash/isUndefined';
 import { throwError } from '../actions/messages';
+import { FEATURE_FLAG_STANDARD_PROTOCOLS, useFeatureFlag } from '@asl/service/ui/feature-flag';
+import { useHistory } from 'react-router-dom';
 
 const noopPromise = () => Promise.resolve();
 
@@ -15,6 +17,7 @@ export default ({
   type = 'item',
   prefix,
   singular = 'item',
+  addProtocol = false,
   addOnInit = true,
   addAnother = true,
   addButtonBefore = false,
@@ -33,6 +36,9 @@ export default ({
   onAfterRestore = noopPromise,
   ...props
 }) => {
+
+  const history = useHistory();
+  const standardProtocolsEnabled = useFeatureFlag(FEATURE_FLAG_STANDARD_PROTOCOLS);
 
   const onBeforeDuplicate = useCallback(
     (items, uuid) => props.onBeforeDuplicate ? props.onBeforeDuplicate(items, uuid) : Promise.resolve(items),
@@ -55,6 +61,7 @@ export default ({
   }, []);
 
   const save = useCallback((newItems) => onSave(newItems ?? items), [onSave]);
+
   const update = useCallback((newItems) =>
     Promise.resolve()
       .then(() => setItems(newItems))
@@ -64,6 +71,11 @@ export default ({
   );
 
   const addItem = useCallback(() => {
+    if (!addProtocol && type === 'protocols' && standardProtocolsEnabled) {
+      history.push('/standard-protocol');
+      return Promise.resolve();
+    }
+
     Promise.resolve()
       .then(onBeforeAdd)
       .then(() => update([ ...items, { id: uuid(), ...(itemProps ?? {}) } ]))
@@ -169,7 +181,7 @@ export default ({
   }, [update, items]);
 
   useMemo(() => {
-    if (addOnInit && !items.length) {
+    if (addProtocol || (addOnInit && !items.length)) {
       addItem();
     }
   }, [] /* Only run on first render */);

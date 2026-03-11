@@ -1,14 +1,17 @@
 const {
-  get,
-  isEqual,
-  uniq,
-  mapValues,
-  sortBy,
-  pickBy,
-  isEmpty,
   castArray,
+  dropWhile,
+  filter,
   flow,
-  omit
+  get,
+  isEmpty,
+  isEqual,
+  mapValues,
+  omit,
+  pickBy,
+  reverse,
+  sortBy,
+  uniq
 } = require('lodash');
 const isUUID = require('uuid-validate');
 const extractComments = require('../lib/extract-comments');
@@ -151,21 +154,36 @@ const canViewVersion = req => version => {
   return (req.user.profile.asruUser === version.asruVersion) || version.status !== 'draft' || version.id === req.versionId;
 };
 
-const getFirstVersion = (req, type = 'project-versions') => {
+const getVersionsForDiff = (req, type = 'project-versions') => {
   if (!req.project) {
-    return Promise.resolve();
+    return {};
   }
-  // no first submission for granted projects
-  if (type === 'project-versions' && req.project.granted) {
-    return Promise.resolve();
-  }
+
   const key = type === 'project-versions' ? 'versions' : 'retrospectiveAssessments';
-  const versions = req.project[key];
-  // if there are only one or two versions then the first version will be the same as current or previous
-  if (versions.length < 3) {
+  const versions = reverse(sortBy(req.project[key], 'createdAt'));
+  const versionId = type === 'project-versions' ? req.versionId : req.raId;
+
+  const previousVersions = dropWhile(versions, version => version.id !== versionId).slice(1);
+
+  const previous = previousVersions.shift();
+
+  if (previous?.status === 'granted') {
+    return { previous, granted: previous };
+  }
+
+  const granted = previousVersions.find(version => version.status === 'granted');
+  const first = granted ? undefined : previousVersions.pop();
+
+  return { previous, first, granted };
+};
+
+const getFirstVersion = (req, type = 'project-versions') => {
+  const { first } = getVersionsForDiff(req, type);
+
+  if (!first) {
     return Promise.resolve();
   }
-  const first = sortBy(versions, 'createdAt')[0];
+
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${first.id}`)
     // swallow error as this will return 403 for receiving establishment viewing a project transfer version
     // eslint-disable-next-line handle-callback-err
@@ -173,19 +191,12 @@ const getFirstVersion = (req, type = 'project-versions') => {
 };
 
 const getPreviousVersion = (req, type = 'project-versions') => {
-  if (!req.project) {
-    return Promise.resolve();
-  }
-  const key = type === 'project-versions' ? 'versions' : 'retrospectiveAssessments';
-  const model = type === 'project-versions' ? 'version' : 'retrospectiveAssessment';
-  const granted = req.project[key].find(v => v.status === 'granted');
-  const previous = req.project[key]
-    .filter(version => granted ? version.createdAt >= granted.createdAt : true)
-    .find(version => version.createdAt < req[model].createdAt);
+  const { previous } = getVersionsForDiff(req, type);
 
   if (!previous) {
     return Promise.resolve();
   }
+
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${previous.id}`)
     // swallow error as this will return 403 for receiving establishment viewing a project transfer version
     // eslint-disable-next-line handle-callback-err
@@ -193,22 +204,14 @@ const getPreviousVersion = (req, type = 'project-versions') => {
 };
 
 const getGrantedVersion = (req, type = 'project-versions') => {
-  const key = type === 'project-versions' ? 'versions' : 'retrospectiveAssessments';
-  const model = type === 'project-versions' ? 'version' : 'retrospectiveAssessment';
-
-  if (!req.project || !req.project[key]) {
-    return Promise.resolve();
-  }
-
-  const granted = req.project[key]
-    .find(version => version.createdAt < req[model].createdAt && version.status === 'granted');
+  const { granted } = getVersionsForDiff(req, type);
 
   if (!granted) {
     return Promise.resolve();
   }
 
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${granted.id}`)
-    // swallow error as this will return 403 for receiving establishment viewing a project transfer
+    // swallow error as this will return 403 for receiving establishment viewing a project transfer version
     // eslint-disable-next-line handle-callback-err
     .catch(() => {});
 };
@@ -221,7 +224,7 @@ const getCacheableVersion = (req, url) => {
     });
 };
 
-function normaliseSteps(protocol) {
+function normaliseSteps(protocol, reusableSteps) {
   if (!protocol.steps) {
     return [];
   }
@@ -233,11 +236,28 @@ function normaliseSteps(protocol) {
 
   return (Array.isArray(protocol.steps) ? protocol.steps : []).flatMap(
     step => {
-      // If step is not reusable, then it dont need reusableStepId, this is causing issues down the line
-      if (step?.reusableStepId && step?.hasOwnProperty('reusable') && step?.reusable === false) {
-        delete step.reusableStepId;
-      }
-      return step?.deleted ? [] : [omit(step, 'deleted')];
+      const normalisedStep = {
+        ...(
+          step && step.reusableStepId && step.reusable !== false
+            ? reusableSteps?.[step.reusableStepId] ?? {}
+            : {}
+        ),
+        ...(step ?? {})
+      };
+
+      return normalisedStep?.deleted
+        ? []
+        : [omit(
+          normalisedStep, [
+            'deleted',
+            'saved',
+            'completed',
+            'reusableStepId',
+            'reusedStep',
+            'reusable',
+            'usedInProtocols'
+          ]
+        )];
     }
   );
 }
@@ -248,10 +268,17 @@ function normaliseSteps(protocol) {
  * `deleted: true`, and hiding the deleted flag when false so that adding the
  * flag, then setting it to false doesn't count as a change.
  *
+ * `isStandardProtocol` can't change for a protocol, excluding as it may change
+ * from undefined => false.
+ *
+ * `displayTitle` is generated from title, so changes are already accounted for
+ * in title, also displayTitle doesn't have an underlying field with associated
+ * badge
+ *
  * @param versionData
  * @returns {*&{protocols: (*&{steps})[]}}
  */
-const normaliseDeletedProtocols = (versionData) => ({
+const normaliseProtocols = (versionData) => ({
   ...versionData,
   protocols: (Array.isArray(versionData.protocols) ? versionData.protocols : []).flatMap(
     protocol => {
@@ -260,16 +287,30 @@ const normaliseDeletedProtocols = (versionData) => ({
       return protocol?.deleted
         ? []
         : [{
-          ...omit(protocol, 'deleted'),
-          steps: normaliseSteps(protocol)
+          ...omit(protocol, 'deleted', 'isStandardProtocol', 'displayTitle'),
+          speciesDetails: filter(protocol.speciesDetails ?? [], ({value}) => (protocol.species ?? []).includes(value)),
+          steps: normaliseSteps(protocol, versionData.reusableSteps ?? {})
         }];
     })
+});
+
+/**
+ * Reusable step data is normalised into protocol steps, so we don't need to
+ * compare changes in them
+ * @param {object} versionData
+ * @return {object}
+ */
+const removeReusableSteps = (versionData) => ({
+  ...versionData,
+  reusableSteps: []
 });
 
 const normaliseData = (versionData, opts) => {
   return flow([
     normaliseConditions(opts),
-    normaliseDeletedProtocols,
+    normaliseProtocols,
+    // Must be called after normaliseProtocols which uses this data
+    removeReusableSteps,
     deepRemoveEmpty
   ])(versionData);
 };
@@ -314,7 +355,7 @@ const removeHiddenChangeKeys = (keys, prevTree, currTree) => {
 
 const getChanges = (current, version) => {
   if (!current || !version) {
-    return [];
+    return {changed: [], added: [], removed: []};
   }
   const normalisationOptions = { isSubmitted: current.status !== 'draft' };
   const before = normaliseData(version.data, normalisationOptions);
@@ -328,15 +369,19 @@ const getChanges = (current, version) => {
 
   const added = cvKeys.difference(pvKeys);
   const removed = pvKeys.difference(cvKeys);
-  const changed = cvKeys.values().flatMap(
+  const changed = new Set(cvKeys.values().flatMap(
     key => {
       const pvNode = getNode(before, key);
       const cvNode = getNode(after, key);
       return hasChanged(pvNode, cvNode, key) ? [key] : [];
     }
-  );
+  ));
 
-  return [...added, ...removed, ...changed];
+  return {
+    added: [...added],
+    removed: [...removed],
+    changed: [...added.union(removed).union(changed)]
+  };
 };
 
 const ignoreEmptyArrayProps = obj => {
@@ -357,7 +402,10 @@ const hasChanged = (before, after, key) => {
       return !isEqual(ignoreEmptyArrayProps(before[idx]), ignoreEmptyArrayProps(after[idx]));
     });
   } else if (/^protocols\.[a-f0-9-]+$/.test(key)) { // individual protocol
-    return !isEqual(ignoreEmptyArrayProps(before), ignoreEmptyArrayProps(after));
+    const ignoreEmptyArrayPropsBefore = ignoreEmptyArrayProps(before);
+    const ignoreEmptyArrayPropsAfter = ignoreEmptyArrayProps(after);
+    const equal = isEqual(ignoreEmptyArrayPropsBefore, ignoreEmptyArrayPropsAfter);
+    return !equal;
   }
   const valueChanged = !isEqual(before, after);
 
@@ -421,7 +469,15 @@ const getAllChanges = (type = 'project-versions') => (req, res, next) => {
     getGrantedVersion(req, type)
   ])
     .then(([firstVersion, previousVersion, grantedVersion]) => {
-      res.locals.static.changes = getVersionChanges(req[model], firstVersion, previousVersion, grantedVersion);
+      res.locals.static.versionsForComparison = {
+        firstId: firstVersion?.id,
+        previousId: previousVersion?.id,
+        grantedId: grantedVersion?.id
+      };
+      const versionChanges = getVersionChanges(req[model], firstVersion, previousVersion, grantedVersion);
+      res.locals.static.changes = mapValues(versionChanges, changeSet => changeSet.changed);
+      res.locals.static.added = mapValues(versionChanges, changeSet => changeSet.added);
+      res.locals.static.removed = mapValues(versionChanges, changeSet => changeSet.removed);
       res.locals.static.previousProtocols = getPreviousProtocols(firstVersion, previousVersion, grantedVersion);
       res.locals.static.previousAA = getPreviousAA(firstVersion, previousVersion, grantedVersion);
       res.locals.static.previousTraining = getPreviousTraining(firstVersion, previousVersion, grantedVersion);
@@ -443,8 +499,12 @@ const getChangedValues = (question, req, type = 'project-versions') => {
   return Promise.resolve()
     .then(() => getVersion[req.query.version](req, type))
     .then(async (result) => {
-      const value = result && getNode(result.data, question);
-      const current = getNode(req[model].data, question);
+      const normalisationOptions = { isSubmitted: req[model].data.status !== 'draft' };
+      const before = result ? normaliseData(result.data, normalisationOptions) : undefined;
+      const after = normaliseData(req[model].data, normalisationOptions);
+
+      const value = before && getNode(before, question);
+      const current = getNode(after, question);
       return {
         value,
         diff: await diff(value, current, { type: req.query.type })
@@ -514,6 +574,7 @@ module.exports = {
   getPreviousVersion,
   getGrantedVersion,
   getAllChanges,
+  getVersionsForDiff,
   getChangedValues,
   getProjectEstablishment,
   loadRa

@@ -36,7 +36,8 @@ const ReviewFields = ({
   showItemHeading = true,
   isFullApplication,
   title,
-  additionalCommentFields = []
+  additionalCommentFields = [],
+  commentPrefix
 }) => (
   <Fragment>
     {
@@ -69,7 +70,12 @@ const ReviewFields = ({
                 altLabels={altLabels}
                 readonly={readonly}
                 hideChanges={hideChanges}
-                additionalCommentFields={additionalCommentFields}
+                commentKey={commentPrefix ? `${commentPrefix}${field.name}` : undefined }
+                additionalCommentFields={[
+                  ...additionalCommentFields,
+                  // still show comments attached to the field if an override is provided
+                  ...(commentPrefix ? [`${prefix ?? ''}${field.name}`] : [])
+                ]}
               />;
             })
           }

@@ -369,7 +369,10 @@ const FieldGroup = props => {
     <Fragment>
       <ConnectedField {...props} />
       {
-        showComments && <Comments field={props.name} />
+        showComments && <Comments
+          field={props.commentKey ?? props.name}
+          additionalCommentFields={props.additionalCommentFields ?? []}
+        />
       }
     </Fragment>
   );

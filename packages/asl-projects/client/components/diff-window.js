@@ -26,21 +26,23 @@ const DiffWindow = (props) => {
   const isRa = useSelector(state => state.application.schemaVersion) === 'RA';
   const versions = useSelector(state => {
 
-    const iterations = isRa
-      ? get(state, 'application.project.retrospectiveAssessments')
-      : get(state, 'application.project.versions');
+    const { firstId, previousId, grantedId } = get(state, 'static.versionsForComparison');
 
-    const isFirstIteration = iterations.length <= 2 || iterations[1].status === 'granted';
     const arr = [];
     if (props.changedFromGranted) {
       arr.push('granted');
-    } else if (props.changedFromFirst && !isFirstIteration) {
-      arr.push('first');
+      if(props.changedFromLatest && grantedId !== previousId) {
+        arr.push('latest');
+      }
+    } else {
+      if (props.changedFromFirst && firstId !== previousId) {
+        arr.push('first');
+      }
+      if (props.changedFromLatest) {
+        arr.push('latest');
+      }
     }
-    // if the latest version and the granted version are the same then don't add separate tabs
-    if (props.changedFromLatest && iterations[1] && iterations[1].status !== 'granted') {
-      arr.push('latest');
-    }
+
     return arr;
   });
 
