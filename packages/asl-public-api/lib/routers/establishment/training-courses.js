@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { BadRequestError } = require('../../errors');
 const { permissions, validateSchema, fetchOpenTasks } = require('../../middleware');
+const { omit, pick } = require('lodash');
 
 const app = Router({ mergeParams: true });
 
@@ -75,6 +76,15 @@ function checkNoLicences(req, res, next) {
     .catch(next);
 }
 
+function updateDates(req, res, next) {
+  req.body.data = {
+    ...omit(req.trainingCourse, 'id', 'courseDuration', 'startDate', 'endDate'),
+    ...pick(req.body.data ?? req.body, 'courseDuration', 'startDate', 'endDate')
+  };
+
+  next();
+}
+
 app.post('/',
   permissions('trainingCourse.update'),
   validateSchema('TrainingCourse'),
@@ -84,6 +94,13 @@ app.post('/',
 app.put('/:trainingCourseId',
   permissions('trainingCourse.update'),
   checkNoLicences,
+  validateSchema('TrainingCourse'),
+  submit('update')
+);
+
+app.put('/:trainingCourseId/course-dates',
+  permissions('trainingCourse.update'),
+  updateDates,
   validateSchema('TrainingCourse'),
   submit('update')
 );
