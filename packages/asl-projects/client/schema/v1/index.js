@@ -2058,15 +2058,19 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
               fields: [
                 {
                   name: 'experience-summary',
-                  label: 'Summarise the typical experience or end-to-end scenario for an animal being used in this protocol.',
-                  hint: 'Consider the cumulative effect of any combinations of procedures that you may carry out.',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  label: values => calculateProtocolContext(values, 'Summarise the typical experience or end-to-end scenario for an animal being used in this protocol.',
+                    'What is the typical experience or end-to-end scenario for an animal being used in this protocol?', 'Typical experience or end-to-end scenario for an animal in this protocol'),
+                  hint: values => calculateProtocolContext(values, 'Consider the cumulative effect of any combinations of procedures that you may carry out.',
+                   'Consider the cumulative effect of any combinations of procedures that you may carry out', null ),
+                  type: values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                 },
                 {
                   name: 'experience-endpoints',
-                  label: 'Describe the general humane endpoints that you will apply during the protocol.',
-                  hint: 'These will be in addition to the endpoints stated for each step.',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  label: values => calculateProtocolContext(values, 'Describe the general humane endpoints that you will apply during the protocol.',
+                    'Describe the general humane endpoints that you will apply during the protocol', 'General humane endpoints for this protocol'),
+                  hint: values => calculateProtocolContext(values, 'These will be in addition to the endpoints stated for each step.', 'These will be in addition to the endpoints stated for each step.'
+                  , 'These will be in addition to the endpoints covered in General constraints and in each step'),
+                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                 }
               ]
             },
@@ -2079,9 +2083,9 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                 {
                   name: 'outputs',
                   show: values => !isTrainingLicence(values),
-                  label: 'What outputs are expected to arise from this protocol?',
-                  hint: 'For example, test results, phenotypic information, or products.',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  label: values => calculateProtocolContext(values, 'What outputs are expected to arise from this protocol?', 'What outputs are expected from this protocol?', 'Permitted outputs from this protocol'),
+                  hint: values => calculateProtocolContext(values, 'For example, test results, phenotypic information, or products.', 'For example, test results, phenotypic information, or products', 'For example, test results, phenotypic information, or products'),
+                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                 },
                 {
                   name: 'training-outputs',
@@ -2091,7 +2095,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                 },
                 {
                   name: 'quantitative-data',
-                  label: 'Will this protocol generate quantitative data?',
+                  label: values => calculateProtocolContext(values, 'Will this protocol generate quantitative data?', 'Will this protocol generate quantitative data?', 'Generation of quantitative data'),
                   type: 'radio',
                   className: 'smaller',
                   inline: true,
