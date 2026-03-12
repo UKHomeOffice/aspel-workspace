@@ -1,3 +1,5 @@
+const { add } = require("lodash");
+
 const E1 = { content: ['2. Ethics, animal welfare and the 3Rs (level 1)'] };
 const E2 = { content: ['9. Ethics, animal welfare and the 3Rs (level 2)'] };
 const L = { content: ['1. Legislation'] };
@@ -71,6 +73,16 @@ const mandatoryTrainingRequirementsForRoles = {
         }
       }
     }
+  },
+  sqp: {
+    title: 'SQP mandatory training',
+    modules: {
+      L,
+      E1,
+      'K (theory)': K,
+      E2
+    },
+    additional: false
   }
 };
 

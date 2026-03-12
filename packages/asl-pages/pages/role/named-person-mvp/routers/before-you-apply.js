@@ -19,6 +19,10 @@ module.exports = () => {
   );
 
   app.post('/', (req, res, next) => {
+    const roles = req.session.form[FORM_ID].values;
+    if (['nacwo', 'nvs', 'sqp'].includes(roles.type.toLowerCase())) {
+      return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'mandatory-training' }));
+    }
     return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'select-role' }));
   });
 

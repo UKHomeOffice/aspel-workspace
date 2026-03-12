@@ -1,4 +1,7 @@
-module.exports = {
+const { merge } = require('lodash');
+const baseContent = require('../../../profile/content');
+
+module.exports = merge({}, baseContent, {
   title: '{{ roleType }} mandatory training',
   nacwoTrainingDesc: `\
 Nominees must have completed all the mandatory training in the last 5 years before starting the role, unless:
@@ -6,7 +9,7 @@ Nominees must have completed all the mandatory training in the last 5 years befo
 * there is an unavoidable delay, in which case they must complete any missing modules as soon as possible
 * they have grounds for an exemption - which means they have equivalent training or professional experience which makes the training unnecessary
 `,
-  nvsTrainingDesc: `\
+  nvsAndSqpTrainingDesc: `\
 Nominees must have completed all the mandatory training in the last 5 years before starting the role, unless they have grounds for exemption. This means they have equivalent training or professional experience which makes the training unnecessary.
 `,
   nvsException: `The only exception is the NVS module, where if they haven't completed it in the last 5 years, they must do so within 12 months of starting the role.`,
@@ -29,4 +32,4 @@ Nominees must have completed all the mandatory training in the last 5 years befo
       required: 'Select an option relating to their mandatory training'
     }
   }
-};
+});

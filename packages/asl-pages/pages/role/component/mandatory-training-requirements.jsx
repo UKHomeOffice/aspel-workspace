@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import content from '../named-person-mvp/mandatory-training/content/mandatory-training-requirements-for-roles';
+import content from '../named-person-mvp/content/mandatory-training-requirements-for-roles';
 
 export default function MandatoryTrainingRequirements({ roleType }) {
 
@@ -50,12 +50,16 @@ export default function MandatoryTrainingRequirements({ roleType }) {
           </thead>
           <tbody>
             {renderModules(contentForRoleType.modules)}
-            <tr>
-              <td colSpan="2">
-                <div className="govuk-heading-s">{contentForRoleType.additional.title}</div>
-              </td>
-            </tr>
-            {renderModules(contentForRoleType.additional.modules)}
+            {contentForRoleType.additional && (
+              <>
+                <tr>
+                  <td colSpan="2">
+                    <div className="govuk-heading-s">{contentForRoleType.additional.title}</div>
+                  </td>
+                </tr>
+                {renderModules(contentForRoleType.additional.modules)}
+              </>
+            )}
           </tbody>
         </table>
       </Fragment>

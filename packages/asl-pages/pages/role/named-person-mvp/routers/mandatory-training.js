@@ -1,18 +1,16 @@
-const { page } = require('@asl/service/ui');
 const { form } = require('../../../common/routers');
-const { buildModel } = require('../../../../lib/utils');
-const schema = require('./schema');
+const { Router } = require('express');
+const schema = require('../schema').mandatoryTraining;
 
-module.exports = (settings) => {
-  const app = page({
-    root: __dirname,
-    ...settings
-  });
+const getMandatoryTrainingFormId = (req) => `${req.profile.id}-mandatory-training`;
+
+module.exports = ({ formId }) => {
+  const app = Router({ mergeParams: true });
 
   app.use((req, res, next) => {
     req.model = {
-      id: `${req.profile.id}-mandatory-training`,
-      ...buildModel(schema)
+      ...req.model,
+      id: getMandatoryTrainingFormId(req)
     };
     next();
   });
@@ -21,7 +19,7 @@ module.exports = (settings) => {
     form({
       configure(req, res, next) {
         const role =
-          req.session.form[`${req.profile.id}-new-role-named-person`].values;
+          req.session.form[formId].values;
         req.form.schema = schema(role);
         next();
       },
@@ -29,14 +27,10 @@ module.exports = (settings) => {
         Object.assign(res.locals.static, {
           profile: req.profile,
           role: {
-            ...req.session.form[`${req.profile.id}-new-role-named-person`]
+            ...req.session.form[formId]
               .values
           }
         });
-        next();
-      },
-      saveValues: (req, res, next) => {
-        req.session.form[req.model.id].values = req.form.values;
         next();
       }
     })
