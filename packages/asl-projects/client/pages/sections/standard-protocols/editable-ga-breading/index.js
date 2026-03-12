@@ -1,14 +1,14 @@
-import ProtocolFormBase from '../helpers/ga-breading/protocol-form-base';
 import { gaBreadingData } from '../prefilled-data/ga-breading-data';
+import ProtocolFormBase from '../helpers/ga-breading/protocol-form-base';
 import { connect } from 'react-redux';
 import { ajaxSync, updateProject } from '../../../../actions/projects';
 
-const GABreedingProtocolForm = (props) => (
+const EditableGABreedingProtocolForm = (props) => (
   <ProtocolFormBase
     {...props}
-    title="Add a standard GA breeding protocol"
-    radioName="standard-protocols"
-    gaBreading={gaBreadingData(true, false)}
+    title="Add an editable GA breeding protocol"
+    radioName="editable-protocols"
+    gaBreading={gaBreadingData(false, true)}
     cancelPath="/standard-protocol"
   />
 );
@@ -25,4 +25,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(GABreedingProtocolForm);
+)(EditableGABreedingProtocolForm);

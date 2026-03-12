@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { Button, Warning } from '@ukhomeoffice/react-components';
 
 import isUndefined from 'lodash/isUndefined';
-import { flatMap, isEqual, pickBy, uniqBy } from 'lodash';
+import { flatMap, pickBy, uniqBy } from 'lodash';
 
 import ReviewFields from '../../../components/review-fields';
 import Repeater from '../../../components/repeater';
@@ -27,7 +27,36 @@ import Expandable from '../../../components/expandable';
 import cloneDeep from 'lodash/cloneDeep';
 
 function isNewStep(step) {
-  return step && (isEqual(Object.keys(step).filter(a => a !== 'addExisting'), ['id']) || !isUndefined(step.addExisting));
+  // A step is considered the "new placeholder" if it only contains an id (and any
+  // small set of ignored metadata keys) or if it explicitly has the addExisting flag.
+  // We must ignore any protocol-level flags and other metadata (e.g. isStandardProtocol,
+  // standardProtocolType, saved, completed, reusable metadata) so that decorating steps
+  // does not break the placeholder detection.
+  if (!step) {
+    return false;
+  }
+
+  const IGNORED_KEYS = new Set([
+    'addExisting',
+    'isStandardProtocol',
+    'standardProtocolType',
+    'saved',
+    'completed',
+    'reusable',
+    'reusableStepId',
+    'existingValues',
+    'reference',
+    'reusedStep'
+  ]);
+
+  const keys = Object.keys(step).filter(k => !IGNORED_KEYS.has(k));
+  // If the only non-ignored key is 'id' it's a new placeholder
+  if (keys.length === 1 && keys[0] === 'id') {
+    return true;
+  }
+
+  // Backwards compatible: if addExisting is defined treat as placeholder
+  return !isUndefined(step.addExisting);
 }
 
 function renderUsedInProtocols(protocolIndexes) {
@@ -174,7 +203,7 @@ class Step extends Component {
       !stepEditable && values.title && (
         <ReviewFields
           fields={[fields.find(f => f.name === 'title')]}
-          values={{ title: values.title }}
+          values={values}
           prefix={prefix}
           editLink={`0#${this.props.prefix}`}
           protocolId={protocol.id}
@@ -233,7 +262,7 @@ class Step extends Component {
             stepId={values.id}
           />
           {
-            !values.reusable && editable && !deleted && <a href="#" onClick={this.editStep}>Edit step</a>
+            values.isStandardProtocol ? null : !values.reusable && editable && !deleted && <a href="#" onClick={this.editStep}>Edit step</a>
           }
           {
             values.reusable && editable && !deleted && (
@@ -244,6 +273,18 @@ class Step extends Component {
     }</>;
 
     const repeatedFrom = getRepeatedFromProtocolIndex(values, protocol.id);
+
+    const canReorder =
+      !values.isStandardProtocol &&
+      editable &&
+      completed &&
+      !deleted &&
+      !values.deleted;
+
+    const isMandatory =
+      values?.optional === false &&
+      ['standard', 'editable'].includes(values?.standardProtocolType);
+
     const step = <>
       {
         values.deleted && <span className="badge deleted">removed</span>
@@ -258,31 +299,43 @@ class Step extends Component {
         }
         <Fragment>
           {
-            editable && completed && !deleted && !values.deleted && (
+            canReorder && (
               <div className="float-right">
                 {
                   length > 1 && (
-                    <span>Reorder: <a href="#" disabled={index === 0} onClick={this.moveUp}>Up</a> <a href="#" disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
+                    <span>
+                      Reorder:{' '}
+                      {index === 0
+                        ? <span className="disabled">Up</span>
+                        : <a href="#" onClick={(e) => { e.preventDefault(); this.moveUp(e); }}>Up</a>
+                      }
+                      {' '}
+                      {index + 1 >= length
+                        ? <span className="disabled">Down</span>
+                        : <a href="#" onClick={(e) => { e.preventDefault(); this.moveDown(e); }}>Down</a>
+                      }
+                    </span>
                   )
                 }
-                {
-                  length > 1 && <span> | <a href="#" onClick={this.removeItem}>Remove</a></span>
-                }
+                {!isMandatory  && length > 1 && (
+                  <span> | <a href="#" onClick={this.removeItem}>Remove</a></span>
+                )}
               </div>
             )
           }
           <h3>
-            Step { !values.deleted && number + 1 }
-            {
-              <a href="#" className={classnames('inline-block', { restore: values.deleted })} onClick={this.props.restoreItem}>{values.deleted ? ' Restore' : ''}</a>
-            }
-            {(pdf || readonly) && values.reference && (<Fragment>: { values.reference }</Fragment>)}
+            Step {!values.deleted && `${number + 1}: ${values.reference ? ` ${values.reference}` : ''}`}
+
+            <a href="#" className={classnames('inline-block', { restore: values.deleted })} onClick={this.props.restoreItem}>{values.deleted ? ' Restore' : ''}</a>
+
+            {(pdf || readonly) && values.reference && (
+              <Fragment>: {values.reference}</Fragment>)}
             {
               completed && !isUndefined(values.optional) &&
-              <span className="light smaller">{` (${values.optional === true ? 'optional' : 'mandatory'})`}</span>
+              <span className="light smaller">{` (${isMandatory ? 'mandatory': 'optional'})`}</span>
             }
             {
-              !pdf && readonly && repeatedFrom && <div className="light smaller">{`Repeated from protocol ${repeatedFrom}`}</div>
+              !pdf && readonly && repeatedFrom && (<div className="light smaller">{`Repeated from protocol ${repeatedFrom}`}</div>)
             }
           </h3>
           {
@@ -294,7 +347,7 @@ class Step extends Component {
       </section>
     </>;
 
-    if (editable && isNewStep(values) && reusableSteps.length > 0) {
+    if (editable && isNewStep(values)) {
       const onSaveSelection = (selectedSteps) => {
         // Replace current step with selected
         const mappedSteps = flatMap(this.props.protocol.steps || [], step => {
@@ -438,7 +491,12 @@ const EditStepWarning = ({ editingReusableStep, protocol, step, completed }) => 
 };
 
 const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReviewStep, steps, reusableSteps, ...props }) => {
-  const lastStepIsNew = isNewStep(steps[steps.length - 1]);
+  // guard steps to a safe array inside the repeater
+  const safeRepeaterSteps = Array.isArray(steps) ? steps : [];
+  // Determine whether the last step is the "new placeholder" safely.
+  const lastStep = safeRepeaterSteps.length ? safeRepeaterSteps[safeRepeaterSteps.length - 1] : null;
+  const lastStepIsNew = lastStep ? isNewStep(lastStep) : false;
+
   //By default, reusable steps are updated always, but this is not true, hence adding ability to turn off when not needed
   const [updateReusable, setUpdateReusable] = useState(true);
 
@@ -446,7 +504,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
     type="steps"
     singular="step"
     prefix={prefix}
-    items={steps}
+    items={safeRepeaterSteps}
     softDelete={true}
     onBeforeAdd={() => {
       setUpdateReusable(false);
@@ -477,7 +535,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
       updateItem({ steps: mappedSteps });
       setUpdateReusable(true); // Always reset this after save
     }}
-    addAnother={!props.pdf && !values.deleted && editable && !lastStepIsNew}
+    addAnother={!values.isStandardProtocol && !props.pdf && !values.deleted && editable && !lastStepIsNew}
     {...props}
   >
     <Step
@@ -496,16 +554,31 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
 export default function Steps({project, values, ...props}) {
   const isReviewStep = parseInt(useParams().step, 10) === 1;
   const [ allSteps, reusableSteps ] = hydrateSteps(project.protocols, values.steps, project.reusableSteps || {});
-  let steps;
-  if (props.pdf) {
-    steps = allSteps.filter(step => !step.deleted);
-  } else {
-    steps = removeNewDeleted(allSteps, props.previousProtocols.steps);
-    if (!props.editable && props.previousProtocols.steps.length > props.index) {
-      steps = addDeletedReusableSteps(steps, props.previousProtocols.steps[props.index], reusableSteps);
-    }
-  }
-  const [expanded, setExpanded] = useState(steps.map(() => false));
+  // project.protocols is an array. Get protocol-level flags from the current protocol `values`.
+  const { isStandardProtocol = false, standardProtocolType = '' } = values || {};
+   let steps;
+   const prevProtocolsSteps = (props.previousProtocols && props.previousProtocols.steps) ? props.previousProtocols.steps : [];
+   if (props.pdf) {
+     steps = allSteps.filter(step => !step.deleted);
+   } else {
+     // use the guarded prevProtocolsSteps variable
+     steps = removeNewDeleted(allSteps, prevProtocolsSteps);
+     if (!props.editable && prevProtocolsSteps.length > props.index) {
+       steps = addDeletedReusableSteps(steps, prevProtocolsSteps[props.index], reusableSteps);
+     }
+   }
+   // Attach protocol flags to each step only when steps array has content
+   if (Array.isArray(steps) && steps.length > 0) {
+     steps = steps.map(step => ({ ...step, isStandardProtocol, standardProtocolType }));
+   }
+   const safeSteps = Array.isArray(steps) ? steps : [];
+
+   // If editable and no real steps exist, render a single placeholder step so the Step
+   // component can show the "create a new step or select reusable" UI. We don't want to
+   // decorate this placeholder with protocol flags (that would break isNewStep detection).
+   const displaySteps = (props.editable && safeSteps.length === 0) ? [{ id: uuid() }] : safeSteps;
+
+   const [expanded, setExpanded] = useState(displaySteps.map(() => false));
 
   const setAllExpanded = (e) => {
     e.preventDefault();
@@ -540,12 +613,12 @@ export default function Steps({project, values, ...props}) {
         <StepsRepeater {...props}
           project={project}
           values={values}
-          steps={steps}
-          reusableSteps={reusableSteps}
-          isReviewStep={isReviewStep}
-          expanded={expanded}
-          onToggleExpanded={onToggleExpanded}
-        />
+          steps={displaySteps}
+           reusableSteps={reusableSteps}
+           isReviewStep={isReviewStep}
+           expanded={expanded}
+           onToggleExpanded={onToggleExpanded}
+         />
       </div>);
   }
 
@@ -558,12 +631,12 @@ export default function Steps({project, values, ...props}) {
         <StepsRepeater {...props}
           project={project}
           values={values}
-          steps={steps}
-          reusableSteps={reusableSteps}
-          isReviewStep={isReviewStep}
-          expanded={expanded}
-          onToggleExpanded={onToggleExpanded}
-        />
+          steps={displaySteps}
+           reusableSteps={reusableSteps}
+           isReviewStep={isReviewStep}
+           expanded={expanded}
+           onToggleExpanded={onToggleExpanded}
+         />
       </div>
     </div>
   );
