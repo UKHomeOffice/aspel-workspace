@@ -17,7 +17,7 @@ module.exports = (role) => {
     if (roleType === 'sqp') {
       return [
         {
-          label: 'Yes, within the last 5 years',
+          label: 'Yes',
           value: 'yes',
           behaviour: 'exclusive'
         },

@@ -8,7 +8,7 @@ describe('named person mvp mandatory training schema', () => {
 
     expect(options).toEqual([
       {
-        label: 'Yes, within the last 5 years',
+        label: 'Yes',
         value: 'yes',
         behaviour: 'exclusive'
       },
