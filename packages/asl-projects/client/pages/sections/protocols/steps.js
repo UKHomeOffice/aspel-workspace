@@ -199,6 +199,8 @@ class Step extends Component {
     const stepEditable = editingReusableStep ? (values.existingValues.id === values.id) : !completed;
     const commentPrefix = values.reusableStepId ? `reusableSteps.${values.reusableStepId}.` : undefined;
 
+    console.log('fields', fields, 'values', values);
+
     const stepContent = <>{
       !stepEditable && values.title && (
         <ReviewFields

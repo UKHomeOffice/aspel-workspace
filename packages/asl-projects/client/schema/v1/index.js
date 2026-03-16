@@ -1969,7 +1969,8 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                       label: 'No',
                       value: false
                     }
-                  ]
+                  ],
+                  show: props => { return !props.readonly; }
                 },
                 {
                   name: 'adverse',
