@@ -19,6 +19,13 @@ const mandatoryTrainingSupportingLinks = (roleType) => {
         label: 'Adding a NVS role'
       },
       guidanceOnTrainingSupportingLink
+    ],
+    sqp: [
+      {
+        href: 'https://www.gov.uk/guidance/nominate-someone-for-a-suitably-qualified-person-role',
+        label: 'Adding a SQP role'
+      },
+      guidanceOnTrainingSupportingLink
     ]
   };
 
