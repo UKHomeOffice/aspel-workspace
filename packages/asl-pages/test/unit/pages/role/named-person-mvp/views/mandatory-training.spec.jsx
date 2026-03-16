@@ -118,5 +118,9 @@ describe('Mandatory training page', () => {
       'href',
       'https://www.gov.uk/guidance/nominate-someone-for-a-suitably-qualified-person-role'
     );
+    expect(screen.getByRole('link', { name: 'Guidance on the operation of the Animals (Scientific Procedures) Act 1986' })).toHaveAttribute(
+      'href',
+      'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#other-suitably-qualified-person'
+    );
   });
 });

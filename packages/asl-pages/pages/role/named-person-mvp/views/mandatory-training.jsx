@@ -2,7 +2,9 @@ import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { Snippet, Header, Form, TrainingSummary, Details, Inset, SupportingLinks, Link, ErrorSummary } from '@ukhomeoffice/asl-components';
 import MandatoryTrainingRequirements from '../../component/mandatory-training-requirements';
-import mandatoryTrainingSupportingLinks from '../content/supporting-links';
+import namedPersonGuidance from '../content/named-person-guidance';
+
+const { getMandatoryTrainingSupportingLinks } = namedPersonGuidance;
 
 const Page = () => {
   const { profile, role } = useSelector(state => state.static, shallowEqual);
@@ -75,7 +77,7 @@ const Page = () => {
 
       <SupportingLinks
         sectionTitle={<Snippet>supportingGuidanceTitle</Snippet>}
-        links={mandatoryTrainingSupportingLinks(roleType)}
+        links={getMandatoryTrainingSupportingLinks(roleType)}
       />
     </div>
   );
