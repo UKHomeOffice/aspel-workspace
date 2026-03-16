@@ -56,10 +56,12 @@ module.exports = (role) => {
 
   return {
     mandatory: {
-      hint: `Select 'Yes' if they have completed all the mandatory training within the last 5 years.`,
       inputType: 'checkboxGroup',
       options: mandatoryOptions(role.type),
-      validate: ['required', 'exclusive']
+      validate: ['required', 'exclusive'],
+      hint: ['nvs', 'nacwo'].includes(role.type)
+        ? 'Select \'Yes\' if they have completed all the mandatory training within the last 5 years.'
+        : null
     }
   };
 };
