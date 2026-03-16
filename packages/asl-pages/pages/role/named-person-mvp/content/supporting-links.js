@@ -1,31 +1,41 @@
 const mandatoryTrainingSupportingLinks = (roleType) => {
-  const guidanceOnTrainingSupportingLink = {
-    href: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act',
-    label:
-      'Guidance on training and continuous professional development (CPD) under ASPA'
+  const guidanceOnTrainingSupportingLink = (roleType) => {
+    let href;
+    if (roleType === 'nacwo') {
+      href = 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-animal-care-and-welfare-officers-nacwos';
+    } else if (roleType === 'nvs') {
+      href = 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-veterinary-surgeons-nvs';
+    } else if (roleType === 'sqp') {
+      href = 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#other-suitably-qualified-person';
+    }
+
+    return {
+      href: href,
+      label: 'Guidance on training and continuous professional development (CPD) under ASPA'
+    };
   };
 
   const supportingLinksMap = {
     nacwo: [
       {
         href: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-animal-care-and-welfare-officer-role',
-        label: 'Adding a NACWO role'
+        label: 'NACWO role guide'
       },
-      guidanceOnTrainingSupportingLink
+      guidanceOnTrainingSupportingLink(roleType)
     ],
     nvs: [
       {
         href: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-veterinary-surgeon-role',
-        label: 'Adding a NVS role'
+        label: 'NVS role guide'
       },
-      guidanceOnTrainingSupportingLink
+      guidanceOnTrainingSupportingLink(roleType)
     ],
     sqp: [
       {
         href: 'https://www.gov.uk/guidance/nominate-someone-for-a-suitably-qualified-person-role',
         label: 'Adding a SQP role'
       },
-      guidanceOnTrainingSupportingLink
+      guidanceOnTrainingSupportingLink(roleType)
     ]
   };
 
