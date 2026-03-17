@@ -29,7 +29,19 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
     if (req.session.form?.[formId]) {
       delete req.session.form[formId];
     }
+
+    // The same form is used for both creation and updates, but req.trainingCourse will only be set if editing an
+    // existing course.
+    //
+    // If the form is being updated then the user should start on the course details page, which means we also need
+    // to set the project in the session to simulate the user having visited that page.
     if (req.trainingCourse) {
+      req.session.form[formId] = {
+        values: {
+          projectId: req.trainingCourse.projectId
+        }
+      };
+
       return res.redirect(
         req.buildRoute(
           baseRoute,
