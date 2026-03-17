@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 import Page from '../../../../../../pages/role/named-person-mvp/views/before-you-apply';
 import content from '../../../../../../pages/role/named-person-mvp/content/before-you-apply';
 
+const mockSupportingLinks = jest.fn(() => null);
+
 jest.mock('@ukhomeoffice/asl-components', () => {
   const React = require('react');
   const { default: Snippet } = jest.requireActual('@ukhomeoffice/asl-components/src/snippet');
@@ -15,7 +17,10 @@ jest.mock('@ukhomeoffice/asl-components', () => {
     Snippet,
     Header: ({ title }) => <div>{title}</div>,
     Form: ({ children }) => <div>{children}</div>,
-    SupportingLinks: () => null
+    SupportingLinks: props => {
+      mockSupportingLinks(props);
+      return null;
+    }
   };
 });
 
@@ -42,6 +47,12 @@ const renderPage = roleType => {
 };
 
 describe('Before you apply page', () => {
+  test('renders the profile name caption', () => {
+    renderPage('NACWO');
+
+    expect(screen.getByText('Jane Doe')).toBeInTheDocument();
+  });
+
   test('renders shared NACWO content with the NACWO role guide link', () => {
     renderPage('NACWO');
 
@@ -130,5 +141,18 @@ describe('Before you apply page', () => {
     expect(screen.getByText('you can describe why they are suitable for the role')).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'HOLC role guide' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'training record in ASPeL' })).not.toBeInTheDocument();
+  });
+
+  test('passes role-specific supporting links to SupportingLinks', () => {
+    renderPage('NTCO');
+
+    expect(mockSupportingLinks).toHaveBeenCalledWith(expect.objectContaining({
+      links: expect.arrayContaining([
+        expect.objectContaining({
+          label: 'NTCO role guide',
+          href: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-training-and-competency-officer-role'
+        })
+      ])
+    }));
   });
 });
