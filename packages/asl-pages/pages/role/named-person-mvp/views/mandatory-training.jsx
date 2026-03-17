@@ -3,6 +3,7 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { Snippet, Header, Form, TrainingSummary, Details, Inset, SupportingLinks, Link, ErrorSummary } from '@ukhomeoffice/asl-components';
 import MandatoryTrainingRequirements from '../../component/mandatory-training-requirements';
 import namedPersonGuidance from '../content/named-person-guidance';
+import { ROLE_TYPES } from '../role-types';
 
 const { getMandatoryTrainingSupportingLinks } = namedPersonGuidance;
 
@@ -11,7 +12,7 @@ const Page = () => {
   const roleType = role.type;
 
   const renderTrainingIntro = () => {
-    if (roleType === 'nacwo') {
+    if (roleType === ROLE_TYPES.nacwo) {
       return (
         <p className="govuk-body">
           <Snippet>nacwoTrainingDesc</Snippet>
@@ -19,14 +20,14 @@ const Page = () => {
       );
     }
 
-    if (roleType === 'nvs' || roleType === 'sqp') {
+    if (roleType === ROLE_TYPES.nvs || roleType === ROLE_TYPES.sqp) {
       return (
         <>
           <p className="govuk-body">
             <Snippet>nvsAndSqpTrainingDesc</Snippet>
           </p>
 
-          {roleType === 'nvs' && (
+          {roleType === ROLE_TYPES.nvs && (
             <Inset>
               <p className="govuk-body">
                 <Snippet>nvsException</Snippet>
