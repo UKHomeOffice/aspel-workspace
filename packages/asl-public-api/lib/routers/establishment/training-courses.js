@@ -2,6 +2,7 @@ const { Router } = require('express');
 const { BadRequestError } = require('../../errors');
 const { permissions, validateSchema, fetchOpenTasks } = require('../../middleware');
 const { omit, pick } = require('lodash');
+const moment = require('moment');
 
 const app = Router({ mergeParams: true });
 
@@ -69,11 +70,20 @@ function checkNoLicences(req, res, next) {
     .then(() => req.trainingCourse.$relatedQuery('trainingPils'))
     .then(pils => {
       if (pils.length) {
-        return next(new BadRequestError());
+        return next(new BadRequestError('Course has participants and can\'t be changed'));
       }
       next();
     })
     .catch(next);
+}
+
+function checkCourseNotStarted(req, res, next) {
+  const currentStartDate = moment(req.trainingCourse.startDate, 'YYYY-MM-DD');
+  if (currentStartDate.isBefore(moment().endOf('day'))) {
+    return next(new BadRequestError('Course dates cannot be updated once the course has started'));
+  }
+
+  next();
 }
 
 function updateDates(req, res, next) {
@@ -100,6 +110,7 @@ app.put('/:trainingCourseId',
 
 app.put('/:trainingCourseId/course-dates',
   permissions('trainingCourse.update'),
+  checkCourseNotStarted,
   updateDates,
   validateSchema('TrainingCourse'),
   submit('update')
