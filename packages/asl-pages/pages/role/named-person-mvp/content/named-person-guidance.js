@@ -1,3 +1,5 @@
+const { ROLE_TYPES, normalizeRoleType } = require('../role-types');
+
 const LABELS = {
   conflictOfInterest: 'Make a conflict of interest declaration',
   cpd: 'Guidance on training and continuous professional development (CPD) under ASPA',
@@ -8,26 +10,26 @@ const URLS = {
   conflictOfInterest: 'https://www.gov.uk/government/publications/conflict-of-interest-declaration-form-aspa-1986',
   mandatoryTrainingGuidance: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act',
   roleGuide: {
-    nacwo: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-animal-care-and-welfare-officer-role',
-    nvs: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-veterinary-surgeon-role',
-    sqp: 'https://www.gov.uk/guidance/nominate-someone-for-a-suitably-qualified-person-role',
-    nio: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-information-officer-role',
-    ntco: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-training-and-competency-officer-role'
+    [ROLE_TYPES.nacwo]: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-animal-care-and-welfare-officer-role',
+    [ROLE_TYPES.nvs]: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-veterinary-surgeon-role',
+    [ROLE_TYPES.sqp]: 'https://www.gov.uk/guidance/nominate-someone-for-a-suitably-qualified-person-role',
+    [ROLE_TYPES.nio]: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-information-officer-role',
+    [ROLE_TYPES.ntco]: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-training-and-competency-officer-role'
   },
   cpd: {
-    nacwo: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-animal-care-and-welfare-officers-nacwos',
-    nvs: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-veterinary-surgeons-nvs',
-    nio: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-information-officers-nios',
-    ntco: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-training-and-competency-officers-ntcos',
+    [ROLE_TYPES.nacwo]: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-animal-care-and-welfare-officers-nacwos',
+    [ROLE_TYPES.nvs]: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-veterinary-surgeons-nvs',
+    [ROLE_TYPES.nio]: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-information-officers-nios',
+    [ROLE_TYPES.ntco]: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-training-and-competency-officers-ntcos',
     establishmentRoles: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#establishment-licence-holdernamed-person-responsible-for-compliance'
   },
   operation: {
-    nacwo: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#named-animal-care-and-welfare-officer-nacwo',
-    nvs: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#named-veterinary-surgeon-nvs',
-    sqp: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#other-suitably-qualified-person',
-    nio: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#named-information-officer-nio',
-    ntco: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#named-training-and-competency-officer-ntco',
-    nprc: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#named-person-responsible-for-compliance-nprc',
+    [ROLE_TYPES.nacwo]: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#named-animal-care-and-welfare-officer-nacwo',
+    [ROLE_TYPES.nvs]: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#named-veterinary-surgeon-nvs',
+    [ROLE_TYPES.sqp]: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#other-suitably-qualified-person',
+    [ROLE_TYPES.nio]: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#named-information-officer-nio',
+    [ROLE_TYPES.ntco]: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#named-training-and-competency-officer-ntco',
+    [ROLE_TYPES.nprc]: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#named-person-responsible-for-compliance-nprc',
     licenceHolder: 'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#who-can-hold-an-establishment-licence'
   }
 };
@@ -35,98 +37,98 @@ const URLS = {
 const link = (href, label) => ({ href, label });
 
 const namedPersonGuidanceByRole = {
-  nacwo: {
-    roleGuideUrl: URLS.roleGuide.nacwo,
+  [ROLE_TYPES.nacwo]: {
+    roleGuideUrl: URLS.roleGuide[ROLE_TYPES.nacwo],
     roleGuideLabels: {
       beforeYouApply: 'NACWO role guide',
       mandatoryTraining: 'Adding a NACWO role'
     },
     supportingLinks: {
       beforeYouApply: [
-        link(URLS.roleGuide.nacwo, 'NACWO role guide'),
+        link(URLS.roleGuide[ROLE_TYPES.nacwo], 'NACWO role guide'),
         link(URLS.conflictOfInterest, LABELS.conflictOfInterest),
-        link(URLS.cpd.nacwo, LABELS.cpd),
-        link(URLS.operation.nacwo, LABELS.operation)
+        link(URLS.cpd[ROLE_TYPES.nacwo], LABELS.cpd),
+        link(URLS.operation[ROLE_TYPES.nacwo], LABELS.operation)
       ],
       mandatoryTraining: [
-        link(URLS.roleGuide.nacwo, 'Adding a NACWO role'),
+        link(URLS.roleGuide[ROLE_TYPES.nacwo], 'Adding a NACWO role'),
         link(URLS.mandatoryTrainingGuidance, LABELS.cpd)
       ]
     }
   },
-  nvs: {
-    roleGuideUrl: URLS.roleGuide.nvs,
+  [ROLE_TYPES.nvs]: {
+    roleGuideUrl: URLS.roleGuide[ROLE_TYPES.nvs],
     roleGuideLabels: {
       beforeYouApply: 'NVS role guide',
       mandatoryTraining: 'Adding a NVS role'
     },
     supportingLinks: {
       beforeYouApply: [
-        link(URLS.roleGuide.nvs, 'NVS role guide'),
+        link(URLS.roleGuide[ROLE_TYPES.nvs], 'NVS role guide'),
         link(URLS.conflictOfInterest, LABELS.conflictOfInterest),
-        link(URLS.cpd.nvs, LABELS.cpd),
-        link(URLS.operation.nvs, LABELS.operation)
+        link(URLS.cpd[ROLE_TYPES.nvs], LABELS.cpd),
+        link(URLS.operation[ROLE_TYPES.nvs], LABELS.operation)
       ],
       mandatoryTraining: [
-        link(URLS.roleGuide.nvs, 'Adding a NVS role'),
+        link(URLS.roleGuide[ROLE_TYPES.nvs], 'Adding a NVS role'),
         link(URLS.mandatoryTrainingGuidance, LABELS.cpd)
       ]
     }
   },
-  sqp: {
-    roleGuideUrl: URLS.roleGuide.sqp,
+  [ROLE_TYPES.sqp]: {
+    roleGuideUrl: URLS.roleGuide[ROLE_TYPES.sqp],
     roleGuideLabels: {
       beforeYouApply: 'SQP role guide',
       mandatoryTraining: 'Adding a SQP role'
     },
     supportingLinks: {
       beforeYouApply: [
-        link(URLS.roleGuide.sqp, 'SQP role guide'),
+        link(URLS.roleGuide[ROLE_TYPES.sqp], 'SQP role guide'),
         link(URLS.conflictOfInterest, LABELS.conflictOfInterest),
-        link(URLS.operation.sqp, LABELS.operation)
+        link(URLS.operation[ROLE_TYPES.sqp], LABELS.operation)
       ],
       mandatoryTraining: [
-        link(URLS.roleGuide.sqp, 'Adding a SQP role'),
-        link(URLS.operation.sqp, LABELS.operation)
+        link(URLS.roleGuide[ROLE_TYPES.sqp], 'Adding a SQP role'),
+        link(URLS.operation[ROLE_TYPES.sqp], LABELS.operation)
       ]
     }
   },
-  nio: {
-    roleGuideUrl: URLS.roleGuide.nio,
+  [ROLE_TYPES.nio]: {
+    roleGuideUrl: URLS.roleGuide[ROLE_TYPES.nio],
     roleGuideLabels: {
       beforeYouApply: 'NIO role guide'
     },
     supportingLinks: {
       beforeYouApply: [
-        link(URLS.roleGuide.nio, 'NIO role guide'),
-        link(URLS.cpd.nio, LABELS.cpd),
-        link(URLS.operation.nio, LABELS.operation)
+        link(URLS.roleGuide[ROLE_TYPES.nio], 'NIO role guide'),
+        link(URLS.cpd[ROLE_TYPES.nio], LABELS.cpd),
+        link(URLS.operation[ROLE_TYPES.nio], LABELS.operation)
       ]
     }
   },
-  ntco: {
-    roleGuideUrl: URLS.roleGuide.ntco,
+  [ROLE_TYPES.ntco]: {
+    roleGuideUrl: URLS.roleGuide[ROLE_TYPES.ntco],
     roleGuideLabels: {
       beforeYouApply: 'NTCO role guide'
     },
     supportingLinks: {
       beforeYouApply: [
-        link(URLS.roleGuide.ntco, 'NTCO role guide'),
-        link(URLS.cpd.ntco, LABELS.cpd),
-        link(URLS.operation.ntco, LABELS.operation)
+        link(URLS.roleGuide[ROLE_TYPES.ntco], 'NTCO role guide'),
+        link(URLS.cpd[ROLE_TYPES.ntco], LABELS.cpd),
+        link(URLS.operation[ROLE_TYPES.ntco], LABELS.operation)
       ]
     }
   },
-  nprc: {
+  [ROLE_TYPES.nprc]: {
     supportingLinks: {
       beforeYouApply: [
         link(URLS.conflictOfInterest, LABELS.conflictOfInterest),
         link(URLS.cpd.establishmentRoles, LABELS.cpd),
-        link(URLS.operation.nprc, LABELS.operation)
+        link(URLS.operation[ROLE_TYPES.nprc], LABELS.operation)
       ]
     }
   },
-  pelh: {
+  [ROLE_TYPES.pelh]: {
     supportingLinks: {
       beforeYouApply: [
         link(URLS.conflictOfInterest, LABELS.conflictOfInterest),
@@ -135,7 +137,7 @@ const namedPersonGuidanceByRole = {
       ]
     }
   },
-  holc: {
+  [ROLE_TYPES.holc]: {
     supportingLinks: {
       beforeYouApply: [
         link(URLS.conflictOfInterest, LABELS.conflictOfInterest),
@@ -146,7 +148,7 @@ const namedPersonGuidanceByRole = {
   }
 };
 
-const getNamedPersonGuidance = roleType => namedPersonGuidanceByRole[(roleType || '').toLowerCase()];
+const getNamedPersonGuidance = roleType => namedPersonGuidanceByRole[normalizeRoleType(roleType)];
 
 const getBeforeYouApplyRoleGuide = roleType => {
   const guidance = getNamedPersonGuidance(roleType);
