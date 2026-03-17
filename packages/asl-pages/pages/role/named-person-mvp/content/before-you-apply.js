@@ -1,6 +1,7 @@
 const { merge } = require('lodash');
 const baseContent = require('../../../profile/content');
 const { getBeforeYouApplyRoleGuide } = require('./named-person-guidance');
+const { ROLE_TYPES } = require('../role-types');
 
 const sharedNamedPersonNominationText = {
   title: 'Before you nominate someone for a {{roleType}} role',
@@ -54,24 +55,24 @@ module.exports = merge({}, baseContent, {
     templateRoles: {
       NACWO: {
         contentKey: 'shared',
-        ...getBeforeYouApplyRoleGuide('nacwo')
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.NACWO)
       },
       NVS: {
         contentKey: 'shared',
-        ...getBeforeYouApplyRoleGuide('nvs')
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.NVS)
       },
       SQP: {
         contentKey: 'shared',
-        ...getBeforeYouApplyRoleGuide('sqp'),
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.SQP),
         requiresVetAvailabilityCheck: true
       },
       NIO: {
         contentKey: 'sharedRoleGuide',
-        ...getBeforeYouApplyRoleGuide('nio')
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.NIO)
       },
       NTCO: {
         contentKey: 'sharedRoleGuide',
-        ...getBeforeYouApplyRoleGuide('ntco')
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.NTCO)
       }
     },
     NPRC: {
