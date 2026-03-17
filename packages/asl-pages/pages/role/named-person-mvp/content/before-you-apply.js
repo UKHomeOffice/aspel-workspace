@@ -55,24 +55,24 @@ module.exports = merge({}, baseContent, {
     templateRoles: {
       NACWO: {
         contentKey: 'shared',
-        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.NACWO)
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.nacwo)
       },
       NVS: {
         contentKey: 'shared',
-        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.NVS)
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.nvs)
       },
       SQP: {
         contentKey: 'shared',
-        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.SQP),
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.sqp),
         requiresVetAvailabilityCheck: true
       },
       NIO: {
         contentKey: 'sharedRoleGuide',
-        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.NIO)
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.nio)
       },
       NTCO: {
         contentKey: 'sharedRoleGuide',
-        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.NTCO)
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.ntco)
       }
     },
     NPRC: {
