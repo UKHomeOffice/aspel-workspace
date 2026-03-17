@@ -3,15 +3,14 @@ import omit from 'lodash/omit';
 import {
   Snippet,
   StickyNavAnchor,
-  Diff
+  Diff,
+  Utils
 } from '@ukhomeoffice/asl-components';
 import userSchema from '../../../../user/update/schema';
-import { dateFormat } from '../../../../../constants';
-import { formatDate } from '../../../../../lib/utils';
 
 const formatters = {
   dob: {
-    format: date => formatDate(date, dateFormat.short)
+    format: date => Utils.formatDate(date, Utils.DATE_FORMAT.short)
   }
 };
 
