@@ -38,7 +38,8 @@ const Fieldset = ({
           label: resolve(f.label),
           hint: resolve(f.hint),
           name: resolve(f.name),
-          classname: resolve(f.classname)
+          classname: resolve(f.classname),
+          options: resolve(f.options)
         };
 
         const fullName = `${prefix}${resolved.name}`;

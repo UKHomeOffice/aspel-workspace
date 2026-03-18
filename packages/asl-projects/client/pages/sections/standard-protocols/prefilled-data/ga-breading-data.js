@@ -95,6 +95,7 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => {
             label: 'Breeding and maintenance of genetically altered rodents (mild)',
             data: {
               title: 'Breeding and maintenance of genetically altered rodents',
+              protocolName: 'rodent-breeding-mild',
               isStandardProtocol: isStandard,
               standardProtocolType: isStandard
                 ? 'standard'
@@ -144,20 +145,6 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => {
               ],
               nonSchedule1: false
             },
-            conditions: [
-              {
-                "autoAdded": true,
-                "key": "rehoming",
-                "path": "rehoming.versions.1",
-                "type": "authorisation"
-              },
-              {
-                "autoAdded": true,
-                "key": "setting-free",
-                "path": "setting-free.versions.1",
-                "type": "authorisation"
-              },
-            ],
             experienceSummary: `Animals may be used for natural mating on a number of occasions. \nAnimals produced under this protocol are not expected to exhibit any harmful
               phenotype. \nOffspring will be maintained by methods appropriate to their genetic alteration until they reach a maximum of 15 months of age.`,
 

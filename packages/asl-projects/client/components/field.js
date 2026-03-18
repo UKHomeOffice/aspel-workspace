@@ -103,29 +103,26 @@ class Field extends Component {
   }
 
   mapOptions(options = []) {
-    return options.filter(Boolean).map(option => {
-      if (!option.reveal) {
-        return option;
-      }
-      return {
-        ...option,
-        reveal: (
-          <div className="govuk-inset-text">
-            { option.additionalInfo && <ReactMarkdown>{option.additionalInfo}</ReactMarkdown> }
-            {
-              option.reveal.component
-                ? option.reveal.component
-                : (
-                  <Fieldset
-                    {...this.props}
-                    fields={castArray(option.reveal)}
-                  />
-                )
-            }
-          </div>
-        )
-      };
-    });
+    return options
+      .filter(opt => {
+        // If the option has a show function, evaluate it with current values
+        if (typeof opt.show === 'function') {
+          return opt.show(this.props.values);
+        }
+        return true; // no show function → render
+      })
+      .map(option => {
+        if (!option.reveal) return option;
+        return {
+          ...option,
+          reveal: (
+            <Fieldset
+              {...this.props}
+              fields={castArray(option.reveal)}
+            />
+          )
+        };
+      });
   }
 
   render() {

@@ -5,6 +5,8 @@ import castArray from 'lodash/castArray';
 import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 
 export const BuildProtocol = (protocolTemplate, project) => {
+
+  console.log('BuildProtocol: ', project['fate-of-animals']);
   // Safe defaults with immutability in mind
   const protocolId = uuidv4();
   const data = protocolTemplate?.data ? { ...protocolTemplate.data } : {};
@@ -88,6 +90,8 @@ export const BuildProtocol = (protocolTemplate, project) => {
     // Metadata - all new primitives or copies
     isStandardProtocol: Boolean(data.isStandardProtocol),
     standardProtocolType: data.standardProtocolType ?? '',
+    protocolName: data.protocolName ?? '',
+
     description: data.description ?? '',
     severity: data.severity ?? '',
     'severity-proportion': data.severityProportion ?? '',
