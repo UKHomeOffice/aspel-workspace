@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { form } = require('../../../common/routers');
+const { MANDATORY_TRAINING_ROLE_TYPES } = require('../role-types');
 
 const FORM_ID = 'new-role-named-person';
 
@@ -19,6 +20,10 @@ module.exports = () => {
   );
 
   app.post('/', (req, res, next) => {
+    const roles = req.session.form[FORM_ID].values;
+    if (MANDATORY_TRAINING_ROLE_TYPES.includes(roles.type.toLowerCase())) {
+      return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'mandatory-training' }));
+    }
     return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'select-role' }));
   });
 

@@ -1,5 +1,7 @@
 const { merge } = require('lodash');
 const baseContent = require('../../../profile/content');
+const { getBeforeYouApplyRoleGuide } = require('./named-person-guidance');
+const { ROLE_TYPES } = require('../role-types');
 
 const sharedNamedPersonNominationText = {
   title: 'Before you nominate someone for a {{roleType}} role',
@@ -53,29 +55,24 @@ module.exports = merge({}, baseContent, {
     templateRoles: {
       NACWO: {
         contentKey: 'shared',
-        roleGuideLabel: 'NACWO role guide',
-        roleGuideUrl: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-animal-care-and-welfare-officer-role'
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.nacwo)
       },
       NVS: {
         contentKey: 'shared',
-        roleGuideLabel: 'NVS role guide',
-        roleGuideUrl: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-veterinary-surgeon-role'
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.nvs)
       },
       SQP: {
         contentKey: 'shared',
-        roleGuideLabel: 'SQP role guide',
-        roleGuideUrl: 'https://www.gov.uk/guidance/nominate-someone-for-a-suitably-qualified-person-role',
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.sqp),
         requiresVetAvailabilityCheck: true
       },
       NIO: {
         contentKey: 'sharedRoleGuide',
-        roleGuideLabel: 'NIO role guide',
-        roleGuideUrl: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-information-officer-role'
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.nio)
       },
       NTCO: {
         contentKey: 'sharedRoleGuide',
-        roleGuideLabel: 'NTCO role guide',
-        roleGuideUrl: 'https://www.gov.uk/guidance/nominate-someone-for-a-named-training-and-competency-officer-role'
+        ...getBeforeYouApplyRoleGuide(ROLE_TYPES.ntco)
       }
     },
     NPRC: {
