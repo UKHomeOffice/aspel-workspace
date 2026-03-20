@@ -170,7 +170,7 @@ const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options 
     }
 };
 
-const renderTextEditor = (doc, value, { onStringFallback, onError, separator } = {}) => {
+const renderTextEditor = (doc, value, { onStringFallback, onError, separator, applyTextFilter, customNodeRenderers } = {}) => {
     let content = value;
     if (typeof value === 'string') {
         try {
@@ -184,9 +184,14 @@ const renderTextEditor = (doc, value, { onStringFallback, onError, separator } =
     }
 
     const nodes = get(content, 'document.nodes', []);
+    const renderOptions = {
+        applyTextFilter,
+        customNodeRenderers
+    };
+
     nodes.forEach(node => {
         try {
-            renderNode(doc, node);
+            renderNode(doc, node, 0, undefined, undefined, undefined, renderOptions);
         } catch (err) {
             if (typeof onError === 'function') {
                 onError(doc, err, node);
