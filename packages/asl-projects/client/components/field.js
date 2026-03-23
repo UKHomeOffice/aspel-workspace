@@ -103,29 +103,26 @@ class Field extends Component {
   }
 
   mapOptions(options = []) {
-    return options.filter(Boolean).map(option => {
-      if (!option.reveal) {
-        return option;
-      }
-      return {
-        ...option,
-        reveal: (
-          <div className="govuk-inset-text">
-            { option.additionalInfo && <ReactMarkdown>{option.additionalInfo}</ReactMarkdown> }
-            {
-              option.reveal.component
-                ? option.reveal.component
-                : (
-                  <Fieldset
-                    {...this.props}
-                    fields={castArray(option.reveal)}
-                  />
-                )
-            }
-          </div>
-        )
-      };
-    });
+    return options
+      .filter(opt => {
+        // If the option has a show function, evaluate it with current values
+        if (typeof opt.show === 'function') {
+          return opt.show(this.props.values);
+        }
+        return true; // no show function → render
+      })
+      .map(option => {
+        if (!option.reveal) return option;
+        return {
+          ...option,
+          reveal: (
+            <Fieldset
+              {...this.props}
+              fields={castArray(option.reveal)}
+            />
+          )
+        };
+      });
   }
 
   render() {
@@ -136,8 +133,26 @@ class Field extends Component {
 
     let { label, hint } = this.props.altLabels ? this.props.alt : this.props;
 
-    label = typeof label === 'string' ? Mustache.render(label, this.props) : label;
-    hint = typeof hint === 'string' ? Mustache.render(hint, this.props) : hint;
+    label = typeof label === 'function' ? label(this.props) : label;
+    hint = typeof hint === 'function' ? hint(this.props) : hint;
+
+    // Create enhanced context for Mustache
+    const mustacheContext = {
+      ...this.props,
+      // Flatten values to root level
+      ...(this.props.values || {}),
+      // Also keep values nested
+      values: this.props.values
+    };
+
+    // Only render Mustache for strings, preserve other types (React elements, null, etc.)
+    if (typeof label === 'string') {
+      label = Mustache.render(label, mustacheContext);
+    }
+
+    if (typeof hint === 'string') {
+      hint = Mustache.render(hint, mustacheContext);
+    }
 
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
@@ -149,6 +164,124 @@ class Field extends Component {
     if (this.props.type === 'animal-quantities') {
       return <AnimalQuantities {...this.props} value={value} label={label} hint={hint} />;
     }
+
+    if (this.props.type === 'standard-list') {
+      const options = this.mapOptions(this.props.options || []);
+      const getSelectedOptions = (value, options = []) => {
+        const values = castArray(value || []);
+
+        return options
+          .filter(opt => values.includes(opt.value))
+          .map(opt => ({
+            ...opt,
+
+            label: typeof opt.label === 'function' ? opt.label(this.props) : opt.label,
+
+            hint: typeof opt.hint === 'function' ? opt.hint(this.props) : opt.hint
+          }));
+      }
+
+      const selected = getSelectedOptions(value, options);
+
+      return (
+        <div className={this.props.className}>
+          {label && <label className="govuk-label">{label}</label>}
+          {hint && <span className="govuk-hint">{hint}</span>}
+          {this.props.error && (
+            <span className="govuk-error-message">{this.props.error}</span>
+          )}
+
+          {selected.length > 0 && (
+            <ul className="govuk-list govuk-list--bullet">
+              {selected.map((opt, i) => (
+                <li key={i}>
+                  <strong className="govuk-body">{opt.label}</strong>
+
+                  {opt.hint && (
+                    <div className="govuk-hint govuk-!-margin-top-1">
+                      {opt.hint}
+                    </div>
+                  )}
+
+                  {opt.reveal}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      );
+    }
+
+    const renderRichText = (value) => {
+      if (!value) return null;
+
+      // Handle arrays as bullet lists
+      if (Array.isArray(value)) {
+        return (
+          <ul className="govuk-list govuk-list--bullet">
+            {value.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        );
+      }
+
+      let text = '';
+
+      // Flatten rich text into a single string
+      if (typeof value === 'string') {
+        text = value;
+      } else if (value.object === 'document' && value.content) {
+        text = value.content
+          .map(
+            block =>
+              block.content?.map(node => node.text).join('') || ''
+          )
+          .join('\n\n');
+      }
+
+      // Split into lines and trim
+      const lines = text
+        .split('\n')
+        .map(line => line.trim())
+        .filter(Boolean);
+
+      // Separate bullets from regular text
+      const bullets = lines
+        .filter(line => line.startsWith('•'))
+        .map(line => line.replace(/^•\s*/, ''));
+
+      const paragraphs = lines.filter(line => !line.startsWith('•'));
+
+      return (
+        <div>
+          {paragraphs.map((p, i) => (
+            <p key={`p-${i}`} className="govuk-body">
+              {p}
+            </p>
+          ))}
+
+          {bullets.length > 0 && (
+            <ul className="govuk-list govuk-list--bullet">
+              {bullets.map((b, i) => (
+                <li key={`b-${i}`}>{b}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      );
+    };
+    if (this.props.type === 'paragraph') {
+      return (
+        <div className={this.props.className}>
+          {this.props.label && <label className="govuk-label">{this.props.label}</label>}
+          {this.props.hint && <span className="govuk-hint">{this.props.hint}</span>}
+          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
+          <p className="govuk-body">{renderRichText(value)}</p>
+        </div>
+      )
+    }
+
     if (this.props.type === 'species-selector') {
       return <SpeciesSelector
         {...this.props}
@@ -158,6 +291,7 @@ class Field extends Component {
         onChange={ this.onFieldChange }
       />;
     }
+
     if (this.props.type === 'establishment-selector') {
       return <EstablishmentSelector {...this.props} value={value} label={label} hint={hint} />;
     }
@@ -251,6 +385,53 @@ class Field extends Component {
           this.onFieldChange(val);
         }}
       />;
+    }
+    if (this.props.type === 'standard-radio') {
+      const options = this.mapOptions(this.props.options || []);
+      const selectedOption = options.find(opt => opt.value === value);
+
+      const getRevealValue = (field) => {
+        if (this.props.value && this.props.value[field.name] !== undefined) {
+          return this.props.value[field.name];
+        }
+        const speciesDetails = this.props.project?.speciesDetails || [];
+        const sd = speciesDetails.find(s => s.id === this.props.values?.id);
+        if (sd && sd[field.name] !== undefined) {
+          return sd[field.name];
+        }
+        return '';
+      };
+
+      return (
+        <div className={this.props.className}>
+          {label && <label className="govuk-label">{label}</label>}
+          {hint && <span className="govuk-hint">{hint}</span>}
+          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
+
+          {selectedOption ? (
+            <p className="govuk-body">{selectedOption.label}</p>
+          ) : (
+            <p className="govuk-body"><em>-</em></p>
+          )}
+
+          {/* Conditional reveal */}
+          {selectedOption?.reveal && !selectedOption.reveal.$$typeof && (
+            <Fieldset
+              {...this.props}
+              fields={castArray(selectedOption.reveal).map(field => ({
+                ...field,
+                value: getRevealValue(field),
+                label: typeof field.label === 'function' ? field.label(this.props.values) : field.label,
+                hint: typeof field.hint === 'function' ? field.hint(this.props.values) : field.hint,
+                type: typeof field.type === 'function' ? field.type(this.props.values) : field.type
+              }))}
+            />
+          )}
+
+          {/* If reveal is already a React element (rare), render as-is */}
+          {selectedOption?.reveal && selectedOption.reveal.$$typeof && selectedOption.reveal}
+        </div>
+      );
     }
     if (this.props.type === 'checkbox' && this.props.name === 'fate-of-animals') {
       return <NtsCheckBoxWithModal

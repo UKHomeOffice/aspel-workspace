@@ -14,7 +14,7 @@ import { DATE_FORMAT } from './constants';
 
 import { useFeatureFlag, FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
 import GABreeding from './pages/sections/standard-protocols/ga-breading';
-import StandardProtocols from './pages/sections/standard-protocols';
+import EditableGaBreading from './pages/sections/standard-protocols/editable-ga-breading';
 
 
 const selector = ({
@@ -223,15 +223,16 @@ const ProjectRouter = () => {
 
         <Switch>
           <Route path="/protocol-summary" component={ProtocolSummary} />
-          {standardProtocolsEnabled && (
-              <Route path="/standard-protocol" render={(props) => (
-                  <StandardProtocols {...props} />
-                )}
-              />
-              )}
+          // todo: remove this route when the standard protocols, remove all line, link works automatically.
           {standardProtocolsEnabled && (
               <Route path="/ga-breeding" render={(props) => (
                 <GABreeding {...props} />
+              )}
+              />
+            )}
+                    {standardProtocolsEnabled && (
+              <Route path="/editable-ga-breeding" render={(props) => (
+                <EditableGaBreading {...props} />
               )}
               />
             )}

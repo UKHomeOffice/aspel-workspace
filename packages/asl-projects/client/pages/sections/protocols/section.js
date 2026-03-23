@@ -19,6 +19,12 @@ class Section extends PureComponent {
       project
     } = this.props;
 
+    const valuesWithProject = {
+      ...values,
+      project: project
+    };
+    console.log('Rendering Section with project:', valuesWithProject);
+
     return (
       <Fragment>
         {
@@ -30,7 +36,7 @@ class Section extends PureComponent {
             ? (
               <Fieldset
                 fields={fields.filter(f => f.show === undefined || f.show(project))}
-                values={values}
+                values={valuesWithProject}
                 prefix={prefix}
                 onFieldChange={onFieldChange}
               />
@@ -38,7 +44,7 @@ class Section extends PureComponent {
             : (
               <ReviewFields
                 fields={fields.filter(f => f.show === undefined || f.show(project))}
-                values={values}
+                values={valuesWithProject}
                 prefix={prefix}
                 editLink={`0#${prefix}`}
                 readonly={values.deleted}

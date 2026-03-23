@@ -1,7 +1,9 @@
 import NTSFateOfAnimalFields from './nts-field';
 
-export const renderFieldsInProtocol = (fateOfAnimals) => {
+export const renderFieldsInProtocol = (fateOfAnimals, values) => {
   const predefinedFields = NTSFateOfAnimalFields();
+
+  console.log('renderFieldsInProtocol: ', values);
 
   if (!fateOfAnimals) {
     return [predefinedFields['continued-use']];
@@ -19,4 +21,6 @@ export const renderFieldsInProtocol = (fateOfAnimals) => {
 
   // Filter out null values
   return orderedFields.filter(field => field !== null);
+  // todo: before returning, caclulate standardProtocolType, isStandardProtocol with list of constants and app that filter aswell.
+  // i.e [!null] + [whiteList_of_fields_based_on_type]
 };
