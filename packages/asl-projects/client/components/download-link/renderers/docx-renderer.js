@@ -139,8 +139,7 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const customNodeRenderers = {
-    'table-cell': (p, n, ctx = {}) => {
-      const { depth = 0, paragraph, numbers, index } = ctx;
+      'table-cell': (p, n, ctx) => {
       (n.nodes || []).forEach(part => renderNodeShared(p, part, depth, paragraph, numbers, index, {
         applyTextFilter: stripInvalidXmlChars,
         customNodeRenderers
@@ -150,14 +149,7 @@ export default (application, sections, values, updateImageDimensions) => {
       renderTable(p, n);
     },
     'image': (p, n, ctx = {}) => {
-      if (get(n, 'data.renderError') || !get(n, 'data.src')) {
         const pg = ctx.paragraph || new Paragraph();
-        pg.addRun(new TextRun(get(n, 'data.renderErrorMessage', '[Image unavailable in export]')).size(20));
-        p.addParagraph(pg);
-        return;
-      }
-
-      const pg = ctx.paragraph || new Paragraph();
       pg.addImage(Media.addImage(document, n.data.src, n.data.width, n.data.height));
       p.addParagraph(pg);
     },
