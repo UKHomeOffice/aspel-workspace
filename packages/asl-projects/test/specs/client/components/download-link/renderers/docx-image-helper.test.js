@@ -31,7 +31,7 @@ describe('docx image helper', () => {
     assert.equal(result, 'data:image/png;base64,abc123');
   });
 
-  it('falls back to token URLs when the original src fetch fails', async () => {
+  it('falls back to the token URL when the original src fetch fails', async () => {
     const calls = [];
 
     global.fetch = src => {

@@ -1,7 +1,6 @@
 // 600px seems to be roughly 100% page width (inside the margins)
 const MAX_IMAGE_WIDTH = 600;
 const MAX_IMAGE_HEIGHT = 800;
-const DEFAULT_IMAGE_ROOT = '/attachment';
 const IMAGE_PLACEHOLDER_TEXT = '[Image unavailable in export]';
 
 const scaleAndPreserveAspectRatio = (srcWidth, srcHeight, maxWidth, maxHeight) => {
@@ -34,23 +33,8 @@ const fetchAsDataUri = src => {
 };
 
 const toAttachmentUrl = (token, imageRoot) => {
-  const base = (imageRoot || DEFAULT_IMAGE_ROOT).replace(/\/+$/, '');
+  const base = imageRoot.replace(/\/+$/, '');
   return `${base}/${encodeURIComponent(token)}`;
-};
-
-const firstSuccessful = candidates => {
-  let index = 0;
-
-  const next = () => {
-    if (index >= candidates.length) {
-      return Promise.reject(new Error('All image source attempts failed'));
-    }
-
-    const candidate = candidates[index++];
-    return fetchAsDataUri(candidate).catch(next);
-  };
-
-  return next();
 };
 
 const resolveImageSource = (node, imageRoot) => {
@@ -68,24 +52,12 @@ const resolveImageSource = (node, imageRoot) => {
           return Promise.reject(new Error('Failed to resolve image src'));
         }
 
-        const tokenSources = [toAttachmentUrl(token, imageRoot)];
-        const defaultTokenUrl = toAttachmentUrl(token, DEFAULT_IMAGE_ROOT);
-        if (tokenSources[0] !== defaultTokenUrl) {
-          tokenSources.push(defaultTokenUrl);
-        }
-
-        return firstSuccessful(tokenSources);
+        return fetchAsDataUri(toAttachmentUrl(token, imageRoot));
       });
   }
 
   if (token) {
-    const tokenSources = [toAttachmentUrl(token, imageRoot)];
-    const defaultTokenUrl = toAttachmentUrl(token, DEFAULT_IMAGE_ROOT);
-    if (tokenSources[0] !== defaultTokenUrl) {
-      tokenSources.push(defaultTokenUrl);
-    }
-
-    return firstSuccessful(tokenSources);
+    return fetchAsDataUri(toAttachmentUrl(token, imageRoot));
   }
 
   return Promise.reject(new Error('Image node has no src or token'));

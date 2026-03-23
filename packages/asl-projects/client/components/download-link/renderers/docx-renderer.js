@@ -666,10 +666,6 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const addImageDimensions = values => {
-    if (typeof updateImageDimensions !== 'function') {
-      return Promise.resolve(values);
-    }
-
     const updateNodes = nodes => {
       if (!Array.isArray(nodes)) {
         return Promise.resolve(nodes);
