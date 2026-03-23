@@ -18,10 +18,6 @@ const blobToDataUri = blob => {
 };
 
 const fetchAsDataUri = src => {
-  if (typeof fetch !== 'function') {
-    return Promise.reject(new Error('Fetch unavailable for image export'));
-  }
-
   return fetch(src)
     .then(response => {
       if (!response.ok) {
@@ -29,7 +25,10 @@ const fetchAsDataUri = src => {
       }
       return response.blob();
     })
-    .then(blobToDataUri);
+    .then(blobToDataUri)
+    .catch(error => {
+      throw new Error(`Failed to fetch image: ${error.message}`);
+    });
 };
 
 const toAttachmentUrl = (token, imageRoot) => {
