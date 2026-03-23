@@ -15,7 +15,7 @@ describe('docx image helper', () => {
     global.Image = originalImage;
   });
 
-  it('returns an existing data URI without fetching', async () => {
+  it('uses data URI as-is without fetch', async () => {
     global.fetch = () => {
       throw new Error('fetch should not be called for data URIs');
     };
@@ -31,7 +31,7 @@ describe('docx image helper', () => {
     assert.equal(result, 'data:image/png;base64,abc123');
   });
 
-  it('falls back to the token URL when the original src fetch fails', async () => {
+  it('uses token URL when source fetch fails', async () => {
     const calls = [];
 
     global.fetch = src => {
@@ -70,7 +70,7 @@ describe('docx image helper', () => {
     ]);
   });
 
-  it('updates node dimensions after the image loads', async () => {
+  it('sets scaled dimensions when image loads', async () => {
     global.Image = class MockImage {
       constructor() {
         this.naturalWidth = 1200;
@@ -104,7 +104,7 @@ describe('docx image helper', () => {
     assert.equal(node.data.renderErrorMessage, undefined);
   });
 
-  it('marks the node with a placeholder when image loading fails', async () => {
+  it('sets placeholder error when image fails to load', async () => {
     global.Image = class MockImage {
       set src(value) {
         this._src = value;
