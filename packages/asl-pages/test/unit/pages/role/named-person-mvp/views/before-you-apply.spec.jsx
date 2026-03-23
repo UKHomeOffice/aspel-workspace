@@ -118,9 +118,9 @@ describe('Before you apply page', () => {
 
     expect(screen.getByRole('heading', { name: 'Before you nominate someone for an NPRC role you must ensure:' })).toBeInTheDocument();
     expect(screen.getByText('the legally accountable person supports the nomination')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'ASRULicensing@homeoffice.gov.uk' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'asrulicensing@homeoffice.gov.uk' })).toHaveAttribute(
       'href',
-      'mailto:ASRULicensing@homeoffice.gov.uk'
+      'mailto:asrulicensing@homeoffice.gov.uk'
     );
     expect(screen.queryByRole('link', { name: 'NPRC role guide' })).not.toBeInTheDocument();
   });
