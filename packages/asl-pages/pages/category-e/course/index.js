@@ -14,6 +14,10 @@ module.exports = _settings => {
         return response.json.data;
       })
       .then(trainingCourse => {
+        if (trainingCourse && !trainingCourse.courseDuration) {
+          trainingCourse.courseDuration = trainingCourse.endDate ? 'multi-day' : 'one-day';
+        }
+
         req.trainingCourseId = trainingCourseId;
         req.trainingCourse = trainingCourse;
         req.model = trainingCourse;

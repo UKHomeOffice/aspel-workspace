@@ -1,15 +1,11 @@
 const namedRoles = require('../content/named-roles');
 const hintText = require('../../content/hint-text');
-
-const excludedRoles = {
-  corporate: ['pelh'],
-  'non-profit': ['nprc']
-};
+const { EXCLUDED_ROLE_TYPES_BY_CORPORATE_STATUS, ROLE_TYPES } = require('../role-types');
 
 module.exports = (roles, establishment) => {
   const excludeRoles =
     (establishment.corporateStatus &&
-      excludedRoles[establishment.corporateStatus]) ||
+      EXCLUDED_ROLE_TYPES_BY_CORPORATE_STATUS[establishment.corporateStatus]) ||
     [];
   roles = Object.keys(namedRoles)
     .filter((r) => !roles.includes(r))
@@ -21,7 +17,7 @@ module.exports = (roles, establishment) => {
       label: namedRoles[role],
       hint: hintText[role],
       reveal:
-        role === 'nvs'
+        role === ROLE_TYPES.nvs
           ? { rcvsNumber: { inputType: 'inputText', validate: ['required'] } }
           : null
     };
