@@ -29,7 +29,7 @@ Nominees must have completed all the mandatory training in the last 5 years befo
   },
   errors: {
     mandatory: {
-      required: 'Select an option relating to their mandatory training'
+      required: 'Select if they have completed all their mandatory training'
     }
   }
 });
