@@ -138,28 +138,29 @@ export default (application, sections, values, updateImageDimensions) => {
     doc.addTable(table);
   };
 
-  const renderNode = (parent, node, depth = 0, paragraph, numbers, index) => {
-    const customNodeRenderers = {
+  const customNodeRenderers = {
       'table-cell': (p, n, ctx) => {
-        (n.nodes || []).forEach(part => renderNodeShared(p, part, depth, paragraph, numbers, index, {
-          applyTextFilter: stripInvalidXmlChars,
-          customNodeRenderers
-        }));
-      },
-      'table': (p, n) => {
-        renderTable(p, n);
-      },
-      'image': (p, n, ctx = {}) => {
+      (n.nodes || []).forEach(part => renderNodeShared(p, part, depth, paragraph, numbers, index, {
+        applyTextFilter: stripInvalidXmlChars,
+        customNodeRenderers
+      }));
+    },
+    'table': (p, n) => {
+      renderTable(p, n);
+    },
+    'image': (p, n, ctx = {}) => {
         const pg = ctx.paragraph || new Paragraph();
-        pg.addImage(Media.addImage(document, n.data.src, n.data.width, n.data.height));
-        p.addParagraph(pg);
-      },
-      'error': (p, n) => {
-        const raw = get(n, 'nodes[0].leaves[0].text', get(n, 'nodes[0].text', ''));
-        const content = stripInvalidXmlChars((raw || '').trim());
-        p.createParagraph(content).style('error');
-      }
-    };
+      pg.addImage(Media.addImage(document, n.data.src, n.data.width, n.data.height));
+      p.addParagraph(pg);
+    },
+    'error': (p, n) => {
+      const raw = get(n, 'nodes[0].leaves[0].text', get(n, 'nodes[0].text', ''));
+      const content = stripInvalidXmlChars((raw || '').trim());
+      p.createParagraph(content).style('error');
+    }
+  };
+
+  const renderNode = (parent, node, depth = 0, paragraph, numbers, index) => {
     return renderNodeShared(parent, node, depth, paragraph, numbers, index, {
       applyTextFilter: stripInvalidXmlChars,
       customNodeRenderers
@@ -174,6 +175,7 @@ export default (application, sections, values, updateImageDimensions) => {
         d.createParagraph(`There was a problem rendering this content (${node.type})`).style('error');
         d.createParagraph(err.stack).style('error');
       },
+      customNodeRenderers,
       separator: noSeparator ? null : d => renderHorizontalRule(d)
     });
   };
@@ -663,29 +665,42 @@ export default (application, sections, values, updateImageDimensions) => {
     });
   };
 
-  const traverse = (obj, fn) => {
-    if (!obj || typeof obj !== 'object') {
-      return Promise.resolve(obj);
+  const addImageDimensions = values => {
+    if (typeof updateImageDimensions !== 'function') {
+      return Promise.resolve(values);
     }
 
-    const promises = Object.keys(obj).map(key => {
-      const val = obj[key];
-
-      // if we find an array, iterate it
-      if (Array.isArray(val)) {
-        return Promise.all(val.map(item => traverse(item, fn)));
+    const updateNodes = nodes => {
+      if (!Array.isArray(nodes)) {
+        return Promise.resolve(nodes);
       }
 
-      return Promise.resolve()
-        .then(() => fn(val))
-        .then(transformed => { obj[key] = transformed; });
-    });
+      return Promise.all(nodes.map(node => {
+        if (!node || typeof node !== 'object') {
+          return Promise.resolve(node);
+        }
 
-    return Promise.all(promises).then(() => obj);
-  };
+        return Promise.resolve()
+          .then(() => {
+            if (node.type === 'image') {
+              return updateImageDimensions(node);
+            }
+            return node;
+          })
+          .then(updatedNode => {
+            if (Array.isArray(updatedNode.nodes)) {
+              return updateNodes(updatedNode.nodes)
+                .then(updatedChildren => {
+                  updatedNode.nodes = updatedChildren;
+                  return updatedNode;
+                });
+            }
+            return updatedNode;
+          });
+      }));
+    };
 
-  const addImageDimensions = values => {
-    return traverse(values, (value) => {
+    const processTextEditorValue = value => {
       if ((typeof value !== 'object' && typeof value !== 'string') || value === null) {
         return Promise.resolve(value);
       }
@@ -705,20 +720,42 @@ export default (application, sections, values, updateImageDimensions) => {
         return Promise.resolve(valueWasJson ? JSON.stringify(value) : value);
       }
 
-      const nodePromises = value.document.nodes.map(node => {
-        if (node.type !== 'image') {
-          return Promise.resolve(node);
-        }
-
-        return updateImageDimensions(node);
-      });
-
-      return Promise.all(nodePromises)
+      return updateNodes(value.document.nodes)
         .then(nodes => {
           value.document.nodes = nodes;
           return Promise.resolve(valueWasJson ? JSON.stringify(value) : value);
         });
-    });
+    };
+
+    const traverse = obj => {
+      if (!obj || typeof obj !== 'object') {
+        return Promise.resolve(obj);
+      }
+
+      const promises = Object.keys(obj).map(key => {
+        const val = obj[key];
+
+        if (Array.isArray(val)) {
+          return Promise.all(val.map(item => traverse(item)))
+            .then(items => { obj[key] = items; })
+            .then(() => processTextEditorValue(obj[key]))
+            .then(transformed => { obj[key] = transformed; });
+        }
+
+        if (val && typeof val === 'object') {
+          return processTextEditorValue(val)
+            .then(transformed => { obj[key] = transformed; })
+            .then(() => traverse(obj[key]));
+        }
+
+        return processTextEditorValue(val)
+          .then(transformed => { obj[key] = transformed; });
+      });
+
+      return Promise.all(promises).then(() => obj);
+    };
+
+    return traverse(values);
   };
 
   return Promise.resolve()
