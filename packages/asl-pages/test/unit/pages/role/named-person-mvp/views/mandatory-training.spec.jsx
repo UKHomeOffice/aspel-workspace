@@ -84,13 +84,13 @@ describe('Mandatory training page', () => {
     expect(screen.getByText('Training summary (2)')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Update Jane\'s training record' })).toHaveAttribute('href', 'training.dashboard');
     expect(screen.getByRole('heading', { name: 'Supporting guidance on GOV.UK' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Adding a NACWO role' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'NACWO role guide' })).toHaveAttribute(
       'href',
       'https://www.gov.uk/guidance/nominate-someone-for-a-named-animal-care-and-welfare-officer-role'
     );
     expect(screen.getByRole('link', { name: 'Guidance on training and continuous professional development (CPD) under ASPA' })).toHaveAttribute(
       'href',
-      'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act'
+      'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-animal-care-and-welfare-officers-nacwos'
     );
   });
 
@@ -101,7 +101,7 @@ describe('Mandatory training page', () => {
     expect(screen.getByText(/unless they have grounds for exemption/i)).toBeInTheDocument();
     expect(screen.getByText(/The only exception is the NVS module/i)).toBeInTheDocument();
     expect(screen.getByText('Requirements for nvs')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Adding a NVS role' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'NVS role guide' })).toHaveAttribute(
       'href',
       'https://www.gov.uk/guidance/nominate-someone-for-a-named-veterinary-surgeon-role'
     );
@@ -114,13 +114,13 @@ describe('Mandatory training page', () => {
     expect(screen.getByText(/unless they have grounds for exemption/i)).toBeInTheDocument();
     expect(screen.queryByText(/The only exception is the NVS module/i)).not.toBeInTheDocument();
     expect(screen.getByText('Requirements for sqp')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Adding a SQP role' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'SQP role guide' })).toHaveAttribute(
       'href',
       'https://www.gov.uk/guidance/nominate-someone-for-a-suitably-qualified-person-role'
     );
-    expect(screen.getByRole('link', { name: 'Guidance on the operation of the Animals (Scientific Procedures) Act 1986' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Guidance on training and continuous professional development (CPD) under ASPA' })).toHaveAttribute(
       'href',
-      'https://www.gov.uk/government/publications/the-operation-of-the-animals-scientific-procedures-act-1986/the-operation-of-the-animals-scientific-procedures-act-1986-aspa-accessible#other-suitably-qualified-person'
+      'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#other-suitably-qualified-persons-sqp'
     );
   });
 });

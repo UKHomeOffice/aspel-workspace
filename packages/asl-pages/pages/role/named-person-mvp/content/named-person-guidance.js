@@ -52,7 +52,7 @@ const namedPersonGuidanceByRole = {
         link(URLS.operation[ROLE_TYPES.nacwo], LABELS.operation)
       ],
       mandatoryTraining: [
-        link(URLS.roleGuide[ROLE_TYPES.nacwo], 'Adding a NACWO role'),
+        link(URLS.roleGuide[ROLE_TYPES.nacwo], 'NACWO role guide'),
         link(URLS.cpd[ROLE_TYPES.nacwo], LABELS.cpd)
       ]
     }
