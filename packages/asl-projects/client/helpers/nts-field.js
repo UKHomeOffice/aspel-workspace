@@ -1,5 +1,5 @@
 import { calculateProtocolContext } from './index';
-import { showFateOfAnimals } from './show-fate-of-animals-';
+import { showFateOfAnimals } from './show-fate-of-animals';
 
 
 export default function NTSFateOfAnimalFields() {
