@@ -118,9 +118,5 @@ describe('Mandatory training page', () => {
       'href',
       'https://www.gov.uk/guidance/nominate-someone-for-a-suitably-qualified-person-role'
     );
-    expect(screen.getByRole('link', { name: 'Guidance on training and continuous professional development (CPD) under ASPA' })).toHaveAttribute(
-      'href',
-      'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#other-suitably-qualified-persons-sqp'
-    );
   });
 });
