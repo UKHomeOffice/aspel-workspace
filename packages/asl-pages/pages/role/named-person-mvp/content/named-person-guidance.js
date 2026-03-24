@@ -18,7 +18,8 @@ const URLS = {
   },
   cpd: {
     [ROLE_TYPES.nacwo]: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-animal-care-and-welfare-officers-nacwos',
-    [ROLE_TYPES.nvs]: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-veterinary-surgeons-nvs',
+    [ROLE_TYPES.nvs]: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-veterinary-surgeons-nvss',
+    [ROLE_TYPES.sqp]: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#other-suitably-qualified-persons-sqp',
     [ROLE_TYPES.nio]: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-information-officers-nios',
     [ROLE_TYPES.ntco]: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#named-training-and-competency-officers-ntcos',
     establishmentRoles: 'https://www.gov.uk/government/publications/training-and-development-under-the-animals-scientific-procedures-act/guidance-for-training-and-continuous-professional-development-under-the-animals-scientific-procedures-act-1986-accessible#establishment-licence-holdernamed-person-responsible-for-compliance'
@@ -41,7 +42,7 @@ const namedPersonGuidanceByRole = {
     roleGuideUrl: URLS.roleGuide[ROLE_TYPES.nacwo],
     roleGuideLabels: {
       beforeYouApply: 'NACWO role guide',
-      mandatoryTraining: 'Adding a NACWO role'
+      mandatoryTraining: 'NACWO role guide'
     },
     supportingLinks: {
       beforeYouApply: [
@@ -51,8 +52,8 @@ const namedPersonGuidanceByRole = {
         link(URLS.operation[ROLE_TYPES.nacwo], LABELS.operation)
       ],
       mandatoryTraining: [
-        link(URLS.roleGuide[ROLE_TYPES.nacwo], 'Adding a NACWO role'),
-        link(URLS.mandatoryTrainingGuidance, LABELS.cpd)
+        link(URLS.roleGuide[ROLE_TYPES.nacwo], 'NACWO role guide'),
+        link(URLS.cpd[ROLE_TYPES.nacwo], LABELS.cpd)
       ]
     }
   },
@@ -60,7 +61,7 @@ const namedPersonGuidanceByRole = {
     roleGuideUrl: URLS.roleGuide[ROLE_TYPES.nvs],
     roleGuideLabels: {
       beforeYouApply: 'NVS role guide',
-      mandatoryTraining: 'Adding a NVS role'
+      mandatoryTraining: 'NVS role guide'
     },
     supportingLinks: {
       beforeYouApply: [
@@ -70,8 +71,8 @@ const namedPersonGuidanceByRole = {
         link(URLS.operation[ROLE_TYPES.nvs], LABELS.operation)
       ],
       mandatoryTraining: [
-        link(URLS.roleGuide[ROLE_TYPES.nvs], 'Adding a NVS role'),
-        link(URLS.mandatoryTrainingGuidance, LABELS.cpd)
+        link(URLS.roleGuide[ROLE_TYPES.nvs], 'NVS role guide'),
+        link(URLS.cpd[ROLE_TYPES.nvs], LABELS.cpd)
       ]
     }
   },
@@ -79,7 +80,7 @@ const namedPersonGuidanceByRole = {
     roleGuideUrl: URLS.roleGuide[ROLE_TYPES.sqp],
     roleGuideLabels: {
       beforeYouApply: 'SQP role guide',
-      mandatoryTraining: 'Adding a SQP role'
+      mandatoryTraining: 'SQP role guide'
     },
     supportingLinks: {
       beforeYouApply: [
@@ -88,8 +89,8 @@ const namedPersonGuidanceByRole = {
         link(URLS.operation[ROLE_TYPES.sqp], LABELS.operation)
       ],
       mandatoryTraining: [
-        link(URLS.roleGuide[ROLE_TYPES.sqp], 'Adding a SQP role'),
-        link(URLS.operation[ROLE_TYPES.sqp], LABELS.operation)
+        link(URLS.roleGuide[ROLE_TYPES.sqp], 'SQP role guide'),
+        link(URLS.cpd[ROLE_TYPES.sqp], LABELS.cpd)
       ]
     }
   },
