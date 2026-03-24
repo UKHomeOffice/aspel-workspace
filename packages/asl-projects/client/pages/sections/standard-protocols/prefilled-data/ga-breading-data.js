@@ -143,6 +143,7 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => {
                 "rehomed",
                 "kept-alive"
               ],
+              continuedUseRelevantProject: 'Animals may be transferred to another protocol in this project authorised to use the same animal types.',
               nonSchedule1: false
             },
             experienceSummary: `Animals may be used for natural mating on a number of occasions. \nAnimals produced under this protocol are not expected to exhibit any harmful

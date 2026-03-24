@@ -72,8 +72,9 @@ const rodentBreedingMild = (fateOfAnimals, fieldName) => {
     visibilityMap[f] = allowedFates.includes(f);
   });
 
-  console.log('rodent-breeding-mild -> fateOfAnimals:', fateOfAnimals, 'visibility:', visibilityMap);
-
+  console.log('visibility:', visibilityMap);
+  const result = allowedFates.includes(fieldName);
+  console.log('result-fate: ', result);
   // Return visibility for the requested field
-  return allowedFates.includes(fieldName);
+  return result;
 };

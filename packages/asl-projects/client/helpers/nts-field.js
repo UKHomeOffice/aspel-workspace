@@ -22,7 +22,7 @@ export default function NTSFateOfAnimalFields() {
             reveal: {
               name: 'method-and-justification',
               label: 'For each non-schedule 1 method, explain why this is necessary.',
-              type: 'texteditor'
+              type: values => calculateProtocolContext(values,'texteditor', 'texteditor', 'paragraph')
             }
           },
           {
@@ -35,11 +35,11 @@ export default function NTSFateOfAnimalFields() {
     'continued-use': {
       label: 'Continued use on another protocol in this project',
       value: 'continued-use',
+      show: values => showFateOfAnimals(values, 'continued-use'),
       reveal: {
         name: 'continued-use-relevant-project',
-        label: 'Please state the relevant protocol.',
-        type: 'texteditor',
-        show: values => showFateOfAnimals(values, 'continued-use')
+        label: values => calculateProtocolContext(values,'Please state the relevant protocol.', 'Please state the relevant protocol.', null),
+        type: values => calculateProtocolContext(values,'texteditor', 'texteditor', 'paragraph'),
       }
     },
     'continued-use-2': {
