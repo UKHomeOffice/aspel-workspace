@@ -89,8 +89,7 @@ const namedPersonGuidanceByRole = {
         link(URLS.operation[ROLE_TYPES.sqp], LABELS.operation)
       ],
       mandatoryTraining: [
-        link(URLS.roleGuide[ROLE_TYPES.sqp], 'SQP role guide'),
-        link(URLS.cpd[ROLE_TYPES.sqp], LABELS.cpd)
+        link(URLS.roleGuide[ROLE_TYPES.sqp], 'SQP role guide')
       ]
     }
   },
