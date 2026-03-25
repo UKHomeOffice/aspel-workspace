@@ -8,7 +8,7 @@ const sharedNamedPersonNominationBody = `\
 * there is no vet available with the right expertise
 {{/requiresVetAvailabilityCheck}}
 * they have agreed to be nominated
-* the establishment licence (PEL) holder (or legally accountable person) supports the application
+* the establishment licence (PEL) holder (or legally accountable person) supports the nomination
 * you have added them as an ASPeL user
 
 ## Mandatory training requirements
