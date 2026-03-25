@@ -30,21 +30,17 @@ You will need to describe how they demonstrate the recommended skills and experi
 
 You must ensure the nominee has no significant conflict of interest, and their declaration form is held on record at the establishment.`;
 
-const sharedNamedPersonNominationText = {
-  title: 'Before you nominate someone for a {{roleType}} role',
+const getNamedPersonNominationText = (article, roleType) => ({
+  title: `Before you nominate someone for ${article} ${roleType} role`,
   desc: `\
-**Before you nominate someone for a {{roleType}} role you must ensure:**
+**Before you nominate someone for ${article} ${roleType} role you must ensure:**
 
 ${sharedNamedPersonNominationBody}`
-};
+});
 
-const nvsNamedPersonNominationText = {
-  title: 'Before you nominate someone for an NVS role',
-  desc: `\
-**Before you nominate someone for an NVS role you must ensure:**
-
-${sharedNamedPersonNominationBody}`
-};
+const sharedNamedPersonNominationText = getNamedPersonNominationText('a', '{{roleType}}');
+const nvsNamedPersonNominationText = getNamedPersonNominationText('an', 'NVS');
+const sqpNamedPersonNominationText = getNamedPersonNominationText('an', 'SQP');
 
 const sharedRoleGuideNominationText = {
   title: 'Before you nominate someone for an {{roleType}} role',
@@ -63,6 +59,7 @@ module.exports = merge({}, baseContent, {
   beforeYouNominateText: {
     shared: sharedNamedPersonNominationText,
     NVS: nvsNamedPersonNominationText,
+    SQP: sqpNamedPersonNominationText,
     sharedRoleGuide: sharedRoleGuideNominationText,
     templateRoles: {
       NACWO: {
@@ -73,7 +70,6 @@ module.exports = merge({}, baseContent, {
         ...getBeforeYouApplyRoleGuide(ROLE_TYPES.nvs)
       },
       SQP: {
-        contentKey: 'shared',
         ...getBeforeYouApplyRoleGuide(ROLE_TYPES.sqp),
         requiresVetAvailabilityCheck: true
       },
