@@ -3,11 +3,7 @@ const baseContent = require('../../../profile/content');
 const { getBeforeYouApplyRoleGuide } = require('./named-person-guidance');
 const { ROLE_TYPES } = require('../role-types');
 
-const sharedNamedPersonNominationText = {
-  title: 'Before you nominate someone for a {{roleType}} role',
-  desc: `\
-### Before you nominate someone for a {{roleType}} role you must ensure:
-
+const sharedNamedPersonNominationBody = `\
 {{#requiresVetAvailabilityCheck}}
 * there is no vet available with the right expertise
 {{/requiresVetAvailabilityCheck}}
@@ -15,7 +11,7 @@ const sharedNamedPersonNominationText = {
 * the establishment licence (PEL) holder (or legally accountable person) supports the application
 * you have added them as an ASPeL user
 
-### Mandatory training requirements
+## Mandatory training requirements
 
 You must ensure:
 
@@ -26,19 +22,30 @@ You must ensure:
   * the NTCO has checked any certificates and evidence to support exemption requests, and emailed them to ASRU Licensing: [asrulicensing@homeoffice.gov.uk](mailto:asrulicensing@homeoffice.gov.uk)
 * they have updated their training and exemptions in their [training record in ASPeL]({{trainingDashboardUrl}})
 
-### Skills and experience
+## Skills and experience
 
 You will need to describe how they demonstrate the recommended skills and experience set out in the [{{roleGuideLabel}}]({{roleGuideUrl}}).
 
-### Conflict of interest declaration
+## Conflict of interest declaration
 
-You must ensure the nominee has no significant conflict of interest, and their declaration form is held on record at the establishment.`
-};
+You must ensure the nominee has no significant conflict of interest, and their declaration form is held on record at the establishment.`;
+
+const getNamedPersonNominationText = (article, roleType) => ({
+  title: `Before you nominate someone for ${article} ${roleType} role`,
+  desc: `\
+**Before you nominate someone for ${article} ${roleType} role you must ensure:**
+
+${sharedNamedPersonNominationBody}`
+});
+
+const sharedNamedPersonNominationText = getNamedPersonNominationText('a', '{{roleType}}');
+const nvsNamedPersonNominationText = getNamedPersonNominationText('an', 'NVS');
+const sqpNamedPersonNominationText = getNamedPersonNominationText('an', 'SQP');
 
 const sharedRoleGuideNominationText = {
   title: 'Before you nominate someone for an {{roleType}} role',
   desc: `\
-### Before you nominate someone for an {{roleType}} role you must ensure:
+## Before you nominate someone for an {{roleType}} role you must ensure:
 
 * they have agreed to be nominated
 * the establishment licence (PEL) holder (or legally accountable person) supports the nomination
@@ -51,6 +58,8 @@ module.exports = merge({}, baseContent, {
   supportingGuidanceTitle: 'Supporting guidance on GOV.UK',
   beforeYouNominateText: {
     shared: sharedNamedPersonNominationText,
+    NVS: nvsNamedPersonNominationText,
+    SQP: sqpNamedPersonNominationText,
     sharedRoleGuide: sharedRoleGuideNominationText,
     templateRoles: {
       NACWO: {
@@ -58,11 +67,9 @@ module.exports = merge({}, baseContent, {
         ...getBeforeYouApplyRoleGuide(ROLE_TYPES.nacwo)
       },
       NVS: {
-        contentKey: 'shared',
         ...getBeforeYouApplyRoleGuide(ROLE_TYPES.nvs)
       },
       SQP: {
-        contentKey: 'shared',
         ...getBeforeYouApplyRoleGuide(ROLE_TYPES.sqp),
         requiresVetAvailabilityCheck: true
       },
@@ -78,7 +85,7 @@ module.exports = merge({}, baseContent, {
     NPRC: {
       title: 'Before you nominate someone for an NPRC role',
       desc: `\
-### Before you nominate someone for an NPRC role you must ensure:
+**Before you nominate someone for an NPRC role you must ensure:**
 
 * they have agreed to be nominated
 * the legally accountable person supports the nomination
@@ -87,9 +94,9 @@ module.exports = merge({}, baseContent, {
 * you have added them as an ASPeL user`
     },
     PELH: {
-      title: 'Before you nominate someone for the PEL holder role you must ensure:',
+      title: 'Before you nominate someone for the PEL holder role',
       desc: `\
-### Before you nominate someone for the PEL holder role you must ensure:
+**Before you nominate someone for the PEL holder role you must ensure:**
 
 * you can describe why they are suitable for the role
 * they have no significant conflict of interest, and you have sent the declaration form to ASRU Licensing: [asrulicensing@homeoffice.gov.uk](mailto:asrulicensing@homeoffice.gov.uk)`
@@ -97,7 +104,7 @@ module.exports = merge({}, baseContent, {
     HOLC: {
       title: 'Before you nominate someone for a HOLC role',
       desc: `\
-### Before you nominate someone for a HOLC role you must ensure:
+**Before you nominate someone for a HOLC role you must ensure:**
 
 * they have agreed to be nominated
 * the establishment licence (PEL) holder (or legally accountable person) supports the nomination

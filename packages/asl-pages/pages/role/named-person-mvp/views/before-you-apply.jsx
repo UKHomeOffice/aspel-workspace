@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { Snippet, Header, Form, SupportingLinks } from '@ukhomeoffice/asl-components';
 import namedPersonGuidance from '../content/named-person-guidance';
+import { ROLE_TYPES } from '../role-types';
 
 const { getBeforeYouApplySupportingLinks } = namedPersonGuidance;
 
@@ -37,7 +38,9 @@ const Page = () => {
           </Form>
         </div>
 
-        <SupportingLinks sectionTitle={<Snippet>supportingGuidanceTitle</Snippet>} links={getBeforeYouApplySupportingLinks(roleType)} />
+        { roleType.toLowerCase() !== ROLE_TYPES.holc && (
+          <SupportingLinks sectionTitle={<Snippet>supportingGuidanceTitle</Snippet>} links={getBeforeYouApplySupportingLinks(roleType)} />
+        )}
       </div>
     </div>
   );

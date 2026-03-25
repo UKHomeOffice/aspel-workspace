@@ -70,7 +70,7 @@ describe('Before you apply page', () => {
   test('renders shared NVS content with the NVS role guide link', () => {
     renderPage('NVS');
 
-    expect(screen.getByText('Before you nominate someone for a NVS role')).toBeInTheDocument();
+    expect(screen.getByText('Before you nominate someone for an NVS role')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'NVS role guide' })).toHaveAttribute(
       'href',
       'https://www.gov.uk/guidance/nominate-someone-for-a-named-veterinary-surgeon-role'
@@ -80,7 +80,7 @@ describe('Before you apply page', () => {
   test('renders shared SQP content with the vet availability check and SQP role guide link', () => {
     renderPage('SQP');
 
-    expect(screen.getByText('Before you nominate someone for a SQP role')).toBeInTheDocument();
+    expect(screen.getByText('Before you nominate someone for an SQP role')).toBeInTheDocument();
     expect(screen.getByText('there is no vet available with the right expertise')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'SQP role guide' })).toHaveAttribute(
       'href',
@@ -116,7 +116,7 @@ describe('Before you apply page', () => {
   test('renders explicit NPRC content without the shared role guide template', () => {
     renderPage('NPRC');
 
-    expect(screen.getByRole('heading', { name: 'Before you nominate someone for an NPRC role you must ensure:' })).toBeInTheDocument();
+    expect(screen.getByText('Before you nominate someone for an NPRC role you must ensure:')).toBeInTheDocument();
     expect(screen.getByText('the legally accountable person supports the nomination')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'asrulicensing@homeoffice.gov.uk' })).toHaveAttribute(
       'href',
@@ -128,7 +128,7 @@ describe('Before you apply page', () => {
   test('renders explicit PELH content without the shared role guide template', () => {
     renderPage('PELH');
 
-    expect(screen.getByRole('heading', { name: 'Before you nominate someone for the PEL holder role you must ensure:' })).toBeInTheDocument();
+    expect(screen.getByText('Before you nominate someone for the PEL holder role you must ensure:')).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'NACWO role guide' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'NVS role guide' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'SQP role guide' })).not.toBeInTheDocument();
@@ -137,7 +137,7 @@ describe('Before you apply page', () => {
   test('renders explicit HOLC content without the shared role guide template', () => {
     renderPage('HOLC');
 
-    expect(screen.getByRole('heading', { name: 'Before you nominate someone for a HOLC role you must ensure:' })).toBeInTheDocument();
+    expect(screen.getByText('Before you nominate someone for a HOLC role you must ensure:')).toBeInTheDocument();
     expect(screen.getByText('you can describe why they are suitable for the role')).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'HOLC role guide' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'training record in ASPeL' })).not.toBeInTheDocument();
