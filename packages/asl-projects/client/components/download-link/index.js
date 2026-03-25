@@ -16,7 +16,8 @@ const mapStateToProps = (state, props) => {
   return {
     values,
     sections,
-    application: state.application
+    application: state.application,
+    imageRoot: (state.static && state.static.imageRoot) || '/attachment'
   };
 };
 
