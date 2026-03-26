@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 
 const content = `# Privacy notice
 
-ASPeL is provided by Home Office Digital, Data and Technology on behalf of the ASRU (Animals in Science Regulation Unit).
+ASPeL is provided by Home Office Digital, on behalf of the Animals in Science Regulation Unit (ASRU).
 
 The data controller for ASPeL is ASRU. A data controller determines how and why personal data is processed.
 
@@ -25,11 +25,15 @@ The personal data we collect from you includes:
 
 ## What we do with your data and who sees it
 
-The data provided by you and your establishment(s) is used by ASRU, the Animals in Science Committee and trusted, security vetted, government suppliers to assess the suitability of licence applications. It is also used to process metrics that are used to help improve the service that ASRU provides.
+The data provided by you and your establishment(s) is used by the Home Office, the Animals in Science Committee and trusted, security vetted, government suppliers to assess the suitability of licence applications. It is also used to process metrics that are used to help improve the service that ASRU provides.
+
+The information you provide to the Home Office as part of a licence application is considered by us to be information provided in confidence, and the release of this information is prohibited under section 24 of the Animals (Scientific Procedures) Act 1986. This may also apply where the Home Office restates the information supplied in the course of its decision-making.
+
+The non-technical summaries supplied as part of the process are not treated by the Home Office as having been provided in confidence.
 
 Information provided in the non-technical summaries of project licences, and in the annual statistics, will be de-identified before being published on GOV.UK.
 
-De-identified data may also be used to answer Parliamentary Questions and Freedom of Information requests.
+De-identified data may also be used to answer Parliamentary Questions, Freedom of Information requests and other types of correspondence, unless disclosure of that information is prohibited by section 24 of the Animals (Scientific Procedures) Act 1986.
 
 We will only ever share any identifiable data if we are required to do so by law – for example, by court order, or to prevent fraud or other crime.
 
@@ -79,11 +83,11 @@ If you have any of these requests, get in contact with our Data Protection Offic
 
 ASPeL may contain links to other websites.
 
-This privacy policy only applies to ASPeL, and doesn’t cover any other sites or online services that we link to.
+This privacy policy only applies to ASPeL, and does not cover any other sites or online services that we link to.
 
 ## Following a link to another website
 
-If you go to another website from this one, read the privacy policy on that website to find out what it does with your information.
+If you go to another website from ASPeL, read the privacy policy on that website to find out what it does with your information.
 
 ## Changes to this policy
 
@@ -93,38 +97,38 @@ If these changes affect how your personal data is processed, the Home Office wil
 
 ## Contact us or make a complaint
 
-Contact the Data Protection Officer (DPO) if you:
+Contact the DPO if you:
 
 * have any questions about anything in this document
 * think that your personal data has been misused or mishandled
 
 Data Protection Officer
 
-[DPO@homeoffice.gov.uk](mailto:DPO@homeoffice.gov.uk)
+Email: [DPO@homeoffice.gov.uk](mailto:DPO@homeoffice.gov.uk)
 
-Home Office<br>
-2 Marsham Street<br>
-London,<br>
-SW1P 4DF<br>
+Home Office
+2 Marsham Street
+London,
+SW1P 4DF
 
 You can also make a complaint to the Information Commissioner, who is an independent regulator.
 
-[casework@ico.org.uk](mailto:casework@ico.org.uk)
+Email: [casework@ico.org.uk](mailto:casework@ico.org.uk)
 
-Telephone: 0303 123 1113<br>
-Textphone: 01625 545860<br>
+Phone: 0303 123 1113
+Textphone: 01625 545860
 Monday to Friday, 9am to 4:30pm
 
 [Find out about call charges](https://www.gov.uk/call-charges)
 
-Information Commissioner's Office<br>
-Wycliffe House<br>
-Water Lane<br>
-Wilmslow<br>
-Cheshire<br>
+Information Commissioner's Office
+Wycliffe House
+Water Lane
+Wilmslow
+Cheshire
 SK9 5AF
 
-Last updated 17 May 2018
+Last updated 26 March 2026
 
 Last reviewed 1st December 2020`;
 
