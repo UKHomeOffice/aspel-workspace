@@ -108,7 +108,7 @@ Email: [DPO@homeoffice.gov.uk](mailto:DPO@homeoffice.gov.uk)
 
 Home Office
 2 Marsham Street
-London,
+London
 SW1P 4DF
 
 You can also make a complaint to the Information Commissioner, who is an independent regulator.
@@ -130,7 +130,7 @@ SK9 5AF
 
 Last updated 26 March 2026
 
-Last reviewed 1st December 2020`;
+Last reviewed 26 March 2026`;
 
 export default () => {
   return <ReactMarkdown escapeHtml={false}>{ content }</ReactMarkdown>;
