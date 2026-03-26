@@ -283,9 +283,7 @@ class Step extends Component {
       !deleted &&
       !values.deleted;
 
-    const isMandatory =
-      values?.optional === false &&
-      ['standard', 'editable'].includes(values?.standardProtocolType);
+    const isMandatory = values?.optional === false;
 
     const step = <>
       {
@@ -301,10 +299,9 @@ class Step extends Component {
         }
         <Fragment>
           {
-            canReorder && (
               <div className="float-right">
                 {
-                  length > 1 && (
+                  canReorder && length > 1 && (
                     <span>
                       Reorder:{' '}
                       {index === 0
@@ -319,19 +316,17 @@ class Step extends Component {
                     </span>
                   )
                 }
-                {!isMandatory  && length > 1 && (
-                  <span> | <a href="#" onClick={this.removeItem}>Remove</a></span>
+                {!isMandatory && (
+                  <span> { isMandatory ? '|' : null } <a href="#" onClick={this.removeItem}>Remove</a></span>
                 )}
               </div>
-            )
           }
           <h3>
             Step {!values.deleted && `${number + 1}: ${values.reference ? ` ${values.reference}` : ''}`}
 
             <a href="#" className={classnames('inline-block', { restore: values.deleted })} onClick={this.props.restoreItem}>{values.deleted ? ' Restore' : ''}</a>
 
-            {(pdf || readonly) && values.reference && (
-              <Fragment>: {values.reference}</Fragment>)}
+            {(pdf || readonly) && values.reference && (<Fragment>: {values.reference}</Fragment>)}
             {
               completed && !isUndefined(values.optional) &&
               <span className="light smaller">{` (${isMandatory ? 'mandatory': 'optional'})`}</span>
