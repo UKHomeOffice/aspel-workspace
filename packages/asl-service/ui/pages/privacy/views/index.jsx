@@ -106,26 +106,26 @@ Data Protection Officer
 
 Email: [DPO@homeoffice.gov.uk](mailto:DPO@homeoffice.gov.uk)
 
-Home Office
-2 Marsham Street
-London
+Home Office  
+2 Marsham Street  
+London  
 SW1P 4DF
 
 You can also make a complaint to the Information Commissioner, who is an independent regulator.
 
 Email: [casework@ico.org.uk](mailto:casework@ico.org.uk)
 
-Phone: 0303 123 1113
-Textphone: 01625 545860
+Phone: 0303 123 1113  
+Textphone: 01625 545860  
 Monday to Friday, 9am to 4:30pm
 
 [Find out about call charges](https://www.gov.uk/call-charges)
 
-Information Commissioner's Office
-Wycliffe House
-Water Lane
-Wilmslow
-Cheshire
+Information Commissioner's Office  
+Wycliffe House  
+Water Lane  
+Wilmslow  
+Cheshire  
 SK9 5AF
 
 Last updated 26 March 2026
