@@ -1,22 +1,42 @@
-const AWS = require('aws-sdk');
-const { Client } = require('@elastic/elasticsearch');
-const { createAWSConnection, awsGetCredentials } = require('@acuris/aws-es-connection');
+const { Client, Connection } = require('@elastic/elasticsearch');
+const aws4 = require('aws4');
 
 const createESClient = async (options) => {
   if (options.aws.credentials.key) {
     console.log('creating AWS client');
 
-    AWS.config.update({
-      credentials: new AWS.Credentials(options.aws.credentials.key, options.aws.credentials.secret),
-      region: options.aws.region
-    });
+    const awsCredentials = {
+      accessKeyId: options.aws.credentials.key,
+      secretAccessKey: options.aws.credentials.secret
+    };
 
-    const awsCredentials = await awsGetCredentials();
-    const AWSConnection = createAWSConnection(awsCredentials);
+    class AwsConnection extends Connection {
+      request(params, callback) {
+        const path = params.querystring ? `${params.path}?${params.querystring}` : params.path;
+        const url = new URL(this.url.href);
+
+        const opts = {
+          method: params.method,
+          path: path,
+          body: params.body,
+          headers: {
+            ...params.headers,
+            'host': url.host
+          },
+          service: 'es',
+          region: options.aws.region,
+          hostname: url.hostname
+        };
+
+        aws4.sign(opts, awsCredentials);
+        params.headers = opts.headers;
+        return super.request(params, callback);
+      }
+    }
 
     return new Client({
       ...options.aws.client,
-      ...AWSConnection
+      Connection: AwsConnection
     });
   }
 
