@@ -3,7 +3,9 @@ const { omit } = require('lodash');
 const { form } = require('../../../common/routers');
 const { PELH_OR_NPRC_ROLES } = require('../../helper');
 
-module.exports = ({ formId, getRoleSchema } = {}) => {
+const FORM_ID = 'new-role-named-person';
+
+module.exports = ({ getRoleSchema } = {}) => {
   const app = Router({ mergeParams: true });
 
   app.use(
@@ -49,7 +51,7 @@ module.exports = ({ formId, getRoleSchema } = {}) => {
         next();
       },
       saveValues: (req, res, next) => {
-        req.session.form[formId].values = req.form.values;
+        req.session.form[FORM_ID].values = req.form.values;
         next();
       }
     })
