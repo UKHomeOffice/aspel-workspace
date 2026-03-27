@@ -3,21 +3,19 @@ const { Router } = require('express');
 const schema = require('../schema').mandatoryTraining;
 const { ROLE_TYPES, normalizeRoleType } = require('../role-types');
 
-const FORM_ID = 'new-role-named-person';
-
-module.exports = () => {
+module.exports = ({ formId }) => {
   const app = Router({ mergeParams: true });
 
   app.use(
     form({
       configure(req, res, next) {
         const role =
-          req.session.form[FORM_ID].values;
+          req.session.form[formId].values;
         req.form.schema = schema(role);
         next();
       },
       getValidationErrors: (req, res, next) => {
-        const role = req.session.form[FORM_ID].values;
+        const role = req.session.form[formId].values;
         const roleType = normalizeRoleType(role.type);
 
         if (roleType === ROLE_TYPES.sqp && req.form.validationErrors?.mandatory === 'required') {
@@ -30,7 +28,7 @@ module.exports = () => {
         Object.assign(res.locals.static, {
           profile: req.profile,
           role: {
-            ...req.session.form[FORM_ID].values
+            ...req.session.form[formId].values
           }
         });
         next();
