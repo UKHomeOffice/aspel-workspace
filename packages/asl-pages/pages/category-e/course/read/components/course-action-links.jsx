@@ -6,7 +6,7 @@ import { endOfDay, isAfter } from 'date-fns';
 export default function CourseActionLinks() {
   const { establishmentId, trainingCourseId } = useSelector(state => state.static);
   const hasParticipants = useSelector(state => state.datatable.data.rows.length) > 0;
-  const courseStarted = useSelector(state => isAfter(state.static.trainingCourse.startDate, endOfDay(new Date())));
+  const courseStarted = useSelector(state => isAfter(endOfDay(new Date()), state.static.trainingCourse.startDate));
 
   if (!hasParticipants) {
     return <p>

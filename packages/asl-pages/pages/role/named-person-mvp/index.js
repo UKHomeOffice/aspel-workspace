@@ -2,9 +2,8 @@ const { page } = require('@asl/service/ui');
 const { FEATURE_FLAG_NAMED_PERSON_MVP } = require('@asl/service/ui/feature-flag');
 const router = require('./routers');
 const schema = require('./schema');
-const { form } = require('../../common/routers');
+const { clearSessionIfNotFromTask } = require('../../common/middleware');
 const { buildModel } = require('../../../lib/utils');
-const { omit } = require('lodash');
 const { PELH_OR_NPRC_ROLES } = require('../helper');
 const FORM_ID = 'new-role-named-person';
 
@@ -29,9 +28,15 @@ module.exports = (settings) => {
     index: false,
     paths: [
       paths.beforeYouApply,
-      paths.selectRole
+      paths.selectRole,
+      paths.mandatoryTraining
+      // paths.incompleteTraining,
+      // paths.confirm,
+      // paths.success
     ]
   });
+
+  app.get('/', clearSessionIfNotFromTask());
 
   app.get('/', (req, res) => {
     if (!req.hasFeatureFlag(FEATURE_FLAG_NAMED_PERSON_MVP)) {
@@ -77,53 +82,9 @@ module.exports = (settings) => {
       .catch(next);
   });
 
-  app.use('/:page', form({
-    configure: (req, res, next) => {
-      const rolesHeld = req.profile.roles
-        .filter((role) => role.establishmentId === req.establishmentId)
-        .map((role) => role.type);
-
-      const addRoleTasks = req.profile.openTasks
-        .filter(
-          (task) =>
-            task.data.model === 'role' && task.data.action === 'create'
-        )
-        .map((task) => ({
-          id: task.id,
-          type: task.data.data.type
-        }));
-
-      const pelOrNprcTasks = res.locals.static.pelhOrNprcTasks || [];
-      const rolesRequested = addRoleTasks
-        .map((task) => task.type)
-        .concat(pelOrNprcTasks.length > 0 ? PELH_OR_NPRC_ROLES : []);
-
-      req.form.schema = getRoleSchema(rolesHeld.concat(rolesRequested), req.establishment);
-
-      req.model.openTasks = []; // hide the open tasks warning on role forms as it is not applicable
-
-      next();
-    },
-    getValues: (req, res, next) => {
-      req.form.values.rcvsNumber =
-        req.form.values.rcvsNumber || req.profile.rcvsNumber;
-      next();
-    },
-    locals: (req, res, next) => {
-      res.locals.static.schema = omit(req.form.schema, 'rcvsNumber');
-      res.locals.static.ownProfile = req.user.profile.id === req.profileId;
-      res.locals.pageTitle = `${res.locals.static.content.title} - ${req.establishment.name}`;
-      next();
-    },
-    saveValues: (req, res, next) => {
-      req.session.form[FORM_ID].values = req.form.values;
-      next();
-    }
-  }));
-
-  app.use(paths.selectRole, router.selectRole());
+  app.use(paths.selectRole, router.selectRole({ formId: FORM_ID, getRoleSchema }));
   app.use(paths.beforeYouApply, router.beforeYouApply());
-  // app.use(paths.mandatoryTraining, router.mandatoryTraining());
+  app.use(paths.mandatoryTraining, router.mandatoryTraining({ formId: FORM_ID }));
   // app.use(paths.incompleteTraining, router.incompleteTraining());
   // app.use(paths.confirm, router.confirm());
   // app.use(paths.success, router.success());

@@ -71,6 +71,16 @@ const mandatoryTrainingRequirementsForRoles = {
         }
       }
     }
+  },
+  sqp: {
+    title: 'SQP mandatory training',
+    modules: {
+      L,
+      E1,
+      'K (theory)': K,
+      E2
+    },
+    additional: false
   }
 };
 
