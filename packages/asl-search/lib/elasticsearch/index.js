@@ -7,7 +7,7 @@ const createESClient = async (options) => {
 
     const awsCredentials = {
       accessKeyId: options.aws.credentials.key,
-      secretAccessKey: options.aws.credentials.secret,
+      secretAccessKey: options.aws.credentials.secret
     };
 
     class AwsConnection extends Connection {
@@ -25,7 +25,7 @@ const createESClient = async (options) => {
           },
           service: 'es',
           region: options.aws.region,
-          hostname: url.hostname,
+          hostname: url.hostname
         };
 
         aws4.sign(opts, awsCredentials);
