@@ -339,7 +339,8 @@ class Step extends Component {
       number,
       prefix
     } = this.props;
-
+    console.log('Rendering-step-protocol', protocol);
+    console.log('Rendering-step', values);
     const re = new RegExp(`^(reusable)?S?s?teps.${values.id}\\.`);
 
     const relevantComments = Object.values(
