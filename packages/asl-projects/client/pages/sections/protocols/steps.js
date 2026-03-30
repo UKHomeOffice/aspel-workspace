@@ -467,7 +467,7 @@ class Step extends Component {
                   )}
                 </span>
               )}
-              {!isMandatory && editable && completed && !deleted && !values.deleted && !values.isStandardProtocol && (
+              {!isMandatory && editable && completed && !deleted && !values.deleted && (
                 <span> {canReorder && length > 1 ? '|' : null} <a href="#" onClick={this.removeItem}>Remove</a></span>
               )}
             </div>
