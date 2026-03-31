@@ -45,7 +45,7 @@ const sqpNamedPersonNominationText = getNamedPersonNominationText('an', 'SQP');
 const sharedRoleGuideNominationText = {
   title: 'Before you nominate someone for an {{roleType}} role',
   desc: `\
-## Before you nominate someone for an {{roleType}} role you must ensure:
+**Before you nominate someone for an {{roleType}} role you must ensure:**
 
 * they have agreed to be nominated
 * the establishment licence (PEL) holder (or legally accountable person) supports the nomination
