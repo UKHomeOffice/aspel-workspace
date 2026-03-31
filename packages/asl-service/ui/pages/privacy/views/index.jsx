@@ -102,9 +102,9 @@ Contact the DPO if you:
 * have any questions about anything in this document
 * think that your personal data has been misused or mishandled
 
-Data Protection Officer
-
 Email: [DPO@homeoffice.gov.uk](mailto:DPO@homeoffice.gov.uk)
+
+Data Protection Officer
 
 Home Office  
 2 Marsham Street  
@@ -115,9 +115,9 @@ You can also make a complaint to the Information Commissioner, who is an indepen
 
 Email: [casework@ico.org.uk](mailto:casework@ico.org.uk)
 
-Phone: 0303 123 1113  
-Textphone: 01625 545860  
-Monday to Friday, 9am to 4:30pm
+Phone: 0845 630 6060  
+Textphone: 01625 545745  
+Monday to Friday, 9am to 4:30pm  
 
 [Find out about call charges](https://www.gov.uk/call-charges)
 
