@@ -473,7 +473,10 @@ class Step extends Component {
               )}
             </div>
             <h3>
-              Step {!values.deleted && `${number + 1}: ${values.reference ? ` ${values.reference}` : ''}`}
+              Step { !values.deleted
+              ? <>{number + 1}: {values.reference}</>
+              : <>{values.reference}:{" "}</>
+            }
               <a
                 href="#"
                 className={classnames('inline-block', { restore: values.deleted })}

@@ -1,4 +1,4 @@
-import React, { Children, cloneElement, Fragment, useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import React, { Children, cloneElement, Fragment, useCallback, useEffect, useState, useRef } from 'react';
 import classnames from 'classnames';
 import { useDispatch } from 'react-redux';
 import { Button } from '@ukhomeoffice/react-components';
@@ -71,9 +71,14 @@ export default ({
   );
 
   const addItem = useCallback(() => {
+    // Prevent adding an empty protocol if standardProtocolsEnabled is true
     if (!addProtocol && type === 'protocols' && standardProtocolsEnabled) {
       history.push('/standard-protocol');
       return Promise.resolve();
+    }
+    // Only call addProtocol if not redirecting to /standard-protocol
+    if (addProtocol && !(type === 'protocols' && standardProtocolsEnabled)) {
+      addProtocol();
     }
 
     return Promise.resolve()
