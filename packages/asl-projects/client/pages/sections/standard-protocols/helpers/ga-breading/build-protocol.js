@@ -112,9 +112,10 @@ export const BuildProtocol = (protocolTemplate, project) => {
     'continued-use-relevant-project' : data.continuedUseRelevantProject ?? '',
     fate: Array.isArray(data.fate) ? [...data.fate] : [],
     'non-schedule-1': Boolean(data.nonSchedule1),
+    "experience-complete": true,
     'experience-summary': data.experienceSummary ?? '',
     'experience-endpoints': data.experienceEndpoints ?? '',
     'outputs': data.outputs ?? '',
-    'quantitative-data': data['quantitative-data'] ?? '',
+    'quantitative-data': data.quantitativeData ?? '',
   };
 };

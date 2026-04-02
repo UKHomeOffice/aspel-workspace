@@ -63,20 +63,21 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => {
                 "kept-alive"
               ],
               continuedUseRelevantProject: 'Animals may be transferred to another protocol in this project authorised to use the same animal types.',
-              nonSchedule1: false
-            },
-            experienceSummary: `Animals may be used for natural mating on a number of occasions. \nAnimals produced under this protocol are not expected to exhibit any harmful
+              nonSchedule1: false,
+
+              experienceSummary: `Animals may be used for natural mating on a number of occasions. \nAnimals produced under this protocol are not expected to exhibit any harmful
               phenotype. \nOffspring will be maintained by methods appropriate to their genetic alteration until they reach a maximum of 15 months of age.`,
 
-            experienceEndpoints: `Some animals may have an altered immune system making them more susceptible to infection. Animals with altered immune status will be housed in a barrier environment thereby minimising the likelihood of compromising health.
+              experienceEndpoints: `Some animals may have an altered immune system making them more susceptible to infection. Animals with altered immune status will be housed in a barrier environment thereby minimising the likelihood of compromising health.
             \nAny animal will be immediately killed by Schedule 1 method if it shows signs of suffering that is greater than minor and transient or in any way compromises normal behaviour unless moved on to another protocol for a specific purpose (continued use).
             \nAnimals exhibiting any unexpected harmful phenotypes will be killed (Schedule 1), or in the case of individual animals of particular scientific interest, advice will be sought promptly from a Home Office inspector.
             \nOther than those described in the strain-specific adverse effects above, animals are not expected to die because of any authorised genetic alteration. A small number of animals, living beyond the neonatal period (5 days – before which ASRU does not require you to report any mortality), may suddenly and unexpectedly die having shown no preceding clinical signs indicative of impending death. Unless otherwise indicated, such deaths, should they occur, are unlikely to be related to the genotype. However, as per the published ASRU Advice Note on Severity Assessment of GA animals, should the mortality rate (age-matched) of the genetically altered strain rise beyond that present in the background source breeding colony, this will be reported under PPL standard condition 18.`,
 
-            outputs: `Genetically altered mice.
+              outputs: `Genetically altered mice.
             \n(Note: If you are using this protocol to produce tissues for in vitro use you should include mention of the expected outputs from that use and answer Yes to the question below).`,
 
-            quantitativeData: false
+              quantitativeData: false
+            },
           },
         ]
       }
