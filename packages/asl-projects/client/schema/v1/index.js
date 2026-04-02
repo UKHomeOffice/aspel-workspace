@@ -2092,7 +2092,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                   name: 'training-outputs',
                   show: values => isTrainingLicence(values),
                   label: 'What learning outcomes are expected to arise from this protocol?',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                 },
                 {
                   name: 'quantitative-data',
@@ -2128,29 +2128,29 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                                 {
                                   name: 'quantitative-data-pilot-studies-how',
                                   label: 'Where relevant, explain how and when pilot studies will be used.',
-                                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                                 },
                                 {
                                   name: 'quantitative-data-experimental-groups',
                                   label: 'How will you choose different experimental groups?',
                                   hint: 'For example, controls, dose levels, satellites etc.',
-                                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                                 },
                                 {
                                   name: 'control-groups',
                                   label: 'How will you choose control groups?',
                                   hint: 'Provide a robust scientific justification for controls with significant suffering such as sham surgery controls or untreated infected controls.',
-                                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                                 },
                                 {
                                   name: 'randomised',
                                   label: 'How will experiments and data analysis be randomised and blinded?',
-                                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                                 },
                                 {
                                   name: 'reproducibility',
                                   label: 'How will you minimise variables to ensure reproducibility?',
-                                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                                 },
                                 {
                                   name: 'control-groups-size',
@@ -2161,7 +2161,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                                 {
                                   name: 'maximize-effectiveness',
                                   label: 'How will you maximise the data output from the animals you use on this protocol?',
-                                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                                 }
                               ]
                             }
@@ -2180,6 +2180,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
             justification: {
               title: 'Protocol justification',
               label: 'Why is each type of animal, experimental model, and/or method selected for this protocol:',
+              show: props => props.values?.isStandardProtocol !== true,
               granted: {
                 order: 10
               },
@@ -2187,27 +2188,27 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                 {
                   name: 'most-appropriate',
                   label: 'a) the most appropriate scientific approach?',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                 },
                 {
                   name: 'most-refined',
                   label: 'b) the most refined for the purpose?',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                 },
                 {
                   name: 'scientific-endpoints',
                   label: 'For each model and/or method, what is the scientific need for the expected clinical signs?',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  type: values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                 },
                 {
                   name: 'scientific-suffering',
                   label: 'Why scientifically do the animals need to suffer to this degree?',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                 },
                 {
                   name: 'scientific-endpoints-justification',
                   label: 'Why can\'t you achieve your scientific outputs with an earlier humane endpoint, or without animals showing any clinical signs?',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                 },
                 {
                   name: 'justification-substances',
@@ -2224,13 +2225,13 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                           name: 'substances-suitibility',
                           label: 'How will you assess the suitability of these substances, and minimise the unnecessary harms arising from their administration given the particular strain or type of animal you will be using?',
                           hint: 'When assessing suitability, state how you will consider toxicity, efficacy, and sterility.',
-                          type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                          type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                         },
                         {
                           name: 'dosing-regimen',
                           label: 'How will you determine an appropriate dosing regimen?',
                           hint: 'Include routes, dosage volumes, frequencies, and durations.',
-                          type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                          type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
                         }
                       ]
                     },
@@ -2241,6 +2242,12 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                   ]
                 }
               ]
+            },
+            justificationStandardProtocol: {
+              title: 'Protocol justification',
+              label: 'In what ways have you changed the standard protocol and why?',
+              type: 'texteditor',
+              show: props => props.values?.isStandardProtocol === true,
             },
             conditions: {
               title: 'Additional conditions',
