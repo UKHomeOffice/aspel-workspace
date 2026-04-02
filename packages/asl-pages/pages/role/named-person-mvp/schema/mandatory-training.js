@@ -19,7 +19,7 @@ module.exports = (role) => {
     if (roleType === ROLE_TYPES.sqp) {
       return [
         {
-          label: 'Yes',
+          label: 'Yes, within the last 5 years',
           value: 'yes',
           behaviour: 'exclusive'
         },
@@ -60,7 +60,7 @@ module.exports = (role) => {
 
   return {
     mandatory: {
-      inputType: 'checkboxGroup',
+      inputType: roleType === ROLE_TYPES.sqp ? 'radioGroup' : 'checkboxGroup',
       options: mandatoryOptions(roleType),
       validate: ['required', 'exclusive'],
       hint: MANDATORY_TRAINING_HINT_ROLE_TYPES.includes(roleType)

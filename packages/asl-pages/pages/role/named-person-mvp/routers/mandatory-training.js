@@ -1,19 +1,10 @@
 const { form } = require('../../../common/routers');
 const { Router } = require('express');
 const schema = require('../schema').mandatoryTraining;
-
-const getMandatoryTrainingFormId = (req) => `${req.profile.id}-mandatory-training`;
+const { ROLE_TYPES, normalizeRoleType } = require('../role-types');
 
 module.exports = ({ formId }) => {
   const app = Router({ mergeParams: true });
-
-  app.use((req, res, next) => {
-    req.model = {
-      ...req.model,
-      id: getMandatoryTrainingFormId(req)
-    };
-    next();
-  });
 
   app.use(
     form({
@@ -23,12 +14,21 @@ module.exports = ({ formId }) => {
         req.form.schema = schema(role);
         next();
       },
+      getValidationErrors: (req, res, next) => {
+        const role = req.session.form[formId].values;
+        const roleType = normalizeRoleType(role.type);
+
+        if (roleType === ROLE_TYPES.sqp && req.form.validationErrors?.mandatory === 'required') {
+          req.form.validationErrors.mandatory = 'requiredRadioGroup';
+        }
+
+        next();
+      },
       locals: (req, res, next) => {
         Object.assign(res.locals.static, {
           profile: req.profile,
           role: {
-            ...req.session.form[formId]
-              .values
+            ...req.session.form[formId].values
           }
         });
         next();
