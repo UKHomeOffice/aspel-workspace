@@ -4,12 +4,13 @@
 
 ### 1. Protocol Metadata Fields
 
-| Field Name | Type | Conditional Logic | Example Values | Notes |
-|------------|------|-------------------|----------------|-------|
-| `id` | string | Always required | `'protocol-001'`, `'p-abc123'` | Unique identifier |
-| `title` | string | Always required | `'Mouse Breeding Protocol'` | Protocol title from top-level field |
-| `isStandardProtocol` | boolean | Determines field rendering | `true`, `false` | If `true`: uses paragraph fields, if `false`: uses texteditor |
+| Field Name             | Type | Conditional Logic | Example Values | Notes |
+|------------------------|------|-------------------|----------------|-------|
+| `id`                   | string | Always required | `'protocol-001'`, `'p-abc123'` | Unique identifier |
+| `title`                | string | Always required | `'Mouse Breeding Protocol'` | Protocol title from top-level field |
+| `isStandardProtocol`   | boolean | Determines field rendering | `true`, `false` | If `true`: uses paragraph fields, if `false`: uses texteditor |
 | `standardProtocolType` | string | Required if `isStandardProtocol=true` | `'ga-breeding'`, `''` | Empty string for non-standard |
+| `protocolName`         | string | Required if `isStandardProtocol=true` | `'ga-breeding'`, `''` | Empty string for non-standard |
 
 ---
 
