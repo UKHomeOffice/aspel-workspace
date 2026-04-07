@@ -21,6 +21,4 @@ export const renderFieldsInProtocol = (fateOfAnimals, values) => {
 
   // Filter out null values
   return orderedFields.filter(field => field !== null);
-  // todo: before returning, caclulate standardProtocolType, isStandardProtocol with list of constants and app that filter aswell.
-  // i.e [!null] + [whiteList_of_fields_based_on_type]
 };
