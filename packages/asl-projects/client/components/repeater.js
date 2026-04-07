@@ -78,7 +78,7 @@ export default ({
     }
     // Only call addProtocol if not redirecting to /standard-protocol
     if (addProtocol && !(type === 'protocols' && standardProtocolsEnabled)) {
-      addProtocol();
+      addItem();
     }
 
     return Promise.resolve()
