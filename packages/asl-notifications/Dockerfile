@@ -28,7 +28,7 @@ RUN --mount=type=secret,id=token \
     npm update npm \
     npm ci --omit=optional --omit=dev --ignore-scripts --loglevel=verbose
 
-FROM quay.io/ukhomeofficedigital/asl-base:v18
+FROM quay.io/ukhomeofficedigital/asl-base:v22.22.0
 
 RUN apk upgrade --no-cache
 
