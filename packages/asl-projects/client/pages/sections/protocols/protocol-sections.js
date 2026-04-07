@@ -158,7 +158,6 @@ class ProtocolSections extends PureComponent {
               onFieldChange={(key, value) => updateItem({ [key]: value })}
             />
             {
-              !values.isStandardProtocol && editable && !values.deleted && (
                 <Fragment>
                   <Complete
                     type="protocol"
@@ -166,15 +165,16 @@ class ProtocolSections extends PureComponent {
                     onChange={this.setCompleted}
                     buttonClassName="button-secondary"
                   />
-                  <p>
-                    <span>Reorder: <a href="#" disabled={index === 0} onClick={this.moveUp}>Up</a> or <a href="#" disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
-                    <span> │ </span>
-                    <a href="#" onClick={this.props.duplicateItem}>Duplicate protocol</a>
-                    <span> │ </span>
-                    <a href="#" onClick={this.delete}>Remove protocol</a>
-                  </p>
+                  { !values.isStandardProtocol && editable && !values.deleted && (
+                    <p>
+                      <span>Reorder: <a href="#" disabled={index === 0} onClick={this.moveUp}>Up</a> or <a href="#" disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
+                      <span> │ </span>
+                      <a href="#" onClick={this.props.duplicateItem}>Duplicate protocol</a>
+                      <span> │ </span>
+                      <a href="#" onClick={this.delete}>Remove protocol</a>
+                    </p>
+                  )}
                 </Fragment>
-              )
             }
           </div>
         </Expandable>
