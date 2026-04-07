@@ -48,7 +48,7 @@ const mandatoryTrainingRequirementsForRoles = {
     }
   },
   nvs: {
-    title: 'NVS mandatory training',
+    title: 'NVS mandatory training requirements',
     modules: {
       L,
       E1,
@@ -73,7 +73,7 @@ const mandatoryTrainingRequirementsForRoles = {
     }
   },
   sqp: {
-    title: 'SQP mandatory training',
+    title: 'SQP mandatory training requirements',
     modules: {
       L,
       E1,

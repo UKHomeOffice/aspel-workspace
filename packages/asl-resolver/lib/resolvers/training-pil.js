@@ -40,6 +40,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
   if (action === 'grant') {
     const trainingPil = await TrainingPil.query(transaction).findById(id).withGraphFetched('trainingCourse');
     const profile = await Profile.query(transaction).findById(trainingPil.profileId);
+    const issueDate = moment();
 
     if (!profile.pilLicenceNumber) {
       const pilLicenceNumber = await generateLicenceNumber({ model: Profile, transaction, type: 'pil', key: 'pilLicenceNumber' });
@@ -54,8 +55,8 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
 
     return TrainingPil.query(transaction).patchAndFetchById(id, {
       status: 'active',
-      issueDate: moment().toISOString(),
-      expiryDate: moment().add(3, 'months').toISOString()
+      issueDate: issueDate.toISOString(),
+      expiryDate: issueDate.clone().add(3, 'months').toISOString()
     });
   }
 

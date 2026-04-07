@@ -194,7 +194,10 @@ describe('Training pil resolver', () => {
         .then(trainingPil => {
           assert.equal(trainingPil.status, 'active');
           assert.ok(isNowish(trainingPil.issueDate));
-          assert.ok(isNowish(moment(trainingPil.expiryDate).subtract(3, 'months')));
+          assert.equal(
+            trainingPil.expiryDate,
+            moment(trainingPil.issueDate).add(3, 'months').toISOString()
+          );
         });
     });
 
