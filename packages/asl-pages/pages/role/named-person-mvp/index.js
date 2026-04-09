@@ -29,8 +29,8 @@ module.exports = (settings) => {
     paths: [
       paths.beforeYouApply,
       paths.selectRole,
-      paths.mandatoryTraining
-      // paths.incompleteTraining,
+      paths.mandatoryTraining,
+      paths.incompleteTraining
       // paths.confirm,
       // paths.success
     ]
@@ -85,7 +85,7 @@ module.exports = (settings) => {
   app.use(paths.selectRole, router.selectRole({ formId: FORM_ID, getRoleSchema }));
   app.use(paths.beforeYouApply, router.beforeYouApply());
   app.use(paths.mandatoryTraining, router.mandatoryTraining({ formId: FORM_ID }));
-  // app.use(paths.incompleteTraining, router.incompleteTraining());
+  app.use(paths.incompleteTraining, router.incompleteTraining({ formId: FORM_ID }));
   // app.use(paths.confirm, router.confirm());
   // app.use(paths.success, router.success());
 
