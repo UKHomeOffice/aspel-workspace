@@ -1,10 +1,8 @@
 export const showFateOfAnimals = (values, fieldName) => {
 
-  console.log('showFateOfAnimals -> values:', values, 'fieldName:', fieldName, 'standard: ', values.isStandardProtocol, 'type:', values.standardProtocolType === 'standard', 'name:', values.protocolName === 'rodent-breeding-mild');
   // Case 1 → standard protocols SP
   if (values.isStandardProtocol && values.standardProtocolType === 'standard') {
     if (values.protocolName === 'rodent-breeding-mild') {
-      console.log('isRodentBreedingMild', values.protocolName);
       return rodentBreedingMild(values.project['fate-of-animals'], fieldName);
     }
     // fallback for other standard protocols
@@ -22,7 +20,6 @@ export const showFateOfAnimals = (values, fieldName) => {
 
 // Main driver for rodent-breeding-mild protocol
 const rodentBreedingMild = (fateOfAnimals, fieldName) => {
-  console.log('rodentBreedingMild -> fateOfAnimals:', fateOfAnimals, 'fieldName:', fieldName);
   // Mapping of all fields and their visibility
   const allFields = [
     'killed',
@@ -72,9 +69,7 @@ const rodentBreedingMild = (fateOfAnimals, fieldName) => {
     visibilityMap[f] = allowedFates.includes(f);
   });
 
-  console.log('visibility:', visibilityMap);
   const result = allowedFates.includes(fieldName);
-  console.log('result-fate: ', result);
   // Return visibility for the requested field
   return result;
 };

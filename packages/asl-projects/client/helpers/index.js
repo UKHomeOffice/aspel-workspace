@@ -454,19 +454,15 @@ export const calculateProtocolContext = (
 
   const isStandardProtocol = context?.isStandardProtocol;
   const standardProtocolType = context?.standardProtocolType;
-console.log('context: ', context);
 
   if (isStandardProtocol === true && standardProtocolType === 'standard') {
-    console.log('calculateProtocolContext',  standardProtocol);
     return standardProtocol;
   }
 
   if (isStandardProtocol === false && standardProtocolType === 'editable') {
-    console.log('calculateProtocolContext',  editableProtocol);
     return editableProtocol;
   }
 
-  console.log('calculateProtocolContext',  defaultValue);
   return defaultValue;
 };
 

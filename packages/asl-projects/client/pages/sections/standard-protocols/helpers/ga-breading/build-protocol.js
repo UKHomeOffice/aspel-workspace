@@ -6,7 +6,6 @@ import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 
 export const BuildProtocol = (protocolTemplate, project) => {
 
-  console.log('BuildProtocol: ', project['fate-of-animals']);
   // Safe defaults with immutability in mind
   const protocolId = uuidv4();
   const data = protocolTemplate?.data ? { ...protocolTemplate.data } : {};

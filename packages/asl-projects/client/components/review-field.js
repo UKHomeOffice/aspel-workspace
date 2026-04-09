@@ -99,14 +99,12 @@ class ReviewField extends React.Component {
     }
 
     if (['checkbox', 'radio', 'select', 'permissible-purpose'].includes(this.props.type)) {
-      console.log('inCheckRadio: ', this.props);
       options = this.props.optionsFromSettings
         ? this.props.settings[this.props.optionsFromSettings]
         : this.props.options;
     }
 
     if ((this.props.type === 'radio' || this.props.type === 'select') && !isUndefined(value)) {
-      console.log('inSelectRadio: ', this.props);
       value = options.find(option => !isUndefined(option.value) ? option.value === value : option === value);
       additionalInfo = value && value.additionalInfo;
     }

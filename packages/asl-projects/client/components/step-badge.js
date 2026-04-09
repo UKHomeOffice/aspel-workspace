@@ -9,29 +9,22 @@ export default function StepBadge(props) {
   }
 
   const collectSteps = (protocols = []) => {
-    console.log('collectSteps input protocols:', protocols);
-
     let index = -1;
     const ids = [];
 
     if (!Array.isArray(protocols)) {
-      console.warn('protocols is not an array:', protocols);
       return { index, ids };
     }
 
     protocols.forEach((protocol, protocolIndex) => {
-      console.log(`protocol[${protocolIndex}] value:`, protocol);
 
       if (!Array.isArray(protocol)) {
-        console.warn(`protocol[${protocolIndex}] is not an array:`, protocol);
         return;
       }
 
       protocol.forEach((step, i) => {
-        console.log(`step at protocol[${protocolIndex}][${i}]`, step);
 
         if (step?.id === props.fields.id && props.position !== i) {
-          console.log('Matched step id:', step.id, 'index:', i);
           index = i;
         }
 
@@ -42,8 +35,6 @@ export default function StepBadge(props) {
         }
       });
     });
-
-    console.log('collectSteps result:', { index, ids });
 
     return { index, ids };
   };
