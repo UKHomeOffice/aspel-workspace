@@ -39,15 +39,13 @@ module.exports = ({ formId }) => {
   app.post('/', (req, res, next) => {
     const { mandatory } = req.form.values;
     if (mandatory === 'yes' || mandatory === 'exemption') {
-      return res.redirect(req.buildRoute('role.namedPersonMvp.confirm'));
+      return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'confirm' }));
     }
     if (
       mandatory === 'delay' ||
       (Array.isArray(mandatory) && mandatory.includes('delay'))
     ) {
-      return res.redirect(
-        req.buildRoute('role.namedPersonMvp.incompleteTraining')
-      );
+      return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'incomplete-training' }));
     }
   });
 
