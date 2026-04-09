@@ -139,8 +139,8 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const customNodeRenderers = {
-      'table-cell': (p, n, ctx) => {
-      (n.nodes || []).forEach(part => renderNodeShared(p, part, depth, paragraph, numbers, index, {
+    'table-cell': (p, n, ctx = {}) => {
+      (n.nodes || []).forEach(part => renderNodeShared(p, part, ctx.depth, ctx.paragraph, ctx.numbers, ctx.index, {
         applyTextFilter: stripInvalidXmlChars,
         customNodeRenderers
       }));
