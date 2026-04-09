@@ -1,7 +1,8 @@
 const { form } = require('../../../common/routers');
 const { Router } = require('express');
 const schema = require('../schema').incompleteTraining;
-const { format, parse, isValid } = require('date-fns');
+const { isValid } = require('date-fns');
+const { formatDate, DATE_FORMAT } = require('@ukhomeoffice/asl-components/src/utils');
 
 module.exports = ({ formId }) => {
   const app = Router({ mergeParams: true });
@@ -18,8 +19,8 @@ module.exports = ({ formId }) => {
         const month = req.body['completeDate-month'];
         const year = req.body['completeDate-year'];
 
-        const completeDate = parse(`${year}-${month}-${day}`, 'yyyy-M-d', new Date());
-        req.form.values.completeDate = isValid(completeDate) ? format(completeDate, 'yyyy-MM-dd') : '';
+        const completeDate = formatDate(`${year}-${month}-${day}`, DATE_FORMAT.medium);
+        req.form.values.completeDate = isValid(completeDate) ? completeDate : '';
         next();
       },
       locals: (req, res, next) => {
