@@ -50,8 +50,6 @@ class ReviewField extends React.Component {
     let options;
     let additionalInfo;
 
-    console.log('Props: ',this.props);
-
     if (type === 'standard-list') {
       // Ensure value is an array
       const valuesArray = castArray(value || []);
