@@ -223,7 +223,6 @@ const ProjectRouter = () => {
 
         <Switch>
           <Route path="/protocol-summary" component={ProtocolSummary} />
-          // todo: remove this route when the standard protocols, remove all line, link works automatically.
           {standardProtocolsEnabled && (
               <Route path="/ga-breeding" render={(props) => (
                 <GABreeding {...props} />

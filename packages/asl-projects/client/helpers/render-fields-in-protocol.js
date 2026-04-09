@@ -3,8 +3,6 @@ import NTSFateOfAnimalFields from './nts-field';
 export const renderFieldsInProtocol = (fateOfAnimals, values) => {
   const predefinedFields = NTSFateOfAnimalFields();
 
-  console.log('renderFieldsInProtocol: ', values);
-
   if (!fateOfAnimals) {
     return [predefinedFields['continued-use']];
   }

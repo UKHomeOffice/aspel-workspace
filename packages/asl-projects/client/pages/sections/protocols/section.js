@@ -23,7 +23,6 @@ class Section extends PureComponent {
       ...values,
       project: project
     };
-    console.log('Rendering Section with project:', valuesWithProject);
 
     return (
       <Fragment>

@@ -76,10 +76,6 @@ export default ({
       history.push('/standard-protocol');
       return Promise.resolve();
     }
-    // Only call addProtocol if not redirecting to /standard-protocol
-    if (addProtocol && !(type === 'protocols' && standardProtocolsEnabled)) {
-      addItem();
-    }
 
     return Promise.resolve()
       .then(onBeforeAdd)

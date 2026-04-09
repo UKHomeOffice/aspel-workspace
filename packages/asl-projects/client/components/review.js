@@ -93,8 +93,6 @@ class Review extends React.Component {
       />;
     }
 
-    console.log('reviewJS to see Editlink:',[label, this.props.values?.isStandardProtocol]);
-
     return (
       <div className={classnames('review', this.props.className)}>
         {

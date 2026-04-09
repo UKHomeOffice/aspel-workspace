@@ -8,8 +8,6 @@ const {
   getTruncatedStepTitle
 } = require('../../client/helpers/steps');
 
-const { v4: uuidv4 } = require('uuid');
-
 describe('helpers/steps', () => {
   describe('hydrateSteps', () => {
     it('should hydrate steps that reference reusableStepId with reusable step data and usedInProtocols', () => {
