@@ -1,6 +1,6 @@
 import NTSFateOfAnimalFields from './nts-field';
 
-export const renderFieldsInProtocol = (fateOfAnimals, values) => {
+export const renderFieldsInProtocol = (fateOfAnimals) => {
   const predefinedFields = NTSFateOfAnimalFields();
 
   if (!fateOfAnimals) {

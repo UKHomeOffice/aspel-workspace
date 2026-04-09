@@ -7,9 +7,7 @@ import isUndefined from 'lodash/isUndefined';
 import castArray from 'lodash/castArray';
 import every from 'lodash/every';
 import Mustache from 'mustache';
-
 import ReactMarkdown from 'react-markdown';
-
 import { CheckboxGroup, DateInput, Input, RadioGroup, Select, TextArea } from '@ukhomeoffice/react-components';
 
 import RAPlaybackHint from './ra-playback-hint';
@@ -104,22 +102,28 @@ class Field extends Component {
 
   mapOptions(options = []) {
     return options
+      // Advanced filter: show function or truthy
       .filter(opt => {
-        // If the option has a show function, evaluate it with current values
-        if (typeof opt.show === 'function') {
+        if (typeof opt?.show === 'function') {
           return opt.show(this.props.values);
         }
-        return true; // no show function → render
+        return Boolean(opt);
       })
       .map(option => {
         if (!option.reveal) return option;
+        // Combine: render additionalInfo, inset styling, reveal.component, and Fieldset fallback
         return {
           ...option,
           reveal: (
-            <Fieldset
-              {...this.props}
-              fields={castArray(option.reveal)}
-            />
+            <div className="govuk-inset-text">
+              {option.additionalInfo &&
+                <ReactMarkdown>{option.additionalInfo}</ReactMarkdown>
+              }
+              {option.reveal.component
+                ? option.reveal.component
+                : <Fieldset {...this.props} fields={castArray(option.reveal)} />
+              }
+            </div>
           )
         };
       });
@@ -277,7 +281,7 @@ class Field extends Component {
           {this.props.label && <label className="govuk-label">{this.props.label}</label>}
           {this.props.hint && <span className="govuk-hint">{this.props.hint}</span>}
           {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
-          <p className="govuk-body">{renderRichText(value)}</p>
+          {renderRichText(value)}
         </div>
       )
     }

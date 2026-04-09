@@ -482,7 +482,7 @@ class Step extends Component {
               >
                 {values.deleted ? ' Restore' : ''}
               </a>
-              {(pdf || readonly) && values.reference && (<Fragment>: {values.reference}</Fragment>)}
+              {(pdf || readonly) && values.reference && (<span>: {values.reference}</span>)}
               {completed && !isUndefined(values.optional) && (
                 <span className="light smaller">{` (${isMandatory ? 'mandatory' : 'optional'})`}</span>
               )}

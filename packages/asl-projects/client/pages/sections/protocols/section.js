@@ -34,7 +34,7 @@ class Section extends PureComponent {
           editable && !values.deleted
             ? (
               <Fieldset
-                fields={fields.filter(f => f.show === undefined || f.show(project))}
+                fields={(fields || []).filter(f => f.show === undefined || f.show(project))}
                 values={valuesWithProject}
                 prefix={prefix}
                 onFieldChange={onFieldChange}
@@ -42,7 +42,7 @@ class Section extends PureComponent {
             )
             : (
               <ReviewFields
-                fields={fields.filter(f => f.show === undefined || f.show(project))}
+                fields={(fields || []).filter(f => f.show === undefined || f.show(project))}
                 values={valuesWithProject}
                 prefix={prefix}
                 editLink={`0#${prefix}`}

@@ -30,8 +30,6 @@ export default function StepBadge(props) {
 
         if (step?.id) {
           ids.push(step.id);
-        } else {
-          console.warn('Step without id:', step);
         }
       });
     });
