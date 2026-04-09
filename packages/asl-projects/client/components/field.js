@@ -216,6 +216,55 @@ class Field extends Component {
       );
     }
 
+    if (this.props.type === 'standard-radio') {
+      const options = this.mapOptions(this.props.options || []);
+      const selectedOption = options.find(opt => opt.value === value);
+
+      const getRevealValue = (field) => {
+        if (this.props.value && this.props.value[field.name] !== undefined) {
+          return this.props.value[field.name];
+        }
+        const speciesDetails = this.props.project?.speciesDetails || [];
+        const sd = speciesDetails.find(s => s.id === this.props.values?.id);
+        if (sd && sd[field.name] !== undefined) {
+          return sd[field.name];
+        }
+        return '';
+      };
+
+      return (
+        <div className={this.props.className}>
+          <p>yahoo</p>
+          {label && <label className="govuk-label">{<ReactMarkdown>{label}</ReactMarkdown>}</label>}
+          {hint && <span className="govuk-hint">{hint}</span>}
+          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
+
+          {selectedOption ? (
+            <p className="govuk-body">{selectedOption.label}</p>
+          ) : (
+            <p className="govuk-body"><em>-</em></p>
+          )}
+
+          {/* Conditional reveal */}
+          {selectedOption?.reveal && !selectedOption.reveal.$$typeof && (
+            <Fieldset
+              {...this.props}
+              fields={castArray(selectedOption.reveal).map(field => ({
+                ...field,
+                value: getRevealValue(field),
+                label: typeof field.label === 'function' ? field.label(this.props.values) : field.label,
+                hint: typeof field.hint === 'function' ? field.hint(this.props.values) : field.hint,
+                type: typeof field.type === 'function' ? field.type(this.props.values) : field.type
+              }))}
+            />
+          )}
+
+          {/* If reveal is already a React element (rare), render as-is */}
+          {selectedOption?.reveal && selectedOption.reveal.$$typeof && selectedOption.reveal}
+        </div>
+      );
+    }
+
     const renderRichText = (value) => {
       if (!value) return null;
 
@@ -389,53 +438,6 @@ class Field extends Component {
           this.onFieldChange(val);
         }}
       />;
-    }
-    if (this.props.type === 'standard-radio') {
-      const options = this.mapOptions(this.props.options || []);
-      const selectedOption = options.find(opt => opt.value === value);
-
-      const getRevealValue = (field) => {
-        if (this.props.value && this.props.value[field.name] !== undefined) {
-          return this.props.value[field.name];
-        }
-        const speciesDetails = this.props.project?.speciesDetails || [];
-        const sd = speciesDetails.find(s => s.id === this.props.values?.id);
-        if (sd && sd[field.name] !== undefined) {
-          return sd[field.name];
-        }
-        return '';
-      };
-
-      return (
-        <div className={this.props.className}>
-          {label && <label className="govuk-label">{label}</label>}
-          {hint && <span className="govuk-hint">{hint}</span>}
-          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
-
-          {selectedOption ? (
-            <p className="govuk-body">{selectedOption.label}</p>
-          ) : (
-            <p className="govuk-body"><em>-</em></p>
-          )}
-
-          {/* Conditional reveal */}
-          {selectedOption?.reveal && !selectedOption.reveal.$$typeof && (
-            <Fieldset
-              {...this.props}
-              fields={castArray(selectedOption.reveal).map(field => ({
-                ...field,
-                value: getRevealValue(field),
-                label: typeof field.label === 'function' ? field.label(this.props.values) : field.label,
-                hint: typeof field.hint === 'function' ? field.hint(this.props.values) : field.hint,
-                type: typeof field.type === 'function' ? field.type(this.props.values) : field.type
-              }))}
-            />
-          )}
-
-          {/* If reveal is already a React element (rare), render as-is */}
-          {selectedOption?.reveal && selectedOption.reveal.$$typeof && selectedOption.reveal}
-        </div>
-      );
     }
     if (this.props.type === 'checkbox' && this.props.name === 'fate-of-animals') {
       return <NtsCheckBoxWithModal

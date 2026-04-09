@@ -466,3 +466,12 @@ export const calculateProtocolContext = (
   return defaultValue;
 };
 
+/**
+ * Returns the current page URL with #general-constraints appended as an anchor.
+ * If window is undefined (SSR), returns null.
+ * protocol section
+ */
+export const getToGeneralConstraints = () => {
+  if (typeof window === 'undefined') return null;
+  return window.location.href.split('#')[0] + '#general-constraints';
+};

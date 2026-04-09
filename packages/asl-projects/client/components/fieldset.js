@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import ToggleEdit from './toggle-edit';
 import Field from './field';
 

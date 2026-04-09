@@ -93,10 +93,14 @@ class Review extends React.Component {
       />;
     }
 
+    const renderedLabel = displayedLabel ? (
+      <Markdown links={true} paragraphProps={{ className: 'govuk-label' }}>{displayedLabel}</Markdown>
+    ) : null;
+
     return (
       <div className={classnames('review', this.props.className)}>
         {
-          (!isGranted || showGrantedLabel) && displayedLabel && <h3>{displayedLabel}</h3>
+          (!isGranted || showGrantedLabel) && renderedLabel
         }
         {
           showChanges && (

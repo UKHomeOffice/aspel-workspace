@@ -37,7 +37,7 @@ import {
   isTrainingLicence,
   markdownLink,
   getCurrentURLForFateOfAnimals,
-  calculateProtocolContext
+  calculateProtocolContext, getToGeneralConstraints
 } from '../../helpers';
 import NTSFateOfAnimalFields from '../../helpers/nts-field';
 import { trainingSummaryRenderer } from '../../components/download-link/components/training-summary-renderer.mjs';
@@ -1974,12 +1974,12 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                 },
                 {
                   name: 'adverse',
-                  label: values => calculateProtocolContext(values, 'Do you expect this step to have adverse effects for the animals that are more than mild and transient?', 'Do you expect this step to have adverse effects that are more than mild and short-term and not listed in General constraints? [links to General constraints section]',
-                    'Expected adverse effects that are more than mild and short-term and not listed in General constraints [links to General constraints section]'),
+                  label: values => calculateProtocolContext(values, 'Do you expect this step to have adverse effects for the animals that are more than mild and transient?', `Do you expect this step to have adverse effects that are more than mild and short-term and not listed in ${markdownLink('General constraints', getToGeneralConstraints())}?`,
+                    `Expected adverse effects that are more than mild and short-term and not listed in General constraints ${markdownLink('General constraints', getToGeneralConstraints())}`),
                   hint: values => calculateProtocolContext(values, 'Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.',
                     `Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.
                     \n [Remove injection example as not appropriate - advice needed]`, null),
-                  type: 'radio',
+                  type: values => calculateProtocolContext(values, 'radio', 'standard-radio', 'standard-radio'),
                   inline: true,
                   className: 'smaller',
                   options: [
