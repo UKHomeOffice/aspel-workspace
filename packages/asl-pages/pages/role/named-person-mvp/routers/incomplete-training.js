@@ -22,7 +22,7 @@ module.exports = ({ formId }) => {
       },
       locals: (req, res, next) => {
         Object.assign(res.locals.static, {
-          roleType: req.session.form[formId].values.type
+          roleType: req.session.form[formId].values.type.toUpperCase()
         });
         next();
       },
