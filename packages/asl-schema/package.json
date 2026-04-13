@@ -31,6 +31,7 @@
     "deep-diff": "^1.0.2",
     "glob": "^7.1.7",
     "immutable": "^4.0.0-rc.12",
+    "keycloak-connect": "^26.1.1",
     "knex": "^3.1.0",
     "lodash": "^4.18.1",
     "minimist": "^1.2.6",
@@ -39,7 +40,7 @@
     "pg": "^8.7.3",
     "pg-query-stream": "^2.0.1",
     "pg-tsquery": "^8.2.0",
-    "sinon": "^9.0.2",
+    "sinon": "21.1.2",
     "slate": "^0.47.8",
     "uuid": "^3.3.2"
   },
@@ -50,9 +51,9 @@
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "chai": "^4.1.2",
     "dotenv": "^6.0.0",
-    "eslint": "^5.16.0",
+    "eslint": "^10.2.0",
     "faker": "^5.1.0",
-    "mocha": "^11.7.1",
+    "mocha": "7.2.0",
     "nyc": "^15.1.0",
     "uuid-validate": "0.0.3"
   }

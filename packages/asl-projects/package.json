@@ -61,8 +61,8 @@
     "redux-thunk": "^3.1.0",
     "remark-parse": "^9.0.0",
     "reselect": "^5.1.1",
-    "shasum": "^1.0.2",
     "sha.js": "^2.4.12",
+    "shasum": "^1.0.2",
     "slate": "^0.47.8",
     "slate-react": "^0.22.10",
     "unified": "^9.2.2",
@@ -74,9 +74,9 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^7.32.0",
     "eslint-plugin-import": "^2.29.1",
-    "mocha": "^11.7.1",
+    "mocha": "^11.3.0",
     "process": "^0.11.10",
-    "sinon": "19.0.2"
+    "sinon": "^21.1.2"
   },
   "files": [
     "client/*",
