@@ -345,7 +345,7 @@ describe('Place', () => {
       browser.$(`[name="site"]`).setValue('<script>window.location="http://www.test.com/"</script>');
       submitForm(browser);
       assert.equal(browser.getText('h1'), 'Confirm changes');
-      assert.equal(browser.getText('body').match(/<\/?script>/g), null);
+      assert.equal(browser.getText('body').match(/<\/?script>/gi), null);
     });
   });
 
