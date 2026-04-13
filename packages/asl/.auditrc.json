@@ -6,9 +6,5 @@
     "GHSA-73rr-hh4g-fpgx: jsdiff has a Denial of Service vulnerability in parsePatch and applyPatch"
   ],
   "allowlist": [
-    "GHSA-776f-qx25-q3cc",
-    "GHSA-52f5-9888-hmc6",
-    "GHSA-j965-2qgj-vjmq",
-    "GHSA-73rr-hh4g-fpgx"
   ]
 }

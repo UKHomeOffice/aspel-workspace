@@ -30,7 +30,9 @@
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@ukhomeoffice/asl-dictionary": "file:../asl-dictionary",
     "express": "^4.17.1",
+    "express-rate-limit": "^8.3.2",
     "fast-csv": "^5.0.2",
+    "keycloak-connect": "^26.1.1",
     "knex": "^3.1.0",
     "lodash": "^4.18.1",
     "minimist": "^1.2.8",
@@ -40,8 +42,7 @@
     "pg-query-stream": "^4.2.1",
     "through2": "^3.0.1",
     "uuid-validate": "^0.0.3",
-    "winston": "^3.18.3",
-    "express-rate-limit": "^8.3.2"
+    "winston": "^3.18.3"
   },
   "devDependencies": {
     "@babel/register": "^7.8.3",
@@ -49,9 +50,9 @@
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "dotenv": "^8.2.0",
     "eslint": "^8.57.1",
-    "mocha": "^11.7.1",
+    "mocha": "^11.3.0",
     "nodemon": "^3.1.10",
-    "sinon": "^19.0.2",
+    "sinon": "21.1.2",
     "uuid": "^8.1.0"
   },
   "overrides": {
