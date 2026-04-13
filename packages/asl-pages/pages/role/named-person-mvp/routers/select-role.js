@@ -49,7 +49,7 @@ module.exports = ({ formId, getRoleSchema } = {}) => {
         next();
       },
       saveValues: (req, res, next) => {
-        req.session.form[formId].values = req.form.values;
+        req.session.form[formId].values = { ...req.session.form[formId].values, ...req.form.values };
         next();
       }
     })
