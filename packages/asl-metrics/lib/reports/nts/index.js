@@ -25,7 +25,7 @@ module.exports = ({ db, query: params }) => {
       )
       .leftJoin('establishments', 'projects.establishment_id', 'establishments.id')
       .whereIn('projects.status', ['active', 'expired', 'revoked'])
-      .where(db.asl.raw(`date_part('year', projects.issue_date) = '${params.year}'`));
+      .whereRaw("date_part('year', projects.issue_date) = ?", [params.year]);
   };
 
   const parse = project => {
