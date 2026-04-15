@@ -1,3 +1,4 @@
+const e = require('express');
 const { ROLE_TYPES, normalizeRoleType } = require('../role-types');
 
 module.exports = (roleType) => {
@@ -21,9 +22,7 @@ module.exports = (roleType) => {
         validate: ['lessThanOrEqualToMaxWordCount', 'required']
       }
     };
-  }
-
-  if (normalizedRoleType === ROLE_TYPES.nvs) {
+  } else if (normalizedRoleType === ROLE_TYPES.nvs) {
     return {
       experience: {
         inputType: 'textAreaWithWordCount',
@@ -31,7 +30,49 @@ module.exports = (roleType) => {
         validate: ['lessThanOrEqualToMaxWordCount', 'required']
       }
     };
+  } else if (normalizedRoleType === ROLE_TYPES.sqp) {
+    return {
+      experience: {
+        inputType: 'textAreaWithWordCount',
+        maxWordCount: 300,
+        validate: ['lessThanOrEqualToMaxWordCount', 'required']
+      }
+    };
+  } else if (normalizedRoleType === ROLE_TYPES.nio) {
+    return {
+      understanding: {
+        inputType: 'textAreaWithWordCount',
+        maxWordCount: 300,
+        validate: ['lessThanOrEqualToMaxWordCount', 'required']
+      },
+      familiarity: {
+        inputType: 'textAreaWithWordCount',
+        maxWordCount: 300,
+        validate: ['lessThanOrEqualToMaxWordCount', 'required']
+      },
+      experience: {
+        inputType: 'textAreaWithWordCount',
+        maxWordCount: 300,
+        validate: ['lessThanOrEqualToMaxWordCount', 'required']
+      },
+      communication: {
+        inputType: 'textAreaWithWordCount',
+        maxWordCount: 300,
+        validate: ['lessThanOrEqualToMaxWordCount', 'required']
+      }
+    };
+  } else if (normalizedRoleType === ROLE_TYPES.ntco) {
+    return {
+      experience: {
+        inputType: 'textAreaWithWordCount',
+        maxWordCount: 300,
+        validate: ['lessThanOrEqualToMaxWordCount', 'required']
+      },
+      communication: {
+        inputType: 'textAreaWithWordCount',
+        maxWordCount: 300,
+        validate: ['lessThanOrEqualToMaxWordCount', 'required']
+      }
+    };
   }
-
-  return {};
 };

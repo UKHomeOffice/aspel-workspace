@@ -28,6 +28,33 @@ module.exports = merge({}, baseContent, {
       experience: {
         label: 'Describe how {{profile.firstName}} demonstrates proven expertise in the health and welfare of the species held and the procedures carried out at the establishment'
       }
+    },
+    [ROLE_TYPES.nio]: {
+      desc: 'Describe how {{profile.firstName}} demonstrates the following skills and experience:',
+      understanding: {
+        label: 'A good understanding of legal and ethical aspects of use of animals for scientific purposes',
+        hint: 'State if they have completed training modules L and E1'
+      },
+      familiarity: {
+        label: 'Familiarity with the concept, principles and potential applications of the 3Rs',
+        hint: 'State if they have completed training module E2'
+      },
+      experience: {
+        label: 'Expertise in sourcing, retrieving and storing relevant information',
+        hint: 'For example, in a previous librarian role'
+      },
+      communication: {
+        label: 'Good communication and networking skills'
+      }
+    },
+    [ROLE_TYPES.ntco]: {
+      desc: 'Describe how {{profile.firstName}} demonstrates the following skills and experience:',
+      experience: {
+        label: 'Sufficient seniority to influence others and make decisions on training issues'
+      },
+      communication: {
+        label: 'Good communication, management and organisational skills'
+      }
     }
   },
   buttons: {
@@ -55,6 +82,28 @@ module.exports = merge({}, baseContent, {
       [ROLE_TYPES.sqp]: {
         experience: {
           required: 'Describe how they demonstrate proven expertise in the health and welfare of the species held and the procedures carried out at the establishment'
+        }
+      },
+      [ROLE_TYPES.nio]: {
+        understanding: {
+          required: 'Describe how they demonstrate a good understanding of legal and ethical aspects of use of animals for scientific purposes'
+        },
+        familiarity: {
+          required: 'Describe how they demonstrate familiarity with the concept, principles and potential applications of the 3Rs'
+        },
+        experience: {
+          required: 'Describe how they demonstrate expertise in sourcing, retrieving and storing relevant information'
+        },
+        communication: {
+          required: 'Describe how they demonstrate good communication and networking skills'
+        }
+      },
+      [ROLE_TYPES.ntco]: {
+        experience: {
+          required: 'Describe how they demonstrate sufficient seniority to influence others and make decisions on training issues'
+        },
+        communication: {
+          required: 'Describe how they demonstrate good communication, management and organisational skills'
         }
       }
     }
