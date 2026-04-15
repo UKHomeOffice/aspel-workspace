@@ -74,5 +74,21 @@ module.exports = (roleType) => {
         validate: ['lessThanOrEqualToMaxWordCount', 'required']
       }
     };
+  } else if (normalizedRoleType === ROLE_TYPES.nprc) {
+    return {
+      experience: {
+        inputType: 'textAreaWithWordCount',
+        maxWordCount: 300,
+        validate: ['lessThanOrEqualToMaxWordCount', 'required']
+      }
+    };
+  } else if (normalizedRoleType === ROLE_TYPES.pelh) {
+    return {
+      experience: {
+        inputType: 'textAreaWithWordCount',
+        maxWordCount: 300,
+        validate: ['lessThanOrEqualToMaxWordCount', 'required']
+      }
+    };
   }
 };

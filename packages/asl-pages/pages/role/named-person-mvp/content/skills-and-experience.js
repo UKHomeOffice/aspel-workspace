@@ -55,6 +55,16 @@ module.exports = merge({}, baseContent, {
       communication: {
         label: 'Good communication, management and organisational skills'
       }
+    },
+    [ROLE_TYPES.nprc]: {
+      experience: {
+        label: 'Describe why {{profile.firstName}} is suitable for the NPRC role'
+      }
+    },
+    [ROLE_TYPES.pelh]: {
+      experience: {
+        label: 'Describe why {{profile.firstName}} is suitable for the PELH role'
+      }
     }
   },
   buttons: {
@@ -104,6 +114,16 @@ module.exports = merge({}, baseContent, {
         },
         communication: {
           required: 'Describe how they demonstrate good communication, management and organisational skills'
+        }
+      },
+      [ROLE_TYPES.nprc]: {
+        experience: {
+          required: 'Describe why they are suitable for the NPRC role'
+        }
+      },
+      [ROLE_TYPES.pelh]: {
+        experience: {
+          required: 'Describe why they are suitable for the PELH role'
         }
       }
     }
