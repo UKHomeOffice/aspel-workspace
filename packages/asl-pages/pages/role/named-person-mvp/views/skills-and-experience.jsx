@@ -6,17 +6,18 @@ import content from '../content/skills-and-experience';
 const Page = () => {
 
   const { profile, roleType } = useSelector(state => state.static, shallowEqual);
+  const roleKey = (roleType || '').toLowerCase();
+  const renderers = {};
 
-  const renderers = () => (
-    Object.keys(content.fields).map(key => ({
-      [key]: {
-        propMappers: {
-          label: () => <Snippet>{`fields.${key}.label`}</Snippet>,
-          hint: () => <Snippet>{`fields.${key}.hint`}</Snippet>,
-          error: () => <Snippet>{`errors.${key}.required`}</Snippet>
-        }
+  for (const key of Object.keys(content.fields[roleKey] || {})) {
+    renderers[key] = {
+      propMappers: {
+        label: () => <Snippet>{`fields.${roleKey}.${key}.label`}</Snippet>,
+        hint: () => <Snippet>{`fields.${roleKey}.${key}.hint`}</Snippet>,
+        error: () => <Snippet>{`errors.fields.${roleKey}.${key}.required`}</Snippet>
       }
-    })));
+    };
+  }
 
   return (
     <div>
@@ -25,7 +26,7 @@ const Page = () => {
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
           <Header title={<Snippet>title</Snippet>} />
-          <span className="govuk-heading-s"><Snippet>desc</Snippet></span>
+          {content.fields[roleKey]?.desc && <span className="govuk-heading-s"><Snippet>{`fields.${roleKey}.desc`}</Snippet></span>}
           <Form renderers={renderers} cancelLink="profile.read"></Form>
         </div>
       </div>

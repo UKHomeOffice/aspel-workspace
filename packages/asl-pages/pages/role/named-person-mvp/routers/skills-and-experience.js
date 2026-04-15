@@ -8,7 +8,8 @@ module.exports = ({ formId }) => {
   app.use(
     form({
       configure(req, res, next) {
-        req.form.schema = schema();
+        const roleType = req.session.form[formId].values.type;
+        req.form.schema = schema(roleType);
         next();
       },
       locals: (req, res, next) => {
