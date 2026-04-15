@@ -30,6 +30,7 @@ import Comments from './comments';
 import ErrorBoundary from './error-boundary';
 import NtsCheckBoxWithModal from './checkbox';
 import without from 'lodash/without';
+import { getTextFromNodes } from '../helpers/get-text-from-node';
 
 /**
  * Where an option in a checkbox group is marked as exclusive, this handles
@@ -285,12 +286,7 @@ class Field extends Component {
       if (typeof value === 'string') {
         text = value;
       } else if (value.object === 'document' && value.content) {
-        text = value.content
-          .map(
-            block =>
-              block.content?.map(node => node.text).join('') || ''
-          )
-          .join('\n\n');
+        text = getTextFromNodes(value.content);
       }
 
       // Split into lines and trim

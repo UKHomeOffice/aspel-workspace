@@ -26,24 +26,24 @@ import { saveReusableSteps } from '../../../actions/projects';
 import Expandable from '../../../components/expandable';
 import cloneDeep from 'lodash/cloneDeep';
 
+const IGNORED_KEYS = new Set([
+  'addExisting',
+  'isStandardProtocol',
+  'standardProtocolType',
+  'saved',
+  'completed',
+  'reusable',
+  'reusableStepId',
+  'existingValues',
+  'reference',
+  'reusedStep',
+  'deleted'
+]);
+
 function isNewStep(step) {
   if (!step) {
     return false;
   }
-
-  const IGNORED_KEYS = new Set([
-    'addExisting',
-    'isStandardProtocol',
-    'standardProtocolType',
-    'saved',
-    'completed',
-    'reusable',
-    'reusableStepId',
-    'existingValues',
-    'reference',
-    'reusedStep',
-    'deleted'
-  ]);
 
   const keys = Object.keys(step).filter(k => !IGNORED_KEYS.has(k));
 

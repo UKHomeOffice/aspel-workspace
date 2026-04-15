@@ -19,6 +19,7 @@ import EstablishmentSelector from './establishment-selector';
 import { DATE_FORMAT } from '../constants';
 import ReviewFields from './review-fields';
 import { ReviewRepeater } from '../pages/sections/repeater/review';
+import { getTextFromNodes } from '../helpers/get-text-from-node';
 
 function RevealChildren({ value, options, values, prefix, diff }) {
   const option = (options || []).find(option => option.value === value);
@@ -355,19 +356,6 @@ class ReviewField extends React.Component {
         </div>
       );
     }
-
-    const getTextFromNodes = (nodes = []) =>
-      nodes
-        .map(node => {
-          if (node.text) {
-            return node.text;
-          }
-          if (node.nodes) {
-            return getTextFromNodes(node.nodes);
-          }
-          return '';
-        })
-        .join('');
 
     const renderRichText = (value) => {
       if (!value) {
