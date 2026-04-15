@@ -1,2 +1,14 @@
 extends:
   - "@ukhomeoffice/asl"
+
+overrides:
+  - files:
+      - "test/**/*.js"
+    env:
+      mocha: true
+    plugins:
+      - chai-friendly
+    rules:
+      implicit-dependencies/no-implicit: off
+      no-unused-expressions: off
+      chai-friendly/no-unused-expressions: error
