@@ -7,8 +7,9 @@
     "build": "exit 0",
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config",
-    "test": "npm run test:lint",
-    "test:lint": "eslint ."
+    "test": "npm run test:lint && npm run test:mocha",
+    "test:lint": "eslint .",
+    "test:mocha": "mocha --exit"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,12 @@
   "homepage": "https://github.com/UKHomeOffice/asl-attachments#readme",
   "devDependencies": {
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
-    "eslint": "^8.32.0"
+    "chai": "^4.3.7",
+    "eslint": "^8.32.0",
+    "eslint-plugin-chai-friendly": "^1.2.0",
+    "mocha": "^10.2.0",
+    "sinon": "^21.1.2",
+    "supertest": "^7.2.2"
   },
   "dependencies": {
     "@asl/schema": "file:../asl-schema",
