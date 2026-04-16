@@ -39,8 +39,6 @@ class Review extends React.Component {
 
     const mustacheContext = {
       ...this.props,
-      // Flatten values to root level
-      ...(this.props.values || {}),
       // Also keep values nested for backward compatibility
       values: this.props.values
     };
