@@ -75,60 +75,33 @@ module.exports = merge({}, baseContent, {
     cancel: 'Cancel'
   },
   errors: {
-    fields: {
-      [ROLE_TYPES.nacwo]: {
-        experience: {
-          required: 'Describe how they demonstrate suitable expertise and training to minimise suffering and optimise the welfare of animals they are responsible for'
-        },
-        authority: {
-          required: 'Describe how they demonstrate appropriate personal and managerial authority to promote high standards'
-        },
-        skills: {
-          required: 'Describe how they demonstrate good communication and diplomacy skills to champion a culture of care among both scientific and husbandry staff'
-        }
-      },
-      [ROLE_TYPES.nvs]: {
-        experience: {
-          required: 'Describe how they demonstrate expertise in the health and welfare of the species they will be responsible for'
-        }
-      },
-      [ROLE_TYPES.sqp]: {
-        experience: {
-          required: 'Describe how they demonstrate proven expertise in the health and welfare of the species held and the procedures carried out at the establishment'
-        }
-      },
-      [ROLE_TYPES.nio]: {
-        understanding: {
-          required: 'Describe how they demonstrate a good understanding of legal and ethical aspects of use of animals for scientific purposes'
-        },
-        familiarity: {
-          required: 'Describe how they demonstrate familiarity with the concept, principles and potential applications of the 3Rs'
-        },
-        experience: {
-          required: 'Describe how they demonstrate expertise in sourcing, retrieving and storing relevant information'
-        },
-        communication: {
-          required: 'Describe how they demonstrate good communication and networking skills'
-        }
-      },
-      [ROLE_TYPES.ntco]: {
-        experience: {
-          required: 'Describe how they demonstrate sufficient seniority to influence others and make decisions on training issues'
-        },
-        communication: {
-          required: 'Describe how they demonstrate good communication, management and organisational skills'
-        }
-      },
-      [ROLE_TYPES.pelh]: {
-        experience: {
-          required: 'Describe why they are suitable for the PEL holder role'
-        }
-      },
-      default: {
-        experience: {
-          required: 'Describe why they are suitable for the {{roleType}} role'
-        }
-      }
+    experience: {
+      required: 'Describe why they are suitable for the {{roleType}} role',
+      lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
+    },
+    authority: {
+      required: 'Describe how they demonstrate appropriate personal and managerial authority to promote high standards',
+      lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
+    },
+    skills: {
+      required: 'Describe how they demonstrate good communication and diplomacy skills to champion a culture of care among both scientific and husbandry staff',
+      lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
+    },
+    understanding: {
+      required: 'Describe how they demonstrate a good understanding of legal and ethical aspects of use of animals for scientific purposes',
+      lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
+    },
+    familiarity: {
+      required: 'Describe how they demonstrate familiarity with the concept, principles and potential applications of the 3Rs',
+      lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
+    },
+    communication: {
+      required: 'Describe how they demonstrate good communication and networking skills',
+      lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
+    },
+    default: {
+      required: 'This is a required field',
+      lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
     }
   }
 });

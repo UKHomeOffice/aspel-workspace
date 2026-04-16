@@ -13,14 +13,12 @@ const Page = () => {
 
   for (const key of Object.keys(content.fields[contentKey] || {})) {
     const fieldContent = content.fields[contentKey]?.[key];
-    const errorKey = content.errors.fields[roleKey]?.[key] ? roleKey : 'default';
     renderers[key] = {
       propMappers: {
         label: () => <Snippet>{`fields.${contentKey}.${key}.label`}</Snippet>,
         ...(fieldContent?.hint && {
           hint: () => <Snippet>{`fields.${contentKey}.${key}.hint`}</Snippet>
-        }),
-        error: () => <Snippet>{`errors.fields.${errorKey}.${key}.required`}</Snippet>
+        })
       }
     };
   }
