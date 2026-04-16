@@ -12,11 +12,14 @@ const Page = () => {
   const renderers = {};
 
   for (const key of Object.keys(content.fields[contentKey] || {})) {
+    const fieldContent = content.fields[contentKey]?.[key];
     const errorKey = content.errors.fields[roleKey]?.[key] ? roleKey : 'default';
     renderers[key] = {
       propMappers: {
         label: () => <Snippet>{`fields.${contentKey}.${key}.label`}</Snippet>,
-        hint: () => <Snippet>{`fields.${contentKey}.${key}.hint`}</Snippet>,
+        ...(fieldContent?.hint && {
+          hint: () => <Snippet>{`fields.${contentKey}.${key}.hint`}</Snippet>
+        }),
         error: () => <Snippet>{`errors.fields.${errorKey}.${key}.required`}</Snippet>
       }
     };
@@ -28,9 +31,11 @@ const Page = () => {
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <Header title={<Snippet>{`title.${titleKey}`}</Snippet>} />
-          {content.fields[contentKey]?.desc && <span className="govuk-heading-s"><Snippet>{`fields.${contentKey}.desc`}</Snippet></span>}
-          <Form renderers={renderers} cancelLink="profile.read"></Form>
+          <Form renderers={renderers} cancelLink="profile.read">
+            <Header title={<Snippet>{`title.${titleKey}`}</Snippet>} />
+
+            <div className="govuk-body">{content.fields[contentKey]?.desc && <strong><Snippet>{`fields.${contentKey}.desc`}</Snippet></strong>}</div>
+          </Form>
         </div>
       </div>
     </div>

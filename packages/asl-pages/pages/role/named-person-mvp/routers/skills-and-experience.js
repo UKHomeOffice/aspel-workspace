@@ -26,7 +26,7 @@ module.exports = ({ formId }) => {
   );
 
   app.post('/', (req, res, next) => {
-    return res.redirect(req.buildRoute('role.namedPersonMvp.confirm'));
+    return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'confirm' }));
   });
 
   return app;

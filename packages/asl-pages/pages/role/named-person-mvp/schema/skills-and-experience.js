@@ -1,4 +1,3 @@
-const e = require('express');
 const { ROLE_TYPES, normalizeRoleType } = require('../role-types');
 
 module.exports = (roleType) => {

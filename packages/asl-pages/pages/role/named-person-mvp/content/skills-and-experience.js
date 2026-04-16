@@ -19,12 +19,12 @@ module.exports = merge({}, baseContent, {
         hint: 'For example, they are managing a service, area or team of animal technicians'
       },
       skills: {
-        label: 'Good communication and diplomacy skills to champion a culture of care among both scientificand husbandry staff'
+        label: 'Good communication and diplomacy skills to champion a culture of care among both scientific and husbandry staff'
       }
     },
     [ROLE_TYPES.nvs]: {
       experience: {
-        label: 'Describe how {{profile.firstName}} demonstrate expertise in the health and welfare of the species they will be responsible for'
+        label: 'Describe how {{profile.firstName}} demonstrates expertise in the health and welfare of the species they will be responsible for'
       }
     },
     [ROLE_TYPES.sqp]: {
@@ -84,7 +84,7 @@ module.exports = merge({}, baseContent, {
           required: 'Describe how they demonstrate appropriate personal and managerial authority to promote high standards'
         },
         skills: {
-          required: 'Describe how they demonstrate good communication and diplomacy skills to champion a culture of care among both scientificand husbandry staff'
+          required: 'Describe how they demonstrate good communication and diplomacy skills to champion a culture of care among both scientific and husbandry staff'
         }
       },
       [ROLE_TYPES.nvs]: {
