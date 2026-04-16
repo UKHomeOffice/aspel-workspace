@@ -3,7 +3,10 @@ const baseContent = require('../../../profile/content');
 const { ROLE_TYPES } = require('../role-types');
 
 module.exports = merge({}, baseContent, {
-  title: '{{roleType}} skills and experience',
+  title: {
+    [ROLE_TYPES.pelh]: 'PEL holder skills and experience',
+    default: '{{roleType}} skills and experience'
+  },
   fields: {
     [ROLE_TYPES.nacwo]: {
       desc: 'Describe how {{profile.firstName}} demonstrates the following skills and experience:',
@@ -56,14 +59,14 @@ module.exports = merge({}, baseContent, {
         label: 'Good communication, management and organisational skills'
       }
     },
-    [ROLE_TYPES.nprc]: {
-      experience: {
-        label: 'Describe why {{profile.firstName}} is suitable for the NPRC role'
-      }
-    },
     [ROLE_TYPES.pelh]: {
       experience: {
-        label: 'Describe why {{profile.firstName}} is suitable for the PELH role'
+        label: 'Describe why {{profile.firstName}} is suitable for the PEL holder role'
+      }
+    },
+    default: {
+      experience: {
+        label: 'Describe why {{profile.firstName}} is suitable for the {{roleType}} role'
       }
     }
   },
@@ -116,14 +119,14 @@ module.exports = merge({}, baseContent, {
           required: 'Describe how they demonstrate good communication, management and organisational skills'
         }
       },
-      [ROLE_TYPES.nprc]: {
-        experience: {
-          required: 'Describe why they are suitable for the NPRC role'
-        }
-      },
       [ROLE_TYPES.pelh]: {
         experience: {
-          required: 'Describe why they are suitable for the PELH role'
+          required: 'Describe why they are suitable for the PEL holder role'
+        }
+      },
+      default: {
+        experience: {
+          required: 'Describe why they are suitable for the {{roleType}} role'
         }
       }
     }

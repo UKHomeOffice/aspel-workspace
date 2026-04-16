@@ -22,22 +22,6 @@ module.exports = (roleType) => {
         validate: ['lessThanOrEqualToMaxWordCount', 'required']
       }
     };
-  } else if (normalizedRoleType === ROLE_TYPES.nvs) {
-    return {
-      experience: {
-        inputType: 'textAreaWithWordCount',
-        maxWordCount: 300,
-        validate: ['lessThanOrEqualToMaxWordCount', 'required']
-      }
-    };
-  } else if (normalizedRoleType === ROLE_TYPES.sqp) {
-    return {
-      experience: {
-        inputType: 'textAreaWithWordCount',
-        maxWordCount: 300,
-        validate: ['lessThanOrEqualToMaxWordCount', 'required']
-      }
-    };
   } else if (normalizedRoleType === ROLE_TYPES.nio) {
     return {
       understanding: {
@@ -74,15 +58,7 @@ module.exports = (roleType) => {
         validate: ['lessThanOrEqualToMaxWordCount', 'required']
       }
     };
-  } else if (normalizedRoleType === ROLE_TYPES.nprc) {
-    return {
-      experience: {
-        inputType: 'textAreaWithWordCount',
-        maxWordCount: 300,
-        validate: ['lessThanOrEqualToMaxWordCount', 'required']
-      }
-    };
-  } else if (normalizedRoleType === ROLE_TYPES.pelh) {
+  } else {
     return {
       experience: {
         inputType: 'textAreaWithWordCount',
