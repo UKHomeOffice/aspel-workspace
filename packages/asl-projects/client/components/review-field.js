@@ -19,7 +19,6 @@ import EstablishmentSelector from './establishment-selector';
 import { DATE_FORMAT } from '../constants';
 import ReviewFields from './review-fields';
 import { ReviewRepeater } from '../pages/sections/repeater/review';
-import { getTextFromNodes } from '../helpers/get-text-from-node';
 
 function RevealChildren({ value, options, values, prefix, diff }) {
   const option = (options || []).find(option => option.value === value);
@@ -357,33 +356,14 @@ class ReviewField extends React.Component {
       );
     }
 
-    const renderRichText = (value) => {
-      if (!value) {
-        return null;
-      }
-
-      if (typeof value === 'string') {
-        return value;
-      }
-
-      if(typeof value === 'boolean') {
-        return value ? 'Yes' : 'No';
-      }
-
-      // Slate 0.47 Value object
-      if (value.object === 'value' && value.document?.nodes) {
-        return value.document.nodes
-          .map(block => getTextFromNodes(block.nodes))
-          .join('\n\n');
-      }
-
-      return '';
-    };
-
     if (!isUndefined(value) && !isNull(value) && value !== '') {
       return (
         <Fragment>
-          <p>{renderRichText(value.review || value.label || value)}</p>
+          <TextEditor
+            name={this.props.name}
+            value={value}
+            readOnly={true}
+          />
           {additionalInfo && <ReactMarkdown>{additionalInfo}</ReactMarkdown>}
           {
             this.props.preserveHierarchy && <RevealChildren value={value} options={options} {...this.props} />

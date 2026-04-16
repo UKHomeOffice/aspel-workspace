@@ -90,7 +90,7 @@ export const BuildProtocol = (protocolTemplate, project) => {
     isStandardProtocol: Boolean(data.isStandardProtocol),
     standardProtocolType: data.standardProtocolType ?? '',
     protocolName: data.protocolName ?? '',
-
+    protocolVersion: 'v1',
     description: data.description ?? '',
     severity: data.severity ?? '',
     'severity-proportion': data.severityProportion ?? '',

@@ -30,7 +30,6 @@ import Comments from './comments';
 import ErrorBoundary from './error-boundary';
 import NtsCheckBoxWithModal from './checkbox';
 import without from 'lodash/without';
-import { getTextFromNodes } from '../helpers/get-text-from-node';
 
 /**
  * Where an option in a checkbox group is marked as exclusive, this handles
@@ -266,67 +265,17 @@ class Field extends Component {
       );
     }
 
-    const renderRichText = (value) => {
-      if (!value) return null;
-
-      // Handle arrays as bullet lists
-      if (Array.isArray(value)) {
-        return (
-          <ul className="govuk-list govuk-list--bullet">
-            {value.map((item, i) => (
-              <li key={i}>{item}</li>
-            ))}
-          </ul>
-        );
-      }
-
-      let text = '';
-
-      // Flatten rich text into a single string
-      if (typeof value === 'string') {
-        text = value;
-      } else if (value.object === 'document' && value.content) {
-        text = getTextFromNodes(value.content);
-      }
-
-      // Split into lines and trim
-      const lines = text
-        .split('\n')
-        .map(line => line.trim())
-        .filter(Boolean);
-
-      // Separate bullets from regular text
-      const bullets = lines
-        .filter(line => line.startsWith('•'))
-        .map(line => line.replace(/^•\s*/, ''));
-
-      const paragraphs = lines.filter(line => !line.startsWith('•'));
-
-      return (
-        <div>
-          {paragraphs.map((p, i) => (
-            <p key={`p-${i}`} className="govuk-body">
-              {p}
-            </p>
-          ))}
-
-          {bullets.length > 0 && (
-            <ul className="govuk-list govuk-list--bullet">
-              {bullets.map((b, i) => (
-                <li key={`b-${i}`}>{b}</li>
-              ))}
-            </ul>
-          )}
-        </div>
-      );
-    };
     if (this.props.type === 'paragraph') {
       return (
         <div className={this.props.className}>
           {this.props.label && <label className="govuk-label">{this.props.label}</label>}
           {this.props.hint && <span className="govuk-hint">{this.props.hint}</span>}
           {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
-          {renderRichText(value)}
+          <TextEditor
+            name={this.props.name}
+            value={value}
+            readOnly={true}
+          />
         </div>
       )
     }
