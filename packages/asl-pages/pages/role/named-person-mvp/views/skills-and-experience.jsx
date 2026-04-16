@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Snippet, Header, Form } from '@ukhomeoffice/asl-components';
+import { Snippet, Header, Form, ErrorSummary } from '@ukhomeoffice/asl-components';
 import content from '../content/skills-and-experience';
 
 const Page = () => {
@@ -31,6 +31,7 @@ const Page = () => {
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
+          <ErrorSummary />
           <Form renderers={renderers} cancelLink="profile.read">
             <Header title={<Snippet>{`title.${titleKey}`}</Snippet>} />
 
