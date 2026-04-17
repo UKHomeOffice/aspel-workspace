@@ -4,6 +4,7 @@ import SectionsLink from '../../../../../components/sections-link';
 
 const ProtocolFormBase = ({
                                       title,
+                                      hint,
                                       radioName,
                                       gaBreading,
                                       project,
@@ -66,7 +67,8 @@ const ProtocolFormBase = ({
       <form onSubmit={handleSubmit}>
         <fieldset className="govuk-fieldset">
           <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
-            <h1 className="govuk-fieldset__heading">{title}</h1>
+            <h1 className="govuk-heading-l">{title}</h1>
+            {hint && <span className="govuk-hint">{hint}</span>}
           </legend>
 
           <p className="govuk-body">Select a protocol</p>
@@ -98,7 +100,7 @@ const ProtocolFormBase = ({
           </div>
 
           <div className="govuk-button-group govuk-!-margin-top-8">
-            <button type="submit" className="govuk-button">
+            <button type="submit" className="govuk-button govuk-!-margin-right-4">
               Continue
             </button>
             <a href="#" onClick={onCancel ?? (() => history.push(cancelPath))}>

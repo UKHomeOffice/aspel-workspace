@@ -6,7 +6,8 @@ import { ajaxSync, updateProject } from '../../../../actions/projects';
 const EditableGABreedingProtocolForm = (props) => (
   <ProtocolFormBase
     {...props}
-    title="Add an editable GA breeding protocol"
+    title="Add a non-standard GA breeding protocol"
+    hint="Select an editable protocol template"
     radioName="editable-protocols"
     gaBreading={gaBreadingData(false, true)}
     cancelPath="/standard-protocol"
