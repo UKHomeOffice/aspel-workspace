@@ -77,12 +77,30 @@ const ProtocolFormBase = ({
             <span className="govuk-error-message">{error}</span>
           )}
 
-          <h2 className="govuk-heading-m">
-            GA breeding protocols for mice and rats
-          </h2>
-
           <div className="govuk-radios">
+            <h2 className="govuk-heading-m">
+              {gaBreading.groups[0].title}
+            </h2>
             {gaBreading.groups[0].protocols.map(protocol => (
+              <div className="govuk-radios__item" key={protocol.id}>
+                <input
+                  className="govuk-radios__input"
+                  type="radio"
+                  name={radioName}
+                  value={protocol.value}
+                  checked={selectedTemplate === protocol.value}
+                  onChange={e => setSelectedTemplate(e.target.value)}
+                />
+                <label className="govuk-label govuk-radios__label">
+                  {protocol.label}
+                </label>
+              </div>
+            ))}
+
+            <h2 className="govuk-heading-m govuk-!-margin-top-8">
+              {gaBreading.groups[1].title}
+            </h2>
+            {gaBreading.groups[1].protocols.map(protocol => (
               <div className="govuk-radios__item" key={protocol.id}>
                 <input
                   className="govuk-radios__input"

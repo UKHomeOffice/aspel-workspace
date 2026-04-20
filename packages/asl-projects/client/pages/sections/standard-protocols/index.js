@@ -87,16 +87,6 @@ export default function StandardProtocols() {
             Read the guidance on writing protocols (opens in new tab)
           </a>
         </p>
-        <p className="govuk-body govuk-!-margin-top-4">
-          <a
-            href="https://assets.publishing.service.gov.uk/media/68947734e7be62b4f06430e1/Guidance_on_the_use_of_Standard_Genetically_Altered_Animal_Protocols.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="govuk-link"
-          >
-            View the standard protocols (on GOV.UK - opens in a new tab)
-          </a>
-        </p>
       </div>
 
       {/* Guidance section */}

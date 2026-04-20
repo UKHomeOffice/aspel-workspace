@@ -6,14 +6,32 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => {
     description: 'Select a protocol',
     groups: [
       {
-        title: 'GA breeding protocols for mice and rats',
+        title: 'Mice and rats',
         protocols: [
+          {
+            id: 'superovulation',
+            value: 'superovulation',
+            label: 'Superovulation (mild)',
+            data: {}
+          },
+          {
+            id: 'embryo-recipients',
+            value: 'embryo-recipients',
+            label: 'Embryo recipients (moderate)',
+            data: {}
+          },
+          {
+            id: 'vasectomy',
+            value: 'vasectomy',
+            label: 'Vasectomy (moderate)',
+            data: {}
+          },
           {
             id: 'rodent-breeding-mild',
             value: 'rodent-breeding-mild',
-            label: 'Breeding and maintenance of genetically altered rodents (mild)',
+            label: 'Breeding and maintenance of GA mice and rats (mild)',
             data: {
-              title: 'Breeding and maintenance of genetically altered rodents',
+              title: 'Breeding and maintenance of GA mice and rats (mild)',
               protocolName: 'rodent-breeding-mild',
               isStandardProtocol: isStandard,
               standardProtocolType: isStandard
@@ -79,7 +97,36 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => {
               quantitativeData: false
             },
           },
+          {
+            id: 'rodent-breeding-moderate',
+            value: 'rodent-breeding-moderate',
+            label: 'Breeding and maintenance of GA mice and rats (moderate)',
+            data: {}
+          }
         ]
+      },
+      {
+        title: 'Zebrafish',
+        protocols: [
+          {
+            id: 'gamete-collection',
+            value: 'gamete-collection',
+            label: 'Gamete collection (mild)',
+            data: {}
+          },
+          {
+            id: 'breading-and-maintenance-of-genetically-altered-zebrafish-mild',
+            value: 'breading-and-maintenance-of-genetically-altered-zebrafish-mild',
+            label: 'Breeding and maintenance of GA zebrafish (mild)',
+            data: {}
+          },
+          {
+            id: 'breading-and-maintenance-of-genetically-altered-zebrafish-moderate',
+            value: 'breading-and-maintenance-of-genetically-altered-zebrafish-moderate',
+            label: 'Breeding and maintenance of GA zebrafish (moderate)',
+            data: {}
+          }
+          ]
       }
     ]
   };

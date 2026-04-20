@@ -23,7 +23,7 @@ All animals are expected to make a rapid and unremarkable recovery from an anaes
 
   surgery: `## Surgery
 
-Surgical procedures will be carried out aseptically in line with best practice guidelines, for example Guiding principles for preparing for and undertaking aseptic surgery ${markdownLink('Laboratory Animal Science Association, 2017', 'https://lasa.co.uk/wp-content/uploads/2018/05/Aseptic-Surgery.pdf')}
+Surgical procedures will be carried out aseptically in line with best practice guidelines, for example ${markdownLink('Guiding principles for preparing for and undertaking aseptic surgery ', 'https://lasa.co.uk/wp-content/uploads/2018/05/Aseptic-Surgery.pdf')} (Laboratory Animal Science Association, 2017)
 
 \n Minimally inflamed wounds without obvious infection may only be reclosed once. If there are concerns about wounds healing, NVS advice will be followed.
 
