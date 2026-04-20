@@ -199,7 +199,9 @@ export default function StandardProtocols() {
                     value={option.value}
                     checked={selection === option.value}
                     onChange={e => setSelection(e.target.value)}
-                    aria-describedby={`${option.value}-hint`}
+                    {...(option.hint && {
+                      'aria-describedby': `${option.value}-hint`
+                    })}
                   />
 
                   <label

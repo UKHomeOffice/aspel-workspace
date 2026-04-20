@@ -85,13 +85,14 @@ const ProtocolFormBase = ({
               <div className="govuk-radios__item" key={protocol.id}>
                 <input
                   className="govuk-radios__input"
+                  id={protocol.id}
                   type="radio"
                   name={radioName}
                   value={protocol.value}
                   checked={selectedTemplate === protocol.value}
                   onChange={e => setSelectedTemplate(e.target.value)}
                 />
-                <label className="govuk-label govuk-radios__label">
+                <label className="govuk-label govuk-radios__label" htmlFor={protocol.id} >
                   {protocol.label}
                 </label>
               </div>
@@ -104,13 +105,14 @@ const ProtocolFormBase = ({
               <div className="govuk-radios__item" key={protocol.id}>
                 <input
                   className="govuk-radios__input"
+                  id={protocol.id}
                   type="radio"
                   name={radioName}
                   value={protocol.value}
                   checked={selectedTemplate === protocol.value}
                   onChange={e => setSelectedTemplate(e.target.value)}
                 />
-                <label className="govuk-label govuk-radios__label">
+                <label className="govuk-label govuk-radios__label" htmlFor={protocol.id} >
                   {protocol.label}
                 </label>
               </div>
