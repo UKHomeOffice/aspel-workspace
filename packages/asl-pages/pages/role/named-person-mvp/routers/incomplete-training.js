@@ -25,10 +25,6 @@ module.exports = ({ formId }) => {
           roleType: req.session.form[formId].values.type.toUpperCase()
         });
         next();
-      },
-      saveValues: (req, res, next) => {
-        req.session.form[formId].values = { ...req.session.form[formId].values, ...req.form.values };
-        next();
       }
     })
   );

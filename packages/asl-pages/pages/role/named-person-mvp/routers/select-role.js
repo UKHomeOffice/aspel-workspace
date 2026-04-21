@@ -47,10 +47,6 @@ module.exports = ({ formId, getRoleSchema } = {}) => {
         res.locals.static.ownProfile = req.user.profile.id === req.profileId;
         res.locals.pageTitle = `${res.locals.static.content.title} - ${req.establishment.name}`;
         next();
-      },
-      saveValues: (req, res, next) => {
-        req.session.form[formId].values = { ...req.session.form[formId].values, ...req.form.values };
-        next();
       }
     })
   );
