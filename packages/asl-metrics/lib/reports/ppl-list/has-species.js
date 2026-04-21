@@ -1,5 +1,5 @@
 const { projectSpecies } = require('@ukhomeoffice/asl-constants');
-const { intersection, flatten, values, uniq, get } = require('lodash');
+const { flatten, values, get } = require('lodash');
 
 const allSpecies = flatten(values(projectSpecies));
 
@@ -39,29 +39,51 @@ const species = {
   ]
 };
 
-module.exports = (project, type) => {
-  let value;
-  const labels = species[type]
-    .map(n => allSpecies.find(s => s.value === n))
-    .filter(Boolean)
-    .map(s => s.label);
+const speciesLabels = Object.entries(species).reduce((lookup, [type, values]) => {
+  lookup[type] = new Set(
+    values
+      .map(value => allSpecies.find(item => item.value === value))
+      .filter(Boolean)
+      .map(item => item.label)
+  );
+  return lookup;
+}, {});
+
+const speciesValues = Object.entries(species).reduce((lookup, [type, values]) => {
+  lookup[type] = new Set(values);
+  return lookup;
+}, {});
+
+const getSpeciesValues = project => {
+  let values;
 
   // schema_version is not camelCased because it came from a raw knex query
   if (project.schema_version === 1) {
-    value = []
+    values = []
       .concat(get(project, 'data.species', []))
       .concat(get(project, 'data.species-other', []));
   } else {
-    const protocols = get(project, 'data.protocols', []);
-    value = protocols
-      .map(p => {
-        return (p.species || []).map(s => s.speciesId === '28' ? s['other-species-type'] : s.speciesId);
+    values = (get(project, 'data.protocols', [])).reduce((result, protocol) => {
+      (protocol.species || []).forEach(species => {
+        result.push(species.speciesId === '28' ? species['other-species-type'] : species.speciesId);
       });
+      return result;
+    }, []);
   }
-  value = uniq(flatten(value));
 
-  const hasCodedSpecies = !!intersection(species[type], value).length;
-  const hasOtherSpecies = !!intersection(labels, value).length;
-
-  return hasCodedSpecies || hasOtherSpecies;
+  return new Set(values.filter(Boolean));
 };
+
+const matches = (values, type) => {
+  for (const value of values) {
+    if (speciesValues[type].has(value) || speciesLabels[type].has(value)) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const hasSpecies = (project, type) => matches(getSpeciesValues(project), type);
+
+module.exports = hasSpecies;
