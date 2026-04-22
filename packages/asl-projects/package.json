@@ -37,7 +37,7 @@
     "classnames": "^2.2.6",
     "date-fns": "^3.6.0",
     "details-element-polyfill": "^2.3.0",
-    "docx": "5.0.0-rc4",
+    "docx": "^9.5.3",
     "fast-array-diff": "^1.1.0",
     "file-saver": "^2.0.0",
     "immutable": "^3.8.2",
