@@ -84,10 +84,6 @@ module.exports = (settings) => {
           mandatoryTraining: getMandatoryTraining(req)
         });
         next();
-      },
-      saveValues: (req, res, next) => {
-        req.session.form[req.model.id].values = req.form.values;
-        next();
       }
     })
   );
