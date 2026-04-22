@@ -1,6 +1,6 @@
 const { form } = require('../../../common/routers');
 const { Router } = require('express');
-const schema = require('../schema').incompleteTraining;
+const schema = require('../schema').skillsAndExperience;
 
 module.exports = ({ formId }) => {
   const app = Router({ mergeParams: true });
@@ -10,14 +10,6 @@ module.exports = ({ formId }) => {
       configure(req, res, next) {
         const roleType = req.session.form[formId].values.type;
         req.form.schema = schema(roleType);
-        next();
-      },
-      process: (req, res, next) => {
-        const day = req.body['completeDate-day'];
-        const month = req.body['completeDate-month'];
-        const year = req.body['completeDate-year'];
-
-        req.form.values.completeDate = `${year}-${month}-${day}`;
         next();
       },
       locals: (req, res, next) => {
@@ -30,7 +22,7 @@ module.exports = ({ formId }) => {
   );
 
   app.post('/', (req, res, next) => {
-    return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'skills-and-experience' }));
+    return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'confirm' }));
   });
 
   return app;
