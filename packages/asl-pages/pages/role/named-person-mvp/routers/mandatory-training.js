@@ -38,10 +38,11 @@ module.exports = ({ formId }) => {
 
   app.post('/', (req, res, next) => {
     const { mandatory } = req.form.values;
-    if (mandatory === 'yes' || mandatory === 'exemption') {
+    if (mandatory === 'yes') {
       return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'confirm' }));
-    }
-    if (
+    } else if (mandatory === 'exemption') {
+      return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'skills-and-experience' }));
+    } else if (
       mandatory === 'delay' ||
       (Array.isArray(mandatory) && mandatory.includes('delay'))
     ) {

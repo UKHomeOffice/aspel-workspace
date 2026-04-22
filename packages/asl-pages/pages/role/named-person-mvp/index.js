@@ -17,6 +17,7 @@ const paths = {
   selectRole: '/select-role',
   mandatoryTraining: '/mandatory-training',
   incompleteTraining: '/incomplete-training',
+  skillsAndExperience: '/skills-and-experience',
   confirm: '/confirm',
   success: '/success'
 };
@@ -30,7 +31,8 @@ module.exports = (settings) => {
       paths.beforeYouApply,
       paths.selectRole,
       paths.mandatoryTraining,
-      paths.incompleteTraining
+      paths.incompleteTraining,
+      paths.skillsAndExperience
       // paths.confirm,
       // paths.success
     ]
@@ -86,6 +88,7 @@ module.exports = (settings) => {
   app.use(paths.beforeYouApply, router.beforeYouApply());
   app.use(paths.mandatoryTraining, router.mandatoryTraining({ formId: FORM_ID }));
   app.use(paths.incompleteTraining, router.incompleteTraining({ formId: FORM_ID }));
+  app.use(paths.skillsAndExperience, router.skillsAndExperience({ formId: FORM_ID }));
   // app.use(paths.confirm, router.confirm());
   // app.use(paths.success, router.success());
 
