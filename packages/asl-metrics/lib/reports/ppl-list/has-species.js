@@ -55,15 +55,15 @@ const speciesValues = Object.entries(species).reduce((lookup, [type, speciesList
 }, {});
 
 const getSpeciesValues = project => {
-  let values;
+  let speciesValuesForProject;
 
   // schema_version is not camelCased because it came from a raw knex query
   if (project.schema_version === 1) {
-    values = []
+    speciesValuesForProject = []
       .concat(get(project, 'data.species', []))
       .concat(get(project, 'data.species-other', []));
   } else {
-    values = (get(project, 'data.protocols', [])).reduce((result, protocol) => {
+    speciesValuesForProject = (get(project, 'data.protocols', [])).reduce((result, protocol) => {
       (protocol.species || []).forEach(specimen => {
         result.push(specimen.speciesId === '28' ? specimen['other-species-type'] : specimen.speciesId);
       });
@@ -71,7 +71,7 @@ const getSpeciesValues = project => {
     }, []);
   }
 
-  return new Set(values.filter(Boolean));
+  return new Set(speciesValuesForProject.filter(Boolean));
 };
 
 const matches = (values, type) => {
