@@ -21,10 +21,11 @@ module.exports = settings => {
       'Content-type': 'application/json'
     };
     req.metrics = (path, { stream = true, query = {} } = {}) => {
-      const shouldStream = Object.prototype.hasOwnProperty.call(query, 'stream')
-        ? toBoolean(query.stream)
-        : stream;
-      const qs = querystring.stringify({ ...query, stream: shouldStream });
+      const queryParams = { ...query };
+      delete queryParams.stream;
+
+      const shouldStream = toBoolean(stream);
+      const qs = querystring.stringify({ ...queryParams, stream: shouldStream });
 
       return fetch(`${settings.metrics}${path}?${qs}`, { headers })
         .then(response => {

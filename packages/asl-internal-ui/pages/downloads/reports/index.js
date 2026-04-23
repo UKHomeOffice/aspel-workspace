@@ -18,7 +18,7 @@ module.exports = settings => {
       header: true
     });
 
-    req.metrics(`/reports/${report}`, { query: req.query })
+    req.metrics(`/reports/${report}`, { stream: true, query: req.query })
       .then(stream => {
         pipeline(
           stream,
