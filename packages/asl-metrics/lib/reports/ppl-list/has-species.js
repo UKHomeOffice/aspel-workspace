@@ -39,9 +39,9 @@ const species = {
   ]
 };
 
-const speciesLabels = Object.entries(species).reduce((lookup, [type, values]) => {
+const speciesLabels = Object.entries(species).reduce((lookup, [type, speciesList]) => {
   lookup[type] = new Set(
-    values
+    speciesList
       .map(value => allSpecies.find(item => item.value === value))
       .filter(Boolean)
       .map(item => item.label)
@@ -49,8 +49,8 @@ const speciesLabels = Object.entries(species).reduce((lookup, [type, values]) =>
   return lookup;
 }, {});
 
-const speciesValues = Object.entries(species).reduce((lookup, [type, values]) => {
-  lookup[type] = new Set(values);
+const speciesValues = Object.entries(species).reduce((lookup, [type, speciesList]) => {
+  lookup[type] = new Set(speciesList);
   return lookup;
 }, {});
 
@@ -64,8 +64,8 @@ const getSpeciesValues = project => {
       .concat(get(project, 'data.species-other', []));
   } else {
     values = (get(project, 'data.protocols', [])).reduce((result, protocol) => {
-      (protocol.species || []).forEach(species => {
-        result.push(species.speciesId === '28' ? species['other-species-type'] : species.speciesId);
+      (protocol.species || []).forEach(specimen => {
+        result.push(specimen.speciesId === '28' ? specimen['other-species-type'] : specimen.speciesId);
       });
       return result;
     }, []);
