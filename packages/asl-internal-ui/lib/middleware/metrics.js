@@ -2,7 +2,7 @@ const querystring = require('querystring');
 const ndjson = require('ndjson');
 
 const toBoolean = value => {
-  if (value === 'false' || value === false || value === '0' || value === 0) {
+  if (value === 'false' || value === '0') {
     return false;
   }
 

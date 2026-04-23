@@ -39,20 +39,19 @@ const species = {
   ]
 };
 
-const speciesLabels = Object.entries(species).reduce((lookup, [type, speciesList]) => {
-  lookup[type] = new Set(
+const speciesLabels = Object.fromEntries(
+  Object.entries(species).map(([type, speciesList]) => [type, new Set(
     speciesList
       .map(value => allSpecies.find(item => item.value === value))
       .filter(Boolean)
       .map(item => item.label)
-  );
-  return lookup;
-}, {});
+  )])
+);
 
-const speciesValues = Object.entries(species).reduce((lookup, [type, speciesList]) => {
-  lookup[type] = new Set(speciesList);
-  return lookup;
-}, {});
+const speciesValues = Object.fromEntries(
+  Object.entries(species)
+    .map(([type, list]) => [type, new Set(list)])
+);
 
 const getSpeciesValues = project => {
   let speciesValuesForProject;
@@ -63,25 +62,19 @@ const getSpeciesValues = project => {
       .concat(get(project, 'data.species', []))
       .concat(get(project, 'data.species-other', []));
   } else {
-    speciesValuesForProject = (get(project, 'data.protocols', [])).reduce((result, protocol) => {
-      (protocol.species || []).forEach(specimen => {
-        result.push(specimen.speciesId === '28' ? specimen['other-species-type'] : specimen.speciesId);
-      });
-      return result;
-    }, []);
+    speciesValuesForProject = [];
+    for (const protocol of get(project, 'data.protocols', [])) {
+      for (const specimen of (protocol.species || [])) {
+        speciesValuesForProject.push(specimen.speciesId === '28' ? specimen['other-species-type'] : specimen.speciesId);
+      }
+    }
   }
 
   return new Set(speciesValuesForProject.filter(Boolean));
 };
 
-const matches = (values, type) => {
-  for (const value of values) {
-    if (speciesValues[type].has(value) || speciesLabels[type].has(value)) {
-      return true;
-    }
-  }
-
-  return false;
+const matches = (speciesValuesForProject, type) => {
+  return Array.from(speciesValuesForProject).some(value => speciesValues[type].has(value) || speciesLabels[type].has(value));
 };
 
 const hasSpecies = (project, type) => matches(getSpeciesValues(project), type);
