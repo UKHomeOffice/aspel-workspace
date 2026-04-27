@@ -47,7 +47,11 @@ function isRequired(project) {
   const hasEndangeredAnimals = project['endangered-animals'];
   const hasSevereProtocols = some(
     project.protocols,
-    (p) => p && (p.severity || '').match(/severe/gi)
+    (p) => {
+      const severity = p && p.severity;
+      const severityStr = typeof severity === 'string' ? severity : '';
+      return severityStr.match(/severe/gi);
+    }
   );
   return (
     hasRASpecies ||

@@ -40,9 +40,63 @@ function RevealChildren({ value, options, values, prefix, diff }) {
 class ReviewField extends React.Component {
 
   render() {
+    const resolve = prop => typeof prop === 'function' ? prop(this.props.values) : prop;
+
+    const type = resolve(this.props.type);
+    const label = resolve(this.props.label);
+    const hint = resolve(this.props.hint);
+
     let value = this.props.value;
     let options;
     let additionalInfo;
+
+    if (type === 'standard-list') {
+      // Ensure value is an array
+      const valuesArray = castArray(value || []);
+
+      // Map options and resolve label/hint if they are functions
+      const resolvedOptions = (this.props.options || []).filter(Boolean).map(opt => ({
+        ...opt,
+        label: typeof opt.label === 'function' ? opt.label(this.props.values) : opt.label,
+        hint: typeof opt.hint === 'function' ? opt.hint(this.props.values) : opt.hint
+      }));
+
+      // Filter only selected options
+      const selectedOptions = resolvedOptions.filter(opt => valuesArray.includes(opt.value));
+
+      if (!selectedOptions.length) {
+        return (
+          <p>
+            <em>None selected</em>
+          </p>
+        );
+      }
+
+      return (
+        <ul className={this.props.className}>
+          {selectedOptions.map((opt, i) => (
+            <li key={i}>
+              <span>{opt.label}</span>
+              {opt.hint && (
+                <div className="govuk-hint govuk-!-margin-top-1">{opt.hint}</div>
+              )}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    if(type === 'standard-radio') {
+      return <p>
+        {
+          value === true
+            ? 'Yes'
+            : value === false
+              ? 'No'
+              : <em>No answer provided</em>
+        }
+      </p>;
+    }
 
     if (['checkbox', 'radio', 'select', 'permissible-purpose'].includes(this.props.type)) {
       options = this.props.optionsFromSettings
@@ -173,6 +227,7 @@ class ReviewField extends React.Component {
       }
       return <p><em>None selected</em></p>;
     }
+
     if (this.props.type === 'checkbox' ||
       this.props.type === 'species-selector' ||
       this.props.type === 'location-selector' ||
@@ -268,11 +323,48 @@ class ReviewField extends React.Component {
       return <TextEditor {...this.props} readOnly={true} />;
     }
 
+    if (type === 'paragraph' && typeof value === 'string') {
+      // Split into lines and trim
+      const lines = value
+        .split('\n')
+        .map(line => line.trim())
+        .filter(Boolean);
+
+      // Separate bullets from regular text
+      const bullets = lines
+        .filter(line => line.startsWith('•'))
+        .map(line => line.replace(/^•\s*/, ''));
+
+      const paragraphs = lines.filter(line => !line.startsWith('•'));
+
+      return (
+        <div>
+          {paragraphs.map((p, i) => (
+            <p key={`p-${i}`} className="govuk-body">
+              {p}
+            </p>
+          ))}
+
+          {bullets.length > 0 && (
+            <ul className="govuk-list govuk-list--bullet">
+              {bullets.map((b, i) => (
+                <li key={`b-${i}`}>{b}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      );
+    }
+
     if (!isUndefined(value) && !isNull(value) && value !== '') {
       return (
         <Fragment>
-          <p>{value.review || value.label || value}</p>
-          { additionalInfo && <ReactMarkdown>{ additionalInfo }</ReactMarkdown> }
+          <TextEditor
+            name={this.props.name}
+            value={value}
+            readOnly={true}
+          />
+          {additionalInfo && <ReactMarkdown>{additionalInfo}</ReactMarkdown>}
           {
             this.props.preserveHierarchy && <RevealChildren value={value} options={options} {...this.props} />
           }
