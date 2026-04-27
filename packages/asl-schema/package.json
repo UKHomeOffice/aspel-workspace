@@ -39,7 +39,7 @@
     "pg": "^8.7.3",
     "pg-query-stream": "^2.0.1",
     "pg-tsquery": "^8.2.0",
-    "sinon": "^9.0.2",
+    "sinon": "21.1.2",
     "slate": "^0.47.8",
     "uuid": "^3.3.2"
   },
@@ -47,13 +47,15 @@
     "registry": "https://artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/"
   },
   "devDependencies": {
+    "@eslint/compat": "^2.0.5",
+    "@faker-js/faker": "^10.4.0",
+    "@eslint/eslintrc": "^3.3.5",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
-    "chai": "^4.1.2",
-    "dotenv": "^6.0.0",
-    "eslint": "^5.16.0",
-    "faker": "^5.1.0",
-    "mocha": "^11.7.1",
-    "nyc": "^15.1.0",
-    "uuid-validate": "0.0.3"
+    "chai": "^6.2.2",
+    "dotenv": "^17.4.2",
+    "eslint": "^10.2.0 ",
+    "mocha": "^11.7.5",
+    "nyc": "^18.0.0",
+    "uuid-validate": "^0.0.3"
   }
 }

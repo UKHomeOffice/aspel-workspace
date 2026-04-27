@@ -1,4 +1,4 @@
-const faker = require('faker');
+const { faker } = require('@faker-js/faker');
 const uuid = require('uuid');
 
 module.exports = ({ count, establishmentIds = [8202], roles = ['basic'], locale = 'en_GB' }) => {

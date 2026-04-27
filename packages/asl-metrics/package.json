@@ -30,7 +30,9 @@
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@ukhomeoffice/asl-dictionary": "file:../asl-dictionary",
     "express": "^4.17.1",
+    "express-rate-limit": "^8.3.2",
     "fast-csv": "^5.0.2",
+    "keycloak-connect": "^26.1.1",
     "knex": "^3.1.0",
     "lodash": "^4.18.1",
     "minimist": "^1.2.8",
@@ -48,9 +50,9 @@
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "dotenv": "^8.2.0",
     "eslint": "^8.57.1",
-    "mocha": "^11.7.1",
+    "mocha": "^11.3.0",
     "nodemon": "^3.1.10",
-    "sinon": "^19.0.2",
+    "sinon": "21.1.2",
     "uuid": "^8.1.0"
   },
   "overrides": {
