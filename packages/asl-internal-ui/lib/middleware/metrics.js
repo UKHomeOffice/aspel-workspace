@@ -1,6 +1,14 @@
 const querystring = require('querystring');
 const ndjson = require('ndjson');
 
+const toBoolean = value => {
+  if (value === 'false' || value === '0') {
+    return false;
+  }
+
+  return !!value;
+};
+
 module.exports = settings => {
 
   return (req, res, next) => {
@@ -13,7 +21,12 @@ module.exports = settings => {
       'Content-type': 'application/json'
     };
     req.metrics = (path, { stream = true, query = {} } = {}) => {
-      const qs = querystring.stringify({ stream, ...query });
+      const queryParams = { ...query };
+      delete queryParams.stream;
+
+      const shouldStream = toBoolean(stream);
+      const qs = querystring.stringify({ ...queryParams, stream: shouldStream });
+
       return fetch(`${settings.metrics}${path}?${qs}`, { headers })
         .then(response => {
           if (response.status > 399) {
@@ -25,7 +38,7 @@ module.exports = settings => {
                 throw err;
               });
           }
-          if (stream) {
+          if (shouldStream) {
             return response.body.pipe(ndjson.parse());
           } else {
             return response.json();
