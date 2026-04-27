@@ -27,8 +27,6 @@ export function hasDatabaseChange(
   hasSpeciesFieldChanges
 ) {
   if (fieldName == null) {
-    // eslint-disable-next-line no-console
-    console.log('fieldName must be provided.');
     return false;
   }
 

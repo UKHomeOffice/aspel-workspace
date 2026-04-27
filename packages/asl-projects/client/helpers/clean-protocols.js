@@ -40,36 +40,80 @@ export default function cleanProtocols({ state, savedState, changed = {}, establ
 
   project.protocols = project.protocols || [];
 
+  // Handle species changes immutably
   if (changed.species) {
     const removedProjectSpecies = difference(savedState.species, changed.species);
 
-    project.protocols.forEach(protocol => {
+    project.protocols = project.protocols.map(protocol => {
       if (!Array.isArray(protocol.species)) {
-        return;
+        return protocol;
       }
-      protocol.species = protocol.species.filter(species => !removedProjectSpecies.includes(species));
+      const newSpecies = protocol.species.filter(species => !removedProjectSpecies.includes(species));
+
+      // Only create new protocol object if species changed
+      if (newSpecies.length === protocol.species.length) {
+        return protocol;
+      }
+
+      return {
+        ...protocol,
+        species: newSpecies
+      };
     });
   }
 
   const locations = getLocations(project, establishment);
   const objectives = (project.objectives || []).map(o => o.title);
 
-  project.protocols.forEach(protocol => {
+  // Handle objectives and locations changes immutably
+  project.protocols = project.protocols.map(protocol => {
+    let protocolUpdated = { ...protocol };
+    let hasChanges = false;
+
     if (changed.objectives) {
-      protocol.objectives = intersection(protocol.objectives, objectives);
+      const newObjectives = intersection(protocol.objectives, objectives);
+      if (newObjectives.length !== (protocol.objectives || []).length) {
+        protocolUpdated.objectives = newObjectives;
+        hasChanges = true;
+      }
     }
+
     if (changesShouldTriggerEstablishmentCleanup(changed)) {
-      protocol.locations = intersection(protocol.locations, locations);
+      const newLocations = intersection(protocol.locations, locations);
+      if (newLocations.length !== (protocol.locations || []).length) {
+        protocolUpdated.locations = newLocations;
+        hasChanges = true;
+      }
     }
+
+    return hasChanges ? protocolUpdated : protocol;
   });
 
   if (changed.protocols) {
-    project.protocols.forEach(protocol => {
-      (protocol.speciesDetails ?? []).forEach(speciesDetail => {
-        if (!(speciesDetail.reuse || []).includes('this-protocol')) {
-          speciesDetail['maximum-times-used'] = '1';
-        }
-      });
+    project.protocols = project.protocols.map(protocol => {
+      // Check if we need to update speciesDetails
+      const needsUpdate = (protocol.speciesDetails ?? []).some(sd =>
+        !(sd.reuse || []).includes('this-protocol')
+      );
+
+      if (!needsUpdate) {
+        return protocol;
+      }
+
+      // Create new protocol object with updated speciesDetails
+      return {
+        ...protocol,
+        speciesDetails: (protocol.speciesDetails ?? []).map(speciesDetail => {
+          if (!(speciesDetail.reuse || []).includes('this-protocol')) {
+            // Create new object with updated maximum-times-used
+            return {
+              ...speciesDetail,
+              'maximum-times-used': '1'
+            };
+          }
+          return speciesDetail;
+        })
+      };
     });
   }
 
