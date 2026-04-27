@@ -27,7 +27,7 @@ The personal data we collect from you includes:
 
 The data provided by you and your establishment(s) is used by the Home Office, the Animals in Science Committee and trusted, security vetted, government suppliers to assess the suitability of licence applications. It is also used to process metrics that are used to help improve the service that ASRU provides.
 
-The information you provide to the Home Office as part of a licence application is considered by us to be information provided in confidence, and the release of this information is prohibited under section 24 of the Animals (Scientific Procedures) Act 1986. This may also apply where the Home Office restates the information supplied in the course of its decision-making.
+The information you provide to the Home Office as part of a licence application, and as part of regulated activities under the Animals (Scientific Procedures) Act 1986, is considered by us to be information provided in confidence. We are prohibited from releasing it under section 24 of the same Act. This may also apply where the Home Office restates the information supplied in the course of its decision-making.
 
 The non-technical summaries supplied as part of the process are not treated by the Home Office as having been provided in confidence.
 
@@ -77,7 +77,7 @@ You can also:
 * raise an objection about how your personal data is processed
 * request that your personal data is erased if there is no longer a justification for it
 
-If you have any of these requests, get in contact with our Data Protection Officer.
+If you have any of these requests, contact our [Data Protection Officer (DPO)](mailto:DPO@homeoffice.gov.uk).
 
 ## Links to other websites
 
