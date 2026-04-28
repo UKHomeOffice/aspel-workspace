@@ -77,7 +77,7 @@ You can also:
 * raise an objection about how your personal data is processed
 * request that your personal data is erased if there is no longer a justification for it
 
-If you have any of these requests, contact our [Data Protection Officer (DPO)](mailto:DPO@homeoffice.gov.uk).
+If you have any of these requests, email our Data Protection Officer: [DPO@homeoffice.gov.uk](mailto:DPO@homeoffice.gov.uk).
 
 ## Links to other websites
 
@@ -97,7 +97,7 @@ If these changes affect how your personal data is processed, the Home Office wil
 
 ## Contact us or make a complaint
 
-Contact the DPO if you:
+Contact the  Data Protection Officer (DPO) if you:
 
 * have any questions about anything in this document
 * think that your personal data has been misused or mishandled
