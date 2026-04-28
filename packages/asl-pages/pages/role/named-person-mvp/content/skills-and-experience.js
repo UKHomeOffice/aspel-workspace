@@ -76,8 +76,14 @@ module.exports = merge({}, baseContent, {
   },
   errors: {
     experience: {
-      required: 'Describe why they are suitable for the {{roleType}} role',
-      lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
+      [ROLE_TYPES.nacwo]: {
+        required: 'Describe how they demonstrate suitable expertise and training to minimise suffering and optimise the welfare of animals they are responsible for',
+        lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
+      },
+      [ROLE_TYPES.nvs]: {
+        required: 'Describe how they demonstrate expertise in the health and welfare of the species they will be responsible for',
+        lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
+      }
     },
     authority: {
       required: 'Describe how they demonstrate appropriate personal and managerial authority to promote high standards',
