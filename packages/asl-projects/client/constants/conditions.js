@@ -203,6 +203,45 @@ Genetically altered animals may not be re-homed.`
         }
       ]
     },
+
+    transferImport: {
+      include: project => {
+        const nopes = [
+          'mice',
+          'rats',
+          'guinea-pigs',
+          'hamsters',
+          // legacy
+          'hamsters-syrian',
+          // legacy
+          'hamsters-chinese',
+          'gerbils',
+          'other-rodents',
+          // legacy
+          'xenopus',
+          'common-frogs',
+          'african-frogs',
+          'zebra-fish'
+        ];
+        return (!!intersection(nopes, project.species).length || !!intersection(nopes.map(n => (species.find(s => s.value === n) || {}).label), project['species-other']).length) &&
+          some(project.protocols, protocol => protocol.gaas);
+      },
+      type: 'authorisation',
+      versions: [
+        {
+          title: 'Importing genetically altered animals from outside Great Britain',
+          content: `
+1. Where possible, you should import tissues, gametes or embryos instead of living animals to meet the project’s scientific objectives.
+2. You may import genetically altered (GA) rodents, fish and frogs and their controls for use under this project licence from recognised lab animal breeders or scientific establishments outside Great Britain, provided that all the following apply:
+    1. the establishment has tried to obtain animals from licensed establishments in Great Britain, but such animals are not available or not suitable for the purpose
+    2. you will only use the imported animals for meeting this project’s scientific objectives
+    3. transfer complies with all relevant regulations on the welfare of animals during transport and regulations on importing animals
+    4. a competent person will inspect animals before and after transfer
+    5. you will immediately report any animal welfare issues relating to transfer to ASRU Licensing: [asrulicensing@homeoffice.gov.uk](mailto:asrulicensing@homeoffice.gov.uk)
+6. You must record the details of each transfer in a structured format agreed in advance with ASRU. You must make these records available to ASRU on request.`
+        }
+      ]
+    },
     transfer: {
       include: project => {
         const nopes = [
@@ -237,6 +276,17 @@ Genetically altered animals may not be re-homed.`
 4. Animals will be inspected by a competent person before transfer; and
 5. A veterinary surgeon will confirm that he/she is not aware of any reason why these animals might suffer by virtue of the fact of being moved to another recognised scientific establishment.
 6. Any transport related problems with the welfare of the animals will be notified to the Home Office promptly.`
+        },
+        {
+          title: 'Exporting genetically altered animals outside Great Britain (transfer)',
+          content: `
+1. Where possible, you should export tissues, gametes or embryos instead of living animals.
+2. You may export genetically altered (GA) rodents, fish and frogs and their controls used under this project licence to recognised scientific establishments outside Great Britain, provided that all the following apply:
+    1. the receiving establishment has a scientific requirement for GA animals of the same type
+    2. transfer complies with all relevant regulations on the welfare of animals during transport and regulations on exporting animals
+    3. a competent person will inspect animals before and after transfer
+    4. a vet will confirm that these animals are unlikely to suffer due to transfer
+    5. you will immediately report any animal welfare issues relating to transfer to ASRU Licensing: [asrulicensing@homeoffice.gov.uk](mailto:asrulicensing@homeoffice.gov.uk)`
         }
       ]
     },
