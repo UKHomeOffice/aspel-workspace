@@ -37,11 +37,37 @@ class Review extends React.Component {
     } = this.props;
     let hint = initialHint;
 
+    const mustacheContext = {
+      ...this.props,
+      // Also keep values nested for backward compatibility
+      values: this.props.values
+    };
+
+    // RESOLVE FUNCTIONS TO STRINGS BEFORE MUSTACHE
+    let template = review || label || '';
+
+    // If it's a function, call it with the context
+    if (typeof template === 'function') {
+      template = template(this.props);
+    }
+
+    // Ensure it's a string for Mustache
+    if (typeof template !== 'string') {
+      template = String(template);
+    }
+
+    const displayedLabel = Mustache.render(template, mustacheContext);
+
+    // Handle hint - also resolve functions
+    if (typeof hint === 'function') {
+      hint = hint(this.props);
+    }
+
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
     } else if (hint && !React.isValidElement(hint)) {
       if(typeof hint === 'string') {
-        hint = Mustache.render(hint, this.props);
+        hint = Mustache.render(hint, mustacheContext);
       }
       hint = <Markdown links={true} paragraphProps={{ className: 'grey' }}>{hint}</Markdown>;
     } else if (hint) {
@@ -65,12 +91,14 @@ class Review extends React.Component {
       />;
     }
 
-    const displayedLabel = Mustache.render(review || label || '', this.props);
+    const renderedLabel = displayedLabel ? (
+      <Markdown links={true} paragraphProps={{ className: 'govuk-label' }}>{displayedLabel}</Markdown>
+    ) : null;
 
     return (
       <div className={classnames('review', this.props.className)}>
         {
-          (!isGranted || showGrantedLabel) && displayedLabel && <h3>{displayedLabel}</h3>
+          (!isGranted || showGrantedLabel) && renderedLabel
         }
         {
           showChanges && (
@@ -99,7 +127,7 @@ class Review extends React.Component {
         }
         {
           // repeaters have edit links on the individual fields
-          !this.props.readonly && this.props.type !== 'repeater' && (
+          this.props.values?.isStandardProtocol ? null : !this.props.readonly && this.props.type !== 'repeater' && (
             <Fragment>
               <p>
                 <Link

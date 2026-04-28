@@ -7,9 +7,7 @@ import isUndefined from 'lodash/isUndefined';
 import castArray from 'lodash/castArray';
 import every from 'lodash/every';
 import Mustache from 'mustache';
-
 import ReactMarkdown from 'react-markdown';
-
 import { CheckboxGroup, DateInput, Input, RadioGroup, Select, TextArea } from '@ukhomeoffice/react-components';
 
 import RAPlaybackHint from './ra-playback-hint';
@@ -103,29 +101,32 @@ class Field extends Component {
   }
 
   mapOptions(options = []) {
-    return options.filter(Boolean).map(option => {
-      if (!option.reveal) {
-        return option;
-      }
-      return {
-        ...option,
-        reveal: (
-          <div className="govuk-inset-text">
-            { option.additionalInfo && <ReactMarkdown>{option.additionalInfo}</ReactMarkdown> }
-            {
-              option.reveal.component
+    return options
+      // Advanced filter: show function or truthy
+      .filter(opt => {
+        if (typeof opt?.show === 'function') {
+          return opt.show(this.props.values);
+        }
+        return Boolean(opt);
+      })
+      .map(option => {
+        if (!option.reveal) return option;
+        // Combine: render additionalInfo, inset styling, reveal.component, and Fieldset fallback
+        return {
+          ...option,
+          reveal: (
+            <div className="govuk-inset-text">
+              {option.additionalInfo &&
+                <ReactMarkdown>{option.additionalInfo}</ReactMarkdown>
+              }
+              {option.reveal.component
                 ? option.reveal.component
-                : (
-                  <Fieldset
-                    {...this.props}
-                    fields={castArray(option.reveal)}
-                  />
-                )
-            }
-          </div>
-        )
-      };
-    });
+                : <Fieldset {...this.props} fields={castArray(option.reveal)} />
+              }
+            </div>
+          )
+        };
+      });
   }
 
   render() {
@@ -136,8 +137,26 @@ class Field extends Component {
 
     let { label, hint } = this.props.altLabels ? this.props.alt : this.props;
 
-    label = typeof label === 'string' ? Mustache.render(label, this.props) : label;
-    hint = typeof hint === 'string' ? Mustache.render(hint, this.props) : hint;
+    label = typeof label === 'function' ? label(this.props) : label;
+    hint = typeof hint === 'function' ? hint(this.props) : hint;
+
+    // Create enhanced context for Mustache
+    const mustacheContext = {
+      ...this.props,
+      // Flatten values to root level
+      ...(this.props.values || {}),
+      // Also keep values nested
+      values: this.props.values
+    };
+
+    // Only render Mustache for strings, preserve other types (React elements, null, etc.)
+    if (typeof label === 'string') {
+      label = Mustache.render(label, mustacheContext);
+    }
+
+    if (typeof hint === 'string') {
+      hint = Mustache.render(hint, mustacheContext);
+    }
 
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
@@ -149,6 +168,118 @@ class Field extends Component {
     if (this.props.type === 'animal-quantities') {
       return <AnimalQuantities {...this.props} value={value} label={label} hint={hint} />;
     }
+
+    if (this.props.type === 'standard-list') {
+      const options = this.mapOptions(this.props.options || []);
+      const getSelectedOptions = (value, options = []) => {
+        const values = castArray(value || []);
+
+        return options
+          .filter(opt => values.includes(opt.value))
+          .map(opt => ({
+            ...opt,
+
+            label: typeof opt.label === 'function' ? opt.label(this.props) : opt.label,
+
+            hint: typeof opt.hint === 'function' ? opt.hint(this.props) : opt.hint
+          }));
+      }
+
+      const selected = getSelectedOptions(value, options);
+
+      return (
+        <div className={this.props.className}>
+          {label && <label className="govuk-label">{label}</label>}
+          {hint && <span className="govuk-hint">{hint}</span>}
+          {this.props.error && (
+            <span className="govuk-error-message">{this.props.error}</span>
+          )}
+
+          {selected.length > 0 && (
+            <ul className="govuk-list govuk-list--bullet">
+              {selected.map((opt, i) => (
+                <li key={i}>
+                  <strong className="govuk-body">{opt.label}</strong>
+
+                  {opt.hint && (
+                    <div className="govuk-hint govuk-!-margin-top-1">
+                      {opt.hint}
+                    </div>
+                  )}
+
+                  {opt.reveal}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      );
+    }
+
+    if (this.props.type === 'standard-radio') {
+      const options = this.mapOptions(this.props.options || []);
+      const selectedOption = options.find(opt => opt.value === value);
+
+      const getRevealValue = (field) => {
+        if (this.props.value && this.props.value[field.name] !== undefined) {
+          return this.props.value[field.name];
+        }
+        const speciesDetails = this.props.project?.speciesDetails || [];
+        const sd = speciesDetails.find(s => s.id === this.props.values?.id);
+        if (sd && sd[field.name] !== undefined) {
+          return sd[field.name];
+        }
+        return '';
+      };
+
+      return (
+        <div className={this.props.className}>
+          <p>yahoo</p>
+          {label && <label className="govuk-label">{<ReactMarkdown>{label}</ReactMarkdown>}</label>}
+          {hint && <span className="govuk-hint">{hint}</span>}
+          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
+
+          {selectedOption ? (
+            <p className="govuk-body">{selectedOption.label}</p>
+          ) : (
+            <p className="govuk-body"><em>-</em></p>
+          )}
+
+          {/* Conditional reveal */}
+          {selectedOption?.reveal && !selectedOption.reveal.$$typeof && (
+            <Fieldset
+              {...this.props}
+              fields={castArray(selectedOption.reveal).map(field => ({
+                ...field,
+                value: getRevealValue(field),
+                label: typeof field.label === 'function' ? field.label(this.props.values) : field.label,
+                hint: typeof field.hint === 'function' ? field.hint(this.props.values) : field.hint,
+                type: typeof field.type === 'function' ? field.type(this.props.values) : field.type
+              }))}
+            />
+          )}
+
+          {/* If reveal is already a React element (rare), render as-is */}
+          {selectedOption?.reveal && selectedOption.reveal.$$typeof && selectedOption.reveal}
+        </div>
+      );
+    }
+
+    if (this.props.type === 'paragraph') {
+      return (
+        <div className={this.props.className}>
+          {this.props.label && <label className="govuk-label">{this.props.label}</label>}
+          {this.props.hint && <span className="govuk-hint">{this.props.hint}</span>}
+          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
+          <TextEditor
+            name={this.props.name}
+            value={value}
+            readOnly={true}
+          />
+        </div>
+      )
+    }
+
     if (this.props.type === 'species-selector') {
       return <SpeciesSelector
         {...this.props}
@@ -158,6 +289,7 @@ class Field extends Component {
         onChange={ this.onFieldChange }
       />;
     }
+
     if (this.props.type === 'establishment-selector') {
       return <EstablishmentSelector {...this.props} value={value} label={label} hint={hint} />;
     }

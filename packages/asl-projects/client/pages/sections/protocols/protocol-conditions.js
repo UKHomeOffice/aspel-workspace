@@ -27,14 +27,14 @@ class ProtocolConditions extends Component {
   render() {
     return (
       <div className="protocol-conditions">
-        <h2>{conditions.title}</h2>
+        <h2 id='general-constraints'>{conditions.title}</h2>
 
         <p>{conditions.summary}</p>
 
         {
           this.props.pdf ? <Content />
             : (
-              <Details summary="Show general constraints">
+              <Details id="general-constraints" summary="general constraints" dynamicShow={true}>
                 <Content />
               </Details>
             )

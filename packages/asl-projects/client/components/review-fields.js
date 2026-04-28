@@ -7,14 +7,25 @@ import every from 'lodash/every';
 import { flattenReveals } from '../helpers';
 import Review from './review';
 
-const fieldIncluded = (field, values, application) => {
+const fieldIncluded = (field, values, application, item) => {
+  const context = item || values;
+
   if (!field.conditional && !field.show) {
     return true;
   }
+
   if (field.show && typeof field.show === 'function') {
-    return field.show({ ...values, ...application });
+    return field.show({
+      ...values,
+      ...application,
+      ...item
+    });
   }
-  return every(Object.keys(field.conditional), key => field.conditional[key] === values[key]);
+
+  return every(
+    Object.keys(field.conditional),
+    key => field.conditional[key] === context[key]
+  );
 };
 
 const ReviewFields = ({
@@ -50,7 +61,7 @@ const ReviewFields = ({
             item.name && showItemHeading && <h2 className="group">{item.name}</h2>
           }
           {
-            flattenReveals(fields.filter(field => fieldIncluded(field, project, application)), item).map(field => {
+            flattenReveals(fields.filter(field => fieldIncluded(field, project, application, item)), item).map(field => {
               return <Review
                 { ...field }
                 className=""
