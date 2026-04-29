@@ -15,6 +15,7 @@ export const BuildProtocol = (protocolTemplate, project) => {
 
   // Project species - create new array, don't mutate original
   const projectSpecies = castArray(project?.species ?? []).slice();
+  const isStandardProtocol = data.isStandardProtocol === true || data.isStandardProtocol === 'true';
 
   // Template species details - create new array of copied objects
   const templateSpeciesDetails = Array.isArray(data.speciesDetails)
@@ -32,7 +33,7 @@ export const BuildProtocol = (protocolTemplate, project) => {
         || templateSpeciesDetails[0]
         || {};
 
-      // Return a brand new object every time
+      // Return a new object every time
       return {
         id: uuidv4(),
         species: speciesValue,
@@ -102,7 +103,8 @@ export const BuildProtocol = (protocolTemplate, project) => {
     animals: data.animals ? { ...data.animals } : {},
 
     // Species data - new arrays with new objects
-    species: [...projectSpecies],
+    // Editable templates should start with no selected species in the intro checkboxes.
+    species: [],
     speciesDetails: [...speciesDetails],
     steps: [...steps],
     gaas: Boolean(data.gaas),

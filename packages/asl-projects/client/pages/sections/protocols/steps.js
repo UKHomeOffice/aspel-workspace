@@ -355,7 +355,11 @@ class Step extends Component {
         {!stepEditable && values.title && (
           <ReviewFields
             fields={[fields.find(f => f.name === 'title')]}
-            values={{ title: values.title }}
+            values={{
+              title: values.title,
+              isStandardProtocol: values.isStandardProtocol,
+              standardProtocolType: values.standardProtocolType
+            }}
             prefix={prefix}
             editLink={`0#${this.props.prefix}`}
             protocolId={protocol.id}

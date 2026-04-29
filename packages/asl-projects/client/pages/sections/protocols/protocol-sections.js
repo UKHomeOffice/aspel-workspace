@@ -106,7 +106,7 @@ class ProtocolSections extends PureComponent {
           <Completable status={values.deleted ? 'deleted' : values.complete ? 'complete' : 'incomplete'}>
             <button className="govuk-button link"><h2 className="title inline-block">{values.deleted ? title : `${number + 1}: ${title}`}</h2></button>
             {
-              editable && <button className={classnames('govuk-button link', { restore: values.deleted })} onClick={values.deleted ? this.props.restoreItem : this.toggleActive}>{values.deleted ? 'Restore' : 'Edit title'}</button>
+              !values.isStandardProtocol && editable && <button className={classnames('govuk-button link', { restore: values.deleted })} onClick={values.deleted ? this.props.restoreItem : this.toggleActive}>{values.deleted ? 'Restore' : 'Edit title'}</button>
             }
             {
               !isLegacy && (
@@ -158,23 +158,34 @@ class ProtocolSections extends PureComponent {
               onFieldChange={(key, value) => updateItem({ [key]: value })}
             />
             {
-                <Fragment>
-                  <Complete
-                    type="protocol"
-                    complete={values.complete}
-                    onChange={this.setCompleted}
-                    buttonClassName="button-secondary"
-                  />
-                  { !values.isStandardProtocol && editable && !values.deleted && (
-                    <p>
-                      <span>Reorder: <a href="#" disabled={index === 0} onClick={this.moveUp}>Up</a> or <a href="#" disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
-                      <span> │ </span>
-                      <a href="#" onClick={this.props.duplicateItem}>Duplicate protocol</a>
-                      <span> │ </span>
-                      <a href="#" onClick={this.delete}>Remove protocol</a>
-                    </p>
-                  )}
-                </Fragment>
+              <Fragment>
+                <Complete
+                  type="protocol"
+                  complete={values.complete}
+                  onChange={this.setCompleted}
+                  buttonClassName="button-secondary"
+                />
+
+                {editable && !values.deleted && (
+                  <p>
+                    {!values.isStandardProtocol && (
+                      <>
+                        <span>
+                          Reorder:
+                          <a href="#" onClick={this.moveUp} disabled={index === 0}>Up</a>
+                          {' '}or{' '}
+                          <a href="#" onClick={this.moveDown} disabled={index + 1 >= length}>Down</a>
+                        </span>
+                        <span> │ </span>
+                        <a href="#" onClick={this.props.duplicateItem}>Duplicate protocol</a>
+                        <span> │ </span>
+                      </>
+                    )}
+
+                    <a href="#" onClick={this.delete}>Remove protocol</a>
+                  </p>
+                )}
+              </Fragment>
             }
           </div>
         </Expandable>

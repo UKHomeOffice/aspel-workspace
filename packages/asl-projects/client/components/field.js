@@ -234,7 +234,6 @@ class Field extends Component {
 
       return (
         <div className={this.props.className}>
-          <p>yahoo</p>
           {label && <label className="govuk-label">{<ReactMarkdown>{label}</ReactMarkdown>}</label>}
           {hint && <span className="govuk-hint">{hint}</span>}
           {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
