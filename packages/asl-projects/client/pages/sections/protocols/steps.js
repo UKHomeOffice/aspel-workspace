@@ -82,7 +82,7 @@ const StepSelector = ({reusableSteps, values, onSaveSelection, length, onCancel}
 
   const selectStepFields = [{
     name: 'select-steps',
-    label: 'Select step',
+    label: '',
     type: 'checkbox',
     className: 'smaller',
     options: options
@@ -131,50 +131,71 @@ const NewStepOptions = ({ step, reusableSteps, values, onSaveSelection, onCancel
   };
 
   return (
-    <div className="add-step-options">
-      <div className="radio-group" style={{ marginBottom: '20px' }}>
-        <label className="radio-label" style={{ display: 'block', marginBottom: '10px' }}>
-          <input
-            type="radio"
-            name="addStepOption"
-            value="false"
-            checked={selectedOption === false}
-            onChange={() => handleRadioChange(false)}
-            style={{ marginRight: '8px' }}
-          />
-          Create a new step
-        </label>
-        {selectedOption === false && (
-          <div className="radio-reveal" style={{ marginTop: '15px', marginLeft: '24px' }}>
-            {step}
-          </div>
-        )}
-      </div>
+    <div className="govuk-form-group">
+      <fieldset className="govuk-fieldset">
+        <legend className="govuk-fieldset__legend govuk-fieldset__legend">
+          <h2 className="govuk-heading-m">Add step</h2>
+        </legend>
 
-      <div className="radio-group">
-        <label className="radio-label" style={{ display: 'block', marginBottom: '10px' }}>
-          <input
-            type="radio"
-            name="addStepOption"
-            value="true"
-            checked={selectedOption === true}
-            onChange={() => handleRadioChange(true)}
-            style={{ marginRight: '8px' }}
-          />
-          Select steps used in other protocols
-        </label>
-        {selectedOption === true && showStepSelector && (
-          <div className="radio-reveal" style={{ marginTop: '15px', marginLeft: '24px' }}>
-            <StepSelector
-              reusableSteps={reusableSteps}
-              values={values}
-              onSaveSelection={onSaveSelection}
-              onCancel={onCancel}
-              length={length}
+        <div className="govuk-radios" data-module="govuk-radios">
+
+          {/* Option 1 */}
+          <div className="govuk-radios__item">
+            <input
+              className="govuk-radios__input"
+              id="add-step-new"
+              name="addStepOption"
+              type="radio"
+              value="false"
+              checked={selectedOption === false}
+              onChange={() => handleRadioChange(false)}
             />
+            <label className="govuk-label" htmlFor="add-step-new">
+              Create a new step
+            </label>
           </div>
-        )}
-      </div>
+
+          {selectedOption === false && (
+            <div
+              className="govuk-radios__conditional"
+              style={{ marginLeft: '20px', marginTop: '10px' }}
+            >
+              {step}
+            </div>
+          )}
+
+          {/* Option 2 */}
+          <div className="govuk-radios__item">
+            <input
+              className="govuk-radios__input"
+              id="add-step-existing"
+              name="addStepOption"
+              type="radio"
+              value="true"
+              checked={selectedOption === true}
+              onChange={() => handleRadioChange(true)}
+            />
+            <label className="govuk-label" htmlFor="add-step-existing">
+              Select steps used in other protocols
+            </label>
+          </div>
+
+          {selectedOption === true && showStepSelector && (
+            <div
+              className="govuk-radios__conditional"
+              style={{ marginLeft: '20px', marginTop: '10px' }}
+            >
+              <StepSelector
+                reusableSteps={reusableSteps}
+                values={values}
+                onSaveSelection={onSaveSelection}
+                onCancel={onCancel}
+                length={length}
+              />
+            </div>
+          )}
+        </div>
+      </fieldset>
     </div>
   );
 };
