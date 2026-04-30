@@ -452,7 +452,6 @@ export const calculateProtocolContext = (
       ? values
       : values?.values ?? values;
 
-  console.log('calculateProtocolContext: ', values);
   const isStandardProtocol = context?.isStandardProtocol;
   const standardProtocolType = context?.standardProtocolType;
 
