@@ -15,7 +15,6 @@ export const BuildProtocol = (protocolTemplate, project) => {
 
   // Project species - create new array, don't mutate original
   const projectSpecies = castArray(project?.species ?? []).slice();
-  const isStandardProtocol = data.isStandardProtocol === true || data.isStandardProtocol === 'true';
 
   // Template species details - create new array of copied objects
   const templateSpeciesDetails = Array.isArray(data.speciesDetails)
