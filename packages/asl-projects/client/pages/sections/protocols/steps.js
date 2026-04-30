@@ -169,7 +169,7 @@ const NewStepOptions = ({ step, reusableSteps, values, onSaveSelection, onCancel
             <input
               className="govuk-radios__input"
               id="add-step-existing"
-              name="addStepOption"
+              name="stepaddExisting"
               type="radio"
               value="true"
               checked={selectedOption === true}
