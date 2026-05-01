@@ -94,6 +94,7 @@ const StepSelector = ({reusableSteps, values, onSaveSelection, length, onCancel}
 
   return (
     <Fragment>
+      <h2 className="govuk-heading-m">Select step</h2>
       <Fieldset
         fields={selectStepFields}
         prefix={`${values.id}-select-steps`}
@@ -473,6 +474,7 @@ class Step extends Component {
         {values.deleted && <span className="badge deleted">removed</span>}
         <section
           className={classnames('step', { completed: !stepEditable, editable })}
+          data-testid={`step-${values.id}`}
           ref={this.step}
         >
           <NewComments comments={relevantComments} />
@@ -506,7 +508,7 @@ class Step extends Component {
                 <span> {canReorder && length > 1 ? '|' : null} <a href="#" onClick={this.removeItem}>Remove</a></span>
               )}
             </div>
-            <h3 data-testid={`step-${values.id || values.reference?.replace(/\s+/g, '-').toLowerCase()}`}>
+            <h3>
               Step { !values.deleted
               ? <>{number + 1}: {values.reference}</>
               : <>{values.reference}:{" "}</>
