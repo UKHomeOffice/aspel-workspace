@@ -94,7 +94,6 @@ const StepSelector = ({reusableSteps, values, onSaveSelection, length, onCancel}
 
   return (
     <Fragment>
-      <h2 className="govuk-heading-m">Select step</h2>
       <Fieldset
         fields={selectStepFields}
         prefix={`${values.id}-select-steps`}
