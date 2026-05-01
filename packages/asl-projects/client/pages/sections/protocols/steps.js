@@ -94,6 +94,7 @@ const StepSelector = ({reusableSteps, values, onSaveSelection, length, onCancel}
 
   return (
     <Fragment>
+      <h2 className="govuk-heading-m">Select step</h2>
       <Fieldset
         fields={selectStepFields}
         prefix={`${values.id}-select-steps`}
@@ -102,12 +103,19 @@ const StepSelector = ({reusableSteps, values, onSaveSelection, length, onCancel}
         }}
         values={values}
       />
+      {!options.length && (
+        <p>No reusable steps available to select. Please create and save a step before selecting it for reuse.</p>
+      )}
+
       <p className="control-panel">
         <Button className={classnames('block', 'save-selection')} onClick={saveSelectionHandler}>
           Add steps to protocol
         </Button>
+
         {length > 1 && (
-          <Button className="link" onClick={onCancel}>Cancel</Button>
+          <Button className="link" onClick={onCancel}>
+            Cancel
+          </Button>
         )}
       </p>
     </Fragment>
@@ -133,7 +141,7 @@ const NewStepOptions = ({ step, reusableSteps, values, onSaveSelection, onCancel
   return (
     <div className="govuk-form-group">
       <fieldset className="govuk-fieldset">
-        <legend className="govuk-fieldset__legend govuk-fieldset__legend">
+        <legend className="govuk-fieldset__legend">
           <h2 className="govuk-heading-m">Add step</h2>
         </legend>
 
@@ -144,13 +152,15 @@ const NewStepOptions = ({ step, reusableSteps, values, onSaveSelection, onCancel
             <input
               className="govuk-radios__input"
               id="add-step-new"
-              name="addStepOption"
+              data-testid="add-step-new"
+              name="stepaddExisting"
               type="radio"
               value="false"
               checked={selectedOption === false}
+              data-aria-controls="conditional-add-step-new"
               onChange={() => handleRadioChange(false)}
             />
-            <label className="govuk-label" htmlFor="add-step-new">
+            <label className="govuk-label govuk-radios__label" htmlFor="add-step-new">
               Create a new step
             </label>
           </div>
@@ -158,7 +168,7 @@ const NewStepOptions = ({ step, reusableSteps, values, onSaveSelection, onCancel
           {selectedOption === false && (
             <div
               className="govuk-radios__conditional"
-              style={{ marginLeft: '20px', marginTop: '10px' }}
+              id="conditional-add-step-new"
             >
               {step}
             </div>
@@ -169,13 +179,15 @@ const NewStepOptions = ({ step, reusableSteps, values, onSaveSelection, onCancel
             <input
               className="govuk-radios__input"
               id="add-step-existing"
+              data-testid="add-step-existing"
               name="stepaddExisting"
               type="radio"
               value="true"
+              data-aria-controls="conditional-add-step-existing"
               checked={selectedOption === true}
               onChange={() => handleRadioChange(true)}
             />
-            <label className="govuk-label" htmlFor="add-step-existing">
+            <label className="govuk-label govuk-radios__label" htmlFor="add-step-existing">
               Select steps used in other protocols
             </label>
           </div>
@@ -183,7 +195,7 @@ const NewStepOptions = ({ step, reusableSteps, values, onSaveSelection, onCancel
           {selectedOption === true && showStepSelector && (
             <div
               className="govuk-radios__conditional"
-              style={{ marginLeft: '20px', marginTop: '10px' }}
+              id="conditional-add-step-existing"
             >
               <StepSelector
                 reusableSteps={reusableSteps}
@@ -495,7 +507,7 @@ class Step extends Component {
                 <span> {canReorder && length > 1 ? '|' : null} <a href="#" onClick={this.removeItem}>Remove</a></span>
               )}
             </div>
-            <h3>
+            <h3 data-testid={`step-${values.id || values.reference?.replace(/\s+/g, '-').toLowerCase()}`}>
               Step { !values.deleted
               ? <>{number + 1}: {values.reference}</>
               : <>{values.reference}:{" "}</>
