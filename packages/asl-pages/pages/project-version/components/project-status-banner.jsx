@@ -65,7 +65,7 @@ export default function ProjectStatusBanner({ model = {}, version = {}, isPdf })
 
     model.versions = model.versions || [];
 
-    const grantedVersions = sortBy(model.versions.filter(v => v.status === 'granted'), 'updatedAt');
+    const grantedVersions = sortBy(model.versions.filter(v => v.status === 'granted'), ['updatedAt', 'createdAt']);
     const versionIndex = grantedVersions.map(v => v.id).indexOf(version.id);
     const isFirstVersion = versionIndex === 0;
     const nextVersion = versionIndex > -1 ? grantedVersions[versionIndex + 1] : null;

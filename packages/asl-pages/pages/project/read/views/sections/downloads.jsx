@@ -27,7 +27,7 @@ function DownloadSection({ project, version, canReplaceHBA }) {
 
   const grantedVersions = sortBy(
     project.versions.filter((v) => v.status === 'granted'),
-    'updatedAt'
+    ['updatedAt', 'createdAt']
   );
   const versionIndex = grantedVersions.map((v) => v.id).indexOf(version.id);
   const isFirstVersion = versionIndex === 0;
