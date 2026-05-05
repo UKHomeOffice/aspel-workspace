@@ -29,11 +29,10 @@ function DownloadSection({ project, version, canReplaceHBA }) {
     project.versions.filter((v) => v.status === 'granted'),
     'updatedAt'
   );
-  const isSuperseded =
-    isGranted && project.granted.createdAt > version.createdAt;
   const versionIndex = grantedVersions.map((v) => v.id).indexOf(version.id);
   const isFirstVersion = versionIndex === 0;
-  const nextVersion = grantedVersions[versionIndex + 1];
+  const nextVersion = versionIndex > -1 ? grantedVersions[versionIndex + 1] : null;
+  const isSuperseded = isGranted && !!nextVersion;
 
   let startDate = project.amendedDate || project.issueDate;
   let endDate;
