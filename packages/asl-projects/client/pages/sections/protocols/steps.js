@@ -82,7 +82,7 @@ const StepSelector = ({reusableSteps, values, onSaveSelection, length, onCancel}
 
   const selectStepFields = [{
     name: 'select-steps',
-    label: 'Select step',
+    label: '',
     type: 'checkbox',
     className: 'smaller',
     options: options
@@ -94,6 +94,7 @@ const StepSelector = ({reusableSteps, values, onSaveSelection, length, onCancel}
 
   return (
     <Fragment>
+      <h2 className="govuk-heading-m">Select step</h2>
       <Fieldset
         fields={selectStepFields}
         prefix={`${values.id}-select-steps`}
@@ -102,12 +103,19 @@ const StepSelector = ({reusableSteps, values, onSaveSelection, length, onCancel}
         }}
         values={values}
       />
+      {!options.length && (
+        <p>No reusable steps available to select. Please create and save a step before selecting it for reuse.</p>
+      )}
+
       <p className="control-panel">
         <Button className={classnames('block', 'save-selection')} onClick={saveSelectionHandler}>
           Add steps to protocol
         </Button>
+
         {length > 1 && (
-          <Button className="link" onClick={onCancel}>Cancel</Button>
+          <Button className="link" onClick={onCancel}>
+            Cancel
+          </Button>
         )}
       </p>
     </Fragment>
@@ -131,50 +139,75 @@ const NewStepOptions = ({ step, reusableSteps, values, onSaveSelection, onCancel
   };
 
   return (
-    <div className="add-step-options">
-      <div className="radio-group" style={{ marginBottom: '20px' }}>
-        <label className="radio-label" style={{ display: 'block', marginBottom: '10px' }}>
-          <input
-            type="radio"
-            name="addStepOption"
-            value="false"
-            checked={selectedOption === false}
-            onChange={() => handleRadioChange(false)}
-            style={{ marginRight: '8px' }}
-          />
-          Create a new step
-        </label>
-        {selectedOption === false && (
-          <div className="radio-reveal" style={{ marginTop: '15px', marginLeft: '24px' }}>
-            {step}
-          </div>
-        )}
-      </div>
+    <div className="govuk-form-group">
+      <fieldset className="govuk-fieldset">
+        <legend className="govuk-fieldset__legend">
+          <h2 className="govuk-heading-m">Add step</h2>
+        </legend>
 
-      <div className="radio-group">
-        <label className="radio-label" style={{ display: 'block', marginBottom: '10px' }}>
-          <input
-            type="radio"
-            name="addStepOption"
-            value="true"
-            checked={selectedOption === true}
-            onChange={() => handleRadioChange(true)}
-            style={{ marginRight: '8px' }}
-          />
-          Select steps used in other protocols
-        </label>
-        {selectedOption === true && showStepSelector && (
-          <div className="radio-reveal" style={{ marginTop: '15px', marginLeft: '24px' }}>
-            <StepSelector
-              reusableSteps={reusableSteps}
-              values={values}
-              onSaveSelection={onSaveSelection}
-              onCancel={onCancel}
-              length={length}
+        <div className="govuk-radios" data-module="govuk-radios">
+
+          {/* Option 1 */}
+          <div className="govuk-radios__item">
+            <input
+              className="govuk-radios__input"
+              id="add-step-new"
+              data-testid="add-step-new"
+              name="stepaddExisting"
+              type="radio"
+              value="false"
+              checked={selectedOption === false}
+              data-aria-controls="conditional-add-step-new"
+              onChange={() => handleRadioChange(false)}
             />
+            <label className="govuk-label govuk-radios__label" htmlFor="add-step-new">
+              Create a new step
+            </label>
           </div>
-        )}
-      </div>
+
+          {selectedOption === false && (
+            <div
+              className="govuk-radios__conditional"
+              id="conditional-add-step-new"
+            >
+              {step}
+            </div>
+          )}
+
+          {/* Option 2 */}
+          <div className="govuk-radios__item">
+            <input
+              className="govuk-radios__input"
+              id="add-step-existing"
+              data-testid="add-step-existing"
+              name="stepaddExisting"
+              type="radio"
+              value="true"
+              data-aria-controls="conditional-add-step-existing"
+              checked={selectedOption === true}
+              onChange={() => handleRadioChange(true)}
+            />
+            <label className="govuk-label govuk-radios__label" htmlFor="add-step-existing">
+              Select steps used in other protocols
+            </label>
+          </div>
+
+          {selectedOption === true && showStepSelector && (
+            <div
+              className="govuk-radios__conditional"
+              id="conditional-add-step-existing"
+            >
+              <StepSelector
+                reusableSteps={reusableSteps}
+                values={values}
+                onSaveSelection={onSaveSelection}
+                onCancel={onCancel}
+                length={length}
+              />
+            </div>
+          )}
+        </div>
+      </fieldset>
     </div>
   );
 };
@@ -355,7 +388,11 @@ class Step extends Component {
         {!stepEditable && values.title && (
           <ReviewFields
             fields={[fields.find(f => f.name === 'title')]}
-            values={{ title: values.title }}
+            values={{
+              title: values.title,
+              isStandardProtocol: values.isStandardProtocol,
+              standardProtocolType: values.standardProtocolType
+            }}
             prefix={prefix}
             editLink={`0#${this.props.prefix}`}
             protocolId={protocol.id}
@@ -437,6 +474,7 @@ class Step extends Component {
         {values.deleted && <span className="badge deleted">removed</span>}
         <section
           className={classnames('step', { completed: !stepEditable, editable })}
+          data-testid={`step-${values.id}`}
           ref={this.step}
         >
           <NewComments comments={relevantComments} />

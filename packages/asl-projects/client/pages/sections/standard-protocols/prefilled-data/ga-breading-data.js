@@ -3,7 +3,6 @@ import { getPrefilledStepsForProtocol } from '../helpers/protocol-step-generator
 export const gaBreadingData = (isStandard = true, isExperimental = false) => {
   return {
     title: 'Add a standard GA breeding protocol',
-    description: 'Select a protocol',
     groups: [
       {
         title: 'Mice and rats',
@@ -72,19 +71,11 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => {
               gaasHarmful: false,
 
               steps: getPrefilledStepsForProtocol('rodent-breeding-mild', isStandard),
-              fate: [
-                "killed",
-                "continued-use",
-                "continued-use-2",
-                "set-free",
-                "rehomed",
-                "kept-alive"
-              ],
+              fate: [],
               continuedUseRelevantProject: 'Animals may be transferred to another protocol in this project authorised to use the same animal types.',
               nonSchedule1: false,
 
-              experienceSummary: `Animals may be used for natural mating on a number of occasions. \nAnimals produced under this protocol are not expected to exhibit any harmful
-              phenotype. \nOffspring will be maintained by methods appropriate to their genetic alteration until they reach a maximum of 15 months of age.`,
+              experienceSummary: `Animals may be used for natural mating on a number of occasions. \nAnimals produced under this protocol are not expected to exhibit any harmful phenotype. \nOffspring will be maintained by methods appropriate to their genetic alteration until they reach a maximum of 15 months of age.`,
 
               experienceEndpoints: `Some animals may have an altered immune system making them more susceptible to infection. Animals with altered immune status will be housed in a barrier environment thereby minimising the likelihood of compromising health.
             \nAny animal will be immediately killed by Schedule 1 method if it shows signs of suffering that is greater than minor and transient or in any way compromises normal behaviour unless moved on to another protocol for a specific purpose (continued use).
