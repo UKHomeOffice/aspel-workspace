@@ -4,7 +4,6 @@ import { Button } from '@ukhomeoffice/react-components';
 
 function Image({ src, token, remove, loading }) {
   const imageRoot = useSelector(state => state.static.imageRoot || '/attachment');
-
   if (!src && token) {
     src = `${imageRoot}/${token}`;
   }

@@ -19,11 +19,6 @@ class Section extends PureComponent {
       project
     } = this.props;
 
-    const valuesWithProject = {
-      ...values,
-      project: project
-    };
-
     return (
       <Fragment>
         {
@@ -34,16 +29,16 @@ class Section extends PureComponent {
           editable && !values.deleted
             ? (
               <Fieldset
-                fields={(fields || []).filter(f => f.show === undefined || f.show(project))}
-                values={valuesWithProject}
+                fields={fields.filter(f => f.show === undefined || f.show(project))}
+                values={values}
                 prefix={prefix}
                 onFieldChange={onFieldChange}
               />
             )
             : (
               <ReviewFields
-                fields={(fields || []).filter(f => f.show === undefined || f.show(project))}
-                values={valuesWithProject}
+                fields={fields.filter(f => f.show === undefined || f.show(project))}
+                values={values}
                 prefix={prefix}
                 editLink={`0#${prefix}`}
                 readonly={values.deleted}
