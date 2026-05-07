@@ -65,11 +65,11 @@ export default function ProjectStatusBanner({ model = {}, version = {}, isPdf })
 
     model.versions = model.versions || [];
 
-    const grantedVersions = sortBy(model.versions.filter(v => v.status === 'granted'), 'updatedAt');
-    const superseded = version.status === 'granted' && model.granted.createdAt > version.createdAt;
+    const grantedVersions = sortBy(model.versions.filter(v => v.status === 'granted'), ['updatedAt', 'createdAt']);
     const versionIndex = grantedVersions.map(v => v.id).indexOf(version.id);
-    const nextVersion = grantedVersions[versionIndex + 1];
     const isFirstVersion = versionIndex === 0;
+    const nextVersion = versionIndex > -1 ? grantedVersions[versionIndex + 1] : null;
+    const superseded = version.status === 'granted' && !!nextVersion;
 
     if (additionalAvailabilityRemoved) {
       return (
