@@ -33,12 +33,7 @@ import permissiblePurpose from './permissible-purpose';
 
 import confirmProtocolsAffected from '../../helpers/confirm-protocols-affected';
 
-import {
-  isTrainingLicence,
-  markdownLink,
-  getCurrentURLForFateOfAnimals,
-  calculateProtocolContext, getToGeneralConstraints
-} from '../../helpers';
+import { isTrainingLicence, markdownLink, getCurrentURLForFateOfAnimals } from '../../helpers';
 import NTSFateOfAnimalFields from '../../helpers/nts-field';
 import { trainingSummaryRenderer } from '../../components/download-link/components/training-summary-renderer.mjs';
 
@@ -1551,16 +1546,14 @@ export default () => {
               fields: [
                 {
                   name: 'description',
-                  label: values => calculateProtocolContext(values, 'Briefly describe the purposes of this protocol', 'What are the purposes of this protocol?', 'Purposes of protocol '),
-                  hint: values => calculateProtocolContext(values, 'Ensure that you state any relevant regulatory guidelines.', 'Ensure that you state any relevant regulatory guidelines.', null),
-                  type: values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph')
+                  label: 'Briefly describe the purposes of this protocol',
+                  hint: 'Ensure that you state any relevant regulatory guidelines.',
+                  type: 'texteditor'
                 },
                 {
                   name: 'severity',
-                  label: values => calculateProtocolContext(values,'Given the controls and limitations in place, what is the highest severity that an animal could experience in this protocol?',
-                    'What is the highest level of suffering an animal could experience in this protocol?', 'Highest level of suffering an animal could experience in this protocol '),
-                  hint: values => calculateProtocolContext(values, null,  'This determines the severity category for the protocol', 'This determines the severity category for the protocol'),
-                  type: values => calculateProtocolContext(values, 'radio', 'radio',  'paragraph'),
+                  label: 'Given the controls and limitations in place, what is the highest severity that an animal could experience in this protocol?',
+                  type: 'radio',
                   options: [
                     {
                       label: 'Mild',
@@ -1583,43 +1576,30 @@ export default () => {
                 },
                 {
                   name: 'severity-proportion',
-                  label: values =>
-                    calculateProtocolContext(
-                      values,
-                      'What proportion of animals will experience this severity?',
-                      'What proportion of animals could experience this level of suffering?',
-                      'Proportion of animals that could experience this level of suffering '
-                    ),
-                  type: values =>
-                    calculateProtocolContext(
-                      values,
-                      'texteditor',
-                      'texteditor',
-                      'paragraph'
-                    )
+                  label: 'What proportion of animals will experience this severity?',
+                  type: 'texteditor'
                 },
                 {
                   name: 'severity-details',
-                  label: values => calculateProtocolContext(values, 'Why are you proposing this severity category?', 'What is the reason for this level of suffering?', 'Reason for level of suffering'),
-                    type: values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph'),
+                  label: 'Why are you proposing this severity category?',
+                  type: 'texteditor'
                 },
                 {
                   name: 'locations',
-                  label: values => calculateProtocolContext(values, 'Select the establishments and POLEs where this protocol will be carried out.', 'Where will you carry out this protocol?', 'Where will you carry out this protocol?'),
+                  label: 'Select the establishments and POLEs where this protocol will be carried out.',
                   review: 'Locations where this protocol can be carried out',
-                  hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply', 'Select all that apply'),
-                  type:  'location-selector'
+                  hint: 'Select all that apply.',
+                  type: 'location-selector'
                 },
                 {
                   name: 'objectives',
-                  label: values => calculateProtocolContext(values, 'Which of your objectives will this protocol address?','Which objectives will this protocol address?', 'Which objectives will this protocol address?'),
-                  hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply', 'Select all that apply'),
+                  label: 'Which of your objectives will this protocol address?',
+                  hint: 'Select all that apply.',
                   type: 'objective-selector'
                 },
                 {
                   name: 'training-used-for',
-                  show: values => values?.isStandardProtocol !== true &&
-                    isTrainingLicence(values),
+                  show: values => isTrainingLicence(values),
                   label: 'What will this protocol be used for?',
                   hint: 'If your purpose isn’t listed you can leave this blank.',
                   type: 'checkbox',
@@ -1637,15 +1617,13 @@ export default () => {
                 },
                 {
                   name: 'training-responsible-for-animals',
-                  show: values =>values?.isStandardProtocol !== true &&
-                    isTrainingLicence(values),
+                  show: values => isTrainingLicence(values),
                   label: 'Who will be responsible for the animals used in this protocol?',
-                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph'),
+                  type: 'texteditor'
                 },
                 {
                   name: 'training-regulated-procedures',
-                  show: values =>values?.isStandardProtocol !== true &&
-                    isTrainingLicence(values),
+                  show: values => isTrainingLicence(values),
                   label: 'Will students carry out regulated procedures under this protocol?',
                   type: 'radio',
                   className: 'smaller',
@@ -1682,10 +1660,9 @@ export default () => {
                 },
                 {
                   name: 'training-participant-pre-course-training',
-                  show: values =>values?.isStandardProtocol !== true &&
-                    isTrainingLicence(values),
+                  show: values => isTrainingLicence(values),
                   label: 'What training will participants receive before they can use protected animals?',
-                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                  type: 'texteditor'
                 }
               ]
             },
@@ -1712,8 +1689,8 @@ export default () => {
               fields: [
                 {
                   name: 'species',
-                  label: values => calculateProtocolContext(values, 'Which types of animals would you like to add to this protocol?', 'Which types of animals would you like to add to this protocol?','Which animal types will you be using in this protocol?'),
-                  hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply', 'Select all that apply'),
+                  label: 'Which types of animals would you like to add to this protocol?',
+                  hint: 'Select all that apply.',
                   type: 'checkbox',
                   className: 'smaller',
                   inline: true,
@@ -1721,20 +1698,17 @@ export default () => {
                 },
                 {
                   name: 'maximum-animals',
-                  label: values => {
-                    const species = values?.speciesLabel ?? 'animals';
-                    return calculateProtocolContext(values, `What is the maximum number of ${species} that will be used in this protocol?`, `What is the maximum number of ${species}  that will be used in this protocol?`, `Maximum number of ${species} to be used`)},
-                  hint: values => calculateProtocolContext(values, 'Only enter numerals, for example 40', 'This should be a maximum and not estimated', 'This should be a maximum and not estimated'),
+                  label: 'What is the maximum number of {{ values.speciesLabel }} that will be used in this protocol?',
+                  hint: 'Only enter numerals, for example 40',
                   type: 'text',
                   inputMode: 'numeric',
                   className: 'govuk-input--width-5'
                 },
                 {
                   name: 'life-stages',
-                  label: values => calculateProtocolContext(values, 'Which life stages will be used in this protocol?', 'Which life stages will be used in this protocol?', 'Life stages permitted'),
-                  hint: values => calculateProtocolContext(values, 'Select all that apply.', 'Select all that apply.', null),
-                  type: values => calculateProtocolContext(values, 'checkbox', 'checkbox', 'standard-list'),
-
+                  label: 'Which life stages will be used in this protocol?',
+                  hint: 'Select all that apply',
+                  type: 'checkbox',
                   className: 'smaller',
                   options: [
                     {
@@ -1743,18 +1717,15 @@ export default () => {
                     },
                     {
                       label: 'Neonate',
-                      value: 'neonate',
-                      hint: values => calculateProtocolContext(values, null, null, 'The animal is not self-supporting - typically up to 10 days post-birth')
+                      value: 'neonate'
                     },
                     {
                       label: 'Juvenile',
-                      value: 'juvenile',
-                      hint: values => calculateProtocolContext(values,null, null, 'The animal is self-supporting, and is moving towards sexual maturity and adult weight')
+                      value: 'juvenile'
                     },
                     {
                       label: 'Adult',
-                      value: 'adult',
-                      hint: values => calculateProtocolContext(values, null, null, 'The animal has reached sexual maturity and adult weight')
+                      value: 'adult'
                     },
                     {
                       label: 'Pregnant adult',
@@ -1768,19 +1739,18 @@ export default () => {
                 },
                 {
                   name: 'continued-use',
-                  label: values => calculateProtocolContext(values, 'Will any {{ values.speciesLabel }} coming onto this protocol be classed as ‘continued use’?', 'Will any {{ values.speciesLabel }}  coming this protocol be classed as ‘continued use’?', 'Continued use coming onto the protocol'),
-                  hint: values => calculateProtocolContext(values,'‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use or animals that have had procedures applied to them in order to be prepared for use in this protocol.',
-                    '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use, or animals that have had procedures applied to them to prepare them for use in this protocol', '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use, or animals that have had procedures applied to them to prepare them for use in this protocol'),
-                  type: values => calculateProtocolContext(values, 'radio', 'radio', 'standard-radio'),
+                  label: 'Will any {{ values.speciesLabel }} coming onto this protocol be classed as ‘continued use’?',
+                  hint: '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use or animals that have had procedures applied to them in order to be prepared for use in this protocol.',
+                  type: 'radio',
                   options: [
                     {
                       label: 'Yes',
                       value: true,
                       reveal: {
                         name: 'continued-use-sourced',
-                        label: values => calculateProtocolContext(values,'How did these animals start their use?', 'How did these animals start their use? ', 'Where these animals may be obtained from'),
-                        hint: values => calculateProtocolContext(values,'Describe the procedures that have been applied to animals that will continue their use on to this protocol.', 'Describe the procedures that have been applied to animals that will continue their use onto this protocol.', null),
-                        type: values => calculateProtocolContext(values,'texteditor', 'texteditor', 'paragraph')
+                        label: 'How did these animals start their use?',
+                        hint: 'Describe the procedures that have been applied to animals that will continue their use on to this protocol.',
+                        type: 'texteditor'
                       }
                     },
                     {
@@ -1794,11 +1764,11 @@ export default () => {
                 {
                   name: 'reuse',
                   label: 'Are you re-using any {{ values.speciesLabel }}?',
-                  hint: values => calculateProtocolContext(values,`\
+                  hint: `\
 ‘Re-use’ describes using an animal for a new experiment when you could equally use a naive animal to get the same results.
 
-Select each that applies`, 'Re-use’ describes using an animal for a new experiment when you could equally use a naive animal to get the same results.', '‘Re-use’ describes using animals again for a new experiment when you could equally use a naïve animal to get the same results'),
-                  type: values => calculateProtocolContext(values, 'checkbox', 'checkbox', 'standard-list'),
+Select each that applies`,
+                  type: 'checkbox',
                   preserveHierarchy: true,
                   options: [
                     {
@@ -1807,8 +1777,8 @@ Select each that applies`, 'Re-use’ describes using an animal for a new experi
                       reveal: [
                         {
                           name: 'reuse-details',
-                          label:  values => calculateProtocolContext(values,'Describe the procedures that have been applied to them and why you are choosing to re-use them', 'Describe any procedure that may have been applied to these animals, and why you are choosing to re-use them.', 'Procedures that have been applied to these animals, and why you are choosing to re-use them'),
-                          type:  values => calculateProtocolContext(values,'texteditor', 'texteditor', 'paragraph')
+                          label: 'Describe the procedures that have been applied to them and why you are choosing to re-use them',
+                          type: 'texteditor'
                         }
                       ]
                     },
@@ -1820,7 +1790,7 @@ Select each that applies`, 'Re-use’ describes using an animal for a new experi
                           name: 'maximum-times-used',
                           label: 'What is the maximum number of times an animal will be used in this protocol?',
                           hint: 'Only enter numerals, for example 40',
-                          type:  'text',
+                          type: 'text',
                           inputMode: 'numeric',
                           className: 'govuk-input--width-5'
                         }
@@ -1847,8 +1817,8 @@ Select each that applies`, 'Re-use’ describes using an animal for a new experi
               fields: [
                 {
                   name: 'gaas',
-                  label: values => calculateProtocolContext(values, 'Will this protocol use any genetically altered animals?', 'Will this protocol use any genetically altered animals?', 'Use of GA animals in this protocol'),
-                  type: values => calculateProtocolContext(values, 'radio', 'radio', 'standard-radio'),
+                  label: 'Will this protocol use any genetically altered animals?',
+                  type: 'radio',
                   className: 'smaller',
                   inline: true,
                   options: [
@@ -1858,16 +1828,13 @@ Select each that applies`, 'Re-use’ describes using an animal for a new experi
                       reveal: [
                         {
                           name: 'gaas-types',
-                          label: values => calculateProtocolContext(values,'Which general types or strains will you be using and why?', 'Which general types or strains will you be using?', 'General types or strains to be used'),
-                          type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph')
+                          label: 'Which general types or strains will you be using and why?',
+                          type: 'texteditor'
                         },
                         {
                           name: 'gaas-harmful',
-                          label: values => calculateProtocolContext(values, 'Do you expect any of these GAAs to show a harmful phenotype with welfare consequences?', 'Do you expect any of these GA animals to show a harmful phenotype with welfare consequences?',
-                            'Expected harmful phenotype with welfare consequences'),
-                          type: values => calculateProtocolContext(values, 'radio', 'radio', 'standard-radio'),
-                          hint: values => calculateProtocolContext(values, null, 'If control measures prevent the harmful phenotype, you should answer ‘No’ - for example, if you are housing immunodeficient animals in a barrier environment',
-                            'If control measures prevent the harmful phenotype, you should answer ‘No’ - for example, if you are housing immunodeficient animals in a barrier environment'),
+                          label: 'Do you expect any of these GAAs to show a harmful phenotype with welfare consequences?',
+                          type: 'radio',
                           className: 'smaller',
                           inline: true,
                           options: [
@@ -1878,13 +1845,13 @@ Select each that applies`, 'Re-use’ describes using an animal for a new experi
                                 {
                                   name: 'gaas-harmful-justification',
                                   label: 'Why are each of these harmful phenotypes necessary?',
-                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph')
+                                  type: 'texteditor'
                                 },
                                 {
                                   name: 'gaas-harmful-control',
-                                  label: values => calculateProtocolContext(values, 'How will you minimise the harms associated with these phenotypes?', 'How will you minimise the harms associated with these phenotypes?', 'What control measures and humane endpoints will you use to minimise suffering due to the adverse phenotypes? '),
+                                  label: 'How will you minimise the harms associated with these phenotypes?',
                                   hint: 'Ensure that you include any humane endpoints that you will use.',
-                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph')
+                                  type: 'texteditor'
                                 }
                               ]
                             },
@@ -1924,28 +1891,13 @@ Select each that applies`, 'Re-use’ describes using an animal for a new experi
               fields: [
                 {
                   name: 'title',
-                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph'),
-                  label: values => calculateProtocolContext(values, 'Describe the procedures that will be carried out during this step.', 'Describe the procedures that will be carried out during this step', 'Permitted procedures for this step'),
-                  hint: values => calculateProtocolContext(values,
-                      `Explain where one or more steps are repeated in one experiment, list any alternative techniques within a step (e.g. dosing routes), and include all procedures performed under terminal anaesthesia.
-
-When describing the technical aspects of a step, be broad enough to be flexible when the variation does not impact on animal welfare (e.g. use "antibiotic" instead of "penicillin"). Finally, avoid specifying volumes and frequencies when they do not impact on animal welfare.`,
-
-                      `You should: \n
-• explain where one or more steps are repeated in one experiment \n
-• list any alternative techniques within a step (for example dosing routes) \n
-• include all procedures performed under terminal anaesthesia \n
-
-When describing the technical aspects of a step, be broad enough to be flexible when the variation does not affect animal welfare (for example, use 'antibiotic' instead of 'penicillin').
-
-Avoid specifying volumes and frequencies when they do not affect animal welfare.`,
-
-                      null
-                    )
+                  type: 'texteditor',
+                  label: 'Describe the procedures that will be carried out during this step.',
+                  hint: 'Explain where one or more steps are repeated in one experiment, list any alternative techniques within a step (e.g. dosing routes), and include all procedures performed under terminal anaesthesia.\n\nWhen describing the technical aspects of a step, be broad enough to be flexible when the variation does not impact on animal welfare (e.g. use "antibiotic" instead of "penicillin"). Finally, avoid specifying volumes and frequencies when they do not impact on animal welfare.'
                 },
                 {
                   name: 'reference',
-                  type:  values => calculateProtocolContext(values, 'text', 'text','paragraph'),
+                  type: 'text',
                   label: 'Step reference',
                   hint: 'Provide a short reference for this step, e.g. \'Blood sampling\' or \'Transgene induction\'',
                   show: props => {
@@ -1967,17 +1919,13 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                       label: 'No',
                       value: false
                     }
-                  ],
-                  show: props => { return !props.readonly; }
+                  ]
                 },
                 {
                   name: 'adverse',
-                  label: values => calculateProtocolContext(values, 'Do you expect this step to have adverse effects for the animals that are more than mild and transient?', `Do you expect this step to have adverse effects that are more than mild and short-term and not listed in ${markdownLink('General constraints', getToGeneralConstraints())}?`,
-                    `Expected adverse effects that are more than mild and short-term and not listed in ${markdownLink('General constraints', getToGeneralConstraints())}`),
-                  hint: values => calculateProtocolContext(values, 'Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.',
-                    `Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.
-                    \n [Remove injection example as not appropriate - advice needed]`, null),
-                  type: values => calculateProtocolContext(values, 'radio', 'standard-radio', 'standard-radio'),
+                  label: 'Do you expect this step to have adverse effects for the animals that are more than mild and transient?',
+                  hint: 'Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.',
+                  type: 'radio',
                   inline: true,
                   className: 'smaller',
                   options: [
@@ -1989,19 +1937,19 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                           name: 'adverse-effects',
                           label: 'What are the likely adverse effects of this step?',
                           hint: 'State the expected adverse effect, including the likely incidence, and the anticipated degree and duration of suffering.',
-                          type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph'),
+                          type: 'texteditor'
                         },
                         {
                           name: 'prevent-adverse-effects',
                           label: 'How will you monitor for, control, and limit any of these adverse effects?',
                           hint: 'If adverse effects can\'t be prevented, how will you attempt to ameliorate their initial signs?',
-                          type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph'),
+                          type: 'texteditor'
                         },
                         {
                           name: 'endpoints',
                           label: 'What are the humane endpoints for this step?',
                           hint: 'This would be the point at which you would kill the animal to prevent further suffering.',
-                          type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph'),
+                          type: 'texteditor'
                         }
                       ]
                     },
@@ -2027,7 +1975,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                       value: false
                     }
                   ],
-                  show: props => { return (!props.readonly) }
+                  show: props => !props.readonly
                 }
               ]
             },
@@ -2057,19 +2005,15 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
               fields: [
                 {
                   name: 'experience-summary',
-                  label: values => calculateProtocolContext(values, 'Summarise the typical experience or end-to-end scenario for an animal being used in this protocol.',
-                    'What is the typical experience or end-to-end scenario for an animal being used in this protocol?', 'Typical experience or end-to-end scenario for an animal in this protocol'),
-                  hint: values => calculateProtocolContext(values, 'Consider the cumulative effect of any combinations of procedures that you may carry out.',
-                   'Consider the cumulative effect of any combinations of procedures that you may carry out', null ),
-                  type: values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                  label: 'Summarise the typical experience or end-to-end scenario for an animal being used in this protocol.',
+                  hint: 'Consider the cumulative effect of any combinations of procedures that you may carry out.',
+                  type: 'texteditor'
                 },
                 {
                   name: 'experience-endpoints',
-                  label: values => calculateProtocolContext(values, 'Describe the general humane endpoints that you will apply during the protocol.',
-                    'Describe the general humane endpoints that you will apply during the protocol', 'General humane endpoints for this protocol'),
-                  hint: values => calculateProtocolContext(values, 'These will be in addition to the endpoints stated for each step.', 'These will be in addition to the endpoints stated for each step.'
-                  , 'These will be in addition to the endpoints covered in General constraints and in each step'),
-                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                  label: 'Describe the general humane endpoints that you will apply during the protocol.',
+                  hint: 'These will be in addition to the endpoints stated for each step.',
+                  type: 'texteditor'
                 }
               ]
             },
@@ -2082,19 +2026,19 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                 {
                   name: 'outputs',
                   show: values => !isTrainingLicence(values),
-                  label: values => calculateProtocolContext(values, 'What outputs are expected to arise from this protocol?', 'What outputs are expected from this protocol?', 'Permitted outputs from this protocol'),
-                  hint: values => calculateProtocolContext(values, 'For example, test results, phenotypic information, or products.', 'For example, test results, phenotypic information, or products', 'For example, test results, phenotypic information, or products'),
-                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                  label: 'What outputs are expected to arise from this protocol?',
+                  hint: 'For example, test results, phenotypic information, or products.',
+                  type: 'texteditor'
                 },
                 {
                   name: 'training-outputs',
                   show: values => isTrainingLicence(values),
                   label: 'What learning outcomes are expected to arise from this protocol?',
-                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                  type: 'texteditor'
                 },
                 {
                   name: 'quantitative-data',
-                  label: values => calculateProtocolContext(values, 'Will this protocol generate quantitative data?', 'Will this protocol generate quantitative data?', 'Generation of quantitative data'),
+                  label: 'Will this protocol generate quantitative data?',
                   type: 'radio',
                   className: 'smaller',
                   inline: true,
@@ -2116,7 +2060,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                               reveal: {
                                 name: 'quantitative-data-guideline-refined',
                                 label: 'How will you ensure that you are using the most refined methodology?',
-                                type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                                type: 'texteditor'
                               }
                             },
                             {
@@ -2126,40 +2070,40 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                                 {
                                   name: 'quantitative-data-pilot-studies-how',
                                   label: 'Where relevant, explain how and when pilot studies will be used.',
-                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                                  type: 'texteditor'
                                 },
                                 {
                                   name: 'quantitative-data-experimental-groups',
                                   label: 'How will you choose different experimental groups?',
                                   hint: 'For example, controls, dose levels, satellites etc.',
-                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                                  type: 'texteditor'
                                 },
                                 {
                                   name: 'control-groups',
                                   label: 'How will you choose control groups?',
                                   hint: 'Provide a robust scientific justification for controls with significant suffering such as sham surgery controls or untreated infected controls.',
-                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                                  type: 'texteditor'
                                 },
                                 {
                                   name: 'randomised',
                                   label: 'How will experiments and data analysis be randomised and blinded?',
-                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                                  type: 'texteditor'
                                 },
                                 {
                                   name: 'reproducibility',
                                   label: 'How will you minimise variables to ensure reproducibility?',
-                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                                  type: 'texteditor'
                                 },
                                 {
                                   name: 'control-groups-size',
                                   label: 'How will you determine group sizes?',
                                   hint: 'You should reference POWER calculations you have made, if relevant.',
-                                  type:  values => values?.isStandardProtocol ? 'paragraph' : 'texteditor'
+                                  type: 'texteditor'
                                 },
                                 {
                                   name: 'maximize-effectiveness',
                                   label: 'How will you maximise the data output from the animals you use on this protocol?',
-                                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                                  type: 'texteditor'
                                 }
                               ]
                             }
@@ -2178,7 +2122,6 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
             justification: {
               title: 'Protocol justification',
               label: 'Why is each type of animal, experimental model, and/or method selected for this protocol:',
-              show: props => props.values?.isStandardProtocol !== true,
               granted: {
                 order: 10
               },
@@ -2186,27 +2129,27 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                 {
                   name: 'most-appropriate',
                   label: 'a) the most appropriate scientific approach?',
-                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                  type: 'texteditor'
                 },
                 {
                   name: 'most-refined',
                   label: 'b) the most refined for the purpose?',
-                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                  type: 'texteditor'
                 },
                 {
                   name: 'scientific-endpoints',
                   label: 'For each model and/or method, what is the scientific need for the expected clinical signs?',
-                  type: values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                  type: 'texteditor'
                 },
                 {
                   name: 'scientific-suffering',
                   label: 'Why scientifically do the animals need to suffer to this degree?',
-                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                  type: 'texteditor'
                 },
                 {
                   name: 'scientific-endpoints-justification',
                   label: 'Why can\'t you achieve your scientific outputs with an earlier humane endpoint, or without animals showing any clinical signs?',
-                  type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                  type: 'texteditor'
                 },
                 {
                   name: 'justification-substances',
@@ -2223,13 +2166,13 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                           name: 'substances-suitibility',
                           label: 'How will you assess the suitability of these substances, and minimise the unnecessary harms arising from their administration given the particular strain or type of animal you will be using?',
                           hint: 'When assessing suitability, state how you will consider toxicity, efficacy, and sterility.',
-                          type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                          type: 'texteditor'
                         },
                         {
                           name: 'dosing-regimen',
                           label: 'How will you determine an appropriate dosing regimen?',
                           hint: 'Include routes, dosage volumes, frequencies, and durations.',
-                          type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor', 'paragraph')
+                          type: 'texteditor'
                         }
                       ]
                     },
@@ -2240,12 +2183,6 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                   ]
                 }
               ]
-            },
-            justificationStandardProtocol: {
-              title: 'Protocol justification',
-              label: 'In what ways have you changed the standard protocol and why?',
-              type: 'texteditor',
-              show: props => props.values?.isStandardProtocol === true,
             },
             conditions: {
               title: 'Additional conditions',
