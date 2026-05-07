@@ -1798,7 +1798,7 @@ export default () => {
 ‘Re-use’ describes using an animal for a new experiment when you could equally use a naive animal to get the same results.
 
 Select each that applies`, 'Re-use’ describes using an animal for a new experiment when you could equally use a naive animal to get the same results.', '‘Re-use’ describes using animals again for a new experiment when you could equally use a naïve animal to get the same results'),
-                  type: values => calculateProtocolContext(values, 'checkbox', 'checkbox', 'standard-list'),
+                  type: 'checkbox',
                   preserveHierarchy: true,
                   options: [
                     {
@@ -1926,7 +1926,9 @@ Select each that applies`, 'Re-use’ describes using an animal for a new experi
                   name: 'title',
                   type:  values => calculateProtocolContext(values, 'texteditor', 'texteditor','paragraph'),
                   label: values => calculateProtocolContext(values, 'Describe the procedures that will be carried out during this step.', 'Describe the procedures that will be carried out during this step', 'Permitted procedures for this step'),
-                  hint: values => calculateProtocolContext(values,
+                  hint: values =>
+                    calculateProtocolContext(
+                      values,
                       `Explain where one or more steps are repeated in one experiment, list any alternative techniques within a step (e.g. dosing routes), and include all procedures performed under terminal anaesthesia.
 
 When describing the technical aspects of a step, be broad enough to be flexible when the variation does not impact on animal welfare (e.g. use "antibiotic" instead of "penicillin"). Finally, avoid specifying volumes and frequencies when they do not impact on animal welfare.`,
@@ -1973,7 +1975,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                 {
                   name: 'adverse',
                   label: values => calculateProtocolContext(values, 'Do you expect this step to have adverse effects for the animals that are more than mild and transient?', `Do you expect this step to have adverse effects that are more than mild and short-term and not listed in ${markdownLink('General constraints', getToGeneralConstraints())}?`,
-                    `Expected adverse effects that are more than mild and short-term and not listed in ${markdownLink('General constraints', getToGeneralConstraints())}`),
+                    `Expected adverse effects that are more than mild and short-term and not listed in General constraints ${markdownLink('General constraints', getToGeneralConstraints())}`),
                   hint: values => calculateProtocolContext(values, 'Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.',
                     `Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.
                     \n [Remove injection example as not appropriate - advice needed]`, null),

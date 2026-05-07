@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 
 export default function Details({ summary, children, className, id, dynamicShow = false }) {
-    const [open, setOpen] = useState(dynamicShow);
+    const [open, setOpen] = useState(false);
 
     const toggle = useCallback(
         e => {

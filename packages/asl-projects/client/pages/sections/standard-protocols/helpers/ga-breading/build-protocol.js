@@ -32,7 +32,7 @@ export const BuildProtocol = (protocolTemplate, project) => {
         || templateSpeciesDetails[0]
         || {};
 
-      // Return a new object every time
+      // Return a brand new object every time
       return {
         id: uuidv4(),
         species: speciesValue,
@@ -102,8 +102,7 @@ export const BuildProtocol = (protocolTemplate, project) => {
     animals: data.animals ? { ...data.animals } : {},
 
     // Species data - new arrays with new objects
-    // Editable templates should start with no selected species in the intro checkboxes.
-    species: [],
+    species: [...projectSpecies],
     speciesDetails: [...speciesDetails],
     steps: [...steps],
     gaas: Boolean(data.gaas),
