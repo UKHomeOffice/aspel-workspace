@@ -23,7 +23,6 @@ const getSection = (section, props) => {
   if (props.isGranted && props.granted && props.granted.review && !isFullApplicationPdf) {
     return <props.granted.review {...props} />;
   }
-
   switch (section) {
     case 'steps':
       return props.schemaVersion === 0

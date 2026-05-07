@@ -4,15 +4,7 @@ import { getLegacySpeciesLabel } from '../../../helpers';
 import { filterSpeciesByActive } from '../protocols/animals';
 
 function titleCase(str) {
-  if (Array.isArray(str)) {
-    str = str[0];
-  }
-
-  if (typeof str !== 'string') {
-    return '';
-  }
-
-  return str.charAt(0).toUpperCase() + str.slice(1);
+  return `${str.charAt(0).toUpperCase()}${str.substring(1)}`;
 }
 
 function TableRow({ species, project, protocol, index, isLegacy, ExpandingRow, expanded, onClick }) {

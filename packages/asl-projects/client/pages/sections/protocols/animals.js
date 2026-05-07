@@ -33,13 +33,14 @@ function getProjectSpecies(project) {
 function normaliseValues(speciesDetails) {
   return speciesDetails.map(details => {
     if (details.value) {
-      return { ...details };
+      return details;
     }
+    // if there's a species with a label matching the name use that
     const match = allSpecies.find(sp => sp.label === details.name);
     if (match) {
       return { ...details, value: match.value };
     }
-    return { ...details };
+    return details;
   });
 }
 
@@ -102,10 +103,8 @@ class Animals extends Component {
   }
 
   getItems = () => {
-    const { project, values: protocol } = this.props;
-    let speciesDetails = (this.props.values.speciesDetails || [])
-      .filter(Boolean)
-      .map(sd => ({ ...sd }));
+    const { project } = this.props;
+    const speciesDetails = (this.props.values.speciesDetails || []).filter(Boolean);
     let species = this.props.values.species || [];
 
     species.forEach(item => {
@@ -118,14 +117,7 @@ class Animals extends Component {
         const matchingValue = speciesDetails.find(sd => sd.value === value);
         // item is already in list - make sure it has the right label
         if (matchingValue) {
-          const index = speciesDetails.findIndex(sd => sd.value === value);
-          if (index > -1) {
-            speciesDetails[index] = {
-              ...speciesDetails[index],
-              name: item
-            };
-            return;
-          }
+          matchingValue.name = item;
           return;
         }
       }
@@ -133,21 +125,10 @@ class Animals extends Component {
       if (some(speciesDetails, sd => sd.name === item)) {
         return;
       }
-      speciesDetails = [
-        ...speciesDetails,
-        { name: item, id: uuid(), value }
-      ];
+      speciesDetails.push({ name: item, id: uuid(), value });
     });
 
-    const { isStandardProtocol = false, standardProtocolType = '' } = protocol;
-
-    const items =  filterSpeciesByActive({ speciesDetails, species }, project);
-
-    return items.map(item => ({
-      ...item,
-      isStandardProtocol,
-      standardProtocolType
-    }));
+    return filterSpeciesByActive({ speciesDetails, species }, project);
   }
 
   render() {
