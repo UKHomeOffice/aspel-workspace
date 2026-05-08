@@ -37,7 +37,8 @@ const IGNORED_KEYS = new Set([
   'existingValues',
   'reference',
   'reusedStep',
-  'deleted'
+  'deleted',
+  'initial'
 ]);
 
 function isNewStep(step) {
@@ -124,8 +125,11 @@ const StepSelector = ({reusableSteps, values, onSaveSelection, length, onCancel}
 
 // NewStepOptions component - MUST be defined before Step class component
 const NewStepOptions = ({ step, reusableSteps, values, onSaveSelection, onCancel, length, updateItem, updateReusable }) => {
-  const [selectedOption, setSelectedOption] = useState(values.addExisting || false);
-  const [showStepSelector, setShowStepSelector] = useState(selectedOption === true);
+  const [selectedOption, setSelectedOption] = useState(undefined);
+  const [showStepSelector, setShowStepSelector] = useState(false);
+  const addStepName = `add-stepaddExisting-${values.id}`;
+  const addStepNewId = `add-step-new-${values.id}`;
+  const addStepExistingId = `add-step-existing-${values.id}`;
 
   const handleRadioChange = (value) => {
     setSelectedOption(value);
@@ -151,16 +155,16 @@ const NewStepOptions = ({ step, reusableSteps, values, onSaveSelection, onCancel
           <div className="govuk-radios__item">
             <input
               className="govuk-radios__input"
-              id="add-step-new"
+              id={addStepNewId}
               data-testid="add-step-new"
-              name="stepaddExisting"
+              name={addStepName}
               type="radio"
               value="false"
               checked={selectedOption === false}
-              data-aria-controls="conditional-add-step-new"
+              aria-controls="conditional-add-step-new"
               onChange={() => handleRadioChange(false)}
             />
-            <label className="govuk-label govuk-radios__label" htmlFor="add-step-new">
+            <label className="govuk-label govuk-radios__label" htmlFor={addStepNewId}>
               Create a new step
             </label>
           </div>
@@ -178,16 +182,16 @@ const NewStepOptions = ({ step, reusableSteps, values, onSaveSelection, onCancel
           <div className="govuk-radios__item">
             <input
               className="govuk-radios__input"
-              id="add-step-existing"
+              id={addStepExistingId}
               data-testid="add-step-existing"
-              name="stepaddExisting"
+              name={addStepName}
               type="radio"
               value="true"
-              data-aria-controls="conditional-add-step-existing"
+              aria-controls="conditional-add-step-existing"
               checked={selectedOption === true}
               onChange={() => handleRadioChange(true)}
             />
-            <label className="govuk-label govuk-radios__label" htmlFor="add-step-existing">
+            <label className="govuk-label govuk-radios__label" htmlFor={addStepExistingId}>
               Select steps used in other protocols
             </label>
           </div>
@@ -382,6 +386,7 @@ class Step extends Component {
     const editingReusableStep = !completed && values.existingValues && values.reusableStepId && values.saved;
     const stepEditable = editingReusableStep ? (values.existingValues.id === values.id) : !completed;
     const commentPrefix = values.reusableStepId ? `reusableSteps.${values.reusableStepId}.` : undefined;
+    const hasReusableSteps = Array.isArray(reusableSteps) && reusableSteps.length > 0;
 
     const stepContent = (
       <>
@@ -539,7 +544,13 @@ class Step extends Component {
     );
 
     // Handle new step with radio options
-    if (editable && isNewStep(values)) {
+    const shouldShowStepOptions =
+      editable &&
+      hasReusableSteps &&
+      isNewStep(values) &&
+      !values.initial;
+
+    if (shouldShowStepOptions) {
       const onSaveSelection = (selectedSteps) => {
         const mappedSteps = flatMap(this.props.protocol.steps || [], step => {
           if (step.id === values.id) {
@@ -620,6 +631,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
       singular="step"
       prefix={prefix}
       items={safeRepeaterSteps}
+      itemProps={{}}
       softDelete={true}
       onBeforeAdd={() => {
         setUpdateReusable(false);
@@ -700,7 +712,7 @@ export default function Steps({project, values, ...props}) {
 
   // Create placeholder for empty editable state
   const displaySteps = (props.editable && safeSteps.length === 0 && !props.pdf)
-    ? [{ id: uuid() }]
+    ? [{ id: uuid(), initial: true }]
     : safeSteps;
 
   const [expanded, setExpanded] = useState(displaySteps.map(() => false));
