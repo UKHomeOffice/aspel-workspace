@@ -469,7 +469,9 @@ class Step extends Component {
     const repeatedFrom = getRepeatedFromProtocolIndex(values, protocol.id);
     const isMandatory = values?.optional === false;
     const canReorder = !values.isStandardProtocol && editable && completed && !deleted && !values.deleted;
-    const isStandardProtocolType = values.isStandardProtocol === 'editable' || values.isStandardProtocol;
+    const isStandardProtocolType =
+      values.standardProtocolType === 'editable' ||
+      values.isStandardProtocol === true;
 
     const step = (
       <>
@@ -511,10 +513,12 @@ class Step extends Component {
               )}
             </div>
             <h3>
-              Step { !values.deleted
-              ? <>{number + 1}: {values.reference}</>
-              : <>{values.reference}:{" "}</>
-            }
+              Step{" "}
+              {isStandardProtocolType
+                ? (!values.deleted
+                  ? `${number + 1}: ${values.reference || getStepTitle(values.title)}`
+                  : `${values.reference || getStepTitle(values.title)}: `)
+                : (!values.deleted ? number + 1 : null)}
               <a
                 href="#"
                 className={classnames('inline-block', { restore: values.deleted })}
