@@ -1,4 +1,4 @@
-import { getVersionsForDiff } from '../../../../../pages/project-version/middleware/index';
+import { getVersionsForDiff, getTaskForVersion } from '../../../../../pages/project-version/middleware/index';
 
 describe('Versions', () => {
   describe('Getting relevant versions for change detection', () => {
@@ -159,6 +159,115 @@ describe('Versions', () => {
       expect(previous).toBe(versions[3]);
       expect(first).toBeUndefined();
       expect(granted).toBe(versions[4]);
+    });
+  });
+
+  describe('getTaskForVersion', () => {
+    const ESTABLISHMENT_ID = 100;
+    const PROJECT_ID = 'project-1';
+
+    const buildTask = (id, action, versionId, extra = {}) => ({
+      id,
+      data: { action, data: { version: versionId } },
+      ...extra
+    });
+
+    const buildReq = ({ versionId, openTasks = [], closedTasks = [], establishmentId = ESTABLISHMENT_ID }) => {
+      const api = jest.fn(() => Promise.resolve({ json: { data: closedTasks } }));
+      return {
+        versionId,
+        projectId: PROJECT_ID,
+        establishmentId,
+        project: {
+          establishmentId: ESTABLISHMENT_ID,
+          openTasks
+        },
+        api
+      };
+    };
+
+    it('returns the open task whose version matches the active draft', async () => {
+      const activeTask = buildTask('task-active', 'grant', 'active-draft');
+      const req = buildReq({
+        versionId: 'active-draft',
+        openTasks: [activeTask]
+      });
+
+      const task = await getTaskForVersion(req);
+
+      expect(task).toBe(activeTask);
+      expect(req.api).not.toHaveBeenCalled();
+    });
+
+    it('returns undefined for an older draft snapshot of an in-flight amendment', async () => {
+      const activeTask = buildTask('task-active', 'grant', 'active-draft');
+      const req = buildReq({
+        versionId: 'older-snapshot',
+        openTasks: [activeTask]
+      });
+
+      const task = await getTaskForVersion(req);
+
+      expect(task).toBeUndefined();
+    });
+
+    it('falls back to closed tasks for a granted historical version', async () => {
+      const closedGrant = buildTask('task-closed', 'grant', 'granted-version');
+      const req = buildReq({
+        versionId: 'granted-version',
+        openTasks: [],
+        closedTasks: [closedGrant]
+      });
+
+      const task = await getTaskForVersion(req);
+
+      expect(task).toBe(closedGrant);
+      expect(req.api).toHaveBeenCalledWith('/tasks/related', {
+        query: {
+          model: 'project',
+          modelId: PROJECT_ID,
+          establishmentId: ESTABLISHMENT_ID,
+          onlyClosed: true
+        }
+      });
+    });
+
+    it('ignores closed tasks for a different version', async () => {
+      const closedGrant = buildTask('task-closed', 'grant', 'other-version');
+      const req = buildReq({
+        versionId: 'granted-version',
+        openTasks: [],
+        closedTasks: [closedGrant]
+      });
+
+      const task = await getTaskForVersion(req);
+
+      expect(task).toBeUndefined();
+    });
+
+    it('only matches tasks whose action is in the allowed list', async () => {
+      const openTask = buildTask('task-open', 'amend', 'active-draft');
+      const req = buildReq({
+        versionId: 'active-draft',
+        openTasks: [openTask]
+      });
+
+      const task = await getTaskForVersion(req);
+
+      expect(task).toBeUndefined();
+    });
+
+    it('skips lookup when the project belongs to a different establishment (AA project)', async () => {
+      const req = buildReq({
+        versionId: 'some-version',
+        openTasks: [buildTask('task-open', 'grant', 'some-version')],
+        establishmentId: 999
+      });
+
+      const task = await getTaskForVersion(req);
+
+      expect(task).toBeUndefined();
+      expect(req.api).not.toHaveBeenCalled();
     });
   });
 });

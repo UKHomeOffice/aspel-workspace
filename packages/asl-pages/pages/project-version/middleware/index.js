@@ -40,22 +40,50 @@ const getVersion = () => (req, res, next) => {
     .catch(next);
 };
 
-const getComments = (actions = ['grant', 'transfer']) => (req, res, next) => {
-  if (!req.project || !req.project.openTasks || !req.project.openTasks.length) {
-    return next();
+// Returns the task whose data.data.version matches req.versionId, looking first
+// in openTasks and then falling back to closed related tasks (for granted
+// historical versions). Returns undefined if no matching task exists, so
+// comments from a different version's task can't leak onto this version.
+const getTaskForVersion = (req, actions = ['grant', 'transfer']) => {
+  if (!req.project || !req.versionId) {
+    return Promise.resolve();
   }
   if (req.project.establishmentId !== req.establishmentId) {
     // the application task for AA projects won't be visible so don't try to load it
-    return next();
+    return Promise.resolve();
   }
-  const task = get(req.project, 'openTasks', []).find(task => castArray(actions).includes(get(task, 'data.action')));
-  if (!task) {
-    return next();
+  const actionList = castArray(actions);
+  const matches = task =>
+    actionList.includes(get(task, 'data.action')) &&
+    get(task, 'data.data.version') === req.versionId;
+
+  const openTask = get(req.project, 'openTasks', []).find(matches);
+  if (openTask) {
+    return Promise.resolve(openTask);
   }
-  req.api(`/tasks/${task.id}`)
-    .then(response => extractComments(response.json.data))
-    .then(comments => {
-      res.locals.static.comments = comments;
+  const query = {
+    model: 'project',
+    modelId: req.projectId,
+    establishmentId: req.establishmentId,
+    onlyClosed: true
+  };
+  return req.api('/tasks/related', { query })
+    .then(response => get(response, 'json.data', []).find(matches))
+    .catch(() => undefined);
+};
+
+const getComments = (actions = ['grant', 'transfer']) => (req, res, next) => {
+  getTaskForVersion(req, actions)
+    .then(task => {
+      req.versionTask = task;
+      if (!task) {
+        return;
+      }
+      return req.api(`/tasks/${task.id}`)
+        .then(response => extractComments(response.json.data))
+        .then(comments => {
+          res.locals.static.comments = comments;
+        });
     })
     .then(() => next())
     .catch(next);
@@ -76,8 +104,9 @@ const hasEditPermission = (req) => {
 
 const userCanComment = req => {
   const asruUser = req.user.profile.asruUser;
-  const task = get(req.project, 'openTasks[0]');
-  if (!task) {
+  const task = req.versionTask;
+  const isOpenTask = !!task && get(req.project, 'openTasks', []).some(t => t.id === task.id);
+  if (!isOpenTask) {
     return Promise.resolve(false);
   }
   return Promise.resolve()
@@ -570,6 +599,7 @@ const loadRa = (req, res, next) => {
 module.exports = {
   getVersion,
   getComments,
+  getTaskForVersion,
   canComment,
   getPreviousVersion,
   getGrantedVersion,

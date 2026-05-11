@@ -19,8 +19,9 @@ module.exports = settings => {
   );
 
   app.use((req, res, next) => {
-    const task = get(req.project, 'openTasks[0]');
-    const showComments = req.version.status !== 'granted' && !!task;
+    const task = req.versionTask;
+    const isOpenForVersion = !!task && get(req.project, 'openTasks', []).some(t => t.id === task.id);
+    const showComments = req.version.status !== 'granted' && isOpenForVersion;
 
     const previewLink = req.buildRoute('projectVersion.preview');
 
@@ -34,11 +35,11 @@ module.exports = settings => {
 
     res.locals.static.projectUrl = req.buildRoute('project.read');
     res.locals.static.establishment = req.project.establishment;
-    res.locals.static.isActionable = get(task, 'data.data.version') === req.versionId;
+    res.locals.static.isActionable = isOpenForVersion;
     res.locals.static.showComments = !req.isPreview && showComments;
     res.locals.static.commentable = !req.isPreview && showComments && req.user.profile.asruUser && res.locals.static.isCommentable;
 
-    const taskId = task ? task.id : null;
+    const taskId = isOpenForVersion ? task.id : null;
 
     if (taskId) {
       res.locals.static.taskLink = req.buildRoute('task.read', { taskId });
