@@ -21,6 +21,10 @@ export const BuildProtocol = (protocolTemplate, project) => {
     ? data.speciesDetails.map(sd => ({ ...sd }))
     : [];
 
+  const severity = Array.isArray(data.severity)
+    ? data.severity[0] ?? ''
+    : data.severity ?? '';
+
   // Create species details for each project species
   const speciesDetails = projectSpecies
     .map(speciesValue => {
@@ -92,7 +96,7 @@ export const BuildProtocol = (protocolTemplate, project) => {
     protocolName: data.protocolName ?? '',
     protocolVersion: 'v1',
     description: data.description ?? '',
-    severity: data.severity ?? '',
+    severity,
     'severity-proportion': data.severityProportion ?? '',
     'severity-details': data.severityDetails ?? '',
 

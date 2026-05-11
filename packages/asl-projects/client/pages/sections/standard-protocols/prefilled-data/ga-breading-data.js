@@ -38,7 +38,7 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => {
                 ? 'standard'
                 : 'editable',
 
-              severity: isStandard ? 'Mild' : ['mild'],
+              severity: isStandard ? 'Mild' : 'mild',
 
               severityProportion: 'Most animals will experience mild harms.',
 
