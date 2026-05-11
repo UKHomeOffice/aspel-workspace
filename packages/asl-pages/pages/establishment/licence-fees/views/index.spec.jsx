@@ -7,7 +7,6 @@ import Fees from './index';
 
 jest.mock('@ukhomeoffice/asl-components', () => {
   const React = require('react');
-
   const content = {
     'fees.title': 'Estimated licence fees',
     'fees.period': 'Covering the financial year:',

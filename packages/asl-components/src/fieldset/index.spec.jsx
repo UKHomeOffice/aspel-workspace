@@ -5,6 +5,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import Fieldset from './index';
 
+// guards against empty legend label> regressions screen readers read them as unlabelled
 describe('<Fieldset />', () => {
   const store = configureStore({
     reducer: {
@@ -21,7 +22,7 @@ describe('<Fieldset />', () => {
     </Provider>
   );
 
-  test('does not render an empty heading when a checkbox group label is false', () => {
+  test('skips the heading if checkbox group label is empty', () => {
     renderFieldset({
       species: {
         inputType: 'checkboxGroup',
@@ -38,8 +39,8 @@ describe('<Fieldset />', () => {
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
     expect(screen.getByLabelText('Cats')).toBeInTheDocument();
   });
-
-  test('does not render an empty heading when a checkbox group label is an empty string', () => {
+ //
+  test('does not show heading if label is empty', () => {
     renderFieldset({
       species: {
         inputType: 'checkboxGroup',
