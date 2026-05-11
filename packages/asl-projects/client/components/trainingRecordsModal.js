@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import Modal from './modal';
 import { useSelector } from 'react-redux';
+import { findArrayDifferences } from '../helpers/array-diff';
 
 const DEFAULT_LABEL = '-';
 
@@ -111,8 +112,9 @@ export default function TrainingRecordModal({
     prevArr = Array.isArray(prevArr) ? prevArr : [];
     nextArr = Array.isArray(nextArr) ? nextArr : [];
 
-    const removed = prevArr.filter(x => !nextArr.includes(x));
-    const added = nextArr.filter(x => !prevArr.includes(x));
+    const arrayDiff = findArrayDifferences(prevArr, nextArr);
+    const removed = arrayDiff.removed[1]?.value || [];
+    const added = arrayDiff.added[1]?.value || [];
     const items = side === 'left' ? prevArr : nextArr;
 
     if (!items.length) {
