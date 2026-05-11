@@ -399,17 +399,44 @@ export default (application, sections, values, updateImageDimensions) => {
     }
     const value = values[field.name];
 
+    const resolveFieldProp = (prop) => {
+      if (typeof prop === 'function') {
+        // Pass the same context that the UI would receive
+        return prop({ ...field, values, project });
+      }
+      return prop;
+    };
+
     if (!field.label && field.type === 'checkbox' && field.name.includes('declaration')) {
       return renderDeclaration(doc, field, values, value);
     }
 
+    console.error('Non‑string label/review in field:', field.name, field.review || field.label);
+
     const context = { ...field, values };
-    const renderedLabel = Mustache.render(field.review || field.label || '', context);
-    doc.createParagraph(renderedLabel).style('Question');
+    let labelText = field.review || field.label || '';
+
+// Resolve function to string
+    labelText = resolveFieldProp(labelText);
+
+// Only proceed if it's now a string
+    if (typeof labelText === 'string') {
+      const renderedLabel = Mustache.render(labelText, context);
+      doc.createParagraph(renderedLabel).style('Question');
+    } else {
+      // Fallback to field name if still not a string
+      console.warn(`Docx export: field "${field.name}" label is not a string after resolution`);
+      doc.createParagraph(field.name || 'Question').style('Question');
+    }
 
     if (field.hint) {
-      const renderedHint = Mustache.render(field.hint, context);
-      renderMarkdown(doc, renderedHint, 'aside');
+      let hintText = resolveFieldProp(field.hint);
+      if (typeof hintText === 'string') {
+        const renderedHint = Mustache.render(hintText, context);
+        renderMarkdown(doc, renderedHint, 'aside');
+      } else {
+        console.warn(`Docx export: field "${field.name}" hint is not a string – skipping`);
+      }
     }
 
     switch (field.type) {
@@ -500,6 +527,7 @@ export default (application, sections, values, updateImageDimensions) => {
       }
     });
   };
+
 
   const renderMarkdown = (doc, markdown, style = 'body') => {
     renderMarkdownContent(doc, markdown, style, { applyTextFilter: stripInvalidXmlChars });
