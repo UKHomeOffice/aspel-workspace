@@ -1,5 +1,5 @@
 const { projectSpecies } = require('@ukhomeoffice/asl-constants');
-const { flatten, values, get } = require('lodash');
+const { intersection, flatten, values, uniq, get } = require('lodash');
 
 const allSpecies = flatten(values(projectSpecies));
 
@@ -39,44 +39,29 @@ const species = {
   ]
 };
 
-const speciesLabels = Object.fromEntries(
-  Object.entries(species).map(([type, speciesList]) => [type, new Set(
-    speciesList
-      .map(value => allSpecies.find(item => item.value === value))
-      .filter(Boolean)
-      .map(item => item.label)
-  )])
-);
-
-const speciesValues = Object.fromEntries(
-  Object.entries(species)
-    .map(([type, list]) => [type, new Set(list)])
-);
-
-const getSpeciesValues = project => {
-  let speciesValuesForProject;
+module.exports = (project, type) => {
+  let value;
+  const labels = species[type]
+    .map(n => allSpecies.find(s => s.value === n))
+    .filter(Boolean)
+    .map(s => s.label);
 
   // schema_version is not camelCased because it came from a raw knex query
   if (project.schema_version === 1) {
-    speciesValuesForProject = []
+    value = []
       .concat(get(project, 'data.species', []))
       .concat(get(project, 'data.species-other', []));
   } else {
-    speciesValuesForProject = [];
-    for (const protocol of get(project, 'data.protocols', [])) {
-      for (const specimen of (protocol.species || [])) {
-        speciesValuesForProject.push(specimen.speciesId === '28' ? specimen['other-species-type'] : specimen.speciesId);
-      }
-    }
+    const protocols = get(project, 'data.protocols', []);
+    value = protocols
+      .map(p => {
+        return (p.species || []).map(s => s.speciesId === '28' ? s['other-species-type'] : s.speciesId);
+      });
   }
+  value = uniq(flatten(value));
 
-  return new Set(speciesValuesForProject.filter(Boolean));
+  const hasCodedSpecies = !!intersection(species[type], value).length;
+  const hasOtherSpecies = !!intersection(labels, value).length;
+
+  return hasCodedSpecies || hasOtherSpecies;
 };
-
-const matches = (speciesValuesForProject, type) => {
-  return Array.from(speciesValuesForProject).some(value => speciesValues[type].has(value) || speciesLabels[type].has(value));
-};
-
-const hasSpecies = (project, type) => matches(getSpeciesValues(project), type);
-
-module.exports = hasSpecies;

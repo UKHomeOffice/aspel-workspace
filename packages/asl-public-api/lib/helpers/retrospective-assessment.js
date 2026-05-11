@@ -47,7 +47,11 @@ function calculateRA(versionData) {
   const hasNonHumanPrimates = !!intersection(versionData.species, nhp).length || hasNhpOther;
 
   const hasEndangeredAnimals = !!versionData['endangered-animals'];
-  const hasSevereProtocols = (versionData.protocols || []).filter(p => p && !p.deleted).some(p => (p.severity || '').match(/severe/ig));
+  const hasSevereProtocols = (versionData.protocols || []).filter(p => p && !p.deleted).some(p => {
+    const severity = p.severity;
+    const severityStr = typeof severity === 'string' ? severity : '';
+    return severityStr.match(/severe/ig);
+  });
   const isTrainingLicence = !!versionData['training-licence'];
 
   return {

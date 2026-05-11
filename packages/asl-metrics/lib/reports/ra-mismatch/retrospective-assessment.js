@@ -41,7 +41,11 @@ function isRequired(project) {
   const hasRASpecies = !!intersection(project.species, nopes).length;
   const hasRASpeciesOther = !!intersection(project['species-other'], nopes.map(n => (species.find(s => s.value === n) || {}).label)).length;
   const hasEndangeredAnimals = project['endangered-animals'];
-  const hasSevereProtocols = (project.protocols || []).filter(p => p && !p.deleted).some(p => (p.severity || '').match(/severe/ig));
+  const hasSevereProtocols = (project.protocols || []).filter(p => p && !p.deleted).some(p => {
+    const severity = p.severity;
+    const severityStr = typeof severity === 'string' ? severity : '';
+    return severityStr.match(/severe/ig);
+  });
   const isTrainingLicence = project['training-licence'];
   return hasRASpecies || hasRASpeciesOther || hasEndangeredAnimals || hasSevereProtocols || isTrainingLicence;
 }
