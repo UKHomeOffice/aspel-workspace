@@ -5,7 +5,7 @@ const content = `# Privacy notice
 
 ASPeL is provided by Home Office Digital, on behalf of the Animals in Science Regulation Unit (ASRU).
 
-The data controller for ASPeL is ASRU. A data controller determines how and why personal data is processed.
+The data controller for ASPeL is the Home Office. A data controller determines how and why personal data is processed.
 
 ## What data we need
 
@@ -113,7 +113,7 @@ SW1P 4DF
 
 You can also make a complaint to the Information Commissioner, who is an independent regulator.
 
-Email: [casework@ico.org.uk](mailto:casework@ico.org.uk)
+Email: [icocasework@ico.org.uk](mailto:icocasework@ico.org.uk)
 
 Phone: 0845 630 6060  
 Textphone: 01625 545745  
@@ -128,9 +128,9 @@ Wilmslow
 Cheshire  
 SK9 5AF
 
-Last updated 26 March 2026
+Last updated 12 May 2026
 
-Last reviewed 26 March 2026`;
+Last reviewed 12 May 2026`;
 
 export default () => {
   return <ReactMarkdown escapeHtml={false}>{ content }</ReactMarkdown>;
