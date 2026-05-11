@@ -5,11 +5,15 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { Button, Input, Warning } from '@ukhomeoffice/react-components';
 import castArray from 'lodash/castArray';
 
-function Item({ item, onRemove, showRemove, onChange, name, isDisabled, disabledWarning }) {
+function getItemLabel(itemLabel, index) {
+    return `${itemLabel} ${index + 1}`;
+}
+
+function Item({ item, index, itemLabel, onRemove, showRemove, onChange, name, isDisabled, disabledWarning }) {
     return (
         <Fragment>
             <div className="multi-input-item">
-                <Input type="text" value={item.value} onChange={onChange} label="" name={name} id={item.id} disabled={isDisabled} />
+                <Input type="text" value={item.value} onChange={onChange} label={getItemLabel(itemLabel, index)} name={name} id={item.id} disabled={isDisabled} />
                 {
                     showRemove && <Button onClick={onRemove} disabled={isDisabled}>Remove</Button>
                 }
@@ -28,7 +32,7 @@ const getReproducibleUuid = str => {
     return uuid({ random: new Uint8Array(unsignedInts) });
 };
 
-export default function MultiInput({ value = [], onChange, onFieldChange, name, label, hint, error, disabled = [], disabledWarning, objectItems = false }) {
+export default function MultiInput({ value = [], onChange, onFieldChange, name, label, hint, error, disabled = [], disabledWarning, objectItems = false, itemLabel = label || 'Item', addAnotherLabel = 'Add another' }) {
     const initialValue = (value ? castArray(value) : [])
         .filter(Boolean)
         .map((value, idx) => {
@@ -92,15 +96,17 @@ export default function MultiInput({ value = [], onChange, onFieldChange, name, 
             {
                 objectItems && <input type="hidden" name={name} value={JSON.stringify(getItems())} />
             }
-            <label className="govuk-label" htmlFor={name}>{label}</label>
+            { label && <label className="govuk-label" htmlFor={name}>{label}</label> }
             { hint && <span id={`${name}-hint`} className="govuk-hint">{hint}</span> }
             { error && <span id={`${name}-error`} className="govuk-error-message">{error}</span> }
             <fieldset id={name}>
                 {
-                    items.map(item => (
+                    items.map((item, index) => (
                         <Item
                             item={item}
+                            index={index}
                             key={item.id}
+                            itemLabel={itemLabel}
                             name={`${name}-${item.id}`}
                             onRemove={removeItem(item.id)}
                             onChange={updateItem(item.id)}
@@ -111,7 +117,7 @@ export default function MultiInput({ value = [], onChange, onFieldChange, name, 
                     ))
                 }
             </fieldset>
-            <Button className="button-secondary" onClick={addItem}>Add another</Button>
+            <Button className="button-secondary" onClick={addItem}>{addAnotherLabel}</Button>
         </div>
     );
 }

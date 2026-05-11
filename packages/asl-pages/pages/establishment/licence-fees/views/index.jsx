@@ -85,12 +85,11 @@ export default function Fees({ tab, tabs, children, subtitle = '' }) {
           subtitle={establishment ? <EstablishmentHeader establishment={establishment}/> : subtitle}
         />
         <div className="subtitle">
-          <Snippet>fees.period</Snippet>
           <Select
             name="year"
-            label=""
+            label={<Snippet>fees.period</Snippet>}
             options={options}
-            className="inline"
+            className="inline-label"
             onChange={onYearSelect}
             value={year}
             nullOption={null}

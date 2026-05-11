@@ -78,6 +78,8 @@ const SpeciesSelector = ({
                     reveal: {
                         [fieldName]: {
                             inputType: 'multiInput',
+                            label: `Specify type of ${option.label.toLowerCase()}`,
+                            itemLabel: `${option.label} type`,
                             onFieldChange: vals => {
                                 setValue(prev => ({
                                     ...prev,
@@ -162,7 +164,12 @@ const SpeciesSelector = ({
                 <details open={value.otherSpecies.length || isSelected(species.OTHER || [])}>
                     <summary>{GROUP_LABELS.OTHER}</summary>
                     {species.OTHER && getField(species.OTHER, 'OTHER')}
-                    <MultiInput name="other-species" value={value.otherSpecies} onChange={onOtherChange} />
+                    <MultiInput
+                        name="other-species"
+                        value={value.otherSpecies}
+                        onChange={onOtherChange}
+                        itemLabel="Other animal type"
+                    />
                 </details>
                 <input type="hidden" name={name} value={getValue()} />
             </InputWrapper>

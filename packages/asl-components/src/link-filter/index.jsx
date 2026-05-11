@@ -26,7 +26,7 @@ export const LinkFilter = ({
 }) => {
     return (
         <div className="link-filter">
-            <label>{ label }</label>
+            { label && <span className="link-filter__label">{ label }</span> }
             <ul>
                 {
                     showAll && showAll.position !== 'after' &&
