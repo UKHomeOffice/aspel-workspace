@@ -80,10 +80,10 @@ describe('hasExistingDataForCheckbox', () => {
     assert.deepEqual(result, { checkboxValue: 'killed', hasData: true });
   });
 
-  it('should return true for "used-in-other-projects" if there is data in "continued-use-relevant-project"', () => {
+  it('should return true for "used-in-other-projects" if there is data in "continued-use-2"', () => {
     const project = set(
       cloneDeep(emptyProject),
-      'protocols.0.continued-use-relevant-project',
+      'protocols.0.continued-use-2',
       textAreaWithText('Relevant project')
     );
 
