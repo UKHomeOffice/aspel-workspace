@@ -48,7 +48,8 @@ const emptyProject = {
   'setting-free-recapturing': cloneDeep(emptyTextArea),
   'setting-free-rehabilitate': cloneDeep(emptyTextArea),
   'setting-free-socialise': cloneDeep(emptyTextArea),
-  'setting-free-vet': false
+  'setting-free-vet': false,
+  'continued-use-2': false
 };
 
 const textAreaWithText = (text) => {
