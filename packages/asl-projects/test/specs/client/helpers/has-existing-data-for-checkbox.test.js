@@ -88,7 +88,7 @@ describe('hasExistingDataForCheckbox', () => {
       textAreaWithText('Relevant project')
     );
 
-    const result = hasExistingDataForCheckbox(project, 'used-in-other-projects');
+    const result = hasExistingDataForCheckbox(project, 'continued-use-2');
 
     assert.deepEqual(result, { checkboxValue: 'used-in-other-projects', hasData: true });
   });
