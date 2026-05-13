@@ -30,7 +30,7 @@ const emptyProject = {
     {
       'method-and-justification': cloneDeep(emptyTextArea),
       'continued-use-relevant-project': cloneDeep(emptyTextArea),
-      'continued-use-2': false
+      'fate' : [ 'continued-use-2' ]
     }
   ],
   'keeping-alive-complete': false,
