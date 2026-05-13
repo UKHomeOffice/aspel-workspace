@@ -29,7 +29,8 @@ const emptyProject = {
   'protocols': [
     {
       'method-and-justification': cloneDeep(emptyTextArea),
-      'continued-use-relevant-project': cloneDeep(emptyTextArea)
+      'continued-use-relevant-project': cloneDeep(emptyTextArea),
+      'continued-use-2': true
     }
   ],
   'keeping-alive-complete': false,
@@ -48,8 +49,7 @@ const emptyProject = {
   'setting-free-recapturing': cloneDeep(emptyTextArea),
   'setting-free-rehabilitate': cloneDeep(emptyTextArea),
   'setting-free-socialise': cloneDeep(emptyTextArea),
-  'setting-free-vet': false,
-  'continued-use-2': false
+  'setting-free-vet': false
 };
 
 const textAreaWithText = (text) => {
@@ -81,14 +81,14 @@ describe('hasExistingDataForCheckbox', () => {
     assert.deepEqual(result, { checkboxValue: 'killed', hasData: true });
   });
 
-  it('should return true for "used-in-other-projects" if there is data in "continued-use-2"', () => {
+  it('should return true for "used-in-other-projects" if there is data in "continued-use-relevant-project"', () => {
     const project = set(
       cloneDeep(emptyProject),
       'protocols.0.continued-use-2',
       textAreaWithText('Relevant project')
     );
 
-    const result = hasExistingDataForCheckbox(project, 'continued-use-2');
+    const result = hasExistingDataForCheckbox(project, 'used-in-other-projects');
 
     assert.deepEqual(result, { checkboxValue: 'used-in-other-projects', hasData: true });
   });
