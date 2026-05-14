@@ -49,6 +49,12 @@ module.exports = ({ formId }) => {
           }
         }
 
+        if (roleType === ROLE_TYPES.pelh) {
+          if (req.form.validationErrors?.experience === 'required') {
+            req.form.validationErrors.experience = 'requiredPelh';
+          }
+        }
+
         next();
       },
       locals: (req, res, next) => {
