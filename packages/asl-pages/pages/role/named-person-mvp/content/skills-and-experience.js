@@ -72,6 +72,7 @@ module.exports = merge({}, baseContent, {
   errors: {
     experience: {
       required: 'Describe why they are suitable for the {{roleType}} role',
+      requiredNacwo: 'Describe how they demonstrate suitable expertise and training to minimise suffering and optimise the welfare of animals they are responsible for',
       requiredNtco: 'Describe how they demonstrate sufficient seniority to influence others and make decisions on training issues',
       requiredNio: 'Describe how they demonstrate expertise in sourcing, retrieving and storing relevant information',
       requiredNvs: 'Describe how they demonstrate expertise in the health and welfare of the species they will be responsible for',

@@ -43,6 +43,12 @@ module.exports = ({ formId }) => {
           }
         }
 
+        if (roleType === ROLE_TYPES.nacwo) {
+          if (req.form.validationErrors?.experience === 'required') {
+            req.form.validationErrors.experience = 'requiredNacwo';
+          }
+        }
+
         next();
       },
       locals: (req, res, next) => {
