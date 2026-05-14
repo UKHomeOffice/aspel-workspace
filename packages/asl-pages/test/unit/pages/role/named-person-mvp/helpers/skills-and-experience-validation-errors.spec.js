@@ -1,7 +1,7 @@
 const { describe, expect, it } = require('@jest/globals');
-const getValidationErrors = require('../../../../../../pages/role/named-person-mvp/helpers/skills-and-experience-validation-errors');
+const applyRoleSpecificValidationErrors = require('../../../../../../pages/role/named-person-mvp/helpers/skills-and-experience-validation-errors');
 
-describe('skillsAndExperienceValidationErrors', () => {
+describe('applyRoleSpecificValidationErrors', () => {
   it.each([
     ['NACWO', { experience: 'required' }, { experience: 'requiredNacwo' }],
     ['NIO', { experience: 'required' }, { experience: 'requiredNio' }],
@@ -10,7 +10,7 @@ describe('skillsAndExperienceValidationErrors', () => {
     ['SQP', { experience: 'required' }, { experience: 'requiredSqp' }],
     ['NTCO', { experience: 'required', communication: 'required' }, { experience: 'requiredNtco', communication: 'requiredNtco' }]
   ])('maps required errors for %s', (roleType, validationErrors, expected) => {
-    expect(getValidationErrors(roleType, validationErrors)).toEqual(expected);
+    expect(applyRoleSpecificValidationErrors(roleType, validationErrors)).toEqual(expected);
   });
 
   it('preserves unrelated validation errors', () => {
@@ -20,7 +20,7 @@ describe('skillsAndExperienceValidationErrors', () => {
       form: 'invalid'
     };
 
-    expect(getValidationErrors('NVS', validationErrors)).toEqual(validationErrors);
+    expect(applyRoleSpecificValidationErrors('NVS', validationErrors)).toEqual(validationErrors);
   });
 
   it('returns validation errors unchanged for roles with no remapping', () => {
@@ -28,6 +28,6 @@ describe('skillsAndExperienceValidationErrors', () => {
       experience: 'required'
     };
 
-    expect(getValidationErrors('NPRC', validationErrors)).toEqual(validationErrors);
+    expect(applyRoleSpecificValidationErrors('NPRC', validationErrors)).toEqual(validationErrors);
   });
 });

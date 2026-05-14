@@ -1,7 +1,7 @@
 const { form } = require('../../../common/routers');
 const { Router } = require('express');
 const schema = require('../schema').skillsAndExperience;
-const getValidationErrors = require('../helpers/skills-and-experience-validation-errors');
+const applyRoleSpecificValidationErrors = require('../helpers/skills-and-experience-validation-errors');
 
 module.exports = ({ formId }) => {
   const app = Router({ mergeParams: true });
@@ -14,7 +14,7 @@ module.exports = ({ formId }) => {
         next();
       },
       getValidationErrors: (req, res, next) => {
-        req.form.validationErrors = getValidationErrors(
+        req.form.validationErrors = applyRoleSpecificValidationErrors(
           req.session.form[formId].values.type,
           req.form.validationErrors
         );

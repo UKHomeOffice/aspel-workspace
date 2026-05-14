@@ -1,6 +1,6 @@
 const { ROLE_TYPES, normalizeRoleType } = require('../role-types');
 
-const roleFieldErrorMap = {
+const roleSpecificRequiredErrorMap = {
   [ROLE_TYPES.nacwo]: {
     experience: 'requiredNacwo'
   },
@@ -22,21 +22,23 @@ const roleFieldErrorMap = {
   }
 };
 
-module.exports = (roleType, validationErrors = {}) => {
+function applyRoleSpecificValidationErrors(roleType, validationErrors = {}) {
   const normalizedRoleType = normalizeRoleType(roleType);
-  const fieldMap = roleFieldErrorMap[normalizedRoleType];
+  const roleSpecificErrors = roleSpecificRequiredErrorMap[normalizedRoleType];
 
-  if (!fieldMap) {
+  if (!roleSpecificErrors) {
     return validationErrors;
   }
 
   const errors = { ...validationErrors };
 
-  for (const [field, errorKey] of Object.entries(fieldMap)) {
+  for (const [field, errorKey] of Object.entries(roleSpecificErrors)) {
     if (errors[field] === 'required') {
       errors[field] = errorKey;
     }
   }
 
   return errors;
-};
+}
+
+module.exports = applyRoleSpecificValidationErrors;
