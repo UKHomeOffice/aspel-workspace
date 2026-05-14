@@ -83,8 +83,8 @@ describe('hasExistingDataForCheckbox', () => {
   it('should return true for "used-in-other-projects" if there is data in "continued-use-relevant-project"', () => {
     const project = set(
       cloneDeep(emptyProject),
-      'protocols.0.continued-use-relevant-project',
-      textAreaWithText('Relevant project')
+      'protocols.0.fate',
+      ['continued-use-2']
     );
 
     const result = hasExistingDataForCheckbox(project, 'used-in-other-projects');
