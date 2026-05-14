@@ -37,6 +37,12 @@ module.exports = ({ formId }) => {
           }
         }
 
+        if (roleType === ROLE_TYPES.nvs) {
+          if (req.form.validationErrors?.experience === 'required') {
+            req.form.validationErrors.experience = 'requiredNvs';
+          }
+        }
+
         next();
       },
       locals: (req, res, next) => {
