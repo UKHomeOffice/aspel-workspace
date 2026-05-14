@@ -20,9 +20,14 @@ module.exports = ({ formId }) => {
           if (req.form.validationErrors?.experience === 'required') {
             req.form.validationErrors.experience = 'requiredNtco';
           }
-
           if (req.form.validationErrors?.communication === 'required') {
             req.form.validationErrors.communication = 'requiredNtco';
+          }
+        }
+
+        if (roleType === ROLE_TYPES.nio) {
+          if (req.form.validationErrors?.experience === 'required') {
+            req.form.validationErrors.experience = 'requiredNio';
           }
         }
 

@@ -11,12 +11,10 @@ module.exports = merge({}, baseContent, {
     [ROLE_TYPES.nacwo]: {
       desc: 'Describe how {{profile.firstName}} demonstrates the following skills and experience:',
       experience: {
-        label: 'Suitable expertise and training to minimise suffering and optimise the welfare of animals they are responsible for',
-        hint: 'State if this is covered by mandatory training modules PILA, L, E1 and E2'
+        label: 'Suitable expertise and training to minimise suffering and optimise the welfare of animals they are responsible for'
       },
       authority: {
-        label: 'Appropriate personal and managerial authority to promote high standards',
-        hint: 'For example, they are managing a service, area or team of animal technicians'
+        label: 'Appropriate personal and managerial authority to promote high standards'
       },
       skills: {
         label: 'Good communication and diplomacy skills to champion a culture of care among both scientific and husbandry staff'
@@ -35,16 +33,13 @@ module.exports = merge({}, baseContent, {
     [ROLE_TYPES.nio]: {
       desc: 'Describe how {{profile.firstName}} demonstrates the following skills and experience:',
       understanding: {
-        label: 'A good understanding of legal and ethical aspects of use of animals for scientific purposes',
-        hint: 'State if they have completed training modules L and E1'
+        label: 'A good understanding of legal and ethical aspects of use of animals for scientific purposes'
       },
       familiarity: {
-        label: 'Familiarity with the concept, principles and potential applications of the 3Rs',
-        hint: 'State if they have completed training module E2'
+        label: 'Familiarity with the concept, principles and potential applications of the 3Rs'
       },
       experience: {
-        label: 'Expertise in sourcing, retrieving and storing relevant information',
-        hint: 'For example, in a previous librarian role'
+        label: 'Expertise in sourcing, retrieving and storing relevant information'
       },
       communication: {
         label: 'Good communication and networking skills'
@@ -78,6 +73,7 @@ module.exports = merge({}, baseContent, {
     experience: {
       required: 'Describe why they are suitable for the {{roleType}} role',
       requiredNtco: 'Describe how they demonstrate sufficient seniority to influence others and make decisions on training issues',
+      requiredNio: 'Describe how they demonstrate expertise in sourcing, retrieving and storing relevant information',
       lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
     },
     authority: {
