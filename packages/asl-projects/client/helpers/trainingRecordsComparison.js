@@ -1,3 +1,5 @@
+import { findArrayDifferences } from './array-diff';
+
 /**
  * Compare training records across versions and detect new, removals, and changes.
  * Compare current version with previous - pink
@@ -74,8 +76,9 @@ export function compareTrainingRecords(current = [], trainingHistory = {}) {
 
       // array fields (modules, species)
       if (Array.isArray(a) && Array.isArray(b)) {
-        const added = a.filter(x => !b.includes(x));
-        const removed = b.filter(x => !a.includes(x));
+        const arrayDiff = findArrayDifferences(b, a);
+        const added = arrayDiff.added[1]?.value || [];
+        const removed = arrayDiff.removed[1]?.value || [];
         if (added.length || removed.length) diff[key] = { added, removed };
       } else if (a !== b) {
         diff[key] = { old: b, new: a };
