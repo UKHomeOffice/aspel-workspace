@@ -29,8 +29,7 @@ const emptyProject = {
   'protocols': [
     {
       'method-and-justification': cloneDeep(emptyTextArea),
-      'continued-use-relevant-project': cloneDeep(emptyTextArea),
-      'fate' : [ 'continued-use-2' ]
+      'continued-use-relevant-project': cloneDeep(emptyTextArea)
     }
   ],
   'keeping-alive-complete': false,
@@ -84,8 +83,8 @@ describe('hasExistingDataForCheckbox', () => {
   it('should return true for "used-in-other-projects" if there is data in "continued-use-relevant-project"', () => {
     const project = set(
       cloneDeep(emptyProject),
-      'protocols.0.fate.continued-use-2',
-      true
+      'protocols.0.fate',
+      ['continued-use-2']
     );
 
     const result = hasExistingDataForCheckbox(project, 'used-in-other-projects');
