@@ -77,6 +77,7 @@ module.exports = merge({}, baseContent, {
   errors: {
     experience: {
       required: 'Describe why they are suitable for the {{roleType}} role',
+      requiredNtco: 'Describe how they demonstrate sufficient seniority to influence others and make decisions on training issues',
       lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
     },
     authority: {
@@ -97,6 +98,7 @@ module.exports = merge({}, baseContent, {
     },
     communication: {
       required: 'Describe how they demonstrate good communication and networking skills',
+      requiredNtco: 'Describe how they demonstrate good communication, management and organisational skills',
       lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
     },
     default: {

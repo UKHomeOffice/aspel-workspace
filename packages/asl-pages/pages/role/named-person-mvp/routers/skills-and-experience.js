@@ -1,6 +1,7 @@
 const { form } = require('../../../common/routers');
 const { Router } = require('express');
 const schema = require('../schema').skillsAndExperience;
+const { ROLE_TYPES, normalizeRoleType } = require('../role-types');
 
 module.exports = ({ formId }) => {
   const app = Router({ mergeParams: true });
@@ -10,6 +11,21 @@ module.exports = ({ formId }) => {
       configure(req, res, next) {
         const roleType = req.session.form[formId].values.type;
         req.form.schema = schema(roleType);
+        next();
+      },
+      getValidationErrors: (req, res, next) => {
+        const roleType = normalizeRoleType(req.session.form[formId].values.type);
+
+        if (roleType === ROLE_TYPES.ntco) {
+          if (req.form.validationErrors?.experience === 'required') {
+            req.form.validationErrors.experience = 'requiredNtco';
+          }
+
+          if (req.form.validationErrors?.communication === 'required') {
+            req.form.validationErrors.communication = 'requiredNtco';
+          }
+        }
+
         next();
       },
       locals: (req, res, next) => {
