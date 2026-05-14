@@ -34,7 +34,7 @@ const protocolHasDataForValue = (checkboxValue) => (protocol) => {
     case 'killed':
       return checkField(protocol['method-and-justification']);
     case 'used-in-other-projects':
-      return checkField(protocol['continued-use-relevant-project']);
+      return Array.isArray(protocol['fate']) && protocol['fate'].includes('continued-use-2');
     default:
       return false;
   }

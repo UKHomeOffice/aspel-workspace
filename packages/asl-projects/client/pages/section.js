@@ -10,7 +10,6 @@ import RaSidePanel from '../components/ra-side-panel';
 import RAHint from '../components/ra-hint';
 import Readonly from './readonly';
 import { getSubsections } from '../schema';
-import StandardProtocols from './sections/standard-protocols';
 
 const mapStateToProps = (
   {
@@ -29,28 +28,9 @@ const mapStateToProps = (
     }
   }
 ) => {
+  const section = getSubsections(schemaVersion)[params.section];
 
-  const subsections = getSubsections(schemaVersion);
-
-/**
-* all the folders in section are loaded:
- * pages/sections/[%] = section
- * We are overriding.
-* */
-  const schemaSectionKey = params.section === 'standard-protocol'
-    ? 'protocols'
-    : params.section;
-
-  const section = subsections[schemaSectionKey] || {};
-
-  const component = params.section === 'standard-protocol'
-    ? StandardProtocols
-    : section.component;
-
-  // Keep section name as 'protocol' for UI
-  const sectionName =  params.section === 'standard-protocol'
-    ? 'protocol'
-    : params.section;
+  section.fields = section.fields || [];
 
   return {
     isLegacy: schemaVersion === 0,
@@ -59,12 +39,11 @@ const mapStateToProps = (
     establishment,
     readonly,
     step: parseInt(params.step, 10) || 0,
-    section: sectionName,
+    section: params.section,
     ...section,
     options: section,
     isGranted,
-    actualProject,
-    component,
+    actualProject
   };
 };
 
@@ -114,7 +93,7 @@ class Section extends React.Component {
               <Component
                 { ...this.props }
                 title={ title }
-                section={ section}
+                section={ section }
                 save={(data, value) => {
                   if (typeof data === 'string') {
                     data = { [data]: value };

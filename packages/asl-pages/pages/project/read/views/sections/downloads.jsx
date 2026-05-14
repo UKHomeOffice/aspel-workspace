@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { format } from 'date-fns';
 import capitalize from 'lodash/capitalize';
 import sortBy from 'lodash/sortBy';
 import { dateFormat } from '../../../../../constants';
+import { formatDate } from '../../../../../lib/utils';
 import { Link, Snippet, Inset } from '@ukhomeoffice/asl-components';
 import Subsection from '../components/subsection';
 import HBA from '../components/hba';
@@ -27,13 +27,12 @@ function DownloadSection({ project, version, canReplaceHBA }) {
 
   const grantedVersions = sortBy(
     project.versions.filter((v) => v.status === 'granted'),
-    'updatedAt'
+    ['updatedAt', 'createdAt']
   );
-  const isSuperseded =
-    isGranted && project.granted.createdAt > version.createdAt;
   const versionIndex = grantedVersions.map((v) => v.id).indexOf(version.id);
   const isFirstVersion = versionIndex === 0;
-  const nextVersion = grantedVersions[versionIndex + 1];
+  const nextVersion = versionIndex > -1 ? grantedVersions[versionIndex + 1] : null;
+  const isSuperseded = isGranted && !!nextVersion;
 
   let startDate = project.amendedDate || project.issueDate;
   let endDate;
@@ -63,7 +62,7 @@ function DownloadSection({ project, version, canReplaceHBA }) {
           </h2>
           <h3>
             <Snippet
-              started={format(startDate, dateFormat.long)}
+              started={formatDate(startDate, dateFormat.long)}
             >{`downloads.${downloadType}.subHeading`}</Snippet>
           </h3>
 
@@ -109,8 +108,8 @@ function DownloadSection({ project, version, canReplaceHBA }) {
           {isSuperseded ? (
             <h3>
               <Snippet
-                start={format(startDate, dateFormat.long)}
-                end={format(endDate, dateFormat.long)}
+                start={formatDate(startDate, dateFormat.long)}
+                end={formatDate(endDate, dateFormat.long)}
               >
                 downloads.superseded.subHeading
               </Snippet>
@@ -126,8 +125,8 @@ function DownloadSection({ project, version, canReplaceHBA }) {
                   </h2>
                   <h3>
                     <Snippet
-                      start={format(startDate, dateFormat.long)}
-                      end={format(endDate, dateFormat.long)}
+                      start={formatDate(startDate, dateFormat.long)}
+                      end={formatDate(endDate, dateFormat.long)}
                     >
                       downloads.expired.subHeading
                     </Snippet>
@@ -139,7 +138,7 @@ function DownloadSection({ project, version, canReplaceHBA }) {
                     <Snippet>downloads.granted.heading</Snippet>
                   </h2>
                   <h3>
-                    <Snippet granted={format(startDate, dateFormat.long)}>
+                    <Snippet granted={formatDate(startDate, dateFormat.long)}>
                       downloads.granted.subHeading
                     </Snippet>
                   </h3>

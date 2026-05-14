@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
-export default function Details({ summary, children, className, id, dynamicShow = false }) {
+export default function Details({ summary, children, className, id }) {
     const [open, setOpen] = useState(false);
 
     const toggle = useCallback(
@@ -20,10 +20,6 @@ export default function Details({ summary, children, className, id, dynamicShow 
         [toggle]
     );
 
-    const actionText = open ? 'Hide' : 'Show';
-
-    const summaryTitle = dynamicShow ? `${actionText} ${summary}` : summary;
-
     return (
         <details
             className={className}
@@ -39,7 +35,7 @@ export default function Details({ summary, children, className, id, dynamicShow 
                 onClick={toggle}
                 onKeyDown={toggleOnActivation}
             >
-                {summaryTitle}
+                {summary}
             </summary>
             <div
                 id={`${id}-content`}

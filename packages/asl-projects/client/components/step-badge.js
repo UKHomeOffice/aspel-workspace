@@ -8,38 +8,38 @@ export default function StepBadge(props) {
     return null;
   }
 
-  const collectSteps = (protocols = []) => {
-    let index = -1;
-    const ids = [];
-
-    if (!Array.isArray(protocols)) {
-      return { index, ids };
-    }
-
-    protocols.forEach((protocol, protocolIndex) => {
-
-      if (!Array.isArray(protocol)) {
-        return;
+  let stepIds = [];
+  let previousIndex = -1;
+  steps.forEach(protocol => {
+    protocol.forEach((step, i) => {
+      if (step.id === props.fields.id && props.position !== i) {
+        previousIndex = i;
       }
-
-      protocol.forEach((step, i) => {
-
-        if (step?.id === props.fields.id && props.position !== i) {
-          index = i;
-        }
-
-        if (step?.id) {
-          ids.push(step.id);
-        }
-      });
+      stepIds.push(step.id);
     });
+  });
 
-    return { index, ids };
-  };
+  let grantedIndex = -1;
+  let grantedStepIds = [];
+  grantedSteps.forEach(protocol => {
+    protocol.forEach((step, i) => {
+      if (step.id === props.fields.id && props.position !== i) {
+        grantedIndex = i;
+      }
+      grantedStepIds.push(step.id);
+    });
+  });
 
-  const { index: previousIndex, ids: stepIds } = collectSteps(steps);
-  const { index: grantedIndex, ids: grantedStepIds } = collectSteps(grantedSteps);
-  const { index: firstIndex, ids: firstStepIds } = collectSteps(firstSteps);
+  let firstIndex = -1;
+  let firstStepIds = [];
+  firstSteps.forEach(protocol => {
+    protocol.forEach((step, i) => {
+      if (step.id === props.fields.id && props.position !== i) {
+        firstIndex = i;
+      }
+      firstStepIds.push(step.id);
+    });
+  });
 
   const field = props.changeFieldPrefix.substr(0, props.changeFieldPrefix.length - 1)
 
