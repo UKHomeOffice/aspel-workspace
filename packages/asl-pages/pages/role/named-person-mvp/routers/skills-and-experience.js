@@ -1,7 +1,7 @@
 const { form } = require('../../../common/routers');
 const { Router } = require('express');
 const schema = require('../schema').skillsAndExperience;
-const { ROLE_TYPES, normalizeRoleType } = require('../role-types');
+const getValidationErrors = require('../helpers/skills-and-experience-validation-errors');
 
 module.exports = ({ formId }) => {
   const app = Router({ mergeParams: true });
@@ -14,47 +14,10 @@ module.exports = ({ formId }) => {
         next();
       },
       getValidationErrors: (req, res, next) => {
-        const roleType = normalizeRoleType(req.session.form[formId].values.type);
-
-        if (roleType === ROLE_TYPES.ntco) {
-          if (req.form.validationErrors?.experience === 'required') {
-            req.form.validationErrors.experience = 'requiredNtco';
-          }
-          if (req.form.validationErrors?.communication === 'required') {
-            req.form.validationErrors.communication = 'requiredNtco';
-          }
-        }
-
-        if (roleType === ROLE_TYPES.nio) {
-          if (req.form.validationErrors?.experience === 'required') {
-            req.form.validationErrors.experience = 'requiredNio';
-          }
-        }
-
-        if (roleType === ROLE_TYPES.sqp) {
-          if (req.form.validationErrors?.experience === 'required') {
-            req.form.validationErrors.experience = 'requiredSqp';
-          }
-        }
-
-        if (roleType === ROLE_TYPES.nvs) {
-          if (req.form.validationErrors?.experience === 'required') {
-            req.form.validationErrors.experience = 'requiredNvs';
-          }
-        }
-
-        if (roleType === ROLE_TYPES.nacwo) {
-          if (req.form.validationErrors?.experience === 'required') {
-            req.form.validationErrors.experience = 'requiredNacwo';
-          }
-        }
-
-        if (roleType === ROLE_TYPES.pelh) {
-          if (req.form.validationErrors?.experience === 'required') {
-            req.form.validationErrors.experience = 'requiredPelh';
-          }
-        }
-
+        req.form.validationErrors = getValidationErrors(
+          req.session.form[formId].values.type,
+          req.form.validationErrors
+        );
         next();
       },
       locals: (req, res, next) => {
