@@ -74,6 +74,7 @@ module.exports = merge({}, baseContent, {
       required: 'Describe why they are suitable for the {{roleType}} role',
       requiredNtco: 'Describe how they demonstrate sufficient seniority to influence others and make decisions on training issues',
       requiredNio: 'Describe how they demonstrate expertise in sourcing, retrieving and storing relevant information',
+      requiredSqp: 'Describe how they demonstrate proven expertise in the health and welfare of the species held and the procedures carried out at the establishment',
       lessThanOrEqualToMaxWordCount: 'Your description must be 300 words or less'
     },
     authority: {
