@@ -6,6 +6,28 @@ import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 
 const species = flatten(values(SPECIES));
 
+const isImportExportRequired = project => {
+    const nopes = [
+      'mice',
+      'rats',
+      'guinea-pigs',
+      'hamsters',
+      // legacy
+      'hamsters-syrian',
+      // legacy
+      'hamsters-chinese',
+      'gerbils',
+      'other-rodents',
+      // legacy
+      'xenopus',
+      'common-frogs',
+      'african-frogs',
+      'zebra-fish'
+    ];
+    return (!!intersection(nopes, project.species).length || !!intersection(nopes.map(n => (species.find(s => s.value === n) || {}).label), project['species-other']).length) &&
+      some(project.protocols, protocol => protocol.gaas);
+}
+
 export default {
   protocol: {
     nmbas: {
@@ -203,28 +225,27 @@ Genetically altered animals may not be re-homed.`
         }
       ]
     },
+
+    transferImport: {
+      include: project => isImportExportRequired(project),
+      type: 'authorisation',
+      versions: [
+        {
+          title: 'Importing genetically altered animals from outside Great Britain',
+          content: `
+1. Where possible, you should import tissues, gametes or embryos instead of living animals to meet the project’s scientific objectives.
+2. You may import genetically altered (GA) rodents, fish and frogs and their controls for use under this project licence from recognised lab animal breeders or scientific establishments outside Great Britain, provided that all the following apply:
+    1. the establishment has tried to obtain animals from licensed establishments in Great Britain, but such animals are not available or not suitable for the purpose
+    2. you will only use the imported animals for meeting this project’s scientific objectives
+    3. transfer complies with all relevant regulations on the welfare of animals during transport and regulations on importing animals
+    4. a competent person will inspect animals before and after transfer
+    5. you will immediately report any animal welfare issues relating to transfer to ASRU Licensing: [asrulicensing@homeoffice.gov.uk](mailto:asrulicensing@homeoffice.gov.uk)
+6. You must record the details of each transfer in a structured format agreed in advance with ASRU. You must make these records available to ASRU on request.`
+        }
+      ]
+    },
     transfer: {
-      include: project => {
-        const nopes = [
-          'mice',
-          'rats',
-          'guinea-pigs',
-          'hamsters',
-          // legacy
-          'hamsters-syrian',
-          // legacy
-          'hamsters-chinese',
-          'gerbils',
-          'other-rodents',
-          // legacy
-          'xenopus',
-          'common-frogs',
-          'african-frogs',
-          'zebra-fish'
-        ];
-        return (!!intersection(nopes, project.species).length || !!intersection(nopes.map(n => (species.find(s => s.value === n) || {}).label), project['species-other']).length) &&
-          some(project.protocols, protocol => protocol.gaas);
-      },
+      include: project => isImportExportRequired(project),
       type: 'authorisation',
       versions: [
         {
@@ -237,6 +258,17 @@ Genetically altered animals may not be re-homed.`
 4. Animals will be inspected by a competent person before transfer; and
 5. A veterinary surgeon will confirm that he/she is not aware of any reason why these animals might suffer by virtue of the fact of being moved to another recognised scientific establishment.
 6. Any transport related problems with the welfare of the animals will be notified to the Home Office promptly.`
+        },
+        {
+          title: 'Exporting genetically altered animals outside Great Britain (transfer)',
+          content: `
+1. Where possible, you should export tissues, gametes or embryos instead of living animals.
+2. You may export genetically altered (GA) rodents, fish and frogs and their controls used under this project licence to recognised scientific establishments outside Great Britain, provided that all the following apply:
+    1. the receiving establishment has a scientific requirement for GA animals of the same type
+    2. transfer complies with all relevant regulations on the welfare of animals during transport and regulations on exporting animals
+    3. a competent person will inspect animals before and after transfer
+    4. a vet will confirm that these animals are unlikely to suffer due to transfer
+    5. you will immediately report any animal welfare issues relating to transfer to ASRU Licensing: [asrulicensing@homeoffice.gov.uk](mailto:asrulicensing@homeoffice.gov.uk)`
         }
       ]
     },
@@ -370,32 +402,32 @@ For studies requested for other worldwide authorities, for example the US Food a
           title: 'Antibody production',
           content: `\
 1.  You must not use living animals to produce antibodies as part of this project unless you have prior approval from the AWERB.
-    
+
     You must request approval on a case-by-case basis for each antibody - giving a robust, legitimate scientific rationale to explain why non-animal alternatives are not suitable
-      
-2.  You must submit an annual project report to AWERB by 31 December each year for the duration of the project licence. The report should include the following information: 
-    1.  each antibody produced using living animals 
-    2.  the current state of knowledge in the relevant area of scientific research 
-    3.  any validated non-animal alternatives already available 
-    4.  any identically active antibodies or alternative binding or affinity reagents already available, either commercially or through other means 
-    5.  why existing antibodies or reagents are unsuitable and why it’s necessary to produce an antibody using living animals 
-    6.  the scientific rationale for producing each antibody using living animals, for example: 
-        1. a statement that you’ve tried to use a non-animal alternative and this approach has failed, including the scientific reasons why  
-        2. a statement that extrapolation of existing data strongly indicates that a non-animal antibody alternative is highly unlikely to be suitable 
-        3. a statement that the target epitope does not bind to non-animal alternatives 
+
+2.  You must submit an annual project report to AWERB by 31 December each year for the duration of the project licence. The report should include the following information:
+    1.  each antibody produced using living animals
+    2.  the current state of knowledge in the relevant area of scientific research
+    3.  any validated non-animal alternatives already available
+    4.  any identically active antibodies or alternative binding or affinity reagents already available, either commercially or through other means
+    5.  why existing antibodies or reagents are unsuitable and why it’s necessary to produce an antibody using living animals
+    6.  the scientific rationale for producing each antibody using living animals, for example:
+        1. a statement that you’ve tried to use a non-animal alternative and this approach has failed, including the scientific reasons why
+        2. a statement that extrapolation of existing data strongly indicates that a non-animal antibody alternative is highly unlikely to be suitable
+        3. a statement that the target epitope does not bind to non-animal alternatives
         4. discussion of availability and timeliness of non-animal antibody alternatives - this may be particularly relevant for therapeutic applications or where there is a scientific urgency (for example, global infectious disease pandemics where there is a need for a new diagnostic)
-        
-        Note: The regulator will not accept cost or convenience as reasons why you haven’t developed or used non-animal alternatives to produce antibodies (or used a third party) 
-    7.  the animal models and numbers, antigen(s) and methods you’ve used during this project 
-    8.  any specific problems you’ve addressed 
-    9.  how the antibody will be used 
-    10. who or what is likely to benefit - and how - in the short, medium and longer term 
-    11. why the adjuvants, techniques and administration routes you’ve used are the most appropriate and refined 
-    12. how you’re keeping up to date with advances in the 3Rs, and implementing these advances effectively 
-    13. how you’ve used 3Rs learnings from previous projects 
-    14. how you’ll refine the procedures to minimise potential harm to animals 
-    
-3. You must share any project reports and AWERB review outcomes with ASRU when requested 
+
+        Note: The regulator will not accept cost or convenience as reasons why you haven’t developed or used non-animal alternatives to produce antibodies (or used a third party)
+    7.  the animal models and numbers, antigen(s) and methods you’ve used during this project
+    8.  any specific problems you’ve addressed
+    9.  how the antibody will be used
+    10. who or what is likely to benefit - and how - in the short, medium and longer term
+    11. why the adjuvants, techniques and administration routes you’ve used are the most appropriate and refined
+    12. how you’re keeping up to date with advances in the 3Rs, and implementing these advances effectively
+    13. how you’ve used 3Rs learnings from previous projects
+    14. how you’ll refine the procedures to minimise potential harm to animals
+
+3. You must share any project reports and AWERB review outcomes with ASRU when requested
 `
         }
       ]
