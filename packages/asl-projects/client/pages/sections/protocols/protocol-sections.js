@@ -70,8 +70,11 @@ class ProtocolSections extends PureComponent {
       newComments,
       readonly,
       schemaVersion,
-      project
+      project,
+      standardProtocolsEnabled
     } = this.props;
+
+    const isStandardProtocol = standardProtocolsEnabled && values.isStandardProtocol === true;
 
     const isLegacy = schemaVersion === 0;
 
@@ -96,7 +99,7 @@ class ProtocolSections extends PureComponent {
         {
           !values.deleted && (
             <Fragment>
-              <StandardProtocolBadge values={values} />
+              {isStandardProtocol && <StandardProtocolBadge values={values} />}
               <ReorderedBadge id={values.id} />
               <ChangedBadge primaryField={`protocols.${values.id}`} protocolId={values.id} />
             </Fragment>
@@ -166,13 +169,15 @@ class ProtocolSections extends PureComponent {
                     onChange={this.setCompleted}
                     buttonClassName="button-secondary"
                   />
-                  <p>
-                    <span>Reorder: <a href="#" disabled={index === 0} onClick={this.moveUp}>Up</a> or <a href="#" disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
-                    <span> │ </span>
-                    <a href="#" onClick={this.props.duplicateItem}>Duplicate protocol</a>
-                    <span> │ </span>
-                    <a href="#" onClick={this.delete}>Remove protocol</a>
-                  </p>
+                  {!isStandardProtocol && (
+                    <p>
+                      <span>Reorder: <a href="#" disabled={index === 0} onClick={this.moveUp}>Up</a> or <a href="#" disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
+                      <span> │ </span>
+                      <a href="#" onClick={this.props.duplicateItem}>Duplicate protocol</a>
+                      <span> │ </span>
+                      <a href="#" onClick={this.delete}>Remove protocol</a>
+                    </p>
+                  )}
                 </Fragment>
               )
             }

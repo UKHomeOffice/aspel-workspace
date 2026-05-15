@@ -75,6 +75,11 @@ function calculateNewCheckboxValues(values, toggledValue, options) {
   return [withoutExclusives, withoutExclusives.length <= values.length];
 }
 
+function resolveTemplateContent(template, props) {
+  const resolved = typeof template === 'function' ? template(props) : template;
+  return typeof resolved === 'string' ? Mustache.render(resolved, props) : resolved;
+}
+
 class Field extends Component {
 
   state = {
@@ -136,8 +141,8 @@ class Field extends Component {
 
     let { label, hint } = this.props.altLabels ? this.props.alt : this.props;
 
-    label = typeof label === 'string' ? Mustache.render(label, this.props) : label;
-    hint = typeof hint === 'string' ? Mustache.render(hint, this.props) : hint;
+    label = resolveTemplateContent(label, this.props);
+    hint = resolveTemplateContent(hint, this.props);
 
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;

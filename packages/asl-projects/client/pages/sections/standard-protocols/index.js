@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import SectionsLink from '../../../components/sections-link';
 
-export default function StandardProtocols({ ...props }) {
+export default function StandardProtocols() {
   const history = useHistory();
   const [selection, setSelection] = useState('');
 
@@ -27,7 +27,7 @@ export default function StandardProtocols({ ...props }) {
 
         break;
       case 'editable':
-        history.push('/protocols', {
+        history.push('/editable-ga-breeding', {
           createProtocolType: selection
         });
         break;
@@ -43,7 +43,6 @@ export default function StandardProtocols({ ...props }) {
 
   return (
     <div className="govuk-grid-column-full">
-      <SectionsLink />
       <h1 className="govuk-heading-l govuk-!-margin-bottom-6">Add a protocol</h1>
 
       <div className="govuk-!-margin-bottom-8">

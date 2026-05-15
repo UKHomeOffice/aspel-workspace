@@ -18,6 +18,20 @@ import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared
 export default (application, sections, values, updateImageDimensions) => {
   const document = new Document();
 
+  const renderTemplate = (template, context) => {
+    const resolved = typeof template === 'function' ? template(context) : template;
+
+    if (typeof resolved === 'string') {
+      return Mustache.render(resolved, context);
+    }
+
+    if (typeof resolved === 'number' || typeof resolved === 'boolean') {
+      return `${resolved}`;
+    }
+
+    return '';
+  };
+
   const tableToMatrix = table => {
     const rows = table.nodes;
     let rowspans = [];
@@ -404,12 +418,14 @@ export default (application, sections, values, updateImageDimensions) => {
     }
 
     const context = { ...field, values };
-    const renderedLabel = Mustache.render(field.review || field.label || '', context);
+    const renderedLabel = renderTemplate(field.review || field.label || '', context);
     doc.createParagraph(renderedLabel).style('Question');
 
     if (field.hint) {
-      const renderedHint = Mustache.render(field.hint, context);
-      renderMarkdown(doc, renderedHint, 'aside');
+      const renderedHint = renderTemplate(field.hint, context);
+      if (renderedHint) {
+        renderMarkdown(doc, renderedHint, 'aside');
+      }
     }
 
     switch (field.type) {
