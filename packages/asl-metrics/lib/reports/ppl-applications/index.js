@@ -1,5 +1,6 @@
 const { bankHolidays } = require('@ukhomeoffice/asl-constants');
 const moment = require('moment-business-time');
+const { keyBy } = require('lodash');
 const getDeadline = require('./get-deadline');
 
 // configure bank holidays
@@ -13,11 +14,44 @@ const formatTime = time => {
 
 module.exports = ({ db, query: params, flow }) => {
 
+  let projectsPromise;
+
+  const getProjects = () => {
+    if (!projectsPromise) {
+      projectsPromise = db.asl('projects')
+        .select(
+          'projects.*',
+          'establishments.name',
+          'profiles.first_name',
+          'profiles.last_name'
+        )
+        .leftJoin('establishments', 'projects.establishment_id', 'establishments.id')
+        .leftJoin('profiles', 'projects.licence_holder_id', 'profiles.id')
+        .where('projects.issue_date', '>', '2019-07-31')
+        .then(projects => keyBy(projects, 'id'));
+    }
+
+    return projectsPromise;
+  };
+
   const query = () => {
     return db.flow('cases')
       .select([
         'cases.*',
-        db.flow.raw('JSON_AGG(activity_log.*) as activity')
+        db.flow.raw(`
+          COALESCE(
+            JSON_AGG(
+              JSON_BUILD_OBJECT(
+                'event_name', activity_log.event_name,
+                'created_at', activity_log.created_at,
+                'comment', activity_log.comment,
+                'event', activity_log.event
+              )
+              ORDER BY activity_log.created_at
+            ) FILTER (WHERE activity_log.id IS NOT NULL),
+            '[]'::json
+          ) as activity
+        `)
       ])
       .leftJoin('activity_log', 'cases.id', 'activity_log.case_id')
       .whereRaw(`cases.data->>'model' = 'project'`)
@@ -60,19 +94,10 @@ module.exports = ({ db, query: params, flow }) => {
       last = moment(log.created_at).valueOf();
     });
 
-    return db.asl('projects')
-      .select(
-        'projects.*',
-        'establishments.name',
-        'profiles.first_name',
-        'profiles.last_name'
-      )
-      .leftJoin('establishments', 'projects.establishment_id', 'establishments.id')
-      .leftJoin('profiles', 'projects.licence_holder_id', 'profiles.id')
-      .where({ 'projects.id': record.data.id })
-      .where('projects.issue_date', '>', '2019-07-31')
-      .first()
-      .then(project => {
+    return getProjects()
+      .then(projects => {
+        const project = projects[record.data.id];
+
         // ignore PPLs which have had their issue date changed to pre-aspel
         if (!project) {
           return [];
