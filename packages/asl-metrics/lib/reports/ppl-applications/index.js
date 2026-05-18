@@ -20,7 +20,11 @@ module.exports = ({ db, query: params, flow }) => {
     if (!projectsPromise) {
       projectsPromise = db.asl('projects')
         .select(
-          'projects.*',
+          'projects.id',
+          'projects.title',
+          'projects.licence_number',
+          'projects.created_at',
+          'projects.issue_date',
           'establishments.name',
           'profiles.first_name',
           'profiles.last_name'
