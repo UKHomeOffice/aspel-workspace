@@ -36,17 +36,8 @@ export const hydrateSteps = (protocols, steps, reusableSteps) => {
   return [hydratedSteps, Object.values(reusableSteps)];
 };
 
-export const removeNewDeleted = (steps, previousSteps) => {
-  let oldSteps = [];
-  previousSteps.forEach(protocol => {
-    protocol.forEach(step => oldSteps.push(step.id));
-  });
-  return (steps || []).filter(p => {
-    if (p.deleted === true) {
-      return !!oldSteps.includes(p.id);
-    }
-    return true;
-  });
+export const removeNewDeleted = (steps) => {
+  return steps || [];
 };
 
 export const addDeletedReusableSteps = (steps, previousSteps, reusableSteps) => {

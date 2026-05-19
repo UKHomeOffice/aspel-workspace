@@ -10,6 +10,7 @@ import { Markdown } from '@ukhomeoffice/asl-components';
 import ErrorBoundary from './error-boundary';
 import classnames from 'classnames';
 import Mustache from 'mustache';
+import ReactMarkdown from 'react-markdown';
 import { FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
 
 const resolveTemplateContent = (template, props) => {
@@ -22,6 +23,16 @@ const stringifyReviewText = value => {
     return `${value}`;
   }
   return '';
+};
+
+const renderInlineMarkdown = value => {
+  const text = stringifyReviewText(value);
+  if (!text) {
+    return text;
+  }
+
+  const looksLikeMarkdown = (text.includes('[') && text.includes('](')) || text.includes('\n');
+  return looksLikeMarkdown ? <ReactMarkdown components={{ p: 'span' }}>{text}</ReactMarkdown> : text;
 };
 
 class Review extends React.Component {
@@ -75,7 +86,7 @@ class Review extends React.Component {
       />;
     }
 
-    const displayedLabel = stringifyReviewText(resolveTemplateContent(review || label || '', this.props));
+    const displayedLabel = renderInlineMarkdown(resolveTemplateContent(review || label || '', this.props));
 
     return (
       <div className={classnames('review', this.props.className)}>

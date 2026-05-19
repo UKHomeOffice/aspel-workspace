@@ -80,6 +80,15 @@ function resolveTemplateContent(template, props) {
   return typeof resolved === 'string' ? Mustache.render(resolved, props) : resolved;
 }
 
+function renderMarkdownIfNeeded(content) {
+  if (typeof content !== 'string') {
+    return content;
+  }
+
+  const looksLikeMarkdown = (content.includes('[') && content.includes('](')) || content.includes('\n');
+  return looksLikeMarkdown ? <ReactMarkdown>{content}</ReactMarkdown> : content;
+}
+
 class Field extends Component {
 
   state = {
@@ -108,7 +117,17 @@ class Field extends Component {
   }
 
   mapOptions(options = []) {
-    return options.filter(Boolean).map(option => {
+    return options
+      .filter(opt => {
+        if (!opt) {
+          return false;
+        }
+        if (typeof opt.show === 'function') {
+          return opt.show(this.props.values);
+        }
+        return opt.show === undefined || Boolean(opt.show);
+      })
+      .map(option => {
       if (!option.reveal) {
         return option;
       }
@@ -138,11 +157,14 @@ class Field extends Component {
       return null;
     }
     const { value } = this.state;
+    const type = typeof this.props.type === 'function' ? this.props.type(this.props.values || this.props) : this.props.type;
 
     let { label, hint } = this.props.altLabels ? this.props.alt : this.props;
 
     label = resolveTemplateContent(label, this.props);
     hint = resolveTemplateContent(hint, this.props);
+    label = renderMarkdownIfNeeded(label);
+    hint = renderMarkdownIfNeeded(hint);
 
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
@@ -151,10 +173,10 @@ class Field extends Component {
     if (this.props.fallbackLink && this.props.options && !this.props.options.length) {
       return <a href={this.props.fallbackLink.url}>{this.props.fallbackLink.label}</a>;
     }
-    if (this.props.type === 'animal-quantities') {
+    if (type === 'animal-quantities') {
       return <AnimalQuantities {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'species-selector') {
+    if (type === 'species-selector') {
       return <SpeciesSelector
         {...this.props}
         value={value}
@@ -163,25 +185,25 @@ class Field extends Component {
         onChange={ this.onFieldChange }
       />;
     }
-    if (this.props.type === 'establishment-selector') {
+    if (type === 'establishment-selector') {
       return <EstablishmentSelector {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'additional-availability') {
+    if (type === 'additional-availability') {
       return <AdditionalAvailability {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'legacy-species-selector') {
+    if (type === 'legacy-species-selector') {
       return <LegacySpeciesSelector {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'location-selector') {
+    if (type === 'location-selector') {
       return <LocationSelector {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'objective-selector') {
+    if (type === 'objective-selector') {
       return <ObjectiveSelector {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'other-species-selector') {
+    if (type === 'other-species-selector') {
       return <OtherSpecies {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'repeater') {
+    if (type === 'repeater') {
       return <Repeater
         {...this.props}
         type={this.props.name}
@@ -192,7 +214,7 @@ class Field extends Component {
         onSave={val => this.onFieldChange(val)}
       />;
     }
-    if (this.props.type === 'duration') {
+    if (type === 'duration') {
       return <Duration
         name={ this.props.name }
         label={ label }
@@ -202,7 +224,7 @@ class Field extends Component {
         onChange={ val => this.onFieldChange(val) }
       />;
     }
-    if (this.props.type === 'keywords') {
+    if (type === 'keywords') {
       return <Keywords
         name={ this.props.name }
         label={ label }
@@ -212,7 +234,7 @@ class Field extends Component {
         onChange={ val => this.onFieldChange(val) }
       />;
     }
-    if (this.props.type === 'select') {
+    if (type === 'select') {
       return <Select
         className={ this.props.className }
         label={ label }
@@ -224,7 +246,75 @@ class Field extends Component {
         onChange={ e => this.onFieldChange(e.target.value) }
       />;
     }
-    if (this.props.type === 'date') {
+    if (type === 'paragraph') {
+      return <TextEditor
+        name={ this.props.name }
+        label={ label }
+        hint={ hint }
+        value={ value }
+        error={ this.props.error }
+        onChange={ this.onFieldChange }
+        readOnly={true}
+      />;
+    }
+    if (type === 'standard-list') {
+      const options = this.mapOptions(this.props.options || []).map(opt => ({
+        ...opt,
+        label: typeof opt.label === 'function' ? opt.label(this.props.values) : opt.label,
+        hint: typeof opt.hint === 'function' ? opt.hint(this.props.values) : opt.hint
+      }));
+      const selectedValues = castArray(value || []);
+      const selectedOptions = options.filter(opt => selectedValues.includes(opt.value));
+
+      return (
+        <div className={this.props.className}>
+          {label && <label className="govuk-label">{label}</label>}
+          {hint && <span className="govuk-hint">{hint}</span>}
+          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
+
+          {selectedOptions.length > 0 ? (
+            <ul className="govuk-list govuk-list--bullet">
+              {selectedOptions.map((opt, i) => (
+                <li key={i}>
+                  <strong className="govuk-body">{opt.label}</strong>
+                  {opt.hint && (
+                    <div className="govuk-hint govuk-!-margin-top-1">{opt.hint}</div>
+                  )}
+                  {opt.reveal}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p><em>No answer provided</em></p>
+          )}
+        </div>
+      );
+    }
+    if (type === 'standard-radio') {
+      const options = this.mapOptions(this.props.options || []).map(opt => ({
+        ...opt,
+        label: typeof opt.label === 'function' ? opt.label(this.props.values) : opt.label,
+        hint: typeof opt.hint === 'function' ? opt.hint(this.props.values) : opt.hint
+      }));
+      const selectedOption = options.find(opt => opt.value === value);
+
+      return (
+        <div className={this.props.className}>
+          {label && <label className="govuk-label">{label}</label>}
+          {hint && <span className="govuk-hint">{hint}</span>}
+          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
+
+          {selectedOption ? (
+            <p className="govuk-body">{selectedOption.label}</p>
+          ) : (
+            <p className="govuk-body"><em>No answer provided</em></p>
+          )}
+
+          {selectedOption?.reveal}
+        </div>
+      );
+    }
+    if (type === 'date') {
       return <DateInput
         className={ this.props.className }
         label={ label }
@@ -235,7 +325,7 @@ class Field extends Component {
         onChange={value => this.onFieldChange(value) }
       />;
     }
-    if (this.props.type === 'radio') {
+    if (type === 'radio') {
       return <RadioGroup
         className={ this.props.className }
         label={ label }
@@ -257,7 +347,7 @@ class Field extends Component {
         }}
       />;
     }
-    if (this.props.type === 'checkbox' && this.props.name === 'fate-of-animals') {
+    if (type === 'checkbox' && this.props.name === 'fate-of-animals') {
       return <NtsCheckBoxWithModal
         className={ this.props.className }
         label={ label }
@@ -271,7 +361,7 @@ class Field extends Component {
         onFieldChange={this.onFieldChange}
       />;
     }
-    if (this.props.type === 'checkbox' || this.props.type === 'permissible-purpose') {
+    if (type === 'checkbox' || type === 'permissible-purpose') {
       const options = this.mapOptions(this.props.options);
 
       return <CheckboxGroup
@@ -303,7 +393,7 @@ class Field extends Component {
         }}
       />;
     }
-    if (this.props.type === 'textarea') {
+    if (type === 'textarea') {
       return <TextArea
         className={ this.props.className }
         label={ label }
@@ -315,7 +405,7 @@ class Field extends Component {
         onChange={ e => this.onFieldChange(e.target.value) }
       />;
     }
-    if (this.props.type === 'texteditor') {
+    if (type === 'texteditor') {
       return <TextEditor
         name={ this.props.name }
         label={ label }
@@ -325,7 +415,7 @@ class Field extends Component {
         onChange={ this.onFieldChange }
       />;
     }
-    if (this.props.type === 'declaration') {
+    if (type === 'declaration') {
       return <CheckboxGroup
         options={[{
           label: this.props.label,
@@ -342,7 +432,7 @@ class Field extends Component {
     }
     return <Input
       className={ this.props.className }
-      type={ this.props.type || 'text' }
+      type={ type || 'text' }
       label={ label }
       hint={ hint }
       name={ this.props.name }
