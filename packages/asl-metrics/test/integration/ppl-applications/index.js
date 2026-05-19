@@ -30,6 +30,9 @@ describe('PPL Applications Report', () => {
             model: 'project',
             action: 'grant',
             id: ids.active,
+            deadline: {
+              isExtended: true
+            },
             modelData: {
               status: 'inactive'
             }
@@ -74,6 +77,23 @@ describe('PPL Applications Report', () => {
           event_name: 'status:with-inspectorate:inspector-recommended',
           event: {},
           created_at: '2020-01-21T12:00:00.000'
+        },
+        {
+          case_id: ids.task,
+          event_name: 'update',
+          comment: 'Complex application requires extension',
+          event: {
+            meta: {
+              payload: {
+                data: {
+                  deadline: {
+                    isExtended: true
+                  }
+                }
+              }
+            }
+          },
+          created_at: '2020-01-22T12:00:00.000'
         },
         {
           case_id: ids.task,
@@ -157,6 +177,18 @@ describe('PPL Applications Report', () => {
       .then(result => flatten(result))
       .then(result => {
         assert.ok(result.every(row => row.title !== 'Changed issue date'));
+      });
+  });
+
+  it('includes deadline extension details from update activity', () => {
+    const { query, parse } = report({ db: this.db, flow });
+    return query()
+      .then(result => result.map(parse))
+      .then(result => Promise.all(result))
+      .then(result => flatten(result))
+      .then(result => {
+        assert.equal(result[0].wasExtended, 'Yes');
+        assert.equal(result[0].extendedReason, 'Complex application requires extension');
       });
   });
 
