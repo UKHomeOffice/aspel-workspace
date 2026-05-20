@@ -171,6 +171,7 @@ class Step extends Component {
     const completed = !editable || values.completed;
     const isStandardProtocol = standardProtocolsEnabled && values.isStandardProtocol === true;
     const standardProtocolType = standardProtocolsEnabled ? values.standardProtocolType : undefined;
+    const restoreDeletedStepsEnabled = standardProtocolsEnabled && (isStandardProtocol || standardProtocolType === 'editable');
     const useReferenceInStepTitle = standardProtocolsEnabled && (isStandardProtocol || standardProtocolType === 'editable');
     const editingReusableStep = !completed && values.existingValues && values.reusableStepId && values.saved;
     const stepEditable = editingReusableStep ? (values.existingValues.id === values.id) : !completed;
@@ -266,7 +267,7 @@ class Step extends Component {
       >
         <NewComments comments={relevantComments} />
         {
-          !values.deleted && <StepBadge fields={values} changeFieldPrefix={prefix} protocolId={protocol.id} position={index}/>
+          !values.deleted && <StepBadge fields={values} changeFieldPrefix={prefix} protocolId={protocol.id} position={restoreDeletedStepsEnabled ? number : index}/>
         }
         <Fragment>
           {
@@ -367,7 +368,7 @@ class Step extends Component {
             values.deleted && <span className="badge deleted">removed</span>
           }
           {
-            !values.deleted && !pdf && <StepBadge fields={values} changeFieldPrefix={prefix} protocolId={protocol.id} position={index} />
+            !values.deleted && !pdf && <StepBadge fields={values} changeFieldPrefix={prefix} protocolId={protocol.id} position={restoreDeletedStepsEnabled ? number : index} />
           }
           <Expandable expanded={expanded} onHeaderClick={() => onToggleExpanded(index)}>
             <Fragment>
@@ -512,11 +513,12 @@ export default function Steps({project, values, ...props}) {
   const isReviewStep = parseInt(useParams().step, 10) === 1;
   const [ allSteps, reusableSteps ] = hydrateSteps(project.protocols, values.steps, project.reusableSteps || {});
   const { isStandardProtocol = false, standardProtocolType = '' } = values || {};
+  const restoreDeletedStepsEnabled = props.standardProtocolsEnabled && (isStandardProtocol || standardProtocolType === 'editable');
   let steps;
   if (props.pdf) {
     steps = allSteps.filter(step => !step.deleted);
   } else {
-    steps = removeNewDeleted(allSteps, props.previousProtocols.steps);
+    steps = removeNewDeleted(allSteps, props.previousProtocols.steps, restoreDeletedStepsEnabled);
     if (!props.editable && props.previousProtocols.steps.length > props.index) {
       steps = addDeletedReusableSteps(steps, props.previousProtocols.steps[props.index], reusableSteps);
     }

@@ -36,8 +36,22 @@ export const hydrateSteps = (protocols, steps, reusableSteps) => {
   return [hydratedSteps, Object.values(reusableSteps)];
 };
 
-export const removeNewDeleted = (steps) => {
-  return steps || [];
+export const removeNewDeleted = (steps, previousSteps = [], keepNewDeleted = false) => {
+  if (keepNewDeleted) {
+    return steps || [];
+  }
+
+  const oldSteps = [];
+  (previousSteps || []).forEach(protocol => {
+    (protocol || []).forEach(step => oldSteps.push(step.id));
+  });
+
+  return (steps || []).filter(step => {
+    if (step.deleted === true) {
+      return oldSteps.includes(step.id);
+    }
+    return true;
+  });
 };
 
 export const addDeletedReusableSteps = (steps, previousSteps, reusableSteps) => {
