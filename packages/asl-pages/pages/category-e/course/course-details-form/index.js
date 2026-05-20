@@ -56,10 +56,14 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
   app.use((req, res, next) => {
     const mode = req.trainingCourseId ? 'update' : 'add';
 
-    res.locals.pageTitle = [
-      res.locals.static.content.pageTitle[mode] ?? res.locals.static.content.pageTitle,
-      res.locals.static.content.breadcrumbs.categoryE.course[mode]
-    ].join(' - ');
+    res.locals.pageTitle =
+      [
+        res.locals.static.content.pageTitle[mode] ?? res.locals.static.content.pageTitle,
+        res.locals.static.content.breadcrumbs.categoryE.course[mode],
+        req.trainingCourse?.title
+      ]
+        .filter(Boolean)
+        .join(' - ');
 
     next();
   });
@@ -138,6 +142,9 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
       }
 
       const projectSpecies = project.species ?? [];
+      if (req.form.schema.species && !Array.isArray(req.form.values.species)) {
+        req.form.values.species = [];
+      }
       if (Array.isArray(req.form.values.species)) {
         req.form.values.species = req.form.values.species.filter(species => projectSpecies.includes(species));
       }
