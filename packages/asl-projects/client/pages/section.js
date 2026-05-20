@@ -10,8 +10,6 @@ import RaSidePanel from '../components/ra-side-panel';
 import RAHint from '../components/ra-hint';
 import Readonly from './readonly';
 import { getSubsections } from '../schema';
-import StandardProtocols from './sections/standard-protocols';
-import { FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
 
 const mapStateToProps = (
   {
@@ -22,10 +20,7 @@ const mapStateToProps = (
       establishment,
       isGranted,
       project: actualProject
-    },
-    static: {
-      keycloakRoles = []
-    } = {}
+    }
   },
   {
     match: {
@@ -33,23 +28,7 @@ const mapStateToProps = (
     }
   }
 ) => {
-  const subsections = getSubsections(schemaVersion);
-  const standardProtocolsEnabled = keycloakRoles.includes(FEATURE_FLAG_STANDARD_PROTOCOLS);
-  const useStandardProtocolsSection = standardProtocolsEnabled && params.section === 'standard-protocol';
-
-  const schemaSectionKey = useStandardProtocolsSection
-    ? 'protocols'
-    : params.section;
-
-  const section = subsections[schemaSectionKey] || {};
-
-  const component = useStandardProtocolsSection
-    ? StandardProtocols
-    : section.component;
-
-  const sectionName = useStandardProtocolsSection
-    ? 'protocol'
-    : params.section;
+  const section = getSubsections(schemaVersion)[params.section] || {};
 
   section.fields = section.fields || [];
 
@@ -60,12 +39,11 @@ const mapStateToProps = (
     establishment,
     readonly,
     step: parseInt(params.step, 10) || 0,
-    section: sectionName,
+    section: params.section,
     ...section,
     options: section,
     isGranted,
-    actualProject,
-    component
+    actualProject
   };
 };
 

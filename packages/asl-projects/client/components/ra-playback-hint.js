@@ -41,9 +41,30 @@ export default function RAPlaybackHint({ hint, summary, name }) {
     .filter(f => fieldName.includes(f.name))
     .map(f => omit(f, 'show'));
 
+  const resolveHint = (input) => {
+    if (typeof input !== 'function') {
+      return input;
+    }
+
+    try {
+      return input({ values: grantedVersion?.data, project });
+    } catch (e) {
+      // Fall back for zero-arg hint functions.
+      return input();
+    }
+  };
+
+  const resolvedHint = resolveHint(hint);
+
+  const markdownHint = (typeof resolvedHint === 'string' || typeof resolvedHint === 'number')
+    ? `${resolvedHint}`
+    : null;
+
   return (
     <Fragment>
-      <p><Markdown links={true}>{ hint }</Markdown></p>
+      <div className="ra-playback-hint-text">
+        {markdownHint ? <Markdown links={true} components={{ p: 'span' }}>{markdownHint}</Markdown> : resolvedHint}
+      </div>
       <Details summary={summary} className="ra-playback">
         <Inset>
           <label className="govuk-hint">Extract from Programme of Work or Non-technical Summary</label>
