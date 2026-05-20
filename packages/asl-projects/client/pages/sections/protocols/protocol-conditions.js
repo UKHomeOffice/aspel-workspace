@@ -1,47 +1,67 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
+import { FEATURE_FLAG_STANDARD_PROTOCOLS, useFeatureFlag } from '@asl/service/ui/feature-flag';
 import conditions from '../../../constants/protocol-conditions';
 import { Details, Markdown } from '@ukhomeoffice/asl-components';
 
-class Content extends Component {
-  render() {
-    return (
-      <Fragment>
-        <div className="purple-inset condition-text">
-          <Markdown>{conditions.anaesthesia}</Markdown>
-        </div>
-        <div className="purple-inset condition-text">
-          <Markdown>{conditions.generalAnaesthesia}</Markdown>
-        </div>
-        <div className="purple-inset condition-text">
-          <Markdown>{conditions.surgery}</Markdown>
-        </div>
-        <div className="purple-inset condition-text">
-          <Markdown>{conditions.administration}</Markdown>
-        </div>
-      </Fragment>
-    );
-  }
+function Content({ copy }) {
+  return (
+    <Fragment>
+      <div className="purple-inset condition-text">
+        <Markdown>{copy.anaesthesia}</Markdown>
+      </div>
+      <div className="purple-inset condition-text">
+        <Markdown>{copy.generalAnaesthesia}</Markdown>
+      </div>
+      <div className="purple-inset condition-text">
+        <Markdown>{copy.surgery}</Markdown>
+      </div>
+      <div className="purple-inset condition-text">
+        <Markdown>{copy.administration}</Markdown>
+      </div>
+    </Fragment>
+  );
 }
 
-class ProtocolConditions extends Component {
-  render() {
+export default function ProtocolConditions({ pdf }) {
+  const standardProtocolsEnabled = useFeatureFlag(FEATURE_FLAG_STANDARD_PROTOCOLS);
+  const copy = standardProtocolsEnabled ? conditions.variants.standardProtocol : conditions.variants.default;
+
+  const [isOpen, setIsOpen] = useState(Boolean(standardProtocolsEnabled));
+
+  useEffect(() => {
+    setIsOpen(Boolean(standardProtocolsEnabled));
+  }, [standardProtocolsEnabled]);
+
+  if (pdf) {
     return (
       <div className="protocol-conditions">
-        <h2>{conditions.title}</h2>
-
-        <p>{conditions.summary}</p>
-
-        {
-          this.props.pdf ? <Content />
-            : (
-              <Details summary="Show general constraints">
-                <Content />
-              </Details>
-            )
-        }
+        <h2>{copy.title}</h2>
+        <p>{copy.summary}</p>
+        <Content copy={copy} />
       </div>
     );
   }
-}
 
-export default ProtocolConditions;
+  return (
+    <div className="protocol-conditions">
+      <h2 id={standardProtocolsEnabled ? 'general-constraints' : undefined}>{copy.title}</h2>
+
+      <p>{copy.summary}</p>
+
+      {
+        standardProtocolsEnabled
+          ? (
+            <details open={isOpen} onToggle={e => setIsOpen(e.target.open)}>
+              <summary id="general-constraints">{`${isOpen ? 'Hide' : 'Show'} general constraints`}</summary>
+              <Content copy={copy} />
+            </details>
+          )
+          : (
+            <Details summary="Show general constraints">
+              <Content copy={copy} />
+            </Details>
+          )
+      }
+    </div>
+  );
+}

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Details } from '@ukhomeoffice/asl-components';
 
 export default function StandardProtocols() {
   const history = useHistory();
   const [selection, setSelection] = useState('');
+  const [isGuidanceOpen, setIsGuidanceOpen] = useState(false);
 
   const onContinue = e => {
     e.preventDefault();
@@ -94,11 +94,12 @@ export default function StandardProtocols() {
 
         <h2 className="govuk-heading-m">Standard protocols for breeding genetically altered animals</h2>
 
-        <Details
+        <details
           id="standard-protocols"
-          summary="the guidance on ‘Standard protocols for breeding genetically altered animals’"
-          dynamicShow={true}
+          open={isGuidanceOpen}
+          onToggle={e => setIsGuidanceOpen(e.target.open)}
         >
+          <summary>{`${isGuidanceOpen ? 'Hide' : 'Show'} the guidance on 'Standard protocols for breeding genetically altered animals'`}</summary>
           <div className="govuk-inset-text">
 
             <p className="govuk-body">
@@ -176,7 +177,7 @@ export default function StandardProtocols() {
             </p>
 
           </div>
-        </Details>
+        </details>
       </div>
 
       {/* Form section */}
