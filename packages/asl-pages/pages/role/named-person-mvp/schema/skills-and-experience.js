@@ -62,7 +62,7 @@ module.exports = (roleType) => {
         validate: ['lessThanOrEqualToMaxWordCount', 'required']
       }
     };
-  } else if ([ROLE_TYPES.pelh, ROLE_TYPES.nprc].includes(normalizedRoleType)) {
+  } else if ([ROLE_TYPES.pelh, ROLE_TYPES.nprc, ROLE_TYPES.holc].includes(normalizedRoleType)) {
     return {
       experience: {
         inputType: 'textarea',
