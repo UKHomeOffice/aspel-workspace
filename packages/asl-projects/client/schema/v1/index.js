@@ -1950,9 +1950,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                   type:  values => calculateProtocolContext(values, 'text', 'text','paragraph'),
                   label: 'Step reference',
                   hint: 'Provide a short reference for this step, e.g. \'Blood sampling\' or \'Transgene induction\'',
-                  show: props => {
-                    return !props.readonly;
-                  }
+                  show: props => props?.isStandardProtocol === true ? false : !props?.readonly
                 },
                 {
                   name: 'optional',
@@ -1970,7 +1968,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                       value: false
                     }
                   ],
-                  show: props => { return !props.readonly; }
+                  show: props => props?.isStandardProtocol === true ? false : !props?.readonly
                 },
                 {
                   name: 'adverse',
@@ -2029,7 +2027,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
                       value: false
                     }
                   ],
-                  show: props => { return (!props.readonly) }
+                  show: props => props?.isStandardProtocol === true ? false : !props?.readonly
                 }
               ]
             },

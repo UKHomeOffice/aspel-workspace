@@ -176,6 +176,13 @@ class Step extends Component {
     const editingReusableStep = !completed && values.existingValues && values.reusableStepId && values.saved;
     const stepEditable = editingReusableStep ? (values.existingValues.id === values.id) : !completed;
     const commentPrefix = values.reusableStepId ? `reusableSteps.${values.reusableStepId}.` : undefined;
+    const showContext = {
+      isStandardProtocol,
+      readonly: Boolean(readonly),
+      values
+    };
+    const visibleFields = fields.filter(field => !field.show || field.show(showContext));
+    const reusableField = visibleFields.find(f => f.name === 'reusable');
 
     const stepContent = <>{
       !stepEditable && values.title && (
@@ -199,27 +206,33 @@ class Step extends Component {
       stepEditable && !deleted
         ? <Fragment>
           {!editingReusableStep ? <Fieldset
-            fields={fields}
+            fields={visibleFields}
             prefix={prefix}
             onFieldChange={(key, value) => updateItem({ [key]: value })}
             commentPrefix={commentPrefix}
             values={values}
           /> : <Fragment>
             <Fieldset
-              fields={fields.filter(f => f.name !== 'reusable')}
+              fields={visibleFields.filter(f => f.name !== 'reusable')}
               prefix={prefix}
               commentPrefix={commentPrefix}
               onFieldChange={(key, value) => updateItem({ [key]: value })}
               values={values}
             />
-            <Review
-              {...fields.find(f => f.name === 'reusable')}
-              value={values.existingValues.reusable}
-              readonly={true}
-              className="reusable"
-              commentKey={commentPrefix ? `${commentPrefix}reusable` : undefined}
-            />
-            <Warning>You cannot change this answer when editing reusable steps.</Warning>
+            {
+              reusableField && (
+                <Fragment>
+                  <Review
+                    {...reusableField}
+                    value={values.existingValues.reusable}
+                    readonly={true}
+                    className="reusable"
+                    commentKey={commentPrefix ? `${commentPrefix}reusable` : undefined}
+                  />
+                  <Warning>You cannot change this answer when editing reusable steps.</Warning>
+                </Fragment>
+              )
+            }
           </Fragment>
           }
           <p className="control-panel">
@@ -234,7 +247,7 @@ class Step extends Component {
         </Fragment>
         : <div className="review">
           <ReviewFields
-            fields={fields.filter(f => f.name !== 'title')}
+            fields={visibleFields.filter(f => f.name !== 'title')}
             values={values}
             prefix={prefix}
             commentPrefix={commentPrefix}
