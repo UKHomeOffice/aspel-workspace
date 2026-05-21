@@ -113,7 +113,7 @@ export const BuildProtocol = (protocolTemplate, project) => {
     'gaas-types': data.gaasTypes ?? '',
     'gaas-harmful': Boolean(data.gaasHarmful),
     'continued-use-relevant-project' : data.continuedUseRelevantProject ?? '',
-    fate: Array.isArray(data.fate) ? [...data.fate] : [],
+    fate: [],
     'non-schedule-1': Boolean(data.nonSchedule1),
     "experience-complete": true,
     'experience-summary': data.experienceSummary ?? '',
