@@ -106,7 +106,7 @@ export const BuildProtocol = (protocolTemplate, project) => {
     animals: data.animals ? { ...data.animals } : {},
 
     // Species data - new arrays with new objects
-    species: [...projectSpecies],
+    species: [],
     speciesDetails: [...speciesDetails],
     steps: [...steps],
     gaas: Boolean(data.gaas),

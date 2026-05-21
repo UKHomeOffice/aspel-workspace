@@ -89,6 +89,17 @@ function renderMarkdownIfNeeded(content) {
   return looksLikeMarkdown ? <ReactMarkdown>{content}</ReactMarkdown> : content;
 }
 
+function normaliseChoiceValue(value) {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  if (typeof value === 'string') return value.trim().toLowerCase();
+  return value;
+}
+
+function choiceMatches(left, right) {
+  return normaliseChoiceValue(left) === normaliseChoiceValue(right);
+}
+
 class Field extends Component {
 
   state = {
@@ -268,7 +279,7 @@ class Field extends Component {
         hint: typeof opt.hint === 'function' ? opt.hint(this.props.values) : opt.hint
       }));
       const selectedValues = castArray(value || []);
-      const selectedOptions = options.filter(opt => selectedValues.includes(opt.value));
+      const selectedOptions = options.filter(opt => selectedValues.some(v => choiceMatches(v, opt.value)));
 
       return (
         <div className={this.props.className}>
@@ -300,7 +311,7 @@ class Field extends Component {
         label: typeof opt.label === 'function' ? opt.label(this.props.values) : opt.label,
         hint: typeof opt.hint === 'function' ? opt.hint(this.props.values) : opt.hint
       }));
-      const selectedOption = options.find(opt => opt.value === value);
+      const selectedOption = options.find(opt => choiceMatches(opt.value, value));
 
       return (
         <div className={this.props.className}>

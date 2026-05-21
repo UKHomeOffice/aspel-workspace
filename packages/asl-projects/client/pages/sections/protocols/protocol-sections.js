@@ -79,7 +79,11 @@ class ProtocolSections extends PureComponent {
     const isLegacy = schemaVersion === 0;
 
     const severityField = sections.details.fields.find(field => field.name === 'severity');
-    const severityOption = ((severityField.options || []).find(option => option.value === values.severity) || {}).label;
+    const normalisedSeverity = typeof values.severity === 'string' ? values.severity.trim().toLowerCase() : values.severity;
+    const severityOption = ((severityField.options || []).find(option => {
+      const optionValue = typeof option.value === 'string' ? option.value.trim().toLowerCase() : option.value;
+      return optionValue === normalisedSeverity;
+    }) || {}).label;
 
     const numberOfNewComments = Object.values(newComments)
       .reduce((total, comments) => total + (comments || []).length, 0);

@@ -53,8 +53,10 @@ class ReviewField extends React.Component {
     const normaliseBooleanLike = val => {
       if (val === true || val === 'true') return true;
       if (val === false || val === 'false') return false;
+      if (typeof val === 'string') return val.trim().toLowerCase();
       return val;
     };
+    const choiceMatches = (left, right) => normaliseBooleanLike(left) === normaliseBooleanLike(right);
 
     const type = resolve(this.props.type);
 
@@ -89,7 +91,7 @@ class ReviewField extends React.Component {
         label: typeof opt.label === 'function' ? opt.label(this.props.values) : opt.label,
         hint: typeof opt.hint === 'function' ? opt.hint(this.props.values) : opt.hint
       }));
-      const selectedOptions = resolvedOptions.filter(opt => valuesArray.includes(opt.value));
+      const selectedOptions = resolvedOptions.filter(opt => valuesArray.some(v => choiceMatches(v, opt.value)));
 
       if (!selectedOptions.length) {
         return <p><em>None selected</em></p>;
@@ -119,7 +121,7 @@ class ReviewField extends React.Component {
         hint: typeof opt.hint === 'function' ? opt.hint(this.props.values) : opt.hint
       }));
       const radioValue = normaliseBooleanLike(value);
-      const selectedOption = resolvedOptions.find(opt => opt.value === radioValue || opt.value === value);
+      const selectedOption = resolvedOptions.find(opt => choiceMatches(opt.value, radioValue) || choiceMatches(opt.value, value));
 
       return (
         <div className={`${this.props.className || ''} govuk-!-margin-bottom-4`}>
