@@ -4,9 +4,7 @@ import renderer from './docx-renderer';
 import { updateImageDimensions } from './helpers/docx-image-helper';
 
 const pack = (doc, filename) => {
-  const packer = new Packer(doc);
-
-  packer.toBlob(doc).then(blob => {
+  Packer.toBlob(doc).then(blob => {
     saveAs(blob, filename);
   });
 };
