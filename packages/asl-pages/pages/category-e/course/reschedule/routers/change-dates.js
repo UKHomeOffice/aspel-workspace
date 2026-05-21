@@ -4,7 +4,6 @@ module.exports = () => {
   const app = Router({ mergeParams: true });
 
   app.get('/', (req, res) => {
-    console.log('change dates response');
     return res.sendResponse();
   });
 
