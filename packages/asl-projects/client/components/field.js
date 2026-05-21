@@ -247,15 +247,19 @@ class Field extends Component {
       />;
     }
     if (type === 'paragraph') {
-      return <TextEditor
-        name={ this.props.name }
-        label={ label }
-        hint={ hint }
-        value={ value }
-        error={ this.props.error }
-        onChange={ this.onFieldChange }
-        readOnly={true}
-      />;
+      return (
+        <div className={this.props.className}>
+          {label && <label className="govuk-label">{label}</label>}
+          {hint && <span className="govuk-hint">{hint}</span>}
+          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
+          <TextEditor
+            name={ this.props.name }
+            value={ value }
+            onChange={ this.onFieldChange }
+            readOnly={true}
+          />
+        </div>
+      );
     }
     if (type === 'standard-list') {
       const options = this.mapOptions(this.props.options || []).map(opt => ({
