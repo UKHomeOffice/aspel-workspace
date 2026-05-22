@@ -19,9 +19,17 @@ import EstablishmentSelector from './establishment-selector';
 import { DATE_FORMAT } from '../constants';
 import ReviewFields from './review-fields';
 import { ReviewRepeater } from '../pages/sections/repeater/review';
+import {
+  findSelectedOption,
+  findSelectedOptions,
+  isOptionFieldType,
+  isRichTextFieldType,
+  resolveFieldValue,
+  resolveVisibleOptions
+} from '../helpers/field-resolution';
 
 function RevealChildren({ value, options, values, prefix, diff }) {
-  const option = (options || []).find(option => option.value === value);
+  const option = findSelectedOption(options || [], value);
   if (!option?.reveal || diff) {
     return null;
   }
@@ -40,25 +48,7 @@ function RevealChildren({ value, options, values, prefix, diff }) {
 class ReviewField extends React.Component {
 
   render() {
-    const resolve = prop => typeof prop === 'function' ? prop(this.props.values || this.props) : prop;
-    const filterVisibleOptions = (opts = []) => opts.filter(opt => {
-      if (!opt) {
-        return false;
-      }
-      if (typeof opt.show === 'function') {
-        return opt.show(this.props.values);
-      }
-      return opt.show === undefined || Boolean(opt.show);
-    });
-    const normaliseBooleanLike = val => {
-      if (val === true || val === 'true') return true;
-      if (val === false || val === 'false') return false;
-      if (typeof val === 'string') return val.trim().toLowerCase();
-      return val;
-    };
-    const choiceMatches = (left, right) => normaliseBooleanLike(left) === normaliseBooleanLike(right);
-
-    const type = resolve(this.props.type);
+    const type = resolveFieldValue(this.props.type, this.props);
 
     const renderReveal = reveal => {
       if (!reveal) {
@@ -85,13 +75,8 @@ class ReviewField extends React.Component {
     let additionalInfo;
 
     if (type === 'standard-list') {
-      const valuesArray = castArray(value || []);
-      const resolvedOptions = filterVisibleOptions(this.props.options || []).map(opt => ({
-        ...opt,
-        label: typeof opt.label === 'function' ? opt.label(this.props.values) : opt.label,
-        hint: typeof opt.hint === 'function' ? opt.hint(this.props.values) : opt.hint
-      }));
-      const selectedOptions = resolvedOptions.filter(opt => valuesArray.some(v => choiceMatches(v, opt.value)));
+      const resolvedOptions = resolveVisibleOptions(this.props.options || [], this.props);
+      const selectedOptions = findSelectedOptions(resolvedOptions, value);
 
       if (!selectedOptions.length) {
         return <p><em>None selected</em></p>;
@@ -115,13 +100,8 @@ class ReviewField extends React.Component {
     }
 
     if (type === 'standard-radio') {
-      const resolvedOptions = (this.props.options || []).filter(Boolean).map(opt => ({
-        ...opt,
-        label: typeof opt.label === 'function' ? opt.label(this.props.values) : opt.label,
-        hint: typeof opt.hint === 'function' ? opt.hint(this.props.values) : opt.hint
-      }));
-      const radioValue = normaliseBooleanLike(value);
-      const selectedOption = resolvedOptions.find(opt => choiceMatches(opt.value, radioValue) || choiceMatches(opt.value, value));
+      const resolvedOptions = resolveVisibleOptions(this.props.options || [], this.props);
+      const selectedOption = findSelectedOption(resolvedOptions, value);
 
       return (
         <div className={`${this.props.className || ''} govuk-!-margin-bottom-4`}>
@@ -136,17 +116,14 @@ class ReviewField extends React.Component {
       );
     }
 
-    if (['checkbox', 'radio', 'select', 'permissible-purpose'].includes(type)) {
-      options = filterVisibleOptions(this.props.optionsFromSettings
+    if (isOptionFieldType(type)) {
+      options = resolveVisibleOptions(this.props.optionsFromSettings
         ? this.props.settings[this.props.optionsFromSettings]
-        : this.props.options);
+        : this.props.options, this.props);
     }
 
     if ((type === 'radio' || type === 'select') && !isUndefined(value)) {
-      const inputValue = normaliseBooleanLike(value);
-      const selectedValue = (options || []).find(option =>
-        !isUndefined(option.value) ? option.value === inputValue : option === inputValue
-      );
+      const selectedValue = findSelectedOption(options || [], value);
       value = selectedValue;
       additionalInfo = selectedValue && selectedValue.additionalInfo;
       if (type === 'radio' && value && !isUndefined(value.label)) {
@@ -264,7 +241,7 @@ class ReviewField extends React.Component {
                         <ul>
                           {
                             this.props.project[o.reveal.name].map((val, index) => {
-                              return <li key={index}>{o.reveal.options.find(opt => opt.value === val).label}</li>;
+                              return <li key={index}>{findSelectedOption(o.reveal.options || [], val).label}</li>;
                             })
                           }
                         </ul>
@@ -293,16 +270,14 @@ class ReviewField extends React.Component {
       }
 
       const getValue = value => {
-        const v = (options || []).find(option => option.value === value);
-        return v
-          ? v.label
-          : value;
+        const option = findSelectedOption(options || [], value);
+        return option?.label || value;
       };
 
       return (
         <ul>
           {
-            value.filter(v => options ? options.find(o => o.value === v) : true).map(value => (
+            value.filter(v => options ? findSelectedOption(options, v) : true).map(value => (
               <li key={value}>
                 {
                   getValue(value)
@@ -369,7 +344,7 @@ class ReviewField extends React.Component {
       </dl>;
     }
 
-    if (type === 'texteditor' || type === 'paragraph') {
+    if (isRichTextFieldType(type)) {
       return <TextEditor {...this.props} readOnly={true} />;
     }
 

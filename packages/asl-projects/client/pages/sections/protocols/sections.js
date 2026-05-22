@@ -8,7 +8,7 @@ import lowerFirst from 'lodash/lowerFirst';
 import Accordion from '../../../components/accordion';
 import ExpandingPanel from '../../../components/expanding-panel';
 import NewComments from '../../../components/new-comments';
-import { flattenReveals } from '../../../helpers';
+import { flattenReveals, isStandardProtocolMode } from '../../../helpers';
 import Section from './section';
 import Steps from './steps';
 import Animals from './animals';
@@ -137,7 +137,7 @@ const sortGranted = sections => (a, b) => {
 };
 
 const ProtocolSections = ({ sections, protocolState, editable, newComments, ...props }) => {
-  const isStandardProtocol = props.standardProtocolsEnabled && props.values.isStandardProtocol === true;
+  const isStandardProtocol = isStandardProtocolMode(props.values, props.standardProtocolsEnabled);
   let sectionNames = Object.keys(sections)
     .filter(section => !sections[section].show || sections[section].show(props));
 

@@ -15,6 +15,7 @@ import { filterSpeciesByActive } from './animals';
 
 import { keepAlive } from '../../../actions/session';
 import StandardProtocolBadge from '../../../components/standard-protocol-badge';
+import { isStandardProtocolMode } from '../../../helpers';
 
 class ProtocolSections extends PureComponent {
   state = {
@@ -74,7 +75,7 @@ class ProtocolSections extends PureComponent {
       standardProtocolsEnabled
     } = this.props;
 
-    const isStandardProtocol = standardProtocolsEnabled && values.isStandardProtocol === true;
+    const isStandardProtocol = isStandardProtocolMode(values, standardProtocolsEnabled);
 
     const isLegacy = schemaVersion === 0;
 

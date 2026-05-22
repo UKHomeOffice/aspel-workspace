@@ -6,9 +6,9 @@ import { throwError } from '../actions/messages';
 import isUndefined from 'lodash/isUndefined';
 import castArray from 'lodash/castArray';
 import every from 'lodash/every';
-import Mustache from 'mustache';
 
 import ReactMarkdown from 'react-markdown';
+import { FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
 
 import { CheckboxGroup, DateInput, Input, RadioGroup, Select, TextArea } from '@ukhomeoffice/react-components';
 
@@ -32,6 +32,14 @@ import Comments from './comments';
 import ErrorBoundary from './error-boundary';
 import NtsCheckBoxWithModal from './checkbox';
 import without from 'lodash/without';
+import {
+  coerceChoiceValue,
+  findSelectedOption,
+  findSelectedOptions,
+  resolveFieldValue,
+  resolveTemplateContent,
+  resolveVisibleOptions
+} from '../helpers/field-resolution';
 
 /**
  * Where an option in a checkbox group is marked as exclusive, this handles
@@ -75,11 +83,6 @@ function calculateNewCheckboxValues(values, toggledValue, options) {
   return [withoutExclusives, withoutExclusives.length <= values.length];
 }
 
-function resolveTemplateContent(template, props) {
-  const resolved = typeof template === 'function' ? template(props) : template;
-  return typeof resolved === 'string' ? Mustache.render(resolved, props) : resolved;
-}
-
 function renderMarkdownIfNeeded(content) {
   if (typeof content !== 'string') {
     return content;
@@ -87,17 +90,6 @@ function renderMarkdownIfNeeded(content) {
 
   const looksLikeMarkdown = (content.includes('[') && content.includes('](')) || content.includes('\n');
   return looksLikeMarkdown ? <ReactMarkdown>{content}</ReactMarkdown> : content;
-}
-
-function normaliseChoiceValue(value) {
-  if (value === 'true') return true;
-  if (value === 'false') return false;
-  if (typeof value === 'string') return value.trim().toLowerCase();
-  return value;
-}
-
-function choiceMatches(left, right) {
-  return normaliseChoiceValue(left) === normaliseChoiceValue(right);
 }
 
 class Field extends Component {
@@ -128,16 +120,7 @@ class Field extends Component {
   }
 
   mapOptions(options = []) {
-    return options
-      .filter(opt => {
-        if (!opt) {
-          return false;
-        }
-        if (typeof opt.show === 'function') {
-          return opt.show(this.props.values);
-        }
-        return opt.show === undefined || Boolean(opt.show);
-      })
+    return resolveVisibleOptions(options, this.props)
       .map(option => {
       if (!option.reveal) {
         return option;
@@ -168,7 +151,7 @@ class Field extends Component {
       return null;
     }
     const { value } = this.state;
-    const type = typeof this.props.type === 'function' ? this.props.type(this.props.values || this.props) : this.props.type;
+    const type = resolveFieldValue(this.props.type, this.props);
 
     let { label, hint } = this.props.altLabels ? this.props.alt : this.props;
 
@@ -246,12 +229,14 @@ class Field extends Component {
       />;
     }
     if (type === 'select') {
+      const options = this.mapOptions(this.props.options || []);
+
       return <Select
         className={ this.props.className }
         label={ label }
         hint={ hint }
         name={ this.props.name }
-        options={ this.props.options }
+        options={ options }
         value={ value }
         error={ this.props.error }
         onChange={ e => this.onFieldChange(e.target.value) }
@@ -273,13 +258,8 @@ class Field extends Component {
       );
     }
     if (type === 'standard-list') {
-      const options = this.mapOptions(this.props.options || []).map(opt => ({
-        ...opt,
-        label: typeof opt.label === 'function' ? opt.label(this.props.values) : opt.label,
-        hint: typeof opt.hint === 'function' ? opt.hint(this.props.values) : opt.hint
-      }));
-      const selectedValues = castArray(value || []);
-      const selectedOptions = options.filter(opt => selectedValues.some(v => choiceMatches(v, opt.value)));
+      const options = this.mapOptions(this.props.options || []);
+      const selectedOptions = findSelectedOptions(options, value);
 
       return (
         <div className={this.props.className}>
@@ -306,12 +286,8 @@ class Field extends Component {
       );
     }
     if (type === 'standard-radio') {
-      const options = this.mapOptions(this.props.options || []).map(opt => ({
-        ...opt,
-        label: typeof opt.label === 'function' ? opt.label(this.props.values) : opt.label,
-        hint: typeof opt.hint === 'function' ? opt.hint(this.props.values) : opt.hint
-      }));
-      const selectedOption = options.find(opt => choiceMatches(opt.value, value));
+      const options = this.mapOptions(this.props.options || []);
+      const selectedOption = findSelectedOption(options, value);
 
       return (
         <div className={this.props.className}>
@@ -341,34 +317,31 @@ class Field extends Component {
       />;
     }
     if (type === 'radio') {
+      const options = this.mapOptions(this.props.options || []);
+
       return <RadioGroup
         className={ this.props.className }
         label={ label }
         hint={ hint }
         name={ this.props.name }
-        options={ this.mapOptions(this.props.options) }
+        options={ options }
         value={ value }
         error={ this.props.error }
         inline={ this.props.inline }
         onChange={ e => {
-          let val = e.target.value;
-          if (val === 'true') {
-            val = true;
-          }
-          if (val === 'false') {
-            val = false;
-          }
-          this.onFieldChange(val);
+          this.onFieldChange(coerceChoiceValue(e.target.value));
         }}
       />;
     }
     if (type === 'checkbox' && this.props.name === 'fate-of-animals') {
+      const options = this.mapOptions(this.props.options || []);
+
       return <NtsCheckBoxWithModal
         className={ this.props.className }
         label={ label }
         hint={ hint }
         name={ this.props.name }
-        options={ this.mapOptions(this.props.options) }
+        options={ options }
         value={ value }
         error={ this.props.error }
         inline={ this.props.inline }
@@ -377,7 +350,7 @@ class Field extends Component {
       />;
     }
     if (type === 'checkbox' || type === 'permissible-purpose') {
-      const options = this.mapOptions(this.props.options);
+      const options = this.mapOptions(this.props.options || []);
 
       return <CheckboxGroup
         className={ this.props.className }
@@ -459,7 +432,7 @@ class Field extends Component {
   }
 }
 
-const mapStateToProps = ({ project, settings, application }, { name, conditional, optionsFromSettings, options, value, onFieldChange }) => {
+const mapStateToProps = ({ project, settings, application, static: { keycloakRoles = [] } = {} }, { name, conditional, optionsFromSettings, options, value, onFieldChange }) => {
   options = optionsFromSettings ? settings[optionsFromSettings] : options;
   return {
     options,
@@ -467,7 +440,8 @@ const mapStateToProps = ({ project, settings, application }, { name, conditional
     showChanges: !!onFieldChange && application && !application.newApplication,
     value: !isUndefined(value) ? value : project && project[name],
     show: !conditional || every(Object.keys(conditional), key => conditional[key] === project[key]),
-    grantedVersion: application && application.grantedVersion
+    grantedVersion: application && application.grantedVersion,
+    standardProtocolsEnabled: keycloakRoles.includes(FEATURE_FLAG_STANDARD_PROTOCOLS)
   };
 };
 

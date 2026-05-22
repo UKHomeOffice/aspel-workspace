@@ -440,26 +440,64 @@ export const markdownLink = (linkText, url) => {
   return url ? `[${linkText}](${url})` : linkText;
 };
 
+const getProtocolContextSource = values => {
+  if (values && typeof values === 'object' && values.values && typeof values.values === 'object') {
+    return {
+      ...values.values,
+      standardProtocolsEnabled: values.standardProtocolsEnabled ?? values.values.standardProtocolsEnabled
+    };
+  }
+
+  return values && typeof values === 'object'
+    ? values
+    : {};
+};
+
+export const getProtocolMode = (values = {}, standardProtocolsEnabled) => {
+  const context = getProtocolContextSource(values);
+  const flagEnabled = standardProtocolsEnabled ?? context.standardProtocolsEnabled ?? true;
+
+  if (!flagEnabled) {
+    return 'experimental';
+  }
+
+  if (context?.isStandardProtocol === true && context?.standardProtocolType === 'standard') {
+    return 'standard';
+  }
+
+  if (context?.isStandardProtocol === false && context?.standardProtocolType === 'editable') {
+    return 'editable';
+  }
+
+  return 'experimental';
+};
+
+export const isStandardProtocolMode = (values = {}, standardProtocolsEnabled) => {
+  return getProtocolMode(values, standardProtocolsEnabled) === 'standard';
+};
+
+export const isEditableStandardProtocolMode = (values = {}, standardProtocolsEnabled) => {
+  return getProtocolMode(values, standardProtocolsEnabled) === 'editable';
+};
+
+export const isProtocolPlaybackMode = (values = {}, standardProtocolsEnabled) => {
+  return isStandardProtocolMode(values, standardProtocolsEnabled)
+    || isEditableStandardProtocolMode(values, standardProtocolsEnabled);
+};
+
 export const calculateProtocolContext = (
   values = {},
   defaultValue,
   editableProtocol,
   standardProtocol
 ) => {
-  // Normalize protocol context
-  const context =
-    values?.isStandardProtocol !== undefined
-      ? values
-      : values?.values ?? values;
+  const mode = getProtocolMode(values);
 
-  const isStandardProtocol = context?.isStandardProtocol;
-  const standardProtocolType = context?.standardProtocolType;
-
-  if (isStandardProtocol === true && standardProtocolType === 'standard') {
+  if (mode === 'standard') {
     return standardProtocol;
   }
 
-  if (isStandardProtocol === false && standardProtocolType === 'editable') {
+  if (mode === 'editable') {
     return editableProtocol;
   }
 

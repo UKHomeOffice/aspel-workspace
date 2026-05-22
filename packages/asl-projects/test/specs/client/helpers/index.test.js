@@ -1,6 +1,13 @@
 import assert from 'assert';
 import {
+  calculateProtocolContext,
+  getProtocolMode,
   getFields
+} from '../../../../client/helpers';
+import {
+  isEditableStandardProtocolMode,
+  isProtocolPlaybackMode,
+  isStandardProtocolMode
 } from '../../../../client/helpers';
 
 describe('Helpers', () => {
@@ -288,5 +295,56 @@ describe('Helpers', () => {
     assert.equal(fields[5].name, 'protocols.*.prevent-adverse-effects');
     assert.equal(fields[6].name, 'protocols.*.endpoints');
     assert.equal(fields[7].name, 'protocols.*.reusable');
+  });
+
+  it('resolves protocol mode from saved values and feature flag state', () => {
+    assert.equal(getProtocolMode({}), 'experimental');
+    assert.equal(getProtocolMode({ isStandardProtocol: true, standardProtocolType: 'standard' }), 'standard');
+    assert.equal(getProtocolMode({ isStandardProtocol: false, standardProtocolType: 'editable' }), 'editable');
+    assert.equal(
+      getProtocolMode({ isStandardProtocol: true, standardProtocolType: 'standard', standardProtocolsEnabled: false }),
+      'experimental'
+    );
+
+    assert.equal(isStandardProtocolMode({ isStandardProtocol: true, standardProtocolType: 'standard' }), true);
+    assert.equal(isEditableStandardProtocolMode({ isStandardProtocol: false, standardProtocolType: 'editable' }), true);
+    assert.equal(isProtocolPlaybackMode({ isStandardProtocol: false, standardProtocolType: 'editable' }), true);
+    assert.equal(
+      isProtocolPlaybackMode({ isStandardProtocol: true, standardProtocolType: 'standard', standardProtocolsEnabled: false }),
+      false
+    );
+  });
+
+  it('calculates protocol context from nested props and honours an explicit disabled feature flag', () => {
+    assert.equal(
+      calculateProtocolContext(
+        {
+          values: {
+            isStandardProtocol: true,
+            standardProtocolType: 'standard'
+          }
+        },
+        'default',
+        'editable',
+        'standard'
+      ),
+      'standard'
+    );
+
+    assert.equal(
+      calculateProtocolContext(
+        {
+          standardProtocolsEnabled: false,
+          values: {
+            isStandardProtocol: true,
+            standardProtocolType: 'standard'
+          }
+        },
+        'default',
+        'editable',
+        'standard'
+      ),
+      'default'
+    );
   });
 });

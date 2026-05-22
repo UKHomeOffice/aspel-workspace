@@ -1,4 +1,4 @@
-import { Document, Paragraph, TextRun, Indent, Table, Media } from 'docx';
+import { Document, Paragraph, TextRun, Table, Media } from 'docx';
 import flatten from 'lodash/flatten';
 import isUndefined from 'lodash/isUndefined';
 import isNull from 'lodash/isNull';
@@ -11,25 +11,35 @@ import { DATE_FORMAT } from '../../../constants';
 import { filterSpeciesByActive } from '../../../pages/sections/protocols/animals';
 import protocolConditions from '../../../constants/protocol-conditions';
 import { getRepeatedFromProtocolIndex, hydrateSteps } from '../../../helpers/steps';
-import Mustache from 'mustache';
-import { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers } from './helpers/docx-style-helper'
+import {
+  findSelectedOption,
+  isRichTextFieldType,
+  resolveFieldValue,
+  resolveTemplateContent,
+  resolveVisibleOptions,
+  stringifyResolvedValue
+} from '../../../helpers/field-resolution';
+import { addStyles, renderHorizontalRule, addPageNumbers } from './helpers/docx-style-helper'
 import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared, renderNull as renderNullShared, renderNode as renderNodeShared } from './helpers/docx-content-renderer'
 
 export default (application, sections, values, updateImageDimensions) => {
   const document = new Document();
 
   const renderTemplate = (template, context) => {
-    const resolved = typeof template === 'function' ? template(context) : template;
+    return stringifyResolvedValue(resolveTemplateContent(template, context));
+  };
 
-    if (typeof resolved === 'string') {
-      return Mustache.render(resolved, context);
-    }
+  const getFieldContext = (field, values, project) => ({
+    ...project,
+    ...values,
+    ...field,
+    readonly: Boolean(values?.readonly),
+    values,
+    project
+  });
 
-    if (typeof resolved === 'number' || typeof resolved === 'boolean') {
-      return `${resolved}`;
-    }
-
-    return '';
+  const getResolvedOptions = (field, values, project) => {
+    return resolveVisibleOptions(field.options || [], getFieldContext(field, values, project));
   };
 
   const tableToMatrix = table => {
@@ -195,11 +205,7 @@ export default (application, sections, values, updateImageDimensions) => {
   };
 
   const renderRadio = (doc, field, values, value, noSeparator) => {
-    let option;
-
-    if (field.options) {
-      option = field.options.find(o => o.value === value);
-    }
+    const option = field.options ? findSelectedOption(field.options, value) : undefined;
 
     const label = option ? option.label : value;
     doc.createParagraph(label).style('body');
@@ -309,11 +315,11 @@ export default (application, sections, values, updateImageDimensions) => {
     }
 
     if (field.options) {
-      value = value.filter(v => field.options.map(o => o.value).includes(v));
+      value = value.filter(v => findSelectedOption(field.options, v));
     }
 
     value.forEach(item => {
-      const opt = (field.options || []).find(o => o.value === item);
+      const opt = findSelectedOption(field.options || [], item);
       if (opt) {
         item = opt.label;
       }
@@ -408,27 +414,35 @@ export default (application, sections, values, updateImageDimensions) => {
 
   const renderField = (doc, field, values, project, noSeparator) => {
     project = project || values;
-    if (field.show && !field.show(project)) {
+    const fieldContext = getFieldContext(field, values, project);
+    const type = resolveFieldValue(field.type, fieldContext);
+    const resolvedField = {
+      ...field,
+      type,
+      options: field.options ? getResolvedOptions(field, values, project) : field.options
+    };
+
+    if (field.show && !field.show(fieldContext)) {
       return false;
     }
     const value = values[field.name];
 
-    if (!field.label && field.type === 'checkbox' && field.name.includes('declaration')) {
-      return renderDeclaration(doc, field, values, value);
+    if (!resolvedField.label && type === 'checkbox' && resolvedField.name.includes('declaration')) {
+      return renderDeclaration(doc, resolvedField, values, value);
     }
 
-    const context = { ...field, values };
-    const renderedLabel = renderTemplate(field.review || field.label || '', context);
+    const context = { ...fieldContext, type, values };
+    const renderedLabel = renderTemplate(resolvedField.review || resolvedField.label || '', context);
     doc.createParagraph(renderedLabel).style('Question');
 
-    if (field.hint) {
-      const renderedHint = renderTemplate(field.hint, context);
+    if (resolvedField.hint) {
+      const renderedHint = renderTemplate(resolvedField.hint, context);
       if (renderedHint) {
         renderMarkdown(doc, renderedHint, 'aside');
       }
     }
 
-    switch (field.type) {
+    switch (type) {
       case 'species-selector':
         return renderSpeciesSelector(doc, values, value, noSeparator);
       case 'legacy-species-selector':
@@ -460,15 +474,20 @@ export default (application, sections, values, updateImageDimensions) => {
       return renderNull(doc, noSeparator);
     }
 
-    switch (field.type) {
+    if (isRichTextFieldType(type)) {
+      return renderTextEditor(doc, value, noSeparator);
+    }
+
+    switch (type) {
       case 'radio':
-        return renderRadio(doc, field, values, value, noSeparator);
+      case 'standard-radio':
+        return renderRadio(doc, resolvedField, values, value, noSeparator, project);
 
       case 'additional-availability':
-        return renderAdditionalEstablishment(doc, field, values, value, noSeparator);
+        return renderAdditionalEstablishment(doc, resolvedField, values, value, noSeparator);
 
       case 'repeater':
-        return (value || []).map(item => renderFields(doc, field, item, field.fields, project));
+        return (value || []).map(item => renderFields(doc, resolvedField, item, resolvedField.fields, project));
 
       case 'date':
         return renderText(doc, formatDate(value, DATE_FORMAT.long));
@@ -476,10 +495,11 @@ export default (application, sections, values, updateImageDimensions) => {
       case 'location-selector':
       case 'objective-selector':
       case 'checkbox':
-        return renderSelector(doc, field, value, values, project, noSeparator);
+      case 'standard-list':
+        return renderSelector(doc, resolvedField, value, values, project, noSeparator);
 
       case 'permissible-purpose':
-        return renderPermissiblePurpose(doc, field, value, values);
+        return renderPermissiblePurpose(doc, resolvedField, value, values);
 
       case 'text':
       case 'textarea':
@@ -488,9 +508,6 @@ export default (application, sections, values, updateImageDimensions) => {
 
       case 'holder':
         return renderText(doc, `${value.firstName} ${value.lastName}`, noSeparator);
-
-      case 'texteditor':
-        return renderTextEditor(doc, value, noSeparator);
     }
 
   };
@@ -583,7 +600,15 @@ export default (application, sections, values, updateImageDimensions) => {
       renderField(doc, subsection.fields[0], protocolValues);
 
       Object.keys(subsection.sections)
-        .filter(k => !subsection.sections[k].show || subsection.sections[k].show(values))
+        .filter(k => {
+          const section = subsection.sections[k];
+          const sectionContext = {
+            ...values,
+            ...protocolValues,
+            values: protocolValues
+          };
+          return !section.show || section.show(sectionContext);
+        })
         .map(k => renderProtocol(doc, k, subsection.sections[k], protocolValues, values, title));
     });
   };

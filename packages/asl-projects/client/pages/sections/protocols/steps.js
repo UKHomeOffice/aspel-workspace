@@ -22,6 +22,11 @@ import {
   removeNewDeleted,
   addDeletedReusableSteps
 } from '../../../helpers/steps';
+import {
+  getProtocolMode,
+  isProtocolPlaybackMode,
+  isStandardProtocolMode
+} from '../../../helpers';
 import { saveReusableSteps } from '../../../actions/projects';
 import Expandable from '../../../components/expandable';
 import cloneDeep from 'lodash/cloneDeep';
@@ -169,10 +174,12 @@ class Step extends Component {
     ).reduce((total, comments) => total + (comments || []).length, 0);
 
     const completed = !editable || values.completed;
-    const isStandardProtocol = standardProtocolsEnabled && values.isStandardProtocol === true;
-    const standardProtocolType = standardProtocolsEnabled ? values.standardProtocolType : undefined;
-    const restoreDeletedStepsEnabled = standardProtocolsEnabled && (isStandardProtocol || standardProtocolType === 'editable');
-    const useReferenceInStepTitle = standardProtocolsEnabled && (isStandardProtocol || standardProtocolType === 'editable');
+    const protocolMode = getProtocolMode(values, standardProtocolsEnabled);
+    const isStandardProtocol = isStandardProtocolMode(values, standardProtocolsEnabled);
+    const isEditableProtocol = protocolMode === 'editable';
+    const standardProtocolType = protocolMode === 'experimental' ? undefined : values.standardProtocolType;
+    const restoreDeletedStepsEnabled = isStandardProtocol || isEditableProtocol;
+    const useReferenceInStepTitle = isStandardProtocol || isEditableProtocol;
     const editingReusableStep = !completed && values.existingValues && values.reusableStepId && values.saved;
     const stepEditable = editingReusableStep ? (values.existingValues.id === values.id) : !completed;
     const commentPrefix = values.reusableStepId ? `reusableSteps.${values.reusableStepId}.` : undefined;
@@ -505,7 +512,7 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
       updateItem({ steps: mappedSteps });
       setUpdateReusable(true); // Always reset this after save
     }}
-    addAnother={!(standardProtocolsEnabled && values.isStandardProtocol) && !props.pdf && !values.deleted && editable && !lastStepIsNew}
+    addAnother={!isStandardProtocolMode(values, standardProtocolsEnabled) && !props.pdf && !values.deleted && editable && !lastStepIsNew}
     {...props}
   >
     <Step
@@ -525,8 +532,10 @@ const StepsRepeater = ({ values, prefix, updateItem, editable, project, isReview
 export default function Steps({project, values, ...props}) {
   const isReviewStep = parseInt(useParams().step, 10) === 1;
   const [ allSteps, reusableSteps ] = hydrateSteps(project.protocols, values.steps, project.reusableSteps || {});
-  const { isStandardProtocol = false, standardProtocolType = '' } = values || {};
-  const restoreDeletedStepsEnabled = props.standardProtocolsEnabled && (isStandardProtocol || standardProtocolType === 'editable');
+  const protocolMode = getProtocolMode(values, props.standardProtocolsEnabled);
+  const isStandardProtocol = isStandardProtocolMode(values, props.standardProtocolsEnabled);
+  const standardProtocolType = protocolMode === 'experimental' ? '' : values?.standardProtocolType ?? '';
+  const restoreDeletedStepsEnabled = isProtocolPlaybackMode(values, props.standardProtocolsEnabled);
   let steps;
   if (props.pdf) {
     steps = allSteps.filter(step => !step.deleted);

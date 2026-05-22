@@ -9,24 +9,16 @@ import RAPlaybackHint from './ra-playback-hint';
 import { Markdown } from '@ukhomeoffice/asl-components';
 import ErrorBoundary from './error-boundary';
 import classnames from 'classnames';
-import Mustache from 'mustache';
 import ReactMarkdown from 'react-markdown';
 import { FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
-
-const resolveTemplateContent = (template, props) => {
-  const resolved = typeof template === 'function' ? template(props) : template;
-  return typeof resolved === 'string' ? Mustache.render(resolved, props) : resolved;
-};
-
-const stringifyReviewText = value => {
-  if (typeof value === 'string' || typeof value === 'number') {
-    return `${value}`;
-  }
-  return '';
-};
+import {
+  resolveTemplateContent,
+  stringifyResolvedValue
+} from '../helpers/field-resolution';
+import { isStandardProtocolMode } from '../helpers';
 
 const renderInlineMarkdown = value => {
-  const text = stringifyReviewText(value);
+  const text = stringifyResolvedValue(value);
   if (!text) {
     return text;
   }
@@ -64,7 +56,7 @@ class Review extends React.Component {
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
     } else if (hint && !React.isValidElement(hint)) {
-      hint = <Markdown links={true} paragraphProps={{ className: 'grey' }}>{stringifyReviewText(hint)}</Markdown>;
+      hint = <Markdown links={true} paragraphProps={{ className: 'grey' }}>{stringifyResolvedValue(hint)}</Markdown>;
     } else if (hint) {
       hint = <p className="grey">{hint}</p>;
     } else {
@@ -120,7 +112,7 @@ class Review extends React.Component {
         }
         {
           // repeaters have edit links on the individual fields
-          !(this.props.standardProtocolsEnabled && this.props.values?.isStandardProtocol) && !this.props.readonly && this.props.type !== 'repeater' && (
+          !isStandardProtocolMode(this.props.values, this.props.standardProtocolsEnabled) && !this.props.readonly && this.props.type !== 'repeater' && (
             <Fragment>
               <p>
                 <Link
