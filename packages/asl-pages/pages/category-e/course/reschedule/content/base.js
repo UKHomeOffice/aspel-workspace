@@ -56,7 +56,7 @@ module.exports = merge({},
     breadcrumbs: {
       categoryE: {
         course: {
-          reschedule: 'Change course dates'
+          reschedule: 'Course date{{#model.endDate}}s{{/model.endDate}}'
         }
       }
     }

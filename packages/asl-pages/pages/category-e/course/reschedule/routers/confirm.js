@@ -10,7 +10,8 @@ const normaliseDate = (dateStr) => {
 const normaliseDates = ({courseDuration, courseDate, startDate, endDate}) => {
   if (courseDuration === trainingCourseDuration.ONE_DAY) {
     return {
-      startDate: normaliseDate(courseDate)
+      startDate: normaliseDate(courseDate),
+      endDate: null
     };
   }
 
@@ -42,8 +43,13 @@ module.exports = () => {
 
     req.api(`/establishment/${req.establishmentId}/training-course/${req.trainingCourseId}/course-dates`, params)
       .then(() => {
+        const isMultiDay = !!req.session.form[req.model.id].endDate;
         delete req.session.form[req.model.id];
-        res.setFlash('Course dates have been updated');
+        res.setFlash(
+          isMultiDay
+            ? 'Course dates have been updated'
+            : 'Course date has been updated'
+        );
 
         return res.redirect(req.buildRoute('categoryE.course.read', { trainingCourseId: req.trainingCourseId }));
       })
