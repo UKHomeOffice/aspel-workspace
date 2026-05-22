@@ -2,3 +2,12 @@
 /*.iml
 .env
 /node_modules/
+/output/
+
+# js files generated from typescript
+/scripts/lib/keycloak-manage-roles/**/*.js
+/scripts/lib/cli.js
+/scripts/lib/progress-bar.js
+/scripts/lib/stream.js
+/scripts/lib/readline.js
+/scripts/keycloak-manage-roles.js

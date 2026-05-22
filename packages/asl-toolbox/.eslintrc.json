@@ -1,9 +1,27 @@
 {
   "extends": ["@ukhomeoffice/asl"],
+  "ignorePatterns": [
+    "**/*.ts"
+  ],
   "parserOptions": {
     "ecmaVersion": "latest"
   },
   "env": {
     "node": true
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "tests/**/*.js"
+      ],
+      "rules": {
+        "implicit-dependencies/no-implicit": [
+          "error",
+          {
+            "dev": true
+          }
+        ]
+      }
+    }
+  ]
 }

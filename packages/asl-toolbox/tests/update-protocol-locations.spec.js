@@ -1,8 +1,5 @@
 import 'dotenv/config';
-// Dev dependency, builtin
-/* eslint-disable implicit-dependencies/no-implicit */
 import {describe, it, jest, expect, afterEach, beforeAll, afterAll, beforeEach} from '@jest/globals';
-/* eslint-enable implicit-dependencies/no-implicit */
 
 import {dataDb} from '../scripts/lib/db.js';
 

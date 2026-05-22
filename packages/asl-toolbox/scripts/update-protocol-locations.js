@@ -4,7 +4,7 @@ import 'dotenv/config';
 import {dataDb} from './lib/db.js';
 import {readline} from './lib/readline.js';
 import minimist from 'minimist';
-import {isCliEntrypoint} from './lib/cli.js';
+import {isCliEntrypoint} from './lib/cli.ts';
 
 /**
  * Instructions for using this script as a CLI tool
