@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const assert = require('assert');
 const db = require('../helpers/db');
 const retrospectiveAssessment = require('../../lib/resolvers/retrospective-assessment');

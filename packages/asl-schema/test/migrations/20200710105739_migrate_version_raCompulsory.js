@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const assert = require('assert');
 const db = require('./helpers/db');
 const { raCompulsory, up } = require('../../migrations/20200710105739_migrate_version_raCompulsory');
@@ -163,7 +163,7 @@ describe('up', () => {
             severity: 'severe'
           }
         ]
-      },
+      }
     },
     {
       id: ids.version.activeNoRA,

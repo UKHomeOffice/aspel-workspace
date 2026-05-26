@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 
 const transform = version => {
   if (!version) {
@@ -29,7 +29,7 @@ exports.up = function(knex) {
       return knex
         .select('id')
         .from('projects')
-        .where({ 'schema_version': 1 })
+        .where({ 'schema_version': 1 });
     })
     .then(projects => {
       return projects.reduce((promise, project) => {
