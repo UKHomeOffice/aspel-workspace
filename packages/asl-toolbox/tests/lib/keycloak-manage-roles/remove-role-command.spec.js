@@ -13,7 +13,7 @@ jest.unstable_mockModule('fs/promises', () => ({
   open: fsPromises.open
 }));
 
-const { default: RemoveRoleCommand } = await import('../../../scripts/lib/keycloak-manage-roles/remove-role-command.js');
+const { default: RemoveRoleCommand } = await import('../../../dist/scripts/lib/keycloak-manage-roles/remove-role-command.js');
 
 const role = { id: 'role-id', name: 'old-role' };
 const defaultRole = { id: 'default-role-id', name: 'default-roles-asl-test' };

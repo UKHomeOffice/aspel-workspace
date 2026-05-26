@@ -53,10 +53,10 @@ function createClientCredentialsTokenProvider(credentials: ClientCredentials) {
     );
 
     await authClient.auth({
-                            clientId: credentials.clientId,
-                            clientSecret: credentials.clientSecret,
-                            grantType: 'client_credentials'
-                          });
+      clientId: credentials.clientId,
+      clientSecret: credentials.clientSecret,
+      grantType: 'client_credentials'
+    });
 
     if (!authClient.accessToken) {
       throw new Error('Keycloak did not return an access token');

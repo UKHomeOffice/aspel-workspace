@@ -13,7 +13,7 @@ type Args = {
   role: ValidatedRole;
   defaultRole: ValidatedRole;
   filename: string;
-}
+};
 
 export default class AddRoleCommand implements Command<Args> {
   private readonly client: KeycloakAdminClient;
@@ -29,7 +29,6 @@ Options:
     this.client = client;
   }
 
-
   async getConfig<T extends ParsedArgs>(args: T): Promise<Args> {
     const roleName = args.role;
     if (typeof roleName !== 'string') {
@@ -42,7 +41,7 @@ Options:
     const defaultRole = await getValidRole(defaultRoleName, this.client);
 
     const filename = args.filename ?? 'add-roles.csv';
-    if (typeof roleName !== 'string') {
+    if (typeof filename !== 'string') {
       throw new Error(`--filename must be a string`);
     }
 
@@ -50,10 +49,10 @@ Options:
       role,
       defaultRole,
       filename
-    }
+    };
   }
 
-  async run({ role, defaultRole,filename: outputFilename }: Args): Promise<void> {
+  async run({ role, defaultRole, filename: outputFilename }: Args): Promise<void> {
     await addRoleToComposite(defaultRole, role, this.client);
 
     const roles = [asPayload(role)];

@@ -1,7 +1,7 @@
 {
   "extends": ["@ukhomeoffice/asl"],
   "ignorePatterns": [
-    "**/*.ts"
+    "dist/**"
   ],
   "parserOptions": {
     "ecmaVersion": "latest"
@@ -9,7 +9,25 @@
   "env": {
     "node": true
   },
+  "rules": {
+    "generator-star-spacing": [
+      "error", {
+        "before": false,
+        "after": true
+      }
+    ]
+  },
   "overrides": [
+    {
+      "files": [
+        "**/*.ts"
+      ],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+      }
+    },
     {
       "files": [
         "tests/**/*.js"

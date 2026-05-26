@@ -22,9 +22,10 @@ function usage(exitCode = 1): never {
 
 Options:
   command          Name of command to run must be one of ${
-    Object.keys(commandFactories)
-          .map(commandName => `\n                     - ${commandName}`)
-  }
+  Object
+    .keys(commandFactories)
+    .map(commandName => `\n                     - ${commandName}`)
+}
   --filename       CSV file to write under ./output (default: roles-added.csv)
   --help           Show this help, or the help for the command provided`;
 

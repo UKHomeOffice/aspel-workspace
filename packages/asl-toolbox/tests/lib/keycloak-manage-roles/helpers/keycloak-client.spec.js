@@ -44,11 +44,11 @@ jest.unstable_mockModule('@keycloak/keycloak-admin-client', () => ({
   default: KeycloakAdminClient
 }));
 
-jest.unstable_mockModule('../../../../scripts/keycloak-manage-roles.js', () => ({
+jest.unstable_mockModule('../../../../dist/scripts/keycloak-manage-roles.js', () => ({
   panic
 }));
 
-const { buildClient } = await import('../../../../scripts/lib/keycloak-manage-roles/helpers/keycloak-client.js');
+const { buildClient } = await import('../../../../dist/scripts/lib/keycloak-manage-roles/helpers/keycloak-client.js');
 
 const originalEnv = { ...process.env };
 

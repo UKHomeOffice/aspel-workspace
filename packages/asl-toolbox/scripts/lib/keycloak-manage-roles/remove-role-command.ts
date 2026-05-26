@@ -13,7 +13,7 @@ type Args = {
   role: ValidatedRole;
   defaultRole: ValidatedRole;
   filename: string;
-}
+};
 
 export default class RemoveRoleCommand implements Command<Args> {
   private readonly client: KeycloakAdminClient;
@@ -24,7 +24,6 @@ export default class RemoveRoleCommand implements Command<Args> {
   constructor(client: KeycloakAdminClient) {
     this.client = client;
   }
-
 
   async getConfig<T extends ParsedArgs>(args: T): Promise<Args> {
     const roleName = args.role;
@@ -38,7 +37,7 @@ export default class RemoveRoleCommand implements Command<Args> {
     const defaultRole = await getValidRole(defaultRoleName, this.client);
 
     const filename = args.filename ?? 'remove-roles.csv';
-    if (typeof roleName !== 'string') {
+    if (typeof filename !== 'string') {
       throw new Error(`--filename must be a string\n\n${this.usage}`);
     }
 
@@ -46,10 +45,10 @@ export default class RemoveRoleCommand implements Command<Args> {
       role,
       defaultRole,
       filename
-    }
+    };
   }
 
-  async run({ role, defaultRole,filename: outputFilename }: Args): Promise<void> {
+  async run({ role, defaultRole, filename: outputFilename }: Args): Promise<void> {
     await removeRoleFromComposite(defaultRole, role, this.client);
 
     const roles = [asPayload(role)];

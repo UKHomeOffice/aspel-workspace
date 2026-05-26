@@ -3,7 +3,7 @@ import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
 import { ValidatedRole } from '../types.js';
 
 function isValidRole(role: RoleRepresentation | undefined): role is ValidatedRole {
-  return role?.id != null && role?.name != null
+  return role?.id != null && role?.name != null;
 }
 
 export async function getValidRole(roleName: string, client: KeycloakAdminClient): Promise<ValidatedRole> {
@@ -30,12 +30,11 @@ export async function getOrCreateRole(roleName: string, description: unknown, cl
   await client.roles.create({ name: roleName, description });
   role = await client.roles.findOneByName({ name: roleName });
 
-
   if (!isValidRole(role)) {
     throw new Error(`Unable to find or create role ${roleName}`);
   }
 
-  return role
+  return role;
 }
 
 export async function addRoleToComposite(composite: ValidatedRole, child: ValidatedRole, client: KeycloakAdminClient): Promise<void> {
@@ -45,7 +44,7 @@ export async function addRoleToComposite(composite: ValidatedRole, child: Valida
   if (!alreadyIncluded) {
     await client.roles.createComposite(
       { roleId: composite.id },
-      [asPayload(child)],
+      [asPayload(child)]
     );
 
     console.log(`Added ${child.name} to ${composite.name}`);
@@ -59,7 +58,7 @@ export async function removeRoleFromComposite(composite: ValidatedRole, child: V
   if (!alreadyRemoved) {
     await client.roles.delCompositeRoles(
       { id: composite.id },
-      [asPayload(child)],
+      [asPayload(child)]
     );
 
     console.log(`Added ${child.name} to ${composite.name}`);
@@ -67,5 +66,5 @@ export async function removeRoleFromComposite(composite: ValidatedRole, child: V
 }
 
 export function asPayload(role: ValidatedRole): RoleMappingPayload {
-  return {id: role.id, name: role.name};
+  return { id: role.id, name: role.name };
 }

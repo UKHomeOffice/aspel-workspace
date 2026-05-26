@@ -52,7 +52,7 @@ export class ProgressBar {
 
     if (this.current >= this.total) {
       this.completed = true;
-      stdout.write(this.encoder.encode("\r\n"));
+      stdout.write(this.encoder.encode('\r\n'));
     }
 
     this.lastFlushed = Date.now();

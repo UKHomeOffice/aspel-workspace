@@ -16,7 +16,7 @@ export function filter<T>(predicate: (t: T) => boolean): TransformStream<T, T> {
     {
       transform(t, controller) {
         if (predicate(t)) {
-          controller.enqueue(t)
+          controller.enqueue(t);
         }
       }
     }
@@ -27,7 +27,7 @@ export function map<In, Out>(mapper: (i: In) => Out | Promise<Out>): TransformSt
   return new TransformStream(
     {
       async transform(t, controller) {
-        controller.enqueue(await mapper(t))
+        controller.enqueue(await mapper(t));
       }
     }
   );
@@ -48,7 +48,7 @@ export function flatMap<In, Out>(mapper: (i: In) => Out[] | Promise<Out[]>): Tra
   return new TransformStream(
     {
       async transform(i, controller) {
-        (await mapper(i)).forEach(out => controller.enqueue(out))
+        (await mapper(i)).forEach(out => controller.enqueue(out));
       }
     }
   );
@@ -63,20 +63,20 @@ export function toCSV(): TransformStream<Record<string, unknown>, Uint8Array> {
     return /["\n\r,]/.test(asString)
       ? `"${asString.replace(/"/g, '""')}"`
       : asString;
-  }
+  };
 
   return new TransformStream(
     {
       transform(obj, controller) {
         if (!headersSent) {
-          const headerRow = [...Object.keys(obj)].map(escapeCell).join(",");
+          const headerRow = [...Object.keys(obj)].map(escapeCell).join(',');
           controller.enqueue(encoder.encode(`${headerRow}\n`));
           headersSent = true;
         }
 
-        const valuesRow = [...Object.values(obj)].map(escapeCell).join(",");
+        const valuesRow = [...Object.values(obj)].map(escapeCell).join(',');
         controller.enqueue(encoder.encode(`${valuesRow}\n`));
       }
     }
-  )
+  );
 }

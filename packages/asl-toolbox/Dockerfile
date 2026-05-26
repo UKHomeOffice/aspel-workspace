@@ -39,10 +39,11 @@ WORKDIR /app
 
 COPY --from=builder --chown=app:app /app/node_modules /app/node_modules
 COPY --from=builder --chown=app:app /app/packages/asl-toolbox/node_modules /app/node_modules
-COPY --from=builder --chown=app:app /app/packages/asl-toolbox/scripts /app/
 COPY --from=builder --chown=app:app /app/packages/asl-toolbox/dist/scripts /app/
 COPY --from=builder --chown=app:app /app/packages/asl-schema /app/packages/asl-schema
 COPY --from=builder --chown=app:app /app/packages/asl-constants /app/packages/asl-constants
+
+RUN chmod +x /app/*.js
 
 USER 999
 
