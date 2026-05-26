@@ -8,7 +8,7 @@ jest.unstable_mockModule('@keycloak/keycloak-admin-client', () => ({
   default: jest.fn()
 }));
 
-jest.unstable_mockModule('node:fs/promises', () => ({
+jest.unstable_mockModule('fs/promises', () => ({
   mkdir: fsPromises.mkdir,
   open: fsPromises.open
 }));

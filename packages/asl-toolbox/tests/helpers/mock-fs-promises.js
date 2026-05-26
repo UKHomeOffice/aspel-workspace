@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
 // eslint-disable-next-line implicit-dependencies/no-implicit
-import { Writable } from 'node:stream';
+import { Writable } from 'stream';
 
 export function createMockFsPromises() {
   const chunks = [];

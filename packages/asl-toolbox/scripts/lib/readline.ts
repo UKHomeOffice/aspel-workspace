@@ -1,7 +1,7 @@
 // eslint-plugin-implicit-dependencies doesn't recognise `node:` dependencies as builtin
 /* eslint-disable implicit-dependencies/no-implicit */
-import * as nodeReadline from 'node:readline/promises';
-import { stdin as input, stdout as output } from 'node:process';
+import * as nodeReadline from 'readline/promises';
+import { stdin as input, stdout as output } from 'process';
 /* eslint-enable implicit-dependencies/no-implicit */
 
 /**
