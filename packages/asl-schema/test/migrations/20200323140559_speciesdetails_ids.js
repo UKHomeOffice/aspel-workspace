@@ -1,5 +1,5 @@
 const assert = require('assert');
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const isuuid = require('uuid-validate');
 const { cloneDeep, omit } = require('lodash');
 const diff = require('deep-diff');
@@ -121,7 +121,7 @@ describe('transform', () => {
         }
       ]
     };
-    const expected = cloneDeep(input);
+
     const output = transform(input);
 
     assert.equal(output.protocols[0], null);
@@ -143,7 +143,7 @@ describe('transform', () => {
         }
       ]
     };
-    const expected = cloneDeep(input);
+
     const output = transform(input);
 
     assert.equal(output.protocols[0], null);
@@ -347,7 +347,7 @@ describe('up', () => {
       .then(before => {
         return Promise.resolve()
           .then(() => {
-            return up(this.knex)
+            return up(this.knex);
           })
           .then(() => {
             return this.knex('projects')
@@ -361,7 +361,7 @@ describe('up', () => {
             assert.ok(changes.every(change => {
               return change.kind === 'N' && change.path.pop() === 'id';
             }));
-          })
+          });
       });
   });
 

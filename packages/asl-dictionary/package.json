@@ -25,5 +25,8 @@
   },
   "devDependencies": {
     "eslint": "^8.27.0"
+  },
+  "dependencies": {
+    "uuid": "^13.0.2"
   }
 }

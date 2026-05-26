@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 
 const transform = version => {
   if (!version) {
@@ -23,11 +23,11 @@ exports.up = function(knex) {
       return knex('project_versions')
         .select('project_versions.id')
         .join('projects', 'project_versions.project_id', 'projects.id')
-        .where({ 'schema_version':  1 })
+        .where({ 'schema_version': 1 })
         .whereRaw('data->>\'project-continuation\' IS NOT NULL');
     })
     .then(versions => {
-      console.log(`found ${versions.length} versions`)
+      console.log(`found ${versions.length} versions`);
       return versions.reduce((promise, version, index) => {
         return promise
           .then(() => {
@@ -47,7 +47,7 @@ exports.up = function(knex) {
               });
           })
           .catch(e => {
-            console.error(`Failed to update project ${project.id}`);
+            console.error(`Failed to update project version ${version.id}`);
             console.error(e.stack);
             throw e;
           });
@@ -55,6 +55,6 @@ exports.up = function(knex) {
     });
 };
 
-exports.down = function(knex) {
+exports.down = function() {
   return Promise.resolve();
 };
