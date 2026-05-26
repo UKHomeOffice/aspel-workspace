@@ -27,10 +27,11 @@
   },
   "dependencies": {
     "@asl/schema": "file:../asl-schema",
+    "@keycloak/keycloak-admin-client": "^26.6.2",
     "dotenv": "^16.4.7",
     "minimist": "^1.2.8",
     "pg-query-stream": "^4.2.1",
-    "@keycloak/keycloak-admin-client": "^26.6.2"
+    "uuid": "^13.0.2"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
