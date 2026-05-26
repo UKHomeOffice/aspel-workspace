@@ -2,12 +2,12 @@ import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
 import { Command, ValidatedRole } from './types.js';
 import { ParsedArgs } from 'minimist';
 import { asPayload, getValidRole, removeRoleFromComposite } from './helpers/role.js';
-import { mkdir, open } from 'node:fs/promises';
-import path from 'node:path';
+import { mkdir, open } from 'fs/promises';
+import path from 'path';
 import { ProgressBar } from '../progress-bar.js';
 import { forEach, fromAsyncIterable, map, toCSV } from '../stream.js';
 import { getAllUsers } from './helpers/users.js';
-import { Writable } from 'node:stream';
+import { Writable } from 'stream';
 
 type Args = {
   role: ValidatedRole;
@@ -74,7 +74,7 @@ export default class RemoveRoleCommand implements Command<Args> {
 
             if (hasRole) {
               await this.client.users.delRealmRoleMappings({ id: user.id!, roles });
-              userRoles = userRoles.filter(name => name != role.name);
+              userRoles = userRoles.filter(name => name !== role.name);
             }
 
             return {

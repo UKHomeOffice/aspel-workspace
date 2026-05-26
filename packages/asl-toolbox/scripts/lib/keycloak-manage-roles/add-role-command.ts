@@ -2,12 +2,12 @@ import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
 import { Command, ValidatedRole } from './types.js';
 import { ParsedArgs } from 'minimist';
 import { addRoleToComposite, asPayload, getOrCreateRole, getValidRole } from './helpers/role.js';
-import { open, mkdir } from 'node:fs/promises';
-import path from 'node:path';
+import { open, mkdir } from 'fs/promises';
+import path from 'path';
 import { ProgressBar } from '../progress-bar.js';
 import { forEach, fromAsyncIterable, map, toCSV } from '../stream.js';
 import { getAllUsers } from './helpers/users.js';
-import { Writable } from 'node:stream';
+import { Writable } from 'stream';
 
 type Args = {
   role: ValidatedRole;

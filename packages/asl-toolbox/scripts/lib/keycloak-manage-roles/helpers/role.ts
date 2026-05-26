@@ -3,7 +3,7 @@ import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
 import { ValidatedRole } from '../types.js';
 
 function isValidRole(role: RoleRepresentation | undefined): role is ValidatedRole {
-  return role?.id != undefined && role?.name != undefined;
+  return role?.id != null && role?.name != null
 }
 
 export async function getValidRole(roleName: string, client: KeycloakAdminClient): Promise<ValidatedRole> {

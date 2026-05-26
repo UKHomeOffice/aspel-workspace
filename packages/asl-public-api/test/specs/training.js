@@ -3,7 +3,7 @@ const openAPI = require('../helpers/open-api');
 const assert = require('assert');
 const ids = require('../data/ids');
 const moment = require('moment');
-const uuid = require('uuid');
+const { v4: uuid } = require('uuid');
 
 const courseDefaults = {
   establishmentId: ids.establishments.trainingEstablishment,

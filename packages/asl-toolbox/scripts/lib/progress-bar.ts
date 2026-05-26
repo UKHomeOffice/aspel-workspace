@@ -1,4 +1,4 @@
-import { stdout } from 'node:process';
+import { stdout } from 'process';
 
 const colour = (code: number, value: string) => stdout.isTTY ? `\u001b[${code}m${value}\u001b[0m` : value;
 const bold = (value: string) => colour(1, value);

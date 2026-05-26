@@ -20,7 +20,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "lint": "eslint --ext js .",
+    "lint": "eslint --ext js --ext ts .",
     "migrate": "knex migrate:latest --knexfile ../../node_modules/@asl/schema/knexfile.js --env test",
     "pretest": "npm run migrate && npm run build",
     "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js"

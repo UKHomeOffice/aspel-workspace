@@ -2,7 +2,7 @@ const assert = require('assert');
 const moment = require('moment');
 const { project } = require('../../lib/resolvers');
 const db = require('../helpers/db');
-const generateUuid = require('uuid/v4');
+const { v4: generateUuid } = require('uuid');
 
 const profileId = generateUuid();
 const projectId = generateUuid();
