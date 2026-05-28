@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const Task = require('@ukhomeoffice/asl-taskflow/lib/db/task');
 const ActivityLog = require('@ukhomeoffice/asl-taskflow/lib/db/activity-log');
 const seeds = require('../data/tasks');
@@ -17,8 +17,9 @@ module.exports = knex => {
       .then(() => ActivityLog.query(knex).insert(activitySeeds))
       .then(() => {
         if (tasks.length) {
-          tasks = tasks.map(t => ({ id: uuid(), ...t }));
-          return Task.query(knex).insert(tasks);
+          return Task.query(knex).insert(
+            tasks.map(t => ({ id: uuid(), ...t }))
+          );
         }
       }),
     insert: async (tasks = []) => Task.query(knex).insert(tasks)

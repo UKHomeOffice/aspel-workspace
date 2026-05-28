@@ -67,7 +67,7 @@
     "semver": "^7.6.0",
     "slate": "^0.47.8",
     "striptags": "^3.2.0",
-    "uuid": "^8.3.2",
+    "uuid": "^13.0.2",
     "uuid-validate": "0.0.3"
   },
   "devDependencies": {

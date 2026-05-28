@@ -1,6 +1,6 @@
 const moment = require('moment');
 const ids = require('./ids');
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const { userAtMultipleEstablishments, ntco101, user, userWithActivePil, holc } = require('./profiles');
 
 module.exports = models => {

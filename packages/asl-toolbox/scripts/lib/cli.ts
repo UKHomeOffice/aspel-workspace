@@ -9,6 +9,6 @@
  *
  * @param {string} scriptUrl
  */
-export function isCliEntrypoint(scriptUrl) {
+export function isCliEntrypoint(scriptUrl: string) {
   return scriptUrl === (`file://${process.argv[1]}`);
 }

@@ -1,6 +1,6 @@
 const assert = require('assert');
 const request = require('supertest');
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const apiHelper = require('../helpers/api');
 const ids = require('../data/ids');
 
@@ -23,7 +23,7 @@ describe('/establishment/:id/invitations', () => {
       return request(this.api)
         .delete(`/establishment/${ids.establishments.marvell}/invitations/${ids.invitations.basic}`)
         .expect(200)
-        .expect(response => {
+        .expect(() => {
           assert.equal(this.workflow.handler.callCount, 1);
           const req = this.workflow.handler.firstCall.args[0];
           assert.equal(req.body.model, 'invitation');
@@ -70,7 +70,7 @@ describe('/establishment/:id/invitations', () => {
       return request(this.api)
         .put(`/establishment/${ids.establishments.marvell}/invitations/${ids.invitations.basic}/cancel`)
         .expect(200)
-        .expect(response => {
+        .expect(() => {
           assert.equal(this.workflow.handler.callCount, 1);
           const req = this.workflow.handler.firstCall.args[0];
           assert.equal(req.body.model, 'invitation');
@@ -117,7 +117,7 @@ describe('/establishment/:id/invitations', () => {
       return request(this.api)
         .put(`/establishment/${ids.establishments.marvell}/invitations/${ids.invitations.basic}/resend`)
         .expect(200)
-        .expect(response => {
+        .expect(() => {
           assert.equal(this.workflow.handler.callCount, 1);
           const req = this.workflow.handler.firstCall.args[0];
           assert.equal(req.body.model, 'invitation');

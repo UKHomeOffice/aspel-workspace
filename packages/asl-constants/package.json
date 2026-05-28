@@ -20,7 +20,9 @@
     "url": "https://github.com/UKHomeOffice/asl-constants/issues"
   },
   "homepage": "https://github.com/UKHomeOffice/asl-constants#readme",
-  "dependencies": {},
+  "dependencies": {
+    "uuid": "^13.0.2"
+  },
   "publishConfig": {
     "@ukhomeoffice:registry": "https://npm.pkg.github.com"
   },

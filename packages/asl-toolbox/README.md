@@ -25,7 +25,10 @@ Where there are manual tasks to be run by devs, these can be provided as scripts
 
 Existing scripts are:
 
-* [update-protocol-locations](./docs/update-protocol-locations.md)
+* [`update-protocol-locations`](./docs/update-protocol-locations.md)
+* [`keycloak-manage-roles`](./docs/keycloak-manage-roles.md)
 
 Node has been set up with access to `@asl-schema`, plus `eslint` and `jest` to help check code quality. Scripts will be
 linted and tested by the pipeline that publishes new versions of the `asl-toolbox`.
+
+

@@ -41,7 +41,7 @@
     "pg-tsquery": "^8.2.0",
     "sinon": "^9.0.2",
     "slate": "^0.47.8",
-    "uuid": "^3.3.2"
+    "uuid": "^13.0.2"
   },
   "publishConfig": {
     "registry": "https://artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/"
