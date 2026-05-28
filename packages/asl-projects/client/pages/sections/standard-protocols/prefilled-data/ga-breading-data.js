@@ -83,15 +83,20 @@ export const gaBreadingData = (isStandard = true, isExperimental = false) => {
               continuedUseRelevantProject: 'Animals may be transferred to another protocol in this project authorised to use the same animal types.',
               nonSchedule1: false,
 
-              experienceSummary: `Animals may be used for natural mating on a number of occasions. \nAnimals produced under this protocol are not expected to exhibit any harmful phenotype. \nOffspring will be maintained by methods appropriate to their genetic alteration until they reach a maximum of 15 months of age.`,
+              experienceSummary: `Animals will be bred by natural mating.\nAnimals may undergo procedures for genotyping.\nAnimals will be kept for breeding or maintenance. \nAnimals with an altered immune system will be housed in a barrier environment to reduce risk of infection.`,
 
-              experienceEndpoints: `Some animals may have an altered immune system making them more susceptible to infection. Animals with altered immune status will be housed in a barrier environment thereby minimising the likelihood of compromising health.
-            \nAny animal will be immediately killed by Schedule 1 method if it shows signs of suffering that is greater than minor and transient or in any way compromises normal behaviour unless moved on to another protocol for a specific purpose (continued use).
-            \nAnimals exhibiting any unexpected harmful phenotypes will be killed (Schedule 1), or in the case of individual animals of particular scientific interest, advice will be sought promptly from a Home Office inspector.
-            \nOther than those described in the strain-specific adverse effects above, animals are not expected to die because of any authorised genetic alteration. A small number of animals, living beyond the neonatal period (5 days – before which ASRU does not require you to report any mortality), may suddenly and unexpectedly die having shown no preceding clinical signs indicative of impending death. Unless otherwise indicated, such deaths, should they occur, are unlikely to be related to the genotype. However, as per the published ASRU Advice Note on Severity Assessment of GA animals, should the mortality rate (age-matched) of the genetically altered strain rise beyond that present in the background source breeding colony, this will be reported under PPL standard condition 18.`,
+              experienceEndpoints: `Animals will be killed immediately if:\n
+• they experience more than mild short-term adverse effects that cannot be resolved with minor interventions - unless they are being transferred to another protocol for a specific purpose (continued use) \n
+• they show any harmful phenotypes despite, for example, use of a barrier environment \n
 
-              outputs: `Genetically altered mice.
-            \n(Note: If you are using this protocol to produce tissues for in vitro use you should include mention of the expected outputs from that use and answer Yes to the question below).`,
+If animals show a significantly higher incidence of adverse effects or mortality compared with the background strain, this will be reported using the SC18 notification form. Individual deaths that occur in the neonatal period (first 5 days) do not need to be reported. \n
+
+If animals show any harmful phenotypes and they are required to achieve the project’s scientific outcomes: \n
+• a request will be made to keep them alive using the SC18 notification form \n
+• a project licence amendment may be required`,
+
+              outputs: `• GA mice and/or rats \n
+• Tissues for in vitro use (optional)`,
 
               quantitativeData: false
             },

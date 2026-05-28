@@ -428,7 +428,7 @@ export default (application, sections, values, updateImageDimensions) => {
     const value = values[field.name];
 
     if (!resolvedField.label && type === 'checkbox' && resolvedField.name.includes('declaration')) {
-      return renderDeclaration(doc, resolvedField, values, value);
+      return renderDeclaration(doc, resolvedField, values);
     }
 
     const context = { ...fieldContext, type, values };

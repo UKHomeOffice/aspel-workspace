@@ -52,18 +52,22 @@ describe('field resolution helpers', () => {
     });
   });
 
-  describe('choice matching', () => {
+  describe('coerceChoiceValue', () => {
     it('coerces boolean-like strings before matching', () => {
       assert.equal(coerceChoiceValue('true'), true);
       assert.equal(coerceChoiceValue('false'), false);
       assert.equal(coerceChoiceValue('mild'), 'mild');
     });
+  });
 
+  describe('normaliseChoiceValue', () => {
     it('normalises boolean-like strings', () => {
       assert.equal(normaliseChoiceValue('true'), true);
       assert.equal(normaliseChoiceValue('false'), false);
     });
+  });
 
+  describe('choiceValuesMatch', () => {
     it('matches strings case-insensitively and trims whitespace', () => {
       assert.equal(choiceValuesMatch(' Mild ', 'mild'), true);
     });
@@ -90,7 +94,7 @@ describe('field resolution helpers', () => {
     });
   });
 
-  describe('resolved option helpers', () => {
+  describe('resolveVisibleOptions', () => {
     const options = [
       { value: 'a', label: props => props.mode === 'standard' ? 'Option A' : 'Editable A' },
       { value: 'b', label: 'Option B', hint: props => `Hint ${props.mode}` },
@@ -107,6 +111,14 @@ describe('field resolution helpers', () => {
         ]
       );
     });
+  });
+
+  describe('findSelectedOption', () => {
+    const options = [
+      { value: 'a', label: props => props.mode === 'standard' ? 'Option A' : 'Editable A' },
+      { value: 'b', label: 'Option B', hint: props => `Hint ${props.mode}` },
+      'c'
+    ];
 
     it('finds selected options using normalised matching', () => {
       assert.deepEqual(
@@ -114,6 +126,14 @@ describe('field resolution helpers', () => {
         { value: 'a', label: 'Option A' }
       );
     });
+  });
+
+  describe('findSelectedOptions', () => {
+    const options = [
+      { value: 'a', label: props => props.mode === 'standard' ? 'Option A' : 'Editable A' },
+      { value: 'b', label: 'Option B', hint: props => `Hint ${props.mode}` },
+      'c'
+    ];
 
     it('finds multiple selected options and supports string options', () => {
       assert.deepEqual(

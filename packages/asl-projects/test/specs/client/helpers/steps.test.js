@@ -1,40 +1,34 @@
 import assert from 'assert';
 import { removeNewDeleted } from '../../../../client/helpers/steps';
 
-describe('helpers/steps removeNewDeleted', () => {
-  it('keeps existing behaviour by hiding newly deleted steps', () => {
-    const steps = [
-      { id: 'existing-step', deleted: true },
-      { id: 'new-step', deleted: true },
-      { id: 'active-step', deleted: false }
-    ];
+describe('removeNewDeleted', () => {
+  const steps = [
+    { id: 'existing-step', deleted: true },
+    { id: 'new-step', deleted: true },
+    { id: 'active-step', deleted: false }
+  ];
 
-    const previousSteps = [
-      [{ id: 'existing-step' }]
-    ];
+  const previousSteps = [
+    [{ id: 'existing-step' }]
+  ];
 
-    const result = removeNewDeleted(steps, previousSteps);
+  describe('when restore support is disabled', () => {
+    it('removes newly deleted steps that do not exist in previous steps', () => {
+      const result = removeNewDeleted(steps, previousSteps);
 
-    assert.deepEqual(result, [
-      { id: 'existing-step', deleted: true },
-      { id: 'active-step', deleted: false }
-    ]);
+      assert.deepEqual(result, [
+        { id: 'existing-step', deleted: true },
+        { id: 'active-step', deleted: false }
+      ]);
+    });
   });
 
-  it('keeps newly deleted steps when feature-gated restore support is enabled', () => {
-    const steps = [
-      { id: 'existing-step', deleted: true },
-      { id: 'new-step', deleted: true },
-      { id: 'active-step', deleted: false }
-    ];
+  describe('when restore support is enabled', () => {
+    it('keeps newly deleted steps so they can be restored', () => {
+      const result = removeNewDeleted(steps, previousSteps, true);
 
-    const previousSteps = [
-      [{ id: 'existing-step' }]
-    ];
-
-    const result = removeNewDeleted(steps, previousSteps, true);
-
-    assert.deepEqual(result, steps);
+      assert.deepEqual(result, steps);
+    });
   });
 });
 

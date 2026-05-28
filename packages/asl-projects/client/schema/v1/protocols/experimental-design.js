@@ -211,7 +211,8 @@ export default {
           label: 'Will this protocol generate quantitative data?'
         },
         standard: {
-          label: 'Generation of quantitative data'
+          label: 'Generation of quantitative data',
+          type: 'standard-radio'
         }
       }
     )

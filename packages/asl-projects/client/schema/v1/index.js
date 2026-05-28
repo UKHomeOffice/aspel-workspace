@@ -17,13 +17,7 @@ import ProjectSummary from '../../pages/sections/granted/project-summary';
 import GrantedConditions from '../../pages/sections/granted/conditions';
 import GrantedAuthorisations from '../../pages/sections/granted/authorisations';
 import ActionPlan from '../../pages/sections/granted/action-plan';
-import Purpose from '../../pages/sections/granted/protocol-purpose';
-import ProtocolEstablishments from '../../pages/sections/granted/protocol-establishments';
-import ProtocolObjectives from '../../pages/sections/granted/protocol-objectives';
 import GrantedProtocols from '../../pages/sections/granted/protocols';
-
-import GrantedSteps from '../../pages/sections/granted/protocol-steps';
-
 import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 
 import intersection from 'lodash/intersection';
@@ -35,12 +29,8 @@ import protocolSections from './protocols';
 import confirmProtocolsAffected from '../../helpers/confirm-protocols-affected';
 
 import {
-  isTrainingLicence,
-  markdownLink,
-  getCurrentURLForFateOfAnimals,
-  calculateProtocolContext, getToGeneralConstraints
+  isTrainingLicence
 } from '../../helpers';
-import NTSFateOfAnimalFields from '../../helpers/nts-field';
 import { trainingSummaryRenderer } from '../../components/download-link/components/training-summary-renderer.mjs';
 
 export default () => {
