@@ -25,8 +25,10 @@ RUN --mount=type=secret,id=token \
     --mount=type=secret,id=github_token \
     ART_AUTH_TOKEN=`cat /run/secrets/token` \
     GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` \
-    npm update npm \
-    npm ci --omit=optional --omit=dev --ignore-scripts --loglevel=verbose
+    npm update npm && \
+    npm ci --omit=optional --ignore-scripts --loglevel=verbose && \
+    npm run build -w asl-toolbox && \
+    npm prune --omit=dev
 
 FROM quay.io/ukhomeofficedigital/asl-base:v22.22.0
 
@@ -37,9 +39,11 @@ WORKDIR /app
 
 COPY --from=builder --chown=app:app /app/node_modules /app/node_modules
 COPY --from=builder --chown=app:app /app/packages/asl-toolbox/node_modules /app/node_modules
-COPY --from=builder --chown=app:app /app/packages/asl-toolbox/scripts /app/
+COPY --from=builder --chown=app:app /app/packages/asl-toolbox/dist/scripts /app/
 COPY --from=builder --chown=app:app /app/packages/asl-schema /app/packages/asl-schema
 COPY --from=builder --chown=app:app /app/packages/asl-constants /app/packages/asl-constants
+
+RUN chmod +x /app/*.js
 
 USER 999
 

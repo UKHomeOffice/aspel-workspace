@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const assert = require('assert');
 const isUuid = require('uuid-validate');
 const db = require('./helpers/db');
@@ -73,7 +73,7 @@ describe('up', () => {
     legacyVersion: uuid(),
     noContinuation: uuid(),
     missingContinuationIds: uuid()
-  }
+  };
 
   const projects = [
     {
@@ -96,7 +96,7 @@ describe('up', () => {
       id: ids.legacyVersion,
       project_id: ids.legacyProject,
       data: {
-        title: 'Legacy version',
+        title: 'Legacy version'
       }
     },
     {

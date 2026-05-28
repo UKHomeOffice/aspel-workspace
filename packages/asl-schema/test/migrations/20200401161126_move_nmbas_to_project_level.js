@@ -1,11 +1,9 @@
 const assert = require('assert');
 const { cloneDeep } = require('lodash');
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const diff = require('deep-diff');
 const db = require('./helpers/db');
 const { transform, up } = require('../../migrations/20200401161126_move_nmbas_to_project_level');
-
-const util = require('util')
 
 describe('Move NMBAs to project level', () => {
 
@@ -158,7 +156,6 @@ describe('Move NMBAs to project level', () => {
 
   });
 
-
   describe('up', () => {
     const ids = {
       active: uuid(),
@@ -218,7 +215,7 @@ describe('Move NMBAs to project level', () => {
         licence_holder_id: licenceHolder.id,
         status: 'active',
         schema_version: 1
-      },
+      }
     ];
 
     const versions = [
@@ -406,7 +403,7 @@ describe('Move NMBAs to project level', () => {
               assert.ok(changes.every(change => {
                 return change.kind === 'N' && change.path.pop() === 'nmbas-used';
               }));
-            })
+            });
         });
     });
 

@@ -2,7 +2,7 @@ const moment = require('moment');
 const assert = require('assert');
 const { trainingPil } = require('../../lib/resolvers');
 const db = require('../helpers/db');
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 
 function isNowish(date) {
   return moment(date).isBetween(moment().subtract(5, 'seconds'), moment().add(5, 'seconds'));

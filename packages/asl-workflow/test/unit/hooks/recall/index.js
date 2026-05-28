@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const assert = require('assert');
 const sinon = require('sinon');
 const hook = require('../../../../lib/hooks/recall');

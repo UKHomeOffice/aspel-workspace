@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const { mapValues, omit, flatten, isEmpty, concat } = require('lodash');
 const { suitabilityCodes, holdingCodes } = require('@ukhomeoffice/asl-constants');
 const places = require('../data/places.json').map((p) => ({
