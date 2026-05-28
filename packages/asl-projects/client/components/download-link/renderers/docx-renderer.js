@@ -428,7 +428,7 @@ export default (application, sections, values, updateImageDimensions) => {
     const value = values[field.name];
 
     if (!resolvedField.label && type === 'checkbox' && resolvedField.name.includes('declaration')) {
-      return renderDeclaration(doc, resolvedField, values);
+      return;
     }
 
     const context = { ...fieldContext, type, values };
@@ -481,7 +481,7 @@ export default (application, sections, values, updateImageDimensions) => {
     switch (type) {
       case 'radio':
       case 'standard-radio':
-        return renderRadio(doc, resolvedField, values, value, noSeparator, project);
+        return renderRadio(doc, resolvedField, values, value, noSeparator);
 
       case 'additional-availability':
         return renderAdditionalEstablishment(doc, resolvedField, values, value, noSeparator);

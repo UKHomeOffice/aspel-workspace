@@ -1,25 +1,19 @@
 import assert from 'assert';
 import { withProtocolContext } from '../../../../client/schema/v1/protocols/helpers/with-protocol-context';
+import {
+  editableValues,
+  experimentalValues,
+  getFieldState,
+  standardDisabledProps,
+  standardValues
+} from '../test-utils/protocol-mode';
 
 describe('withProtocolContext', () => {
-  it('keeps non-overridden properties from the base field', () => {
-    const field = withProtocolContext({
-      name: 'severity',
-      className: 'smaller',
-      label: 'Base label'
-    }, {
-      standard: {
-        label: 'Standard label'
-      }
-    });
-
-    assert.equal(field.name, 'severity');
-    assert.equal(field.className, 'smaller');
-    assert.equal(field.label({}), 'Base label');
-  });
-
   const field = withProtocolContext({
+    name: 'severity',
+    className: 'smaller',
     label: 'Default label',
+    hint: 'Default hint',
     type: 'radio'
   }, {
     editable: {
@@ -27,49 +21,59 @@ describe('withProtocolContext', () => {
     },
     standard: {
       label: 'Standard label',
+      hint: null,
       type: 'standard-radio'
     }
   });
 
-  describe('when protocol mode is experimental', () => {
-    it('returns the base value for overridden properties', () => {
-      assert.equal(field.label({}), 'Default label');
-      assert.equal(field.type({}), 'radio');
-    });
+  it('keeps non-overridden properties from the base field', () => {
+    assert.equal(field.name, 'severity');
+    assert.equal(field.className, 'smaller');
   });
 
-  describe('when protocol mode is editable', () => {
-    it('returns editable overrides', () => {
-      assert.equal(
-        field.label({ isStandardProtocol: false, standardProtocolType: 'editable' }),
-        'Editable label'
-      );
-      assert.equal(field.type({ isStandardProtocol: false, standardProtocolType: 'editable' }), 'radio');
-    });
-  });
-
-  describe('when protocol mode is standard', () => {
-    it('returns standard overrides', () => {
-      assert.equal(
-        field.label({ isStandardProtocol: true, standardProtocolType: 'standard' }),
-        'Standard label'
-      );
-      assert.equal(field.type({ isStandardProtocol: true, standardProtocolType: 'standard' }), 'standard-radio');
+  describe('protocol mode overrides', () => {
+    [
+      {
+        mode: 'experimental',
+        context: experimentalValues,
+        expected: {
+          label: 'Default label',
+          hint: 'Default hint',
+          type: 'radio'
+        }
+      },
+      {
+        mode: 'editable',
+        context: editableValues,
+        expected: {
+          label: 'Editable label',
+          hint: 'Default hint',
+          type: 'radio'
+        }
+      },
+      {
+        mode: 'standard',
+        context: standardValues,
+        expected: {
+          label: 'Standard label',
+          hint: null,
+          type: 'standard-radio'
+        }
+      }
+    ].forEach(({ mode, context, expected }) => {
+      it(`returns the expected values in ${mode} mode`, () => {
+        assert.deepEqual(getFieldState(field, context), expected);
+      });
     });
   });
 
   describe('when standard protocols are explicitly disabled', () => {
     it('falls back to the base value', () => {
-      assert.equal(
-        field.label({
-          values: {
-            isStandardProtocol: true,
-            standardProtocolType: 'standard'
-          },
-          standardProtocolsEnabled: false
-        }),
-        'Default label'
-      );
+      assert.deepEqual(getFieldState(field, standardDisabledProps), {
+        label: 'Default label',
+        hint: 'Default hint',
+        type: 'radio'
+      });
     });
   });
 });

@@ -7,9 +7,14 @@ const fate = require('../../../../client/schema/v1/protocols/fate').default;
 const experience = require('../../../../client/schema/v1/protocols/experience').default;
 const experimentalDesign = require('../../../../client/schema/v1/protocols/experimental-design').default;
 const justification = require('../../../../client/schema/v1/protocols/justification').default;
-const justificationStandardProtocol = require('../../../../client/schema/v1/protocols/justification-standard-protocol').default;
 const conditions = require('../../../../client/schema/v1/protocols/conditions').default;
 const authorisations = require('../../../../client/schema/v1/protocols/authorisations').default;
+const {
+  editableValues,
+  experimentalValues,
+  sectionPropsFor,
+  standardValues
+} = require('../test-utils/protocol-mode');
 
 const protocolSectionsIndexSource = fs.readFileSync(
   path.join(__dirname, '../../../../client/schema/v1/protocols/index.js'),
@@ -38,7 +43,6 @@ describe('protocol section schema', () => {
         "import experience from './experience';",
         "import experimentalDesign from './experimental-design';",
         "import justification from './justification';",
-        "import justificationStandardProtocol from './justification-standard-protocol';",
         "import conditions from './conditions';",
         "import authorisations from './authorisations';",
         '  animals,',
@@ -48,7 +52,6 @@ describe('protocol section schema', () => {
         '  experience,',
         '  experimentalDesign,',
         '  justification,',
-        '  justificationStandardProtocol,',
         '  conditions,',
         '  authorisations'
       ]);
@@ -60,18 +63,15 @@ describe('protocol section schema', () => {
     const continuedUse = animals.fields.find(field => field.name === 'continued-use');
 
     it('uses checkbox for life-stages by default and standard-list in standard protocol mode', () => {
-      assert.equal(lifeStages.label({}), 'Which life stages will be used in this protocol?');
-      assert.equal(lifeStages.type({}), 'checkbox');
-      assert.equal(lifeStages.type({ isStandardProtocol: true, standardProtocolType: 'standard' }), 'standard-list');
+      assert.equal(lifeStages.label(experimentalValues), 'Which life stages will be used in this protocol?');
+      assert.equal(lifeStages.type(experimentalValues), 'checkbox');
+      assert.equal(lifeStages.type(standardValues), 'standard-list');
     });
 
     it('uses the standard continued-use label and standard-radio type in standard protocol mode', () => {
-      assert.equal(
-        continuedUse.label({ isStandardProtocol: true, standardProtocolType: 'standard' }),
-        'Continued use coming onto the protocol'
-      );
-      assert.equal(continuedUse.type({}), 'radio');
-      assert.equal(continuedUse.type({ isStandardProtocol: true, standardProtocolType: 'standard' }), 'standard-radio');
+      assert.equal(continuedUse.label(standardValues), 'Continued use coming onto the protocol');
+      assert.equal(continuedUse.type(experimentalValues), 'radio');
+      assert.equal(continuedUse.type(standardValues), 'standard-radio');
     });
   });
 
@@ -79,8 +79,8 @@ describe('protocol section schema', () => {
     const gaasField = gaas.fields.find(field => field.name === 'gaas');
 
     it('uses the expected default label and standard-radio type in standard protocol mode', () => {
-      assert.equal(gaasField.label({}), 'Will this protocol use any genetically altered animals?');
-      assert.equal(gaasField.type({ isStandardProtocol: true, standardProtocolType: 'standard' }), 'standard-radio');
+      assert.equal(gaasField.label(experimentalValues), 'Will this protocol use any genetically altered animals?');
+      assert.equal(gaasField.type(standardValues), 'standard-radio');
     });
   });
 
@@ -102,32 +102,46 @@ describe('protocol section schema', () => {
     const quantitativeData = experimentalDesign.fields.find(field => field.name === 'quantitative-data');
 
     it('uses the standard experience summary label in standard protocol mode', () => {
-      assert.equal(
-        experienceSummary.label({ isStandardProtocol: true, standardProtocolType: 'standard' }),
-        'Typical experience or end-to-end scenario for an animal in this protocol'
-      );
+      assert.equal(experienceSummary.label(standardValues), 'Typical experience or end-to-end scenario for an animal in this protocol');
     });
 
     it('uses the expected outputs labels across protocol modes', () => {
-      assert.equal(outputs.label({}), 'What outputs are expected to arise from this protocol?');
-      assert.equal(
-        outputs.label({ isStandardProtocol: true, standardProtocolType: 'standard' }),
-        'Permitted outputs from this protocol'
-      );
+      assert.equal(outputs.label(experimentalValues), 'What outputs are expected to arise from this protocol?');
+      assert.equal(outputs.label(standardValues), 'Permitted outputs from this protocol');
     });
 
     it('keeps quantitative-data as a radio question by default', () => {
-      assert.equal(quantitativeData.label({}), 'Will this protocol generate quantitative data?');
+      assert.equal(quantitativeData.label(experimentalValues), 'Will this protocol generate quantitative data?');
     });
   });
 
   describe('supporting sections', () => {
+    const mostAppropriate = justification.fields.find(field => field.name === 'most-appropriate');
+    const mostRefined = justification.fields.find(field => field.name === 'most-refined');
+
     it('export the expected titles and singular labels', () => {
       assert.equal(fate.title, 'Fate of animals');
+      assert.equal(justification.title, 'Protocol justification');
       assert.equal(justification.label, 'Why is each type of animal, experimental model, and/or method selected for this protocol:');
-      assert.equal(justificationStandardProtocol.label, 'In what ways have you changed the standard protocol and why?');
       assert.equal(conditions.singular, 'Additional condition');
       assert.equal(authorisations.singular, 'Authorisation');
+    });
+
+    it('shows the justification section in baseline and editable modes, but hides it in standard mode', () => {
+      assert.equal(justification.show(sectionPropsFor(experimentalValues)), true);
+      assert.equal(justification.show(sectionPropsFor(editableValues)), true);
+      assert.equal(justification.show(sectionPropsFor(standardValues)), false);
+    });
+
+    it('uses the baseline label by default and the editable label in editable mode', () => {
+      assert.equal(mostAppropriate.label(experimentalValues), 'a) the most appropriate scientific approach?');
+      assert.equal(mostAppropriate.label(editableValues), 'In what ways have you changed the standard protocol and why?');
+    });
+
+    it('shows only the most-appropriate field in editable mode', () => {
+      assert.equal(mostAppropriate.type, 'texteditor');
+      assert.equal(mostRefined.show(experimentalValues), true);
+      assert.equal(mostRefined.show(editableValues), false);
     });
   });
 });

@@ -275,7 +275,9 @@ class Step extends Component {
     }</>;
 
     const repeatedFrom = getRepeatedFromProtocolIndex(values, protocol.id);
-    const showRemoveLink = editable && completed && !deleted && !values.deleted && length > 1;
+    const canRemoveStep = length > 1 && (!isStandardProtocol || values.optional === true);
+    const showReorderControls = !isStandardProtocol && length > 1;
+    const showRemoveLink = editable && completed && !deleted && !values.deleted && canRemoveStep;
     const showRestoreLink = values.deleted;
     const step = <>
       {
@@ -294,12 +296,12 @@ class Step extends Component {
             editable && completed && !deleted && !values.deleted && (
               <div className="float-right">
                 {
-                  !isStandardProtocol && length > 1 && (
+                  showReorderControls && (
                     <span>Reorder: <a href="#" disabled={index === 0} onClick={this.moveUp}>Up</a> <a href="#" disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
                   )
                 }
                 {
-                  showRemoveLink && <span> | <a href="#" onClick={this.removeItem}>Remove</a></span>
+                  showRemoveLink && <span>{showReorderControls ? ' | ' : ''}<a href="#" onClick={this.removeItem}>Remove</a></span>
                 }
               </div>
             )

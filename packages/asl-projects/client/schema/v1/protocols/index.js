@@ -9,7 +9,6 @@ import fate from './fate';
 import experience from './experience';
 import experimentalDesign from './experimental-design';
 import justification from './justification';
-import justificationStandardProtocol from './justification-standard-protocol';
 import conditions from './conditions';
 import authorisations from './authorisations';
 
@@ -28,7 +27,6 @@ export default {
   experience,
   experimentalDesign,
   justification,
-  justificationStandardProtocol,
   conditions,
   authorisations
 };
