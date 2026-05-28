@@ -1,6 +1,6 @@
 const moment = require('moment');
 const assert = require('assert');
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const db = require('./helpers/db');
 const { getSpecies, up } = require('../../migrations/20201203162238_migrate_species_from_versions');
 

@@ -43,7 +43,7 @@ module.exports = merge(
     },
     actions: {
       updateCourse: 'Change course details',
-      updateCourseDates: 'Change course dates',
+      updateCourseDates: 'Change course date{{#model.endDate}}s{{/model.endDate}}',
       deleteCourse: 'Delete course',
       addParticipant: 'Apply for a cat E PIL'
     }

@@ -46,7 +46,7 @@ describe('transform', () => {
   });
 
   it('returns undefined if neither licence number or expiry day found.', () => {
-    const versionId = uuid();
+    const versionId = uuid.v4();
     const input = 'Some text here';
     const data = {
       'expiring-yes': slateify(input)
@@ -56,7 +56,7 @@ describe('transform', () => {
   });
 
   it('adds a single project continuation if licence number found but no expiry date.', () => {
-    const versionId = uuid();
+    const versionId = uuid.v4();
     const input = 'Licence number: P12345678';
     const data = {
       'expiring-yes': slateify(input)
@@ -74,7 +74,7 @@ describe('transform', () => {
   });
 
   it('adds a single project continuation if expiry date but no licence number found.', () => {
-    const versionId = uuid();
+    const versionId = uuid.v4();
     const input = 'Expiry date: 01/01/2020';
     const data = {
       'expiring-yes': slateify(input)
@@ -92,7 +92,7 @@ describe('transform', () => {
   });
 
   it('adds a single project continuation if both licence number and expiry date found.', () => {
-    const versionId = uuid();
+    const versionId = uuid.v4();
     const input = 'Licence number: P12345678, Expiry date: 01/01/2020';
     const data = {
       'expiring-yes': slateify(input)
@@ -110,7 +110,7 @@ describe('transform', () => {
   });
 
   it('Adds the first licence number and logs a warning if multiple found.', () => {
-    const versionId = uuid();
+    const versionId = uuid.v4();
     const input = 'Licence number: P12345678, also from P87654321, Expiry date: 01/01/2020';
     const data = {
       'expiring-yes': slateify(input)
@@ -128,7 +128,7 @@ describe('transform', () => {
   });
 
   it('parses old style slate leaves', () => {
-    const versionId = uuid();
+    const versionId = uuid.v4();
     const data = {
       'expiring-yes': '{"object":"value","document":{"object":"document","data":{},"nodes":[{"object":"block","type":"paragraph","data":{},"nodes":[{"object":"text","leaves":[{"object":"leaf","text":"P12345678","marks":[]}]}]},{"object":"block","type":"paragraph","data":{},"nodes":[{"object":"text","leaves":[{"object":"leaf","text":"27 Feb 2020","marks":[]}]}]}]}}'
     };
@@ -158,7 +158,7 @@ describe('transform', () => {
       ];
 
       valid.forEach(licenceNumber => {
-        const versionId = uuid();
+        const versionId = uuid.v4();
         const data = {
           'expiring-yes': slateify(licenceNumber.toString())
         };
@@ -189,7 +189,7 @@ describe('transform', () => {
       ];
 
       invalid.forEach(licenceNumber => {
-        const versionId = uuid();
+        const versionId = uuid.v4();
         const data = {
           'expiring-yes': slateify(licenceNumber.toString())
         };
@@ -211,7 +211,7 @@ describe('transform', () => {
       ];
 
       valid.forEach(expiryDate => {
-        const versionId = uuid();
+        const versionId = uuid.v4();
         const data = {
           'expiring-yes': slateify(expiryDate)
         };
@@ -256,7 +256,7 @@ describe('transform', () => {
       ];
 
       valid.forEach(expiryDate => {
-        const versionId = uuid();
+        const versionId = uuid.v4();
         const data = {
           'expiring-yes': slateify(expiryDate)
         };
@@ -268,11 +268,8 @@ describe('transform', () => {
 });
 
 describe('up', () => {
-  // Utility function to validate UUID format
-  const isValidUUID = (uuid) => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(uuid);
-
   const licenceHolder = {
-    id: uuid(),
+    id: uuid.v4(),
     first_name: 'Licence',
     last_name: 'Holder',
     email: 'test@example.com'
@@ -287,12 +284,12 @@ describe('up', () => {
   };
 
   const ids = {
-    VALID_INPUT: uuid(),
-    INVALID_INPUT: uuid(),
-    INVALID_DATE: uuid(),
-    INVALID_LICENCE_NUMBER: uuid(),
-    MULTIPLE_LICENCE_NUMBERS: uuid(),
-    LEGACY_SLATE_FORMAT: uuid()
+    VALID_INPUT: uuid.v4(),
+    INVALID_INPUT: uuid.v4(),
+    INVALID_DATE: uuid.v4(),
+    INVALID_LICENCE_NUMBER: uuid.v4(),
+    MULTIPLE_LICENCE_NUMBERS: uuid.v4(),
+    LEGACY_SLATE_FORMAT: uuid.v4()
   };
 
   const continuations = {
@@ -334,10 +331,8 @@ describe('up', () => {
           return this.knex('projects').insert(project).returning('id')
             .then(ids => ids[0])
             .then((projectId) => {
-              if (!isValidUUID(projectId) && projectId.id) {
-                projectId = projectId.id;
-              }
-              return this.knex('project_versions').insert({ ...projectVersion, project_id: projectId });
+              const projectUuid = !uuid.validate(projectId) && projectId.id ? projectId.id : projectId;
+              return this.knex('project_versions').insert({ ...projectVersion, project_id: projectUuid });
             });
         }));
       });

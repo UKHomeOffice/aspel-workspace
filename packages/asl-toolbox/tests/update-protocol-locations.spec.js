@@ -1,19 +1,16 @@
 import 'dotenv/config';
-// Dev dependency, builtin
-/* eslint-disable implicit-dependencies/no-implicit */
 import {describe, it, jest, expect, afterEach, beforeAll, afterAll, beforeEach} from '@jest/globals';
-/* eslint-enable implicit-dependencies/no-implicit */
 
 import {dataDb} from '../scripts/lib/db.js';
 
 // Jest does not yet provide a stable way of mocking ES Modules.
-jest.unstable_mockModule('../scripts/lib/readline.js', () => ({
+jest.unstable_mockModule('../dist/scripts/lib/readline.js', () => ({
   readline: jest.fn()
 }));
 
 // These have to be loaded after Jest has had the opportunity to set up the readline mock
-const {main} = await import('../scripts/update-protocol-locations.js');
-const {readline: readlineMock} = await import('../scripts/lib/readline.js');
+const {main} = await import('../dist/scripts/update-protocol-locations.js');
+const {readline: readlineMock} = await import('../dist/scripts/lib/readline.js');
 
 const ESTABLISHMENT_1_PROJECT_1_ID = '4d298d9b-a69b-441b-919e-70670f326130';
 const ESTABLISHMENT_1_PROJECT_2_ID = '3e98e5cb-afc1-4084-b911-e8c058f66d3d';

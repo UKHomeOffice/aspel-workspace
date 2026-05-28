@@ -1,5 +1,5 @@
 const assert = require('assert');
-const uuid = require('uuid');
+const { v4: uuid } = require('uuid');
 const db = require('./helpers/db');
 const { transform, up } = require('../../migrations/20200715133416_migrate_ra_as_boolean');
 

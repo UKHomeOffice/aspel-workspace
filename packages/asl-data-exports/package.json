@@ -34,7 +34,7 @@
     "jszip": "^3.7.1",
     "mocha": "^11.7.1",
     "nodemon": "^3.1.10",
-    "uuid": "^8.3.2"
+    "uuid": "^13.0.2"
   },
   "dependencies": {
     "@asl/schema": "file:../asl-schema",

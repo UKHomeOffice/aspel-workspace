@@ -4,6 +4,7 @@ const { form } = require('../../../common/routers');
 const changeDates = require('./routers/change-dates');
 const confirm = require('./routers/confirm');
 const { modelFromCourse } = require('../middleware/model-from-course');
+const { render } = require('mustache');
 
 module.exports = settings => {
   const app = page({
@@ -28,16 +29,21 @@ module.exports = settings => {
     ));
   });
 
+  app.use(modelFromCourse(schema));
+
   app.use((req, res, next) => {
-    res.locals.pageTitle = [
-      res.locals.static.content.pageTitle,
-      res.locals.static.content.breadcrumbs.categoryE.course.reschedule
-    ].join(' - ');
+    res.locals.pageTitle =
+      [
+        res.locals.static.content.pageTitle,
+        res.locals.static.content.breadcrumbs.categoryE.course.reschedule,
+        req.trainingCourse?.title
+      ]
+        .map(part => render(part, {model: req.model}))
+        .filter(Boolean)
+        .join(' - ');
 
     next();
   });
-
-  app.use(modelFromCourse(schema));
 
   const parseAndSetDate = (req, key) => {
     const day = req.body[`${key}-day`];

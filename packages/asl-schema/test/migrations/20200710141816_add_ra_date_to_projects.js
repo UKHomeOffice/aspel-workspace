@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const assert = require('assert');
 const moment = require('moment');
 const db = require('./helpers/db');
@@ -119,7 +119,7 @@ describe('up', () => {
     activeNoRA: uuid(),
     multipleVersionsLatestNoRa: uuid(),
     multipleVersionsLatestRa: uuid()
-  }
+  };
 
   const licenceHolder = {
     id: uuid(),
