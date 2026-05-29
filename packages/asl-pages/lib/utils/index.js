@@ -30,17 +30,17 @@ const getValue = ({ row, schema, key }) => {
 };
 
 const hasChanged = (newValue, oldValue, { accessor } = {}) => {
-  oldValue = get(oldValue, accessor, oldValue);
-  newValue = get(newValue, accessor, newValue);
-  if (!oldValue && !newValue) {
-    return false;
-  }
-  if (Array.isArray(newValue)) {
-    newValue = [ ...newValue ].map(v => get(v, accessor, v)).sort();
-    oldValue = [ ...oldValue ].map(v => get(v, accessor, v)).sort();
-    return !isEqual(oldValue, newValue);
-  }
-  return !isEqual(oldValue, newValue);
+  const resolveValue = (value) => {
+    const resolvedValue = get(value, accessor, value);
+    return Array.isArray(resolvedValue)
+      ? [ ...resolvedValue ].map(v => get(v, accessor, v)).sort()
+      : resolvedValue;
+  };
+
+  const newResolved = resolveValue(newValue);
+  const oldResolved = resolveValue(oldValue);
+
+  return !isEqual(oldResolved, newResolved);
 };
 
 const cleanModel = item => {

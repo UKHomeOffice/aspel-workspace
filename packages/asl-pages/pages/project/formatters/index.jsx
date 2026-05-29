@@ -72,22 +72,16 @@ const formatters = establishmentId => ({
       const aaEstablishment = model.additionalEstablishments && model.additionalEstablishments.find(e => e.id === establishmentId);
       const additionalAvailabilityEnded = isAdditionalAvailability && aaEstablishment && aaEstablishment.status === 'removed';
 
-      if (additionalAvailabilityEnded) {
-        status = 'additional-availability-ended';
-      }
+      const displayStatus =
+        (additionalAvailabilityEnded && 'additional-availability-ended') ||
+        (model.refusedDate && 'refused') ||
+        (status === 'active' && model.suspendedDate && 'suspended') ||
+        status;
 
-      if (model.refusedDate) {
-        status = 'refused';
-      }
-
-      if (status === 'active' && model.suspendedDate) {
-        status = 'suspended';
-      }
-
-      const className = classnames({ badge: true, complete: good.includes(status), rejected: bad.includes(status) });
+      const className = classnames({ badge: true, complete: good.includes(displayStatus), rejected: bad.includes(displayStatus) });
       return (
         <Fragment>
-          <span className={ className }><Snippet>{ `status.${status}` }</Snippet></span>
+          <span className={ className }><Snippet>{ `status.${displayStatus}` }</Snippet></span>
         </Fragment>
       );
     }
