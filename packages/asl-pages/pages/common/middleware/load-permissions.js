@@ -4,10 +4,8 @@ const { every } = require('lodash');
  * and add any that match to `allowedActions`
  */
 
-module.exports = (...perms) => (req, res, next) => {
-  if (Array.isArray(perms[0])) {
-    perms = perms[0];
-  }
+module.exports = (...args) => (req, res, next) => {
+  const perms = Array.isArray(args[0]) ? args[0] : args;
 
   // continue immediately if user has all permissions already
   if (every(perms, p => res.locals.static.allowedActions.includes(p))) {

@@ -16,11 +16,11 @@ import InProgressWarning from '../../../common/components/in-progress-warning';
 
 const connectComponent = value => {
   const mapStateToProps = ({ model, static: { schema, errors } }) => {
-    schema = schema.authorisationTypes.options.find(authorisation => authorisation.value === value).reveal;
+    const reveal = schema.authorisationTypes.options.find(authorisation => authorisation.value === value).reveal;
     return {
       model,
       errors,
-      schema: mapKeys(schema, (v, k) => `authorisation-${value}-${k}`)
+      schema: mapKeys(reveal, (v, k) => `authorisation-${value}-${k}`)
     };
   };
 

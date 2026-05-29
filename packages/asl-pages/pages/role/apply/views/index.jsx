@@ -5,11 +5,11 @@ import OpenTasks from '../../component/open-tasks';
 
 const connectComponent = key => {
   const mapStateToProps = ({ model, static: { schema } }) => {
-    schema = schema.type.options.find(role => role.value === key).reveal;
+    const reveal = schema.type.options.find(role => role.value === key).reveal;
 
     return {
       model,
-      schema
+      schema: reveal
     };
   };
 

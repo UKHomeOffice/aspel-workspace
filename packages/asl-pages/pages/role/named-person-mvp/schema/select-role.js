@@ -2,13 +2,14 @@ const namedRoles = require('../content/named-roles');
 const hintText = require('../../content/hint-text');
 const { EXCLUDED_ROLE_TYPES_BY_CORPORATE_STATUS, ROLE_TYPES } = require('../role-types');
 
-module.exports = (roles, establishment) => {
+module.exports = (currentRoles, establishment) => {
   const excludeRoles =
     (establishment.corporateStatus &&
       EXCLUDED_ROLE_TYPES_BY_CORPORATE_STATUS[establishment.corporateStatus]) ||
     [];
-  roles = Object.keys(namedRoles)
-    .filter((r) => !roles.includes(r))
+
+  const roles = Object.keys(namedRoles)
+    .filter((r) => !currentRoles.includes(r))
     .filter((r) => !excludeRoles.includes(r));
 
   const options = roles.map((role) => {

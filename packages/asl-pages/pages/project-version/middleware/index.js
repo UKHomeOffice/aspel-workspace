@@ -65,16 +65,20 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
     return openTask;
   }
 
-  const query = {
-    model: 'project',
-    modelId: req.projectId,
-    establishmentId: req.establishmentId,
-    onlyClosed: true
-  };
-
   try {
-    const response = await req.api('/tasks/related', { query });
-    const task = get(response, 'json.data', []).find(matches);
+    if (!req.closedTasks) {
+      const query = {
+        model: 'project',
+        modelId: req.projectId,
+        establishmentId: req.establishmentId,
+        onlyClosed: true
+      };
+
+      const response = await req.api('/tasks/related', { query });
+      req.closedTasks = response?.json?.data ?? [];
+    }
+
+    const task = req.closedTasks.find(matches);
 
     // The version id associated with a task is only updated when a draft is submitted
     if (!task && req.version.status === 'draft') {

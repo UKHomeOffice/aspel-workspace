@@ -6,10 +6,10 @@ const excludedRoles = {
   'non-profit': ['nprc']
 };
 
-module.exports = (roles, establishment) => {
+module.exports = (currentRoles, establishment) => {
   const excludeRoles = (establishment.corporateStatus && excludedRoles[establishment.corporateStatus]) || [];
-  roles = Object.keys(namedRoles)
-    .filter(r => !roles.includes(r))
+  const roles = Object.keys(namedRoles)
+    .filter(r => !currentRoles.includes(r))
     .filter(r => !excludeRoles.includes(r));
 
   const options = roles.map(role => {
