@@ -18,6 +18,7 @@ const extractComments = require('../lib/extract-comments');
 const { mapSpecies, mapPermissiblePurpose, mapAnimalQuantities } = require('@asl/projects/client/helpers');
 const diff = require('./diff');
 const { deepRemoveEmpty } = require('../helpers/project');
+const { asyncMiddleware } = require('../../../utils');
 
 // eslint-disable-next-line no-control-regex
 const invisibleWhitespace = /[\u0000-\u0008\u000B-\u0019\u001b\u009b\u00ad\u200b\u2028\u2029\ufeff\ufe00-\ufe0f]/g;
@@ -44,54 +45,66 @@ const getVersion = () => (req, res, next) => {
 // in openTasks and then falling back to closed related tasks (for granted
 // historical versions). Returns undefined if no matching task exists, so
 // comments from a different version's task can't leak onto this version.
-const getTaskForVersion = (req, actions = ['grant', 'transfer']) => {
+const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']) => {
   if (!req.project || !req.versionId) {
-    return Promise.resolve();
+    return undefined;
   }
+
   if (req.project.establishmentId !== req.establishmentId) {
     // the application task for AA projects won't be visible so don't try to load it
-    return Promise.resolve();
+    return undefined;
   }
+
   const actionList = castArray(actions);
   const matches = task =>
     actionList.includes(get(task, 'data.action')) &&
-    get(task, 'data.data.version') === req.versionId;
+    get(task, 'data.data.version') === versionId;
 
   const openTask = get(req.project, 'openTasks', []).find(matches);
   if (openTask) {
-    return Promise.resolve(openTask);
+    return openTask;
   }
+
   const query = {
     model: 'project',
     modelId: req.projectId,
     establishmentId: req.establishmentId,
     onlyClosed: true
   };
-  return req.api('/tasks/related', { query })
-    .then(response => get(response, 'json.data', []).find(matches))
-    .catch(() => undefined);
-};
 
-const getComments = (actions = ['grant', 'transfer']) => (req, res, next) => {
-  getTaskForVersion(req, actions)
-    .then(task => {
-      req.versionTask = task;
-      if (!task) {
-        return;
+  try {
+    const response = await req.api('/tasks/related', { query });
+    const task = get(response, 'json.data', []).find(matches);
+
+    // The version id associated with a task is only updated when a draft is submitted
+    if (!task && req.version.status === 'draft') {
+      const previousVersion = dropWhile(req.project.versions, version => version.id !== versionId).slice(1).shift();
+      if (previousVersion && !['withdrawn', 'granted'].includes(previousVersion.status)) {
+        return getTaskForVersion(req, previousVersion.id, actions);
       }
-      return req.api(`/tasks/${task.id}`)
-        .then(response => extractComments(response.json.data))
-        .then(comments => {
-          res.locals.static.comments = comments;
-        });
-    })
-    .then(() => next())
-    .catch(next);
+    }
+
+    return task;
+  } catch (e) {
+    return undefined;
+  }
 };
 
-const hasEditPermission = (req) => {
+const getComments = (actions = ['grant', 'transfer']) => asyncMiddleware(async (req, res) => {
+  const task = await getTaskForVersion(req, req.versionId, actions);
+
+  req.versionTask = task;
+  if (!task) {
+    return;
+  }
+
+  const taskResponse = await req.api(`/tasks/${task.id}`);
+  res.locals.static.comments = extractComments(taskResponse.json.data);
+});
+
+const hasEditPermission = async (req) => {
   if (req.user.profile.asruUser) {
-    return Promise.resolve();
+    return false;
   }
   const params = {
     id: req.projectId,
@@ -102,27 +115,20 @@ const hasEditPermission = (req) => {
   return req.user.can('project.update', params);
 };
 
-const userCanComment = req => {
+const userCanComment = async req => {
   const asruUser = req.user.profile.asruUser;
   const task = req.versionTask;
   const isOpenTask = !!task && get(req.project, 'openTasks', []).some(t => t.id === task.id);
   if (!isOpenTask) {
-    return Promise.resolve(false);
+    return false;
   }
-  return Promise.resolve()
-    .then(() => {
-      return asruUser ? task.withASRU : (!task.withASRU && hasEditPermission(req));
-    });
+
+  return asruUser ? task.withASRU : (!task.withASRU && hasEditPermission(req));
 };
 
-const canComment = () => (req, res, next) => {
-  userCanComment(req)
-    .then(isCommentable => {
-      res.locals.static.isCommentable = isCommentable;
-    })
-    .then(() => next())
-    .catch(next);
-};
+const canComment = () => asyncMiddleware(async (req, res) => {
+  res.locals.static.isCommentable = await userCanComment(req);
+});
 
 const traverse = (node, key = undefined, keys = []) => {
   if (key) {
