@@ -1,5 +1,5 @@
 const { merge } = require('lodash');
-const baseContent = require('../../../../profile/content');
+const baseContent = require('../../../profile/content');
 
 module.exports = merge({}, baseContent, {
   confirmTitle: 'Check and submit',

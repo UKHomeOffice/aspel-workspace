@@ -4,7 +4,7 @@ module.exports = {
   beforeYouApply: require('./before-you-apply'),
   mandatoryTraining: require('./mandatory-training'),
   incompleteTraining: require('./incomplete-training'),
-  skillsAndExperience: require('./skills-and-experience')
-  // confirm: require('./confirm'),
+  skillsAndExperience: require('./skills-and-experience'),
+  confirm: require('./confirm')
   // success: require('./success')
 };

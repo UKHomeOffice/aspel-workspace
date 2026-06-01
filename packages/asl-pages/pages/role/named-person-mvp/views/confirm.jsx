@@ -33,8 +33,7 @@ const Confirm = ({
 
   const { incompleteTraining = {}, mandatoryTraining } = useSelector(state => state.static);
 
-  // Determine the edit path based on action
-  const editPath = props.action === 'remove' ? 'delete' : 'create';
+  const editTarget = props.action === 'remove' ? 'role.delete' : 'role.namedPersonMvp';
 
   return (
     <FormLayout formatters={formatters}>
@@ -52,7 +51,7 @@ const Confirm = ({
       }
 
       <ControlBar>
-        <Link page={`role.namedPersonMvp.${editPath}`} label={<Snippet>buttons.edit</Snippet>} />
+        <Link page={editTarget} label={<Snippet>buttons.edit</Snippet>} />
         <Link page="profile.read" label={<Snippet>buttons.cancel</Snippet>} />
       </ControlBar>
     </FormLayout>
