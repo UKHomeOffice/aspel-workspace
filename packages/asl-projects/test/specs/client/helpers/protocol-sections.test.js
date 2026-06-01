@@ -4,6 +4,7 @@ const path = require('path');
 const animals = require('../../../../client/schema/v1/protocols/animals').default;
 const gaas = require('../../../../client/schema/v1/protocols/gaas').default;
 const fate = require('../../../../client/schema/v1/protocols/fate').default;
+const NTSFateOfAnimalFields = require('../../../../client/helpers/nts-field').default;
 const experience = require('../../../../client/schema/v1/protocols/experience').default;
 const experimentalDesign = require('../../../../client/schema/v1/protocols/experimental-design').default;
 const justification = require('../../../../client/schema/v1/protocols/justification').default;
@@ -12,6 +13,7 @@ const authorisations = require('../../../../client/schema/v1/protocols/authorisa
 const {
   editableValues,
   experimentalValues,
+  getFieldState,
   sectionPropsFor,
   standardValues
 } = require('../test-utils/protocol-mode');
@@ -118,6 +120,10 @@ describe('protocol section schema', () => {
   describe('supporting sections', () => {
     const mostAppropriate = justification.fields.find(field => field.name === 'most-appropriate');
     const mostRefined = justification.fields.find(field => field.name === 'most-refined');
+    const fateFields = NTSFateOfAnimalFields();
+    const killedReveal = fateFields.killed.reveal;
+    const justificationReveal = killedReveal.options[0].reveal;
+    const continuedUseReveal = fateFields['continued-use'].reveal;
 
     it('export the expected titles and singular labels', () => {
       assert.equal(fate.title, 'Fate of animals');
@@ -142,6 +148,32 @@ describe('protocol section schema', () => {
       assert.equal(mostAppropriate.type, 'texteditor');
       assert.equal(mostRefined.show(experimentalValues), true);
       assert.equal(mostRefined.show(editableValues), false);
+    });
+
+    it('uses protocol-mode specific labels and types for NTS fate reveal fields', () => {
+      assert.deepEqual(getFieldState(killedReveal, experimentalValues), {
+        label: 'Will you be using non-schedule 1 killing methods on a conscious animal?',
+        hint: undefined,
+        type: 'radio'
+      });
+
+      assert.deepEqual(getFieldState(killedReveal, standardValues), {
+        label: 'Non-schedule 1 killing methods on a conscious animal',
+        hint: undefined,
+        type: 'standard-radio'
+      });
+
+      assert.deepEqual(getFieldState(justificationReveal, standardValues), {
+        label: 'For each non-schedule 1 method, explain why this is necessary.',
+        hint: undefined,
+        type: 'paragraph'
+      });
+
+      assert.deepEqual(getFieldState(continuedUseReveal, standardValues), {
+        label: null,
+        hint: undefined,
+        type: 'paragraph'
+      });
     });
   });
 });
