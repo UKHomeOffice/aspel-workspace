@@ -34,7 +34,7 @@ const hasChanged = (newValue, oldValue, { accessor } = {}) => {
     const resolvedValue = get(value, accessor, value);
     return Array.isArray(resolvedValue)
       ? [ ...resolvedValue ].map(v => get(v, accessor, v)).sort()
-      : resolvedValue;
+      : (resolvedValue || false);
   };
 
   const newResolved = resolveValue(newValue);
