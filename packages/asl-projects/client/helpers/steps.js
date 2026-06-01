@@ -36,8 +36,20 @@ export const hydrateSteps = (protocols, steps, reusableSteps) => {
   return [hydratedSteps, Object.values(reusableSteps)];
 };
 
-export const removeNewDeleted = (steps, previousSteps = [], keepNewDeleted = false) => {
-  if (keepNewDeleted) {
+export const canRestoreDeletedStep = (step = {}, standardProtocolsEnabled) => {
+  if (step?.isStandard === true) {
+    return true;
+  }
+
+  const flagEnabled = standardProtocolsEnabled ?? step?.standardProtocolsEnabled ?? true;
+
+  return flagEnabled
+    && step?.isStandardProtocol === true
+    && step?.standardProtocolType === 'standard';
+};
+
+export const removeNewDeleted = (steps, previousSteps = [], keepNewDeleted = false, shouldKeepDeletedStep) => {
+  if (keepNewDeleted && !shouldKeepDeletedStep) {
     return steps || [];
   }
 
@@ -48,6 +60,10 @@ export const removeNewDeleted = (steps, previousSteps = [], keepNewDeleted = fal
 
   return (steps || []).filter(step => {
     if (step.deleted === true) {
+      if (typeof shouldKeepDeletedStep === 'function') {
+        return shouldKeepDeletedStep(step);
+      }
+
       return oldSteps.includes(step.id);
     }
     return true;

@@ -32,6 +32,11 @@ const ProtocolFormBase = ({
 
     if (!protocolTemplate) return;
 
+    if (!Object.keys(protocolTemplate.data || {}).length) {
+      setError('This protocol template is not available yet');
+      return;
+    }
+
     const newProtocol = BuildProtocol(protocolTemplate, project);
 
     const mergedConditions = [
@@ -45,7 +50,7 @@ const ProtocolFormBase = ({
     updateProjectAction({
       ...project,
       protocols: [...(project.protocols || []), newProtocol],
-      "fate-of-animals": protocolTemplate?.data?.fate || project.fate,
+      "fate-of-animals": protocolTemplate?.data?.fate ?? project['fate-of-animals'],
       "fate-of-animals-complete": true,
       conditions: mergedConditions
     });
@@ -78,44 +83,42 @@ const ProtocolFormBase = ({
           )}
 
           <div className="govuk-radios">
-            <h2 className="govuk-heading-m">
-              {gaBreading.groups[0].title}
-            </h2>
-            {gaBreading.groups[0].protocols.map(protocol => (
-              <div className="govuk-radios__item" key={protocol.id}>
-                <input
-                  className="govuk-radios__input"
-                  id={protocol.id}
-                  type="radio"
-                  name={radioName}
-                  value={protocol.value}
-                  checked={selectedTemplate === protocol.value}
-                  onChange={e => setSelectedTemplate(e.target.value)}
-                />
-                <label className="govuk-label govuk-radios__label" htmlFor={protocol.id} >
-                  {protocol.label}
-                </label>
-              </div>
-            ))}
+            {(gaBreading.groups || []).map((group, index) => (
+              <React.Fragment key={group.title || index}>
+                <h2 className={`govuk-heading-m${index > 0 ? ' govuk-!-margin-top-8' : ''}`}>
+                  {group.title}
+                </h2>
+                {(group.protocols || []).map(protocol => {
+                  const unavailable = !Object.keys(protocol.data || {}).length;
 
-            <h2 className="govuk-heading-m govuk-!-margin-top-8">
-              {gaBreading.groups[1].title}
-            </h2>
-            {gaBreading.groups[1].protocols.map(protocol => (
-              <div className="govuk-radios__item" key={protocol.id}>
-                <input
-                  className="govuk-radios__input"
-                  id={protocol.id}
-                  type="radio"
-                  name={radioName}
-                  value={protocol.value}
-                  checked={selectedTemplate === protocol.value}
-                  onChange={e => setSelectedTemplate(e.target.value)}
-                />
-                <label className="govuk-label govuk-radios__label" htmlFor={protocol.id} >
-                  {protocol.label}
-                </label>
-              </div>
+                  return (
+                    <div className="govuk-radios__item" key={protocol.id}>
+                      <input
+                        className="govuk-radios__input"
+                        id={protocol.id}
+                        type="radio"
+                        name={radioName}
+                        value={protocol.value}
+                        checked={selectedTemplate === protocol.value}
+                        onChange={e => {
+                          setSelectedTemplate(e.target.value);
+                          setError('');
+                        }}
+                        disabled={unavailable}
+                        aria-describedby={unavailable ? `${protocol.id}-hint` : undefined}
+                      />
+                      <label className="govuk-label govuk-radios__label" htmlFor={protocol.id}>
+                        {protocol.label}
+                      </label>
+                      {unavailable && (
+                        <div className="govuk-hint govuk-radios__hint" id={`${protocol.id}-hint`}>
+                          This template is not available yet.
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </React.Fragment>
             ))}
           </div>
 

@@ -16,7 +16,7 @@ export default [
         type: 'texteditor'
       },
       standard: {
-        label: 'Purposes of protocol ',
+        label: 'Purposes of protocol',
         hint: null,
         type: 'paragraph'
       }
@@ -55,7 +55,7 @@ export default [
         type: 'radio'
       },
       standard: {
-        label: 'Highest level of suffering an animal could experience in this protocol ',
+        label: 'Highest level of suffering an animal could experience in this protocol',
         hint: 'This determines the severity category for the protocol',
         type: 'standard-radio'
       }
@@ -73,7 +73,7 @@ export default [
         type: 'texteditor'
       },
       standard: {
-        label: 'Proportion of animals that could experience this level of suffering ',
+        label: 'Proportion of animals that could experience this level of suffering',
         type: 'paragraph'
       }
     }

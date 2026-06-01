@@ -1,5 +1,17 @@
 import assert from 'assert';
-import { removeNewDeleted } from '../../../../client/helpers/steps';
+import { canRestoreDeletedStep, removeNewDeleted } from '../../../../client/helpers/steps';
+
+describe('canRestoreDeletedStep', () => {
+  it('allows restore for standard steps', () => {
+    assert.equal(canRestoreDeletedStep({ isStandard: true }), true);
+    assert.equal(canRestoreDeletedStep({ isStandardProtocol: true, standardProtocolType: 'standard' }), true);
+  });
+
+  it('does not allow restore for non-standard steps', () => {
+    assert.equal(canRestoreDeletedStep({ isStandardProtocol: false, standardProtocolType: 'editable' }), false);
+    assert.equal(canRestoreDeletedStep({ isStandardProtocol: true, standardProtocolType: 'standard' }, false), false);
+  });
+});
 
 describe('removeNewDeleted', () => {
   const steps = [
@@ -28,6 +40,24 @@ describe('removeNewDeleted', () => {
       const result = removeNewDeleted(steps, previousSteps, true);
 
       assert.deepEqual(result, steps);
+    });
+
+    it('only keeps deleted steps that can be restored', () => {
+      const result = removeNewDeleted(
+        [
+          { id: 'standard-step', deleted: true, isStandardProtocol: true, standardProtocolType: 'standard' },
+          { id: 'editable-step', deleted: true, isStandardProtocol: false, standardProtocolType: 'editable' },
+          { id: 'active-step', deleted: false }
+        ],
+        [[{ id: 'editable-step' }]],
+        false,
+        canRestoreDeletedStep
+      );
+
+      assert.deepEqual(result, [
+        { id: 'standard-step', deleted: true, isStandardProtocol: true, standardProtocolType: 'standard' },
+        { id: 'active-step', deleted: false }
+      ]);
     });
   });
 });

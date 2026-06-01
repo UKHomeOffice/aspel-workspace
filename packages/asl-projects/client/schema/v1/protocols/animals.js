@@ -30,8 +30,7 @@ export default {
       {
         name: 'maximum-animals',
         label: values => {
-          const species = values?.speciesLabel ?? 'animals';
-          return `What is the maximum number of ${species} that will be used in this protocol?`;
+          return `What is the maximum number of {{ values.speciesLabel }} that will be used in this protocol?`;
         },
         hint: 'Only enter numerals, for example 40',
         type: 'text',
@@ -41,15 +40,13 @@ export default {
       {
         editable: {
           label: values => {
-            const species = values?.speciesLabel ?? 'animals';
-            return `What is the maximum number of ${species}  that will be used in this protocol?`;
+            return `What is the maximum number of {{ values.speciesLabel }} that will be used in this protocol?`;
           },
           hint: 'This should be a maximum and not estimated'
         },
         standard: {
           label: values => {
-            const species = values?.speciesLabel ?? 'animals';
-            return `Maximum number of ${species} to be used`;
+            return `Maximum number of {{ values.speciesLabel }} to be used`;
           },
           hint: 'This should be a maximum and not estimated'
         }
@@ -145,7 +142,7 @@ export default {
               },
               {
                 editable: {
-                  label: 'How did these animals start their use? ',
+                  label: 'How did these animals start their use?',
                   hint: 'Describe the procedures that have been applied to animals that will continue their use onto this protocol.',
                   type: 'texteditor'
                 },
@@ -167,7 +164,7 @@ export default {
       },
       {
         editable: {
-          label: 'Will any {{ values.speciesLabel }}  coming this protocol be classed as ‘continued use’?',
+          label: 'Will any {{ values.speciesLabel }} coming onto this protocol be classed as ‘continued use’?',
           hint: '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use, or animals that have had procedures applied to them to prepare them for use in this protocol',
           type: 'radio'
         },
@@ -239,9 +236,10 @@ Select each that applies`,
       },
       {
         editable: {
-          hint: 'Re-use’ describes using an animal for a new experiment when you could equally use a naive animal to get the same results.'
+          hint: '‘Re-use’ describes using an animal for a new experiment when you could equally use a naive animal to get the same results.'
         },
         standard: {
+          type: 'standard-list',
           hint: '‘Re-use’ describes using animals again for a new experiment when you could equally use a naïve animal to get the same results'
         }
       }

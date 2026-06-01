@@ -20,11 +20,11 @@ import {
   getTruncatedStepTitle,
   hydrateSteps,
   removeNewDeleted,
-  addDeletedReusableSteps
+  addDeletedReusableSteps,
+  canRestoreDeletedStep
 } from '../../../helpers/steps';
 import {
   getProtocolMode,
-  isProtocolPlaybackMode,
   isStandardProtocolMode
 } from '../../../helpers';
 import { saveReusableSteps } from '../../../actions/projects';
@@ -178,7 +178,7 @@ class Step extends Component {
     const isStandardProtocol = isStandardProtocolMode(values, standardProtocolsEnabled);
     const isEditableProtocol = protocolMode === 'editable';
     const standardProtocolType = protocolMode === 'experimental' ? undefined : values.standardProtocolType;
-    const restoreDeletedStepsEnabled = isStandardProtocol || isEditableProtocol;
+    const restoreDeletedStepsEnabled = canRestoreDeletedStep(values, standardProtocolsEnabled);
     const useReferenceInStepTitle = isStandardProtocol || isEditableProtocol;
     const editingReusableStep = !completed && values.existingValues && values.reusableStepId && values.saved;
     const stepEditable = editingReusableStep ? (values.existingValues.id === values.id) : !completed;
@@ -278,7 +278,7 @@ class Step extends Component {
     const canRemoveStep = length > 1 && (!isStandardProtocol || values.optional === true);
     const showReorderControls = !isStandardProtocol && length > 1;
     const showRemoveLink = editable && completed && !deleted && !values.deleted && canRemoveStep;
-    const showRestoreLink = values.deleted;
+    const showRestoreLink = values.deleted && restoreDeletedStepsEnabled;
     const step = <>
       {
         values.deleted && <span className="badge deleted">removed</span>
@@ -537,14 +537,19 @@ export default function Steps({project, values, ...props}) {
   const protocolMode = getProtocolMode(values, props.standardProtocolsEnabled);
   const isStandardProtocol = isStandardProtocolMode(values, props.standardProtocolsEnabled);
   const standardProtocolType = protocolMode === 'experimental' ? '' : values?.standardProtocolType ?? '';
-  const restoreDeletedStepsEnabled = isProtocolPlaybackMode(values, props.standardProtocolsEnabled);
+  const shouldRenderDeletedStep = step => canRestoreDeletedStep({
+    ...step,
+    isStandardProtocol,
+    standardProtocolType
+  }, props.standardProtocolsEnabled);
   let steps;
   if (props.pdf) {
     steps = allSteps.filter(step => !step.deleted);
   } else {
-    steps = removeNewDeleted(allSteps, props.previousProtocols.steps, restoreDeletedStepsEnabled);
+    steps = removeNewDeleted(allSteps, props.previousProtocols.steps, false, shouldRenderDeletedStep);
     if (!props.editable && props.previousProtocols.steps.length > props.index) {
       steps = addDeletedReusableSteps(steps, props.previousProtocols.steps[props.index], reusableSteps);
+      steps = steps.filter(step => !step.deleted || shouldRenderDeletedStep(step));
     }
   }
 

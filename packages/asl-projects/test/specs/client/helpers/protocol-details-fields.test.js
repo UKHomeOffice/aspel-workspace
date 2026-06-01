@@ -30,7 +30,7 @@ describe('protocol details fields', () => {
           type: 'texteditor'
         },
         standard: {
-          label: 'Purposes of protocol ',
+          label: 'Purposes of protocol',
           hint: null,
           type: 'paragraph'
         }
@@ -56,7 +56,7 @@ describe('protocol details fields', () => {
           type: 'radio'
         },
         standard: {
-          label: 'Highest level of suffering an animal could experience in this protocol ',
+          label: 'Highest level of suffering an animal could experience in this protocol',
           hint: 'This determines the severity category for the protocol',
           type: 'standard-radio'
         }

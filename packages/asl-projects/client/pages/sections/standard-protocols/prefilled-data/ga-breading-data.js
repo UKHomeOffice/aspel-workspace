@@ -1,6 +1,6 @@
 import { getPrefilledStepsForProtocol } from '../helpers/protocol-step-generators';
 
-export const gaBreadingData = (isStandard = true, isExperimental = false) => {
+export const gaBreadingData = (isStandard = true) => {
   return {
     title: 'Add a standard GA breeding protocol',
     description: 'Select a protocol',

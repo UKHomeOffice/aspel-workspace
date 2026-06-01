@@ -40,6 +40,7 @@ export default ({
   const history = useHistory();
   const standardProtocolsEnabled = useFeatureFlag(FEATURE_FLAG_STANDARD_PROTOCOLS);
   const addProtocolHandled = useRef(false);
+  const addOnInitHandled = useRef(false);
 
   const onBeforeDuplicate = useCallback(
     (items, uuid) => props.onBeforeDuplicate ? props.onBeforeDuplicate(items, uuid) : Promise.resolve(items),
@@ -99,8 +100,8 @@ export default ({
   }, [addProtocol]);
 
   useEffect(() => {
-    if (addOnInit && items.length === 0 && !addProtocolHandled.current) {
-      addProtocolHandled.current = true;
+    if (addOnInit && items.length === 0 && !addOnInitHandled.current) {
+      addOnInitHandled.current = true;
       addItem();
     }
   }, [addOnInit, items.length, addItem]);

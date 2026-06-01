@@ -241,7 +241,8 @@ class ReviewField extends React.Component {
                         <ul>
                           {
                             this.props.project[o.reveal.name].map((val, index) => {
-                              return <li key={index}>{findSelectedOption(o.reveal.options || [], val).label}</li>;
+                              const selectedOption = findSelectedOption(o.reveal.options || [], val);
+                              return <li key={index}>{selectedOption ? selectedOption.label : val}</li>;
                             })
                           }
                         </ul>

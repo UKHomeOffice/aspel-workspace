@@ -191,7 +191,7 @@ export default function StandardProtocols() {
 
             <div className="govuk-radios">
               {options.map(option => (
-                <div className="govuk-radios__item">
+                <div className="govuk-radios__item" key={option.value}>
                   <input
                     className="govuk-radios__input"
                     type="radio"

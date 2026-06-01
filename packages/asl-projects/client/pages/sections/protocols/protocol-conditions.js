@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { FEATURE_FLAG_STANDARD_PROTOCOLS, useFeatureFlag } from '@asl/service/ui/feature-flag';
 import conditions from '../../../constants/protocol-conditions';
 import { Details, Markdown } from '@ukhomeoffice/asl-components';
@@ -28,9 +28,6 @@ export default function ProtocolConditions({ pdf }) {
 
   const [isOpen, setIsOpen] = useState(Boolean(standardProtocolsEnabled));
 
-  useEffect(() => {
-    setIsOpen(Boolean(standardProtocolsEnabled));
-  }, [standardProtocolsEnabled]);
 
   if (pdf) {
     return (

@@ -9,7 +9,7 @@ const EditableGABreedingProtocolForm = (props) => (
     title="Add a non-standard GA breeding protocol"
     hint="Select an editable protocol template"
     radioName="editable-protocols"
-    gaBreading={gaBreadingData(false, true)}
+    gaBreading={gaBreadingData(false)}
     cancelPath="/standard-protocol"
   />
 );
