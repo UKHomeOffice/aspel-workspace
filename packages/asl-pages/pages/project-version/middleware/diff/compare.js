@@ -4,7 +4,7 @@ const { concatTextFromNodes } = require('@asl/projects/utils');
 
 const parseValue = (val) => {
   if (typeof val === 'string') {
-    val = JSON.parse(val || '{}');
+    return parseValue(JSON.parse(val || '{}'));
   }
   return concatTextFromNodes(val.document.nodes);
 };

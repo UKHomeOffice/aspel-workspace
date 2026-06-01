@@ -13,4 +13,12 @@ const concatTextFromNodes = (nodes) => {
   return getAllNodes(nodes).join(' ');
 };
 
-module.exports = { concatTextFromNodes };
+const asyncMiddleware = fn => {
+  return (req, res, next) => {
+    fn(req, res)
+      .then(res => next(null, res))
+      .catch(err => next(err));
+  };
+};
+
+module.exports = { concatTextFromNodes, asyncMiddleware };

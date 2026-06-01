@@ -61,8 +61,9 @@ module.exports = settings => {
 
   app.get('/', (req, res, next) => {
     const isAmendment = req.project.status !== 'inactive';
-    const openTask = get(req.project, 'openTasks[0]');
-    const showComments = req.version.status !== 'granted' && !!openTask;
+    const versionTask = req.versionTask;
+    const isOpenForVersion = !!versionTask && get(req.project, 'openTasks', []).some(t => t.id === versionTask.id);
+    const showComments = req.version.status !== 'granted' && isOpenForVersion;
     const previousVersion = req.project.versions[1];
 
     // can only update asru version if asru, and vice versa
