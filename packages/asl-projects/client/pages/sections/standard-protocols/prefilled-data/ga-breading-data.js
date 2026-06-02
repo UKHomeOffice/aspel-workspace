@@ -72,14 +72,6 @@ export const gaBreadingData = (isStandard = true) => {
               gaasHarmful: false,
 
               steps: getPrefilledStepsForProtocol('rodent-breeding-mild', isStandard),
-              fate: [
-                "killed",
-                "continued-use",
-                "continued-use-2",
-                "set-free",
-                "rehomed",
-                "kept-alive"
-              ],
               continuedUseRelevantProject: 'Animals may be transferred to another protocol in this project authorised to use the same animal types.',
               nonSchedule1: false,
 

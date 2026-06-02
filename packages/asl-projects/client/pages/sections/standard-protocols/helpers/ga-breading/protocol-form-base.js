@@ -50,7 +50,6 @@ const ProtocolFormBase = ({
     updateProjectAction({
       ...project,
       protocols: [...(project.protocols || []), newProtocol],
-      "fate-of-animals": protocolTemplate?.data?.fate ?? project['fate-of-animals'],
       "fate-of-animals-complete": true,
       conditions: mergedConditions
     });
