@@ -8,7 +8,7 @@ import lowerFirst from 'lodash/lowerFirst';
 import Accordion from '../../../components/accordion';
 import ExpandingPanel from '../../../components/expanding-panel';
 import NewComments from '../../../components/new-comments';
-import { flattenReveals } from '../../../helpers';
+import { flattenReveals, isStandardProtocolMode } from '../../../helpers';
 import Section from './section';
 import Steps from './steps';
 import Animals from './animals';
@@ -137,6 +137,7 @@ const sortGranted = sections => (a, b) => {
 };
 
 const ProtocolSections = ({ sections, protocolState, editable, newComments, ...props }) => {
+  const isStandardProtocol = isStandardProtocolMode(props.values, props.standardProtocolsEnabled);
   let sectionNames = Object.keys(sections)
     .filter(section => !sections[section].show || sections[section].show(props));
 
@@ -144,7 +145,7 @@ const ProtocolSections = ({ sections, protocolState, editable, newComments, ...p
     sectionNames = sectionNames.sort(sortGranted(sections));
   }
   return (
-    <div className={`${props.values.isStandardProtocol ? 'playback standard-protocol' : ''}`}>
+    <div className={`${isStandardProtocol ? 'playback standard-protocol' : ''}`}>
       <Accordion open={getOpenSection(protocolState, editable, sections)} toggleAll={!props.pdf} pdf={props.pdf}>
         {
           sectionNames.map((section, sectionIndex) => (

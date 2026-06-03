@@ -15,6 +15,7 @@ import { DATE_FORMAT } from './constants';
 import { useFeatureFlag, FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
 import GABreeding from './pages/sections/standard-protocols/ga-breading';
 import StandardProtocols from './pages/sections/standard-protocols';
+import EditableGaBreading from './pages/sections/standard-protocols/editable-ga-breading/index';
 
 
 const selector = ({
@@ -232,6 +233,12 @@ const ProjectRouter = () => {
           {standardProtocolsEnabled && (
               <Route path="/ga-breeding" render={(props) => (
                 <GABreeding {...props} />
+              )}
+              />
+            )}
+          {standardProtocolsEnabled && (
+              <Route path="/editable-ga-breeding" render={(props) => (
+                <EditableGaBreading {...props} />
               )}
               />
             )}
