@@ -1,14 +1,12 @@
 import React from 'react';
 import { connect, useSelector } from 'react-redux';
 import {
-  ControlBar,
   FormLayout,
   Header,
-  Link,
   Snippet
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
-import { NamedPersonDetails, DetailsByRole } from '../../../common/components/role-change-summary';
+import { NamedPersonDetails, DetailsByRole, SkillsAndExperience } from '../../../common/components/role-change-summary';
 
 const Confirm = ({
   establishment,
@@ -33,27 +31,26 @@ const Confirm = ({
 
   const { incompleteTraining = {}, mandatoryTraining } = useSelector(state => state.static);
 
-  const editTarget = props.action === 'remove' ? 'role.delete' : 'role.namedPersonMvp';
-
   return (
     <FormLayout formatters={formatters}>
       <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
       <Header title={<Snippet>confirmTitle</Snippet>}/>
       <dl>
         <NamedPersonDetails roleType={values.type} profile={profile} props={props} profileReplaced={profileReplaced} />
+      </dl>
 
+      <dl>
         <DetailsByRole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} role={values.type} roleDetails={values} />
       </dl>
 
+      <dl>
+        <SkillsAndExperience roleType={values.type} profile={profile} values={values} />
+      </dl>
       {
         props.action === 'remove' && values.type === 'nacwo' &&
           <Warning><Snippet>nacwoWarning</Snippet></Warning>
       }
 
-      <ControlBar>
-        <Link page={editTarget} label={<Snippet>buttons.edit</Snippet>} />
-        <Link page="profile.read" label={<Snippet>buttons.cancel</Snippet>} />
-      </ControlBar>
     </FormLayout>
   );
 };

@@ -1,11 +1,14 @@
 const { merge } = require('lodash');
 const baseContent = require('../../../profile/content');
+const skillsAndExperienceContent = require('./skills-and-experience');
 
-module.exports = merge({}, baseContent, {
+module.exports = merge({}, baseContent, skillsAndExperienceContent, {
   confirmTitle: 'Check and submit',
   applyingFor: 'You are assigning:',
   onBehalfOf: 'To:',
   explanation: {
+    trainingHeading: 'Mandatory training',
+    skillsAndExperienceHeading: 'Skills and experience',
     trainingComplete:
       'All mandatory training is complete and their training record is up to date.',
     exemptionRequest:
