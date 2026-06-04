@@ -46,7 +46,7 @@ const getVersion = () => (req, res, next) => {
 // historical versions). Returns undefined if no matching task exists, so
 // comments from a different version's task can't leak onto this version.
 const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']) => {
-  if (!req.project || !req.versionId) {
+  if (!req.project) {
     return undefined;
   }
 
@@ -56,6 +56,12 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
   }
 
   const actionList = castArray(actions);
+  const isRaTaskLookup = actionList.includes('grant-ra');
+
+  if (isRaTaskLookup && !versionId) {
+    return get(req.project, 'openTasks', []).find(task => actionList.includes(get(task, 'data.action')));
+  }
+
   const matches = task =>
     actionList.includes(get(task, 'data.action')) &&
     get(task, 'data.data.version') === versionId;
