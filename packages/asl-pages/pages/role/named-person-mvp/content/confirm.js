@@ -46,13 +46,11 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
   * the NTCO has endorsed {{profile.firstName}}'s training and exemptions
   * the PEL holder (or legally accountable person) supports the nomination and is confident that {{profile.firstName}} has no significant conflict of interest, and their declaration form is held on record at the establishment`,
     nvs: `\
-**By submitting this application, I confirm that {{profile.firstName}} has agreed to be nominated for the NVS role.**
+**By submitting this application, I confirm that:**
 
-**I confirm that the NTCO has endorsed {{profile.firstName}}'s training and exemptions.**
-
-**I also confirm that the PEL holder supports the application and is confident that {{profile.firstName}}:**
-* has expertise in the health and welfare of the species they'll be responsible for
-* has no significant conflict of interest, and their declaration form is held on record at the establishment`,
+  * {{profile.firstName}} has agreed to be nominated for the NVS role
+  * the NTCO has endorsed {{profile.firstName}}'s training and exemptions
+  * the PEL holder (or legally accountable person) supports the nomination and is confident that {{profile.firstName}} has no significant conflict of interest, and their declaration form is held on record at the establishment`,
     nio: `\
 **By submitting this application, I confirm that {{profile.firstName}} has agreed to be nominated for the NIO role.**
 

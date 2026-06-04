@@ -75,6 +75,8 @@ table {
 }
 
 dl.continuation {
+  margin-left: $govuk-gutter-half;
+  padding-left: $govuk-gutter-half;
   margin-bottom: $govuk-gutter;
 
   dd {

@@ -36,7 +36,7 @@ const Confirm = ({
       <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
       <Header title={<Snippet>confirmTitle</Snippet>}/>
       <dl>
-        <NamedPersonDetails roleType={values.type} profile={profile} props={props} profileReplaced={profileReplaced} />
+        <NamedPersonDetails roleType={values.type} profile={profile} props={props} profileReplaced={profileReplaced} roleDetails={values} />
       </dl>
 
       <dl>

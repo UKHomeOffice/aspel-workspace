@@ -25,6 +25,7 @@ const ExemptionRequest = () => {
   return (
     <>
       <dt><Snippet>explanation.exemptionRequest</Snippet></dt>
+      <dd />
     </>
   );
 };
@@ -33,23 +34,19 @@ const NVSRole = ({ nvs, incompleteTraining, mandatoryTraining }) => {
   const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
   return (
     <dl>
-      {nvs.rcvsNumber && (
-        <>
-          <dt><Snippet>explanation.nvs.rcvsNumber</Snippet></dt>
-          <dd>{nvs.rcvsNumber}</dd>
-        </>
-      )}
-
       {isExemption && <ExemptionRequest /> }
 
       {isDelay && (
         <>
           <dt><Snippet>explanation.nvs.trainingNotComplete</Snippet></dt>
-          <dd />
-          <dt><Snippet>explanation.nvs.reasonForDelay</Snippet></dt>
-          <dd>{incompleteTraining.delayReason}</dd>
-          <dt><Snippet>explanation.nvs.completionDate</Snippet></dt>
-          <dd>{format(incompleteTraining.completeDate, dateFormat.long)}</dd>
+          <dd>
+            <dl className="continuation" style={{ marginLeft: '1.5rem', paddingLeft: '1rem' }}>
+              <dt><Snippet>explanation.nvs.reasonForDelay</Snippet></dt>
+              <dd>{incompleteTraining.delayReason}</dd>
+              <dt><Snippet>explanation.nvs.completionDate</Snippet></dt>
+              <dd>{format(incompleteTraining.completeDate, dateFormat.long)}</dd>
+            </dl>
+          </dd>
         </>
       )}
     </dl>
@@ -67,13 +64,16 @@ const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
       {isDelay && (
         <>
           <dt><Snippet>explanation.nacwo.delay</Snippet></dt>
-          <dd />
-          <dt><Snippet>explanation.nacwo.trainingNotComplete</Snippet></dt>
-          <dd>{incompleteModules}</dd>
-          <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
-          <dd>{incompleteTraining.delayReason}</dd>
-          <dt><Snippet>explanation.nacwo.completionDate</Snippet></dt>
-          <dd>{format(incompleteTraining.completeDate, dateFormat.long)}</dd>
+          <dd>
+            <dl className="continuation" style={{ marginLeft: '1.5rem', paddingLeft: '1rem' }}>
+              <dt><Snippet>explanation.nacwo.trainingNotComplete</Snippet></dt>
+              <dd>{incompleteModules}</dd>
+              <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
+              <dd>{incompleteTraining.delayReason}</dd>
+              <dt><Snippet>explanation.nacwo.completionDate</Snippet></dt>
+              <dd>{format(incompleteTraining.completeDate, dateFormat.long)}</dd>
+            </dl>
+          </dd>
         </>
       )}
     </>
@@ -109,6 +109,7 @@ export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, rol
 
 export const SkillsAndExperience = ({ roleType, profile, values = {} }) => {
   const contentKey = skillsAndExperienceContent.fields[roleType] ? roleType : 'default';
+  const contentForRole = skillsAndExperienceContent.fields[contentKey] || {};
   const fieldKeys = Object.keys(skillsAndExperienceContent.fields[contentKey] || {}).filter(key => key !== 'desc');
   const hasSkillsAndExperienceData = fieldKeys.some(fieldKey => {
     const value = values[fieldKey];
@@ -125,7 +126,10 @@ export const SkillsAndExperience = ({ roleType, profile, values = {} }) => {
         <Snippet>explanation.skillsAndExperienceHeading</Snippet>
       </h2>
 
-      <dt><Snippet roleType={namedRoles[roleType]} profile={profile}>{`fields.${contentKey}.desc`}</Snippet></dt>
+      {
+        contentForRole.desc &&
+          <dt><Snippet roleType={namedRoles[roleType]} profile={profile}>{`fields.${contentKey}.desc`}</Snippet></dt>
+      }
 
       <dl>
         {fieldKeys.map(fieldKey => (
@@ -143,7 +147,7 @@ export const SkillsAndExperience = ({ roleType, profile, values = {} }) => {
   );
 };
 
-export const NamedPersonDetails = ({ roleType, profile, props, profileReplaced }) => {
+export const NamedPersonDetails = ({ roleType, profile, props, profileReplaced, roleDetails }) => {
   const hasNamedPersonDetails = !!(
     roleType ||
     profile?.firstName ||
@@ -166,6 +170,13 @@ export const NamedPersonDetails = ({ roleType, profile, props, profileReplaced }
           <Warning>The existing {profileReplaced.type.toUpperCase()} {profileReplaced.firstName} {profileReplaced.lastName} will be removed from the role when this request is approved.</Warning>
         }
       </dd>
+
+      {roleDetails?.rcvsNumber && (
+        <>
+          <dt><Snippet>explanation.nvs.rcvsNumber</Snippet></dt>
+          <dd>{roleDetails.rcvsNumber}</dd>
+        </>
+      )}
 
       <Link page={'role.namedPersonMvp'} label={<Snippet>buttons.edit</Snippet>} />
     </>
