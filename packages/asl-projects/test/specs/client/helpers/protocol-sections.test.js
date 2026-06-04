@@ -96,6 +96,14 @@ describe('protocol section schema', () => {
         "type: 'standard-radio'"
       ]);
     });
+
+    it('keeps the baseline readonly gating for reference and reusable metadata while hiding optional for standard protocols', () => {
+      const readonlyMatches = stepsSource.match(/show: props => props\?\.isStandardProtocol === true \? false : !props\?\.readonly/g) || [];
+      const standardOnlyMatches = stepsSource.match(/show: props => props\?\.isStandardProtocol !== true/g) || [];
+
+      assert.equal(readonlyMatches.length, 2);
+      assert.equal(standardOnlyMatches.length, 1);
+    });
   });
 
   describe('experience and experimental design sections', () => {
