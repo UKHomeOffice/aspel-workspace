@@ -1,9 +1,21 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { DocumentHeader, Link, Snippet } from '@ukhomeoffice/asl-components';
-import { format } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { dateFormat } from '../../../constants';
 import ProceduresDownloadLink from './procedures-download-link';
+
+const formatExpiryDate = expiryDate => {
+  if (!expiryDate) {
+    return '-';
+  }
+
+  const parsedDate = expiryDate instanceof Date ? expiryDate : parseISO(expiryDate);
+
+  return isValid(parsedDate)
+    ? format(parsedDate, dateFormat.long)
+    : '-';
+};
 
 export default function RopHeader() {
   const project = useSelector(state => state.static.project);
@@ -27,7 +39,7 @@ export default function RopHeader() {
         <dd>{ project.licenceNumber }</dd>
 
         <dt>Expiry date</dt>
-        <dd>{ format(project.expiryDate, dateFormat.long) }</dd>
+        <dd>{ formatExpiryDate(project.expiryDate) }</dd>
 
         <dt>Downloads</dt>
         <dd>
