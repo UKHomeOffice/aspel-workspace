@@ -73,7 +73,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
           value: false
         }
       ],
-      show: props => props?.isStandardProtocol === true ? false : !props?.readonly
+      show: props => props?.isStandardProtocol !== true
     },
     withProtocolContext(
       {

@@ -96,6 +96,12 @@ describe('protocol section schema', () => {
         "type: 'standard-radio'"
       ]);
     });
+
+    it('keeps non-standard step metadata visible in readonly review and pdf contexts', () => {
+      const matches = stepsSource.match(/show: props => props\?\.isStandardProtocol !== true/g) || [];
+
+      assert.equal(matches.length, 3);
+    });
   });
 
   describe('experience and experimental design sections', () => {
