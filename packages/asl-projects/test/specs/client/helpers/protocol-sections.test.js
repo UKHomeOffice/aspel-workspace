@@ -97,10 +97,12 @@ describe('protocol section schema', () => {
       ]);
     });
 
-    it('keeps non-standard step metadata visible in readonly review and pdf contexts', () => {
-      const matches = stepsSource.match(/show: props => props\?\.isStandardProtocol !== true/g) || [];
+    it('keeps the baseline readonly gating for reference and reusable metadata while hiding optional for standard protocols', () => {
+      const readonlyMatches = stepsSource.match(/show: props => props\?\.isStandardProtocol === true \? false : !props\?\.readonly/g) || [];
+      const standardOnlyMatches = stepsSource.match(/show: props => props\?\.isStandardProtocol !== true/g) || [];
 
-      assert.equal(matches.length, 3);
+      assert.equal(readonlyMatches.length, 2);
+      assert.equal(standardOnlyMatches.length, 1);
     });
   });
 
