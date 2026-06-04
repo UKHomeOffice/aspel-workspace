@@ -11,17 +11,20 @@ const schema = [
 
 const getFieldValue = (data, field) => {
   let value = data[field.name];
+  const type = typeof field.type === 'function' ? field.type(data) : field.type;
+  const options = typeof field.options === 'function' ? field.options(data) : field.options;
 
-  switch (field.type) {
+  switch (type) {
     case 'text':
     case 'keywords':
       return [value];
     case 'texteditor':
+    case 'paragraph':
       if (typeof value === 'string') {
         try {
           value = JSON.parse(value);
         } catch (e) {
-          return [];
+          return [value];
         }
       }
       const text = [];
@@ -31,8 +34,8 @@ const getFieldValue = (data, field) => {
       }
       return text;
     default:
-      if (field.options) {
-        const revealed = field.options.find(opt => opt.value === value && opt.reveal);
+      if (options) {
+        const revealed = options.find(opt => opt.value === value && opt.reveal);
         if (revealed) {
           const subfields = Array.isArray(revealed.reveal) ? revealed.reveal : [revealed.reveal];
           return subfields.map(f => getFieldValue(data, f));
