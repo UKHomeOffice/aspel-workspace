@@ -5,13 +5,14 @@ import { Value } from 'slate';
 import get from 'lodash/get';
 import { Warning } from '@ukhomeoffice/react-components';
 import { fetchQuestionVersions } from '../actions/projects';
-import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay, additionalAvailabilityDiff,checkboxDiffDisplay } from '../helpers';
+import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay, additionalAvailabilityDiff, checkboxDiffDisplay, radioDiffDisplay } from '../helpers';
 import Modal from './modal';
 import ReviewField from './review-field';
 import Tabs from './tabs';
 import { findArrayDifferences } from '../helpers/array-diff';
 import { getChanges, findSteps } from '../helpers/document-diff';
 import normaliseWhitespace from '../helpers/normalise-whitespace';
+import { getComparisonFieldConfig } from '../helpers/diff-window-field-config';
 
 const DEFAULT_LABEL = 'No answer provided';
 
@@ -19,6 +20,11 @@ const DiffWindow = (props) => {
   const [modalOpen, setModelOpen] = useState(false);
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(false);
+  const {
+    resolvedType,
+    comparisonType,
+    resolvedOptions
+  } = getComparisonFieldConfig(props);
 
   const project = useSelector(state => state.project);
   // mainly contain proposed values with quantities
@@ -69,10 +75,10 @@ const DiffWindow = (props) => {
   useEffect(() => {
     if (!before && modalOpen) {
       setLoading(true);
-      dispatch(fetchQuestionVersions(props.name, { version: versions[active], type: props.type, isRa }))
+      dispatch(fetchQuestionVersions(props.name, { version: versions[active], type: comparisonType, isRa }))
         .then(() => setLoading(false));
     }
-  }, [props.name, versions[active], modalOpen]);
+  }, [props.name, versions, active, modalOpen, comparisonType, isRa, before, dispatch]);
 
   const toggleModal = e => {
     e.preventDefault();
@@ -167,11 +173,11 @@ const DiffWindow = (props) => {
     }
 
     const getLabel = item => {
-      if (!props.options || !Array.isArray(props.options)) {
+      if (!resolvedOptions || !Array.isArray(resolvedOptions)) {
         return item;
       }
 
-      const option = props.options.find(opt => opt.value === item);
+      const option = resolvedOptions.find(opt => opt.value === item);
       return option ? option.label : item;
     };
 
@@ -184,26 +190,6 @@ const DiffWindow = (props) => {
         .map(({ value, added, removed, label }) => {
           return <li key={value}><span className={classnames({ added, removed, diff: (added || removed) })}>{ label }</span></li>;
         });
-    };
-
-    const radioDiff = () => {
-      const booleanValue = typeof value === 'boolean'
-        ? (value ? 'Yes' : 'No')
-        : value;
-
-      return (
-        <p>
-          {
-            value === undefined ? (
-              <em>{DEFAULT_LABEL}</em>
-            ) : (
-              <span className={`diff ${parts.added ? 'added' : 'removed'}`}>
-                {booleanValue}
-              </span>
-            )
-          }
-        </p>
-      );
     };
 
     const permissiblePurposeDiff = () => {
@@ -235,7 +221,7 @@ const DiffWindow = (props) => {
         });
     };
 
-    switch (props.type) {
+    switch (resolvedType) {
       case 'text':
         return (
           <p>
@@ -313,7 +299,11 @@ const DiffWindow = (props) => {
           );
         }
       case 'radio':
-        return radioDiff();
+        return radioDiffDisplay({
+          value,
+          isBefore,
+          DEFAULT_LABEL
+        });
       case 'permissible-purpose':
         return parts.length
           ? (
@@ -345,10 +335,10 @@ const DiffWindow = (props) => {
             name={props.name}
             decorateNode={decorateNode(parts)}
             renderDecoration={renderDecoration}
-            options={props.options}
-            type={props.type}
+            options={resolvedOptions}
+            type={resolvedType}
             value={value}
-            values={{[props.name]: value}}
+            values={props.values}
             diff={true}
             noComments
           />
@@ -382,9 +372,9 @@ const DiffWindow = (props) => {
 
   const compare = () => {
 
-    const hasVisibleChanges = hasContentChanges(before, props.value, props.type);
+    const hasVisibleChanges = hasContentChanges(before, props.value, comparisonType);
     let { removed, added } = changes;
-    if (props.type === 'radio') {
+    if (resolvedType === 'radio') {
       removed = { added: false };
       added = { added: true };
     }

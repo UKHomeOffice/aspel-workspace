@@ -251,6 +251,27 @@ export function checkboxDiffDisplay({ before = [], value = [], isBefore, DEFAULT
 
   return value.length ? renderList(value, added, 'added') : <p><em>{DEFAULT_LABEL}</em></p>;
 }
+
+export function radioDiffDisplay({ value, isBefore, DEFAULT_LABEL }) {
+  const booleanValue = typeof value === 'boolean'
+    ? (value ? 'Yes' : 'No')
+    : value;
+
+  return (
+    <p>
+      {
+        value === undefined ? (
+          <em>{DEFAULT_LABEL}</em>
+        ) : (
+          <span className={classnames('diff', { removed: isBefore, added: !isBefore })}>
+            {booleanValue}
+          </span>
+        )
+      }
+    </p>
+  );
+}
+
 export const getScrollPos = (elem, offset = 0) => {
   const box = elem.getBoundingClientRect();
   const body = document.body;
