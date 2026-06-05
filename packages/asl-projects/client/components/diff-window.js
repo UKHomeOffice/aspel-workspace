@@ -5,7 +5,7 @@ import { Value } from 'slate';
 import get from 'lodash/get';
 import { Warning } from '@ukhomeoffice/react-components';
 import { fetchQuestionVersions } from '../actions/projects';
-import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay, additionalAvailabilityDiff,checkboxDiffDisplay } from '../helpers';
+import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay, additionalAvailabilityDiff, checkboxDiffDisplay, radioDiffDisplay } from '../helpers';
 import Modal from './modal';
 import ReviewField from './review-field';
 import Tabs from './tabs';
@@ -192,26 +192,6 @@ const DiffWindow = (props) => {
         });
     };
 
-    const radioDiff = () => {
-      const booleanValue = typeof value === 'boolean'
-        ? (value ? 'Yes' : 'No')
-        : value;
-
-      return (
-        <p>
-          {
-            value === undefined ? (
-              <em>{DEFAULT_LABEL}</em>
-            ) : (
-              <span className={`diff ${parts.added ? 'added' : 'removed'}`}>
-                {booleanValue}
-              </span>
-            )
-          }
-        </p>
-      );
-    };
-
     const permissiblePurposeDiff = () => {
       const diffs = parts
         .reduce((arr, {value, added, removed}) => {
@@ -319,7 +299,11 @@ const DiffWindow = (props) => {
           );
         }
       case 'radio':
-        return radioDiff();
+        return radioDiffDisplay({
+          value,
+          isBefore,
+          DEFAULT_LABEL
+        });
       case 'permissible-purpose':
         return parts.length
           ? (
