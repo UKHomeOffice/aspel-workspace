@@ -6,6 +6,12 @@ const { ROLE_TYPES, normalizeRoleType } = require('../role-types');
 module.exports = ({ formId }) => {
   const app = Router({ mergeParams: true });
 
+  const hasMandatorySelection = (mandatory, selection) => {
+    return Array.isArray(mandatory)
+      ? mandatory.includes(selection)
+      : mandatory === selection;
+  };
+
   app.use(
     form({
       configure(req, res, next) {
@@ -38,14 +44,11 @@ module.exports = ({ formId }) => {
 
   app.post('/', (req, res, next) => {
     const { mandatory } = req.form.values;
-    if (mandatory === 'yes') {
+    if (hasMandatorySelection(mandatory, 'yes')) {
       return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'confirm' }));
-    } else if (mandatory === 'exemption') {
+    } else if (hasMandatorySelection(mandatory, 'exemption') && !hasMandatorySelection(mandatory, 'delay')) {
       return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'skills-and-experience' }));
-    } else if (
-      mandatory === 'delay' ||
-      (Array.isArray(mandatory) && mandatory.includes('delay'))
-    ) {
+    } else if (hasMandatorySelection(mandatory, 'delay')) {
       return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'incomplete-training' }));
     }
   });
