@@ -127,7 +127,7 @@ export const SkillsAndExperience = ({ roleType, profile, values = {} }) => {
       </h2>
 
       {
-        contentForRole.desc &&
+        roleType !== 'nvs' && contentForRole.desc &&
           <dt><Snippet roleType={namedRoles[roleType]} profile={profile}>{`fields.${contentKey}.desc`}</Snippet></dt>
       }
 
