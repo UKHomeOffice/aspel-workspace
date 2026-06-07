@@ -9,6 +9,16 @@ import {
 describe('diff window field config', () => {
   const descriptionField = protocolDetailsFields.find(field => field.name === 'description');
 
+  it('resolves nested dynamic type functions before selecting the comparison type', () => {
+    const config = getComparisonFieldConfig({
+      type: props => () => props.typeValue,
+      typeValue: 'paragraph'
+    });
+
+    assert.equal(config.resolvedType, 'paragraph');
+    assert.equal(config.comparisonType, 'texteditor');
+  });
+
   it('uses texteditor comparison for editable protocol descriptions', () => {
     const config = getComparisonFieldConfig({
       ...descriptionField,

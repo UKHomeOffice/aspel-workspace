@@ -1,7 +1,21 @@
 import Mustache from 'mustache';
 
 export const resolveFieldValue = (value, props) => {
-  return typeof value === 'function' ? value(props) : value;
+  let resolved = value;
+  let depth = 0;
+
+  while (typeof resolved === 'function' && depth < 10) {
+    const next = resolved(props);
+
+    if (next === resolved) {
+      break;
+    }
+
+    resolved = next;
+    depth += 1;
+  }
+
+  return resolved;
 };
 
 export const resolveTemplateContent = (template, props) => {
