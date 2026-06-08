@@ -21,7 +21,7 @@ const Confirm = ({
       propMappers: {
         label: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>agreement</Snippet>,
         title: () => <Snippet>fields.declaration.title</Snippet>,
-        hint: () => <Snippet fallback='declarations.default'>declarations.{values.type}</Snippet>
+        hint: () => <Snippet>declarations.{values.type}</Snippet>
       },
       renderContext: {
         agreementDeterminer: ['nacwo', 'nvs'].includes(values.type) ? 'all' : 'both'

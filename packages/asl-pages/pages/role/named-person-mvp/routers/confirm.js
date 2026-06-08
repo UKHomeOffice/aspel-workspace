@@ -5,6 +5,7 @@ const { populateNamedPeople } = require('../../../common/middleware');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
 const { versions } = require('@ukhomeoffice/asl-constants');
 const FORM_ID = 'new-role-named-person';
+const ROLE_TYPES_WITH_DECLARATION = ['nacwo', 'nio', 'ntco', 'nvs', 'sqp'];
 
 const getIncompleteTrainingDetails = (req) => {
   const formData = get(req.session.form, [FORM_ID, 'values'], {});
@@ -63,7 +64,10 @@ module.exports = (settings) => {
   app.use(
     '/',
     form({
-      requiresDeclaration: (req) => !req.user.profile.asruUser,
+      requiresDeclaration: (req) => {
+        const roleType = req.session.form[FORM_ID]?.values?.type;
+        return !req.user.profile.asruUser && ROLE_TYPES_WITH_DECLARATION.includes(roleType);
+      },
       locals: (req, res, next) => {
         Object.assign(res.locals.static, {
           values: {
