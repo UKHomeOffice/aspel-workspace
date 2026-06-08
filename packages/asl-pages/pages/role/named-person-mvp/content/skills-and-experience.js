@@ -57,13 +57,11 @@ module.exports = merge({}, baseContent, {
       }
     },
     [ROLE_TYPES.pelh]: {
-      desc: 'Describe why they are suitable for the PEL holder role:',
       experience: {
         label: 'Describe why they are suitable for the PEL holder role'
       }
     },
     default: {
-      desc: 'Describe why {{profile.firstName}} is suitable for the {{roleType}} role:',
       experience: {
         label: 'Describe why {{profile.firstName}} is suitable for the {{roleType}} role'
       }
