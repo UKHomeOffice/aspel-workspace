@@ -5,7 +5,7 @@ import { Value } from 'slate';
 import get from 'lodash/get';
 import { Warning } from '@ukhomeoffice/react-components';
 import { fetchQuestionVersions } from '../actions/projects';
-import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay, additionalAvailabilityDiff, checkboxDiffDisplay, radioDiffDisplay } from '../helpers';
+import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay, additionalAvailabilityDiff, checkboxDiffDisplay } from '../helpers';
 import Modal from './modal';
 import ReviewField from './review-field';
 import Tabs from './tabs';
@@ -51,34 +51,36 @@ const DiffWindow = (props) => {
 
     return arr;
   });
+  const activeVersion = versions[active];
 
   const dispatch = useDispatch();
 
-  const { before, changes } = useSelector(state => {
-    const before = get(state.questionVersions, `['${props.name}'].${versions[active]}.value`);
+  const { before, changes, hasLoadedVersion } = useSelector(state => {
+    const questionVersion = get(state.questionVersions, `['${props.name}'].${activeVersion}`);
+    const before = questionVersion && questionVersion.value;
 
     // dealing with protocol step when it was moved from normal to reusable
     if (before === undefined && props.stepId && props.previousProtocols) {
-      const beforeSteps = findSteps(versions[active], props.previousProtocols, props.protocolId, props.stepId, props.fieldName);
+      const beforeSteps = findSteps(activeVersion, props.previousProtocols, props.protocolId, props.stepId, props.fieldName);
       if (beforeSteps) {
-        return { before: beforeSteps, changes: getChanges(props.value, beforeSteps) };
+        return { before: beforeSteps, changes: getChanges(props.value, beforeSteps), hasLoadedVersion: true };
       }
     }
 
     const changes = props.type === 'keywords' && props.value.length > 0 && before
       ? findArrayDifferences(before, props.value)
-      : get(state.questionVersions, `['${props.name}'].${versions[active]}.diff`, { added: [], removed: [] });
+      : get(state.questionVersions, `['${props.name}'].${activeVersion}.diff`, { added: [], removed: [] });
 
-    return { before, changes };
+    return { before, changes, hasLoadedVersion: !!questionVersion };
   });
 
   useEffect(() => {
-    if (!before && modalOpen) {
+    if (!hasLoadedVersion && modalOpen) {
       setLoading(true);
-      dispatch(fetchQuestionVersions(props.name, { version: versions[active], type: comparisonType, isRa }))
-        .then(() => setLoading(false));
+      dispatch(fetchQuestionVersions(props.name, { version: activeVersion, type: comparisonType, isRa }))
+        .finally(() => setLoading(false));
     }
-  }, [props.name, versions, active, modalOpen, comparisonType, isRa, before, dispatch]);
+  }, [props.name, activeVersion, modalOpen, comparisonType, isRa, hasLoadedVersion, dispatch]);
 
   const toggleModal = e => {
     e.preventDefault();
@@ -179,6 +181,26 @@ const DiffWindow = (props) => {
 
       const option = resolvedOptions.find(opt => opt.value === item);
       return option ? option.label : item;
+    };
+
+    const radioDiff = () => {
+      const booleanValue = typeof value === 'boolean'
+        ? (value ? 'Yes' : 'No')
+        : value;
+
+      return (
+        <p>
+          {
+            value === undefined ? (
+              <em>{DEFAULT_LABEL}</em>
+            ) : (
+              <span className={`diff ${parts.added ? 'added' : 'removed'}`}>
+                {booleanValue}
+              </span>
+            )
+          }
+        </p>
+      );
     };
 
     const arrayDiff = () => {
@@ -299,11 +321,7 @@ const DiffWindow = (props) => {
           );
         }
       case 'radio':
-        return radioDiffDisplay({
-          value,
-          isBefore,
-          DEFAULT_LABEL
-        });
+        return radioDiff();
       case 'permissible-purpose':
         return parts.length
           ? (
@@ -338,7 +356,7 @@ const DiffWindow = (props) => {
             options={resolvedOptions}
             type={resolvedType}
             value={value}
-            values={props.values}
+            values={{[props.name]: value}}
             diff={true}
             noComments
           />

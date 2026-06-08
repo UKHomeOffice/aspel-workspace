@@ -23,6 +23,13 @@ describe('field resolution helpers', () => {
     it('resolves function values against props', () => {
       assert.equal(resolveFieldValue(props => props.mode, { mode: 'standard' }), 'standard');
     });
+
+    it('resolves nested function values until a concrete value is returned', () => {
+      assert.equal(
+        resolveFieldValue(props => () => props.mode, { mode: 'editable' }),
+        'editable'
+      );
+    });
   });
 
   describe('resolveTemplateContent', () => {
