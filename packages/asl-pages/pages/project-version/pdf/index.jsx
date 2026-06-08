@@ -87,7 +87,7 @@ module.exports = settings => {
         } else if (isPreview) {
           filename = `${filename} (licence preview)`;
         }
-
+        console.log('Generated PDF for', filename);
         res.attachment(`${filenamify(req.pdf.filename || filename)}.pdf`);
         response.body.pipe(res);
       })

@@ -7,6 +7,7 @@ function Image({ src, token, remove, loading }) {
   if (!src && token) {
     src = `${imageRoot}/${token}`;
   }
+  console.log('Rendering image with src', src);
   return (
     <div className="image-wrapper">
       <div className="image-overlay">
