@@ -57,12 +57,10 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
   * {{profile.firstName}} has agreed to be nominated for the NIO role
   * the establishment licence (PEL) holder (or legally accountable person) supports the nomination`,
     ntco: `\
-**By submitting this application, I confirm that {{profile.firstName}} has agreed to be nominated for the NTCO role.**
+**By submitting this application, I confirm that:**
 
-**I also confirm that the PEL holder supports the application and is confident that {{profile.firstName}} has the following recommended skills and experience:**
-
-  * sufficient seniority to influence others and make decisions on training issues
-  * good communication, management and organisational skills`,
+  * {{profile.firstName}} has agreed to be nominated for the NTCO role
+  * the PEL holder (or legally accountable person) supports the nomination`,
     sqp: `\
 **By submitting this application, I confirm that:**
 
