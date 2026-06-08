@@ -67,6 +67,13 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
 
   * sufficient seniority to influence others and make decisions on training issues
   * good communication, management and organisational skills`,
+    sqp: `\
+**By submitting this application, I confirm that:**
+
+  * there is no vet available with the right expertise
+  * {{profile.firstName}} has agreed to be nominated for the SQP role
+  * the NTCO has endorsed {{profile.firstName}}'s training and exemptions
+  * the PEL holder (or legally accountable person) supports the nomination and is confident that {{profile.firstName}} has no significant conflict of interest, and their declaration form is held on record at the establishment`,
     default: `\
 **By submitting this application, I confirm that {{profile.firstName}} has agreed to be nominated for the role.**
 

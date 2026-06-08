@@ -24,18 +24,16 @@ const checkExemptionDelay = (mandatoryTraining) => {
 const ExemptionRequest = () => {
   return (
     <>
-      <dt><Snippet>explanation.exemptionRequest</Snippet></dt>
+      <dt><strong><Snippet>explanation.exemptionRequest</Snippet></strong></dt>
       <dd />
     </>
   );
 };
 
 const NVSRole = ({ incompleteTraining, mandatoryTraining }) => {
-  const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
+  const { isDelay } = checkExemptionDelay(mandatoryTraining);
   return (
     <>
-      {isExemption && <ExemptionRequest /> }
-
       {isDelay && (
         <>
           <dt><Snippet>explanation.nvs.trainingNotComplete</Snippet></dt>
@@ -54,13 +52,11 @@ const NVSRole = ({ incompleteTraining, mandatoryTraining }) => {
 };
 
 const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
-  const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
+  const { isDelay } = checkExemptionDelay(mandatoryTraining);
   const incompleteModules = [].concat(incompleteTraining.incomplete || []).join(', ');
 
   return (
     <>
-      {isExemption && <ExemptionRequest /> }
-
       {isDelay && (
         <>
           <dt><Snippet>explanation.nacwo.delay</Snippet></dt>
@@ -96,6 +92,7 @@ export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, rol
         <Snippet>explanation.trainingHeading</Snippet>
       </h2>
 
+      {isExemption && <ExemptionRequest /> }
       { role === 'nacwo' && <NACWORole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
       { role === 'nvs' && <NVSRole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
       { mandatoryTraining === 'yes' && (
@@ -127,7 +124,7 @@ export const SkillsAndExperience = ({ roleType, profile, values = {} }) => {
       </h2>
 
       {
-        roleType !== 'nvs' && contentForRole.desc &&
+        !['nvs', 'sqp'].includes(roleType) && contentForRole.desc &&
           <dt><Snippet roleType={namedRoles[roleType]} profile={profile}>{`fields.${contentKey}.desc`}</Snippet></dt>
       }
 
