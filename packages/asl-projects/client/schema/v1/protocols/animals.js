@@ -195,16 +195,6 @@ Select each that applies`,
                   name: 'reuse-details',
                   label: 'Describe the procedures that have been applied to them and why you are choosing to re-use them',
                   type: 'texteditor'
-                },
-                {
-                  editable: {
-                    label: 'Describe any procedure that may have been applied to these animals, and why you are choosing to re-use them.',
-                    type: 'texteditor'
-                  },
-                  standard: {
-                    label: 'Procedures that have been applied to these animals, and why you are choosing to re-use them',
-                    type: 'paragraph'
-                  }
                 }
               )
             ]
@@ -233,15 +223,6 @@ Select each that applies`,
             behaviour: 'exclusive'
           }
         ]
-      },
-      {
-        editable: {
-          hint: '‘Re-use’ describes using an animal for a new experiment when you could equally use a naive animal to get the same results.'
-        },
-        standard: {
-          type: 'standard-list',
-          hint: '‘Re-use’ describes using animals again for a new experiment when you could equally use a naïve animal to get the same results'
-        }
       }
     )
   ]
