@@ -279,6 +279,10 @@ class Step extends Component {
     const showReorderControls = !isStandardProtocol && length > 1;
     const showRemoveLink = editable && completed && !deleted && !values.deleted && canRemoveStep;
     const showRestoreLink = values.deleted && restoreDeletedStepsEnabled;
+    const stepTitle = values.reference || getStepTitle(values.title);
+    const stepHeading = useReferenceInStepTitle
+      ? `${number + 1}: ${stepTitle}`
+      : number + 1;
     const step = <>
       {
         values.deleted && <span className="badge deleted">removed</span>
@@ -307,10 +311,13 @@ class Step extends Component {
             )
           }
           <h3>
-            Step { !values.deleted && (useReferenceInStepTitle ? `${number + 1}: ${values.reference || getStepTitle(values.title)}` : number + 1) }
+            Step { stepHeading }
             {
               showRestoreLink && (
-                <a href="#" className={classnames('inline-block', { restore: values.deleted })} onClick={this.props.restoreItem}> Restore</a>
+                <Fragment>
+                  {' '}
+                  <a href="#" className={classnames('inline-block', { restore: values.deleted })} onClick={this.props.restoreItem}>Restore</a>
+                </Fragment>
               )
             }
             {(pdf || readonly) && values.reference && (<Fragment>: { values.reference }</Fragment>)}
@@ -537,6 +544,14 @@ export default function Steps({project, values, ...props}) {
   const protocolMode = getProtocolMode(values, props.standardProtocolsEnabled);
   const isStandardProtocol = isStandardProtocolMode(values, props.standardProtocolsEnabled);
   const standardProtocolType = protocolMode === 'experimental' ? '' : values?.standardProtocolType ?? '';
+  const resolvedHint = typeof props.hint === 'function'
+    ? props.hint({
+      isStandardProtocol,
+      readonly: Boolean(props.readonly),
+      values
+    })
+    : props.hint;
+  const showHint = Boolean(resolvedHint) && !isStandardProtocol;
   const shouldRenderDeletedStep = step => canRestoreDeletedStep({
     ...step,
     isStandardProtocol,
@@ -603,8 +618,14 @@ export default function Steps({project, values, ...props}) {
   return (
     <div className="accordion">
       <div className="steps">
-        <p className="grey">{props.hint}</p>
-        <br/>
+        {
+          showHint && (
+            <Fragment>
+              <p className="grey">{resolvedHint}</p>
+              <br/>
+            </Fragment>
+          )
+        }
         {openCloseLink}
         <StepsRepeater {...props}
           project={project}
