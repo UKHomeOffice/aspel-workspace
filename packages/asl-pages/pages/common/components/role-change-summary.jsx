@@ -90,9 +90,9 @@ export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, rol
   return (
     <>
       {showHeading && (
-        <h3 className="margin-bottom">
+        <h2 className="margin-bottom">
           <Snippet>explanation.trainingHeading</Snippet>
-        </h3>
+        </h2>
       )}
 
       {isExemption && <ExemptionRequest /> }
