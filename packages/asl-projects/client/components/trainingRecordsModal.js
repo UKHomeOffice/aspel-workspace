@@ -204,8 +204,8 @@ export default function TrainingRecordModal({
           {data.isExemption ? (
             <p className="preserve-whitespace">
               {diffField(
-                data.exemptionReason,
                 compareTo.exemptionReason,
+                data.exemptionReason,
                 'right'
               ) || '-'}
             </p>
