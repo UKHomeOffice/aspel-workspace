@@ -36,15 +36,15 @@ const Confirm = ({
       <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
       <Header title={<Snippet>confirmTitle</Snippet>}/>
       <dl>
-        <NamedPersonDetails roleType={values.type} profile={profile} props={props} profileReplaced={profileReplaced} roleDetails={values} />
+        <NamedPersonDetails roleType={values.type} profile={profile} props={props} profileReplaced={profileReplaced} roleDetails={values} showEditLink />
       </dl>
 
       <dl>
-        <DetailsByRole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} role={values.type} roleDetails={values} />
+        <DetailsByRole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} role={values.type} roleDetails={values} showHeading showEditLink />
       </dl>
 
       <dl>
-        <SkillsAndExperience roleType={values.type} profile={profile} values={values} />
+        <SkillsAndExperience roleType={values.type} profile={profile} values={values} showHeading showEditLink />
       </dl>
       {
         props.action === 'remove' && values.type === 'nacwo' &&

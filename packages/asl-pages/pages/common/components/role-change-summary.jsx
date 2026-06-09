@@ -38,7 +38,7 @@ const NVSRole = ({ incompleteTraining, mandatoryTraining }) => {
         <>
           <dt><Snippet>explanation.nvs.trainingNotComplete</Snippet></dt>
           <dd>
-            <dl className="continuation" style={{ marginLeft: '1.5rem', paddingLeft: '1rem' }}>
+            <dl className="continuation">
               <dt><Snippet>explanation.nvs.reasonForDelay</Snippet></dt>
               <dd>{incompleteTraining.delayReason}</dd>
               <dt><Snippet>explanation.nvs.completionDate</Snippet></dt>
@@ -61,7 +61,7 @@ const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
         <>
           <dt><Snippet>explanation.nacwo.delay</Snippet></dt>
           <dd>
-            <dl className="continuation" style={{ marginLeft: '1.5rem', paddingLeft: '1rem' }}>
+            <dl className="continuation">
               <dt><Snippet>explanation.nacwo.trainingNotComplete</Snippet></dt>
               <dd>{incompleteModules}</dd>
               <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
@@ -76,7 +76,7 @@ const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
   );
 };
 
-export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, roleDetails }) => {
+export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, roleDetails, showHeading = false, showEditLink = false }) => {
   const { isExemption, isDelay } = checkExemptionDelay(mandatoryTraining);
   const hasTrainingComplete = mandatoryTraining === 'yes';
   const hasNvsRcvsNumber = role === 'nvs' && !!roleDetails?.rcvsNumber;
@@ -88,9 +88,11 @@ export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, rol
 
   return (
     <>
-      <h2 className="margin-bottom">
-        <Snippet>explanation.trainingHeading</Snippet>
-      </h2>
+      {showHeading && (
+        <h2 className="margin-bottom">
+          <Snippet>explanation.trainingHeading</Snippet>
+        </h2>
+      )}
 
       {isExemption && <ExemptionRequest /> }
       { role === 'nacwo' && <NACWORole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
@@ -99,12 +101,12 @@ export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, rol
         <dt><Snippet>explanation.trainingComplete</Snippet></dt>
       )}
 
-      <Link page={'role.namedPersonMvp'} suffix='/mandatory-training' label={<Snippet>buttons.edit</Snippet>} />
+      {showEditLink && <Link page={'role.namedPersonMvp'} suffix='/mandatory-training' label={<Snippet>buttons.edit</Snippet>} />}
     </>
   );
 };
 
-export const SkillsAndExperience = ({ roleType, profile, values = {} }) => {
+export const SkillsAndExperience = ({ roleType, profile, values = {}, showHeading = false, showEditLink = false }) => {
   const contentKey = skillsAndExperienceContent.fields[roleType] ? roleType : 'default';
   const contentForRole = skillsAndExperienceContent.fields[contentKey] || {};
   const fieldKeys = Object.keys(skillsAndExperienceContent.fields[contentKey] || {}).filter(key => key !== 'desc');
@@ -119,9 +121,11 @@ export const SkillsAndExperience = ({ roleType, profile, values = {} }) => {
 
   return (
     <section>
-      <h2 className="margin-bottom">
-        <Snippet>explanation.skillsAndExperienceHeading</Snippet>
-      </h2>
+      {showHeading && (
+        <h2 className="margin-bottom">
+          <Snippet>explanation.skillsAndExperienceHeading</Snippet>
+        </h2>
+      )}
 
       {
         !['nvs', 'sqp'].includes(roleType) && contentForRole.desc &&
@@ -139,12 +143,12 @@ export const SkillsAndExperience = ({ roleType, profile, values = {} }) => {
         ))}
       </dl>
 
-      <Link page={'role.namedPersonMvp'} suffix='/skills-and-experience' label={<Snippet>buttons.edit</Snippet>} />
+      {showEditLink && <Link page={'role.namedPersonMvp'} suffix='/skills-and-experience' label={<Snippet>buttons.edit</Snippet>} />}
     </section>
   );
 };
 
-export const NamedPersonDetails = ({ roleType, profile, props, profileReplaced, roleDetails }) => {
+export const NamedPersonDetails = ({ roleType, profile, props, profileReplaced, roleDetails, showEditLink = false }) => {
   const hasNamedPersonDetails = !!(
     roleType ||
     profile?.firstName ||
@@ -175,7 +179,7 @@ export const NamedPersonDetails = ({ roleType, profile, props, profileReplaced, 
         </>
       )}
 
-      <Link page={'role.namedPersonMvp'} label={<Snippet>buttons.edit</Snippet>} />
+      {showEditLink && <Link page={'role.namedPersonMvp'} label={<Snippet>buttons.edit</Snippet>} />}
     </>
   );
 };
