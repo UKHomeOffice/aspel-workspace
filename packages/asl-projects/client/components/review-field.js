@@ -19,9 +19,17 @@ import EstablishmentSelector from './establishment-selector';
 import { DATE_FORMAT } from '../constants';
 import ReviewFields from './review-fields';
 import { ReviewRepeater } from '../pages/sections/repeater/review';
+import {
+  findSelectedOption,
+  findSelectedOptions,
+  isOptionFieldType,
+  isRichTextFieldType,
+  resolveFieldValue,
+  resolveVisibleOptions
+} from '../helpers/field-resolution';
 
 function RevealChildren({ value, options, values, prefix, diff }) {
-  const option = (options || []).find(option => option.value === value);
+  const option = findSelectedOption(options || [], value);
   if (!option?.reveal || diff) {
     return null;
   }
@@ -40,22 +48,96 @@ function RevealChildren({ value, options, values, prefix, diff }) {
 class ReviewField extends React.Component {
 
   render() {
+    const type = resolveFieldValue(this.props.type, this.props);
+
+    const renderReveal = reveal => {
+      if (!reveal) {
+        return null;
+      }
+
+      if (React.isValidElement(reveal)) {
+        return reveal;
+      }
+
+      return (
+        <div className="review-children">
+          <ReviewFields
+            fields={castArray(reveal).map(field => ({ ...field, preserveHierarchy: true }))}
+            values={this.props.values}
+            prefix={this.props.prefix}
+          />
+        </div>
+      );
+    };
+
     let value = this.props.value;
     let options;
     let additionalInfo;
 
-    if (['checkbox', 'radio', 'select', 'permissible-purpose'].includes(this.props.type)) {
-      options = this.props.optionsFromSettings
+    if (type === 'standard-list') {
+      const resolvedOptions = resolveVisibleOptions(this.props.options || [], this.props);
+      const selectedOptions = findSelectedOptions(resolvedOptions, value);
+
+      if (!selectedOptions.length) {
+        return <p><em>None selected</em></p>;
+      }
+
+      return (
+        <div className={`${this.props.className || ''} govuk-!-margin-bottom-4`}>
+          <ul className="govuk-list govuk-list--bullet">
+            {selectedOptions.map((opt, i) => (
+              <li key={i}>
+                <strong className="govuk-body">{opt.label}</strong>
+                {opt.hint && (
+                  <div className="govuk-hint govuk-!-margin-top-1">{opt.hint}</div>
+                )}
+                {renderReveal(opt.reveal)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    if (type === 'standard-radio') {
+      const resolvedOptions = resolveVisibleOptions(this.props.options || [], this.props);
+      const selectedOption = findSelectedOption(resolvedOptions, value);
+
+      return (
+        <div className={`${this.props.className || ''} govuk-!-margin-bottom-4`}>
+          {selectedOption ? (
+            <p className="govuk-body">{selectedOption.label}</p>
+          ) : (
+            <p className="govuk-body"><em>No answer provided</em></p>
+          )}
+
+          {renderReveal(selectedOption?.reveal)}
+        </div>
+      );
+    }
+
+    if (isOptionFieldType(type)) {
+      options = resolveVisibleOptions(this.props.optionsFromSettings
         ? this.props.settings[this.props.optionsFromSettings]
-        : this.props.options;
+        : this.props.options, this.props);
     }
 
-    if ((this.props.type === 'radio' || this.props.type === 'select') && !isUndefined(value)) {
-      value = options.find(option => !isUndefined(option.value) ? option.value === value : option === value);
-      additionalInfo = value && value.additionalInfo;
+    if ((type === 'radio' || type === 'select') && !isUndefined(value)) {
+      const selectedValue = findSelectedOption(options || [], value);
+      value = selectedValue;
+      additionalInfo = selectedValue && selectedValue.additionalInfo;
+      if (type === 'radio' && value && !isUndefined(value.label)) {
+        return (
+          <Fragment>
+            <p>{value.label}</p>
+            {additionalInfo && <ReactMarkdown>{additionalInfo}</ReactMarkdown>}
+            {this.props.preserveHierarchy && <RevealChildren value={value.value} options={options} {...this.props} />}
+          </Fragment>
+        );
+      }
     }
 
-    if (this.props.type === 'duration') {
+    if (type === 'duration') {
       let months = get(value, 'months');
       let years = get(value, 'years');
       months = isInteger(months) ? months : 0;
@@ -79,7 +161,7 @@ class ReviewField extends React.Component {
       );
     }
 
-    if (this.props.type === 'keywords') {
+    if (type === 'keywords') {
       return (value || []).length >= 1
         ? (
           <ul>
@@ -93,35 +175,35 @@ class ReviewField extends React.Component {
         : <p><em>No answer provided</em></p>;
     }
 
-    if (value && this.props.type === 'holder') {
+    if (value && type === 'holder') {
       return (
         <p><Link page="profile.read" profileId={value.licenceHolder.id} establishmentId={value.establishment.id} label={`${value.licenceHolder.firstName} ${value.licenceHolder.lastName}`} /></p>
       );
     }
 
-    if (value && this.props.type === 'holder-name') {
+    if (value && type === 'holder-name') {
       return (
         <p>{value.firstName} {value.lastName}</p>
       );
     }
 
-    if (this.props.type === 'establishment-selector') {
+    if (type === 'establishment-selector') {
       return <EstablishmentSelector {...this.props} review={true} />;
     }
 
-    if (value && this.props.type === 'date') {
+    if (value && type === 'date') {
       return <p>{ formatDate(value, DATE_FORMAT.long) }</p>;
     }
 
-    if (this.props.type === 'legacy-species-selector') {
+    if (type === 'legacy-species-selector') {
       value = getLegacySpeciesLabel(this.props.values);
     }
 
-    if (this.props.type === 'species-selector') {
+    if (type === 'species-selector') {
       value = mapSpecies(this.props.project);
     }
 
-    if (this.props.type === 'repeater') {
+    if (type === 'repeater') {
       const items = this.props.values[this.props.name];
       if (!items || !items.length) {
         return <em>No answer provided</em>;
@@ -139,7 +221,7 @@ class ReviewField extends React.Component {
       );
     }
 
-    if (this.props.type === 'permissible-purpose') {
+    if (type === 'permissible-purpose') {
       const childrenName = options.find(o => o.reveal).reveal.name;
       const hasChildren = o => o.reveal && this.props.project[o.reveal.name] && this.props.project[o.reveal.name].length;
       if (
@@ -159,7 +241,8 @@ class ReviewField extends React.Component {
                         <ul>
                           {
                             this.props.project[o.reveal.name].map((val, index) => {
-                              return <li key={index}>{o.reveal.options.find(opt => opt.value === val).label}</li>;
+                              const selectedOption = findSelectedOption(o.reveal.options || [], val);
+                              return <li key={index}>{selectedOption ? selectedOption.label : val}</li>;
                             })
                           }
                         </ul>
@@ -173,10 +256,10 @@ class ReviewField extends React.Component {
       }
       return <p><em>None selected</em></p>;
     }
-    if (this.props.type === 'checkbox' ||
-      this.props.type === 'species-selector' ||
-      this.props.type === 'location-selector' ||
-      this.props.type === 'objective-selector'
+    if (type === 'checkbox' ||
+      type === 'species-selector' ||
+      type === 'location-selector' ||
+      type === 'objective-selector'
     ) {
       value = value || [];
       if (!value.length) {
@@ -188,16 +271,14 @@ class ReviewField extends React.Component {
       }
 
       const getValue = value => {
-        const v = (options || []).find(option => option.value === value);
-        return v
-          ? v.label
-          : value;
+        const option = findSelectedOption(options || [], value);
+        return option?.label || value;
       };
 
       return (
         <ul>
           {
-            value.filter(v => options ? options.find(o => o.value === v) : true).map(value => (
+            value.filter(v => options ? findSelectedOption(options, v) : true).map(value => (
               <li key={value}>
                 {
                   getValue(value)
@@ -212,7 +293,7 @@ class ReviewField extends React.Component {
       );
     }
 
-    if (this.props.type === 'declaration') {
+    if (type === 'declaration') {
       return <p>
         {
           this.props.value
@@ -222,14 +303,14 @@ class ReviewField extends React.Component {
       </p>;
     }
 
-    if (this.props.type === 'additional-availability') {
+    if (type === 'additional-availability') {
       const item = (this.props.project.establishments || []).find(e => e['establishment-id'] === this.props.value);
       if (item) {
         return <p>{item.name || item['establishment-name']}</p>; // establishment-name is legacy
       }
     }
 
-    if (this.props.type === 'animal-quantities') {
+    if (type === 'animal-quantities') {
       const species = [
         ...flatten((this.props.project.species || []).map(s => {
           if (s.indexOf('other') > -1) {
@@ -264,7 +345,7 @@ class ReviewField extends React.Component {
       </dl>;
     }
 
-    if (this.props.type === 'texteditor') {
+    if (isRichTextFieldType(type)) {
       return <TextEditor {...this.props} readOnly={true} />;
     }
 

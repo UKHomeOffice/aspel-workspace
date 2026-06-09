@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { DocumentHeader, Link, Snippet } from '@ukhomeoffice/asl-components';
-import { format } from 'date-fns';
+import { formatDate } from '../../../lib/utils';
 import { dateFormat } from '../../../constants';
 import ProceduresDownloadLink from './procedures-download-link';
 
@@ -27,7 +27,7 @@ export default function RopHeader() {
         <dd>{ project.licenceNumber }</dd>
 
         <dt>Expiry date</dt>
-        <dd>{ format(project.expiryDate, dateFormat.long) }</dd>
+        <dd>{ formatDate(project.expiryDate, dateFormat.long) }</dd>
 
         <dt>Downloads</dt>
         <dd>

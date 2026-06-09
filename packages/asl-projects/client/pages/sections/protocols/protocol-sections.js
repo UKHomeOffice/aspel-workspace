@@ -15,6 +15,7 @@ import { filterSpeciesByActive } from './animals';
 
 import { keepAlive } from '../../../actions/session';
 import StandardProtocolBadge from '../../../components/standard-protocol-badge';
+import { isStandardProtocolMode } from '../../../helpers';
 
 class ProtocolSections extends PureComponent {
   state = {
@@ -70,13 +71,20 @@ class ProtocolSections extends PureComponent {
       newComments,
       readonly,
       schemaVersion,
-      project
+      project,
+      standardProtocolsEnabled
     } = this.props;
+
+    const isStandardProtocol = isStandardProtocolMode(values, standardProtocolsEnabled);
 
     const isLegacy = schemaVersion === 0;
 
     const severityField = sections.details.fields.find(field => field.name === 'severity');
-    const severityOption = ((severityField.options || []).find(option => option.value === values.severity) || {}).label;
+    const normalisedSeverity = typeof values.severity === 'string' ? values.severity.trim().toLowerCase() : values.severity;
+    const severityOption = ((severityField.options || []).find(option => {
+      const optionValue = typeof option.value === 'string' ? option.value.trim().toLowerCase() : option.value;
+      return optionValue === normalisedSeverity;
+    }) || {}).label;
 
     const numberOfNewComments = Object.values(newComments)
       .reduce((total, comments) => total + (comments || []).length, 0);
@@ -96,7 +104,7 @@ class ProtocolSections extends PureComponent {
         {
           !values.deleted && (
             <Fragment>
-              <StandardProtocolBadge values={values} />
+              {isStandardProtocol && <StandardProtocolBadge values={values} />}
               <ReorderedBadge id={values.id} />
               <ChangedBadge primaryField={`protocols.${values.id}`} protocolId={values.id} />
             </Fragment>
@@ -166,13 +174,15 @@ class ProtocolSections extends PureComponent {
                     onChange={this.setCompleted}
                     buttonClassName="button-secondary"
                   />
-                  <p>
-                    <span>Reorder: <a href="#" disabled={index === 0} onClick={this.moveUp}>Up</a> or <a href="#" disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
-                    <span> │ </span>
-                    <a href="#" onClick={this.props.duplicateItem}>Duplicate protocol</a>
-                    <span> │ </span>
-                    <a href="#" onClick={this.delete}>Remove protocol</a>
-                  </p>
+                  {!isStandardProtocol && (
+                    <p>
+                      <span>Reorder: <a href="#" disabled={index === 0} onClick={this.moveUp}>Up</a> or <a href="#" disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
+                      <span> │ </span>
+                      <a href="#" onClick={this.props.duplicateItem}>Duplicate protocol</a>
+                      <span> │ </span>
+                      <a href="#" onClick={this.delete}>Remove protocol</a>
+                    </p>
+                  )}
                 </Fragment>
               )
             }

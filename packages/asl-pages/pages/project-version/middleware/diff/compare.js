@@ -33,6 +33,7 @@ const diff = (a, b, { type, granularity = 'word' }) => {
       diff = diffArrays((a || []).sort(), (b || []).sort());
       break;
     case 'texteditor':
+    case 'paragraph':
 
       try {
         before = parseValue(a);

@@ -28,7 +28,7 @@ const mapStateToProps = (
     }
   }
 ) => {
-  const section = getSubsections(schemaVersion)[params.section];
+  const section = getSubsections(schemaVersion)[params.section] || {};
 
   section.fields = section.fields || [];
 

@@ -1,11 +1,18 @@
 import assert from 'assert';
 import {
+  calculateProtocolContext,
+  getProtocolMode,
   getFields
 } from '../../../../client/helpers';
+import {
+  isEditableStandardProtocolMode,
+  isProtocolPlaybackMode,
+  isStandardProtocolMode
+} from '../../../../client/helpers';
 
-describe('Helpers', () => {
+describe('getFields', () => {
 
-  it('getFields - experimental design', () => {
+  it('returns top-level experimental design protocol fields by default', () => {
 
     const experimentalDesignSection = {
       'title': 'Protocols',
@@ -151,7 +158,7 @@ describe('Helpers', () => {
     assert.equal(fields[11].name, 'protocols.*.maximize-effectiveness');
   });
 
-  it('getFields - adverse fields', () => {
+  it('returns top-level adverse step fields by default', () => {
 
     const stepsSection = {
       'title': 'Protocols',
@@ -288,5 +295,70 @@ describe('Helpers', () => {
     assert.equal(fields[5].name, 'protocols.*.prevent-adverse-effects');
     assert.equal(fields[6].name, 'protocols.*.endpoints');
     assert.equal(fields[7].name, 'protocols.*.reusable');
+  });
+
+});
+
+describe('getProtocolMode', () => {
+  it('returns the expected protocol mode from saved values and feature flag state', () => {
+    assert.equal(getProtocolMode({}), 'experimental');
+    assert.equal(getProtocolMode({ isStandardProtocol: true, standardProtocolType: 'standard' }), 'standard');
+    assert.equal(getProtocolMode({ isStandardProtocol: false, standardProtocolType: 'editable' }), 'editable');
+    assert.equal(
+      getProtocolMode({ isStandardProtocol: true, standardProtocolType: 'standard', standardProtocolsEnabled: false }),
+      'experimental'
+    );
+
+  });
+});
+
+describe('calculateProtocolContext', () => {
+  it('uses nested props values and falls back to the default value when the feature flag is disabled', () => {
+    assert.equal(
+      calculateProtocolContext(
+        {
+          values: {
+            isStandardProtocol: true,
+            standardProtocolType: 'standard'
+          }
+        },
+        'default',
+        'editable',
+        'standard'
+      ),
+      'standard'
+    );
+
+    assert.equal(
+      calculateProtocolContext(
+        {
+          standardProtocolsEnabled: false,
+          values: {
+            isStandardProtocol: true,
+            standardProtocolType: 'standard'
+          }
+        },
+        'default',
+        'editable',
+        'standard'
+      ),
+      'default'
+    );
+  });
+
+});
+
+describe('protocol mode predicates', () => {
+  it('identifies standard and editable protocol modes correctly', () => {
+    assert.equal(isStandardProtocolMode({ isStandardProtocol: true, standardProtocolType: 'standard' }), true);
+    assert.equal(isEditableStandardProtocolMode({ isStandardProtocol: false, standardProtocolType: 'editable' }), true);
+  });
+
+  it('treats editable protocols as playback mode and respects the feature flag fallback', () => {
+    assert.equal(isProtocolPlaybackMode({ isStandardProtocol: false, standardProtocolType: 'editable' }), true);
+    assert.equal(
+      isProtocolPlaybackMode({ isStandardProtocol: true, standardProtocolType: 'standard', standardProtocolsEnabled: false }),
+      false
+    );
   });
 });

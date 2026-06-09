@@ -9,7 +9,23 @@ import RAPlaybackHint from './ra-playback-hint';
 import { Markdown } from '@ukhomeoffice/asl-components';
 import ErrorBoundary from './error-boundary';
 import classnames from 'classnames';
-import Mustache from 'mustache';
+import ReactMarkdown from 'react-markdown';
+import { FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
+import {
+  resolveTemplateContent,
+  stringifyResolvedValue
+} from '../helpers/field-resolution';
+import { isStandardProtocolMode } from '../helpers';
+
+const renderInlineMarkdown = value => {
+  const text = stringifyResolvedValue(value);
+  if (!text) {
+    return text;
+  }
+
+  const looksLikeMarkdown = (text.includes('[') && text.includes('](')) || text.includes('\n');
+  return looksLikeMarkdown ? <ReactMarkdown components={{ p: 'span' }}>{text}</ReactMarkdown> : text;
+};
 
 class Review extends React.Component {
 
@@ -35,15 +51,12 @@ class Review extends React.Component {
       commentKey,
       additionalCommentFields
     } = this.props;
-    let hint = initialHint;
+    let hint = resolveTemplateContent(initialHint, this.props);
 
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
     } else if (hint && !React.isValidElement(hint)) {
-      if(typeof hint === 'string') {
-        hint = Mustache.render(hint, this.props);
-      }
-      hint = <Markdown links={true} paragraphProps={{ className: 'grey' }}>{hint}</Markdown>;
+      hint = <Markdown links={true} paragraphProps={{ className: 'grey' }}>{stringifyResolvedValue(hint)}</Markdown>;
     } else if (hint) {
       hint = <p className="grey">{hint}</p>;
     } else {
@@ -65,7 +78,7 @@ class Review extends React.Component {
       />;
     }
 
-    const displayedLabel = Mustache.render(review || label || '', this.props);
+    const displayedLabel = renderInlineMarkdown(resolveTemplateContent(review || label || '', this.props));
 
     return (
       <div className={classnames('review', this.props.className)}>
@@ -99,7 +112,7 @@ class Review extends React.Component {
         }
         {
           // repeaters have edit links on the individual fields
-          !this.props.readonly && this.props.type !== 'repeater' && (
+          !isStandardProtocolMode(this.props.values, this.props.standardProtocolsEnabled) && !this.props.readonly && this.props.type !== 'repeater' && (
             <Fragment>
               <p>
                 <Link
@@ -121,7 +134,8 @@ const mapStateToProps = (state, ownProps) => {
   const {
     application: { readonly = false, isGranted = false, previousProtocols = {} } = {},
     changes: { first = [], latest = [], granted = [] } = {},
-    added: {first: firstAdded = [], latest: latestAdded = [], granted: gratedAdded = []} = {}
+    added: {first: firstAdded = [], latest: latestAdded = [], granted: gratedAdded = []} = {},
+    static: { keycloakRoles = [] } = {}
   } = state;
 
   const key = `${ownProps.prefix || ''}${ownProps.name}`;
@@ -167,6 +181,7 @@ const mapStateToProps = (state, ownProps) => {
     latestSubmittedValue,
     firstSubmittedValue,
     grantedValue,
+    standardProtocolsEnabled: keycloakRoles.includes(FEATURE_FLAG_STANDARD_PROTOCOLS),
     fieldPath: key,
     fieldName: ownProps.name
   };
