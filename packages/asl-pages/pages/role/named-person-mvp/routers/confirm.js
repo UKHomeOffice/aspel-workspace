@@ -90,7 +90,7 @@ module.exports = (settings) => {
         delete req.session.form[FORM_ID];
         delete req.session.form[`${req.profile.id}-declaration`];
         return res.redirect(
-          req.buildRoute('role.create', { suffix: 'success' })
+          req.buildRoute('role.namedPersonMvp', { suffix: 'success' })
         );
       })
       .catch(next);

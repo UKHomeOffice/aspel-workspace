@@ -5,6 +5,6 @@ module.exports = {
   mandatoryTraining: require('./mandatory-training'),
   incompleteTraining: require('./incomplete-training'),
   skillsAndExperience: require('./skills-and-experience'),
-  confirm: require('./confirm')
-  // success: require('./success')
+  confirm: require('./confirm'),
+  success: require('./success')
 };

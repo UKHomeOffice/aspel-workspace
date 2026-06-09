@@ -18,8 +18,8 @@ const paths = {
   mandatoryTraining: '/mandatory-training',
   incompleteTraining: '/incomplete-training',
   skillsAndExperience: '/skills-and-experience',
-  confirm: '/confirm'
-  // success: '/success'
+  confirm: '/confirm',
+  success: '/success'
 };
 
 module.exports = (settings) => {
@@ -33,8 +33,8 @@ module.exports = (settings) => {
       paths.mandatoryTraining,
       paths.incompleteTraining,
       paths.skillsAndExperience,
-      paths.confirm
-      // paths.success
+      paths.confirm,
+      paths.success
     ]
   });
 
@@ -90,7 +90,7 @@ module.exports = (settings) => {
   app.use(paths.incompleteTraining, router.incompleteTraining({ formId: FORM_ID }));
   app.use(paths.skillsAndExperience, router.skillsAndExperience({ formId: FORM_ID }));
   app.use(paths.confirm, router.confirm({ formId: FORM_ID }));
-  // app.use(paths.success, router.success());
+  app.use(paths.success, router.success());
 
   return app;
 };
