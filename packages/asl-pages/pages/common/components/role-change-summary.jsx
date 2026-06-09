@@ -90,9 +90,9 @@ export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, rol
   return (
     <>
       {showHeading && (
-        <h2 className="margin-bottom">
+        <h3 className="margin-bottom">
           <Snippet>explanation.trainingHeading</Snippet>
-        </h2>
+        </h3>
       )}
 
       {isExemption && <ExemptionRequest /> }
@@ -102,7 +102,12 @@ export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, rol
         <dt><Snippet>explanation.trainingComplete</Snippet></dt>
       )}
 
-      {showEditLink && <Link page={'role.namedPersonMvp'} suffix='/mandatory-training' label={<Snippet>buttons.edit</Snippet>} />}
+      {showEditLink && (
+        <div>
+          <dt />
+          <dd><Link page={'role.namedPersonMvp'} suffix='/mandatory-training' label={<Snippet>buttons.edit</Snippet>} /></dd>
+        </div>
+      )}
     </>
   );
 };
@@ -121,31 +126,34 @@ export const SkillsAndExperience = ({ roleType, profile, values = {}, showHeadin
   }
 
   return (
-    <section>
+    <>
       {showHeading && (
         <h2 className="margin-bottom">
           <Snippet>explanation.skillsAndExperienceHeading</Snippet>
         </h2>
       )}
 
-      {
-        !SHARED_TRAINING_INTRO_ROLE_TYPES.includes(roleType) && contentForRole.desc &&
+      {!SHARED_TRAINING_INTRO_ROLE_TYPES.includes(roleType) && contentForRole.desc && (
+        <div>
           <dt><Snippet roleType={namedRoles[roleType]} profile={profile}>{`fields.${contentKey}.desc`}</Snippet></dt>
-      }
+          <dd />
+        </div>
+      )}
 
-      <dl>
-        {fieldKeys.map(fieldKey => (
-          <Fragment key={fieldKey}>
-            <dd />
-            <dd />
-            <dt><Snippet roleType={namedRoles[roleType]} profile={profile}>{`fields.${contentKey}.${fieldKey}.label`}</Snippet></dt>
-            <dd>{values[fieldKey]}</dd>
-          </Fragment>
-        ))}
-      </dl>
+      {fieldKeys.map(fieldKey => (
+        <div key={fieldKey}>
+          <dt><Snippet roleType={namedRoles[roleType]} profile={profile}>{`fields.${contentKey}.${fieldKey}.label`}</Snippet></dt>
+          <dd>{values[fieldKey]}</dd>
+        </div>
+      ))}
 
-      {showEditLink && <Link page={'role.namedPersonMvp'} suffix='/skills-and-experience' label={<Snippet>buttons.edit</Snippet>} />}
-    </section>
+      {showEditLink && (
+        <div>
+          <dt />
+          <dd><Link page={'role.namedPersonMvp'} suffix='/skills-and-experience' label={<Snippet>buttons.edit</Snippet>} /></dd>
+        </div>
+      )}
+    </>
   );
 };
 
