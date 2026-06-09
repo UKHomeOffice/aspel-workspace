@@ -9,6 +9,7 @@ import { dateFormat } from '../../../constants';
 import { Warning } from '@ukhomeoffice/react-components';
 const namedRoles = require('../../role/content/named-roles');
 const skillsAndExperienceContent = require('../../role/named-person-mvp/content/skills-and-experience');
+const { SHARED_TRAINING_INTRO_ROLE_TYPES } = require('../../role/named-person-mvp/role-types');
 
 const checkExemptionDelay = (mandatoryTraining) => {
   const isExemption = Array.isArray(mandatoryTraining)
@@ -128,7 +129,7 @@ export const SkillsAndExperience = ({ roleType, profile, values = {}, showHeadin
       )}
 
       {
-        !['nvs', 'sqp'].includes(roleType) && contentForRole.desc &&
+        !SHARED_TRAINING_INTRO_ROLE_TYPES.includes(roleType) && contentForRole.desc &&
           <dt><Snippet roleType={namedRoles[roleType]} profile={profile}>{`fields.${contentKey}.desc`}</Snippet></dt>
       }
 
