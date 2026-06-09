@@ -48,7 +48,8 @@ export function compareTrainingRecords(current = [], trainingHistory = {}) {
 
   // detect add or removed entries
   const addedPink = currentIds.filter(id => !prevIds.includes(id));
-  const addedGrey = currentIds.filter(id => !firstIds.includes(id));
+  //const addedGrey = currentIds.filter(id => !firstIds.includes(id));
+  const addedGrey = firstIds.length ? currentIds.filter(id => !firstIds.includes(id)) : [];
   const removedPink = prevIds.filter(id => !currentIds.includes(id));
   const removedGrey = firstIds.length ? firstIds.filter(id => !currentIds.includes(id)) : [];
 
