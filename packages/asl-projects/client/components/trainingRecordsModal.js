@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import Modal from './modal';
 import { useSelector } from 'react-redux';
 import { findArrayDifferences } from '../helpers/array-diff';
-
+import { diffWords } from 'diff';
 const DEFAULT_LABEL = '-';
 
 export default function TrainingRecordModal({
@@ -168,11 +168,11 @@ export default function TrainingRecordModal({
           <strong>Details</strong>
           {data.isExemption ? (
             <p className="preserve-whitespace">
-              {diffField(
-                data.exemptionReason,
-                compareTo.exemptionReason,
-                'left'
-              ) || '-'}
+              {diffWords(data.exemptionReason || '', compareTo.exemptionReason || '')
+                .filter(part => !part.added)
+                .map((part, i) => (
+                  <span key={i} className={part.removed ? 'diff removed' : ''}>{part.value}</span>
+                ))}
             </p>
           ) : (
             <>
@@ -203,11 +203,11 @@ export default function TrainingRecordModal({
           <strong>Details</strong>
           {data.isExemption ? (
             <p className="preserve-whitespace">
-              {diffField(
-                compareTo.exemptionReason,
-                data.exemptionReason,
-                'right'
-              ) || '-'}
+              {diffWords(compareTo.exemptionReason || '', data.exemptionReason || '')
+                .filter(part => !part.removed)
+                .map((part, i) => (
+                  <span key={i} className={part.added ? 'diff added' : ''}>{part.value}</span>
+                ))}
             </p>
           ) : (
             <>
