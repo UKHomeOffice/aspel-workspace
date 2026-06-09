@@ -1,6 +1,6 @@
 const projectVersions = require('../data/project-versions');
 const { merge } = require('lodash');
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 
 const defaults = {
   'poles': false,
@@ -88,7 +88,7 @@ module.exports = {
           .reduce((p, projectVersion) => {
             projectVersion.data = merge({}, defaults, projectVersion.data);
             projectVersion.licenceHolderId = projectVersion.licenceHolderId || projects.find(p => p.id === projectVersion.projectId).licenceHolderId;
-            return p.then(version => knex('projectVersions').insert(projectVersion));
+            return p.then(() => knex('projectVersions').insert(projectVersion));
           }, Promise.resolve());
       });
   },

@@ -5,13 +5,14 @@ import { Value } from 'slate';
 import get from 'lodash/get';
 import { Warning } from '@ukhomeoffice/react-components';
 import { fetchQuestionVersions } from '../actions/projects';
-import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay, additionalAvailabilityDiff,checkboxDiffDisplay } from '../helpers';
+import { mapAnimalQuantities, animalQuantitiesDiff, durationDiffDisplay, additionalAvailabilityDiff, checkboxDiffDisplay } from '../helpers';
 import Modal from './modal';
 import ReviewField from './review-field';
 import Tabs from './tabs';
 import { findArrayDifferences } from '../helpers/array-diff';
 import { getChanges, findSteps } from '../helpers/document-diff';
 import normaliseWhitespace from '../helpers/normalise-whitespace';
+import { getComparisonFieldConfig } from '../helpers/diff-window-field-config';
 
 const DEFAULT_LABEL = 'No answer provided';
 
@@ -19,6 +20,11 @@ const DiffWindow = (props) => {
   const [modalOpen, setModelOpen] = useState(false);
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(false);
+  const {
+    resolvedType,
+    comparisonType,
+    resolvedOptions
+  } = getComparisonFieldConfig(props);
 
   const project = useSelector(state => state.project);
   // mainly contain proposed values with quantities
@@ -45,34 +51,36 @@ const DiffWindow = (props) => {
 
     return arr;
   });
+  const activeVersion = versions[active];
 
   const dispatch = useDispatch();
 
-  const { before, changes } = useSelector(state => {
-    const before = get(state.questionVersions, `['${props.name}'].${versions[active]}.value`);
+  const { before, changes, hasLoadedVersion } = useSelector(state => {
+    const questionVersion = get(state.questionVersions, `['${props.name}'].${activeVersion}`);
+    const before = questionVersion && questionVersion.value;
 
     // dealing with protocol step when it was moved from normal to reusable
     if (before === undefined && props.stepId && props.previousProtocols) {
-      const beforeSteps = findSteps(versions[active], props.previousProtocols, props.protocolId, props.stepId, props.fieldName);
+      const beforeSteps = findSteps(activeVersion, props.previousProtocols, props.protocolId, props.stepId, props.fieldName);
       if (beforeSteps) {
-        return { before: beforeSteps, changes: getChanges(props.value, beforeSteps) };
+        return { before: beforeSteps, changes: getChanges(props.value, beforeSteps), hasLoadedVersion: true };
       }
     }
 
     const changes = props.type === 'keywords' && props.value.length > 0 && before
       ? findArrayDifferences(before, props.value)
-      : get(state.questionVersions, `['${props.name}'].${versions[active]}.diff`, { added: [], removed: [] });
+      : get(state.questionVersions, `['${props.name}'].${activeVersion}.diff`, { added: [], removed: [] });
 
-    return { before, changes };
+    return { before, changes, hasLoadedVersion: !!questionVersion };
   });
 
   useEffect(() => {
-    if (!before && modalOpen) {
+    if (!hasLoadedVersion && modalOpen) {
       setLoading(true);
-      dispatch(fetchQuestionVersions(props.name, { version: versions[active], type: props.type, isRa }))
-        .then(() => setLoading(false));
+      dispatch(fetchQuestionVersions(props.name, { version: activeVersion, type: comparisonType, isRa }))
+        .finally(() => setLoading(false));
     }
-  }, [props.name, versions[active], modalOpen]);
+  }, [props.name, activeVersion, modalOpen, comparisonType, isRa, hasLoadedVersion, dispatch]);
 
   const toggleModal = e => {
     e.preventDefault();
@@ -167,23 +175,12 @@ const DiffWindow = (props) => {
     }
 
     const getLabel = item => {
-      if (!props.options || !Array.isArray(props.options)) {
+      if (!resolvedOptions || !Array.isArray(resolvedOptions)) {
         return item;
       }
 
-      const option = props.options.find(opt => opt.value === item);
+      const option = resolvedOptions.find(opt => opt.value === item);
       return option ? option.label : item;
-    };
-
-    const arrayDiff = () => {
-      return parts
-        .reduce((arr, { value, added, removed }) => {
-          return [ ...arr, ...value.map(v => ({ value: v, added, removed })) ];
-        }, [])
-        .map(item => ({ ...item, label: getLabel(item.value) }))
-        .map(({ value, added, removed, label }) => {
-          return <li key={value}><span className={classnames({ added, removed, diff: (added || removed) })}>{ label }</span></li>;
-        });
     };
 
     const radioDiff = () => {
@@ -204,6 +201,17 @@ const DiffWindow = (props) => {
           }
         </p>
       );
+    };
+
+    const arrayDiff = () => {
+      return parts
+        .reduce((arr, { value, added, removed }) => {
+          return [ ...arr, ...value.map(v => ({ value: v, added, removed })) ];
+        }, [])
+        .map(item => ({ ...item, label: getLabel(item.value) }))
+        .map(({ value, added, removed, label }) => {
+          return <li key={value}><span className={classnames({ added, removed, diff: (added || removed) })}>{ label }</span></li>;
+        });
     };
 
     const permissiblePurposeDiff = () => {
@@ -235,7 +243,7 @@ const DiffWindow = (props) => {
         });
     };
 
-    switch (props.type) {
+    switch (resolvedType) {
       case 'text':
         return (
           <p>
@@ -345,8 +353,8 @@ const DiffWindow = (props) => {
             name={props.name}
             decorateNode={decorateNode(parts)}
             renderDecoration={renderDecoration}
-            options={props.options}
-            type={props.type}
+            options={resolvedOptions}
+            type={resolvedType}
             value={value}
             values={{[props.name]: value}}
             diff={true}
@@ -382,9 +390,9 @@ const DiffWindow = (props) => {
 
   const compare = () => {
 
-    const hasVisibleChanges = hasContentChanges(before, props.value, props.type);
+    const hasVisibleChanges = hasContentChanges(before, props.value, comparisonType);
     let { removed, added } = changes;
-    if (props.type === 'radio') {
+    if (resolvedType === 'radio') {
       removed = { added: false };
       added = { added: true };
     }

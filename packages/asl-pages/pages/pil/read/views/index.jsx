@@ -44,8 +44,8 @@ function SuspendReinstateLicence({ pil }) {
   );
 }
 
-export default function PIL({ pil }) {
-  pil = pil || useSelector(state => state.static.pil);
+export default function PIL({ pil: pilOverride }) {
+  const pil = pilOverride || useSelector(state => state.static.pil);
 
   const {
     profile,
@@ -71,7 +71,7 @@ export default function PIL({ pil }) {
       format: issueDate => formatDate(issueDate, dateFormat.long)
     },
     licenceNumber: {
-      format: l => profile.pilLicenceNumber
+      format: () => profile.pilLicenceNumber
     },
     updatedAt: {
       format: (updatedAt, pil) => differenceInCalendarDays(updatedAt, pil.issueDate) > 0
@@ -85,7 +85,7 @@ export default function PIL({ pil }) {
       format: reviewDate => formatDate(reviewDate, dateFormat.long)
     },
     establishment: {
-      format: (e, model) => {
+      format: (e) => {
         return e && e.name ? e.name : 'This licence is held at another establishment.';
       }
     },

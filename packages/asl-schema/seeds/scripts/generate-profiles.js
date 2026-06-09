@@ -1,5 +1,5 @@
 const faker = require('faker');
-const uuid = require('uuid');
+const { v4: uuid } = require('uuid');
 
 module.exports = ({ count, establishmentIds = [8202], roles = ['basic'], locale = 'en_GB' }) => {
   if (locale) {

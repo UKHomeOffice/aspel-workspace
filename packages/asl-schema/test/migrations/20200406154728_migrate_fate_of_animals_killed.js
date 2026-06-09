@@ -1,7 +1,6 @@
 const assert = require('assert');
-const uuid = require('uuid/v4');
-const { cloneDeep, omit } = require('lodash');
-const diff = require('deep-diff');
+const { v4: uuid } = require('uuid');
+const { cloneDeep } = require('lodash');
 const db = require('./helpers/db');
 const { transform, up } = require('../../migrations/20200406154728_migrate_fate_of_animals_killed');
 
@@ -185,7 +184,7 @@ describe('up', () => {
       .then(() => this.knex('establishments').insert(establishment))
       .then(() => this.knex('profiles').insert(licenceHolder))
       .then(() => this.knex('projects').insert(projects))
-      .then(() => this.knex('project_versions').insert(versions))
+      .then(() => this.knex('project_versions').insert(versions));
   });
 
   afterEach(() => {
@@ -204,7 +203,7 @@ describe('up', () => {
     return Promise.resolve()
       .then(() => {
         return this.knex('project_versions')
-          .where('project_id', ids.legacy)
+          .where('project_id', ids.legacy);
       })
       .then(before => {
         return Promise.resolve()
@@ -213,7 +212,7 @@ describe('up', () => {
           })
           .then(() => {
             return this.knex('project_versions')
-              .where('project_id', ids.legacy)
+              .where('project_id', ids.legacy);
           })
           .then(after => {
             assert.deepEqual(before, after);
@@ -229,7 +228,7 @@ describe('up', () => {
       .then(() => {
         return this.knex('project_versions')
           .where('project_id', ids.draft)
-          .first()
+          .first();
       })
       .then(version => {
         const expected = [
@@ -244,7 +243,7 @@ describe('up', () => {
     return Promise.resolve()
       .then(() => {
         return this.knex('project_versions')
-          .where('project_id', ids.active)
+          .where('project_id', ids.active);
       })
       .then(before => {
         return Promise.resolve()
@@ -253,7 +252,7 @@ describe('up', () => {
           })
           .then(() => {
             return this.knex('project_versions')
-              .where('project_id', ids.active)
+              .where('project_id', ids.active);
           })
           .then(after => {
             assert.deepEqual(

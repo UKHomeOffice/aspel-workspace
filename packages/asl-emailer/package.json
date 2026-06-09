@@ -23,7 +23,8 @@
   "dependencies": {
     "@asl/service": "file:../asl-service",
     "mustache": "^4.0.1",
-    "notifications-node-client": "^7.0.0"
+    "notifications-node-client": "^7.0.0",
+    "uuid": "^13.0.2"
   },
   "devDependencies": {
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",

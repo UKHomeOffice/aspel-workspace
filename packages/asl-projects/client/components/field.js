@@ -6,9 +6,9 @@ import { throwError } from '../actions/messages';
 import isUndefined from 'lodash/isUndefined';
 import castArray from 'lodash/castArray';
 import every from 'lodash/every';
-import Mustache from 'mustache';
 
 import ReactMarkdown from 'react-markdown';
+import { FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
 
 import { CheckboxGroup, DateInput, Input, RadioGroup, Select, TextArea } from '@ukhomeoffice/react-components';
 
@@ -32,6 +32,14 @@ import Comments from './comments';
 import ErrorBoundary from './error-boundary';
 import NtsCheckBoxWithModal from './checkbox';
 import without from 'lodash/without';
+import {
+  coerceChoiceValue,
+  findSelectedOption,
+  findSelectedOptions,
+  resolveFieldValue,
+  resolveTemplateContent,
+  resolveVisibleOptions
+} from '../helpers/field-resolution';
 
 /**
  * Where an option in a checkbox group is marked as exclusive, this handles
@@ -75,6 +83,15 @@ function calculateNewCheckboxValues(values, toggledValue, options) {
   return [withoutExclusives, withoutExclusives.length <= values.length];
 }
 
+function renderMarkdownIfNeeded(content) {
+  if (typeof content !== 'string') {
+    return content;
+  }
+
+  const looksLikeMarkdown = (content.includes('[') && content.includes('](')) || content.includes('\n');
+  return looksLikeMarkdown ? <ReactMarkdown>{content}</ReactMarkdown> : content;
+}
+
 class Field extends Component {
 
   state = {
@@ -103,7 +120,8 @@ class Field extends Component {
   }
 
   mapOptions(options = []) {
-    return options.filter(Boolean).map(option => {
+    return resolveVisibleOptions(options, this.props)
+      .map(option => {
       if (!option.reveal) {
         return option;
       }
@@ -133,11 +151,14 @@ class Field extends Component {
       return null;
     }
     const { value } = this.state;
+    const type = resolveFieldValue(this.props.type, this.props);
 
     let { label, hint } = this.props.altLabels ? this.props.alt : this.props;
 
-    label = typeof label === 'string' ? Mustache.render(label, this.props) : label;
-    hint = typeof hint === 'string' ? Mustache.render(hint, this.props) : hint;
+    label = resolveTemplateContent(label, this.props);
+    hint = resolveTemplateContent(hint, this.props);
+    label = renderMarkdownIfNeeded(label);
+    hint = renderMarkdownIfNeeded(hint);
 
     if (this.props.raPlayback) {
       hint = <RAPlaybackHint {...this.props.raPlayback} hint={hint} />;
@@ -146,10 +167,10 @@ class Field extends Component {
     if (this.props.fallbackLink && this.props.options && !this.props.options.length) {
       return <a href={this.props.fallbackLink.url}>{this.props.fallbackLink.label}</a>;
     }
-    if (this.props.type === 'animal-quantities') {
+    if (type === 'animal-quantities') {
       return <AnimalQuantities {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'species-selector') {
+    if (type === 'species-selector') {
       return <SpeciesSelector
         {...this.props}
         value={value}
@@ -158,25 +179,25 @@ class Field extends Component {
         onChange={ this.onFieldChange }
       />;
     }
-    if (this.props.type === 'establishment-selector') {
+    if (type === 'establishment-selector') {
       return <EstablishmentSelector {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'additional-availability') {
+    if (type === 'additional-availability') {
       return <AdditionalAvailability {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'legacy-species-selector') {
+    if (type === 'legacy-species-selector') {
       return <LegacySpeciesSelector {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'location-selector') {
+    if (type === 'location-selector') {
       return <LocationSelector {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'objective-selector') {
+    if (type === 'objective-selector') {
       return <ObjectiveSelector {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'other-species-selector') {
+    if (type === 'other-species-selector') {
       return <OtherSpecies {...this.props} value={value} label={label} hint={hint} />;
     }
-    if (this.props.type === 'repeater') {
+    if (type === 'repeater') {
       return <Repeater
         {...this.props}
         type={this.props.name}
@@ -187,7 +208,7 @@ class Field extends Component {
         onSave={val => this.onFieldChange(val)}
       />;
     }
-    if (this.props.type === 'duration') {
+    if (type === 'duration') {
       return <Duration
         name={ this.props.name }
         label={ label }
@@ -197,7 +218,7 @@ class Field extends Component {
         onChange={ val => this.onFieldChange(val) }
       />;
     }
-    if (this.props.type === 'keywords') {
+    if (type === 'keywords') {
       return <Keywords
         name={ this.props.name }
         label={ label }
@@ -207,19 +228,84 @@ class Field extends Component {
         onChange={ val => this.onFieldChange(val) }
       />;
     }
-    if (this.props.type === 'select') {
+    if (type === 'select') {
+      const options = this.mapOptions(this.props.options || []);
+
       return <Select
         className={ this.props.className }
         label={ label }
         hint={ hint }
         name={ this.props.name }
-        options={ this.props.options }
+        options={ options }
         value={ value }
         error={ this.props.error }
         onChange={ e => this.onFieldChange(e.target.value) }
       />;
     }
-    if (this.props.type === 'date') {
+    if (type === 'paragraph') {
+      return (
+        <div className={this.props.className}>
+          {label && <label className="govuk-label">{label}</label>}
+          {hint && <span className="govuk-hint">{hint}</span>}
+          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
+          <TextEditor
+            name={ this.props.name }
+            value={ value }
+            onChange={ this.onFieldChange }
+            readOnly={true}
+          />
+        </div>
+      );
+    }
+    if (type === 'standard-list') {
+      const options = this.mapOptions(this.props.options || []);
+      const selectedOptions = findSelectedOptions(options, value);
+
+      return (
+        <div className={this.props.className}>
+          {label && <label className="govuk-label">{label}</label>}
+          {hint && <span className="govuk-hint">{hint}</span>}
+          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
+
+          {selectedOptions.length > 0 ? (
+            <ul className="govuk-list govuk-list--bullet">
+              {selectedOptions.map((opt, i) => (
+                <li key={i}>
+                  <strong className="govuk-body">{opt.label}</strong>
+                  {opt.hint && (
+                    <div className="govuk-hint govuk-!-margin-top-1">{opt.hint}</div>
+                  )}
+                  {opt.reveal}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p><em>No answer provided</em></p>
+          )}
+        </div>
+      );
+    }
+    if (type === 'standard-radio') {
+      const options = this.mapOptions(this.props.options || []);
+      const selectedOption = findSelectedOption(options, value);
+
+      return (
+        <div className={this.props.className}>
+          {label && <label className="govuk-label">{label}</label>}
+          {hint && <span className="govuk-hint">{hint}</span>}
+          {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
+
+          {selectedOption ? (
+            <p className="govuk-body">{selectedOption.label}</p>
+          ) : (
+            <p className="govuk-body"><em>No answer provided</em></p>
+          )}
+
+          {selectedOption?.reveal}
+        </div>
+      );
+    }
+    if (type === 'date') {
       return <DateInput
         className={ this.props.className }
         label={ label }
@@ -230,35 +316,32 @@ class Field extends Component {
         onChange={value => this.onFieldChange(value) }
       />;
     }
-    if (this.props.type === 'radio') {
+    if (type === 'radio') {
+      const options = this.mapOptions(this.props.options || []);
+
       return <RadioGroup
         className={ this.props.className }
         label={ label }
         hint={ hint }
         name={ this.props.name }
-        options={ this.mapOptions(this.props.options) }
+        options={ options }
         value={ value }
         error={ this.props.error }
         inline={ this.props.inline }
         onChange={ e => {
-          let val = e.target.value;
-          if (val === 'true') {
-            val = true;
-          }
-          if (val === 'false') {
-            val = false;
-          }
-          this.onFieldChange(val);
+          this.onFieldChange(coerceChoiceValue(e.target.value));
         }}
       />;
     }
-    if (this.props.type === 'checkbox' && this.props.name === 'fate-of-animals') {
+    if (type === 'checkbox' && this.props.name === 'fate-of-animals') {
+      const options = this.mapOptions(this.props.options || []);
+
       return <NtsCheckBoxWithModal
         className={ this.props.className }
         label={ label }
         hint={ hint }
         name={ this.props.name }
-        options={ this.mapOptions(this.props.options) }
+        options={ options }
         value={ value }
         error={ this.props.error }
         inline={ this.props.inline }
@@ -266,8 +349,8 @@ class Field extends Component {
         onFieldChange={this.onFieldChange}
       />;
     }
-    if (this.props.type === 'checkbox' || this.props.type === 'permissible-purpose') {
-      const options = this.mapOptions(this.props.options);
+    if (type === 'checkbox' || type === 'permissible-purpose') {
+      const options = this.mapOptions(this.props.options || []);
 
       return <CheckboxGroup
         className={ this.props.className }
@@ -298,7 +381,7 @@ class Field extends Component {
         }}
       />;
     }
-    if (this.props.type === 'textarea') {
+    if (type === 'textarea') {
       return <TextArea
         className={ this.props.className }
         label={ label }
@@ -310,7 +393,7 @@ class Field extends Component {
         onChange={ e => this.onFieldChange(e.target.value) }
       />;
     }
-    if (this.props.type === 'texteditor') {
+    if (type === 'texteditor') {
       return <TextEditor
         name={ this.props.name }
         label={ label }
@@ -320,7 +403,7 @@ class Field extends Component {
         onChange={ this.onFieldChange }
       />;
     }
-    if (this.props.type === 'declaration') {
+    if (type === 'declaration') {
       return <CheckboxGroup
         options={[{
           label: this.props.label,
@@ -337,7 +420,7 @@ class Field extends Component {
     }
     return <Input
       className={ this.props.className }
-      type={ this.props.type || 'text' }
+      type={ type || 'text' }
       label={ label }
       hint={ hint }
       name={ this.props.name }
@@ -349,7 +432,7 @@ class Field extends Component {
   }
 }
 
-const mapStateToProps = ({ project, settings, application }, { name, conditional, optionsFromSettings, options, value, onFieldChange }) => {
+const mapStateToProps = ({ project, settings, application, static: { keycloakRoles = [] } = {} }, { name, conditional, optionsFromSettings, options, value, onFieldChange }) => {
   options = optionsFromSettings ? settings[optionsFromSettings] : options;
   return {
     options,
@@ -357,7 +440,8 @@ const mapStateToProps = ({ project, settings, application }, { name, conditional
     showChanges: !!onFieldChange && application && !application.newApplication,
     value: !isUndefined(value) ? value : project && project[name],
     show: !conditional || every(Object.keys(conditional), key => conditional[key] === project[key]),
-    grantedVersion: application && application.grantedVersion
+    grantedVersion: application && application.grantedVersion,
+    standardProtocolsEnabled: keycloakRoles.includes(FEATURE_FLAG_STANDARD_PROTOCOLS)
   };
 };
 

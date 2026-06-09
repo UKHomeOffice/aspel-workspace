@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const moment = require('moment');
 const assert = require('assert');
 const { up } = require('../../migrations/20200824182434_migrate_pil_licence_no_to_profile');

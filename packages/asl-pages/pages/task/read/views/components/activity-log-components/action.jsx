@@ -24,30 +24,29 @@ export function Action({ task, action, activity, changedBy }) {
       </p>
     );
   }
-  if (task.data.model === 'rop') {
-    action = task.status;
-  }
+
+  const normalisedAction = (task.data.model === 'rop') ? task.status : action;
 
   const establishmentId = get(activity, 'event.data.establishmentId');
   const profile = get(activity, 'event.meta.user.profile');
   const establishment =
     profile.establishments.find((e) => e.id === establishmentId) || {};
-  let approvedByMsg = `status.${action}.log.${type}`;
+  let approvedByMsg = `status.${normalisedAction}.log.${type}`;
 
-  if (!profile.asruUser && action === 'resolved') {
+  if (!profile.asruUser && normalisedAction === 'resolved') {
     const approvedByPELH = profile.roles.find(
       (r) => r.type === 'pelh' && r.establishmentId === establishmentId
     );
     approvedByMsg = approvedByPELH
-      ? `status.${action}.by-pelh`
-      : `status.${action}.on-behalf-of-pelh`;
+      ? `status.${normalisedAction}.by-pelh`
+      : `status.${normalisedAction}.on-behalf-of-pelh`;
   }
 
   return (
     <p className="gutter">
       <strong>
         <Snippet
-          fallback={`status.${action}.log`}
+          fallback={`status.${normalisedAction}.log`}
           establishmentName={establishment.name}
         >
           {approvedByMsg}

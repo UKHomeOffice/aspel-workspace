@@ -11,11 +11,11 @@ import {
 
 const connectComponent = key => {
   const mapStateToProps = ({ model, static: { schema, errors } }) => {
-    schema = schema.procedures.options.find(m => m.value === key).reveal;
+    const reveal = schema.procedures.options.find(m => m.value === key).reveal;
     return {
       model,
       errors,
-      schema: mapKeys(schema, (v, k) => `notesCat${key}`)
+      schema: mapKeys(reveal, () => `notesCat${key}`)
     };
   };
 

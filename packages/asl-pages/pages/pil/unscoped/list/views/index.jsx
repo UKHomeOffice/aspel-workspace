@@ -36,15 +36,14 @@ const formatters = {
   },
   reviewStatus: {
     format: (status, model) => {
-      if (model.reviewOverdue) {
-        status = 'Overdue';
-      } else if (model.reviewDue) {
-        status = 'Due soon';
-      }
-      if (!status) {
-        return null;
-      }
-      return <span className={classnames({ overdue: model.reviewOverdue })}>{ status }</span>;
+      const displayStatus =
+        (model.reviewOverdue && 'Overdue') ||
+        (model.reviewDue && 'Due soon') ||
+        status;
+
+      return displayStatus
+        ? <span className={classnames({ overdue: model.reviewOverdue })}>{ displayStatus }</span>
+        : null;
     }
   }
 };

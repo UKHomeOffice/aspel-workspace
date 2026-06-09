@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const { user, user101, userAtMultipleEstablishments, holc, inspector, licensing, ntco, userWithActivePil, asruSuper } = require('./profiles');
 const ids = require('./ids');
 const moment = require('moment');

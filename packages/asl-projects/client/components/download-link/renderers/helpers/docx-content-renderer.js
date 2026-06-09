@@ -11,6 +11,45 @@ const applyFilter = (text, filter) => {
     return filter ? filter(text) : text;
 };
 
+const splitTextIntoSegments = (rawText, { applyTextFilter } = {}) => {
+    const filteredText = applyFilter(String(rawText || ''), applyTextFilter);
+    return filteredText.split(/\r?\n/);
+};
+
+const appendTextWithLineBreaks = (paragraph, rawText, { applyTextFilter, marks = [] } = {}) => {
+    const segments = splitTextIntoSegments(rawText, { applyTextFilter });
+
+    segments.forEach((segment, segmentIndex) => {
+        const textRun = new TextRun(segment);
+
+        if (segmentIndex > 0) {
+            textRun.break();
+        }
+
+        (marks || []).forEach(mark => {
+            switch (mark.type) {
+                case 'bold':
+                    textRun.bold();
+                    break;
+                case 'italic':
+                    textRun.italics();
+                    break;
+                case 'underlined':
+                    textRun.underline();
+                    break;
+                case 'subscript':
+                    textRun.subScript();
+                    break;
+                case 'superscript':
+                    textRun.superScript();
+                    break;
+            }
+        });
+
+        paragraph.addRun(textRun);
+    });
+};
+
 const renderMarkdown = (doc, markdown, style = 'body', { applyTextFilter } = {}) => {
     const tree = unified().use(remarkParse).parse(markdown || '');
 
@@ -60,11 +99,18 @@ const renderText = (doc, value, { applyTextFilter, separator } = {}) => {
         return renderNull(doc, { separator });
     } else {
         const text = applyFilter(String(value), applyTextFilter);
-        doc.createParagraph(text).style('body');
+        if (/[\r\n]/.test(text)) {
+            const paragraph = new Paragraph();
+            paragraph.style('body');
+            appendTextWithLineBreaks(paragraph, text);
+            doc.addParagraph(paragraph);
+        } else {
+            doc.createParagraph(text).style('body');
+        }
     }
     if (separator) { separator(doc); }
 };
- 
+
 const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options = {}) => {
     const { applyTextFilter, customNodeRenderers } = options;
 
@@ -116,31 +162,16 @@ const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options 
             (node.nodes || []).forEach((childNode, childNodeIndex) => {
                 const leaves = childNode.leaves || [childNode];
                 leaves.forEach(leaf => {
-                    text = new TextRun(applyFilter(String(leaf.text || ''), applyTextFilter));
-                    (leaf.marks || []).forEach(mark => {
-                        switch (mark.type) {
-                            case 'bold':
-                                text.bold();
-                                break;
-                            case 'italic':
-                                text.italics();
-                                break;
-                            case 'underlined':
-                                text.underline();
-                                break;
-                            case 'subscript':
-                                text.subScript();
-                                break;
-                            case 'superscript':
-                                text.superScript();
-                                break;
-                        }
-                    });
                     if (!addToDoc && (index > 0) && childNodeIndex === 0) {
+                        text = new TextRun('');
                         text.break().break();
+                        paragraph.addRun(text);
                     }
                     paragraph.style('body');
-                    paragraph.addRun(text);
+                    appendTextWithLineBreaks(paragraph, leaf.text || '', {
+                        applyTextFilter,
+                        marks: leaf.marks || []
+                    });
                 });
             });
             if (addToDoc) {
@@ -206,4 +237,4 @@ const renderTextEditor = (doc, value, { onStringFallback, onError, separator, ap
     }
 };
 
-export { renderMarkdown, renderLabel, renderNull, renderText, renderTextEditor, renderNode };
+export { appendTextWithLineBreaks, renderMarkdown, renderLabel, renderNull, renderText, renderTextEditor, renderNode, splitTextIntoSegments };

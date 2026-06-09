@@ -12,6 +12,7 @@ import { getNewComments } from '../../../helpers';
 import { renderFieldsInProtocol } from '../../../helpers/render-fields-in-protocol';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
 import { getEnhancedProtocols } from '../../../selectors/protocols';
+import { FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
 
 const Form = ({
   number,
@@ -110,6 +111,45 @@ class Protocol extends PureComponent {
 }
 
 class Protocols extends PureComponent {
+  constructor(props) {
+    super(props);
+    const searchParams = new URLSearchParams(props.location?.search || window.location.search);
+    this.state = {
+      addProtocol: searchParams.get('addProtocol') === 'true'
+    };
+  }
+
+  componentDidMount() {
+    this.cleanupUrlParams();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location?.search !== this.props.location?.search) {
+      const searchParams = new URLSearchParams(this.props.location.search);
+      const addProtocol = searchParams.get('addProtocol') === 'true';
+
+      if (addProtocol && !this.state.addProtocol) {
+        this.setState({ addProtocol: true }, this.cleanupUrlParams);
+      }
+    }
+  }
+
+  cleanupUrlParams = () => {
+    const { history, location } = this.props;
+    if (!location) {
+      return;
+    }
+
+    const searchParams = new URLSearchParams(location.search);
+    if (searchParams.has('addProtocol')) {
+      searchParams.delete('addProtocol');
+      history.replace({
+        pathname: location.pathname,
+        search: searchParams.toString()
+      });
+    }
+  };
+
   save = protocols => {
     if (this.props.readonly) {
       return;
@@ -123,6 +163,28 @@ class Protocols extends PureComponent {
     this.props.retreat();
   }
 
+  handleAfterAdd = () => {
+    this.setState({ addProtocol: false });
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    });
+  };
+
+  handleAfterDuplicate = (item, id) => {
+    const { items } = this.props;
+    const index = items.findIndex(i => i.id === id);
+    const protocol = document.querySelectorAll('.protocols-section .protocol')[index];
+
+    if (protocol) {
+      window.scrollTo({
+        top: protocol.offsetTop,
+        left: 0
+      });
+    }
+  };
+
   render() {
     const { protocols, editable, previousProtocols, isLegacy } = this.props;
     const safeProtocols = Array.isArray(protocols) ? protocols : [];
@@ -131,7 +193,7 @@ class Protocols extends PureComponent {
         return true;
       }
       if (p.deleted === true) {
-        return !!previousProtocols.showDeleted.includes(p.id);
+        return !!previousProtocols?.showDeleted?.includes(p.id);
       }
       return true;
     });
@@ -141,27 +203,19 @@ class Protocols extends PureComponent {
       steps: isLegacy ? undefined : []
     };
 
-    const searchParams = new URLSearchParams(window.location.search);
-    const addProtocol = searchParams.get('addProtocol') === 'true';
-
     return (
       <Repeater
         type="protocols"
         singular="protocol"
         items={items}
         onSave={this.save}
-        addProtocol={addProtocol}
+        addProtocol={this.state.addProtocol}
         addAnother={editable}
         addButtonBefore={safeProtocols.length > 0 && safeProtocols[0]?.title}
         addButtonAfter={true}
         softDelete={true}
         itemProps={itemProps}
-        onAfterAdd={() => {
-          window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: 'smooth'
-          });
-        }}
+        onAfterAdd={this.handleAfterAdd}
         onBeforeDuplicate={(items, id) => {
           return items.map((item) => {
             if (item.id === id) {
@@ -174,14 +228,7 @@ class Protocols extends PureComponent {
             return item;
           });
         }}
-        onAfterDuplicate={(item, id) => {
-          const index = items.findIndex(i => i.id === id);
-          const protocol = document.querySelectorAll('.protocols-section .protocol')[index];
-          window.scrollTo({
-            top: protocol.offsetTop,
-            left: 0
-          });
-        }}
+        onAfterDuplicate={this.handleAfterDuplicate}
       >
         <Protocol {...this.props} />
       </Repeater>
@@ -192,6 +239,9 @@ class Protocols extends PureComponent {
 const mapStateToProps = ({
   comments,
   project,
+  static: {
+    keycloakRoles = []
+  } = {},
   application: {
     user,
     readonly,
@@ -203,7 +253,8 @@ const mapStateToProps = ({
   newComments: getNewComments(comments, user, project),
   readonly,
   previousProtocols,
-  isLegacy: schemaVersion === 0
+  isLegacy: schemaVersion === 0,
+  standardProtocolsEnabled: keycloakRoles.includes(FEATURE_FLAG_STANDARD_PROTOCOLS)
 });
 
 export default connect(mapStateToProps)(Protocols);

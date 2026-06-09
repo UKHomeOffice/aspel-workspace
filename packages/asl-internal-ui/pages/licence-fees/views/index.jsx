@@ -20,7 +20,7 @@ export default function Container({ children, tab }) {
   ];
 
   return (
-    <Layout tabs={tabs} tab={tab} subtitle={<Snippet>subtitle</Snippet>}>
+    <Layout tabsOverride={tabs} tab={tab} subtitle={<Snippet>subtitle</Snippet>}>
       { children }
     </Layout>
   );

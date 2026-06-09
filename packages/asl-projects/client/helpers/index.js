@@ -251,6 +251,27 @@ export function checkboxDiffDisplay({ before = [], value = [], isBefore, DEFAULT
 
   return value.length ? renderList(value, added, 'added') : <p><em>{DEFAULT_LABEL}</em></p>;
 }
+
+export function radioDiffDisplay({ value, isBefore, DEFAULT_LABEL }) {
+  const booleanValue = typeof value === 'boolean'
+    ? (value ? 'Yes' : 'No')
+    : value;
+
+  return (
+    <p>
+      {
+        value === undefined ? (
+          <em>{DEFAULT_LABEL}</em>
+        ) : (
+          <span className={classnames('diff', { removed: isBefore, added: !isBefore })}>
+            {booleanValue}
+          </span>
+        )
+      }
+    </p>
+  );
+}
+
 export const getScrollPos = (elem, offset = 0) => {
   const box = elem.getBoundingClientRect();
   const body = document.body;
@@ -438,4 +459,78 @@ export const getCurrentURLForFateOfAnimals = () => {
 
 export const markdownLink = (linkText, url) => {
   return url ? `[${linkText}](${url})` : linkText;
+};
+
+const getProtocolContextSource = values => {
+  if (values && typeof values === 'object' && values.values && typeof values.values === 'object') {
+    return {
+      ...values.values,
+      standardProtocolsEnabled: values.standardProtocolsEnabled ?? values.values.standardProtocolsEnabled
+    };
+  }
+
+  return values && typeof values === 'object'
+    ? values
+    : {};
+};
+
+export const getProtocolMode = (values = {}, standardProtocolsEnabled) => {
+  const context = getProtocolContextSource(values);
+  const flagEnabled = standardProtocolsEnabled ?? context.standardProtocolsEnabled ?? true;
+
+  if (!flagEnabled) {
+    return 'experimental';
+  }
+
+  if (context?.isStandardProtocol === true && context?.standardProtocolType === 'standard') {
+    return 'standard';
+  }
+
+  if (context?.isStandardProtocol === false && context?.standardProtocolType === 'editable') {
+    return 'editable';
+  }
+
+  return 'experimental';
+};
+
+export const isStandardProtocolMode = (values = {}, standardProtocolsEnabled) => {
+  return getProtocolMode(values, standardProtocolsEnabled) === 'standard';
+};
+
+export const isEditableStandardProtocolMode = (values = {}, standardProtocolsEnabled) => {
+  return getProtocolMode(values, standardProtocolsEnabled) === 'editable';
+};
+
+export const isProtocolPlaybackMode = (values = {}, standardProtocolsEnabled) => {
+  return isStandardProtocolMode(values, standardProtocolsEnabled)
+    || isEditableStandardProtocolMode(values, standardProtocolsEnabled);
+};
+
+export const calculateProtocolContext = (
+  values = {},
+  defaultValue,
+  editableProtocol,
+  standardProtocol
+) => {
+  const mode = getProtocolMode(values);
+
+  if (mode === 'standard') {
+    return standardProtocol;
+  }
+
+  if (mode === 'editable') {
+    return editableProtocol;
+  }
+
+  return defaultValue;
+};
+
+/**
+ * Returns the current page URL with #general-constraints appended as an anchor.
+ * If window is undefined (SSR), returns null.
+ * protocol section
+ */
+export const getToGeneralConstraints = () => {
+  if (typeof window === 'undefined') return null;
+  return window.location.href.split('#')[0] + '#general-constraints';
 };

@@ -2,3 +2,7 @@
 /*.iml
 .env
 /node_modules/
+/output/
+
+# js files generated from typescript
+/dist

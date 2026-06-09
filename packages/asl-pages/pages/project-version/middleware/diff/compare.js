@@ -4,7 +4,7 @@ const { concatTextFromNodes } = require('@asl/projects/utils');
 
 const parseValue = (val) => {
   if (typeof val === 'string') {
-    val = JSON.parse(val || '{}');
+    return parseValue(JSON.parse(val || '{}'));
   }
   return concatTextFromNodes(val.document.nodes);
 };
@@ -33,6 +33,7 @@ const diff = (a, b, { type, granularity = 'word' }) => {
       diff = diffArrays((a || []).sort(), (b || []).sort());
       break;
     case 'texteditor':
+    case 'paragraph':
 
       try {
         before = parseValue(a);

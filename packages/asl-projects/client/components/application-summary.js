@@ -94,7 +94,7 @@ const getMappedProps = createSelector(
 const ApplicationSummary = () => {
   const standardProtocolsEnabled = useFeatureFlag(FEATURE_FLAG_STANDARD_PROTOCOLS);
   const props = useSelector(getMappedProps);
-  const { isSyncing } = useSelector(selector);
+  const isSyncing = useSelector(state => selector(state).isSyncing);
   const [submitted, setSubmitted] = useState(false);
 
   const getSubsectionLink = key => {

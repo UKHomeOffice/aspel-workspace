@@ -22,14 +22,14 @@ function Fee({ type }) {
   );
 }
 
-export default function Fees({ tab, tabs, children, subtitle = '' }) {
+export default function Fees({ tab, tabsOverride, children, subtitle = '' }) {
   const { establishment, year } = useSelector(state => state.static, shallowEqual);
   const { years } = useSelector(state => state.static.fees);
 
   const options = years
     .sort((a, b) => b - a)
-    .map(year => {
-      year = parseInt(year, 10);
+    .map(yearStr => {
+      const year = parseInt(yearStr, 10);
       const date = `${year}-04-06`;
       const endDate = `${year + 1}-04-05`;
       const start = format(date, dateFormat.long);
@@ -40,7 +40,7 @@ export default function Fees({ tab, tabs, children, subtitle = '' }) {
       };
     });
 
-  tabs = tabs || [
+  const tabs = tabsOverride || [
     {
       page: 'establishment.fees.overview',
       key: 'fees.tabs.overview'

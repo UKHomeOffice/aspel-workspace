@@ -75,24 +75,24 @@ export default function Confirm({ isReview = false }) {
   // eslint-disable-next-line no-useless-call
   const shouldShowLegislation = !!without.apply(null, [rop.regulatorySubpurposes, ...yeps]).length;
 
-  function getRadioOption(field, val) {
-    val = val || rop[field];
-    if (!val) {
+  function getRadioOption(field, valueOverride) {
+    const value = valueOverride || rop[field];
+    if (!value) {
       return '-';
     }
-    if (Array.isArray(val)) {
-      if (!val.length) {
+    if (Array.isArray(value)) {
+      if (!value.length) {
         return '-';
       }
       return <ul>
         {
-          val.map(v => {
+          value.map(v => {
             return <li key={v}>{ getRadioOption(field, v) }</li>;
           })
         }
       </ul>;
     }
-    return <Snippet fallback={`fields.${field}.options.${val}`}>{`fields.${field}.options.${val}.label`}</Snippet>;
+    return <Snippet fallback={`fields.${field}.options.${value}`}>{`fields.${field}.options.${value}.label`}</Snippet>;
   }
 
   const generalOnly = isReview || nilReturn;
