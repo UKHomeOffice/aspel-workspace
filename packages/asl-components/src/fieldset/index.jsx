@@ -276,20 +276,16 @@ export default function Fieldset({ schema, errors = {}, formatters = {}, model, 
             {
                 map(schema, (field, key) => {
                     const fieldName = field.prefix ? `${field.prefix}-${key}` : key;
-                    const label = getResolvedLabel({
-                        name: key,
-                        label: field.label,
-                        snippetProps: getSnippetProps(key, formatters)
-                    });
                     return (
                         <Fragment key={fieldName}>
-                            {field.labelAsLegend && label ?
-                                <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                    <h1 className="govuk-fieldset__heading" id={`${fieldName}-legend`}>
-                                        { label }
-                                    </h1>
-                                </legend> :
-                                null}
+                            {field.labelAsLegend &&
+                                <Legend
+                                    name={key}
+                                    label={field.label}
+                                    snippetProps={getSnippetProps(key, formatters)}
+                                    id={`${fieldName}-legend`}
+                                />
+                            }
                             {formatters?.[fieldName]?.additionalContent ?? null}
                             <Field
                                 {...props}
@@ -311,6 +307,22 @@ export default function Fieldset({ schema, errors = {}, formatters = {}, model, 
             }
         </fieldset>
     );
+}
+
+function Legend({ label, name, snippetProps, id }) {
+    const Wrapper = ({ children }) => (
+        <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 className="govuk-fieldset__heading" id={id}>
+                {children}
+            </h1>
+        </legend>
+    );
+    if (isUndefined(label)) {
+        return <Snippet {...snippetProps} Wrapper={Wrapper}>{`fields.${name}.label`}</Snippet>;
+    }
+    return !label || (typeof label === 'string' && label.trim() === '')
+        ? null
+        : <Wrapper>{label}</Wrapper>;
 }
 
 function getResolvedLabel({ label, name, snippetProps }) {

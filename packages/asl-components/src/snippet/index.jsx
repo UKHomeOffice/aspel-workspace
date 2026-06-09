@@ -34,7 +34,7 @@ function getTemplate(content, primary, fallback, props) {
     return undefined;
 }
 
-export const Snippet = ({ content, children, optional, fallback, isPtag = true, ...props }) => {
+export const Snippet = ({ content, children, optional, fallback, isPtag = true, Wrapper, ...props }) => {
     // dynamic children with {value} values get passes as an array
     const primary = Array.isArray(children) ? children.join('') : children;
 
@@ -51,12 +51,18 @@ export const Snippet = ({ content, children, optional, fallback, isPtag = true, 
 
     const source = render(str, props);
 
-    return (
+    if (source.trim() === '') {
+        return null;
+    }
+
+    const snippet = (
         <Markdown
             unwrapSingleLine={isPtag}
             linkTarget={props.linkTarget}
         >{ source }</Markdown>
     );
+
+    return Wrapper ? <Wrapper>{snippet}</Wrapper> : snippet;
 };
 
 const mapStateToProps = ({

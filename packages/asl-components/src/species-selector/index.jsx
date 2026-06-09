@@ -78,8 +78,8 @@ const SpeciesSelector = ({
                     reveal: {
                         [fieldName]: {
                             inputType: 'multiInput',
-                            label: `Specify type of ${option.label.toLowerCase()}`,
-                            itemLabel: `${option.label} type`,
+                            label: option.legend,
+                            itemLabel: option.itemLabel,
                             onFieldChange: vals => {
                                 setValue(prev => ({
                                     ...prev,
@@ -168,6 +168,7 @@ const SpeciesSelector = ({
                         name="other-species"
                         value={value.otherSpecies}
                         onChange={onOtherChange}
+                        label="Specify other animal types to be used"
                         itemLabel="Other animal type"
                     />
                 </details>

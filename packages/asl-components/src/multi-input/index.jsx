@@ -15,7 +15,11 @@ function Item({ item, index, itemLabel, onRemove, showRemove, onChange, name, is
             <div className="multi-input-item">
                 <Input type="text" value={item.value} onChange={onChange} label={getItemLabel(itemLabel, index)} name={name} id={item.id} disabled={isDisabled} />
                 {
-                    showRemove && <Button onClick={onRemove} disabled={isDisabled}>Remove</Button>
+                    showRemove && (
+                        <Button onClick={onRemove} disabled={isDisabled}>
+                            Remove {getItemLabel(itemLabel, index)}
+                        </Button>
+                    )
                 }
             </div>
             {
@@ -91,15 +95,26 @@ export default function MultiInput({ value = [], onChange, onFieldChange, name, 
         };
     }
 
+    const describedBy = [
+        hint ? `${name}-hint` : null,
+        error ? `${name}-error` : null
+    ].filter(Boolean).join(' ') || undefined;
+
     return (
         <div className={classnames('govuk-form-group', 'multi-input', { 'govuk-form-group--error': error })}>
             {
                 objectItems && <input type="hidden" name={name} value={JSON.stringify(getItems())} />
             }
-            { label && <label className="govuk-label" htmlFor={name}>{label}</label> }
-            { hint && <span id={`${name}-hint`} className="govuk-hint">{hint}</span> }
-            { error && <span id={`${name}-error`} className="govuk-error-message">{error}</span> }
-            <fieldset id={name}>
+            <fieldset id={name} className="govuk-fieldset" aria-describedby={describedBy}>
+                {
+                    label && (
+                        <legend className="govuk-fieldset__legend">
+                            <h3 className="govuk-fieldset__heading">{label}</h3>
+                        </legend>
+                    )
+                }
+                { hint && <span id={`${name}-hint`} className="govuk-hint">{hint}</span> }
+                { error && <span id={`${name}-error`} className="govuk-error-message">{error}</span> }
                 {
                     items.map((item, index) => (
                         <Item
