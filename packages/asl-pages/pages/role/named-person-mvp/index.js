@@ -32,9 +32,9 @@ module.exports = (settings) => {
       paths.selectRole,
       paths.mandatoryTraining,
       paths.incompleteTraining,
-      paths.skillsAndExperience
-      // paths.confirm,
-      // paths.success
+      paths.skillsAndExperience,
+      paths.confirm,
+      paths.success
     ]
   });
 
@@ -89,10 +89,8 @@ module.exports = (settings) => {
   app.use(paths.mandatoryTraining, router.mandatoryTraining({ formId: FORM_ID }));
   app.use(paths.incompleteTraining, router.incompleteTraining({ formId: FORM_ID }));
   app.use(paths.skillsAndExperience, router.skillsAndExperience({ formId: FORM_ID }));
-  // app.use(paths.confirm, router.confirm());
-  // app.use(paths.success, router.success());
+  app.use(paths.confirm, router.confirm({ formId: FORM_ID }));
+  app.use(paths.success, router.success());
 
   return app;
 };
-
-// module.exports.routes = routes;

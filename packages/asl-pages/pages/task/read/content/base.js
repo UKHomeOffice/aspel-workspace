@@ -1,6 +1,6 @@
 const status = require('../../content/status');
 const tasks = require('../../content/tasks');
-const namedPerson = require('../../../role/named-person-mvp/confirm/content/index');
+const namedPerson = require('../../../role/named-person-mvp/content/confirm');
 
 module.exports = {
   status,
