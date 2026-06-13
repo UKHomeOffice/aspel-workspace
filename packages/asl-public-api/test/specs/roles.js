@@ -27,6 +27,39 @@ describe('/roles', () => {
       });
   });
 
+  describe('create', () => {
+
+    it('passes named person skills and experience fields to workflow', () => {
+      return request(this.api)
+        .post(`/establishment/${ids.establishments.croydon}/roles`)
+        .send({
+          data: {
+            profileId: ids.profiles.derek,
+            type: 'nacwo',
+            mandatory: 'delay',
+            incomplete: ['nacwo'],
+            delayReason: 'Delayed training',
+            completeDate: '2027-01-01',
+            experience: 'Relevant welfare experience',
+            authority: 'Manages the animal care team',
+            skills: 'Strong communication skills'
+          },
+          meta: {
+            version: 'named-person-mvp'
+          }
+        })
+        .expect(200)
+        .expect(() => {
+          assert.equal(this.workflow.handler.callCount, 1);
+          const req = this.workflow.handler.firstCall.args[0];
+          assert.equal(req.data.experience, 'Relevant welfare experience');
+          assert.equal(req.data.authority, 'Manages the animal care team');
+          assert.equal(req.data.skills, 'Strong communication skills');
+        });
+    });
+
+  });
+
   describe('delete', () => {
 
     it('returns a 404 if the role does not exist', () => {

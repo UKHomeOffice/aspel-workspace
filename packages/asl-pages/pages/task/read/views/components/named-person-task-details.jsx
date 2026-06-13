@@ -1,5 +1,5 @@
 import React from 'react';
-import { DetailsByRole, NamedPersonDetails } from '../../../../common/components/role-change-summary';
+import { DetailsByRole, NamedPersonDetails, SkillsAndExperience } from '../../../../common/components/role-change-summary';
 import {
   Snippet,
   TrainingSummary,
@@ -16,7 +16,8 @@ export const NamedPersonTaskDetails = ({ taskData, profile }) => {
       <dl>
         <div className="sticky-nav-anchor">
           <NamedPersonDetails roleType={taskData.type} profile={profile} roleDetails={taskData} />
-          <DetailsByRole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} role={taskData.type} roleDetails={taskData} />
+          <DetailsByRole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} role={taskData.type} roleDetails={taskData} showHeading />
+          <SkillsAndExperience roleType={taskData.type} profile={profile} values={taskData} showHeading />
         </div>
 
         {['nacwo', 'nvs'].includes(taskData.type) && (
