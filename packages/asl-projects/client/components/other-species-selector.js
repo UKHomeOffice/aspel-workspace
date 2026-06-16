@@ -54,6 +54,7 @@ class OtherSpecies extends Component {
           {
             items.map((item, index) => {
               const itemFieldLabel = `${itemLabel} ${index + 1}`;
+              const itemFieldLabelLower = `${itemLabel.charAt(0).toLowerCase()}${itemLabel.slice(1)} ${index + 1}`;
               return (
                 <div key={index} className="flex species-selector-other">
                   <div className="grow">
@@ -72,7 +73,7 @@ class OtherSpecies extends Component {
                       <Button
                         className="link"
                         onClick={() => this.removeItem(index)}
-                      >Remove {itemFieldLabel}</Button>
+                      >Remove {itemFieldLabelLower}</Button>
                     )
                   }
                 </div>

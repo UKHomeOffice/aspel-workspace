@@ -25,10 +25,10 @@ module.exports = {
       value: 'gerbils'
     },
     {
-      label: 'Other rodents',
+      label: 'Rodents',
       value: 'other-rodents',
-      itemLabel: 'Other rodent type',
-      legend: 'Specify other rodent types to be used'
+      itemLabel: 'Rodent type',
+      legend: 'Specify rodent types to be used'
     },
     {
       label: 'Rabbits',
@@ -63,16 +63,16 @@ module.exports = {
     {
       label: 'Camelids',
       value: 'other-camelids',
-      itemLabel: 'Other camelid type',
-      legend: 'Specify other camelid types to be used'
+      itemLabel: 'Camelid type',
+      legend: 'Specify camelid types to be used'
     }
   ],
   AQ: [
     {
       label: 'Reptiles',
       value: 'other-reptiles',
-      itemLabel: 'Other reptile type',
-      legend: 'Specify other reptile types to be used'
+      itemLabel: 'Reptile type',
+      legend: 'Specify reptile types to be used'
     },
     {
       label: 'Xenopus laevis',
@@ -89,8 +89,8 @@ module.exports = {
     {
       label: 'Other amphibians',
       value: 'other-amphibians',
-      itemLabel: 'Other amphibian type',
-      legend: 'Specify other amphibian types to be used'
+      itemLabel: 'Amphibian type',
+      legend: 'Specify amphibian types to be used'
     },
     {
       label: 'Zebra fish (Danio rerio)',
@@ -115,8 +115,8 @@ module.exports = {
     {
       label: 'Other fish',
       value: 'other-fish',
-      itemLabel: 'Other fish type',
-      legend: 'Specify other fish types to be used'
+      itemLabel: 'Fish type',
+      legend: 'Specify fish types to be used'
     },
     {
       label: 'Cephalopods',
@@ -135,8 +135,8 @@ module.exports = {
     {
       label: 'Other birds',
       value: 'other-birds',
-      itemLabel: 'Other bird type',
-      legend: 'Specify other bird types to be used'
+      itemLabel: 'Bird type',
+      legend: 'Specify bird types to be used'
     }
   ],
   DOM: [
@@ -151,8 +151,8 @@ module.exports = {
     {
       label: 'Other dogs',
       value: 'other-dogs',
-      itemLabel: 'Other dog type',
-      legend: 'Specify other dog types to be used'
+      itemLabel: 'Dog type',
+      legend: 'Specify dog types to be used'
     },
     {
       label: 'Horses',
@@ -169,8 +169,8 @@ module.exports = {
     {
       label: 'Other equidae',
       value: 'other-equidae',
-      itemLabel: 'Other equid type',
-      legend: 'Specify other equid types to be used'
+      itemLabel: 'Equid type',
+      legend: 'Specify equid types to be used'
     }
   ],
   NHP: [
@@ -193,8 +193,8 @@ module.exports = {
     {
       label: 'Other non human primates',
       value: 'other-nhps',
-      itemLabel: 'Other non-human primate type',
-      legend: 'Specify other non-human primate types to be used'
+      itemLabel: 'Non-human primate type',
+      legend: 'Specify non-human primate types to be used'
     }
   ],
   deprecated: [
