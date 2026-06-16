@@ -47,7 +47,7 @@ const protocolStepGenerators = {
     {
       title: `Substances to suppress the harmful phenotype, for example doxycycline or other compounds, may be administered by one of the following routes:\n      \n• oral, including in diet or water, or by oral gavage (AA/AB)\n      \n• intraperitoneal (AA/AB)\n      \n• subcutaneous (AA/AB)`,
       reference: 'Administration of substances to suppress harmful phenotypes',
-      optional: false,
+      optional: true,
       adverse: false,
       completed: isStandard,
       isStandardProtocol: isStandard,

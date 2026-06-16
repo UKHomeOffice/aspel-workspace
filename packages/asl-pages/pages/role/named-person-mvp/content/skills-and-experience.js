@@ -21,11 +21,13 @@ module.exports = merge({}, baseContent, {
       }
     },
     [ROLE_TYPES.nvs]: {
+      desc: 'Describe how {{profile.firstName}} demonstrates the following skills and experience:',
       experience: {
         label: 'Describe how {{profile.firstName}} demonstrates expertise in the health and welfare of the species they will be responsible for'
       }
     },
     [ROLE_TYPES.sqp]: {
+      desc: 'Describe how {{profile.firstName}} demonstrates the following skills and experience:',
       experience: {
         label: 'Describe how {{profile.firstName}} demonstrates proven expertise in the health and welfare of the species held and the procedures carried out at the establishment'
       }

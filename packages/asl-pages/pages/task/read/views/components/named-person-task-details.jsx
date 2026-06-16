@@ -15,7 +15,7 @@ export const NamedPersonTaskDetails = ({ taskData, profile }) => {
       <br />
       <dl>
         <div className="sticky-nav-anchor">
-          <NamedPersonDetails roleType={taskData.type} profile={profile} />
+          <NamedPersonDetails roleType={taskData.type} profile={profile} roleDetails={taskData} />
           <DetailsByRole incompleteTraining={taskData} mandatoryTraining={taskData.mandatory} role={taskData.type} roleDetails={taskData} />
         </div>
 

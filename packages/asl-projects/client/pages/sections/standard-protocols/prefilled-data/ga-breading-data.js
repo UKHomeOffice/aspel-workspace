@@ -56,8 +56,8 @@ export const gaBreadingData = (isStandard = true) => {
                     'pregnant'
                   ],
                   continuedUse: isStandard,
-                  reuse: isStandard ? ['no'] : undefined,
-                  reuseDetails: 'Animals will not be used more than once within this protocol.',
+                  reuse: ['yes'],
+                  reuseDetails: null,
 
                   continuedUseSourced:
                     'GA animals for use in this protocol (with or without associated wild types) may be obtained from:\n' +
