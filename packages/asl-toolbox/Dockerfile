@@ -42,6 +42,7 @@ COPY --from=builder --chown=app:app /app/packages/asl-toolbox/node_modules /app/
 COPY --from=builder --chown=app:app /app/packages/asl-toolbox/dist/scripts /app/
 COPY --from=builder --chown=app:app /app/packages/asl-schema /app/packages/asl-schema
 COPY --from=builder --chown=app:app /app/packages/asl-constants /app/packages/asl-constants
+COPY --from=builder --chown=app:app /app/packages/asl-toolbox/scripts/db /app/db
 
 RUN chmod +x /app/*.js
 

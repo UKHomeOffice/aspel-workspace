@@ -36,14 +36,16 @@ module.exports = () => {
       method: 'PUT',
       json: {
         data: {
-          ...normaliseDates(values)
+          courseDuration: values.courseDuration,
+          ...normaliseDates(values ?? {})
         }
       }
     };
 
     req.api(`/establishment/${req.establishmentId}/training-course/${req.trainingCourseId}/course-dates`, params)
       .then(() => {
-        const isMultiDay = !!req.session.form[req.model.id].endDate;
+        const isMultiDay = !!get(req.session, `form[${req.model.id}].values.endDate`);
+
         delete req.session.form[req.model.id];
         res.setFlash(
           isMultiDay
