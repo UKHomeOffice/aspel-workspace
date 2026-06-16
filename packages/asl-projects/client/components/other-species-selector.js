@@ -38,37 +38,48 @@ class OtherSpecies extends Component {
   }
 
   render() {
-    const { name, label = 'Specify other type of animal' } = this.props;
+    const {
+      name,
+      label = 'Specify other type of animal',
+      itemLabel = 'Other species'
+    } = this.props;
     const { items } = this.state;
 
     return (
       <Fragment key={items.length}>
-        <h3>{ label }</h3>
-        {
-          items.map((item, index) => (
-            <div key={index} className="flex species-selector-other">
-              <div className="grow">
-                <Field
-                  className="grow"
-                  label={index === 0 ? 'Other species' : ''}
-                  name={`${name}-${index}`}
-                  type="text"
-                  value={item}
-                  onChange={value => this.updateItem(value, index)}
-                  noComments={true}
-                />
-              </div>
-              {
-                items.length > 1 && (
-                  <Button
-                    className="link"
-                    onClick={() => this.removeItem(index)}
-                  >Remove</Button>
-                )
-              }
-            </div>
-          ))
-        }
+        <fieldset className="govuk-fieldset">
+          <legend className="govuk-fieldset__legend">
+            <h3 className="govuk-fieldset__heading">{ label }</h3>
+          </legend>
+          {
+            items.map((item, index) => {
+              const itemFieldLabel = `${itemLabel} ${index + 1}`;
+              return (
+                <div key={index} className="flex species-selector-other">
+                  <div className="grow">
+                    <Field
+                      className="grow"
+                      label={itemFieldLabel}
+                      name={`${name}-${index}`}
+                      type="text"
+                      value={item}
+                      onChange={value => this.updateItem(value, index)}
+                      noComments={true}
+                    />
+                  </div>
+                  {
+                    items.length > 1 && (
+                      <Button
+                        className="link"
+                        onClick={() => this.removeItem(index)}
+                      >Remove {itemFieldLabel}</Button>
+                    )
+                  }
+                </div>
+              );
+            })
+          }
+        </fieldset>
         <Button className="button-secondary" onClick={this.addItem}>Add another</Button>
       </Fragment>
     );
