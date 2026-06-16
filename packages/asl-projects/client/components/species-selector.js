@@ -117,7 +117,7 @@ class SpeciesSelector extends Component {
             value={otherValues}
             onFieldChange={this.onFieldChange}
             label="Specify other animal types to be used"
-            itemLabel="Other animal type"
+            itemLabel="Other animal"
           />
         </details>
       </div>
