@@ -13,6 +13,7 @@ import { renderFieldsInProtocol } from '../../../helpers/render-fields-in-protoc
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
 import { getEnhancedProtocols } from '../../../selectors/protocols';
 import { FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
+import { getDuplicatedProtocols, scheduleProtocolScroll } from './duplicate-protocol';
 
 const Form = ({
   number,
@@ -110,7 +111,7 @@ class Protocol extends PureComponent {
   }
 }
 
-class Protocols extends PureComponent {
+export class Protocols extends PureComponent {
   constructor(props) {
     super(props);
     const searchParams = new URLSearchParams(props.location?.search || window.location.search);
@@ -172,17 +173,8 @@ class Protocols extends PureComponent {
     });
   };
 
-  handleAfterDuplicate = (item, id) => {
-    const { items } = this.props;
-    const index = items.findIndex(i => i.id === id);
-    const protocol = document.querySelectorAll('.protocols-section .protocol')[index];
-
-    if (protocol) {
-      window.scrollTo({
-        top: protocol.offsetTop,
-        left: 0
-      });
-    }
+  handleAfterDuplicate = item => {
+    scheduleProtocolScroll(item?.id);
   };
 
   render() {
@@ -216,18 +208,7 @@ class Protocols extends PureComponent {
         softDelete={true}
         itemProps={itemProps}
         onAfterAdd={this.handleAfterAdd}
-        onBeforeDuplicate={(items, id) => {
-          return items.map((item) => {
-            if (item.id === id) {
-              return {
-                ...item,
-                title: `${item.title} (Copy)`,
-                complete: false
-              };
-            }
-            return item;
-          });
-        }}
+        onBeforeDuplicate={getDuplicatedProtocols}
         onAfterDuplicate={this.handleAfterDuplicate}
       >
         <Protocol {...this.props} />
