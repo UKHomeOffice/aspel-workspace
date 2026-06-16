@@ -71,7 +71,7 @@ module.exports = {
     {
       label: 'Reptiles',
       value: 'other-reptiles',
-      itemLabel: 'Other reptile type',
+      itemLabel: 'Reptile',
       legend: 'Specify other reptile types to be used'
     },
     {
@@ -89,7 +89,7 @@ module.exports = {
     {
       label: 'Other amphibians',
       value: 'other-amphibians',
-      itemLabel: 'Other amphibian type',
+      itemLabel: 'Amphibian',
       legend: 'Specify other amphibian types to be used'
     },
     {
@@ -115,7 +115,7 @@ module.exports = {
     {
       label: 'Other fish',
       value: 'other-fish',
-      itemLabel: 'Other fish type',
+      itemLabel: 'Fish',
       legend: 'Specify other fish types to be used'
     },
     {
