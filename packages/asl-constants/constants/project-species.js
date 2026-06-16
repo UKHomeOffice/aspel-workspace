@@ -63,7 +63,7 @@ module.exports = {
     {
       label: 'Camelids',
       value: 'other-camelids',
-      itemLabel: 'Other camelid type',
+      itemLabel: 'Camelid',
       legend: 'Specify other camelid types to be used'
     }
   ],
