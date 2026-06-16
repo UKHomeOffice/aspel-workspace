@@ -25,6 +25,10 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
   app.get('/', (req, res) => {
     const formId = getFormId(req);
 
+    if (!req.session.form) {
+      req.session.form = {};
+    }
+
     // A user being linked to the index is starting a new form, clear out session data and redirect to the first page.
     if (req.session.form?.[formId]) {
       delete req.session.form[formId];

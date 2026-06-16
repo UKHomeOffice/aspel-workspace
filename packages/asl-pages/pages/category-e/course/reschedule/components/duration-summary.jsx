@@ -53,7 +53,7 @@ const buildFormatters = (prefix, model, comparison) => {
 
   return {
     [`${prefix}CourseDate`]: formatter(comparison?.courseDate ?? comparison?.startDate),
-    [`${prefix}StartDate`]: formatter(comparison?.startDate),
+    [`${prefix}StartDate`]: formatter(comparison?.startDate ?? comparison?.courseDate),
     [`${prefix}EndDate`]: formatter(comparison?.endDate)
   };
 }
