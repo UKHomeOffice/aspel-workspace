@@ -96,7 +96,10 @@ class ProtocolSections extends PureComponent {
     const title = values.title || 'Untitled protocol';
 
     return (
-      <section className={classnames('protocol', { complete: values.complete || readonly, readonly, deleted: values.deleted })}>
+      <section
+        className={classnames('protocol', { complete: values.complete || readonly, readonly, deleted: values.deleted })}
+        data-protocol-id={values.id}
+      >
         {
           values.deleted && <span className="badge deleted">removed</span>
         }
