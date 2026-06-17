@@ -448,13 +448,16 @@ export const isTrainingLicence = values => {
 export const getCurrentURLForFateOfAnimals = () => {
   if (typeof window === 'undefined') return null;
 
-  const href = window.location.href;
-  const splitter = ['/edit/', '/full-application/'].find(urlPart => href.includes(urlPart));
+  const { origin, pathname } = window.location;
+  const splitter = ['/edit/', '/full-application/'].find(urlPart => pathname.includes(urlPart));
+
   if (!splitter) {
     return null;
   }
 
-  return typeof window !== 'undefined' ? window.location.href.split(splitter)[0] + `${splitter}fate-of-animals` : null;
+  // Keep everything up to and including the section root, then append fate-of-animals.
+  const basePath = pathname.split(splitter)[0] + `${splitter}fate-of-animals`;
+  return `${origin}${basePath}`;
 };
 
 export const markdownLink = (linkText, url) => {
@@ -532,5 +535,13 @@ export const calculateProtocolContext = (
  */
 export const getToGeneralConstraints = () => {
   if (typeof window === 'undefined') return null;
-  return window.location.href.split('#')[0] + '#general-constraints';
+
+  const { origin, pathname } = window.location;
+
+  // ensure we always land on the protocols page, not whichever sub/parent route is current
+  if (pathname.includes('/edit/')) {
+    const base = pathname.split('/edit/')[0];
+    return `${origin}${base}/edit/protocols#general-constraints`;
+  }
+  return `${origin}${pathname.replace(/\/$/, '')}/protocols#general-constraints`;
 };
