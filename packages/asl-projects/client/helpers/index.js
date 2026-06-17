@@ -537,11 +537,18 @@ export const getToGeneralConstraints = () => {
   if (typeof window === 'undefined') return null;
 
   const { origin, pathname } = window.location;
+  const cleanPath = pathname.replace(/\/protocols$/, '');
 
   // ensure we always land on the protocols page, not whichever sub/parent route is current
-  if (pathname.includes('/edit/')) {
-    const base = pathname.split('/edit/')[0];
+  if (cleanPath.includes('/edit')) {
+    const base = cleanPath.split('/edit')[0];
     return `${origin}${base}/edit/protocols#general-constraints`;
   }
-  return `${origin}${pathname.replace(/\/$/, '')}/protocols#general-constraints`;
+
+  if (cleanPath.includes('/full-application')) {
+    const base = cleanPath.split('/full-application')[0];
+    return `${origin}${base}/full-application/protocols#general-constraints`;
+  }
+
+  return null;
 };

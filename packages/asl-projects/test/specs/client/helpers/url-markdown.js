@@ -1,14 +1,17 @@
 import assert from 'assert';
-import {getCurrentURLForFateOfAnimals, markdownLink} from '../../../../client/helpers';
+import {getCurrentURLForFateOfAnimals, getToGeneralConstraints, markdownLink} from '../../../../client/helpers';
 
 // Mock window object
 let prevWindow = null;
 
 const mockLocationHref = (url) => {
+  const parsed = new URL(url);
   prevWindow = global.window;
   global.window = {
     location: {
-      href: url
+      href: url,
+      origin: parsed.origin,
+      pathname: parsed.pathname
     }
   };
 };
@@ -58,6 +61,36 @@ describe('getCurrentURLForFateOfAnimals', () => {
     mockLocationHref('https://example.com/some-other-route/some-page');
 
     const result = getCurrentURLForFateOfAnimals();
+
+    assert.strictEqual(result, null);
+  });
+});
+
+describe('getToGeneralConstraints', () => {
+  afterEach(() => { resetWindow(); });
+
+  it('should return the protocols page with the general-constraints anchor for edit routes', () => {
+    mockLocationHref('https://example.com/establishments/8201/projects/123/versions/456/edit');
+    const expectedURL = 'https://example.com/establishments/8201/projects/123/versions/456/edit/protocols#general-constraints';
+
+    const result = getToGeneralConstraints();
+
+    assert.strictEqual(result, expectedURL);
+  });
+
+  it('should return the protocols page with the general-constraints anchor for full-application routes', () => {
+    mockLocationHref('https://example.com/establishments/8201/projects/123/versions/456/full-application');
+    const expectedURL = 'https://example.com/establishments/8201/projects/123/versions/456/full-application/protocols#general-constraints';
+
+    const result = getToGeneralConstraints();
+
+    assert.strictEqual(result, expectedURL);
+  });
+
+  it('should return null when rendering on an unexpected page', () => {
+    mockLocationHref('https://example.com/establishments/8201/projects/123/versions/456/summary');
+
+    const result = getToGeneralConstraints();
 
     assert.strictEqual(result, null);
   });
