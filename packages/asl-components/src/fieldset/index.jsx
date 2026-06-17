@@ -253,8 +253,12 @@ function Field({
         label = getLabelFromRenderers(props.renderers, name, 'label')?.label;
     }
 
+    const resolvedLabel = getResolvedLabel({ label, name, snippetProps });
+
+    const labelProps = !labelAsLegend && resolvedLabel ? { label: resolvedLabel } : {};
+
     return <Component
-        label={!labelAsLegend ? <Label name={name} snippetProps={snippetProps} label={label} /> : null}
+        {...labelProps}
         hint={isUndefined(hint) ? <Snippet optional {...snippetProps}>{`fields.${name}.hint`}</Snippet> : hint}
         error={error && <Error name={name} renderers={props.renderers} error={error} snippetProps={snippetProps} />}
         value={fieldValue}
@@ -274,13 +278,14 @@ export default function Fieldset({ schema, errors = {}, formatters = {}, model, 
                     const fieldName = field.prefix ? `${field.prefix}-${key}` : key;
                     return (
                         <Fragment key={fieldName}>
-                            {field.labelAsLegend ?
-                                <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                    <h1 className="govuk-fieldset__heading" id={`${fieldName}-legend`}>
-                                        <Label name={key} label={field.label} snippetProps={getSnippetProps(key, formatters)} />
-                                    </h1>
-                                </legend> :
-                                null}
+                            {field.labelAsLegend &&
+                                <Legend
+                                    name={key}
+                                    label={field.label}
+                                    snippetProps={getSnippetProps(key, formatters)}
+                                    id={`${fieldName}-legend`}
+                                />
+                            }
                             {formatters?.[fieldName]?.additionalContent ?? null}
                             <Field
                                 {...props}
@@ -304,8 +309,28 @@ export default function Fieldset({ schema, errors = {}, formatters = {}, model, 
     );
 }
 
-function Label({ label, name, snippetProps }) {
-    return isUndefined(label) ? <Snippet {...snippetProps}>{`fields.${name}.label`}</Snippet> : label;
+function Legend({ label, name, snippetProps, id }) {
+    const Wrapper = ({ children }) => (
+        <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 className="govuk-fieldset__heading" id={id}>
+                {children}
+            </h1>
+        </legend>
+    );
+    if (isUndefined(label)) {
+        return <Snippet {...snippetProps} Wrapper={Wrapper}>{`fields.${name}.label`}</Snippet>;
+    }
+    return !label || (typeof label === 'string' && label.trim() === '')
+        ? null
+        : <Wrapper>{label}</Wrapper>;
+}
+
+function getResolvedLabel({ label, name, snippetProps }) {
+    if (isUndefined(label)) {
+        return <Snippet {...snippetProps}>{`fields.${name}.label`}</Snippet>;
+    }
+
+    return label === '' || label === false || label === null ? null : label;
 }
 
 function getSnippetProps (name, formatters) {

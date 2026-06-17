@@ -24,7 +24,8 @@ const getField = (options, name, fieldName) => ({
       return {
         ...option,
         reveal: {
-          label: `Specify type of ${option.label.charAt(0).toLowerCase()}${option.label.substring(1)}`,
+          label: option.legend || `Specify type of ${option.label.charAt(0).toLowerCase()}${option.label.substring(1)}`,
+          itemLabel: option.itemLabel || 'Other species',
           name: `${fieldName}-${option.value}`,
           type: 'other-species-selector'
         }
@@ -115,6 +116,8 @@ class SpeciesSelector extends Component {
             name={`${name}-other`}
             value={otherValues}
             onFieldChange={this.onFieldChange}
+            label="Specify other animal types to be used"
+            itemLabel="Other animal"
           />
         </details>
       </div>

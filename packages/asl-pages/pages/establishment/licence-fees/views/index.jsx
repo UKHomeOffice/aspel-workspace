@@ -1,15 +1,6 @@
 import React, { Fragment } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import {
-  Details,
-  Header,
-  Snippet,
-  WidthContainer,
-  Tabs,
-  Link,
-  Inset,
-  ErrorSummary
-} from '@ukhomeoffice/asl-components';
+import { Details, Header, Snippet, WidthContainer, Tabs, Link, Inset, ErrorSummary } from '@ukhomeoffice/asl-components';
 import { Warning, Select } from '@ukhomeoffice/react-components';
 import { getUrl } from '@ukhomeoffice/asl-components/src/link';
 import { format, isFuture } from 'date-fns';
@@ -85,12 +76,11 @@ export default function Fees({ tab, tabsOverride, children, subtitle = '' }) {
           subtitle={establishment ? <EstablishmentHeader establishment={establishment}/> : subtitle}
         />
         <div className="subtitle">
-          <Snippet>fees.period</Snippet>
           <Select
             name="year"
-            label=""
+            label={<Snippet>fees.period</Snippet>}
             options={options}
-            className="inline"
+            className="inline-label"
             onChange={onYearSelect}
             value={year}
             nullOption={null}

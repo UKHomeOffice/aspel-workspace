@@ -2,9 +2,24 @@ import React from 'react';
 import ToggleEdit from './toggle-edit';
 import Field from './field';
 
-const Fieldset = ({ fields, onFieldChange, values, noComments, altLabels, prefix = '', commentPrefix, updateItem, additionalCommentFields = [] }) => {
-  return (
-    <fieldset>
+const Fieldset = ({
+  fields,
+  onFieldChange,
+  values,
+  noComments,
+  altLabels,
+  prefix = '',
+  commentPrefix,
+  updateItem,
+  additionalCommentFields = [],
+  className,
+  describedBy,
+  error,
+  hint,
+  legend
+}) => {
+  const contents = (
+    <>
       {
         fields.map(f => {
           const fullName = `${prefix}${f.name}`;
@@ -44,6 +59,15 @@ const Fieldset = ({ fields, onFieldChange, values, noComments, altLabels, prefix
           return field;
         })
       }
+    </>
+  );
+
+  return (
+    <fieldset className={className} aria-describedby={describedBy}>
+      { legend }
+      { hint }
+      { error }
+      { contents }
     </fieldset>
   );
 };
