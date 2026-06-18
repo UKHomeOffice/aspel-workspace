@@ -8,6 +8,7 @@ import Expandable from '../../../components/expandable';
 import Completable from '../../../components/completable';
 import Complete from '../../../components/complete';
 import NewComments from '../../../components/new-comments';
+import ProtocolTitleComments from '../../../components/protocol-title-comments';
 import Sections from './sections';
 import ChangedBadge from '../../../components/changed-badge';
 import ReorderedBadge from '../../../components/reordered-badge';
@@ -118,6 +119,16 @@ class ProtocolSections extends PureComponent {
             <button className="govuk-button link"><h2 className="title inline-block">{values.deleted ? title : `${number + 1}: ${title}`}</h2></button>
             {
               editable && <button className={classnames('govuk-button link', { restore: values.deleted })} onClick={values.deleted ? this.props.restoreItem : this.toggleActive}>{values.deleted ? 'Restore' : 'Edit title'}</button>
+            }
+            {
+              !values.deleted && (
+                <ProtocolTitleComments
+                  protocolId={values.id}
+                  title={values.title}
+                  readonly={readonly}
+                  newCommentCount={(newComments.title || []).length}
+                />
+              )
             }
             {
               !isLegacy && (
