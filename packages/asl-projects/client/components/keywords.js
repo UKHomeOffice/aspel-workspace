@@ -27,29 +27,40 @@ export default function Keywords(props) {
     return range(0, numKeywords).map(i => {
       return {
         name: `keyword-${i}`,
-        label: '',
+        label: `Keyword ${i + 1}`,
         type: 'text'
       };
     });
   }
 
   const [keywords, setKeywords] = useState(mapKeywords(props.value));
+  const describedBy = [props.hint && `${props.name}-hint`, props.error && `${props.name}-error`].filter(Boolean).join(' ') || undefined;
 
   function onKeywordChange(key, value) {
-    keywords[key] = value.trim();
-    setKeywords(keywords);
-    props.onChange(Object.values(keywords).filter(Boolean));
+    const updatedKeywords = {
+      ...keywords,
+      [key]: value.trim()
+    };
+
+    setKeywords(updatedKeywords);
+    props.onChange(Object.values(updatedKeywords).filter(Boolean));
   }
 
   return (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-two-thirds">
         <div className={classnames('govuk-form-group', 'keywords', { 'govuk-form-group--error': props.error })}>
-          <label className="govuk-label" htmlFor={props.name}>{props.label}</label>
-          { props.hint && <span id={`${props.name}-hint`} className="govuk-hint">{props.hint}</span> }
-          { props.error && <span id={`${props.name}-error`} className="govuk-error-message">{props.error}</span> }
           <Fieldset
+            className="govuk-fieldset"
+            describedBy={describedBy}
+            hint={props.hint && <div id={`${props.name}-hint`} className="govuk-hint">{props.hint}</div>}
+            error={props.error && <div id={`${props.name}-error`} className="govuk-error-message">{props.error}</div>}
             fields={getFields()}
+            legend={(
+              <legend className="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <span className="govuk-fieldset__heading">{props.label}</span>
+              </legend>
+            )}
             onFieldChange={onKeywordChange}
             values={keywords}
             noComments={true}
