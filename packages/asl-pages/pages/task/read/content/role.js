@@ -7,6 +7,7 @@ module.exports = merge({}, skillsAndExperienceContent, {
   'sticky-nav': {
     applicant: 'Applicant',
     role: 'Amendment details',
+    roleApplication: 'Role application details',
     conditions: 'Establishment conditions'
   },
   mandatoryTrainingRequirements: 'NACWO mandatory training requirements',

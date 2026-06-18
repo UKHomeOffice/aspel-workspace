@@ -8,6 +8,8 @@ import {
 import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
 import { NamedPersonTaskDetails } from '../components/named-person-task-details';
+import { useFeatureFlag, FEATURE_FLAG_NAMED_PERSON_MVP } from '@asl/service/ui/feature-flag';
+
 const { versions } = require('@ukhomeoffice/asl-constants');
 
 const selector = ({ static: { establishment, profile, remainingRoles, allowedActions, openTask, errors } }) => ({ establishment, profile, remainingRoles, allowedActions, openTask, errors });
@@ -17,6 +19,10 @@ export default function Role({ task, values, schema }) {
   const canUpdateConditions = allowedActions.includes('establishment.updateConditions');
   const taskData = task.data.data;
   const { version } = task.data.meta;
+  const namedPersonFeatureFlag = useFeatureFlag(FEATURE_FLAG_NAMED_PERSON_MVP);
+  const roleHeadingSnippet = namedPersonFeatureFlag && version === versions.role.NAMED_PERSON_VERSION_ID
+    ? 'sticky-nav.roleApplication'
+    : 'sticky-nav.role';
 
   if (!taskData.conditions && taskData.conditions !== '') {
     taskData.conditions = establishment.conditions;
@@ -26,7 +32,7 @@ export default function Role({ task, values, schema }) {
     (
       task.data.action === 'create' && (
         <StickyNavAnchor id="role" key="role">
-          <h2><Snippet>sticky-nav.role</Snippet></h2>
+          <h2><Snippet>{roleHeadingSnippet}</Snippet></h2>
           { version === versions.role.NAMED_PERSON_VERSION_ID
             ? <NamedPersonTaskDetails taskData={taskData} profile={profile} />
             : (<>
@@ -55,7 +61,7 @@ export default function Role({ task, values, schema }) {
     (
       task.data.action === 'replace' && (
         <StickyNavAnchor id="role" key="role">
-          <h2><Snippet>sticky-nav.role</Snippet></h2>
+          <h2><Snippet>{roleHeadingSnippet}</Snippet></h2>
           <table className="govuk-table">
             <thead>
               <tr>
@@ -81,7 +87,7 @@ export default function Role({ task, values, schema }) {
     (
       task.data.action === 'delete' && (
         <StickyNavAnchor id="role" key="role">
-          <h2><Snippet>sticky-nav.role</Snippet></h2>
+          <h2><Snippet>{roleHeadingSnippet}</Snippet></h2>
           <dl className="inline">
             <dt><Snippet>fields.role.label</Snippet></dt>
             <dd><Snippet>{`namedRoles.${values.type}`}</Snippet></dd>
