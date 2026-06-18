@@ -52,9 +52,9 @@ describe('/roles', () => {
         .expect(() => {
           assert.equal(this.workflow.handler.callCount, 1);
           const req = this.workflow.handler.firstCall.args[0];
-          assert.equal(req.data.experience, 'Relevant welfare experience');
-          assert.equal(req.data.authority, 'Manages the animal care team');
-          assert.equal(req.data.skills, 'Strong communication skills');
+          assert.equal(req.body.data.experience, 'Relevant welfare experience');
+          assert.equal(req.body.data.authority, 'Manages the animal care team');
+          assert.equal(req.body.data.skills, 'Strong communication skills');
         });
     });
 
@@ -63,11 +63,12 @@ describe('/roles', () => {
   describe('delete', () => {
 
     it('returns a 404 if the role does not exist', () => {
+      const callCount = this.workflow.handler.callCount;
       return request(this.api)
         .delete(`/establishment/${ids.establishments.marvell}/roles/${ids.roles.nacwoClive}?type=nacwo`)
         .expect(404)
         .expect(() => {
-          assert.equal(this.workflow.handler.called, false);
+          assert.equal(this.workflow.handler.callCount, callCount);
         });
     });
 
