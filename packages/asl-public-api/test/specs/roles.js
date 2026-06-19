@@ -30,6 +30,7 @@ describe('/roles', () => {
   describe('create', () => {
 
     it('passes named person skills and experience fields to workflow', () => {
+      const completeDate = new Date(Date.now() + 1).toISOString().slice(0, 10);
       return request(this.api)
         .post(`/establishment/${ids.establishments.croydon}/roles`)
         .send({
@@ -39,7 +40,7 @@ describe('/roles', () => {
             mandatory: 'delay',
             incomplete: ['nacwo'],
             delayReason: 'Delayed training',
-            completeDate: '2027-01-01',
+            completeDate,
             experience: 'Relevant welfare experience',
             authority: 'Manages the animal care team',
             skills: 'Strong communication skills'
