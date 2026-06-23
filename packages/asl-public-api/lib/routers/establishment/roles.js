@@ -108,6 +108,12 @@ router.post(
     'incomplete',
     'delayReason',
     'completeDate',
+    'experience',
+    'skills',
+    'authority',
+    'understanding',
+    'familiarity',
+    'communication',
     'replaceProfile',
     'replaceRoles'
   ),
