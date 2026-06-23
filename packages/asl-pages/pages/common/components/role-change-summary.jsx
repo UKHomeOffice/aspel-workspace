@@ -115,7 +115,7 @@ export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, rol
 export const SkillsAndExperience = ({ roleType, profile, values = {}, showHeading = false, showEditLink = false }) => {
   const contentKey = skillsAndExperienceContent.fields[roleType] ? roleType : 'default';
   const contentForRole = skillsAndExperienceContent.fields[contentKey] || {};
-  const fieldKeys = Object.keys(skillsAndExperienceContent.fields[contentKey] || {}).filter(key => key !== 'desc');
+  const fieldKeys = Object.keys(contentForRole).filter(key => key !== 'desc');
   const hasSkillsAndExperienceData = fieldKeys.some(fieldKey => {
     const value = values[fieldKey];
     return typeof value === 'string' ? value.trim() : value;

@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Header, Panel, Snippet, Link } from '@ukhomeoffice/asl-components';
 import EstablishmentHeader from '../../common/components/establishment-header';
-import { has } from 'lodash';
+import { get, has } from 'lodash';
 
 const Index = ({ onwardLink }) => {
   const establishment = useSelector(state => state.static.establishment);
@@ -31,17 +31,21 @@ const Index = ({ onwardLink }) => {
 
         <Panel title={<Snippet>success.panel.title</Snippet>} className="green-bg success" />
 
-        <div className="what-next">
-          <h2><Snippet>success.whatNext.title</Snippet></h2>
-          {
-            ['suspend', 'reinstate'].includes(action)
-              ? <p><Snippet optional>{`success.whatNext.body.${modelType}`}</Snippet></p>
-              : <p><Snippet optional>success.whatNext.body</Snippet></p>
-          }
-          <p><Snippet optional>{`success.whatNext.${isAsruUser ? 'internal' : 'external'}`}</Snippet></p>
+        {
+          !get(content, 'success.hideWhatNext') && (
+            <div className="what-next">
+              <h2><Snippet>success.whatNext.title</Snippet></h2>
+              {
+                ['suspend', 'reinstate'].includes(action)
+                  ? <p><Snippet optional>{`success.whatNext.body.${modelType}`}</Snippet></p>
+                  : <p><Snippet optional>success.whatNext.body</Snippet></p>
+              }
+              <p><Snippet optional>{`success.whatNext.${isAsruUser ? 'internal' : 'external'}`}</Snippet></p>
+            </div>
+          )
+        }
 
-          <p><Snippet>success.taskLink.before</Snippet> <Link page="task.read" label={<Snippet>success.taskLink.linkText</Snippet>} taskId={taskId} /></p>
-        </div>
+        <p><Snippet>success.taskLink.before</Snippet> <Link page="task.read" label={<Snippet>success.taskLink.linkText</Snippet>} taskId={taskId} /></p>
 
         {
           onwardLink || <Link page="dashboard" label={<Snippet>breadcrumbs.dashboard</Snippet>} />
