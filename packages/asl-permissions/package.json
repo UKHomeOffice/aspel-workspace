@@ -9,7 +9,7 @@
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config",
     "test": "npm run test:lint && npm run test:unit",
-    "test:lint": "eslint .",
+    "test:lint": "../../node_modules/.bin/eslint .",
     "test:unit": "mocha --recursive"
   },
   "repository": {
