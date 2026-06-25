@@ -24,7 +24,7 @@ Nominees must have completed all the mandatory training in the last 5 years befo
     }
   },
   buttons: {
-    submit: 'Save and continue',
+    submit: 'Continue',
     cancel: 'Cancel'
   },
   errors: {
