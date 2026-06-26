@@ -2,15 +2,22 @@ import { mkdtempSync, rmSync, copyFileSync, mkdirSync, appendFileSync } from "no
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import path, { dirname } from "node:path";
-import { execSync } from "node:child_process";
+import { execSync, execFileSync } from "node:child_process";
 import { describe, it, beforeEach, afterEach, before, after } from "node:test";
 import assert from "node:assert";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const runChangeset = (args, env) => execSync(`${process.execPath} changeset.js ${args}`, {
-    env: { ...process.env, ...env },
-})
+const runChangeset = (args, env) => {
+    const argList = Array.isArray(args)
+        ? args
+        : String(args).trim()
+            ? String(args).trim().split(/\s+/)
+            : [];
+    return execFileSync(process.execPath, ["changeset.js", ...argList], {
+        env: { ...process.env, ...env },
+    })
+}
 
 describe("changeset", () => {
     const originalCwd = process.cwd();
