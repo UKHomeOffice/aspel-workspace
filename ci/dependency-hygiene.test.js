@@ -47,8 +47,8 @@ describe("dependency hygiene for vulnerability remediation", () => {
         assert.equal(hasDependency(aslSchema, "dependencies", "sinon"), false)
         assert.equal(hasDependency(aslSchema, "devDependencies", "sinon"), true)
 
-        assert.equal(hasDependency(aslDataExports, "dependencies", "sinon"), false)
-        assert.equal(hasDependency(aslDataExports, "devDependencies", "sinon"), true)
+        assert.equal(hasDependency(aslDataExports, "dependencies", "nodemon"), false)
+        assert.equal(hasDependency(aslDataExports, "devDependencies", "nodemon"), true)
     })
 
     it("should align the asl-metrics sinon version with the newer workspace standard", () => {
