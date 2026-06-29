@@ -1,11 +1,12 @@
 const { Router } = require('express');
-const { get, merge } = require('lodash');
+const { get, merge, pick } = require('lodash');
 const form = require('../../../common/routers/form');
 const { populateNamedPeople } = require('../../../common/middleware');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
 const { versions } = require('@ukhomeoffice/asl-constants');
 const FORM_ID = 'new-role-named-person';
 const ROLE_TYPES_WITH_DECLARATION = ['nacwo', 'nio', 'ntco', 'nvs', 'sqp'];
+const SKILLS_AND_EXPERIENCE_FIELDS = ['experience', 'skills', 'authority', 'understanding', 'familiarity', 'communication'];
 
 const getIncompleteTrainingDetails = (req) => {
   const formData = get(req.session.form, [FORM_ID, 'values'], {});
@@ -20,10 +21,12 @@ const getMandatoryTraining = (req) => {
 };
 
 const sendData = (req, params = {}) => {
-  const { type, rcvsNumber } = req.session.form[FORM_ID]?.values || {};
+  const values = req.session.form[FORM_ID]?.values || {};
+  const { type, rcvsNumber } = values;
   const mandatory = getMandatoryTraining(req);
   const { incomplete, delayReason, completeDate } =
     getIncompleteTrainingDetails(req) || {};
+  const skillsAndExperience = pick(values, SKILLS_AND_EXPERIENCE_FIELDS);
 
   const replaceProfile = profileReplaced(req.establishment, type);
   const opts = {
@@ -37,6 +40,7 @@ const sendData = (req, params = {}) => {
           incomplete,
           delayReason,
           completeDate,
+          ...skillsAndExperience,
           profileId: req.profileId,
           replaceProfile,
           replaceRoles: PELH_OR_NPRC_ROLES
