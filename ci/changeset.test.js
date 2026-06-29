@@ -2,12 +2,22 @@ import { mkdtempSync, rmSync, copyFileSync, mkdirSync, appendFileSync } from "no
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import path, { dirname } from "node:path";
-import { execSync } from "node:child_process";
+import { execSync, execFileSync } from "node:child_process";
 import { describe, it, beforeEach, afterEach, before, after } from "node:test";
 import assert from "node:assert";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const runChangeset = (args, env) => {
+    const argList = Array.isArray(args)
+        ? args
+        : String(args).trim()
+            ? String(args).trim().split(/\s+/)
+            : [];
+    return execFileSync(process.execPath, ["changeset.js", ...argList], {
+        env: { ...process.env, ...env },
+    })
+}
 
 describe("changeset", () => {
     const originalCwd = process.cwd();
@@ -71,7 +81,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test'")
                 try {
-                    execSync(`node changeset.js -m ${packageBDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageBDir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }
@@ -83,7 +93,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test'")
                 try {
-                    execSync(`node changeset.js -m ${packageADir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageADir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }
@@ -95,7 +105,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test'")
                 try {
-                    execSync(`node changeset.js -m ${packageCDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageCDir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }
@@ -107,7 +117,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test'")
                 try {
-                    execSync(`node changeset.js -m ${packageBDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageBDir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, env.SKIP_STATUS, error.stdout.toString())
                     return
@@ -121,7 +131,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test'")
                 try {
-                    execSync(`node changeset.js -m ${packageBDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageBDir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, env.SKIP_STATUS, error.stdout.toString())
                     return
@@ -138,7 +148,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test 2'")
                 try {
-                    execSync(`node changeset.js -m ${packageBDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageBDir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, env.SKIP_STATUS, error.stdout.toString())
                     return
@@ -155,7 +165,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test 2'")
                 try {
-                    execSync(`node changeset.js -m ${packageADir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageADir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, env.SKIP_STATUS, error.stdout.toString())
                     return
@@ -172,7 +182,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test'")
                 try {
-                    execSync(`node changeset.js -m ${packageBDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageBDir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }
@@ -185,7 +195,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test'")
                 try {
-                    execSync(`node changeset.js -m ${packageADir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageADir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }
@@ -198,7 +208,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test'")
                 try {
-                    execSync(`node changeset.js -m ${packageCDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageCDir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }
@@ -214,7 +224,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test 2'")
                 try {
-                    execSync(`node changeset.js -m ${packageBDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageBDir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }
@@ -230,7 +240,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test 2'")
                 try {
-                    execSync(`node changeset.js -m ${packageADir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageADir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }
@@ -246,7 +256,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test 2'")
                 try {
-                    execSync(`node changeset.js -m ${packageCDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageCDir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, 0, error.stdout.toString())
                 }
@@ -259,7 +269,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test'")
                 try {
-                    execSync(`node changeset.js -m ${packageBDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageBDir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, env.SKIP_STATUS, error.stdout.toString())
                     return
@@ -274,7 +284,7 @@ describe("changeset", () => {
                 execSync("git add .")
                 execSync("git commit -m 'test'")
                 try {
-                    execSync(`node changeset.js -m ${packageBDir}`, {env: {...env, SOURCE_COMMIT: branchHead()}})
+                    runChangeset(`-m ${packageBDir}`, {...env, SOURCE_COMMIT: branchHead()})
                 } catch (error) {
                     assert.strictEqual(error.status, env.SKIP_STATUS, error.stdout.toString())
                     return
@@ -297,7 +307,7 @@ describe("changeset", () => {
             for (const test of tests) {
                 it(`should exit with code 1 when ${test.name}`, () => {
                     try {
-                        execSync(`node changeset.js -m ${packageBDir}`, {env: test.env()})
+                        runChangeset(`-m ${packageBDir}`, test.env())
                     } catch (error) {
                         assert.strictEqual(error.status, 1, error.stdout.toString())
                         return
@@ -318,7 +328,7 @@ describe("changeset", () => {
             for (const test of tests) {
                 it(`should exit with code 1 when ${test.name}`, () => {
                     try {
-                        execSync(`node changeset.js ${test.args}`, {env: validEnv()})
+                        runChangeset(test.args, validEnv())
                     } catch (error) {
                         assert.strictEqual(error.status, 1, error.stdout.toString())
                         return

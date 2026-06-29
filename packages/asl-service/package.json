@@ -79,10 +79,10 @@
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "eslint": "^8.26.0",
     "jsdom-global": "^3.0.2",
-    "mocha": "^11.7.1",
+    "mocha": "^11.7.6",
     "process": "^0.11.10",
     "redux-mock-store": "^1.5.5",
-    "sinon": "^19.0.2"
+    "sinon": "^21.1.2"
   },
   "publishConfig": {
     "registry": "https://artifactory.digital.homeoffice.gov.uk/artifactory/api/npm/npm-virtual/"
