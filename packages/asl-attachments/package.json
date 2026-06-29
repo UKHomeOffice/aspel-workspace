@@ -23,7 +23,7 @@
   "homepage": "https://github.com/UKHomeOffice/asl-attachments#readme",
   "devDependencies": {
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
-    "chai": "^4.3.7",
+    "chai": "^6.2.2",
     "eslint": "^8.32.0",
     "eslint-plugin-chai-friendly": "^1.2.0",
     "mocha": "^11.7.6",
