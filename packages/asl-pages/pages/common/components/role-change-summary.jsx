@@ -37,7 +37,7 @@ const NVSRole = ({ incompleteTraining, mandatoryTraining }) => {
     <>
       {isDelay && (
         <>
-          <dt><Snippet>explanation.nvs.trainingNotComplete</Snippet></dt>
+          <dt className="govuk-!-margin-bottom-2"><Snippet>explanation.nvs.trainingNotComplete</Snippet></dt>
           <dd>
             <dl className="continuation">
               <dt><Snippet>explanation.nvs.reasonForDelay</Snippet></dt>
@@ -60,15 +60,15 @@ const NACWORole = ({ incompleteTraining, mandatoryTraining }) => {
     <>
       {isDelay && (
         <>
-          <dt><Snippet>explanation.nacwo.delay</Snippet></dt>
+          <dt className="govuk-!-margin-bottom-2"><Snippet>explanation.nacwo.delay</Snippet></dt>
           <dd>
             <dl className="continuation">
               <dt><Snippet>explanation.nacwo.trainingNotComplete</Snippet></dt>
-              <dd>{incompleteModules}</dd>
+              <dd className="govuk-!-margin-top-2">{incompleteModules}</dd>
               <dt><Snippet>explanation.nacwo.reasonForDelay</Snippet></dt>
-              <dd>{incompleteTraining.delayReason}</dd>
+              <dd className="govuk-!-margin-top-2">{incompleteTraining.delayReason}</dd>
               <dt><Snippet>explanation.nacwo.completionDate</Snippet></dt>
-              <dd>{format(incompleteTraining.completeDate, dateFormat.long)}</dd>
+              <dd className="govuk-!-margin-top-2">{format(incompleteTraining.completeDate, dateFormat.long)}</dd>
             </dl>
           </dd>
         </>
@@ -99,7 +99,7 @@ export const DetailsByRole = ({ incompleteTraining, mandatoryTraining, role, rol
       { role === 'nacwo' && <NACWORole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
       { role === 'nvs' && <NVSRole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} /> }
       { mandatoryTraining === 'yes' && (
-        <dt><Snippet>explanation.trainingComplete</Snippet></dt>
+        <dt className="govuk-!-margin-bottom-2"><Snippet>explanation.trainingComplete</Snippet></dt>
       )}
 
       {showEditLink && (

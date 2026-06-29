@@ -45,7 +45,7 @@ module.exports = ({ formId }) => {
   app.post('/', (req, res, next) => {
     const { mandatory } = req.form.values;
     if (hasMandatorySelection(mandatory, 'yes')) {
-      return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'confirm' }));
+      return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'skills-and-experience' }));
     } else if (hasMandatorySelection(mandatory, 'exemption') && !hasMandatorySelection(mandatory, 'delay')) {
       return res.redirect(req.buildRoute('role.namedPersonMvp', { suffix: 'skills-and-experience' }));
     } else if (hasMandatorySelection(mandatory, 'delay')) {

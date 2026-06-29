@@ -35,7 +35,7 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
   errors: {
     declaration: {
       required:
-        'Select the checkbox to confirm you agree with {{ agreementDeterminer }} these statements'
+        'Select the checkbox to confirm you agree with all these statements'
     }
   },
   declarations: {
