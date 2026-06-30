@@ -20,6 +20,7 @@ const Confirm = ({
     declaration: {
       propMappers: {
         label: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>agreement</Snippet>,
+        error: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>errors.declaration.required</Snippet>,
         title: () => <Snippet>fields.declaration.title</Snippet>,
         hint: () => <Snippet>declarations.{values.type}</Snippet>
       },
