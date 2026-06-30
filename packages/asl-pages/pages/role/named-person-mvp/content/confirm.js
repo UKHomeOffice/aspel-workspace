@@ -71,7 +71,7 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
     default: `\
 **By submitting this application, I confirm that:**
 
-  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the {{values.type}} role
+  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the {{roleLabel}}
   * the legally accountable person supports the nomination`
   },
   buttons: {

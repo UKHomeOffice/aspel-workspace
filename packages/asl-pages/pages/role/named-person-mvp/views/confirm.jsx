@@ -7,6 +7,7 @@ import {
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import { NamedPersonDetails, DetailsByRole, SkillsAndExperience } from '../../../common/components/role-change-summary';
+import namedRoles from '../content/named-roles';
 
 const Confirm = ({
   establishment,
@@ -25,7 +26,8 @@ const Confirm = ({
         hint: () => <Snippet>declarations.{values.type}</Snippet>
       },
       renderContext: {
-        agreementDeterminer: ['nacwo', 'nvs'].includes(values.type) ? 'all' : 'both'
+        agreementDeterminer: ['nacwo', 'nvs'].includes(values.type) ? 'all' : 'both',
+        roleLabel: namedRoles[values.type]
       }
     }
   };
