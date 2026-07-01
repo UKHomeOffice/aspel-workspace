@@ -42,37 +42,37 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
     nacwo: `\
 **By submitting this application, I confirm that:**
 
-  * {{profile.firstName}} has agreed to be nominated for the NACWO role
+  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the NACWO role
   * the NTCO has endorsed {{profile.firstName}}'s training and exemptions
   * the PEL holder (or legally accountable person) supports the nomination and is confident that {{profile.firstName}} has no significant conflict of interest, and their declaration form is held on record at the establishment`,
     nvs: `\
 **By submitting this application, I confirm that:**
 
-  * {{profile.firstName}} has agreed to be nominated for the NVS role
+  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the NVS role
   * the NTCO has endorsed {{profile.firstName}}'s training and exemptions
   * the PEL holder (or legally accountable person) supports the nomination and is confident that {{profile.firstName}} has no significant conflict of interest, and their declaration form is held on record at the establishment`,
     nio: `\
 **By submitting this application, I confirm that:**
 
-  * {{profile.firstName}} has agreed to be nominated for the NIO role
+  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the NIO role
   * the establishment licence (PEL) holder (or legally accountable person) supports the nomination`,
     ntco: `\
 **By submitting this application, I confirm that:**
 
-  * {{profile.firstName}} has agreed to be nominated for the NTCO role
+  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the NTCO role
   * the PEL holder (or legally accountable person) supports the nomination`,
     sqp: `\
 **By submitting this application, I confirm that:**
 
   * there is no vet available with the right expertise
-  * {{profile.firstName}} has agreed to be nominated for the SQP role
+  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the SQP role
   * the NTCO has endorsed {{profile.firstName}}'s training and exemptions
   * the PEL holder (or legally accountable person) supports the nomination and is confident that {{profile.firstName}} has no significant conflict of interest, and their declaration form is held on record at the establishment`,
     default: `\
-**By submitting this application, I confirm that {{profile.firstName}} has agreed to be nominated for the role.**
+**By submitting this application, I confirm that:**
 
-**I also confirm that the PEL holder supports the application and is confident that {{profile.firstName}} has the recommended skills and experience and is suitable for the role.**
-  `
+  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the {{roleLabel}}
+  * the legally accountable person supports the nomination`
   },
   buttons: {
     submit: 'Submit'

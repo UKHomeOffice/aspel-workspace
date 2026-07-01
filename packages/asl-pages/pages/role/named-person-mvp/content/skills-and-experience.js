@@ -9,7 +9,7 @@ module.exports = merge({}, baseContent, {
   },
   fields: {
     [ROLE_TYPES.nacwo]: {
-      desc: 'Describe how {{profile.firstName}} demonstrates the following skills and experience:',
+      desc: 'Describe how {{profile.firstName}} demonstrates skills and experience in the following areas:',
       experience: {
         label: 'Suitable expertise and training to minimise suffering and optimise the welfare of animals they are responsible for'
       },
@@ -21,19 +21,19 @@ module.exports = merge({}, baseContent, {
       }
     },
     [ROLE_TYPES.nvs]: {
-      desc: 'Describe how {{profile.firstName}} demonstrates the following skills and experience:',
+      desc: 'Describe how {{profile.firstName}} demonstrates skills and experience in the following areas:',
       experience: {
         label: 'Describe how {{profile.firstName}} demonstrates expertise in the health and welfare of the species they will be responsible for'
       }
     },
     [ROLE_TYPES.sqp]: {
-      desc: 'Describe how {{profile.firstName}} demonstrates the following skills and experience:',
+      desc: 'Describe how {{profile.firstName}} demonstrates skills and experience in the following areas:',
       experience: {
         label: 'Describe how {{profile.firstName}} demonstrates proven expertise in the health and welfare of the species held and the procedures carried out at the establishment'
       }
     },
     [ROLE_TYPES.nio]: {
-      desc: 'Describe how {{profile.firstName}} demonstrates the following skills and experience:',
+      desc: 'Describe how {{profile.firstName}} demonstrates skills and experience in the following areas:',
       understanding: {
         label: 'A good understanding of legal and ethical aspects of use of animals for scientific purposes'
       },
@@ -48,7 +48,7 @@ module.exports = merge({}, baseContent, {
       }
     },
     [ROLE_TYPES.ntco]: {
-      desc: 'Describe how {{profile.firstName}} demonstrates the following skills and experience:',
+      desc: 'Describe how {{profile.firstName}} demonstrates skills and experience in the following areas:',
       experience: {
         label: 'Sufficient seniority to influence others and make decisions on training issues'
       },
@@ -58,7 +58,7 @@ module.exports = merge({}, baseContent, {
     },
     [ROLE_TYPES.pelh]: {
       experience: {
-        label: 'Describe why they are suitable for the PEL holder role'
+        label: 'Describe why {{profile.firstName}} is suitable for the PEL holder role'
       }
     },
     default: {
