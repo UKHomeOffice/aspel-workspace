@@ -250,6 +250,8 @@ module.exports = async ({ schema, logger, task }) => {
         name,
         their: 'their',
         need: 'needs',
+        trainingRecordLabel: typeUpper === 'NVS' ? 'module' : 'training',
+        trainingRecordOwner: typeUpper === 'NVS' ? 'your' : 'their',
         type: typeUpper === 'NACWO' ? `${typeUpper} mandatory training` : `${typeUpper} module`,
         completeDate,
         identifier,
@@ -266,7 +268,8 @@ module.exports = async ({ schema, logger, task }) => {
           fullName: 'Your',
           fullNameInSubject: 'You',
           their: 'your',
-          need: 'need'
+          need: 'needs',
+          trainingRecordOwner: 'your'
         }
       });
       return notifications;
