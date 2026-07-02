@@ -9,12 +9,12 @@ import ErrorBoundary from './error-boundary';
 // Renders the comment and change display for a protocol title field in the
 // read-only/playback "blue header". The title is shown elsewhere as the
 // heading, so this only adds the NEW COMMENT flag, the CHANGED badge,
-// "See what's changed" and (when comments already exist) the "Show comments"
-// panel - reusing the same primitives as every other PPL field (see
-// ./review.js). The "See what's changed" link is suppressed when the whole
-// protocol is newly added, and the comments panel is display-only (no
-// empty-state "Add comment" box). It is purely additive: it does not alter
-// how the title itself is rendered or edited.
+// "See what's changed" and the comments panel ("Add comment" when empty,
+// "Show comments (N)" once populated) - reusing the same primitives as every
+// other PPL field (see ./review.js). The "See what's changed" link is
+// suppressed when the whole protocol is newly added (nothing to diff against).
+// It is purely additive: it does not alter how the title itself is rendered or
+// edited.
 const ProtocolTitleComments = ({
   field,
   prefix,
@@ -23,7 +23,6 @@ const ProtocolTitleComments = ({
   title,
   readonly,
   newCommentCount,
-  hasComments,
   changedFromFirst,
   changedFromLatest,
   changedFromGranted,
@@ -64,10 +63,11 @@ const ProtocolTitleComments = ({
         )
       }
       {
-        // Display-only: show the comments panel only when a comment already
-        // exists on the title. Titles are not a place to start a new thread,
-        // so we deliberately omit the empty-state "Add comment" box.
-        hasComments && <Comments field={field} collapsed={!readonly} />
+        // Inspectors must be able to read an applicant's title comment and add
+        // their own - including on a brand new protocol (ASL-4862 scenarios
+        // 3-5). The Comments component shows the "Add comment" button when empty
+        // and the "Show comments (N)" panel once comments exist.
+        <Comments field={field} collapsed={!readonly} />
       }
     </div>
   );
@@ -80,8 +80,7 @@ const mapStateToProps = (state, ownProps) => {
   const {
     application: { readonly = false, previousProtocols = {} } = {},
     changes: { first = [], latest = [], granted = [] } = {},
-    added: { first: firstAdded = [], latest: latestAdded = [], granted: grantedAdded = [] } = {},
-    comments = {}
+    added: { first: firstAdded = [], latest: latestAdded = [], granted: grantedAdded = [] } = {}
   } = state;
 
   // Raw change/added flags, kept separate exactly as review.js does: the
@@ -94,7 +93,6 @@ const mapStateToProps = (state, ownProps) => {
     prefix,
     previousProtocols,
     readonly: ownProps.readonly || readonly,
-    hasComments: (comments[field] || []).length > 0,
     changedFromFirst: first.includes(field),
     changedFromLatest: latest.includes(field),
     changedFromGranted: granted.includes(field),
