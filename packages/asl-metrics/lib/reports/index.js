@@ -52,8 +52,8 @@ module.exports = (settings) => {
 
   const router = Router({ mergeParams: true });
   const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100
+    windowMs: settings.reportsRateLimitWindowMs,
+    max: settings.reportsRateLimitMax
   });
 
   router.use(limiter);
