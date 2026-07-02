@@ -2,6 +2,8 @@ module.exports = {
   port: process.env.PORT || 8080,
   verboseErrors: process.env.VERBOSE_ERRORS === 'true',
   flowUrl: process.env.FLOW_URL,
+  reportsRateLimitWindowMs: parseInt(process.env.REPORTS_RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,
+  reportsRateLimitMax: parseInt(process.env.REPORTS_RATE_LIMIT_MAX, 10) || 900,
   workflowdb: {
     database: process.env.DATABASE_NAME || 'taskflow',
     host: process.env.DATABASE_HOST,
