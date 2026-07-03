@@ -1917,9 +1917,6 @@ html.modal-open, html.modal-open body {
 }
 
 #ppl-drafting-tool .protocol-title-comments .govuk-button.button-secondary {
-  color: #0b0c0c;
-}
-#ppl-drafting-tool .protocol-title-comments .govuk-button.button-secondary {
   color: #0b0c0c !important;
   display: block;
   margin-top: 10px;
@@ -1957,17 +1954,16 @@ html.modal-open, html.modal-open body {
 .protocol-title-comments section.expanding-panel.comments.has-new {
   background: transparent;
 }
-.protocol-title-comments section.expanding-panel.comments.has-new  header {
+.protocol-title-comments section.expanding-panel.comments.has-new header {
   background: transparent;
-  color:  #fff;
+  color: #fff;
 }
 .protocol-title-comments section.expanding-panel.comments.has-new h3 {
-  color:  #fff;
+  color: #fff;
 }
 #ppl-drafting-tool .protocol.readonly .expanding-panel .protocol-title-comments header {
   background: transparent;
-  color:  #fff;
-
+  color: #fff;
 }
 
 #ppl-drafting-tool .protocol.readonly .protocol-title-comments .expanding-panel header {
