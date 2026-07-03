@@ -12,7 +12,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@acuris/aws-es-connection": "^2.1.0",
     "@asl/projects": "file:../asl-projects",
     "@asl/schema": "file:../asl-schema",
     "@asl/service": "file:../asl-service",
@@ -30,7 +29,6 @@
     "objection": "^3.1.5",
     "pg-query-stream": "^4.2.1",
     "slate": "^0.47.9",
-    "uuid": "^13.0.2",
     "uuid-validate": "0.0.3",
     "winston": "^3.18.3"
   },
