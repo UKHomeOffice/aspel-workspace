@@ -57,7 +57,7 @@ const namedPersonMvpOutcomes = [
   {
     outcome: 'rejected',
     status: 'rejected',
-    debugEmail: true
+    debugEmail: false
   },
   {
     outcome: 'refused',
@@ -67,7 +67,7 @@ const namedPersonMvpOutcomes = [
   {
     outcome: 'granted',
     status: 'approved',
-    includeStatusLine: true,
+    includeStatusLine: false,
     debugEmail: false
   }
 ];

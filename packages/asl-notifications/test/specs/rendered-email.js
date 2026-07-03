@@ -164,14 +164,14 @@ You can see more details about this task by visiting ${publicTaskUrl(publicUrl, 
     });
 
     it('renders role-removed-refused for the establishment recipient', async function () {
-      const debugEmail = false;
+      const debugEmail = true;
       const task = buildRoleRemovalTask({ roleType: 'holc', outcome: 'refused' });
       const { notification, content } = await getRenderedNotification.call(this, {
         task,
         to: 'vice-chancellor@example.com'
       });
 
-      const expectedHtml = `The request to remove Named Person's ${roleName} role has been refused.
+      const expectedHtml = `The request for Named Person's to be removed from the role of  ${roleName} has been refused.
 
 Establishment name: ${establishmentName}
 
