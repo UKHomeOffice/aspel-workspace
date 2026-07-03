@@ -12,7 +12,7 @@ import { getNewComments } from '../../../helpers';
 import { renderFieldsInProtocol } from '../../../helpers/render-fields-in-protocol';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
 import { getEnhancedProtocols } from '../../../selectors/protocols';
-import { FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
+import { FEATURE_FLAG_STANDARD_PROTOCOLS, FEATURE_FLAG_INSPECTOR_OWN_COMMENTS } from '@asl/service/ui/feature-flag';
 import { getDuplicatedProtocols, scheduleProtocolScroll } from './duplicate-protocol';
 
 const Form = ({
@@ -227,11 +227,12 @@ const mapStateToProps = ({
     user,
     readonly,
     previousProtocols,
-    schemaVersion
+    schemaVersion,
+    asruUser
   }
 }) => ({
   protocols: getEnhancedProtocols(project),
-  newComments: getNewComments(comments, user, project),
+  newComments: getNewComments(comments, user, project, asruUser && keycloakRoles.includes(FEATURE_FLAG_INSPECTOR_OWN_COMMENTS)),
   readonly,
   previousProtocols,
   isLegacy: schemaVersion === 0,

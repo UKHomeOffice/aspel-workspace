@@ -20,7 +20,7 @@ import Submit from './submit';
 import { selector } from './sync-handler';
 import HoldingPage from './holding-page';
 
-import { useFeatureFlag, FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
+import { useFeatureFlag, FEATURE_FLAG_STANDARD_PROTOCOLS, FEATURE_FLAG_INSPECTOR_OWN_COMMENTS } from '@asl/service/ui/feature-flag';
 
 /** ----- MEMOIZED SELECTORS ----- */
 
@@ -30,6 +30,8 @@ const getSchema = createSelector([getSchemaVersion], version => schemaMap[versio
 const getProject = state => state.project;
 const getComments = state => state.comments;
 const getUser = state => state.application.user;
+const getAsruUser = state => state.application.asruUser;
+const getKeycloakRoles = state => state.static?.keycloakRoles ?? [];
 const getFieldsBySubsection = createSelector(
   [getSchema, getProject],
   (schema, project) => {
@@ -57,6 +59,8 @@ const getMappedProps = createSelector(
     getProject,
     getComments,
     getUser,
+    getAsruUser,
+    getKeycloakRoles,
     getFieldsBySubsection,
     getSchema,
     state => state.application.basename,
@@ -70,6 +74,8 @@ const getMappedProps = createSelector(
     project,
     comments,
     user,
+    asruUser,
+    keycloakRoles,
     fieldsBySubsection,
     schema,
     basename,
@@ -79,7 +85,7 @@ const getMappedProps = createSelector(
     readonly,
     showComments,
     showConditions,
-    newComments: getNewComments(comments, user, project),
+    newComments: getNewComments(comments, user, project, asruUser && keycloakRoles.includes(FEATURE_FLAG_INSPECTOR_OWN_COMMENTS)),
     fieldsBySubsection,
     legacy: schemaVersion === 0,
     values: project,
