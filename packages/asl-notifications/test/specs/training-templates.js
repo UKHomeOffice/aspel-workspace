@@ -5,7 +5,7 @@ const {
   completeDate,
   establishmentName,
   getTrainingRecordLabel,
-  getTrainingRecordOwner,
+  getTemplateVars,
   getTrainingType
 } = require('../helpers/training-reminder');
 
@@ -35,7 +35,7 @@ describe('Dispatcher training templates - direct file rendering', () => {
         completeDate,
         name: establishmentName,
         trainingRecordLabel: getTrainingRecordLabel(roleType),
-        trainingRecordOwner: getTrainingRecordOwner({ roleType, isApplicant: false })
+        their: getTemplateVars({ fullName: 'Basic User', roleType, isApplicant: false }).their
       };
       const expected = buildTrainingReminderBody({
         fullName: 'Basic User',

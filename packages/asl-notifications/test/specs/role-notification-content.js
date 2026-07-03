@@ -67,7 +67,7 @@ const namedPersonMvpOutcomes = [
   {
     outcome: 'granted',
     status: 'approved',
-    includeStatusLine: false,
+    includeStatusLine: true,
     debugEmail: false
   }
 ];

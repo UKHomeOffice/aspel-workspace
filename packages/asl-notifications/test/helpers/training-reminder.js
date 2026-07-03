@@ -8,13 +8,6 @@ const getTrainingType = roleType => roleType === 'nvs' ? 'NVS module' : 'NACWO m
 
 const getTrainingRecordLabel = roleType => roleType === 'nvs' ? 'module' : 'training';
 
-const getTrainingRecordOwner = ({ roleType, isApplicant }) => {
-  if (isApplicant) {
-    return 'your';
-  }
-  return roleType === 'nvs' ? 'your' : 'their';
-};
-
 const getSubjectPerspective = ({ fullName, isApplicant = false }) => ({
   fullNameInSubject: isApplicant ? 'You' : fullName,
   need: 'needs',
@@ -27,16 +20,15 @@ const getTemplateVars = ({ fullName, roleType, isApplicant = false }) => ({
   completeDate,
   name: establishmentName,
   trainingRecordLabel: getTrainingRecordLabel(roleType),
-  trainingRecordOwner: getTrainingRecordOwner({ roleType, isApplicant }),
   ...getSubjectPerspective({ fullName, isApplicant })
 });
 
 const buildTrainingReminderBody = ({ fullName, roleType, isApplicant = false }) => {
-  const { type, trainingRecordLabel, trainingRecordOwner } = getTemplateVars({ fullName, roleType, isApplicant });
+  const { type, trainingRecordLabel, their } = getTemplateVars({ fullName, roleType, isApplicant });
 
   return `${fullName}’s ${type} is due to be completed by ${completeDate}.
 Establishment name: ${establishmentName}
-Once completed, ensure the ${trainingRecordLabel} is added to ${trainingRecordOwner} training record.`;
+Once completed, ensure the ${trainingRecordLabel} is added to ${their} training record.`;
 };
 
 const buildTrainingReminderSubject = ({ fullName, roleType, isApplicant = false }) => {
@@ -52,7 +44,6 @@ module.exports = {
   completeDate,
   establishmentName,
   getTrainingRecordLabel,
-  getTrainingRecordOwner,
   getTrainingType,
   getTemplateVars
 };

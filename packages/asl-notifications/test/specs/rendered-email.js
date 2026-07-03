@@ -164,7 +164,7 @@ You can see more details about this task by visiting ${publicTaskUrl(publicUrl, 
     });
 
     it('renders role-removed-refused for the establishment recipient', async function () {
-      const debugEmail = true;
+      const debugEmail = false;
       const task = buildRoleRemovalTask({ roleType: 'holc', outcome: 'refused' });
       const { notification, content } = await getRenderedNotification.call(this, {
         task,

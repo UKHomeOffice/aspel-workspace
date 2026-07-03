@@ -105,7 +105,7 @@ const trainingReminderCases = [
     to: 'ntco@example.com',
     title: 'training-due-reminder NVS ntco',
     fullName: 'Basic User',
-    debugEmail: true
+    debugEmail: false
   }
 ];
 
