@@ -17,6 +17,7 @@ export default {
       },
       {
         editable: {
+          type: 'textarea',
           label: 'In what ways have you changed the standard protocol and why?'
         }
       }
