@@ -53,7 +53,7 @@ const sendData = (req, formId, params = {}) => {
   return req.api(`/establishment/${req.establishmentId}/role`, opts);
 };
 
-module.exports = ({ formId }) => {
+module.exports = ({ formId } = {}) => {
   const app = Router({ mergeParams: true });
 
   app.use(
