@@ -61,6 +61,16 @@ module.exports = merge({}, baseContent, {
         label: 'Describe why {{profile.firstName}} is suitable for the PEL holder role'
       }
     },
+    [ROLE_TYPES.nprc]: {
+      experience: {
+        label: 'Describe why {{profile.firstName}} is suitable for the NPRC role'
+      }
+    },
+    [ROLE_TYPES.holc]: {
+      experience: {
+        label: 'Describe why {{profile.firstName}} is suitable for the HOLC role'
+      }
+    },
     default: {
       experience: {
         label: 'Describe why {{profile.firstName}} is suitable for the {{roleType}} role'
