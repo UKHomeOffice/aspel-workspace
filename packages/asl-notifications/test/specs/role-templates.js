@@ -60,7 +60,7 @@ You can see more details about this task by visiting http://localhost:8080/tasks
       identifierValue: 'University of Croydon',
       taskUrl: 'http://localhost:8080/tasks/task-id?notification=task-id'
     },
-    expected: `Your request for Named Person to be removed from the role of Home Office liaison contact has been returned.
+    expected: `The request for Named Person to be removed from the role of Home Office liaison contact has been returned.
 
 Establishment name: University of Croydon
 

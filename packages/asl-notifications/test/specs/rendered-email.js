@@ -142,7 +142,7 @@ Establishment name: ${establishmentName}`;
         to: 'vice-chancellor@example.com'
       });
 
-      const expectedHtml = `Your request for Named Person to be removed from the role of ${roleName} has been returned.
+      const expectedHtml = `The request for Named Person to be removed from the role of ${roleName} has been returned.
 
 Establishment name: ${establishmentName}
 
