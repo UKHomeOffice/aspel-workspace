@@ -36,6 +36,7 @@
     "sinon": "^21.1.2"
   },
   "dependencies": {
+    "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@asl/schema": "file:../asl-schema",
     "@asl/service": "file:../asl-service",
     "@ukhomeoffice/asl-dictionary": "file:../asl-dictionary",
