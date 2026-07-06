@@ -26,7 +26,7 @@ const Confirm = ({
         hint: () => <Snippet>declarations.{values.type}</Snippet>
       },
       renderContext: {
-        agreementDeterminer: ['nacwo', 'nvs'].includes(values.type) ? 'all' : 'both',
+        agreementDeterminer: ['nacwo', 'nvs', 'sqp'].includes(values.type) ? 'all' : 'both',
         roleLabel: namedRoles[values.type]
       }
     }
