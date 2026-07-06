@@ -6,15 +6,6 @@ import ChangedBadge from './changed-badge';
 import NewComments from './new-comments';
 import ErrorBoundary from './error-boundary';
 
-// Renders the comment and change display for a protocol title field in the
-// read-only/playback "blue header". The title is shown elsewhere as the
-// heading, so this only adds the NEW COMMENT flag, the CHANGED badge,
-// "See what's changed" and the comments panel ("Add comment" when empty,
-// "Show comments (N)" once populated) - reusing the same primitives as every
-// other PPL field (see ./review.js). The "See what's changed" link is
-// suppressed when the whole protocol is newly added (nothing to diff against).
-// It is purely additive: it does not alter how the title itself is rendered or
-// edited.
 const ProtocolTitleComments = ({
   field,
   prefix,
@@ -30,10 +21,7 @@ const ProtocolTitleComments = ({
   parentAddedFromLatest,
   parentAddedFromGranted
 }) => {
-  // Match review.js: the "See what's changed" link is hidden when the change
-  // is only there because the whole protocol was added (nothing to diff
-  // against), but DiffWindow still receives the raw changedFrom* flags so its
-  // version tabs are identical to every other field.
+
   const changed = (changedFromFirst && !parentAddedFromFirst)
     || (changedFromLatest && !parentAddedFromLatest)
     || (changedFromGranted && !parentAddedFromGranted);
@@ -63,10 +51,6 @@ const ProtocolTitleComments = ({
         )
       }
       {
-        // Inspectors must be able to read an applicant's title comment and add
-        // their own - including on a brand new protocol (ASL-4862 scenarios
-        // 3-5). The Comments component shows the "Add comment" button when empty
-        // and the "Show comments (N)" panel once comments exist.
         <Comments field={field} collapsed={!readonly} />
       }
     </div>
@@ -83,11 +67,7 @@ const mapStateToProps = (state, ownProps) => {
     added: { first: firstAdded = [], latest: latestAdded = [], granted: grantedAdded = [] } = {}
   } = state;
 
-  // Raw change/added flags, kept separate exactly as review.js does: the
-  // changedFrom* flags drive DiffWindow's version comparison (so the modal,
-  // tabs and highlighting are identical to other fields), while the
-  // parentAdded* flags are used only to decide whether to offer the diff at
-  // all - a title on a freshly added protocol has no prior version to compare.
+
   return {
     field,
     prefix,

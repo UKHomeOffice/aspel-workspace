@@ -153,45 +153,27 @@ html.modal-open, html.modal-open body {
     }
   }
 
-  // ASL-4862: the protocol title's controls render inside the blue protocol
-  // header (.protocol.complete > .expandable > .header), which applies a
-  // white-text cascade. The "See what's changed" copy icon sits on that blue
-  // bar, so it is recoloured white. The comment panel, however, is a light card
-  // that inherits the same cascade - so its text is re-asserted dark. The
-  // panel's own dividers, notch, bubbles and +/- toggle keep their default
-  // grey/green/dark styling, which is already correct on a light background.
   .protocol.complete > .expandable > .header .protocol-title-comments {
-    // "See what's changed" copy icon -> white (masking the existing shape)
     .modal-trigger:before {
       background: $white;
       -webkit-mask: $copy no-repeat center / 100%;
       mask: $copy no-repeat center / 100%;
     }
 
-    // COLLAPSED: the "Show comments" toggle sits on the readonly white header,
-    // so its text is brand blue (visible on white).
     .comments.expanding-panel *:not(.restore) {
       color: #005ea5;
     }
 
-    // EXPANDED: make the panel, its toggle header and its content transparent so
-    // the blue protocol header shows through (overriding the readonly white
-    // header). The comment bubbles keep their own white background.
     .comments.expanding-panel.open,
     .comments.expanding-panel.open > header,
     .comments.expanding-panel.open > .content {
       background: transparent;
     }
 
-    // On that blue expanded panel, text is white by default - the toggle label,
-    // the "Add new comment" label, Discard, "Show previous comments", Save.
     .comments.expanding-panel.open *:not(.restore) {
       color: #fff;
     }
 
-    // ...except elements that sit on their own white surface: the comment
-    // bubbles, the white "Add comment" secondary button and the textarea, which
-    // stay dark so they're readable.
     .comments.expanding-panel.open .comment,
     .comments.expanding-panel.open .comment *:not(.restore),
     .comments.expanding-panel.open .govuk-button.button-secondary,
@@ -200,10 +182,7 @@ html.modal-open, html.modal-open body {
     }
   }
 
-  // The "See what's changed" DiffWindow modal is rendered in the DOM inside the
-  // blue protocol header, so its content inherits the header's white-text
-  // cascade and would be white-on-white against the modal's white background.
-  // Reset the modal text to dark, matching the diff modal shown elsewhere.
+
   .protocol.complete > .expandable > .header .modal-content *:not(.restore) {
     color: #0b0c0c;
   }
