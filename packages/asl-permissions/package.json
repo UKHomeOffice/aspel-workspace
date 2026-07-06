@@ -9,7 +9,7 @@
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config",
     "test": "npm run test:lint && npm run test:unit",
-    "test:lint": "eslint .",
+    "test:lint": "../../node_modules/.bin/eslint .",
     "test:unit": "mocha --recursive"
   },
   "repository": {
@@ -31,19 +31,19 @@
     "lodash": "^4.18.1",
     "moment": "^2.29.2",
     "objection": "^3.1.5",
-    "redis": "^3.1.1",
-    "uuid": "^13.0.2"
+    "redis": "^3.1.1"
   },
   "devDependencies": {
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "dotenv": "^6.0.0",
-    "eslint": "^5.16.0",
+    "eslint": "^10.2.0",
     "eslint-plugin-undocumented-env": "^1.0.0",
     "express": "^4.21.2",
     "knex": "^3.1.0",
-    "mocha": "^11.7.1",
+    "mocha": "11.7.6",
     "nodemon": "^3.1.10",
-    "sinon": "^19.0.2",
-    "supertest": "^3.1.0"
+    "sinon": "^21.1.2",
+    "supertest": "^3.1.0",
+    "uuid": "^13.0.2"
   }
 }
