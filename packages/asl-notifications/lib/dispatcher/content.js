@@ -92,6 +92,7 @@ module.exports = {
     resolved: 'Approved',
     autoresolved: 'Approved',
     rejected: 'Rejected',
+    refused: 'Refused',
     'status:new:with-inspectorate': 'submitted',
     'status:with-inspectorate:rejected': 'rejected',
     'status:with-inspectorate:returned-to-applicant': 'returned',
