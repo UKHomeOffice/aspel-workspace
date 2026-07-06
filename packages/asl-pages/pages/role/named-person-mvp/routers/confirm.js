@@ -24,7 +24,7 @@ const sendData = (req, formId, params = {}) => {
   const { type, rcvsNumber } = values;
   const mandatory = getMandatoryTraining(req, formId);
   const { incomplete, delayReason, completeDate } =
-    getIncompleteTrainingDetails(req, formId) || {};
+    getIncompleteTrainingDetails(req, formId);
   const skillsAndExperience = pick(values, SKILLS_AND_EXPERIENCE_FIELDS);
 
   const replaceProfile = profileReplaced(req.establishment, type);
