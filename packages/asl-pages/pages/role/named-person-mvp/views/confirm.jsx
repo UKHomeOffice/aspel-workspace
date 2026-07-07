@@ -21,12 +21,12 @@ const Confirm = ({
     declaration: {
       propMappers: {
         label: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>agreement</Snippet>,
-        error: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>errors.declaration.required</Snippet>,
+        error: (error, formatter) => error && <Snippet {...formatter.renderContext ?? {}}>errors.declaration.required</Snippet>,
         title: () => <Snippet>fields.declaration.title</Snippet>,
         hint: () => <Snippet>declarations.{values.type}</Snippet>
       },
       renderContext: {
-        agreementDeterminer: ['nacwo', 'nvs'].includes(values.type) ? 'all' : 'both',
+        agreementDeterminer: ['nacwo', 'nvs', 'sqp'].includes(values.type) ? 'all' : 'both',
         roleLabel: namedRoles[values.type]
       }
     }
