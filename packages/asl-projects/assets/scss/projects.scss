@@ -153,6 +153,40 @@ html.modal-open, html.modal-open body {
     }
   }
 
+  .protocol.complete > .expandable > .header .protocol-title-comments {
+    .modal-trigger:before {
+      background: $white;
+      -webkit-mask: $copy no-repeat center / 100%;
+      mask: $copy no-repeat center / 100%;
+    }
+
+    .comments.expanding-panel *:not(.restore) {
+      color: #005ea5;
+    }
+
+    .comments.expanding-panel.open,
+    .comments.expanding-panel.open > header,
+    .comments.expanding-panel.open > .content {
+      background: transparent;
+    }
+
+    .comments.expanding-panel.open *:not(.restore) {
+      color: #fff;
+    }
+
+    .comments.expanding-panel.open .comment,
+    .comments.expanding-panel.open .comment *:not(.restore),
+    .comments.expanding-panel.open .govuk-button.button-secondary,
+    .comments.expanding-panel.open textarea {
+      color: #0b0c0c;
+    }
+  }
+
+
+  .protocol.complete > .expandable > .header .modal-content *:not(.restore) {
+    color: #0b0c0c;
+  }
+
   .diff {
 
     &.added {
@@ -1859,4 +1893,90 @@ html.modal-open, html.modal-open body {
   #ppl-drafting-tool span.changedText {
     padding-left: 32px;
   }
+}
+
+#ppl-drafting-tool .protocol-title-comments .govuk-button.button-secondary {
+  color: #0b0c0c !important;
+  display: block;
+  margin-top: 10px;
+}
+
+.protocol-title-comments section.expanding-panel.open.comments {
+  padding: 20px;
+  background: #fff;
+}
+
+#ppl-drafting-tool .protocol.complete > .expandable > .header .protocol-title-comments {
+  .comments.expanding-panel *:not(.restore),
+  .modal-content *:not(.restore) {
+    color: #0b0c0c;
+  }
+}
+
+#ppl-drafting-tool .protocol .expandable .content {
+  background: #fff;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+.protocol.complete > .expandable > .header .protocol-title-comments {
+  .comments.expanding-panel.open,
+  .comments.expanding-panel.open > header,
+  .comments.expanding-panel.open > .content {
+    background: transparent;
+  }
+}
+#ppl-drafting-tool .protocol.complete > .expandable > .header .protocol-title-comments .comments.expanding-panel > .content {
+  background: #fff;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+.protocol-title-comments section.expanding-panel.comments.has-new {
+  background: transparent;
+}
+.protocol-title-comments section.expanding-panel.comments.has-new header {
+  background: transparent;
+  color: #fff;
+}
+.protocol-title-comments section.expanding-panel.comments.has-new h3 {
+  color: #fff;
+}
+#ppl-drafting-tool .protocol.readonly .expanding-panel .protocol-title-comments header {
+  background: transparent;
+  color: #fff;
+}
+
+#ppl-drafting-tool .protocol.readonly .protocol-title-comments .expanding-panel header {
+  background-color: transparent;
+}
+#ppl-drafting-tool .protocol.complete > .expandable > .header .protocol-title-comments .comments.expanding-panel header, #ppl-drafting-tool .protocol.complete > .expandable > .header .protocol-title-comments .comments.expanding-panel header * {
+  color: #fff;
+}
+#ppl-drafting-tool
+.protocol.complete
+> .expandable
+> .header
+.protocol-title-comments
+.comments.expanding-panel
+> header
+> button.govuk-button.link,
+#ppl-drafting-tool
+.protocol.complete
+> .expandable
+> .header
+.protocol-title-comments
+.comments.expanding-panel
+> header
+> button.govuk-button.link
+> h3 {
+  color: #fff !important;
+}
+#ppl-drafting-tool
+.protocol.complete
+> .expandable
+> .header
+.protocol-title-comments
+.comments.expanding-panel
+> header
+h3::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='32' viewBox='0 0 16 32'%3E%3Csvg height='16' width='16' viewBox='0 0 16 16' y='0'%3E%3Cpath fill='%23fff' d='m0 6.5v3c0 .276.224.5.5.5h15c.276 0 .5-.224.5-.5v-3c0-.276-.224-.5-.5-.5h-15c-.276 0-.5.224-.5.5z'/%3E%3C/svg%3E%3Csvg height='16' width='16' viewBox='0 0 16 16' y='16'%3E%3Cpath fill='%23fff' d='m15.5 6h-5.5v-5.5c0-.276-.224-.5-.5-.5h-3c-.276 0-.5.224-.5.5v5.5h-5.5c-.276 0-.5.224-.5.5v3c0 .276.224.5.5.5h5.5v5.5c0 .276.224.5.5.5h3c.276 0 .5-.224.5-.5v-5.5h5.5c.276 0 .5-.224.5-.5v-3c0-.276-.224-.5-.5-.5z'/%3E%3C/svg%3E%3C/svg%3E") !important;
 }
