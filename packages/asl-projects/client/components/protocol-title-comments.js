@@ -5,6 +5,7 @@ import DiffWindow from './diff-window';
 import ChangedBadge from './changed-badge';
 import NewComments from './new-comments';
 import ErrorBoundary from './error-boundary';
+import { isTitleChanged } from '../helpers/protocol-title-change-detection';
 
 const ProtocolTitleComments = ({
   field,
@@ -22,9 +23,14 @@ const ProtocolTitleComments = ({
   parentAddedFromGranted
 }) => {
 
-  const changed = (changedFromFirst && !parentAddedFromFirst)
-    || (changedFromLatest && !parentAddedFromLatest)
-    || (changedFromGranted && !parentAddedFromGranted);
+  const changed = isTitleChanged({
+    changedFromFirst,
+    changedFromLatest,
+    changedFromGranted,
+    parentAddedFromFirst,
+    parentAddedFromLatest,
+    parentAddedFromGranted
+  });
 
   return (
     <div className="protocol-title-comments">
@@ -66,7 +72,6 @@ const mapStateToProps = (state, ownProps) => {
     changes: { first = [], latest = [], granted = [] } = {},
     added: { first: firstAdded = [], latest: latestAdded = [], granted: grantedAdded = [] } = {}
   } = state;
-
 
   return {
     field,
