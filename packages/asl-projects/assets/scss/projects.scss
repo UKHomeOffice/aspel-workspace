@@ -177,11 +177,10 @@ html.modal-open, html.modal-open body {
     .comments.expanding-panel.open .comment,
     .comments.expanding-panel.open .comment *:not(.restore),
     .comments.expanding-panel.open .govuk-button.button-secondary,
-    .comments.expanding-panel.open textarea {
+    .comments.expanding-panel.open textarea:not(.restore) {
       color: #0b0c0c;
     }
   }
-
 
   .protocol.complete > .expandable > .header .modal-content *:not(.restore) {
     color: #0b0c0c;
