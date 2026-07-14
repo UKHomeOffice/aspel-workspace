@@ -240,7 +240,10 @@ module.exports = {
     },
     default: {
       maxLength: 'This field is limited to 256 characters',
-      required: 'This field is required'
+      required: 'This field is required',
+      // Used for a date field when exactly one part (day/month/year) is invalid.
+      // Individual pages can override via `errors.<field>.validDatePart`.
+      validDatePart: '{{fieldLabel}} must be a valid {{datePart}}'
     }
   },
   countdown: {

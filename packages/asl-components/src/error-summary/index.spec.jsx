@@ -10,11 +10,16 @@ describe('<ErrorSummary />', () => {
     });
 
     const content = {
+        fields: {
+            passDate: { label: 'Date awarded' }
+        },
         errors: {
             heading: 'There is a problem',
             headingPlural: 'There are problems',
             default: {
-                required: 'Enter a value'
+                required: 'Enter a value',
+                validDate: 'Enter a valid date',
+                validDatePart: '{{fieldLabel}} must be a valid {{datePart}}'
             }
         }
     };
@@ -58,13 +63,14 @@ describe('<ErrorSummary />', () => {
         expect(screen.getByRole('link', { name: 'Enter a value' })).toHaveAttribute('href', '#dob-day');
     });
 
-    test('links a date field to the first invalid part (e.g. the month)', () => {
+    test('links a date field to the first invalid part and names it in the message', () => {
         renderWithStore({
-            errors: { passDate: 'required' },
+            errors: { passDate: 'validDate' },
             schema: { passDate: { inputType: 'inputDate' } },
             model: { passDate: '2024-00-10' } // only the month is out of range
         });
-        expect(screen.getByRole('link', { name: 'Enter a value' })).toHaveAttribute('href', '#passDate-month');
+        const link = screen.getByRole('link', { name: 'Date awarded must be a valid month' });
+        expect(link).toHaveAttribute('href', '#passDate-month');
     });
 
     test('finds date fields nested inside reveals', () => {

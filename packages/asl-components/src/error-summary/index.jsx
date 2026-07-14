@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Snippet } from '../';
 import { getLabelFromRenderers } from '../utils';
 import { splitDateValue, getInvalidDateParts } from '../date-input/invalid-parts';
+import DateErrorMessage from '../date-input/error-message';
 
 // date fields render as a fieldset (Day / Month / Year) with no id matching the
 // field name, so an error summary link of `#${name}` lands on nothing. Collect
@@ -69,10 +70,18 @@ const ErrorSummary = ({
                                         renderers && getLabelFromRenderers(renderers, key, 'error')?.error
                                             ?
                                             <Error name={key} renderers={renderers} />
-                                            :
-                                            <Snippet fallback={`errors.default.${errors[key]}`} {...snippetProps}>
-                                                {`errors.${key}.${errors[key]}`}
-                                            </Snippet>
+                                            : dateFields.has(key)
+                                                ?
+                                                <DateErrorMessage
+                                                    name={key}
+                                                    value={model?.[key]}
+                                                    errorCode={errors[key]}
+                                                    snippetProps={snippetProps}
+                                                />
+                                                :
+                                                <Snippet fallback={`errors.default.${errors[key]}`} {...snippetProps}>
+                                                    {`errors.${key}.${errors[key]}`}
+                                                </Snippet>
                                     }
                                 </a>
                             </li>;
