@@ -19,11 +19,11 @@ describe('<ErrorSummary />', () => {
         }
     };
 
-    const createStore = ({ errors = {}, schema = {} }) =>
+    const createStore = ({ errors = {}, schema = {}, model = {} }) =>
         configureStore({
             reducer: {
                 static: (state = { errors, schema, content }) => state,
-                model: (state = {}) => state,
+                model: (state = model) => state,
                 datatable: (state = {}) => state
             }
         });
@@ -56,6 +56,15 @@ describe('<ErrorSummary />', () => {
             schema: { dob: { inputType: 'inputDate' } }
         });
         expect(screen.getByRole('link', { name: 'Enter a value' })).toHaveAttribute('href', '#dob-day');
+    });
+
+    test('links a date field to the first invalid part (e.g. the month)', () => {
+        renderWithStore({
+            errors: { passDate: 'validDate' },
+            schema: { passDate: { inputType: 'inputDate' } },
+            model: { passDate: '2024-00-10' } // only the month is out of range
+        });
+        expect(screen.getByRole('link', { name: 'Enter a value' })).toHaveAttribute('href', '#passDate-month');
     });
 
     test('finds date fields nested inside reveals', () => {

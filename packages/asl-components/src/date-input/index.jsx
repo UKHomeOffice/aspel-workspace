@@ -1,5 +1,6 @@
 import React from 'react';
 import { DateInput as BaseDateInput } from '@ukhomeoffice/react-components';
+import { getInvalidDateParts } from './invalid-parts';
 
 // ASL-5108 (WCAG 3.3.1 Error Identification): the upstream DateInput hard-codes
 // the fieldset's `aria-describedby` to the hint only, so a screen reader entering
@@ -16,6 +17,21 @@ class DateInput extends BaseDateInput {
             this.props.hint ? this.dateFragment('hint') : null,
             this.props.error ? this.dateFragment('error') : null
         ].filter(Boolean).join(' ') || null;
+    }
+
+    // Parts to highlight when in error: only the individually-invalid ones, or
+    // all three when no single part can be blamed (see invalid-parts.js).
+    erroredParts() {
+        if (!this.props.error) {
+            return [];
+        }
+        const invalid = getInvalidDateParts(this.state.value);
+        return invalid.length ? invalid : ['day', 'month', 'year'];
+    }
+
+    inputClass(part, widthClass) {
+        const inError = this.erroredParts().includes(part);
+        return `govuk-input govuk-date-input__input ${widthClass}${inError ? ' govuk-input--error' : ''}`;
     }
 
     render() {
@@ -46,7 +62,7 @@ class DateInput extends BaseDateInput {
                             <label className="govuk-label govuk-date-input__label" htmlFor={this.dateFragment('day')}>
                                 Day
                             </label>
-                            <input className="govuk-input govuk-date-input__input govuk-input--width-2" id={this.dateFragment('day')} name={this.dateFragment('day')} type="number" pattern="[0-9]*" defaultValue={value.day} onChange={e => this.onChange('day', e.target.value)} />
+                            <input className={this.inputClass('day', 'govuk-input--width-2')} id={this.dateFragment('day')} name={this.dateFragment('day')} type="number" pattern="[0-9]*" defaultValue={value.day} onChange={e => this.onChange('day', e.target.value)} />
                         </div>
                     </div>
                     <div className="govuk-date-input__item">
@@ -54,7 +70,7 @@ class DateInput extends BaseDateInput {
                             <label className="govuk-label govuk-date-input__label" htmlFor={this.dateFragment('month')}>
                                 Month
                             </label>
-                            <input className="govuk-input govuk-date-input__input govuk-input--width-2" id={this.dateFragment('month')} name={this.dateFragment('month')} type="number" pattern="[0-9]*" defaultValue={value.month} onChange={e => this.onChange('month', e.target.value)} />
+                            <input className={this.inputClass('month', 'govuk-input--width-2')} id={this.dateFragment('month')} name={this.dateFragment('month')} type="number" pattern="[0-9]*" defaultValue={value.month} onChange={e => this.onChange('month', e.target.value)} />
                         </div>
                     </div>
                     <div className="govuk-date-input__item">
@@ -62,7 +78,7 @@ class DateInput extends BaseDateInput {
                             <label className="govuk-label govuk-date-input__label" htmlFor={this.dateFragment('year')}>
                                 Year
                             </label>
-                            <input className="govuk-input govuk-date-input__input govuk-input--width-4" id={this.dateFragment('year')} name={this.dateFragment('year')} type="number" pattern="[0-9]*" defaultValue={value.year} onChange={e => this.onChange('year', e.target.value)} />
+                            <input className={this.inputClass('year', 'govuk-input--width-4')} id={this.dateFragment('year')} name={this.dateFragment('year')} type="number" pattern="[0-9]*" defaultValue={value.year} onChange={e => this.onChange('year', e.target.value)} />
                         </div>
                     </div>
                 </div>

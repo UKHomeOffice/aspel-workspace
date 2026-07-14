@@ -3,6 +3,7 @@ import size from 'lodash/size';
 import { connect } from 'react-redux';
 import { Snippet } from '../';
 import { getLabelFromRenderers } from '../utils';
+import { splitDateValue, getInvalidDateParts } from '../date-input/invalid-parts';
 
 // date fields render as a fieldset (Day / Month / Year) with no id matching the
 // field name, so an error summary link of `#${name}` lands on nothing. Collect
@@ -26,11 +27,20 @@ function getDateFieldNames(schema = {}, names = new Set()) {
     return names;
 }
 
+// For a date error, link to the first individually-invalid part (e.g. just the
+// month), falling back to the day when no single part can be blamed. Uses the
+// same helper as the DateInput so the link and the red highlight always agree.
+function getDateHref(name, model) {
+    const invalid = getInvalidDateParts(splitDateValue(model?.[name]));
+    return `#${name}-${invalid[0] || 'day'}`;
+}
+
 const ErrorSummary = ({
     errors,
     schema = {},
     formatters = {},
-    renderers
+    renderers,
+    model = {}
 }) => {
     if (!size(errors)) {
         return null;
@@ -52,7 +62,7 @@ const ErrorSummary = ({
                     {
                         Object.keys(errors).map(key => {
                             const snippetProps = formatters[key]?.renderContext ?? {};
-                            const href = dateFields.has(key) ? `#${key}-day` : `#${key}`;
+                            const href = dateFields.has(key) ? getDateHref(key, model) : `#${key}`;
                             return <li key={key}>
                                 <a href={href}>
                                     {
@@ -79,6 +89,6 @@ function Error({ renderers, name }) {
     return getLabelFromRenderers(renderers, name, 'error').error;
 }
 
-const mapStateToProps = ({ static: { errors, schema } }) => ({ errors, schema });
+const mapStateToProps = ({ static: { errors, schema }, model }) => ({ errors, schema, model });
 
 export default connect(mapStateToProps)(ErrorSummary);

@@ -46,6 +46,35 @@ describe('<DateInput />', () => {
         expect(container.querySelector('.govuk-form-group--error')).not.toBeNull();
     });
 
+    test('highlights only the individually-invalid part', () => {
+        // 10/00/2024 - only the month is out of range
+        const { container } = renderInput({
+            value: '2024-00-10',
+            error: 'Date awarded must be a valid date'
+        });
+        expect(container.querySelector('#passDate-month').classList).toContain('govuk-input--error');
+        expect(container.querySelector('#passDate-day').classList).not.toContain('govuk-input--error');
+        expect(container.querySelector('#passDate-year').classList).not.toContain('govuk-input--error');
+    });
+
+    test('highlights all inputs when no single part can be blamed', () => {
+        // 31/02/2024 - each part is individually in range but the date is invalid
+        const { container } = renderInput({
+            value: '2024-02-31',
+            error: 'Date awarded must be a valid date'
+        });
+        ['day', 'month', 'year'].forEach(part => {
+            expect(container.querySelector(`#passDate-${part}`).classList).toContain('govuk-input--error');
+        });
+    });
+
+    test('does not highlight inputs when there is no error', () => {
+        const { container } = renderInput({ value: '2024-05-10' });
+        ['day', 'month', 'year'].forEach(part => {
+            expect(container.querySelector(`#passDate-${part}`).classList).not.toContain('govuk-input--error');
+        });
+    });
+
     test('emits an ISO yyyy-mm-dd value when parts change', () => {
         const onChange = jest.fn();
         const { container } = render(
