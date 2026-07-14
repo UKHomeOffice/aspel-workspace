@@ -1,10 +1,13 @@
+const { merge } = require('lodash');
 const namedRoles = require('../../../role/content/named-roles');
+const skillsAndExperienceContent = require('../../../role/named-person-mvp/content/skills-and-experience');
 
-module.exports = {
+module.exports = merge({}, skillsAndExperienceContent, {
   namedRoles,
   'sticky-nav': {
     applicant: 'Applicant',
     role: 'Amendment details',
+    roleApplication: 'Role application details',
     conditions: 'Establishment conditions'
   },
   mandatoryTrainingRequirements: 'NACWO mandatory training requirements',
@@ -38,4 +41,4 @@ module.exports = {
   buttons: {
     save: 'Save'
   }
-};
+});

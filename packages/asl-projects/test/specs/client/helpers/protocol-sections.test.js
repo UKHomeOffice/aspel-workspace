@@ -153,7 +153,7 @@ describe('protocol section schema', () => {
     });
 
     it('shows only the most-appropriate field in editable mode', () => {
-      assert.equal(mostAppropriate.type, 'texteditor');
+      assert.equal(getFieldState(mostAppropriate, editableValues).type, 'textarea');
       assert.equal(mostRefined.show(experimentalValues), true);
       assert.equal(mostRefined.show(editableValues), false);
     });

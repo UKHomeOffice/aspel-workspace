@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon -r dotenv/config index.js",
     "test": "npm run test:lint && npm run test:unit",
-    "test:lint": "eslint .",
+    "test:lint": "../../node_modules/.bin/eslint .",
     "pretest:unit": "NODE_ENV=test npm run migrate",
     "test:unit": "NODE_ENV=test mocha ./test --recursive --exit --timeout 10000",
     "migrate": "DATABASE_NAME=asl-test knex migrate:latest --knexfile ../../node_modules/@asl/schema/knexfile.js",
@@ -26,15 +26,17 @@
   "devDependencies": {
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "dotenv": "^6.2.0",
-    "eslint": "^5.16.0",
+    "eslint": "^10.2.0",
     "eslint-plugin-undocumented-env": "^1.0.0",
     "knex": "^3.1.0",
     "mocha": "^11.7.1",
     "mockdate": "^3.0.5",
     "nodemon": "^3.1.10",
-    "pg": "^8.7.3"
+    "pg": "^8.7.3",
+    "sinon": "^21.1.2"
   },
   "dependencies": {
+    "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@asl/schema": "file:../asl-schema",
     "@asl/service": "file:../asl-service",
     "@ukhomeoffice/asl-dictionary": "file:../asl-dictionary",
@@ -44,7 +46,6 @@
     "moment": "^2.30.1",
     "mustache": "^4.2.0",
     "r2": "^2.0.1",
-    "sinon": "^19.0.2",
     "uuid": "^13.0.2",
     "winston": "^3.18.3"
   }

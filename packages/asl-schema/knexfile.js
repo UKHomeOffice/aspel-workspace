@@ -1,9 +1,10 @@
 const { knexSnakeCaseMappers } = require('objection');
 
 try {
-  // eslint-disable-next-line implicit-dependencies/no-implicit
   require('dotenv').config();
-} catch (e) {}
+} catch (e) {
+  console.warn('Error in Knexfile:', e);
+}
 
 const snakeCaseMapper = process.env.SNAKE_MAPPER === 'true' ? knexSnakeCaseMappers() : {};
 

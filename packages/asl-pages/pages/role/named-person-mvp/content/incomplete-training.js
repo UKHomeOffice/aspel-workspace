@@ -29,7 +29,7 @@ module.exports = {
     }
   },
   buttons: {
-    submit: 'Save and continue',
+    submit: 'Continue',
     cancel: 'Cancel'
   },
   errors: {

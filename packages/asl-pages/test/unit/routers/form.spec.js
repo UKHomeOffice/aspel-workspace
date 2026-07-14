@@ -385,6 +385,49 @@ describe('Form Router', () => {
         expect(response.body.sessionFormDefined).toBe(true);
         expect(response.body.redirectUrl).toBeDefined();
       });
+
+      test('parses multipart uploads into req.files using memory storage', async () => {
+        const formRouter = form({
+          schema: {
+            upload: {
+              inputType: 'inputFile',
+              validate: ['fileRequired']
+            }
+          },
+          process: (req, res) => {
+            const file = req.files?.upload?.[0];
+            res.status(200).json({
+              hasFile: !!file,
+              uploadCount: req.files?.upload?.length,
+              originalname: file?.originalname,
+              mimetype: file?.mimetype,
+              size: file?.size,
+              bufferContents: file?.buffer?.toString('utf8'),
+              hasBuffer: Buffer.isBuffer(file?.buffer)
+            });
+          }
+        });
+
+        app.use(formRouter);
+
+        const response = await request(app)
+          .post('/')
+          .attach('upload', Buffer.from('hello world'), {
+            filename: 'sample.txt',
+            contentType: 'text/plain'
+          })
+          .expect(200);
+
+        expect(response.body).toEqual({
+          hasFile: true,
+          uploadCount: 1,
+          originalname: 'sample.txt',
+          mimetype: 'text/plain',
+          size: 11,
+          bufferContents: 'hello world',
+          hasBuffer: true
+        });
+      });
     });
 
     describe('_clearErrors', () => {

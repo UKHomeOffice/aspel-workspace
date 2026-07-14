@@ -2,7 +2,8 @@ import assert from 'assert';
 import {
   calculateProtocolContext,
   getProtocolMode,
-  getFields
+  getFields,
+  getNewComments
 } from '../../../../client/helpers';
 import {
   isEditableStandardProtocolMode,
@@ -360,5 +361,53 @@ describe('protocol mode predicates', () => {
       isProtocolPlaybackMode({ isStandardProtocol: true, standardProtocolType: 'standard', standardProtocolsEnabled: false }),
       false
     );
+  });
+});
+
+describe('getNewComments', () => {
+  const comments = {
+    'protocols.1.title': [
+      { id: 1, author: 'Applicant', isNew: true, deleted: false },
+      { id: 2, author: 'Inspector Morse', isNew: true, deleted: false }
+    ],
+    'protocols.2.title': [
+      { id: 3, author: 'Inspector Morse', isNew: true, deleted: false },
+      { id: 4, author: 'Inspector Morse', isNew: false, deleted: false },
+      { id: 5, author: 'Applicant', isNew: true, deleted: true }
+    ]
+  };
+
+  it('excludes the current user\'s own comments by default (ASL-5097 default/applicant behaviour)', () => {
+    const result = getNewComments(comments, 'Inspector Morse');
+    assert.deepEqual(result, {
+      'protocols.1.title': [{ id: 1, author: 'Applicant', isNew: true, deleted: false }],
+      'protocols.2.title': []
+    });
+  });
+
+  it('includes the current user\'s own new comments when includeOwnComments is true (ASL-5097 inspector-own-comments flag)', () => {
+    const result = getNewComments(comments, 'Inspector Morse', undefined, true);
+    assert.deepEqual(result, {
+      'protocols.1.title': [
+        { id: 1, author: 'Applicant', isNew: true, deleted: false },
+        { id: 2, author: 'Inspector Morse', isNew: true, deleted: false }
+      ],
+      'protocols.2.title': [
+        { id: 3, author: 'Inspector Morse', isNew: true, deleted: false }
+      ]
+    });
+  });
+
+  it('still excludes comments that are not flagged isNew or are deleted, even with includeOwnComments true', () => {
+    const result = getNewComments(comments, 'Applicant', undefined, true);
+    assert.deepEqual(result, {
+      'protocols.1.title': [
+        { id: 1, author: 'Applicant', isNew: true, deleted: false },
+        { id: 2, author: 'Inspector Morse', isNew: true, deleted: false }
+      ],
+      'protocols.2.title': [
+        { id: 3, author: 'Inspector Morse', isNew: true, deleted: false }
+      ]
+    });
   });
 });

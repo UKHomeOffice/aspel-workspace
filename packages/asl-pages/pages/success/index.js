@@ -5,6 +5,7 @@ const { NotFoundError } = require('@asl/service/errors');
 const successMessages = require('./content');
 const { FEATURE_FLAG_NAMED_PERSON_MVP } = require('@asl/service/ui/feature-flag');
 const { versions } = require('@ukhomeoffice/asl-constants');
+const { ROLE_TYPES } = require('../role/named-person-mvp/role-types');
 
 const headerContent = (title, subtitle) => {
   return {
@@ -34,11 +35,12 @@ const getTaskContent = (task) => {
               subtitle
             ),
             panel: {
-              title: 'Application submitted'
+              title: data.type === ROLE_TYPES.holc ? 'Role added' : 'Application submitted'
             },
+            hideWhatNext: data.type === ROLE_TYPES.holc,
             taskLink: {
               before: '',
-              linkText: 'Track progress of application'
+              linkText: data.type === ROLE_TYPES.holc ? 'View history of application' : 'Track progress of application'
             }
           };
         }
