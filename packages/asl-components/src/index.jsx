@@ -21,6 +21,7 @@ export { default as Diff } from './diff';
 export { default as DiffText } from './diff-text';
 export { default as DocumentHeader } from './document-header';
 export { default as DurationField } from './duration-field';
+export { default as DateInput } from './date-input';
 export { default as EditableField } from './editable-field';
 export { default as ErrorSummary } from './error-summary';
 export { default as ExpandingPanel } from './expanding-panel';

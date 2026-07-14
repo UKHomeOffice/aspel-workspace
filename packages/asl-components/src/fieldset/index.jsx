@@ -11,7 +11,6 @@ import {
     CheckboxGroup,
     RadioGroup,
     Select,
-    DateInput,
     Warning
 } from '@ukhomeoffice/react-components';
 import {
@@ -27,7 +26,8 @@ import {
     DurationField,
     SelectMany,
     Inset,
-    TextAreaWithWordCount
+    TextAreaWithWordCount,
+    DateInput
 } from '../';
 import { getLabelFromRenderers } from '../utils';
 
