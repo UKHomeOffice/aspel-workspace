@@ -60,7 +60,7 @@ describe('<ErrorSummary />', () => {
 
     test('links a date field to the first invalid part (e.g. the month)', () => {
         renderWithStore({
-            errors: { passDate: 'validDate' },
+            errors: { passDate: 'required' },
             schema: { passDate: { inputType: 'inputDate' } },
             model: { passDate: '2024-00-10' } // only the month is out of range
         });
