@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 export default function StandardProtocols() {
   const history = useHistory();
   const [selection, setSelection] = useState('');
   const [isGuidanceOpen, setIsGuidanceOpen] = useState(false);
+  const [error, setError] = useState('');
+  const errorSummaryRef = useRef(null);
+  const protocolTypeRef = useRef(null);
+
+  useEffect(() => {
+    if (error) {
+      errorSummaryRef.current?.focus();
+    }
+  }, [error]);
+
+  const focusProtocolType = e => {
+    e.preventDefault();
+    protocolTypeRef.current?.focus();
+  };
 
   const onContinue = e => {
     e.preventDefault();
 
     if (!selection) {
-      alert('Please select a protocol type');
+      setError('Select a type of protocol');
       return;
     }
+
+    setError('');
 
     switch (selection) {
       case 'experimental':
@@ -39,6 +55,11 @@ export default function StandardProtocols() {
   const onCancel = e => {
     e.preventDefault();
     history.push('/');
+  };
+
+  const onSelectionChange = e => {
+    setSelection(e.target.value);
+    setError('');
   };
 
   const options = [
@@ -184,46 +205,81 @@ export default function StandardProtocols() {
       <div className="govuk-!-margin-bottom-8">
         <form onSubmit={onContinue}>
 
-          <fieldset className="govuk-fieldset">
-            <legend className="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-4">
-              What type of protocol do you want to add?
-            </legend>
+          {error && (
+            <div
+              className="govuk-error-summary govuk-!-margin-bottom-6"
+              aria-labelledby="error-summary-title"
+              role="alert"
+              tabIndex="-1"
+              ref={errorSummaryRef}
+            >
+              <h2 className="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+              </h2>
 
-            <div className="govuk-radios">
-              {options.map(option => (
-                <div className="govuk-radios__item" key={option.value}>
-                  <input
-                    className="govuk-radios__input"
-                    type="radio"
-                    name="select-protocol-type"
-                    id={option.value}
-                    value={option.value}
-                    checked={selection === option.value}
-                    onChange={e => setSelection(e.target.value)}
-                    {...(option.hint && {
-                      'aria-describedby': `${option.value}-hint`
-                    })}
-                  />
-
-                  <label
-                    className="govuk-label govuk-radios__label"
-                    htmlFor={option.value}
-                  >
-                    {option.label}
-                  </label>
-
-                  {option.hint && (
-                    <div
-                      className="govuk-hint govuk-radios__hint"
-                      id={`${option.value}-hint`}
-                    >
-                      {option.hint}
-                    </div>
-                  )}
-                </div>
-              ))}
+              <div className="govuk-error-summary__body">
+                <ul className="govuk-list govuk-error-summary__list">
+                  <li>
+                    <a href="#" onClick={focusProtocolType} aria-controls="select-protocol-type">
+                      {error}
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </fieldset>
+          )}
+
+          <div className={`govuk-form-group${error ? ' govuk-form-group--error' : ''}`}>
+            <fieldset
+              className="govuk-fieldset"
+              aria-describedby={error ? 'select-protocol-type-error' : undefined}
+            >
+              <legend className="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-4">
+                What type of protocol do you want to add?
+              </legend>
+
+              {error && <span id="select-protocol-type-error" className="govuk-error-message">{error}</span>}
+
+              <div className="govuk-radios" id="select-protocol-type">
+                {options.map((option, index) => (
+                  <div className="govuk-radios__item" key={option.value}>
+                    <input
+                      className="govuk-radios__input"
+                      type="radio"
+                      name="select-protocol-type"
+                      id={option.value}
+                      value={option.value}
+                      checked={selection === option.value}
+                      onChange={onSelectionChange}
+                      ref={index === 0 ? protocolTypeRef : undefined}
+                      {...((option.hint || error) && {
+                        'aria-describedby': [
+                          option.hint ? `${option.value}-hint` : null,
+                          error ? 'select-protocol-type-error' : null
+                        ].filter(Boolean).join(' ')
+                      })}
+                    />
+
+                    <label
+                      className="govuk-label govuk-radios__label"
+                      htmlFor={option.value}
+                    >
+                      {option.label}
+                    </label>
+
+                    {option.hint && (
+                      <div
+                        className="govuk-hint govuk-radios__hint"
+                        id={`${option.value}-hint`}
+                      >
+                        {option.hint}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </fieldset>
+          </div>
 
           <div className="govuk-button-group govuk-!-margin-top-8">
             <button
