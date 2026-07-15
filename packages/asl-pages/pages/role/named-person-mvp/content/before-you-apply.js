@@ -8,7 +8,7 @@ const sharedNamedPersonNominationBody = `\
 * there is no vet available with the right expertise
 {{/requiresVetAvailabilityCheck}}
 * they have agreed to be nominated
-* the establishment licence (PEL) holder (or legally accountable person) supports the nomination
+* the establishment licence (PEL) holder (or Named Person Responsible for Compliance (NPRC)) supports the nomination
 * you have added them as an ASPeL user
 
 ## Mandatory training requirements
@@ -48,7 +48,7 @@ const sharedRoleGuideNominationText = {
 **Before you nominate someone for an {{roleType}} role you must ensure:**
 
 * they have agreed to be nominated
-* the establishment licence (PEL) holder (or legally accountable person) supports the nomination
+* the establishment licence (PEL) holder (or Named Person Responsible for Compliance (NPRC)) supports the nomination
 * you can describe how they demonstrate the recommended skills and experience set out in the [{{roleGuideLabel}}]({{roleGuideUrl}})
 * you have added them as an ASPeL user`
 };
@@ -107,7 +107,7 @@ module.exports = merge({}, baseContent, {
 **Before you nominate someone for a HOLC role you must ensure:**
 
 * they have agreed to be nominated
-* the establishment licence (PEL) holder (or legally accountable person) supports the nomination
+* the establishment licence (PEL) holder (or Named Person Responsible for Compliance (NPRC)) supports the nomination
 * you can describe why they are suitable for the role
 * you have added them as an ASPeL user`
     }

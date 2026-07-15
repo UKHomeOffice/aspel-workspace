@@ -35,7 +35,8 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
   errors: {
     declaration: {
       required:
-        'Select the checkbox to confirm you agree with {{ agreementDeterminer }} these statements'
+        'Select the checkbox to confirm you agree with {{ agreementDeterminer }} these statements',
+      pehl: 'Select the checkbox to confirm you agree with this statement'
     }
   },
   declarations: {
@@ -44,7 +45,8 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
 
   * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the NACWO role
   * the NTCO has endorsed {{profile.firstName}}'s training and exemptions
-  * the PEL holder (or legally accountable person) supports the nomination and is confident that {{profile.firstName}} has no significant conflict of interest, and their declaration form is held on record at the establishment`,
+  * the PEL holder (or NPRC) supports the nomination and is satisfied that the nominee has no conflicts of interest, or that any conflicts are adequately managed
+  * their declaration form is held on record at the establishment`,
     nvs: `\
 **By submitting this application, I confirm that:**
 
@@ -64,14 +66,17 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
     sqp: `\
 **By submitting this application, I confirm that:**
 
-  * there is no vet available with the right expertise
   * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the SQP role
+  * there is no vet available with the right expertise
   * the NTCO has endorsed {{profile.firstName}}'s training and exemptions
-  * the PEL holder (or legally accountable person) supports the nomination and is confident that {{profile.firstName}} has no significant conflict of interest, and their declaration form is held on record at the establishment`,
+  * the PEL holder (or NPRC) supports the nomination and is satisfied that the nominee has no conflicts of interest, or that any conflicts are adequately managed
+  * their declaration form is held on record at the establishment`,
+    pehl: `\
+**By submitting this change, I confirm that I have the consent of the PEL holder**`,
     default: `\
 **By submitting this application, I confirm that:**
 
-  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the {{roleLabel}}
+  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the SQP role
   * the legally accountable person supports the nomination`
   },
   buttons: {

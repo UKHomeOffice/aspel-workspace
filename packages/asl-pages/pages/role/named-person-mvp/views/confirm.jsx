@@ -20,8 +20,8 @@ const Confirm = ({
   const formatters = {
     declaration: {
       propMappers: {
-        label: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>agreement</Snippet>,
-        error: (error, formatter) => error && <Snippet {...formatter.renderContext ?? {}}>errors.declaration.required</Snippet>,
+        label: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>{values.type === 'pehl' ? 'pehlAgreement' : 'agreement'}</Snippet>,
+        error: (error, formatter) => error && <Snippet {...formatter.renderContext ?? {}}>{values.type === 'pehl' ? 'errors.declaration.pehl' : 'errors.declaration.required'}</Snippet>,
         title: () => <Snippet>fields.declaration.title</Snippet>,
         hint: () => <Snippet>declarations.{values.type}</Snippet>
       },
