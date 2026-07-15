@@ -20,6 +20,8 @@ export default function StandardProtocols() {
     protocolTypeRef.current?.focus();
   };
 
+  const errorSummaryMessage = error.replace(/^Error:\s*/i, '');
+
   const onContinue = e => {
     e.preventDefault();
 
@@ -221,7 +223,7 @@ export default function StandardProtocols() {
                 <ul className="govuk-list govuk-error-summary__list">
                   <li>
                     <a href="#" onClick={focusProtocolType} aria-controls="select-protocol-type">
-                      {error}
+                      {errorSummaryMessage}
                     </a>
                   </li>
                 </ul>
@@ -240,7 +242,7 @@ export default function StandardProtocols() {
 
               {error && (
                 <p id="select-protocol-type-error" className="govuk-error-message">
-                  <span className="govuk-visually-hidden">Error:</span> {error}
+                  {errorSummaryMessage}
                 </p>
               )}
 
