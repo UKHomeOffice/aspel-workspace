@@ -72,9 +72,9 @@ export default function StandardProtocols() {
         <p className="govuk-body">You will describe:</p>
 
         <ul className="govuk-list govuk-list--bullet">
-          <li>the regulated procedures you may apply within each protocol</li>
-          <li>expected adverse effects and their likely incidence</li>
-          <li>control measures and humane endpoints to limit suffering</li>
+          <li>the regulated procedures you may carry out within each protocol</li>
+          <li>the expected adverse effects of these procedures on the animals, and their likely incidence</li>
+          <li>the control measures and humane endpoints you will use to limit severity of suffering</li>
         </ul>
 
         <p className="govuk-body govuk-!-margin-top-4">
