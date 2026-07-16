@@ -52,22 +52,23 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
 
   * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the NVS role
   * the NTCO has endorsed {{profile.firstName}}'s training and exemptions
-  * the PEL holder (or legally accountable person) supports the nomination and is confident that {{profile.firstName}} has no significant conflict of interest, and their declaration form is held on record at the establishment`,
+  * the PEL holder (or NPRC) supports the nomination and is satisfied that the nominee has no conflicts of interest, or that any conflicts are adequately managed
+  * their declaration form is held on record at the establishment`,
     nio: `\
 **By submitting this application, I confirm that:**
 
   * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the NIO role
-  * the establishment licence (PEL) holder (or legally accountable person) supports the nomination`,
+  * the PEL holder (or NPRC) supports the nomination`,
     ntco: `\
 **By submitting this application, I confirm that:**
 
   * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the NTCO role
-  * the PEL holder (or legally accountable person) supports the nomination`,
+  * the PEL holder (or NPRC) supports the nomination`,
     sqp: `\
 **By submitting this application, I confirm that:**
 
-  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the SQP role
   * there is no vet available with the right expertise
+  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the SQP role
   * the NTCO has endorsed {{profile.firstName}}'s training and exemptions
   * the PEL holder (or NPRC) supports the nomination and is satisfied that the nominee has no conflicts of interest, or that any conflicts are adequately managed
   * their declaration form is held on record at the establishment`,

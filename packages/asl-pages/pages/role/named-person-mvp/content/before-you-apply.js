@@ -28,7 +28,10 @@ You will need to describe how they demonstrate the recommended skills and experi
 
 ## Conflict of interest declaration
 
-You must ensure the nominee has no significant conflict of interest, and their declaration form is held on record at the establishment.`;
+You must ensure:
+
+* the PEL holder (or NPRC) is satisfied that the nominee has no conflicts of interest, or that any conflicts are adequately managed
+* their declaration form is held on record at the establishment`;
 
 const getNamedPersonNominationText = (article, roleType) => ({
   title: `Before you nominate someone for ${article} ${roleType} role`,
@@ -98,8 +101,11 @@ module.exports = merge({}, baseContent, {
       desc: `\
 **Before you nominate someone for the PEL holder role you must ensure:**
 
+* they have agreed to be nominated for the role
 * you can describe why they are suitable for the role
-* they have no significant conflict of interest, and you have sent the declaration form to ASRU Licensing: [asrulicensing@homeoffice.gov.uk](mailto:asrulicensing@homeoffice.gov.uk)`
+* they have no conflicts of interest, or any conflicts are adequately managed
+* the declaration form has been sent to ASRU Licensing: [asrulicensing@homeoffice.gov.uk](mailto:asrulicensing@homeoffice.gov.uk)
+* you have added them as an ASPeL user`
     },
     HOLC: {
       title: 'Before you nominate someone for a HOLC role',
