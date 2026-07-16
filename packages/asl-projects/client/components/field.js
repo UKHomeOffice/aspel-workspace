@@ -6,12 +6,10 @@ import { throwError } from '../actions/messages';
 import isUndefined from 'lodash/isUndefined';
 import castArray from 'lodash/castArray';
 import every from 'lodash/every';
-
 import ReactMarkdown from 'react-markdown';
 import { FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
-
-import { CheckboxGroup, DateInput, Input, RadioGroup, Select, TextArea } from '@ukhomeoffice/react-components';
-
+import { CheckboxGroup, Input, RadioGroup, Select, TextArea } from '@ukhomeoffice/react-components';
+import { DateInput } from '@ukhomeoffice/asl-components';
 import RAPlaybackHint from './ra-playback-hint';
 import AdditionalAvailability from './additional-availability';
 import OtherSpecies from './other-species-selector';

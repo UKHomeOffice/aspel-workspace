@@ -1,12 +1,3 @@
-// Shared date-part validation used by BOTH the DateInput (to highlight only the
-// bad inputs) and the ErrorSummary (to point its link at the first bad input),
-// so the two always agree. The server validates the whole date and returns a
-// single error, so this is a best-effort split: it flags a part only when that
-// part is individually wrong (empty, non-numeric or out of range). When the
-// parts are each individually fine but the date as a whole is still invalid
-// (e.g. 31/02, or a future date), this returns [] and callers fall back to
-// treating the whole field as in error.
-
 const DAY = 'day';
 const MONTH = 'month';
 const YEAR = 'year';

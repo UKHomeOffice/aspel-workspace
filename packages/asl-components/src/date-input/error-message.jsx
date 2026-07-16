@@ -4,14 +4,6 @@ import { connect } from 'react-redux';
 import { Snippet } from '../';
 import { splitDateValue, getInvalidDateParts } from './invalid-parts';
 
-// Error text for a date field. When exactly one part (day/month/year) is
-// individually invalid AND the field label is a plain string, we render a
-// part-specific message via the generic `errors.default.validDatePart` template
-// (e.g. "Date awarded must be a valid month"). In every other case - multiple
-// bad parts, an ambiguous whole-date error, or a non-string label - we render
-// the field's normal error snippet unchanged, so bespoke per-field wording is
-// preserved. Uses the same getInvalidDateParts helper as the input highlight
-// and the error-summary link, so all three stay in agreement.
 export const DateErrorMessage = ({ content, name, value, errorCode, snippetProps = {} }) => {
     const invalid = getInvalidDateParts(splitDateValue(value));
     const fieldLabel = get(content, `fields.${name}.label`);

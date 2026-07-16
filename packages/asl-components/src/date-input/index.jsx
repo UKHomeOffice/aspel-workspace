@@ -2,15 +2,6 @@ import React from 'react';
 import { DateInput as BaseDateInput } from '@ukhomeoffice/react-components';
 import { getInvalidDateParts } from './invalid-parts';
 
-// ASL-5108 (WCAG 3.3.1 Error Identification): the upstream DateInput hard-codes
-// the fieldset's `aria-describedby` to the hint only, so a screen reader entering
-// the Day/Month/Year group never hears the error message. We subclass it and
-// override only `render()` to:
-//   - give the fieldset an `id` matching the field name, and
-//   - point `aria-describedby` at BOTH the hint and (when present) the error.
-// All value parsing / change / emit behaviour is inherited unchanged, so every
-// existing `inputDate` field keeps its exact submit contract (`${name}-day`,
-// `${name}-month`, `${name}-year` and the ISO `yyyy-mm-dd` value it emits).
 class DateInput extends BaseDateInput {
     describedBy() {
         return [

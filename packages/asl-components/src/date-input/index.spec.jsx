@@ -2,9 +2,6 @@ import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import DateInput from './';
 
-// ASL-5108 (WCAG 3.3.1): the date fieldset must associate its hint AND error
-// with the group via aria-describedby, and expose a fieldset id + the
-// `${name}-day|month|year` inputs the error-summary link targets.
 describe('<DateInput />', () => {
     afterEach(() => {
         cleanup();
