@@ -2,18 +2,7 @@ import moment from 'moment';
 import { splitDateValue } from './invalid-parts';
 
 // Maps a date error to the GOV.UK Design System message model. GDS uses specific,
-// priority-ordered messages rather than one generic "invalid date":
-//   1. nothing entered        -> "Enter <thing>"
-//   2. incomplete             -> "<Thing> must include a <day/month/year>"
-//                                 (or "Year must include 4 numbers")
-//   3. cannot be correct       -> "<Thing> must be a real date"
-//   4. constraint (past/future/before/after ...)
 // https://design-system.service.gov.uk/components/date-input/#error-messages
-//
-// The server returns a single error code per field, so we recover the finer GDS
-// state from the submitted value: `required` => nothing; `validDate` => either
-// incomplete (a part is empty) or not-a-real-date; the dateIs* codes => the
-// relevant constraint (with the reference date pulled from the field's rule).
 
 const ORDER = ['day', 'month', 'year'];
 

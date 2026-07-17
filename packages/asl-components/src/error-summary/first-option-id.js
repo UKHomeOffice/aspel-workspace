@@ -1,11 +1,4 @@
 // Rebuilds the id react-components' MultipleChoice mixin gives the FIRST option
-// of a radio/checkbox group, so an error-summary link can focus that input
-// instead of landing on the non-focusable fieldset (ASL-5081).
-//
-// This MUST stay byte-for-byte identical to `optionId` in
-// react-components `mixins/multiple-choice.js` - the drift-guard test renders a
-// real RadioGroup and asserts the ids match, so it fails loudly if upstream
-// changes the algorithm.
 
 function optionId(name, option) {
     // An option can pin its own id, in which case the mixin uses it verbatim.
