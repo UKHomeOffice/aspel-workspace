@@ -5,27 +5,29 @@ import { Snippet } from '../';
 import { getLabelFromRenderers } from '../utils';
 import { splitDateValue, getInvalidDateParts } from '../date-input/invalid-parts';
 import DateErrorMessage from '../date-input/error-message';
+import { firstOptionHref } from './first-option-id';
 
 // date fields render as a fieldset (Day / Month / Year) with no id matching the
 // field name, so an error summary link of `#${name}` lands on nothing. Collect
-// the names of all date fields - including those nested inside reveals - so the
-// link can instead target the first input (`#${name}-day`).
-function getDateFieldNames(schema = {}, names = new Set()) {
+// all date fields - including those nested inside reveals - keyed to their schema
+// so the link can target the first input (`#${name}-day`) and the message can see
+// the field's validate rules.
+function getDateFields(schema = {}, fields = new Map()) {
     Object.keys(schema).forEach(key => {
         const field = schema[key];
         if (!field || typeof field !== 'object') {
             return;
         }
         if (field.inputType === 'inputDate') {
-            names.add(key);
+            fields.set(key, field);
         }
         (field.options || []).forEach(option => {
             if (option && typeof option === 'object' && option.reveal) {
-                getDateFieldNames(option.reveal, names);
+                getDateFields(option.reveal, fields);
             }
         });
     });
-    return names;
+    return fields;
 }
 
 // For a date error, link to the first individually-invalid part (e.g. just the
@@ -34,6 +36,28 @@ function getDateFieldNames(schema = {}, names = new Set()) {
 function getDateHref(name, model) {
     const invalid = getInvalidDateParts(splitDateValue(model?.[name]));
     return `#${name}-${invalid[0] || 'day'}`;
+}
+
+// radio/checkbox groups render as a fieldset whose id matches the field name,
+// but the fieldset isn't focusable, so `#${name}` focuses nothing. Collect
+// choice fields - including reveal-nested ones - keyed to their schema so the
+// link can target the first option input instead (ASL-5081).
+function getChoiceFields(schema = {}, fields = new Map()) {
+    Object.keys(schema).forEach(key => {
+        const field = schema[key];
+        if (!field || typeof field !== 'object') {
+            return;
+        }
+        if (field.inputType === 'radioGroup' || field.inputType === 'checkboxGroup') {
+            fields.set(key, field);
+        }
+        (field.options || []).forEach(option => {
+            if (option && typeof option === 'object' && option.reveal) {
+                getChoiceFields(option.reveal, fields);
+            }
+        });
+    });
+    return fields;
 }
 
 const ErrorSummary = ({
@@ -46,7 +70,8 @@ const ErrorSummary = ({
     if (!size(errors)) {
         return null;
     }
-    const dateFields = getDateFieldNames(schema);
+    const dateFields = getDateFields(schema);
+    const choiceFields = getChoiceFields(schema);
     return (
         <div className="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabIndex="-1">
             <h2 className="govuk-error-summary__title" id="error-summary-title">
@@ -63,7 +88,11 @@ const ErrorSummary = ({
                     {
                         Object.keys(errors).map(key => {
                             const snippetProps = formatters[key]?.renderContext ?? {};
-                            const href = dateFields.has(key) ? getDateHref(key, model) : `#${key}`;
+                            const href = dateFields.has(key)
+                                ? getDateHref(key, model)
+                                : choiceFields.has(key)
+                                    ? firstOptionHref(key, choiceFields.get(key))
+                                    : `#${key}`;
                             return <li key={key}>
                                 <a href={href}>
                                     {
@@ -76,6 +105,7 @@ const ErrorSummary = ({
                                                     name={key}
                                                     value={model?.[key]}
                                                     errorCode={errors[key]}
+                                                    validate={dateFields.get(key)?.validate}
                                                     snippetProps={snippetProps}
                                                 />
                                                 :

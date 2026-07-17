@@ -11,7 +11,7 @@ describe('<ErrorSummary />', () => {
 
     const content = {
         fields: {
-            passDate: { label: 'Date awarded' }
+            passDate: { label: 'Date awarded', dateLabel: 'Award date' }
         },
         errors: {
             heading: 'There is a problem',
@@ -19,7 +19,9 @@ describe('<ErrorSummary />', () => {
             default: {
                 required: 'Enter a value',
                 validDate: 'Enter a valid date',
-                validDatePart: '{{fieldLabel}} must be a valid {{datePart}}'
+                date: {
+                    incomplete: '{{dateLabel}} must include {{missingParts}}'
+                }
             }
         }
     };
@@ -67,10 +69,25 @@ describe('<ErrorSummary />', () => {
         renderWithStore({
             errors: { passDate: 'validDate' },
             schema: { passDate: { inputType: 'inputDate' } },
-            model: { passDate: '2024-00-10' } // only the month is out of range
+            model: { passDate: '2024--10' } // month missing
         });
-        const link = screen.getByRole('link', { name: 'Date awarded must be a valid month' });
+        const link = screen.getByRole('link', { name: 'Award date must include a month' });
         expect(link).toHaveAttribute('href', '#passDate-month');
+    });
+
+    test('links a radio/checkbox field to its first option input', () => {
+        renderWithStore({
+            errors: { confirm: 'required' },
+            schema: {
+                confirm: {
+                    inputType: 'radioGroup',
+                    options: [{ value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }]
+                }
+            }
+        });
+        // matches react-components optionId for value "yes": `${name}-yes-<charcodes>`
+        expect(screen.getByRole('link', { name: 'Enter a value' }))
+            .toHaveAttribute('href', '#confirm-yes-121101115');
     });
 
     test('finds date fields nested inside reveals', () => {

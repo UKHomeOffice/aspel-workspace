@@ -4,16 +4,25 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import DateErrorMessage from './error-message';
 
-describe('<DateErrorMessage />', () => {
+describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
     afterEach(() => cleanup());
 
     const content = {
-        fields: { passDate: { label: 'Date awarded' } },
+        fields: {
+            passDate: { label: 'Date awarded', dateLabel: 'Award date' }
+        },
         errors: {
-            passDate: { validDate: 'Date awarded must be a valid date' },
+            passDate: {
+                date: { enter: 'Enter the date the certificate was awarded' }
+            },
             default: {
-                validDate: 'Enter a valid date',
-                validDatePart: '{{fieldLabel}} must be a valid {{datePart}}'
+                date: {
+                    enter: 'Enter {{dateLabel}}',
+                    incomplete: '{{dateLabel}} must include {{missingParts}}',
+                    yearLength: 'Year must include 4 numbers',
+                    realDate: '{{dateLabel}} must be a real date',
+                    past: '{{dateLabel}} must be in the past'
+                }
             }
         }
     };
@@ -28,37 +37,47 @@ describe('<DateErrorMessage />', () => {
         });
         return render(
             <Provider store={store}>
-                <DateErrorMessage errorCode="validDate" {...props} />
+                <DateErrorMessage {...props} />
             </Provider>
         );
     };
 
-    test('names the single invalid part', () => {
-        const { container } = renderWith({ name: 'passDate', value: '2024-00-10' });
-        expect(container.textContent).toBe('Date awarded must be a valid month');
+    test('uses the page override for "enter"', () => {
+        const { container } = renderWith({ name: 'passDate', value: '--', errorCode: 'required' });
+        expect(container.textContent).toBe('Enter the date the certificate was awarded');
     });
 
-    test('names the day when only the day is invalid', () => {
-        const { container } = renderWith({ name: 'passDate', value: '2024-05-32' });
-        expect(container.textContent).toBe('Date awarded must be a valid day');
+    test('names the missing part using the field dateLabel', () => {
+        const { container } = renderWith({ name: 'passDate', value: '2024--10', errorCode: 'validDate' });
+        expect(container.textContent).toBe('Award date must include a month');
     });
 
-    test('falls back to the general message when several parts are invalid', () => {
-        const { container } = renderWith({ name: 'passDate', value: '--' });
-        expect(container.textContent).toBe('Date awarded must be a valid date');
+    test('says the year must be four numbers', () => {
+        const { container } = renderWith({ name: 'passDate', value: '24-05-10', errorCode: 'validDate' });
+        expect(container.textContent).toBe('Year must include 4 numbers');
     });
 
-    test('falls back to the general message for a whole-date error with valid parts (e.g. 31/02)', () => {
-        const { container } = renderWith({ name: 'passDate', value: '2024-02-31' });
-        expect(container.textContent).toBe('Date awarded must be a valid date');
+    test('says a real date for an impossible date', () => {
+        const { container } = renderWith({ name: 'passDate', value: '2024-13-10', errorCode: 'validDate' });
+        expect(container.textContent).toBe('Award date must be a real date');
     });
 
-    test('falls back to the general message when the label is not a plain string', () => {
+    test('maps dateIsBefore now to "in the past"', () => {
+        const { container } = renderWith({
+            name: 'passDate', value: '2999-01-01', errorCode: 'dateIsBefore', validate: [{ dateIsBefore: 'now' }]
+        });
+        expect(container.textContent).toBe('Award date must be in the past');
+    });
+
+    test('falls back to the generic error when the label is not a plain string', () => {
         const noLabel = {
-            ...content,
-            fields: { passDate: {} }
+            fields: { passDate: {} },
+            errors: { passDate: { validDate: 'Enter a valid date' }, default: { validDate: 'x' } }
         };
-        const { container } = renderWith({ name: 'passDate', value: '2024-00-10' }, noLabel);
-        expect(container.textContent).toBe('Date awarded must be a valid date');
+        const { container } = renderWith(
+            { name: 'passDate', value: '2024-13-10', errorCode: 'validDate' },
+            noLabel
+        );
+        expect(container.textContent).toBe('Enter a valid date');
     });
 });

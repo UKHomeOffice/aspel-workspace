@@ -1,13 +1,11 @@
 import React from 'react';
 import { DateInput as BaseDateInput } from '@ukhomeoffice/react-components';
 import { getInvalidDateParts } from './invalid-parts';
+import { describedByIds } from '../aria-describedby';
 
 class DateInput extends BaseDateInput {
     describedBy() {
-        return [
-            this.props.hint ? this.dateFragment('hint') : null,
-            this.props.error ? this.dateFragment('error') : null
-        ].filter(Boolean).join(' ') || null;
+        return describedByIds(this.id(), this.props);
     }
 
     // Parts to highlight when in error: only the individually-invalid ones, or
