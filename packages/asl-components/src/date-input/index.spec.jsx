@@ -72,6 +72,13 @@ describe('<DateInput />', () => {
         });
     });
 
+    test('accepts the GOV.UK object value shape', () => {
+        const { container } = renderInput({ value: { day: '20', month: '08', year: '2020' } });
+        expect(container.querySelector('#passDate-day').value).toBe('20');
+        expect(container.querySelector('#passDate-month').value).toBe('08');
+        expect(container.querySelector('#passDate-year').value).toBe('2020');
+    });
+
     test('emits an ISO yyyy-mm-dd value when parts change', () => {
         const onChange = jest.fn();
         const { container } = render(

@@ -2,8 +2,16 @@ const DAY = 'day';
 const MONTH = 'month';
 const YEAR = 'year';
 
-// value is the emitted ISO-ish string `year-month-day` (see DateInput.emit).
+// Accepts either the GOV.UK object shape ({ day, month, year }) or the
+// persisted ISO-ish string `year-month-day`.
 function splitDateValue(value = '') {
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+        return {
+            day: String(value.day ?? ''),
+            month: String(value.month ?? ''),
+            year: String(value.year ?? '')
+        };
+    }
     const [year = '', month = '', day = ''] = String(value).split('T')[0].split('-');
     return { day, month, year };
 }

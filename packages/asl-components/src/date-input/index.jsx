@@ -1,79 +1,108 @@
 import React from 'react';
-import { DateInput as BaseDateInput } from '@ukhomeoffice/react-components';
-import { getInvalidDateParts } from './invalid-parts';
+import classnames from 'classnames';
+import GovUkDateField from '@govuk-react/date-field';
+import { getInvalidDateParts, splitDateValue } from './invalid-parts';
 import { describedByIds } from '../aria-describedby';
 
-class DateInput extends BaseDateInput {
-    describedBy() {
-        return describedByIds(this.id(), this.props);
+const DateFieldInput = GovUkDateField.Input;
+
+function DateInput({
+    error,
+    hint,
+    label,
+    name,
+    onChange = () => {},
+    value
+}) {
+    const hasError = Boolean(error);
+    const id = name;
+    const dateValue = splitDateValue(value);
+    const describedBy = describedByIds(id, { hint, error });
+    const invalidParts = hasError ? getInvalidDateParts(dateValue) : [];
+    const erroredParts = invalidParts.length ? invalidParts : ['day', 'month', 'year'];
+
+    function dateFragment(part) {
+        return `${id}-${part}`;
     }
 
-    // Parts to highlight when in error: only the individually-invalid ones, or
-    // all three when no single part can be blamed (see invalid-parts.js).
-    erroredParts() {
-        if (!this.props.error) {
-            return [];
+    function inputClass(part, widthClass) {
+        return classnames(
+            'govuk-input',
+            'govuk-date-input__input',
+            widthClass,
+            { 'govuk-input--error': hasError && erroredParts.includes(part) }
+        );
+    }
+
+    function emitDate(parts) {
+        const nextValue = splitDateValue(parts);
+        const day = nextValue.day.trim();
+        const month = nextValue.month.trim();
+        const year = nextValue.year.trim();
+
+        if (!day && !month && !year) {
+            return '';
         }
-        const invalid = getInvalidDateParts(this.state.value);
-        return invalid.length ? invalid : ['day', 'month', 'year'];
+
+        return `${year}-${month}-${day}`;
     }
 
-    inputClass(part, widthClass) {
-        const inError = this.erroredParts().includes(part);
-        return `govuk-input govuk-date-input__input ${widthClass}${inError ? ' govuk-input--error' : ''}`;
-    }
-
-    render() {
-        const { value } = this.state;
-        return <div className={this.errorClass('govuk-form-group')}>
+    return (
+        <div className={classnames('govuk-form-group', { 'govuk-form-group--error': hasError })}>
             <fieldset
                 className="govuk-fieldset"
-                id={this.id()}
-                aria-describedby={this.describedBy()}
+                id={id}
+                aria-describedby={describedBy}
                 role="group"
             >
                 {
-                    this.props.label && (
+                    label && (
                         <legend className="govuk-fieldset__legend">
-                            <h2 className="govuk-fieldset__heading govuk-heading-l">{this.props.label}</h2>
+                            <h2 className="govuk-fieldset__heading govuk-heading-l">{label}</h2>
                         </legend>
                     )
                 }
-                {
-                    this.getContentPart('hint')
-                }
-                {
-                    this.getContentPart('error', 'govuk-error-message')
-                }
-                <div className="govuk-date-input">
-                    <div className="govuk-date-input__item">
-                        <div className="govuk-form-group">
-                            <label className="govuk-label govuk-date-input__label" htmlFor={this.dateFragment('day')}>
-                                Day
-                            </label>
-                            <input className={this.inputClass('day', 'govuk-input--width-2')} id={this.dateFragment('day')} name={this.dateFragment('day')} type="number" pattern="[0-9]*" defaultValue={value.day} onChange={e => this.onChange('day', e.target.value)} />
-                        </div>
-                    </div>
-                    <div className="govuk-date-input__item">
-                        <div className="govuk-form-group">
-                            <label className="govuk-label govuk-date-input__label" htmlFor={this.dateFragment('month')}>
-                                Month
-                            </label>
-                            <input className={this.inputClass('month', 'govuk-input--width-2')} id={this.dateFragment('month')} name={this.dateFragment('month')} type="number" pattern="[0-9]*" defaultValue={value.month} onChange={e => this.onChange('month', e.target.value)} />
-                        </div>
-                    </div>
-                    <div className="govuk-date-input__item">
-                        <div className="govuk-form-group">
-                            <label className="govuk-label govuk-date-input__label" htmlFor={this.dateFragment('year')}>
-                                Year
-                            </label>
-                            <input className={this.inputClass('year', 'govuk-input--width-4')} id={this.dateFragment('year')} name={this.dateFragment('year')} type="number" pattern="[0-9]*" defaultValue={value.year} onChange={e => this.onChange('year', e.target.value)} />
-                        </div>
-                    </div>
-                </div>
+                {hint && <div className="govuk-hint" id={`${id}-hint`}>{hint}</div>}
+                {error && (
+                    <p className="govuk-error-message" id={`${id}-error`}>
+                        <span className="govuk-visually-hidden">Error:</span> {error}
+                    </p>
+                )}
+                <DateFieldInput
+                    value={dateValue}
+                    onChange={parts => onChange(emitDate(parts))}
+                    names={{
+                        day: dateFragment('day'),
+                        month: dateFragment('month'),
+                        year: dateFragment('year')
+                    }}
+                    inputs={{
+                        day: {
+                            id: dateFragment('day'),
+                            inputMode: 'numeric',
+                            pattern: '[0-9]*',
+                            className: inputClass('day', 'govuk-input--width-2'),
+                            error: hasError && erroredParts.includes('day')
+                        },
+                        month: {
+                            id: dateFragment('month'),
+                            inputMode: 'numeric',
+                            pattern: '[0-9]*',
+                            className: inputClass('month', 'govuk-input--width-2'),
+                            error: hasError && erroredParts.includes('month')
+                        },
+                        year: {
+                            id: dateFragment('year'),
+                            inputMode: 'numeric',
+                            pattern: '[0-9]*',
+                            className: inputClass('year', 'govuk-input--width-4'),
+                            error: hasError && erroredParts.includes('year')
+                        }
+                    }}
+                />
             </fieldset>
-        </div>;
-    }
+        </div>
+    );
 }
 
 export default DateInput;

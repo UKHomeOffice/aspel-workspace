@@ -1,6 +1,10 @@
 const { splitDateValue, getInvalidDateParts } = require('./invalid-parts');
 
 describe('splitDateValue', () => {
+    test('passes through the GOV.UK object value shape', () => {
+        expect(splitDateValue({ year: '2024', month: '05', day: '10' })).toEqual({ year: '2024', month: '05', day: '10' });
+    });
+
     test('splits an ISO year-month-day string', () => {
         expect(splitDateValue('2024-05-10')).toEqual({ year: '2024', month: '05', day: '10' });
     });
