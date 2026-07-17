@@ -6,12 +6,6 @@ import castArray from 'lodash/castArray';
 import isUndefined from 'lodash/isUndefined';
 import classnames from 'classnames';
 import {
-    TextArea,
-    Input,
-    CheckboxGroup,
-    RadioGroup,
-    Select,
-    DateInput,
     Warning
 } from '@ukhomeoffice/react-components';
 import {
@@ -27,9 +21,16 @@ import {
     DurationField,
     SelectMany,
     Inset,
-    TextAreaWithWordCount
+    TextAreaWithWordCount,
+    DateInput,
+    Input,
+    Select,
+    TextArea,
+    RadioGroup,
+    CheckboxGroup
 } from '../';
 import { getLabelFromRenderers } from '../utils';
+import DateErrorMessage from '../date-input/error-message';
 
 function getLabel(opt, name, type = 'label') {
     if (type === 'hint') {
@@ -260,7 +261,11 @@ function Field({
     return <Component
         {...labelProps}
         hint={isUndefined(hint) ? <Snippet optional {...snippetProps}>{`fields.${name}.hint`}</Snippet> : hint}
-        error={error && <Error name={name} renderers={props.renderers} error={error} snippetProps={snippetProps} />}
+        error={error && (
+            inputType === 'inputDate' && !(props.renderers && getLabelFromRenderers(props.renderers, name, 'error')?.error)
+                ? <DateErrorMessage name={name} value={fieldValue} errorCode={error} validate={props.validate} snippetProps={snippetProps} />
+                : <Error name={name} renderers={props.renderers} error={error} snippetProps={snippetProps} />
+        )}
         value={fieldValue}
         onChange={onFieldChange}
         name={prefix ? `${prefix}-${name}` : name}
