@@ -1,4 +1,4 @@
-import React from 'react';
+const React = require('react');
 
 // ASL-5081 / ASL-5082 (WCAG 1.3.1 / 3.3.1): the upstream react-components inputs
 // render their hint and error with ids `${id}-hint` / `${id}-error` but never
@@ -9,7 +9,7 @@ import React from 'react';
 // Build the describedby value from the ids the component already renders. Only
 // includes a part when that part is actually present, and returns null when
 // there is nothing to describe (so we never emit an empty attribute).
-export function describedByIds(id, { hint, error } = {}) {
+function describedByIds(id, { hint, error } = {}) {
     return [
         hint ? `${id}-hint` : null,
         error ? `${id}-error` : null
@@ -25,7 +25,7 @@ function addDescribedBy(element, describedBy) {
 
 // Clone the single child of `tree` (used when the control/fieldset is the only
 // child - text input wrapper, radio/checkbox group).
-export function describeOnlyChild(tree, describedBy) {
+function describeOnlyChild(tree, describedBy) {
     if (!describedBy) {
         return tree;
     }
@@ -35,7 +35,7 @@ export function describeOnlyChild(tree, describedBy) {
 
 // Clone the first child of `tree` whose DOM type matches (select / textarea sit
 // among sibling label / hint / error nodes).
-export function describeChildOfType(tree, type, describedBy) {
+function describeChildOfType(tree, type, describedBy) {
     if (!describedBy) {
         return tree;
     }
@@ -44,3 +44,5 @@ export function describeChildOfType(tree, type, describedBy) {
     );
     return React.cloneElement(tree, {}, children);
 }
+
+module.exports = { describedByIds, describeOnlyChild, describeChildOfType };

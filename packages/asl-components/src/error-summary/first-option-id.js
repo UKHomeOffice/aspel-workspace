@@ -13,7 +13,7 @@ function optionId(name, option) {
 
 // The first option's id for a radio/checkbox field, or `#${name}` fallback when
 // the field somehow has no options.
-export function firstOptionHref(name, field = {}) {
+function firstOptionHref(name, field = {}) {
     const first = (field.options || [])[0];
     if (first === undefined) {
         return `#${name}`;
@@ -21,4 +21,4 @@ export function firstOptionHref(name, field = {}) {
     return `#${optionId(name, first)}`;
 }
 
-export { optionId };
+module.exports = { firstOptionHref, optionId };

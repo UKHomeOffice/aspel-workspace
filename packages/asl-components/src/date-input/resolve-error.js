@@ -1,5 +1,5 @@
-import moment from 'moment';
-import { splitDateValue } from './invalid-parts';
+const moment = require('moment');
+const { splitDateValue } = require('./invalid-parts');
 
 // Maps a date error to the GOV.UK Design System message model. GDS uses specific,
 // https://design-system.service.gov.uk/components/date-input/#error-messages
@@ -53,7 +53,7 @@ const CONSTRAINTS = {
 
 // Returns { key, context } for the message, or null when the code is unknown
 // (caller then falls back to the field's generic error text).
-export function resolveDateError({ value, errorCode, validate }) {
+function resolveDateError({ value, errorCode, validate }) {
     if (errorCode === 'required') {
         return { key: 'enter', context: {} };
     }
@@ -73,3 +73,5 @@ export function resolveDateError({ value, errorCode, validate }) {
 
     return null;
 }
+
+module.exports = { resolveDateError };
