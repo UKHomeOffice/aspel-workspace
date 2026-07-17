@@ -47,6 +47,9 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
         expect(container.textContent).toBe('Enter the date the certificate was awarded');
     });
 
+    // `value` is the internal ISO-ish string the DateInput emits/stores
+    // (`year-month-day`), NOT the British display order. splitDateValue reads it
+    // as year, month, day - so `2024--10` is year 2024, month blank, day 10.
     test('names the missing part using the field dateLabel', () => {
         const { container } = renderWith({ name: 'passDate', value: '2024--10', errorCode: 'validDate' });
         expect(container.textContent).toBe('Award date must include a month');
@@ -58,6 +61,7 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
     });
 
     test('says a real date for an impossible date', () => {
+        // year 2024, month 13 (impossible), day 10
         const { container } = renderWith({ name: 'passDate', value: '2024-13-10', errorCode: 'validDate' });
         expect(container.textContent).toBe('Award date must be a real date');
     });
