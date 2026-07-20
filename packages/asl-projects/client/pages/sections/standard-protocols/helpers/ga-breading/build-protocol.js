@@ -80,7 +80,7 @@ export const BuildProtocol = (protocolTemplate, project) => {
         standardProtocolType: stepObj.standardProtocolType ?? '',
         endpoints: stepObj.endpoints ?? '',
         readonly: Boolean(stepObj.readonly),
-        reusable: Boolean(stepObj.reusable)
+        reusable: stepObj.reusable ?? null
       };
     });
 

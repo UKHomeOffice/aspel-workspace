@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 
 import Fieldset from '../../../components/fieldset';
 import ReviewFields from '../../../components/review-fields';
+import { resolveFieldValue } from '../../../helpers/field-resolution';
 
 class Section extends PureComponent {
   render() {
@@ -25,6 +26,7 @@ class Section extends PureComponent {
       readonly: !editable || values.deleted,
       values
     };
+    const resolvedLabel = resolveFieldValue(label, fieldContext);
 
     const visibleFields = fields.filter(f => f.show === undefined || f.show(fieldContext));
 
@@ -33,7 +35,7 @@ class Section extends PureComponent {
         {
           pdf && <h2>{title}</h2>
         }
-        { label && <h4>{label}</h4> }
+        { resolvedLabel && <h4>{resolvedLabel}</h4> }
         {
           editable && !values.deleted
             ? (

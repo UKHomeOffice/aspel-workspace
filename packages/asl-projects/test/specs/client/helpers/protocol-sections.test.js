@@ -136,6 +136,7 @@ describe('protocol section schema', () => {
     it('export the expected titles and singular labels', () => {
       assert.equal(fate.title, 'Fate of animals');
       assert.equal(justification.title, 'Protocol justification');
+      console.log(justification);
       assert.equal(justification.label, 'Why is each type of animal, experimental model, and/or method selected for this protocol:');
       assert.equal(conditions.singular, 'Additional condition');
       assert.equal(authorisations.singular, 'Authorisation');
