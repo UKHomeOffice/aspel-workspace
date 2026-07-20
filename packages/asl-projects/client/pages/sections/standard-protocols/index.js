@@ -15,6 +15,12 @@ export default function StandardProtocols() {
     }
   }, [error]);
 
+  useEffect(() => {
+    if (error) {
+      errorSummaryRef.current?.focus();
+    }
+  }, [error]);
+
   const focusProtocolType = e => {
     e.preventDefault();
     protocolTypeRef.current?.focus();
