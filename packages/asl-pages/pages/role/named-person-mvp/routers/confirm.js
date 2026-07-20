@@ -4,7 +4,7 @@ const form = require('../../../common/routers/form');
 const { populateNamedPeople } = require('../../../common/middleware');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
 const { versions } = require('@ukhomeoffice/asl-constants');
-const ROLE_TYPES_WITH_DECLARATION = ['nacwo', 'nio', 'ntco', 'nvs', 'sqp'];
+const ROLE_TYPES_WITH_DECLARATION = ['nacwo', 'nio', 'ntco', 'nvs', 'pelh', 'sqp'];
 const SKILLS_AND_EXPERIENCE_FIELDS = ['experience', 'skills', 'authority', 'understanding', 'familiarity', 'communication'];
 
 const getIncompleteTrainingDetails = (req, formId) => {
