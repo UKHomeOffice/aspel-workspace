@@ -223,6 +223,14 @@ Select each that applies`,
             behaviour: 'exclusive'
           }
         ]
+      },
+      {
+        editable: {
+          hint: null
+        },
+        standard: {
+          hint: null
+        }
       }
     )
   ]

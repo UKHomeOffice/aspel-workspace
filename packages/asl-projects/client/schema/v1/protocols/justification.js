@@ -3,7 +3,19 @@ import { withProtocolContext } from './helpers/with-protocol-context';
 
 export default {
   title: 'Protocol justification',
-  label: 'Why is each type of animal, experimental model, and/or method selected for this protocol:',
+  ...withProtocolContext(
+    {
+      label: 'Why is each type of animal, experimental model, and/or method selected for this protocol:'
+    },
+    {
+      editable: {
+        label: null
+      },
+      standard: {
+        label: null
+      }
+    }
+  ),
   show: props => getProtocolMode(props.values, props.standardProtocolsEnabled) !== 'standard',
   granted: {
     order: 10
