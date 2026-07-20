@@ -20,10 +20,10 @@ const Confirm = ({
   const formatters = {
     declaration: {
       propMappers: {
-        label: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>agreement</Snippet>,
-        error: (error, formatter) => error && <Snippet {...formatter.renderContext ?? {}}>errors.declaration.required</Snippet>,
+        label: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>{values.type === 'pelh' ? 'pelhAgreement' : 'agreement'}</Snippet>,
+        error: (error, formatter) => error && <Snippet {...formatter.renderContext ?? {}}>{values.type === 'pelh' ? 'errors.declaration.pelh' : 'errors.declaration.required'}</Snippet>,
         title: () => <Snippet>fields.declaration.title</Snippet>,
-        hint: () => <Snippet>declarations.{values.type}</Snippet>
+        hint: () => values.type === 'pelh' ? null : <Snippet>declarations.{values.type}</Snippet>
       },
       renderContext: {
         agreementDeterminer: ['nacwo', 'nvs', 'sqp'].includes(values.type) ? 'all' : 'both',
