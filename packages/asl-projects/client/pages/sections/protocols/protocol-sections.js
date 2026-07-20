@@ -118,7 +118,7 @@ class ProtocolSections extends PureComponent {
           <Completable status={values.deleted ? 'deleted' : values.complete ? 'complete' : 'incomplete'}>
             <button className="govuk-button link"><h2 className="title inline-block">{values.deleted ? title : `${number + 1}: ${title}`}</h2></button>
             {
-              editable && <button className={classnames('govuk-button link', { restore: values.deleted })} onClick={values.deleted ? this.props.restoreItem : this.toggleActive}>{values.deleted ? 'Restore' : 'Edit title'}</button>
+              editable && !isStandardProtocol && <button className={classnames('govuk-button link', { restore: values.deleted })} onClick={values.deleted ? this.props.restoreItem : this.toggleActive}>{values.deleted ? 'Restore' : 'Edit title'}</button>
             }
             {
               !values.deleted && (
@@ -188,15 +188,13 @@ class ProtocolSections extends PureComponent {
                     onChange={this.setCompleted}
                     buttonClassName="button-secondary"
                   />
-                  {!isStandardProtocol && (
-                    <p>
-                      <span>Reorder: <a href="#" disabled={index === 0} onClick={this.moveUp}>Up</a> or <a href="#" disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
-                      <span> │ </span>
-                      <a href="#" onClick={this.props.duplicateItem}>Duplicate protocol</a>
-                      <span> │ </span>
-                      <a href="#" onClick={this.delete}>Remove protocol</a>
-                    </p>
-                  )}
+                  <p>
+                    <span>Reorder: <a href="#" disabled={index === 0} onClick={this.moveUp}>Up</a> or <a href="#" disabled={index + 1 >= length} onClick={this.moveDown}>Down</a></span>
+                    <span> │ </span>
+                    <a href="#" onClick={this.props.duplicateItem}>Duplicate protocol</a>
+                    <span> │ </span>
+                    <a href="#" onClick={this.delete}>Remove protocol</a>
+                  </p>
                 </Fragment>
               )
             }
