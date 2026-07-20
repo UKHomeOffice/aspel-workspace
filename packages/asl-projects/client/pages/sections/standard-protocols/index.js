@@ -15,10 +15,18 @@ export default function StandardProtocols() {
     }
   }, [error]);
 
+  useEffect(() => {
+    if (error) {
+      errorSummaryRef.current?.focus();
+    }
+  }, [error]);
+
   const focusProtocolType = e => {
     e.preventDefault();
     protocolTypeRef.current?.focus();
   };
+
+  const errorSummaryMessage = error.replace(/^Error:\s*/i, '');
 
   const onContinue = e => {
     e.preventDefault();
@@ -93,9 +101,9 @@ export default function StandardProtocols() {
         <p className="govuk-body">You will describe:</p>
 
         <ul className="govuk-list govuk-list--bullet">
-          <li>the regulated procedures you may apply within each protocol</li>
-          <li>expected adverse effects and their likely incidence</li>
-          <li>control measures and humane endpoints to limit suffering</li>
+          <li>the regulated procedures you may carry out within each protocol</li>
+          <li>the expected adverse effects of these procedures on the animals, and their likely incidence</li>
+          <li>the control measures and humane endpoints you will use to limit severity of suffering</li>
         </ul>
 
         <p className="govuk-body govuk-!-margin-top-4">
@@ -221,7 +229,7 @@ export default function StandardProtocols() {
                 <ul className="govuk-list govuk-error-summary__list">
                   <li>
                     <a href="#" onClick={focusProtocolType} aria-controls="select-protocol-type">
-                      {error}
+                      {errorSummaryMessage}
                     </a>
                   </li>
                 </ul>
@@ -234,11 +242,15 @@ export default function StandardProtocols() {
               className="govuk-fieldset"
               aria-describedby={error ? 'select-protocol-type-error' : undefined}
             >
-              <legend className="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-4">
-                What type of protocol do you want to add?
-              </legend>
+            <legend className="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-4">
+              What type of protocol do you want to add?
+            </legend>
 
-              {error && <span id="select-protocol-type-error" className="govuk-error-message">{error}</span>}
+              {error && (
+                <p id="select-protocol-type-error" className="govuk-error-message">
+                  {errorSummaryMessage}
+                </p>
+              )}
 
               <div className="govuk-radios" id="select-protocol-type">
                 {options.map((option, index) => (
@@ -290,7 +302,7 @@ export default function StandardProtocols() {
             </button>
 
             <a href="#" onClick={onCancel} className="govuk-link">
-              List of sections
+              Cancel
             </a>
           </div>
 
