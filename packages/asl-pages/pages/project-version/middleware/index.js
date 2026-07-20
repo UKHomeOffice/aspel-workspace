@@ -108,6 +108,13 @@ const getComments = (actions = ['grant', 'transfer']) => asyncMiddleware(async (
     return;
   }
 
+  // ASL-5161: never expose draft-stage comments (or the granting Inspector's
+  // name) on the granted licence view. Historical comments on previous,
+  // non-granted versions remain available to ASRU/PEL users.
+  if (req.version.status === 'granted') {
+    return;
+  }
+
   const taskResponse = await req.api(`/tasks/${task.id}`);
   res.locals.static.comments = extractComments(taskResponse.json.data);
 });
