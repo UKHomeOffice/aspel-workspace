@@ -19,7 +19,7 @@ function LicenceTypeFilter({ label }) {
   );
 }
 
-function TaskFilters({ hasTasks, progressOptions }) {
+function TaskFilters({ progressOptions }) {
   const filters = useSelector(state => state.datatable.filters);
   const pplFilterActive = get(filters, 'active.licence', []).includes('ppl');
   const pelFilterActive = get(filters, 'active.licence', []).includes('pel');
@@ -31,17 +31,15 @@ function TaskFilters({ hasTasks, progressOptions }) {
       formatter: filter => <Snippet>{`filters.progress.options.${filter}`}</Snippet>,
       options: progressOptions,
       showAll: false
-    }
-  ];
-
-  if (hasTasks) {
-    filterOpts.push({
+    },
+    // Always show the category filter so users with no outstanding tasks can still drill into PPL/PEL
+    {
       label: <Snippet>filters.licence.label</Snippet>,
       prop: 'licence',
       formatter: filter => <Acronym usePlural>{selectivelyUppercase(filter)}</Acronym>,
       append: ['pil', 'pil-e', 'ppl', 'pel', 'profile']
-    });
-  }
+    }
+  ];
 
   if (pplFilterActive) {
     filterOpts.push({
@@ -105,7 +103,7 @@ export default function Tasklist() {
     <Fragment>
       {
         isAsruUser
-          ? <TaskFilters hasTasks={hasTasks} progressOptions={progressOptions} />
+          ? <TaskFilters progressOptions={progressOptions} />
           : <TaskTabs hasTasks={hasTasks} tabs={progressOptions} selected={progressOptions.indexOf(progress)} />
       }
 
