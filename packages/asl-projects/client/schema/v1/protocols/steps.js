@@ -147,9 +147,8 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
       {
         editable: {
           label: `Do you expect this step to have adverse effects that are more than mild and short-term and not listed in ${markdownLink('General constraints', getToGeneralConstraints())}?`,
-          hint: `Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.
-                    \n [Remove injection example as not appropriate - advice needed]`,
-          type: 'standard-radio'
+          hint: `Do not list uncommon or unlikely adverse effects, or effects from procedures that will cause no more than transient discomfort and no lasting harm. For example, an intravenous injection of a small volume of an innocuous substance.`,
+          type: 'radio'
         },
         standard: {
           label: `Expected adverse effects that are more than mild and short-term and not listed in ${markdownLink('General constraints', getToGeneralConstraints())}`,

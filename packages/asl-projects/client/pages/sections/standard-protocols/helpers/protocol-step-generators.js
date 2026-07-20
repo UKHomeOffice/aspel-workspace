@@ -14,7 +14,7 @@ const protocolStepGenerators = {
       standardProtocolType: isStandard ? 'standard' : 'editable',
       endpoints: '',
       readonly: isStandard,
-      reusable: false
+      reusable: null
     },
     {
       title: `The method used to determine genetic status will be the least invasive and is only expected to cause mild short-term pain, suffering or distress and no lasting harm - for example, ear biopsy, blood sampling or non-invasive imaging (AA/AB).\n      \nWhere possible, sampling will be carried out at the earliest feasible life stage. A second sample will only be taken in rare cases where there are technical problems during analysis.\n      \nNVS advice will be followed regarding the use of analgesia.`,
@@ -28,7 +28,7 @@ const protocolStepGenerators = {
       'prevent-adverse-effects': '',
       endpoints: '',
       readonly: isStandard,
-      reusable: false
+      reusable: null
     },
     {
       title: 'Animals may be kept for as long as they are still able to breed without showing any signs of harm.',
@@ -42,7 +42,7 @@ const protocolStepGenerators = {
       'prevent-adverse-effects': '',
       endpoints: '',
       readonly: isStandard,
-      reusable: false
+      reusable: null
     },
     {
       title: `Substances to suppress the harmful phenotype, for example doxycycline or other compounds, may be administered by one of the following routes:\n      \n• oral, including in diet or water, or by oral gavage (AA/AB)\n      \n• intraperitoneal (AA/AB)\n      \n• subcutaneous (AA/AB)`,
@@ -56,7 +56,7 @@ const protocolStepGenerators = {
       'prevent-adverse-effects': '',
       endpoints: '',
       readonly: isStandard,
-      reusable: false
+      reusable: null
     },
     {
       title: `Animals may be killed using either of the following methods:\n      \n• a Schedule 1 method\n      \n• a non-Schedule 1 method under non-recovery anaesthesia, followed by a Schedule 1 completion method`,
@@ -70,7 +70,7 @@ const protocolStepGenerators = {
       'prevent-adverse-effects': '',
       endpoints: '',
       readonly: isStandard,
-      reusable: false
+      reusable: null
     }
   ]
   // Add more protocol types here as needed

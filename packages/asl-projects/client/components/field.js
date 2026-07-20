@@ -6,12 +6,12 @@ import { throwError } from '../actions/messages';
 import isUndefined from 'lodash/isUndefined';
 import castArray from 'lodash/castArray';
 import every from 'lodash/every';
-
 import ReactMarkdown from 'react-markdown';
 import { FEATURE_FLAG_STANDARD_PROTOCOLS } from '@asl/service/ui/feature-flag';
-
-import { CheckboxGroup, DateInput, Input, RadioGroup, Select, TextArea } from '@ukhomeoffice/react-components';
-
+// ASL-5081/5082/5108: local field components add aria-describedby (hint AND
+// error) to the control/fieldset - upstream associates neither (date) or only
+// the hint. Drop-in subclasses; all other behaviour is inherited.
+import { CheckboxGroup, DateInput, Input, RadioGroup, Select, TextArea } from '@ukhomeoffice/asl-components';
 import RAPlaybackHint from './ra-playback-hint';
 import AdditionalAvailability from './additional-availability';
 import OtherSpecies from './other-species-selector';
