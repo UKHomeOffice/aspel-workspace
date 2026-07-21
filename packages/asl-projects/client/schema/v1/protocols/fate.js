@@ -11,7 +11,7 @@ export default {
     {
       name: 'fate',
       label: 'What will happen to animals at the end of this protocol?',
-      hint: () => `Select all that apply. These options are based on what you selected in the ${markdownLink('non-technical summary', getCurrentURLForFateOfAnimals())}.`,
+      hint: () => `Select all that apply. These options are based on what you selected in the ${markdownLink('non-technical summary', getCurrentURLForFateOfAnimals())}. and what is permitted for this standard protocol.`,
       type: 'checkbox',
       preserveHierarchy: true,
       className: 'smaller',
