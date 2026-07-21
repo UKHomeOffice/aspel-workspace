@@ -155,6 +155,12 @@ class Field extends Component {
 
     let { label, hint } = this.props.altLabels ? this.props.alt : this.props;
 
+    const getWrapperClassName = typeName => [
+      this.props.className,
+      'standard-protocol-field',
+      `standard-protocol-field--${typeName}`
+    ].filter(Boolean).join(' ');
+
     label = resolveTemplateContent(label, this.props);
     hint = resolveTemplateContent(hint, this.props);
     label = renderMarkdownIfNeeded(label);
@@ -244,7 +250,7 @@ class Field extends Component {
     }
     if (type === 'paragraph') {
       return (
-        <div className={this.props.className}>
+        <div className={getWrapperClassName('paragraph')}>
           {label && <label className="govuk-label">{label}</label>}
           {hint && <span className="govuk-hint">{hint}</span>}
           {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
@@ -262,7 +268,7 @@ class Field extends Component {
       const selectedOptions = findSelectedOptions(options, value);
 
       return (
-        <div className={this.props.className}>
+        <div className={getWrapperClassName('standard-list')}>
           {label && <label className="govuk-label">{label}</label>}
           {hint && <span className="govuk-hint">{hint}</span>}
           {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}
@@ -290,7 +296,7 @@ class Field extends Component {
       const selectedOption = findSelectedOption(options, value);
 
       return (
-        <div className={this.props.className}>
+        <div className={getWrapperClassName('standard-radio')}>
           {label && <label className="govuk-label">{label}</label>}
           {hint && <span className="govuk-hint">{hint}</span>}
           {this.props.error && <span className="govuk-error-message">{this.props.error}</span>}

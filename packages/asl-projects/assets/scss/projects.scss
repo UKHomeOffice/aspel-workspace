@@ -345,6 +345,41 @@ html.modal-open, html.modal-open body {
 
     &.standard-protocol {
       border-left: 10px solid #0b0c0c;
+
+      .standard-protocol-field {
+        margin-bottom: $govuk-gutter-half;
+
+        .govuk-label,
+        .govuk-hint {
+          margin-bottom: $govuk-gutter-half / 2;
+        }
+
+        .govuk-form-group {
+          margin-bottom: 0;
+        }
+
+        .govuk-body:last-child {
+          margin-bottom: 0;
+        }
+
+        .editor {
+          margin-top: $govuk-gutter-half / 2;
+          margin-bottom: 0;
+        }
+      }
+
+      .govuk-inset-text fieldset > .standard-protocol-field:first-child {
+        margin-top: $govuk-gutter-half;
+      }
+
+      .standard-protocol-field--standard-radio {
+        margin-bottom: $govuk-gutter-half;
+      }
+
+      .standard-protocol-field--paragraph,
+      .standard-protocol-field--standard-list {
+        margin-bottom: $govuk-gutter-half;
+      }
     }
   }
 
