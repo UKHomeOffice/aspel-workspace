@@ -4,10 +4,7 @@ import { connect } from 'react-redux';
 import { Snippet } from '../';
 import { resolveDateError } from './resolve-error';
 
-// Renders the GOV.UK Design System error message for a date field, but only for
-// fields that have opted in by setting a `dateLabel` in content. Every other date
-// field keeps its own bespoke `errors.<field>.<code>` messages unchanged - so we
-// don't silently override wording (and break tests) across the whole app.
+// Renders the GOV.UK Design System error message for a date field, but only for fields that have opted in by setting a `dateLabel` in content
 export const DateErrorMessage = ({ content, name, value, errorCode, validate, snippetProps = {} }) => {
     const resolved = resolveDateError({ value, errorCode, validate });
     const dateLabel = get(content, `fields.${name}.dateLabel`);
