@@ -22,6 +22,16 @@ const mergeBuffers = (buffers) => {
   });
 };
 
+// Helper to check YYYY-MM-DD format and actual calendar validity
+const isValidDate = (dateStr) => {
+  if (typeof dateStr !== 'string') return false;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+
+  const date = new Date(dateStr);
+  // Ensures it's a valid date and didn't overflow (e.g., Feb 31 rolling over into March)
+  return !isNaN(date.getTime()) && date.toISOString().slice(0, 10) === dateStr;
+};
+
 module.exports = settings => {
   const router = Router({ mergeParams: true });
 
@@ -29,7 +39,45 @@ module.exports = settings => {
     try {
       const { startDate, endDate, ra } = req.query;
       console.log(startDate, endDate, ra);
-      const response = await req.api(`/reports/nts-docx/`);
+
+      // Validate startDate
+      if (!startDate) {
+        return res.status(400).send('Missing required query parameter: "startDate".');
+      }
+      if (!isValidDate(startDate)) {
+        return res.status(400).send('Invalid "startDate" parameter. Format must be YYYY-MM-DD.');
+      }
+
+      // Validate endDate
+      if (!endDate) {
+        return res.status(400).send('Missing required query parameter: "endDate".');
+      }
+      if (!isValidDate(endDate)) {
+        return res.status(400).send('Invalid "endDate" parameter. Format must be YYYY-MM-DD.');
+      }
+
+      // Ensure startDate is not after endDate
+      if (new Date(startDate) > new Date(endDate)) {
+        return res.status(400).send('"startDate" cannot be later than "endDate".');
+      }
+
+      // Validate ra (REQUIRED & must be 'true' or 'false')
+      if (ra === undefined || ra === '') {
+        return res.status(400).send('Missing required query parameter: "ra".');
+      }
+      const normalizedRa = String(ra).toLowerCase();
+      if (!['true', 'false'].includes(normalizedRa)) {
+        return res.status(400).send('Invalid "ra" parameter. Must be "true" or "false".');
+      }
+
+      // Build the query params dynamically
+      const query = new URLSearchParams();
+      query.append('startDate', startDate);
+      query.append('endDate', endDate);
+      query.append('ra', ra);
+      const queryString = query.toString();
+
+      const response = await req.api(`/reports/nts-docx/?${queryString}`);
       console.log(response.json.data);
       const items = response.json.data || [];
 

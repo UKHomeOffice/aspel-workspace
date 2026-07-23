@@ -2,7 +2,7 @@ const moment = require('moment');
 
 module.exports = () => (req, res, next) => {
   const { knex } = req.models;
-
+  const isRaTrue = req.query.ra === true || req.query.ra === 'true';
   return knex('projects')
     .select(
       'projects.title',
@@ -13,9 +13,15 @@ module.exports = () => (req, res, next) => {
     )
     .distinctOn('projects.title', 'projects.id')
     .innerJoin('project_versions', 'projects.id', 'project_versions.project_id')
-    .where('projects.issue_date', '>=', '2025-06-01')
-    .where('projects.issue_date', '<', '2026-06-19')
-    .whereNull('projects.ra_date')
+    .where('projects.issue_date', '>=', req.query.startDate)
+    .where('projects.issue_date', '<', req.query.endDate)
+    .modify(queryBuilder => {
+      if (isRaTrue) {
+        queryBuilder.whereNotNull('projects.ra_date');
+      } else {
+        queryBuilder.whereNull('projects.ra_date');
+      }
+    })
     .orderBy([
       { column: 'projects.title', order: 'asc' },
       { column: 'projects.id' },
