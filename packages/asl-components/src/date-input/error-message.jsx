@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import { Snippet } from '../';
 import { resolveDateError } from './resolve-error';
 
-// Renders the GOV.UK Design System error message for a date field.
-
+// Renders the GOV.UK Design System error message for a date field, but only for fields that have opted in by setting a `dateLabel` in content
 export const DateErrorMessage = ({ content, name, value, errorCode, validate, snippetProps = {} }) => {
     const resolved = resolveDateError({ value, errorCode, validate });
-    const dateLabel = get(content, `fields.${name}.dateLabel`) ?? get(content, `fields.${name}.label`);
+    const dateLabel = get(content, `fields.${name}.dateLabel`);
 
     if (resolved && typeof dateLabel === 'string') {
         return (
