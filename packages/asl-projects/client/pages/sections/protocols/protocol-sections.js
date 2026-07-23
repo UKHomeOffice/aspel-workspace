@@ -118,7 +118,7 @@ class ProtocolSections extends PureComponent {
           <Completable status={values.deleted ? 'deleted' : values.complete ? 'complete' : 'incomplete'}>
             <button className="govuk-button link"><h2 className="title inline-block">{values.deleted ? title : `${number + 1}: ${title}`}</h2></button>
             {
-              editable && !isStandardProtocol && <button className={classnames('govuk-button link', { restore: values.deleted })} onClick={values.deleted ? this.props.restoreItem : this.toggleActive}>{values.deleted ? 'Restore' : 'Edit title'}</button>
+              editable && (values.deleted || !isStandardProtocol) && <button className={classnames('govuk-button link', { restore: values.deleted })} onClick={values.deleted ? this.props.restoreItem : this.toggleActive}>{values.deleted ? 'Restore' : 'Edit title'}</button>
             }
             {
               !values.deleted && (
