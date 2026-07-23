@@ -58,17 +58,26 @@ export default function NTSFateOfAnimalFields() {
         },
         {
           standard: {
-            label: null,
             type: 'paragraph'
           }
         }
       )
     },
-    'continued-use-2': {
-      label: 'Continued use on other projects',
-      value: 'continued-use-2',
-      show: values => showFateOfAnimals(values, 'continued-use-2')
-    },
+    'continued-use-2': withProtocolContext(
+      {
+        label: 'Continued use on other projects',
+        value: 'continued-use-2',
+        show: values => showFateOfAnimals(values, 'continued-use-2')
+      },
+      {
+        standard: {
+          hint: 'Animals may be transferred to other projects authorised to use the same animal types '
+        },
+        editable: {
+          hint: 'Animals may be transferred to other projects authorised to use the same animal types '
+        }
+      }
+    ),
     'set-free': {
       label: 'Set free',
       value: 'set-free',

@@ -132,6 +132,7 @@ describe('protocol section schema', () => {
     const killedReveal = fateFields.killed.reveal;
     const justificationReveal = killedReveal.options[0].reveal;
     const continuedUseReveal = fateFields['continued-use'].reveal;
+    const continuedUseOtherProjects = fateFields['continued-use-2'];
 
     it('export the expected titles and singular labels', () => {
       assert.equal(fate.title, 'Fate of animals');
@@ -178,10 +179,18 @@ describe('protocol section schema', () => {
       });
 
       assert.deepEqual(getFieldState(continuedUseReveal, standardValues), {
-        label: null,
+        label: 'Please state the relevant protocol.',
         hint: undefined,
         type: 'paragraph'
       });
+    });
+
+    it('uses the continued-use-2 hint in editable and standard modes', () => {
+      const expectedHint = 'Animals may be transferred to other projects authorised to use the same animal types ';
+
+      assert.equal(continuedUseOtherProjects.hint(experimentalValues), undefined);
+      assert.equal(continuedUseOtherProjects.hint(editableValues), expectedHint);
+      assert.equal(continuedUseOtherProjects.hint(standardValues), expectedHint);
     });
   });
 });
