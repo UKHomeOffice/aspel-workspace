@@ -28,7 +28,7 @@ const isValidDate = (dateStr) => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
 
   const date = new Date(dateStr);
-  // Ensures it's a valid date and didn't overflow (e.g., Feb 31 rolling over into March)
+  // Ensures it's a valid date
   return !isNaN(date.getTime()) && date.toISOString().slice(0, 10) === dateStr;
 };
 
@@ -38,7 +38,6 @@ module.exports = settings => {
   router.get('/', async (req, res, next) => {
     try {
       const { startDate, endDate, ra } = req.query;
-      console.log(startDate, endDate, ra);
 
       // Validate startDate
       if (!startDate) {
@@ -75,10 +74,9 @@ module.exports = settings => {
       query.append('startDate', startDate);
       query.append('endDate', endDate);
       query.append('ra', ra);
-      const queryString = query.toString();
+      let queryString = query.toString();
 
-      const response = await req.api(`/reports/nts-docx/?${queryString}`);
-      console.log(response.json.data);
+      const response = await req.api('/reports/nts-docx?' + queryString);
       const items = response.json.data || [];
 
       if (items.length === 0) {
@@ -107,10 +105,7 @@ module.exports = settings => {
       const mergedBuffer = await mergeBuffers(buffers);
 
       // Return the merged file
-      const filename = filenamify(
-        `NTS_Combined_Report_${startDate || 'all'}_to_${endDate || 'all'}.docx`
-      );
-
+      const filename = filenamify(`NTS_Combined_Report_${startDate}_to_${endDate}.docx`);
       res.attachment(filename);
       res.end(Buffer.from(mergedBuffer));
     } catch (err) {
