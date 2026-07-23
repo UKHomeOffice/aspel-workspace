@@ -163,7 +163,7 @@ Avoid specifying volumes and frequencies when they do not affect animal welfare.
           type: 'radio'
         },
         standard: {
-          label: `Expected adverse effects that are more than mild and short-term and not listed in General constraints ${markdownLink('General constraints', getToGeneralConstraints())}`,
+          label: `Expected adverse effects that are more than mild and short-term and not listed in ${markdownLink('General constraints', getToGeneralConstraints())}`,
           hint: null,
           type: 'standard-radio'
         }

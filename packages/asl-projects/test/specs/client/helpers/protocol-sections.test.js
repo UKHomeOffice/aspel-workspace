@@ -92,7 +92,7 @@ describe('protocol section schema', () => {
         "import { withProtocolContext } from './helpers/with-protocol-context';",
         "name: 'adverse'",
         "label: 'Do you expect this step to have adverse effects for the animals that are more than mild and transient?'",
-        "label: `Expected adverse effects that are more than mild and short-term and not listed in General constraints ${markdownLink('General constraints', getToGeneralConstraints())}`",
+        "label: `Expected adverse effects that are more than mild and short-term and not listed in ${markdownLink('General constraints', getToGeneralConstraints())}`",
         "type: 'standard-radio'"
       ]);
     });
