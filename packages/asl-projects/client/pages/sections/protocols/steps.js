@@ -197,6 +197,7 @@ class Step extends Component {
           fields={[fields.find(f => f.name === 'title')]}
           values={{
             title: values.title,
+            reference: values.reference,
             isStandardProtocol,
             standardProtocolType
           }}
