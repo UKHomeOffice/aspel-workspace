@@ -2,6 +2,18 @@ import GrantedSteps from '../../../pages/sections/granted/protocol-steps';
 import { markdownLink, getToGeneralConstraints } from '../../../helpers';
 import { withProtocolContext } from './helpers/with-protocol-context';
 
+const ageingHint = 'If you are ageing animals for experimental purposes, and the ageing results in adverse effects, you need to include a separate ageing protocol or a separate ageing step in an experimental protocol';
+
+const withMaintenanceHint = hint => props => {
+  const isMaintenanceStep = props?.values?.reference === 'Maintenance';
+
+  if (!isMaintenanceStep) {
+    return hint;
+  }
+
+  return hint ? `${hint}\n${ageingHint}` : ageingHint;
+};
+
 export default {
   title: 'Steps',
   hint: 'A step can be a single procedure or a combination of procedures to achieve an outcome. You will be able to reorder your steps at any time before you send your application to the Home Office, but they should be broadly chronological, with the final step being a method of killing or the last regulated procedure.',
@@ -25,18 +37,18 @@ When describing the technical aspects of a step, be broad enough to be flexible 
         editable: {
           type: 'texteditor',
           label: 'Describe the procedures that will be carried out during this step',
-          hint: `You should: \n
+          hint: withMaintenanceHint(`You should: \n
 • explain where one or more steps are repeated in one experiment \n
 • list any alternative techniques within a step (for example dosing routes) \n
 • include all procedures performed under terminal anaesthesia \n
 When describing the technical aspects of a step, be broad enough to be flexible when the variation does not affect animal welfare (for example, use 'antibiotic' instead of 'penicillin').
 
-Avoid specifying volumes and frequencies when they do not affect animal welfare.`
+Avoid specifying volumes and frequencies when they do not affect animal welfare.\n`)
         },
         standard: {
           type: 'paragraph',
           label: 'Permitted procedures for this step',
-          hint: null
+          hint: withMaintenanceHint(null)
         }
       }
     ),
