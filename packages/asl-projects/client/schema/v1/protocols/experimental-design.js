@@ -23,7 +23,6 @@ export default {
         },
         standard: {
           label: 'Permitted outputs from this protocol',
-          hint: 'For example, test results, phenotypic information, or products',
           type: 'paragraph'
         }
       }
