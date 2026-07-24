@@ -40,10 +40,6 @@ const getVersion = () => (req, res, next) => {
     .then(() => next())
     .catch(next);
 };
-
-// Returns the task whose data.data.version matches req.versionId, looking first
-// in openTasks and then falling back to closed related tasks (for granted
-// historical versions). Returns undefined if no matching task exists, so
 // comments from a different version's task can't leak onto this version.
 const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']) => {
   if (!req.project) {
@@ -108,9 +104,6 @@ const getComments = (actions = ['grant', 'transfer']) => asyncMiddleware(async (
     return;
   }
 
-  // ASL-5161: never expose draft-stage comments (or the granting Inspector's
-  // name) on the granted licence view. Historical comments on previous,
-  // non-granted versions remain available to ASRU/PEL users.
   if (req.version.status === 'granted') {
     return;
   }
