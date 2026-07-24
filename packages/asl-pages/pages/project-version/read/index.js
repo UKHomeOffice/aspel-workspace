@@ -35,7 +35,9 @@ module.exports = settings => {
     res.locals.static.projectUrl = req.buildRoute('project.read');
     res.locals.static.establishment = req.project.establishment;
     res.locals.static.isActionable = isOpenForVersion;
-    res.locals.static.showComments = !req.isPreview;
+    // ASL-5161: comments must not display on the granted licence view for any
+    // user. Previous (non-granted) versions still show comments as before.
+    res.locals.static.showComments = !req.isPreview && req.version.status !== 'granted';
     res.locals.static.commentable = !req.isPreview && req.user.profile.asruUser && res.locals.static.isCommentable;
 
     const taskId = isOpenForVersion ? task.id : null;
