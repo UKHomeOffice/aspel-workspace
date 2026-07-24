@@ -17,7 +17,7 @@ const protocolStepGenerators = {
       reusable: null
     },
     {
-      title: `The method used to determine genetic status will be the least invasive and is only expected to cause short-term pain, suffering or distress and no lasting harm - for example, ear biopsy, blood sampling or non-invasive imaging (AA/AB).\n      \nWhere possible, sampling will be carried out at the earliest feasible life stage. A second sample will only be taken in rare cases where there are technical problems during analysis.\n      \nNVS advice will be followed regarding the use of analgesia.`,
+      title: `The method used to determine genetic status will be the least invasive and is only expected to cause mild short-term pain, suffering or distress and no lasting harm - for example, ear biopsy, blood sampling or non-invasive imaging (AA/AB).\n      \nWhere possible, sampling will be carried out at the earliest feasible life stage. A second sample will only be taken in rare cases where there are technical problems during analysis.\n      \nNVS advice will be followed regarding the use of analgesia.`,
       reference: 'Determining genetic status',
       optional: true,
       adverse: false,
