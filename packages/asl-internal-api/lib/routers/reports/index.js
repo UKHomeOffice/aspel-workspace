@@ -6,6 +6,7 @@ const pplList = require('./ppl-list');
 const pplConditions = require('./ppl-conditions');
 const namedPeople = require('./named-people');
 const taskMetrics = require('./task-metrics');
+const ntsDocx = require('./nts-docx');
 
 module.exports = settings => {
   const router = Router({ mergeParams: true });
@@ -18,6 +19,8 @@ module.exports = settings => {
   router.get('/named-people', namedPeople());
 
   router.use('/task-metrics', taskMetrics(settings));
+
+  router.use('/nts-docx', ntsDocx(settings));
 
   router.get('/', () => {
     throw new NotFoundError();
