@@ -6,12 +6,13 @@ const filenamify = require('filenamify');
 const DocxMerger = require('docx-merger');
 const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
 
+// Converts docx Document instance into a binary Buffer
 const pack = doc => {
   const packer = new Packer(doc);
   return packer.toBuffer(doc);
 };
 
-// Helper to convert docx-merger callback into a Promise
+// Convert docx-merger callback into a Promise
 const mergeBuffers = (buffers) => {
   return new Promise((resolve, reject) => {
     try {
@@ -23,7 +24,7 @@ const mergeBuffers = (buffers) => {
   });
 };
 
-// Helper to check YYYY-MM-DD format and actual calendar validity
+// Helper to check YYYY-MM-DD format and date check
 const isValidDate = (dateStr) => {
   if (typeof dateStr !== 'string') return false;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
@@ -73,7 +74,7 @@ module.exports = settings => {
         return res.status(400).send('Invalid "ra" parameter. Must be "true" or "false".');
       }
 
-      // Build the query params dynamically
+      // Build the api/db query params
       const query = new URLSearchParams();
       query.append('startDate', startDate);
       query.append('endDate', endDate);
@@ -86,7 +87,7 @@ module.exports = settings => {
       if (items.length === 0) {
         return res.status(404).send('No projects found during the specified date range.');
       }
-      // Render each report buffer individually using your existing logic
+      // Rendering each report buffer individually
       const bufferPromises = items.map(async item => {
         const ntsSections = getNtsSchema(item.application.schemaVersion);
         const isTrainingLicence = !!item.data['training-licence'];
