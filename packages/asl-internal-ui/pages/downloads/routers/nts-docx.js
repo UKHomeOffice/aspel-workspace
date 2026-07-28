@@ -4,6 +4,7 @@ const getNtsSchema = require('@asl/pages/pages/project-version/nts/schema');
 const { Packer } = require('@joefitter/docx');
 const filenamify = require('filenamify');
 const DocxMerger = require('docx-merger');
+const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
 
 const pack = doc => {
   const packer = new Packer(doc);
@@ -37,6 +38,9 @@ module.exports = settings => {
 
   router.get('/', async (req, res, next) => {
     try {
+      if (!req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
+        return res.status(400).send('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.');
+      }
       const { startDate, endDate, ra } = req.query;
 
       // Validate startDate
@@ -86,13 +90,14 @@ module.exports = settings => {
       const bufferPromises = items.map(async item => {
         const ntsSections = getNtsSchema(item.application.schemaVersion);
         const isTrainingLicence = !!item.data['training-licence'];
-
         const doc = await ntsRenderer({
           application: item.application,
           version: item.data,
           ntsSections,
+          ra: normalizedRa === 'true',
           isTrainingLicence,
-          attachmentsHost: settings.attachments
+          attachmentsHost: settings.attachments,
+          isBulk: true
         });
 
         // Pack each doc instance into a valid .docx Buffer

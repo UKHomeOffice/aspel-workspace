@@ -31,11 +31,9 @@ module.exports = () => (req, res, next) => {
       res.response = projects.map(project => ({
         application: {
           title: project.title,
-          raDate: project.ra_date ? moment(project.ra_date).format('YYYY-MM-DD') : null,
-          raGrantedDate: project.ra_granted_date ? moment(project.ra_granted_date).format('YYYY-MM-DD') : null,
-          schemaVersion: project.schema_version !== undefined && project.schema_version !== null
-            ? parseInt(project.schema_version, 10)
-            : 1
+          raDate: project.raDate,
+          raGrantedDate: project.raGrantedDate,
+          schemaVersion: project.schemaVersion
         },
         data: typeof project.data === 'string' ? JSON.parse(project.data) : project.data
       }));
