@@ -1,4 +1,4 @@
-import { getTaskForVersion, getVersionsForDiff } from '../../../../../pages/project-version/middleware/index';
+import { getComments, getTaskForVersion, getVersionsForDiff } from '../../../../../pages/project-version/middleware/index';
 
 describe('Versions', () => {
   describe('Getting relevant versions for change detection', () => {
@@ -349,6 +349,88 @@ describe('Versions', () => {
 
       expect(task).toBeUndefined();
       expect(req.api).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getComments (ASL-5161)', () => {
+    const ESTABLISHMENT_ID = 100;
+    const PROJECT_ID = 'project-1';
+
+    const grantTaskWithComment = id => ({
+      id,
+      comments: [
+        {
+          id: 'comment-1',
+          comment: 'Private inspector note',
+          deleted: false,
+          createdAt: '2026-06-01T09:00:00.000Z',
+          isNew: false,
+          isMine: false,
+          changedBy: { firstName: 'Granting', lastName: 'Inspector' },
+          event: { meta: { payload: { meta: { field: 'title' } } } }
+        }
+      ],
+      activityLog: [
+        { eventName: 'status:submitted', createdAt: '2026-06-02T09:00:00.000Z' }
+      ]
+    });
+
+    const buildReq = ({ version, versions, openTasks = [], closedTasks = [] }) => {
+      const api = jest.fn(url => {
+        if (url === '/tasks/related') {
+          return Promise.resolve({ json: { data: closedTasks } });
+        }
+        return Promise.resolve({ json: { data: grantTaskWithComment(url.replace('/tasks/', '')) } });
+      });
+      return {
+        versionId: version.id,
+        version,
+        projectId: PROJECT_ID,
+        establishmentId: ESTABLISHMENT_ID,
+        project: {
+          establishmentId: ESTABLISHMENT_ID,
+          openTasks,
+          versions
+        },
+        api
+      };
+    };
+
+    const run = req => {
+      const res = { locals: { static: {} } };
+      return new Promise((resolve, reject) => {
+        getComments()(req, res, err => (err ? reject(err) : resolve(res)));
+      });
+    };
+
+    it('does not expose comments on the granted licence view', async () => {
+      const granted = { id: 'granted-version', status: 'granted' };
+      const req = buildReq({
+        version: granted,
+        versions: [granted],
+        closedTasks: [{ id: 'task-grant', data: { action: 'grant', data: { version: 'granted-version' } } }]
+      });
+
+      const res = await run(req);
+
+      expect(res.locals.static.comments).toBeUndefined();
+      // the grant task's full detail (which carries the private comments) is never fetched
+      expect(req.api).not.toHaveBeenCalledWith('/tasks/task-grant');
+    });
+
+    it('exposes comments on a previous, non-granted version', async () => {
+      const submitted = { id: 'submitted-version', status: 'submitted' };
+      const req = buildReq({
+        version: submitted,
+        versions: [submitted],
+        openTasks: [{ id: 'task-grant', data: { action: 'grant', data: { version: 'submitted-version' } } }]
+      });
+
+      const res = await run(req);
+
+      expect(res.locals.static.comments).toBeDefined();
+      expect(res.locals.static.comments.title[0].author).toBe('Granting Inspector');
+      expect(req.api).toHaveBeenCalledWith('/tasks/task-grant');
     });
   });
 });

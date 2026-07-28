@@ -240,7 +240,25 @@ module.exports = {
     },
     default: {
       maxLength: 'This field is limited to 256 characters',
-      required: 'This field is required'
+      required: 'This field is required',
+      // GOV.UK Design System date error messages. Rendered by DateErrorMessage
+      // via resolveDateError. `{{dateLabel}}` is the field's noun-phrase (e.g.
+      // "Award date", "Course date"). A page can override any of these per field
+      // under `errors.<field>.date.<key>` when it needs bespoke wording.
+      date: {
+        enter: 'Enter {{dateLabel}}',
+        incomplete: '{{dateLabel}} must include {{missingParts}}',
+        yearLength: 'Year must include 4 numbers',
+        realDate: '{{dateLabel}} must be a real date',
+        past: '{{dateLabel}} must be in the past',
+        future: '{{dateLabel}} must be in the future',
+        todayOrPast: '{{dateLabel}} must be today or in the past',
+        todayOrFuture: '{{dateLabel}} must be today or in the future',
+        before: '{{dateLabel}} must be before {{date}}',
+        after: '{{dateLabel}} must be after {{date}}',
+        sameOrBefore: '{{dateLabel}} must be the same as or before {{date}}',
+        sameOrAfter: '{{dateLabel}} must be the same as or after {{date}}'
+      }
     }
   },
   countdown: {

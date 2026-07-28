@@ -321,14 +321,18 @@ function aliasReusableStepCommentsToReferringSteps(newComments, reusableStepMapp
 }
 
 /**
- * Filter comments to only those flagged as new that are from other users.
+ * Filter comments to only those flagged as new.
  * @param comments
  * @param user
  * @param project Optional - if provided any reusable step comments will be aliased to the steps that reference them
+ * @param includeOwnComments If false (default), comments authored by `user` are excluded, e.g. so an
+ * applicant doesn't see a new-comment flag for their own comments. ASRU inspectors should see their own
+ * new comments flagged before they act on the application, so this is passed as true for them (behind a
+ * feature flag) - see ASL-5097.
  * @return A record of field paths mapped to comments that apply to that field
  */
-export const getNewComments = (comments, user, project) => {
-  const filterNew = field => field.filter(comment => comment.isNew && comment.author !== user && !comment.deleted);
+export const getNewComments = (comments, user, project, includeOwnComments = false) => {
+  const filterNew = field => field.filter(comment => comment.isNew && !comment.deleted && (includeOwnComments || comment.author !== user));
   const newComments = pickBy(mapValues(comments, filterNew), filterNew);
 
   if (project?.reusableSteps) {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BuildProtocol } from './build-protocol';
 import SectionsLink from '../../../../../components/sections-link';
 
@@ -17,6 +17,19 @@ const ProtocolFormBase = ({
                                     }) => {
   const [error, setError] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState('');
+  const errorSummaryRef = useRef(null);
+  const protocolTypeRef = useRef(null);
+
+  useEffect(() => {
+    if (error) {
+      errorSummaryRef.current?.focus();
+    }
+  }, [error]);
+
+  const focusProtocolType = event => {
+    event.preventDefault();
+    protocolTypeRef.current?.focus();
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -66,22 +79,45 @@ const ProtocolFormBase = ({
   };
 
   return (
-    <div className="govuk-form-group">
+    <div>
       <SectionsLink />
       <form onSubmit={handleSubmit}>
-        <fieldset className="govuk-fieldset">
-          <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
-            <h1 className="govuk-heading-l">{title}</h1>
-            {hint && <span className="govuk-hint">{hint}</span>}
-          </legend>
+        {error && (
+          <div
+            className="govuk-error-summary govuk-!-margin-bottom-6"
+            aria-labelledby="error-summary-title"
+            role="alert"
+            tabIndex="-1"
+            ref={errorSummaryRef}
+          >
+            <h2 className="govuk-error-summary__title" id="error-summary-title">
+              There is a problem
+            </h2>
 
-          <p className="govuk-body">Select a protocol</p>
+            <div className="govuk-error-summary__body">
+              <ul className="govuk-list govuk-error-summary__list">
+                <li>
+                  <a href="#" onClick={focusProtocolType} aria-controls={radioName}>
+                    {error}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
 
-          {error && (
-            <span className="govuk-error-message">{error}</span>
-          )}
+        <div className={`govuk-form-group${error ? ' govuk-form-group--error' : ''}`}>
+          <fieldset className="govuk-fieldset" aria-describedby={error ? `${radioName}-error` : undefined}>
+            <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h1 className="govuk-heading-l">{title}</h1>
+              {hint && <span className="govuk-hint">{hint}</span>}
+            </legend>
 
-          <div className="govuk-radios">
+            {error && (
+              <span id={`${radioName}-error`} className="govuk-error-message">{error}</span>
+            )}
+
+            <div className="govuk-radios" id={radioName}>
             {(gaBreading.groups || []).map((group, index) => (
               <React.Fragment key={group.title || index}>
                 <h2 className={`govuk-heading-m${index > 0 ? ' govuk-!-margin-top-8' : ''}`}>
@@ -103,8 +139,12 @@ const ProtocolFormBase = ({
                           setSelectedTemplate(e.target.value);
                           setError('');
                         }}
+                        ref={!index && group.protocols?.[0]?.id === protocol.id ? protocolTypeRef : undefined}
                         disabled={unavailable}
-                        aria-describedby={unavailable ? `${protocol.id}-hint` : undefined}
+                        aria-describedby={[
+                          unavailable ? `${protocol.id}-hint` : null,
+                          error ? `${radioName}-error` : null
+                        ].filter(Boolean).join(' ') || undefined}
                       />
                       <label className="govuk-label govuk-radios__label" htmlFor={protocol.id}>
                         {protocol.label}
@@ -126,10 +166,11 @@ const ProtocolFormBase = ({
               Continue
             </button>
             <a href="#" onClick={onCancel ?? (() => history.push(cancelPath))}>
-              List of sections
+              Cancel
             </a>
           </div>
-        </fieldset>
+          </fieldset>
+        </div>
       </form>
     </div>
   );

@@ -9,6 +9,17 @@ const parse = project => {
   const isLegacy = project.schema_version === 0;
 
   const yn = val => val ? 'Yes' : 'No';
+  const getProtocolType = protocol => {
+    if (protocol.isStandardProtocol === true && protocol.standardProtocolType === 'standard') {
+      return 'standard';
+    }
+
+    if (protocol.isStandardProtocol === false && protocol.standardProtocolType === 'editable') {
+      return 'editable';
+    }
+
+    return 'experimental';
+  };
 
   const mapProtocolToData = (protocol, index, isLegacy) => {
     const speciesList = isLegacy ? protocol.species : protocol.speciesDetails;
@@ -18,6 +29,7 @@ const parse = project => {
       schemaVersion: project.schema_version,
       protocolNumber: index + 1,
       protocolTitle: protocolTitle,
+      protocolType: getProtocolType(protocol),
       projectLicenceNumber: project.licence_number,
       projectStatus: project.status,
       animalType: `Animal type ${speciesIndex + 1}`,

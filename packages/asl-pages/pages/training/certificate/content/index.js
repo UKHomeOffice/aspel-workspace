@@ -10,6 +10,9 @@ module.exports = {
     },
     passDate: {
       label: 'Date awarded',
+      // Noun-phrase used in the GDS date error messages (e.g. "Award date must
+      // include a month"). See errors.default.date.* in common content.
+      dateLabel: 'Award date',
       hint: `This should be within the last 5 years
 
 For example, 30 09 2020`
@@ -23,9 +26,11 @@ For example, 30 09 2020`
       required: 'You need to choose an accrediting body or course provider'
     },
     passDate: {
-      required: 'You need to enter the date when the certificate was awarded.',
-      validDate: 'Date awarded must be a valid date',
-      dateIsBefore: 'Date awarded must be in the past.'
+      // The rest of the date messages (incomplete / real date / past) come from
+      // the generic GDS templates using dateLabel; only "enter" is bespoke here.
+      date: {
+        enter: 'Enter the date the certificate was awarded'
+      }
     },
     otherAccreditingBody: {
       required: 'Please specify which accrediting body'

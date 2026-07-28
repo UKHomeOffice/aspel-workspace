@@ -42,7 +42,7 @@ export const gaBreadingData = (isStandard = true) => {
 
               severityProportion: 'Most animals will experience mild harms.',
 
-              severityDetails: 'The phenotypes are subthreshold or mild. Tissue sampling is only expected to cause transient discomfort but no lasting harm.',
+              severityDetails: 'The phenotypes are subthreshold or mild. Tissue sampling is only expected to cause mild short-term pain, suffering or distress and no lasting harm.',
 
               description: 'To produce, maintain and provide genetically altered (GA) mice and/or rats',
 

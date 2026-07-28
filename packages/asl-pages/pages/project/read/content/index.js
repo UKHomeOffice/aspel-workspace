@@ -1,8 +1,10 @@
 const { merge } = require('lodash');
 const baseContent = require('../../content');
 const downloadContent = require('../../../project-version/downloads/content');
+const status = require('../../../task/content/status');
 
 module.exports = merge({}, baseContent, {
+  status,
   page: {
     title: {
       granted: 'Project',

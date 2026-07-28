@@ -1,6 +1,8 @@
 $assetPath: '/public';
 
 @import "@ukhomeoffice/frontend-toolkit";
+@import '@ukhomeoffice/react-components';
+@import '@ukhomeoffice/asl-components';
 @import "@ukhomeoffice/frontend-toolkit/assets/styles/forms";
 @import "@ukhomeoffice/frontend-toolkit/assets/styles/typography";
 @import "@ukhomeoffice/frontend-toolkit/assets/styles/components/phase-banner";
