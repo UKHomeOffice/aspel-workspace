@@ -1,5 +1,3 @@
-const moment = require('moment');
-
 module.exports = () => (req, res, next) => {
   const { knex } = req.models;
   const isRaTrue = req.query.ra === true || req.query.ra === 'true' || req.query.ra === 'true?';
