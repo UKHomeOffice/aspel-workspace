@@ -263,7 +263,7 @@ function Field({
         hint={isUndefined(hint) ? <Snippet optional {...snippetProps}>{`fields.${name}.hint`}</Snippet> : hint}
         error={error && (
             inputType === 'inputDate' && !(props.renderers && getLabelFromRenderers(props.renderers, name, 'error')?.error)
-                ? <DateErrorMessage name={name} value={fieldValue} errorCode={error} validate={props.validate} dateLabel={props.dateLabel} snippetProps={snippetProps} />
+                ? <DateErrorMessage name={name} value={fieldValue} errorCode={error} validate={props.validate} dateLabel={props.dateLabel} dateEnter={props.dateEnter} snippetProps={snippetProps} />
                 : <Error name={name} renderers={props.renderers} error={error} snippetProps={snippetProps} />
         )}
         value={fieldValue}

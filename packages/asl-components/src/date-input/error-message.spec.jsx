@@ -26,6 +26,7 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
                 required: 'This field is required',
                 date: {
                     enter: 'Enter the date',
+                    enterLiteral: '{{dateEnter}}',
                     incomplete: '{{dateLabel}} must include {{missingParts}}',
                     yearLength: 'Year must include 4 numbers',
                     realDate: '{{dateLabel}} must be a real date',
@@ -81,6 +82,29 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
                 name: 'passDate', value: '2999-01-01', errorCode: 'dateIsBefore', validate: [{ dateIsBefore: 'now' }]
             });
             expect(container.textContent).toBe('Award date must be in the past');
+        });
+    });
+
+    describe('dynamic field enter copy (dateEnter prop)', () => {
+        test('uses the schema-provided dateEnter for the blank-date case', () => {
+            const { container } = renderWith({
+                name: 'awerb-8201',
+                value: '--',
+                errorCode: 'required',
+                dateEnter: "Enter the date of the application's most recent AWERB review"
+            });
+            expect(container.textContent).toBe("Enter the date of the application's most recent AWERB review");
+        });
+
+        test('does not affect non-enter states', () => {
+            const { container } = renderWith({
+                name: 'awerb-8201',
+                value: '2024-13-10',
+                errorCode: 'validDate',
+                dateLabel: 'AWERB review date',
+                dateEnter: 'x'
+            });
+            expect(container.textContent).toBe('AWERB review date must be a real date');
         });
     });
 

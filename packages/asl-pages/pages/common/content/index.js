@@ -249,6 +249,9 @@ module.exports = {
         // Generic; pages override `errors.<field>.date.enter` for specific wording
         // like "Enter the date the certificate was awarded".
         enter: 'Enter the date',
+        // Passthrough for a schema-provided `dateEnter` literal (dynamic fields
+        // such as AWERB that have no static content slot). Not used directly.
+        enterLiteral: '{{dateEnter}}',
         incomplete: '{{dateLabel}} must include {{missingParts}}',
         yearLength: 'Year must include 4 numbers',
         realDate: '{{dateLabel}} must be a real date',

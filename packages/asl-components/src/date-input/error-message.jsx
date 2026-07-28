@@ -16,7 +16,7 @@ import { resolveDateError } from './resolve-error';
 //     `errors.<field>.<code>` message still wins (keeps agreed / e2e-tested wording);
 //     GDS is the fallback.
 // `{{dateLabel}}` is the field's noun-phrase; defaults to a safe generic "The date".
-export const DateErrorMessage = ({ content, name, value, errorCode, validate, dateLabel: dateLabelProp, snippetProps = {} }) => {
+export const DateErrorMessage = ({ content, name, value, errorCode, validate, dateLabel: dateLabelProp, dateEnter, snippetProps = {} }) => {
     const resolved = resolveDateError({ value, errorCode, validate });
 
     if (!resolved) {
@@ -37,15 +37,30 @@ export const DateErrorMessage = ({ content, name, value, errorCode, validate, da
     const pageCodeKey = `errors.${name}.${errorCode}`;
     const legacyDefaultKey = `errors.default.${errorCode}`;
 
-    // For validDate lead with the GDS message; otherwise let the page's own message win.
-    const keys = errorCode === 'validDate'
-        ? [gdsFieldKey, gdsDefaultKey, legacyDefaultKey]
-        : [pageCodeKey, gdsFieldKey, gdsDefaultKey, legacyDefaultKey];
+    let keys;
+    if (errorCode === 'validDate') {
+        // validDate leads with the GDS message (the finer state).
+        keys = [gdsFieldKey, gdsDefaultKey, legacyDefaultKey];
+    } else if (resolved.key === 'enter') {
+        // "Enter ..." : page bespoke -> content override -> a schema-provided literal
+        // (`dateEnter`, for dynamic fields with no content slot) -> generic default.
+        keys = [
+            pageCodeKey,
+            gdsFieldKey,
+            ...(dateEnter ? ['errors.default.date.enterLiteral'] : []),
+            gdsDefaultKey,
+            legacyDefaultKey
+        ];
+    } else {
+        // required / constraints: page's own message wins, GDS is the fallback.
+        keys = [pageCodeKey, gdsFieldKey, gdsDefaultKey, legacyDefaultKey];
+    }
 
     return (
         <Snippet
             {...snippetProps}
             dateLabel={dateLabel}
+            dateEnter={dateEnter}
             {...resolved.context}
             fallback={keys.slice(1)}
         >

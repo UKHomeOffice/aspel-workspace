@@ -11,9 +11,13 @@ module.exports = merge({}, baseContent, {
     }
   },
   errors: {
+    // ASL-5108 (Bryony Scenario 7): GDS date messages. Only the "Enter ..." line
+    // is bespoke; the rest (must include a.../real date/year/past) come from the
+    // shared GDS templates using dateLabel "Date of birth".
     dob: {
-      required: 'Date of birth is required',
-      dateIsBefore: 'Your date of birth must be in the past.'
+      date: {
+        enter: 'Enter your date of birth'
+      }
     }
   },
   buttons: {

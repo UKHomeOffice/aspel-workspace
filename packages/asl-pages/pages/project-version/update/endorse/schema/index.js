@@ -9,11 +9,15 @@ const getDateField = establishmentName => {
     // Noun-phrase for the GDS date error messages (e.g. "AWERB review date must
     // include a month"); the label itself is a full instruction, not a noun.
     dateLabel: 'AWERB review date',
+    // "Enter ..." copy for the blank-date case (dynamic field, no static content).
+    dateEnter: `Enter the date of the application's most recent AWERB review`,
     hint: 'For example, 12 06 2020',
     validate: [
       'required',
       'validDate',
-      { dateIsBefore: 'now' }
+      // ASL-5108 (Bryony 28/Jul): the AWERB review date may be the same as the
+      // submission date, so allow today -> "must be today or in the past".
+      { dateIsSameOrBefore: 'now' }
     ]
   };
 };
