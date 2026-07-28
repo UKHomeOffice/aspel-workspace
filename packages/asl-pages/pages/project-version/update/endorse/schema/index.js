@@ -6,6 +6,9 @@ const getDateField = establishmentName => {
     meta: true,
     inputType: 'inputDate',
     label: `Enter date of application's most recent AWERB review at ${establishmentName}`,
+    // Noun-phrase for the GDS date error messages (e.g. "AWERB review date must
+    // include a month"); the label itself is a full instruction, not a noun.
+    dateLabel: 'AWERB review date',
     hint: 'For example, 12 06 2020',
     validate: [
       'required',

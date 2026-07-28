@@ -4,27 +4,52 @@ import { connect } from 'react-redux';
 import { Snippet } from '../';
 import { resolveDateError } from './resolve-error';
 
-// Renders the GOV.UK Design System error message for a date field, but only for fields that have opted in by setting a `dateLabel` in content
-export const DateErrorMessage = ({ content, name, value, errorCode, validate, snippetProps = {} }) => {
+// Renders the GOV.UK Design System error message for a date field. GDS is now the
+// DEFAULT for every date field (so new date fields get it automatically), driven by
+// resolveDateError + the `errors.default.date.*` templates.
+//
+// Message priority:
+//   - `validDate` -> always the GDS state (incomplete / real date / year length),
+//     because a single "enter a valid date" is exactly the non-GDS wording we're
+//     replacing. A page can still override via `errors.<field>.date.<key>`.
+//   - `required` and the dateIs* constraints -> a page's own bespoke
+//     `errors.<field>.<code>` message still wins (keeps agreed / e2e-tested wording);
+//     GDS is the fallback.
+// `{{dateLabel}}` is the field's noun-phrase; defaults to a safe generic "The date".
+export const DateErrorMessage = ({ content, name, value, errorCode, validate, dateLabel: dateLabelProp, snippetProps = {} }) => {
     const resolved = resolveDateError({ value, errorCode, validate });
-    const dateLabel = get(content, `fields.${name}.dateLabel`);
 
-    if (resolved && typeof dateLabel === 'string') {
+    if (!resolved) {
+        // Unknown code - fall back to the field's plain message.
         return (
-            <Snippet
-                {...snippetProps}
-                dateLabel={dateLabel}
-                {...resolved.context}
-                fallback={[`errors.default.date.${resolved.key}`]}
-            >
-                {`errors.${name}.date.${resolved.key}`}
+            <Snippet {...snippetProps} fallback={`errors.default.${errorCode}`}>
+                {`errors.${name}.${errorCode}`}
             </Snippet>
         );
     }
 
+    // Noun-phrase for the templates: the schema field's `dateLabel` (works for
+    // dynamic fields), then content, then a safe generic.
+    const dateLabel = dateLabelProp ?? get(content, `fields.${name}.dateLabel`) ?? 'The date';
+
+    const gdsFieldKey = `errors.${name}.date.${resolved.key}`;
+    const gdsDefaultKey = `errors.default.date.${resolved.key}`;
+    const pageCodeKey = `errors.${name}.${errorCode}`;
+    const legacyDefaultKey = `errors.default.${errorCode}`;
+
+    // For validDate lead with the GDS message; otherwise let the page's own message win.
+    const keys = errorCode === 'validDate'
+        ? [gdsFieldKey, gdsDefaultKey, legacyDefaultKey]
+        : [pageCodeKey, gdsFieldKey, gdsDefaultKey, legacyDefaultKey];
+
     return (
-        <Snippet {...snippetProps} fallback={`errors.default.${errorCode}`}>
-            {`errors.${name}.${errorCode}`}
+        <Snippet
+            {...snippetProps}
+            dateLabel={dateLabel}
+            {...resolved.context}
+            fallback={keys.slice(1)}
+        >
+            {keys[0]}
         </Snippet>
     );
 };
