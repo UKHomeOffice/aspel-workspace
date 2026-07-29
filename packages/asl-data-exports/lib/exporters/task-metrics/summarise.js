@@ -38,19 +38,19 @@ module.exports = (summary, task) => {
   summary[taskType].returned += (returnedCount || 0);
   summary[taskType].outstanding += isOutstanding ? 1 : 0;
 
-  if (typeof submitToActionDiff !== 'undefined') {
+  if (submitToActionDiff != null) {
     summary[taskType].submitToActionDays.push(submitToActionDiff);
   }
 
-  if (typeof assignToActionDiff !== 'undefined') {
+  if (assignToActionDiff != null) {
     summary[taskType].assignToActionDays.push(assignToActionDiff);
   }
 
-  if (typeof totalDaysWithAsru !== 'undefined') {
+  if (totalDaysWithAsru != null) {
     summary[taskType].totalDaysWithAsru.push(totalDaysWithAsru);
   }
 
-  if (typeof assignToActionDiff !== 'undefined') {
+  if (totalDaysAssigned != null) {
     summary[taskType].totalDaysAssigned.push(totalDaysAssigned);
   }
 

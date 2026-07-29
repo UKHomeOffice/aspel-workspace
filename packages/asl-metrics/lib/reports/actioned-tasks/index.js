@@ -241,7 +241,7 @@ module.exports = ({ db, flow, query: params }) => {
       return null; // task was never with ASRU, ignore
     }
 
-    if (firstSubmittedAt.isAfter(start) && firstSubmittedAt.isBefore(end)) {
+    if (firstSubmittedAt.isSameOrAfter(start) && firstSubmittedAt.isSameOrBefore(end)) {
       wasSubmittedInPeriod = true;
     }
 
@@ -264,7 +264,7 @@ module.exports = ({ db, flow, query: params }) => {
     }
 
     if (previousAssignment !== null) {
-      totalDaysWithAsru += end.workingDiff(previousAssignment, 'calendarDays');
+      totalDaysAssigned += end.workingDiff(previousAssignment, 'calendarDays');
     }
 
     return {
