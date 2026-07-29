@@ -1,5 +1,4 @@
 const knex = require('knex');
-
 const report = require('../../../lib/reports/actioned-tasks');
 const samples = require('./resources/sample-results.json');
 
@@ -40,9 +39,7 @@ const flow = {
   ]
 };
 
-function buildReport(start = '2026-01-01', end = '2026-01-31') {
-  const flowDb = knex({ client: 'pg' });
-
+function buildReport(flowDb, start = '2026-01-01', end = '2026-01-31') {
   return report({
     db: { flow: flowDb },
     flow,
@@ -52,9 +49,19 @@ function buildReport(start = '2026-01-01', end = '2026-01-31') {
 }
 
 describe('Actioned tasks report', () => {
+  let flowDb;
+
+  beforeAll(() => {
+    flowDb = knex({ client: 'pg' });
+  });
+
+  afterAll(() => {
+    flowDb?.destroy();
+  });
+
   describe('query', () => {
     it('matches the SQL snapshot', () => {
-      const { query } = buildReport();
+      const { query } = buildReport(flowDb);
 
       const builtQuery = query().toSQL();
 
@@ -65,8 +72,7 @@ describe('Actioned tasks report', () => {
 
   describe('parse', () => {
     describe('parses the sample PPL licences', () => {
-      //const samples = await import('./resources/sample-results.json');
-      const { parse } = buildReport('2026-02-01', '2026-02-28');
+      const { parse } = buildReport(flowDb, '2026-02-01', '2026-02-28');
 
       for (const [licence, {data, expected}] of Object.entries(samples)) {
         it(`parses ${licence}`, () => {

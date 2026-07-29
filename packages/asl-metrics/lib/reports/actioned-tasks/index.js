@@ -73,7 +73,7 @@ module.exports = ({ db, flow, query: params }) => {
         builder.whereIn('cases.status', openStatuses)
           .orWhere(b =>
             b.whereIn('cases.status', closedStatuses)
-              .andWhereBetween('cases.updated_at', [start.toISOString(), end.toISOString()])
+              .andWhere('cases.updated_at', '>=', start.toISOString())
           )
       );
   };

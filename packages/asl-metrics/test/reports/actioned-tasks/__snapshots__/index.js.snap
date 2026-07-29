@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Actioned tasks report query matches the SQL snapshot 1`] = `"select "cases"."id", "cases"."status", JSON_BUILD_OBJECT( 'model', cases.data->>'model', 'action', cases.data->>'action', 'version', cases.data->>'version', 'modelData', JSON_BUILD_OBJECT( 'id', cases.data->'modelData'->>'id', 'status', cases.data->'modelData'->>'status', 'licenceNumber', cases.data->'modelData'->>'licenceNumber' ) ) as data, "al"."activity" from "cases" LEFT JOIN LATERAL ( SELECT COALESCE( JSON_AGG( JSON_BUILD_OBJECT( 'created_at', activity_log.created_at, 'event_name', activity_log.event_name, 'event', JSON_BUILD_OBJECT( 'status', activity_log.event->>'status', 'assignedTo', activity_log.event->>'assignedTo', 'version', activity_log.event->'data'->'data'->>'version' ) ) ORDER BY activity_log.created_at ASC ), '[]'::json ) AS activity FROM activity_log WHERE activity_log.case_id = cases.id AND activity_log.created_at <= (?)::timestamptz AND (activity_log.event_name like 'status:%' OR activity_log.event_name IN ('create', 'assign')) ) as al ON TRUE where "cases"."status" != ? and "cases"."created_at" <= ? and ("cases"."status" in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) or ("cases"."status" in (?, ?, ?, ?, ?, ?) and "cases"."updated_at" between ? and ?))"`;
+exports[`Actioned tasks report query matches the SQL snapshot 1`] = `"select "cases"."id", "cases"."status", JSON_BUILD_OBJECT( 'model', cases.data->>'model', 'action', cases.data->>'action', 'version', cases.data->>'version', 'modelData', JSON_BUILD_OBJECT( 'id', cases.data->'modelData'->>'id', 'status', cases.data->'modelData'->>'status', 'licenceNumber', cases.data->'modelData'->>'licenceNumber' ) ) as data, "al"."activity" from "cases" LEFT JOIN LATERAL ( SELECT COALESCE( JSON_AGG( JSON_BUILD_OBJECT( 'created_at', activity_log.created_at, 'event_name', activity_log.event_name, 'event', JSON_BUILD_OBJECT( 'status', activity_log.event->>'status', 'assignedTo', activity_log.event->>'assignedTo', 'version', activity_log.event->'data'->'data'->>'version' ) ) ORDER BY activity_log.created_at ASC ), '[]'::json ) AS activity FROM activity_log WHERE activity_log.case_id = cases.id AND activity_log.created_at <= (?)::timestamptz AND (activity_log.event_name like 'status:%' OR activity_log.event_name IN ('create', 'assign')) ) as al ON TRUE where "cases"."status" != ? and "cases"."created_at" <= ? and ("cases"."status" in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) or ("cases"."status" in (?, ?, ?, ?, ?, ?) and "cases"."updated_at" >= ?))"`;
 
 exports[`Actioned tasks report query matches the SQL snapshot 2`] = `
 [
@@ -29,6 +29,5 @@ exports[`Actioned tasks report query matches the SQL snapshot 2`] = `
   "discarded-by-asru",
   "refused",
   "2026-01-01T00:00:00.000Z",
-  "2026-01-31T23:59:59.999Z",
 ]
 `;
