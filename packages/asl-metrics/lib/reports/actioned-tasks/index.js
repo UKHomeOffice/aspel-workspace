@@ -145,7 +145,7 @@ module.exports = ({ db, flow, query: params }) => {
             isOutstanding = true;
           }
         } else {
-          if (isAction && previousSubmission?.isBefore(end) && eventTime.isAfter(start)) {
+          if (isAction && previousSubmission?.isSameOrBefore(end) && eventTime.isSameOrAfter(start)) {
             subtasks.push({
               taskId: task.id,
               model: task.data.model,

@@ -127,7 +127,11 @@ module.exports = settings => {
         .then(stream => {
           logger.debug('writing actioned-tasks-raw csv');
           stream.on('data', task => {
-            actionedTasksRawCSV.write({ ...omit(task, 'data', 'metrics', 'subtasks'), ...task.data, ...task.metrics });
+            actionedTasksRawCSV.write({
+              ...omit(task, 'data', 'metrics'),
+              ...task.data,
+              ...omit(task.metrics, 'subtasks')
+            });
             (task.metrics?.subtasks ?? []).forEach((subTask) => { actionedSubtasksCSV.write(subTask); });
             actionedTasksSummary = summarise(actionedTasksSummary, task);
           });
