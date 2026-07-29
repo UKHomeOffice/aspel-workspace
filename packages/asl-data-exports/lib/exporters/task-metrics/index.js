@@ -23,11 +23,26 @@ module.exports = settings => {
     const internalDeadlinesCSV = csv({
       header: true,
       bom: true,
-      columns: ['task_id', 'project_title', 'licence_number', 'type', 'resubmitted', 'extended', 'still_open', 'target', 'resolved_at']
+      columns: [
+        'task_id',
+        'project_title',
+        'licence_number',
+        'type',
+        'resubmitted',
+        'extended',
+        'still_open',
+        'target',
+        'resolved_at'
+      ]
     });
 
     logger.debug('fetching internal-deadlines report');
-    const internalDeadlinesData = await metrics('/reports/internal-deadlines', { stream: false, query }, accessToken);
+    const internalDeadlinesData = await metrics(
+      '/reports/internal-deadlines',
+      { stream: false, query },
+      accessToken
+    );
+
     logger.debug('writing internal-deadlines csv');
     internalDeadlinesData.filter(Boolean).forEach(row => internalDeadlinesCSV.write(row));
     internalDeadlinesCSV.end();
@@ -35,7 +50,35 @@ module.exports = settings => {
     const actionedTasksRawCSV = csv({
       header: true,
       bom: true,
-      columns: ['id', 'status', 'model', 'action', 'taskType', 'firstSubmittedAt', 'firstReturnedAt', 'firstAssignedAt', 'resolvedAt', 'assignToActionDiff', 'submitToActionDiff', 'wasSubmitted', 'isOutstanding', 'returnedCount']
+      columns: [
+        'taskId',
+        'status',
+        'model',
+        'modelId',
+        'licenceNumber',
+        'action',
+        'taskType',
+        'firstSubmittedAt',
+        'firstReturnedAt',
+        'firstAssignedAt',
+        'firstSubmittedAtInPeriod',
+        'firstReturnedAtInPeriod',
+        'firstAssignedAtInPeriod',
+        'lastResubmittedAt',
+        'lastReturnedAt',
+        'lastAssignedAt',
+        'resolvedAt',
+        'totalDaysAssigned',
+        'firstSubmitToActionDiff',
+        'lastSubmitToActionDiff',
+        'totalDaysWithAsru',
+        'wasSubmittedInPeriod',
+        'isOutstanding',
+        'returnedCount',
+        'returnedCountInPeriod',
+        'resubmittedCount',
+        'resubmittedCountInPeriod'
+      ]
     });
     let actionedTasksSummary = emptyStats();
 
@@ -59,6 +102,24 @@ module.exports = settings => {
       }
     });
 
+    const actionedSubtasksCSV = csv({
+      header: true,
+      bom: true,
+      columns: [
+        'taskId',
+        'model',
+        'modelId',
+        'licenceNumber',
+        'versionId',
+        'submitted',
+        'assigned',
+        'actioned',
+        'action',
+        'isResubmission',
+        'isWithAsru'
+      ]
+    });
+
     return new Promise((resolve, reject) => {
       logger.debug('fetching actioned-tasks stream');
 
@@ -66,7 +127,8 @@ module.exports = settings => {
         .then(stream => {
           logger.debug('writing actioned-tasks-raw csv');
           stream.on('data', task => {
-            actionedTasksRawCSV.write({ ...omit(task, 'data', 'metrics'), ...task.data, ...task.metrics });
+            actionedTasksRawCSV.write({ ...omit(task, 'data', 'metrics', 'subtasks'), ...task.data, ...task.metrics });
+            (task.metrics?.subtasks ?? []).forEach((subTask) => { actionedSubtasksCSV.write(subTask); });
             actionedTasksSummary = summarise(actionedTasksSummary, task);
           });
           stream.on('end', () => resolve());
@@ -83,10 +145,11 @@ module.exports = settings => {
 
         actionedTasksRawCSV.end();
         actionedTasksSummaryCSV.end();
+        actionedSubtasksCSV.end();
       })
       .then(() => {
         logger.debug('creating zip file');
-        const zip = archiver('zip');
+        const zip = archiver('zip', undefined);
 
         zip.on('error', err => {
           throw new Error(err);
@@ -95,6 +158,7 @@ module.exports = settings => {
         zip.append(internalDeadlinesCSV, { name: `internal-deadlines_${start}_${end}.csv` });
         zip.append(actionedTasksRawCSV, { name: `actioned-tasks-raw_${start}_${end}.csv` });
         zip.append(actionedTasksSummaryCSV, { name: `actioned-tasks-summary_${start}_${end}.csv` });
+        zip.append(actionedSubtasksCSV, { name: `subtasks-${start}_${end}.csv` });
         zip.finalize();
 
         logger.debug('uploading zip file');

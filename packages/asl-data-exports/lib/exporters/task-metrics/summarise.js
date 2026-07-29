@@ -5,13 +5,15 @@ module.exports = (summary, task) => {
 
   let {
     taskType,
-    returnedCount = 0,
-    resubmittedCount = 0,
-    wasSubmitted,
+    returnedCountInPeriod: returnedCount = 0,
+    resubmittedCountInPeriod: resubmittedCount = 0,
+    wasSubmittedInPeriod: wasSubmitted,
     isOutstanding,
-    submitToActionDiff,
+    firstSubmitToActionDiff: submitToActionDiff,
     resubmittedDiffs = [],
-    assignToActionDiff,
+    firstAssignedToActionDiff: assignToActionDiff,
+    totalDaysWithAsru,
+    totalDaysAssigned,
     resolvedAt
   } = task.metrics;
 
@@ -42,6 +44,14 @@ module.exports = (summary, task) => {
 
   if (typeof assignToActionDiff !== 'undefined') {
     summary[taskType].assignToActionDays.push(assignToActionDiff);
+  }
+
+  if (typeof totalDaysWithAsru !== 'undefined') {
+    summary[taskType].totalDaysWithAsru.push(totalDaysWithAsru);
+  }
+
+  if (typeof assignToActionDiff !== 'undefined') {
+    summary[taskType].totalDaysAssigned.push(totalDaysAssigned);
   }
 
   summary[taskType].resubmitToActionDays.push(...resubmittedDiffs);
