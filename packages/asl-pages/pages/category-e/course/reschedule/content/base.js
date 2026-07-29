@@ -42,7 +42,7 @@ module.exports = merge({},
         required: 'Enter the course start date',
         validDate: 'Course start date must be a real date and include a day,' +
           ' month and year. The year must include 4 numbers',
-        dateIsAfter: 'The course start date must be in the future.'
+        dateIsAfter: 'course start date must be in the future'
       },
       endDate: {
         required: 'Enter the course end date',
