@@ -5,6 +5,7 @@ const { Packer } = require('@joefitter/docx');
 const filenamify = require('filenamify');
 const DocxMerger = require('@scholarcy/docx-merger');
 const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
+const { NotFoundError } = require('@asl/service/errors');
 
 // Converts docx Document instance into a binary Buffer
 const pack = doc => {
@@ -35,7 +36,7 @@ module.exports = settings => {
   router.get('/', async (req, res, next) => {
     try {
       if (!req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
-        return res.status(400).send('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.');
+        throw new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.');
       }
       const { startDate, endDate, ra } = req.query;
 
