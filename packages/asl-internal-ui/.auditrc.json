@@ -3,18 +3,6 @@
     "GHSA-f88m-g3jw-g9cj: sharp (package.json) - inherited vulnerabilities in libvips:"
   ],
   "allowlist": [
-    "GHSA-f88m-g3jw-g9cj",
-    "GHSA-mh99-v99m-4gvg",
-    "GHSA-848j-6mx2-7j84",
-    "GHSA-v56q-mh7h-f735",
-    "GHSA-36fh-84j7-cv5h",
-    "GHSA-h6q6-9hqw-rwfv",
-    "GHSA-crh6-fp67-6883",
-    "GHSA-5fg8-2547-mr8q",
-    "GHSA-wh4c-j3r5-mjhp",
-    "GHSA-2v35-w6hq-6mfw",
-    "GHSA-f6ww-3ggp-fr8h",
-    "GHSA-x6wf-f3px-wcqx",
-    "GHSA-j759-j44w-7fr8"
+    "GHSA-f88m-g3jw-g9cj"
   ]
 }

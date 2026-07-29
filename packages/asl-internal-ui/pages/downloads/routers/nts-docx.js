@@ -3,7 +3,7 @@ const ntsRenderer = require('@asl/projects/client/components/download-link/rende
 const getNtsSchema = require('@asl/pages/pages/project-version/nts/schema');
 const { Packer } = require('@joefitter/docx');
 const filenamify = require('filenamify');
-const DocxMerger = require('docx-merger');
+const DocxMerger = require('@scholarcy/docx-merger');
 const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
 
 // Converts docx Document instance into a binary Buffer
@@ -13,15 +13,10 @@ const pack = doc => {
 };
 
 // Convert docx-merger callback into a Promise
-const mergeBuffers = (buffers) => {
-  return new Promise((resolve, reject) => {
-    try {
-      const docx = new DocxMerger({}, buffers);
-      docx.save('nodebuffer', (mergedData) => resolve(mergedData));
-    } catch (err) {
-      reject(err);
-    }
-  });
+const mergeBuffers = async (buffers) => {
+  const docx = new DocxMerger();
+  await docx.initialize({}, buffers);
+  return await docx.save('nodebuffer');
 };
 
 // Helper to check YYYY-MM-DD format and date check

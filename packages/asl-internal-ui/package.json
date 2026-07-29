@@ -53,7 +53,7 @@
     "css-loader": "^5.0.0",
     "csv-stringify": "^5.3.6",
     "date-fns": "^3.6.0",
-    "docx-merger": "^1.2.2",
+    "@scholarcy/docx-merger": "^0.3.0",
     "docx": "5.0.0-rc4",
     "express": "^4.18.2",
     "filenamify": "^4.1.0",
