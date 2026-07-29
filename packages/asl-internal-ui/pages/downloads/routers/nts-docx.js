@@ -16,7 +16,7 @@ const pack = doc => {
 const mergeBuffers = async (buffers) => {
   const docx = new DocxMerger();
   await docx.initialize({}, buffers);
-  return await docx.save('nodebuffer');
+  return docx.save('nodebuffer');
 };
 
 // Helper to check YYYY-MM-DD format and date check
