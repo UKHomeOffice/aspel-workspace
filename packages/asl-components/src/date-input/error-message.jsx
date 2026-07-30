@@ -5,17 +5,6 @@ import { Snippet } from '../';
 import { resolveDateError } from './resolve-error';
 
 // Renders the GOV.UK Design System error message for a date field. GDS is now the
-// DEFAULT for every date field (so new date fields get it automatically), driven by
-// resolveDateError + the `errors.default.date.*` templates.
-//
-// Message priority:
-//   - `validDate` -> always the GDS state (incomplete / real date / year length),
-//     because a single "enter a valid date" is exactly the non-GDS wording we're
-//     replacing. A page can still override via `errors.<field>.date.<key>`.
-//   - `required` and the dateIs* constraints -> a page's own bespoke
-//     `errors.<field>.<code>` message still wins (keeps agreed / e2e-tested wording);
-//     GDS is the fallback.
-// `{{dateLabel}}` is the field's noun-phrase; defaults to a safe generic "The date".
 export const DateErrorMessage = ({ content, name, value, errorCode, validate, dateLabel: dateLabelProp, dateEnter, snippetProps = {} }) => {
     const resolved = resolveDateError({ value, errorCode, validate });
 
