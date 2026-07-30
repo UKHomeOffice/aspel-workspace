@@ -65,7 +65,7 @@ module.exports = {
       required: 'Enter the course date',
       validDate: 'The course date must be a real date and include a day,' +
         ' month and year. The year must include 4 numbers',
-      dateIsAfter: 'The course date must be in the future.',
+      dateIsAfter: 'Course date must be in the future',
       dateIsSameOrBefore: 'Course date must be before the PPL expiry' +
         ' date {{ project.formattedExpiryDate }}'
     },
