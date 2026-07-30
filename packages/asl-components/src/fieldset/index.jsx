@@ -73,7 +73,7 @@ const fields = {
     inputPassword: props => <Input type="password" { ...props } />,
     declaration: props => <ApplicationConfirm { ...props } />,
     inputDate: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />,
-    inputDateRange: ({ dateRangeFields, fields: _, ...props }) => <DateRangeInput { ...props } fields={dateRangeFields} legend={props.label} asForm={false} buttonText={null} onChange={props.onChange} />,
+    inputDateRange: ({ dateRangeFields, fields: _, ...props }) => <DateRangeInput { ...props } fields={dateRangeFields} legend={props.label} asForm={false} buttonText={props.buttonText ?? null} onChange={props.onChange} />,
     textarea: props => <TextArea { ...omit(props, ['meta']) } autoExpand={true} />,
     textAreaWithWordCount: props => <TextAreaWithWordCount { ...omit(props, ['meta']) } />,
     radioGroup: props => {
