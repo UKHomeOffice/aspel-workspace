@@ -22,7 +22,8 @@ export default async function ntsDocxRenderer(opts) {
     includeDraftRa,
     ra,
     raReasons,
-    isTrainingLicence
+    isTrainingLicence,
+    isBulk
   } = opts;
 
   const document = new Document();
@@ -41,7 +42,9 @@ export default async function ntsDocxRenderer(opts) {
   };
 
   const renderTitleBlock = () => {
-    document.createParagraph('Non-technical Summary').heading1();
+    if (!isBulk) {
+      document.createParagraph('Non-technical Summary').heading1();
+    }
     document.createParagraph(application.title || version.title || 'Untitled project').heading2();
     document.createParagraph('\n').style('body');
   };
