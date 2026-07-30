@@ -3,7 +3,7 @@ const ntsRenderer = require('@asl/projects/client/components/download-link/rende
 const getNtsSchema = require('@asl/pages/pages/project-version/nts/schema');
 const { Packer } = require('@joefitter/docx');
 const filenamify = require('filenamify');
-const DocxMerger = require('@scholarcy/docx-merger');
+const DocxMerger = require('@valentiniljaz/docx-merger');
 const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
 const { NotFoundError } = require('@asl/service/errors');
 
@@ -15,8 +15,14 @@ const pack = doc => {
 
 // Convert docx-merger callback into a Promise
 const mergeBuffers = async (buffers) => {
+  if (!buffers || buffers.length === 0) {
+    throw new Error('No buffers provided to merge.');
+  }
+  if (buffers.length === 1) {
+    return buffers[0];
+  }
   const docx = new DocxMerger();
-  await docx.initialize({}, buffers);
+  await docx.initialize({ pageBreak: true }, buffers);
   return docx.save('nodebuffer');
 };
 
