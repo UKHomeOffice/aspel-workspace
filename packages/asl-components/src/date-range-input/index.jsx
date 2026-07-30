@@ -23,8 +23,10 @@ function getDateError({ name, field, value, errors = {}, validate = {} }) {
 
 export default function DateRangeInput({
     legend,
+    label,
     name = 'date',
-    fields = defaultFields,
+    fields,
+    dateRangeFields,
     values = {},
     errors = {},
     validate = {},
@@ -36,6 +38,8 @@ export default function DateRangeInput({
     onSubmit
 }) {
     const [range, setRange] = useState(values);
+    const resolvedFields = dateRangeFields || fields || defaultFields;
+    const resolvedLegend = legend || label;
 
     useEffect(() => {
         setRange(values);
@@ -65,15 +69,15 @@ export default function DateRangeInput({
     return (
         <Wrapper {...wrapperProps} className="date-range-input">
             <fieldset className="govuk-fieldset">
-                {legend && (
+                {resolvedLegend && (
                     <legend className="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h2 className="govuk-fieldset__heading">{legend}</h2>
+                        <h2 className="govuk-fieldset__heading">{resolvedLegend}</h2>
                     </legend>
                 )}
                 <div className="date-range-input__fields">
                     {
-                        Object.keys(fields).map(key => {
-                            const field = fields[key];
+                        Object.keys(resolvedFields).map(key => {
+                            const field = resolvedFields[key];
                             const fieldName = field.name || `${name}-${key}`;
                             return (
                                 <div className="date-range-input__field" key={key}>

@@ -22,6 +22,29 @@ describe('<DateRangeInput />', () => {
         expect(screen.getByLabelText('Month', { selector: '#date-to-month' })).toBeInTheDocument();
     });
 
+    test('accepts schema-style label and dateRangeFields props', () => {
+        render(
+            <DateRangeInput
+                label="Granted dates"
+                name="granted"
+                dateRangeFields={{
+                    from: {
+                        label: 'Granted from'
+                    },
+                    to: {
+                        label: 'Granted to'
+                    }
+                }}
+            />
+        );
+
+        expect(screen.getByRole('heading', { name: 'Granted dates' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Granted from' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Granted to' })).toBeInTheDocument();
+        expect(screen.getByLabelText('Day', { selector: '#granted-from-day' })).toBeInTheDocument();
+        expect(screen.getByLabelText('Month', { selector: '#granted-to-month' })).toBeInTheDocument();
+    });
+
     test('uses GOV.UK-style hints for each date input', () => {
         render(<DateRangeInput />);
 
