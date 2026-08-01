@@ -99,7 +99,7 @@ export default function DateRangeInput({
                         })
                     }
                 </div>
-                {buttonText && <button type="submit" className="govuk-button">{buttonText}</button>}
+                {buttonText && <button type="submit" className="govuk-button button-secondary">{buttonText}</button>}
             </fieldset>
         </Wrapper>
     );

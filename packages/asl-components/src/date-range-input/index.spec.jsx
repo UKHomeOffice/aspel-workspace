@@ -84,6 +84,12 @@ describe('<DateRangeInput />', () => {
         expect(onSubmit).toHaveBeenCalledWith({ 'date-from': '2020-01-01' });
     });
 
+    test('uses secondary button styling for the filter action', () => {
+        render(<DateRangeInput />);
+
+        expect(screen.getByRole('button', { name: 'Apply filter' }).classList).toContain('button-secondary');
+    });
+
     test('can render without a form wrapper', () => {
         const { container } = render(<DateRangeInput asForm={false} />);
 
