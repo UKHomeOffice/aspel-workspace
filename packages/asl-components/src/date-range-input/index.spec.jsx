@@ -66,6 +66,62 @@ describe('<DateRangeInput />', () => {
         expect(container.querySelector('#date-to-day').classList).toContain('govuk-input--error');
     });
 
+    test('shows an error when the from date is not before the to date', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2024-02-01', 'date-to': '2024-01-01' }}
+            />
+        );
+
+        expect(screen.getByText('error:date-from:dateIsBefore')).toBeInTheDocument();
+    });
+
+    test('shows an error when the from date is the same as the to date', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2024-01-01', 'date-to': '2024-01-01' }}
+            />
+        );
+
+        expect(screen.getByText('error:date-from:dateIsBefore')).toBeInTheDocument();
+    });
+
+    test('shows the range error on the to date when it is the date being changed', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2024-02-01', 'date-to': '2024-03-01' }}
+            />
+        );
+
+        fireEvent.change(screen.getByLabelText('Month', { selector: '#date-to-month' }), { target: { value: '01' } });
+
+        expect(screen.getByText('error:date-to:dateIsAfter')).toBeInTheDocument();
+        expect(screen.queryByText('error:date-from:dateIsBefore')).not.toBeInTheDocument();
+    });
+
+    test('shows the range error on the from date when it is the date being changed', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2024-01-01', 'date-to': '2024-03-01' }}
+            />
+        );
+
+        fireEvent.change(screen.getByLabelText('Month', { selector: '#date-from-month' }), { target: { value: '04' } });
+
+        expect(screen.getByText('error:date-from:dateIsBefore')).toBeInTheDocument();
+        expect(screen.queryByText('error:date-to:dateIsAfter')).not.toBeInTheDocument();
+    });
+
+    test('does not show a range error while either date is invalid', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2024--01', 'date-to': '2024-01-01' }}
+            />
+        );
+
+        expect(screen.queryByText('error:date-from:dateIsBefore')).not.toBeInTheDocument();
+    });
+
     test('emits updated range values when a date part changes', () => {
         const onChange = jest.fn();
         render(<DateRangeInput values={{ 'date-from': '2020-01-01' }} onChange={onChange} />);

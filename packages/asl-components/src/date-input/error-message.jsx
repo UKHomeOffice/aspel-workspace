@@ -5,9 +5,9 @@ import { Snippet } from '../';
 import { resolveDateError } from './resolve-error';
 
 // Renders the GOV.UK Design System error message for a date field, but only for fields that have opted in by setting a `dateLabel` in content
-export const DateErrorMessage = ({ content, name, value, errorCode, validate, snippetProps = {} }) => {
+export const DateErrorMessage = ({ content, name, value, errorCode, validate, dateLabel: dateLabelProp, snippetProps = {} }) => {
     const resolved = resolveDateError({ value, errorCode, validate });
-    const dateLabel = get(content, `fields.${name}.dateLabel`);
+    const dateLabel = get(content, `fields.${name}.dateLabel`) || dateLabelProp;
 
     if (resolved && typeof dateLabel === 'string') {
         return (
