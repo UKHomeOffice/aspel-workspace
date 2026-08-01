@@ -131,6 +131,16 @@ describe('<DateRangeInput />', () => {
         expect(onChange).toHaveBeenCalledWith({ 'date-from': '2020-01-02' });
     });
 
+    test('merges range updates against the latest state', () => {
+        const onChange = jest.fn();
+        render(<DateRangeInput values={{ 'date-from': '2020-01-01', 'date-to': '2020-02-01' }} onChange={onChange} />);
+
+        fireEvent.change(screen.getByLabelText('Day', { selector: '#date-from-day' }), { target: { value: '02' } });
+        fireEvent.change(screen.getByLabelText('Day', { selector: '#date-to-day' }), { target: { value: '03' } });
+
+        expect(onChange).toHaveBeenLastCalledWith({ 'date-from': '2020-01-02', 'date-to': '2020-02-03' });
+    });
+
     test('submits the current range using the provided handler', () => {
         const onSubmit = jest.fn();
         render(<DateRangeInput values={{ 'date-from': '2020-01-01' }} onSubmit={onSubmit} />);
@@ -151,5 +161,23 @@ describe('<DateRangeInput />', () => {
 
         expect(container.querySelector('form')).toBeNull();
         expect(screen.getByRole('button', { name: 'Apply filter' })).toBeInTheDocument();
+    });
+
+    test('uses a button type and submits via onSubmit without a form wrapper', () => {
+        const onSubmit = jest.fn();
+        const outerSubmit = jest.fn(e => e.preventDefault());
+        render(
+            <form onSubmit={outerSubmit}>
+                <DateRangeInput asForm={false} values={{ 'date-from': '2020-01-01' }} onSubmit={onSubmit} />
+            </form>
+        );
+
+        const button = screen.getByRole('button', { name: 'Apply filter' });
+        expect(button).toHaveAttribute('type', 'button');
+
+        fireEvent.click(button);
+
+        expect(onSubmit).toHaveBeenCalledWith({ 'date-from': '2020-01-01' });
+        expect(outerSubmit).not.toHaveBeenCalled();
     });
 });

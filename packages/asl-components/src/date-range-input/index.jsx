@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import moment from 'moment';
 import DateInput from '../date-input';
 import DateErrorMessage from '../date-input/error-message';
@@ -74,6 +74,7 @@ export default function DateRangeInput({
 }) {
     const [range, setRange] = useState(values);
     const [changedFieldName, setChangedFieldName] = useState(null);
+    const emitChange = useRef(false);
     const resolvedFields = dateRangeFields || fields || defaultFields;
     const resolvedLegend = legend || label;
 
@@ -81,19 +82,25 @@ export default function DateRangeInput({
         setRange(values);
     }, [values]);
 
+    useEffect(() => {
+        if (emitChange.current) {
+            emitChange.current = false;
+            onChange && onChange(range);
+        }
+    }, [range, onChange]);
+
     function update(fieldName, value) {
-        const nextRange = {
-            ...range,
-            [fieldName]: value
-        };
+        emitChange.current = true;
         setChangedFieldName(fieldName);
-        setRange(nextRange);
-        onChange && onChange(nextRange);
+        setRange(previousRange => ({
+            ...previousRange,
+            [fieldName]: value
+        }));
     }
 
     function submit(e) {
         if (onSubmit) {
-            e.preventDefault();
+            e && e.preventDefault();
             onSubmit(range);
         }
     }
@@ -102,6 +109,9 @@ export default function DateRangeInput({
     const wrapperProps = asForm
         ? { action, method, onSubmit: submit }
         : {};
+    const buttonProps = asForm
+        ? { type: 'submit' }
+        : { type: 'button', onClick: submit };
 
     return (
         <Wrapper {...wrapperProps} className="date-range-input">
@@ -147,7 +157,7 @@ export default function DateRangeInput({
                         })
                     }
                 </div>
-                {buttonText && <button type="submit" className="govuk-button button-secondary">{buttonText}</button>}
+                {buttonText && <button {...buttonProps} className="govuk-button button-secondary">{buttonText}</button>}
             </fieldset>
         </Wrapper>
     );
