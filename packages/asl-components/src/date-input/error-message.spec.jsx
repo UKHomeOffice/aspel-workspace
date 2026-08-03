@@ -79,22 +79,23 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
             expect(container.textContent).toBe('Award date must be a real date');
         });
 
-    test('maps dateIsBefore now to "in the past"', () => {
-        const { container } = renderWith({
-            name: 'passDate', value: '2999-01-01', errorCode: 'dateIsBefore', validate: [{ dateIsBefore: 'now' }]
+        test('maps dateIsBefore now to "in the past"', () => {
+            const { container } = renderWith({
+                name: 'passDate', value: '2999-01-01', errorCode: 'dateIsBefore', validate: [{ dateIsBefore: 'now' }]
+            });
+            expect(container.textContent).toBe('Award date must be in the past');
         });
-        expect(container.textContent).toBe('Award date must be in the past');
-    });
 
-    test('falls back to the generic error when the label is not a plain string', () => {
-        const noLabel = {
-            fields: { passDate: {} },
-            errors: { passDate: { validDate: 'Enter a valid date' }, default: { validDate: 'x' } }
-        };
-        const { container } = renderWith(
-            { name: 'passDate', value: '2024-13-10', errorCode: 'validDate' },
-            noLabel
-        );
-        expect(container.textContent).toBe('Enter a valid date');
+        test('falls back to the generic error when the label is not a plain string', () => {
+            const noLabel = {
+                fields: { passDate: {} },
+                errors: { passDate: { validDate: 'Enter a valid date' }, default: { validDate: 'x' } }
+            };
+            const { container } = renderWith(
+                { name: 'passDate', value: '2024-13-10', errorCode: 'validDate' },
+                noLabel
+            );
+            expect(container.textContent).toBe('Enter a valid date');
+        });
     });
 });

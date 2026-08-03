@@ -29,7 +29,7 @@ export const DateErrorMessage = ({ content, name, value, errorCode, validate, da
     let keys;
     if (errorCode === 'validDate') {
         // validDate leads with the GDS message (the finer state).
-        keys = [gdsFieldKey, gdsDefaultKey, legacyDefaultKey];
+        keys = [gdsFieldKey, gdsDefaultKey, pageCodeKey, legacyDefaultKey];
     } else if (resolved.key === 'enter') {
         // "Enter ..." : page bespoke -> content override -> a schema-provided literal
         // (`dateEnter`, for dynamic fields with no content slot) -> generic default.
