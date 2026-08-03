@@ -46,6 +46,7 @@ module.exports = (roleType) => {
     },
     completeDate: {
       inputType: 'inputDate',
+      dateLabel: 'Training completion date',
       hint: 'For example, 27 3 2007',
       nullValue: '',
       validate: [

@@ -14,6 +14,7 @@ module.exports = {
         reveal: {
           deadline: {
             inputType: 'inputDate',
+            dateLabel: 'Deadline',
             label: 'Condition deadline',
             hint: 'Licence holders will receive reminders a month before, a week before and on the day the condition is due to be met. ASRU will receive a reminder when the deadline has passed.',
             validate: [

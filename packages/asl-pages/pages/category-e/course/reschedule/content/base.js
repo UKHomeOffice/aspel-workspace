@@ -32,24 +32,24 @@ module.exports = merge({},
       },
       courseDate: {
         required: 'Enter the course date',
-        validDate: 'The course date must be a real date and include a day,' +
+        validDate: 'Course date must be a real date and include a day,' +
           ' month and year. The year must include 4 numbers',
-        dateIsAfter: 'The course date must be in the future.',
-        dateIsSameOrBefore: 'The course date must be before the PPL expiry' +
+        dateIsAfter: 'Course date must be in the future.',
+        dateIsSameOrBefore: 'Course date must be before the PPL expiry' +
           ' date {{ project.formattedExpiryDate }}'
       },
       startDate: {
         required: 'Enter the course start date',
         validDate: 'Course start date must be a real date and include a day,' +
           ' month and year. The year must include 4 numbers',
-        dateIsAfter: 'The course start date must be in the future.'
+        dateIsAfter: 'course start date must be in the future'
       },
       endDate: {
         required: 'Enter the course end date',
-        validDate: 'The course end date must be a real date and include a day,' +
+        validDate: 'Course end date must be a real date and include a day,' +
           ' month and year. The year must include 4 numbers',
-        dateIsAfter: 'The course end date must be after the start date.',
-        dateIsSameOrBefore: 'The course end date must be before the PPL expiry' +
+        dateIsAfter: 'Course end date must be after the start date.',
+        dateIsSameOrBefore: 'Course end date must be before the PPL expiry' +
           ' date {{ project.formattedExpiryDate }}'
       }
     },
