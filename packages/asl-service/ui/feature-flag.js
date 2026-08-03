@@ -7,8 +7,7 @@ const flags = {
   FEATURE_FLAG_INSPECTOR_OWN_COMMENTS: 'feature-flag-inspector-comment',
   FEATURE_FLAG_NAMED_PERSON_MVP: 'feature-named-person-mvp',
   FEATURE_FLAG_NTS_DOCX: 'feature-nts-docx',
-  FEATURE_FLAG_STANDARD_PROTOCOLS: 'feature-standard-protocols',
-  FEATURE_FLAG_TRAINING_RECORD: 'feature-training-record-highlight'
+  FEATURE_FLAG_STANDARD_PROTOCOLS: 'feature-standard-protocols'
 };
 
 const useFeatureFlags = () => {

@@ -84,7 +84,8 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
     req.api(`/establishment/${req.establishmentId}/projects/${projectId}`)
       .then(response => response.json.data)
       .then(project => {
-        project.formattedExpiryDate = formatDate(project.expiryDate);
+        // Full ordinal form ("20th February 2025") for the date error messages.
+        project.formattedExpiryDate = formatDate(project.expiryDate, 'do MMMM yyyy');
 
         onProject(project, req, res);
         next();

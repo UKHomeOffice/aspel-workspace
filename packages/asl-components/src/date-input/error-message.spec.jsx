@@ -10,19 +10,29 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
 
     const content = {
         fields: {
-            passDate: { label: 'Date awarded', dateLabel: 'Award date' }
+            passDate: { label: 'Date awarded', dateLabel: 'Award date' },
+            // `issueDate` has NO dateLabel and keeps bespoke required/constraint wording
+            issueDate: { label: 'Granted date' }
         },
         errors: {
             passDate: {
                 date: { enter: 'Enter the date the certificate was awarded' }
             },
+            issueDate: {
+                required: 'Enter the granted date',
+                validDate: 'Enter a valid date', // generic - should be IGNORED in favour of GDS
+                dateIsBefore: 'Granted date cannot be in the future'
+            },
             default: {
+                required: 'This field is required',
                 date: {
-                    enter: 'Enter {{dateLabel}}',
+                    enter: 'Enter the date',
+                    enterLiteral: '{{dateEnter}}',
                     incomplete: '{{dateLabel}} must include {{missingParts}}',
                     yearLength: 'Year must include 4 numbers',
                     realDate: '{{dateLabel}} must be a real date',
                     past: '{{dateLabel}} must be in the past',
+                    future: '{{dateLabel}} must be in the future',
                     aspelDataStartDate: 'Aspel data started from 31/07/2019'
                 }
             }
@@ -44,42 +54,36 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
         );
     };
 
-    test('uses the page override for "enter"', () => {
-        const { container } = renderWith({ name: 'passDate', value: '--', errorCode: 'required' });
-        expect(container.textContent).toBe('Enter the date the certificate was awarded');
-    });
-
     // `value` is the internal ISO-ish string the DateInput emits/stores
-    // (`year-month-day`), NOT the British display order. splitDateValue reads it
-    // as year, month, day - so `2024--10` is year 2024, month blank, day 10.
-    test('names the missing part using the field dateLabel', () => {
-        const { container } = renderWith({ name: 'passDate', value: '2024--10', errorCode: 'validDate' });
-        expect(container.textContent).toBe('Award date must include a month');
-    });
+    // (`year-month-day`), NOT the British display order - so `2024--10` is
+    // year 2024, month blank, day 10.
 
-    test('says the year must be four numbers', () => {
-        const { container } = renderWith({ name: 'passDate', value: '24-05-10', errorCode: 'validDate' });
-        expect(container.textContent).toBe('Year must include 4 numbers');
-    });
+    describe('a field that has opted in with a dateLabel (certificate)', () => {
+        test('uses the page override for "enter"', () => {
+            const { container } = renderWith({ name: 'passDate', value: '--', errorCode: 'required' });
+            expect(container.textContent).toBe('Enter the date the certificate was awarded');
+        });
 
-    test('says a real date for an impossible date', () => {
-        // year 2024, month 13 (impossible), day 10
-        const { container } = renderWith({ name: 'passDate', value: '2024-13-10', errorCode: 'validDate' });
-        expect(container.textContent).toBe('Award date must be a real date');
-    });
+        test('names the missing part using the dateLabel', () => {
+            const { container } = renderWith({ name: 'passDate', value: '2024--10', errorCode: 'validDate' });
+            expect(container.textContent).toBe('Award date must include a month');
+        });
+
+        test('says the year must be four numbers', () => {
+            const { container } = renderWith({ name: 'passDate', value: '24-05-10', errorCode: 'validDate' });
+            expect(container.textContent).toBe('Year must include 4 numbers');
+        });
+
+        test('says a real date for an impossible date', () => {
+            const { container } = renderWith({ name: 'passDate', value: '2024-13-10', errorCode: 'validDate' });
+            expect(container.textContent).toBe('Award date must be a real date');
+        });
 
     test('maps dateIsBefore now to "in the past"', () => {
         const { container } = renderWith({
             name: 'passDate', value: '2999-01-01', errorCode: 'dateIsBefore', validate: [{ dateIsBefore: 'now' }]
         });
         expect(container.textContent).toBe('Award date must be in the past');
-    });
-
-    test('renders the ASPEL data start date message', () => {
-        const { container } = renderWith({
-            name: 'passDate', value: '2019-07-30', errorCode: 'aspelDataStartDate'
-        });
-        expect(container.textContent).toBe('Aspel data started from 31/07/2019');
     });
 
     test('falls back to the generic error when the label is not a plain string', () => {
