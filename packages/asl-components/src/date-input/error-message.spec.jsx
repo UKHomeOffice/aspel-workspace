@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
+import { afterEach, describe, expect, test } from '@jest/globals';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import DateErrorMessage from './error-message';
@@ -21,7 +22,8 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
                     incomplete: '{{dateLabel}} must include {{missingParts}}',
                     yearLength: 'Year must include 4 numbers',
                     realDate: '{{dateLabel}} must be a real date',
-                    past: '{{dateLabel}} must be in the past'
+                    past: '{{dateLabel}} must be in the past',
+                    aspelDataStartDate: 'Aspel data started from 31/07/2019'
                 }
             }
         }
@@ -71,6 +73,13 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
             name: 'passDate', value: '2999-01-01', errorCode: 'dateIsBefore', validate: [{ dateIsBefore: 'now' }]
         });
         expect(container.textContent).toBe('Award date must be in the past');
+    });
+
+    test('renders the ASPEL data start date message', () => {
+        const { container } = renderWith({
+            name: 'passDate', value: '2019-07-30', errorCode: 'aspelDataStartDate'
+        });
+        expect(container.textContent).toBe('Aspel data started from 31/07/2019');
     });
 
     test('falls back to the generic error when the label is not a plain string', () => {

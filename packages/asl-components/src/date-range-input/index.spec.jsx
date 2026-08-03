@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import { afterEach, describe, expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
 import DateRangeInput from './';
 
 function MockDateErrorMessage(props) {
@@ -10,7 +10,15 @@ function MockDateErrorMessage(props) {
 jest.mock('../date-input/error-message', () => MockDateErrorMessage);
 
 describe('<DateRangeInput />', () => {
-    afterEach(() => cleanup());
+    beforeEach(() => {
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date('2024-05-29T12:00:00Z'));
+    });
+
+    afterEach(() => {
+        cleanup();
+        jest.useRealTimers();
+    });
 
     test('renders a fieldset with date from and date to inputs', () => {
         render(<DateRangeInput legend="Filter by date granted" />);
@@ -76,14 +84,57 @@ describe('<DateRangeInput />', () => {
         expect(screen.getByText('error:date-from:dateIsBefore')).toBeInTheDocument();
     });
 
-    test('shows an error when the from date is the same as the to date', () => {
+    test('does not show an error when the from date is the same as the to date', () => {
         render(
             <DateRangeInput
                 values={{ 'date-from': '2024-01-01', 'date-to': '2024-01-01' }}
             />
         );
 
-        expect(screen.getByText('error:date-from:dateIsBefore')).toBeInTheDocument();
+        expect(screen.queryByText('error:date-from:dateIsBefore')).not.toBeInTheDocument();
+        expect(screen.queryByText('error:date-to:dateIsAfter')).not.toBeInTheDocument();
+    });
+
+    test('shows an error when either date is in the future', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2024-05-30', 'date-to': '2024-05-30' }}
+            />
+        );
+
+        expect(screen.getByText('error:date-from:dateIsSameOrBefore')).toBeInTheDocument();
+        expect(screen.getByText('error:date-to:dateIsSameOrBefore')).toBeInTheDocument();
+    });
+
+    test('allows either date to be today', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2024-05-29', 'date-to': '2024-05-29' }}
+            />
+        );
+
+        expect(screen.queryByText('error:date-from:dateIsSameOrBefore')).not.toBeInTheDocument();
+        expect(screen.queryByText('error:date-to:dateIsSameOrBefore')).not.toBeInTheDocument();
+    });
+
+    test('shows an error when date from is before ASPEL data started', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2019-07-30', 'date-to': '2019-07-31' }}
+            />
+        );
+
+        expect(screen.getByText('error:date-from:aspelDataStartDate')).toBeInTheDocument();
+    });
+
+    test('allows date from to be the day ASPEL data started', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2019-07-31', 'date-to': '2019-07-31' }}
+            />
+        );
+
+        expect(screen.queryByText('error:date-from:aspelDataStartDate')).not.toBeInTheDocument();
     });
 
     test('shows the range error on the to date when it is the date being changed', () => {

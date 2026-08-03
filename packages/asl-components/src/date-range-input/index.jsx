@@ -3,6 +3,8 @@ import moment from 'moment';
 import DateInput from '../date-input';
 import DateErrorMessage from '../date-input/error-message';
 
+const ASPEL_DATA_START_DATE = '2019-07-31';
+
 const defaultFields = {
     from: {
         label: 'Date from',
@@ -30,6 +32,24 @@ function parseDate(value) {
     return moment(value, ['YYYY-MM-DD', 'YYYY-M-D'], true);
 }
 
+function getBoundaryError({ key, field, fieldName, value }) {
+    const date = parseDate(value);
+
+    if (!date.isValid()) {
+        return null;
+    }
+
+    if (date.isAfter(moment(), 'day')) {
+        return <DateErrorMessage name={fieldName} value={value} errorCode="dateIsSameOrBefore" validate={[{ dateIsSameOrBefore: 'now' }]} dateLabel={field.dateLabel || field.label} />;
+    }
+
+    if (key === 'from' && date.isBefore(moment(ASPEL_DATA_START_DATE, 'YYYY-MM-DD'), 'day')) {
+        return <DateErrorMessage name={fieldName} value={value} errorCode="aspelDataStartDate" dateLabel={field.dateLabel || field.label} />;
+    }
+
+    return null;
+}
+
 function getRangeError({ name, field, fieldName, value, range, fields, errors, changedFieldName }) {
     const fromField = fields.from || {};
     const fromFieldName = fromField.name || `${name}-from`;
@@ -46,7 +66,7 @@ function getRangeError({ name, field, fieldName, value, range, fields, errors, c
     const toValue = getValue(range, toFieldName, 'to');
     const toDate = parseDate(toValue);
 
-    if (!fromDate.isValid() || !toDate.isValid() || fromDate.isBefore(toDate, 'day')) {
+    if (!fromDate.isValid() || !toDate.isValid() || fromDate.isSameOrBefore(toDate, 'day')) {
         return null;
     }
 
@@ -139,6 +159,11 @@ export default function DateRangeInput({
                                             value,
                                             errors,
                                             validate
+                                        }) || getBoundaryError({
+                                            key,
+                                            field,
+                                            fieldName,
+                                            value
                                         }) || getRangeError({
                                             name,
                                             key,
