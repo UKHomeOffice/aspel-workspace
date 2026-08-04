@@ -1,4 +1,4 @@
-const { v4: uuid } = require('uuid');
+const { randomUUID } = require('crypto');
 const { omit, cloneDeep } = require('lodash');
 
 const moment = require('moment-business-time');
@@ -13,12 +13,12 @@ const generateTask = ({
   internalDeadline,
   createdAt = '2021-12-01'
 }) => {
-  const id = uuid();
+  const id = randomUUID();
 
   // add a second to avoid falling directly on midnight
-  createdAt = moment(createdAt).add(1, 'second').toISOString();
+  const normalisedCreatedAt = moment(createdAt).add(1, 'second').toISOString();
 
-  const task = {
+  return {
     id,
     data: {
       action,
@@ -33,10 +33,17 @@ const generateTask = ({
     },
     type,
     status: 'new',
-    created_at: createdAt,
-    updated_at: createdAt,
+    created_at: normalisedCreatedAt,
+    updated_at: normalisedCreatedAt,
     activity: [
-      { id: uuid(), case_id: id, event_name: 'create', event: { status: 'new' }, created_at: createdAt, updated_at: createdAt }
+      {
+        id: randomUUID(),
+        case_id: id,
+        event_name: 'create',
+        event: { status: 'new' },
+        created_at: normalisedCreatedAt,
+        updated_at: normalisedCreatedAt
+      }
     ],
     history: function(status, daysOffset = 1, resubmission = false) {
       let eventName = status;
@@ -61,7 +68,7 @@ const generateTask = ({
       }
 
       this.activity.push({
-        id: uuid(),
+        id: randomUUID(),
         case_id: this.id,
         event_name: eventName,
         event: cloneDeep(omit(this, ['activity', 'history'])),
@@ -70,8 +77,6 @@ const generateTask = ({
       });
     }
   };
-
-  return task;
 };
 
 module.exports = generateTask;
