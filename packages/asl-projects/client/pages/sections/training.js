@@ -6,7 +6,6 @@ import { compareTrainingRecords } from '../../helpers/trainingRecordsComparison'
 import TrainingSummaryWithChangeHighlighting from '../../components/training-summary-custom';
 import Fieldset from '../../components/fieldset';
 import ReviewFields from '../../components/review-fields';
-import ChangedBadge from '../../components/changed-badge';
 export default function Training(props) {
   const { training, basename, readonly, canUpdateTraining } = useSelector(state => state.application, shallowEqual);
   const project = useSelector(state => state.project);
