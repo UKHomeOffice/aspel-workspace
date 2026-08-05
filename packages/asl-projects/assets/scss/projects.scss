@@ -1140,6 +1140,7 @@ html.modal-open, html.modal-open body {
   .ra-playback {
     .review:not(:last-child) {
       margin-bottom: $govuk-gutter;
+      margin-top: -15px !important;
     }
   }
 
@@ -1363,6 +1364,54 @@ html.modal-open, html.modal-open body {
 
     dl.inline {
       padding: $govuk-gutter-half 0;
+    }
+  }
+
+  .playback.standard-protocol {
+    .review {
+      margin-bottom: $govuk-gutter-half;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      > p,
+      > p.grey,
+      > .govuk-\!-margin-bottom-4 > p {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+      // standard-radio / standard-list answers wrap their value in a govuk
+      // spacing override, so the block margin above has to win over it
+      > .govuk-\!-margin-bottom-4 {
+        margin-bottom: 0 !important;
+      }
+
+      > .govuk-form-group {
+        margin-bottom: 0;
+
+        > .editor.readonly {
+          margin-top: 0;
+          margin-bottom: 0;
+
+          > [data-slate-editor] {
+            padding: 0;
+          }
+        }
+      }
+
+      .review-children {
+        margin-bottom: 0;
+      }
+    }
+
+    .steps .step > .review,
+    .steps .step > .review:last-child {
+      margin-top: -15px !important;
+    }
+    .steps .step > .review:last-child {
+      padding-top: 0px !important;
     }
   }
 
