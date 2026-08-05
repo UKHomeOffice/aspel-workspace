@@ -83,7 +83,7 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
     const task = req.closedTasks.find(matches);
 
     // The version id associated with a task is only updated when a draft is submitted
-    if (!task && req.version.status === 'draft') {
+    if (!task && req.version?.status === 'draft') {
       const previousVersion = dropWhile(req.project.versions, version => version.id !== versionId).slice(1).shift();
       if (previousVersion && !['withdrawn', 'granted'].includes(previousVersion.status)) {
         return getTaskForVersion(req, previousVersion.id, actions);

@@ -11,7 +11,7 @@ export default function TrainingSummaryWithChangeHighlighting(
   const dateFormat = 'dd MMMM yyyy';
 
   const trainingHistory = useSelector(state => state.static.previousTraining);
-  const versions = useSelector(state => state.static.project?.versions);
+  const versions = useSelector(state => state.static.project?.versions ?? []);
 
   const previousVersion = trainingHistory?.previous;
   const firstVersion = trainingHistory?.first;
