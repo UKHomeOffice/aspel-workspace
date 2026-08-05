@@ -104,7 +104,7 @@ const getComments = (actions = ['grant', 'transfer']) => asyncMiddleware(async (
     return;
   }
 
-  if (req.version.status === 'granted') {
+  if (req.version?.status === 'granted') {
     return;
   }
 

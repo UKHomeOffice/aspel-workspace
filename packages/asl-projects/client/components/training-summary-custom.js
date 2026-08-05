@@ -1,39 +1,26 @@
 import React from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
-import { getStatus, getTrainingRecord, getRemovedTrainingRecords } from '../helpers/trainingRecordsComparison';
+import { useSelector } from 'react-redux';
+import { getStatus, getTrainingRecord } from '../helpers/trainingRecordsComparison';
 import TrainingRecordModal from './trainingRecordsModal';
 import { format } from 'date-fns';
-const DEFAULT_LABEL = '-';
-export default function TrainingSummaryWithChangeHighlighting({
-                                                                certificates = [],
-                                                                comparisons = {},
-                                                                project = {},
-                                                                readonly
 
-                                                              }) {
+const DEFAULT_LABEL = '-';
+export default function TrainingSummaryWithChangeHighlighting(
+  { certificates = [], comparisons = {}, project = {} }
+) {
   const dateFormat = 'dd MMMM yyyy';
+
   const trainingHistory = useSelector(state => state.static.previousTraining);
-  const versions = useSelector(state => state.static.project.versions);
-  const previousVersion = useSelector(state => state.static.previousTraining.previous);
-  const firstVersion = useSelector(state => state.static.previousTraining.first);
-  const grantedVersion = useSelector(state => state.static.previousTraining.granted);
-  const removedRecords = getRemovedTrainingRecords(comparisons, trainingHistory);
+  const versions = useSelector(state => state.static.project?.versions);
+
+  const previousVersion = trainingHistory?.previous;
+  const firstVersion = trainingHistory?.first;
+  const grantedVersion = trainingHistory?.granted;
+
   const applicationGrantedStatus =
     grantedVersion !== null &&
     grantedVersion !== undefined &&
     Object.keys(grantedVersion).length > 0;
-
-  // Map removed by ID for quick lookup
-  const removedMap = removedRecords.reduce((map, r) => {
-    map[r.trainingId || r.id] = r;
-    return map;
-  }, {});
-
-  // Map current by id's
-  const currentMap = certificates.reduce((map, r) => {
-    map[r.trainingId || r.id] = r;
-    return map;
-  }, {});
 
   // Combine all records from previous, first, granted, and current versions
   const allRecords = [
