@@ -104,11 +104,7 @@ const getComments = (actions = ['grant', 'transfer'], type = 'project-versions')
     return;
   }
 
-  // ASL-5161: never expose draft-stage comments (or the granting Inspector's
-  // name) on a granted view. This is decided from the record the requested view
-  // is showing - the retrospective assessment on the RA view, the project
-  // version everywhere else. `req.version` on the RA view is the granted
-  // project version, so it can't be used to make this decision there.
+  // hide comments on granted views. Check what's actually being viewed  req.version is the granted project version on the RA view.
   const viewed = type === 'retrospective-assessments' ? req.retrospectiveAssessment : req.version;
 
   if (!viewed || viewed.status === 'granted') {
