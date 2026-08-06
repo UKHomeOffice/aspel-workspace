@@ -23,7 +23,7 @@ module.exports = settings => {
 
   app.use(loadRa);
 
-  app.use(getComments('grant-ra'));
+  app.use(getComments('grant-ra', 'retrospective-assessments'));
 
   app.use((req, res, next) => {
     req.api(`/establishment/${req.establishmentId}/project/${req.projectId}/project-version/${req.project.granted.id}`)
