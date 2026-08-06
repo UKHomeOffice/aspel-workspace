@@ -52,25 +52,23 @@ function getBoundaryError({ field, fieldName, value }) {
 }
 
 function getRangeError({ field, fieldName, value, range, errors, changedFieldName }) {
-    const fromFieldName = DATE_FROM_FIELD_NAME;
-    const toFieldName = DATE_TO_FIELD_NAME;
-    const targetFieldName = changedFieldName === toFieldName ? toFieldName : fromFieldName;
+    const targetFieldName = changedFieldName === DATE_TO_FIELD_NAME ? DATE_TO_FIELD_NAME : DATE_FROM_FIELD_NAME;
 
-    if (fieldName !== targetFieldName || errors[fromFieldName] || errors[toFieldName]) {
+    if (fieldName !== targetFieldName || errors[DATE_FROM_FIELD_NAME] || errors[DATE_TO_FIELD_NAME]) {
         return null;
     }
 
-    const fromValue = range[fromFieldName] ?? '';
+    const fromValue = range[DATE_FROM_FIELD_NAME] ?? '';
     const fromDate = parseDate(fromValue);
-    const toValue = range[toFieldName] ?? '';
+    const toValue = range[DATE_TO_FIELD_NAME] ?? '';
     const toDate = parseDate(toValue);
 
     if (!fromDate.isValid() || !toDate.isValid() || fromDate.isSameOrBefore(toDate, 'day')) {
         return null;
     }
 
-    const errorCode = targetFieldName === toFieldName ? 'dateIsAfter' : 'dateIsBefore';
-    const constraintValue = targetFieldName === toFieldName ? fromValue : toValue;
+    const errorCode = targetFieldName === DATE_TO_FIELD_NAME ? 'dateIsAfter' : 'dateIsBefore';
+    const constraintValue = targetFieldName === DATE_TO_FIELD_NAME ? fromValue : toValue;
 
     return <DateErrorMessage name={fieldName} value={value} errorCode={errorCode} validate={[{ [errorCode]: constraintValue }]} dateLabel={field.dateLabel || field.label} />;
 }
@@ -78,7 +76,6 @@ function getRangeError({ field, fieldName, value, range, errors, changedFieldNam
 export default function DateRangeInput({
     legend,
     label,
-    fields,
     dateRangeFields,
     values,
     errors = {},
@@ -88,7 +85,7 @@ export default function DateRangeInput({
     const resolvedValues = values || emptyValues;
     const [range, setRange] = useState(resolvedValues);
     const [changedFieldName, setChangedFieldName] = useState(null);
-    const resolvedFields = dateRangeFields || fields || defaultFields;
+    const resolvedFields = dateRangeFields || defaultFields;
     const resolvedLegend = legend || label;
 
     useEffect(() => {
