@@ -21,7 +21,7 @@ describe('<DateRangeInput />', () => {
     });
 
     test('renders a fieldset with date from and date to inputs', () => {
-        render(<DateRangeInput legend="Filter by date granted" />);
+        render(<DateRangeInput label="Filter by date granted" />);
 
         expect(screen.getByRole('heading', { name: 'Filter by date granted' })).toBeInTheDocument();
         expect(screen.getByRole('group', { name: 'Date from' })).toBeInTheDocument();
@@ -30,24 +30,16 @@ describe('<DateRangeInput />', () => {
         expect(screen.getByLabelText('Month', { selector: '#date-to-month' })).toBeInTheDocument();
     });
 
-    test('accepts schema-style label and dateRangeFields props', () => {
+    test('accepts a label prop', () => {
         render(
             <DateRangeInput
                 label="Granted dates"
-                dateRangeFields={{
-                    'date-from': {
-                        label: 'Granted from'
-                    },
-                    'date-to': {
-                        label: 'Granted to'
-                    }
-                }}
             />
         );
 
         expect(screen.getByRole('heading', { name: 'Granted dates' })).toBeInTheDocument();
-        expect(screen.getByRole('group', { name: 'Granted from' })).toBeInTheDocument();
-        expect(screen.getByRole('group', { name: 'Granted to' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Date from' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Date to' })).toBeInTheDocument();
         expect(screen.getByLabelText('Day', { selector: '#date-from-day' })).toBeInTheDocument();
         expect(screen.getByLabelText('Month', { selector: '#date-to-month' })).toBeInTheDocument();
     });
