@@ -4,25 +4,22 @@ import DateInput from '../date-input';
 import DateErrorMessage from '../date-input/error-message';
 
 const ASPEL_DATA_START_DATE = '2019-07-31';
+const DATE_FROM_FIELD_NAME = 'date-from';
+const DATE_TO_FIELD_NAME = 'date-to';
 
 const defaultFields = {
-    from: {
+    [DATE_FROM_FIELD_NAME]: {
         label: 'Date from',
         hint: 'For example 01 01 2020'
     },
-    to: {
+    [DATE_TO_FIELD_NAME]: {
         label: 'Date to',
         hint: 'For example 12 12 2020'
     }
 };
 
 const emptyValues = {};
-const DATE_FROM_FIELD_NAME = 'date-from';
-const DATE_TO_FIELD_NAME = 'date-to';
-const RANGE_FIELDS = [
-    { key: 'from', fieldName: DATE_FROM_FIELD_NAME },
-    { key: 'to', fieldName: DATE_TO_FIELD_NAME }
-];
+const RANGE_FIELDS = [DATE_FROM_FIELD_NAME, DATE_TO_FIELD_NAME];
 
 function getDateError({ name, field, value, errors = {}, validate = {} }) {
     const errorCode = errors[name];
@@ -36,7 +33,7 @@ function parseDate(value) {
     return moment(value, ['YYYY-MM-DD', 'YYYY-M-D'], true);
 }
 
-function getBoundaryError({ key, field, fieldName, value }) {
+function getBoundaryError({ field, fieldName, value }) {
     const date = parseDate(value);
 
     if (!date.isValid()) {
@@ -47,7 +44,7 @@ function getBoundaryError({ key, field, fieldName, value }) {
         return <DateErrorMessage name={fieldName} value={value} errorCode="dateIsSameOrBefore" validate={[{ dateIsSameOrBefore: 'now' }]} dateLabel={field.dateLabel || field.label} />;
     }
 
-    if (key === 'from' && date.isBefore(moment(ASPEL_DATA_START_DATE, 'YYYY-MM-DD'), 'day')) {
+    if (fieldName === DATE_FROM_FIELD_NAME && date.isBefore(moment(ASPEL_DATA_START_DATE, 'YYYY-MM-DD'), 'day')) {
         return <DateErrorMessage name={fieldName} value={value} errorCode="aspelDataStartDate" dateLabel={field.dateLabel || field.label} />;
     }
 
@@ -120,11 +117,11 @@ export default function DateRangeInput({
                 )}
                 <div className="date-range-input__fields">
                     {
-                        RANGE_FIELDS.map(({ key, fieldName }) => {
-                            const field = resolvedFields[key] || defaultFields[key];
+                        RANGE_FIELDS.map(fieldName => {
+                            const field = resolvedFields[fieldName] || defaultFields[fieldName];
                             const value = range[fieldName] ?? '';
                             return (
-                                <div className="date-range-input__field" key={key}>
+                                <div className="date-range-input__field" key={fieldName}>
                                     <DateInput
                                         {...field}
                                         name={fieldName}
@@ -136,7 +133,6 @@ export default function DateRangeInput({
                                             errors,
                                             validate
                                         }) || getBoundaryError({
-                                            key,
                                             field,
                                             fieldName,
                                             value

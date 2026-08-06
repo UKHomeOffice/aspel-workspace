@@ -35,10 +35,10 @@ describe('<DateRangeInput />', () => {
             <DateRangeInput
                 label="Granted dates"
                 dateRangeFields={{
-                    from: {
+                    'date-from': {
                         label: 'Granted from'
                     },
-                    to: {
+                    'date-to': {
                         label: 'Granted to'
                     }
                 }}
