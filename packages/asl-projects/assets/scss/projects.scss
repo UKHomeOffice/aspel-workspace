@@ -1382,8 +1382,6 @@ html.modal-open, html.modal-open body {
         margin-bottom: 0;
       }
 
-      // standard-radio / standard-list answers wrap their value in a govuk
-      // spacing override, so the block margin above has to win over it
       > .govuk-\!-margin-bottom-4 {
         margin-bottom: 0 !important;
       }
@@ -1413,6 +1411,14 @@ html.modal-open, html.modal-open body {
     .steps .step > .review:last-child {
       padding-top: 0px !important;
     }
+  }
+
+  .playback.standard-protocol .location-selector {
+    margin-bottom: 45px;
+  }
+
+  .playback.standard-protocol .govuk-inset-text div.smaller {
+    padding-top: 30px;
   }
 
   .establishment-review {
