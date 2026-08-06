@@ -263,7 +263,7 @@ module.exports = {
         after: '{{dateLabel}} must be after {{date}}',
         sameOrBefore: '{{dateLabel}} must be the same as or before {{date}}',
         sameOrAfter: '{{dateLabel}} must be the same as or after {{date}}',
-        aspelDataStartDate: 'Aspel data started from 31/07/2019'
+        aspelDataStartDate: 'ASPeL data starts from 31/07/2019'
       }
     }
   },

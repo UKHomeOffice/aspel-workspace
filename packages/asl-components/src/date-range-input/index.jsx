@@ -38,7 +38,7 @@ function parseDate(value) {
     return moment(value, ['YYYY-MM-DD', 'YYYY-M-D'], true);
 }
 
-function getBoundaryError({ field, fieldName, value }) {
+function getBoundaryErrorCode(fieldName, value) {
     const date = parseDate(value);
 
     if (!date.isValid()) {
@@ -46,26 +46,44 @@ function getBoundaryError({ field, fieldName, value }) {
     }
 
     if (date.isAfter(moment(), 'day')) {
-        return <DateErrorMessage name={fieldName} value={value} errorCode="dateIsSameOrBefore" validate={[{ dateIsSameOrBefore: 'now' }]} dateLabel={getDateLabel(field)} />;
+        return 'dateIsSameOrBefore';
     }
 
     if (fieldName === DATE_FROM_FIELD_NAME && date.isBefore(ASPEL_DATA_START, 'day')) {
-        return <DateErrorMessage name={fieldName} value={value} errorCode="aspelDataStartDate" dateLabel={getDateLabel(field)} />;
+        return 'aspelDataStartDate';
     }
 
     return null;
 }
 
-function getRangeError({ field, fieldName, value, range, errors, changedFieldName }) {
+function getBoundaryError({ field, fieldName, value, errorCode }) {
+    if (!errorCode) {
+        return null;
+    }
+
+    return <DateErrorMessage
+        name={fieldName}
+        value={value}
+        errorCode={errorCode}
+        validate={errorCode === 'dateIsSameOrBefore' ? [{ dateIsSameOrBefore: 'now' }] : undefined}
+        dateLabel={getDateLabel(field)}
+    />;
+}
+
+function getRangeError({ field, fieldName, value, range, errors, changedFieldName, hasBoundaryError }) {
     const targetFieldName = changedFieldName === DATE_TO_FIELD_NAME ? DATE_TO_FIELD_NAME : DATE_FROM_FIELD_NAME;
+    const fromValue = range[DATE_FROM_FIELD_NAME] ?? '';
+    const toValue = range[DATE_TO_FIELD_NAME] ?? '';
 
     if (fieldName !== targetFieldName || errors[DATE_FROM_FIELD_NAME] || errors[DATE_TO_FIELD_NAME]) {
         return null;
     }
 
-    const fromValue = range[DATE_FROM_FIELD_NAME] ?? '';
+    if (hasBoundaryError) {
+        return null;
+    }
+
     const fromDate = parseDate(fromValue);
-    const toValue = range[DATE_TO_FIELD_NAME] ?? '';
     const toDate = parseDate(toValue);
 
     if (!fromDate.isValid() || !toDate.isValid() || fromDate.isSameOrBefore(toDate, 'day')) {
@@ -87,6 +105,9 @@ export default function DateRangeInput({
 }) {
     const [range, setRange] = useState(() => values || emptyValues);
     const [changedFieldName, setChangedFieldName] = useState(null);
+    const fromBoundaryErrorCode = getBoundaryErrorCode(DATE_FROM_FIELD_NAME, range[DATE_FROM_FIELD_NAME] ?? '');
+    const toBoundaryErrorCode = getBoundaryErrorCode(DATE_TO_FIELD_NAME, range[DATE_TO_FIELD_NAME] ?? '');
+    const hasBoundaryError = Boolean(fromBoundaryErrorCode || toBoundaryErrorCode);
 
     function update(fieldName, value) {
         setChangedFieldName(fieldName);
@@ -122,14 +143,16 @@ export default function DateRangeInput({
                             }) || getBoundaryError({
                                 field,
                                 fieldName,
-                                value
+                                value,
+                                errorCode: fieldName === DATE_FROM_FIELD_NAME ? fromBoundaryErrorCode : toBoundaryErrorCode
                             }) || getRangeError({
                                 field,
                                 fieldName,
                                 value,
                                 range,
                                 errors,
-                                changedFieldName
+                                changedFieldName,
+                                hasBoundaryError
                             });
                             return (
                                 <div className="date-range-input__field" key={fieldName}>

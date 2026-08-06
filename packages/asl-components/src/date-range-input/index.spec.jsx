@@ -154,6 +154,32 @@ describe('<DateRangeInput />', () => {
         expect(screen.queryByText('error:date-to:dateIsAfter')).not.toBeInTheDocument();
     });
 
+    test('does not show a range error while the other date has a future-date boundary error', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2024-06-20', 'date-to': '2024-06-21' }}
+            />
+        );
+
+        fireEvent.change(screen.getByLabelText('Month', { selector: '#date-to-month' }), { target: { value: '05' } });
+
+        expect(screen.getByText('error:date-from:dateIsSameOrBefore')).toBeInTheDocument();
+        expect(screen.queryByText('error:date-to:dateIsAfter')).not.toBeInTheDocument();
+    });
+
+    test('does not show a range error while date from has an ASPEL-start boundary error', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2019-08-01', 'date-to': '2019-08-10' }}
+            />
+        );
+
+        fireEvent.change(screen.getByLabelText('Month', { selector: '#date-from-month' }), { target: { value: '07' } });
+
+        expect(screen.getByText('error:date-from:aspelDataStartDate')).toBeInTheDocument();
+        expect(screen.queryByText('error:date-from:dateIsBefore')).not.toBeInTheDocument();
+    });
+
     test('does not show a range error while either date is invalid', () => {
         render(
             <DateRangeInput
