@@ -201,6 +201,34 @@ describe('<DateRangeInput />', () => {
         expect(onSubmit).toHaveBeenCalledWith({ 'date-from': '2020-01-01' });
     });
 
+    test('does not reset the current range on rerender when values is omitted', () => {
+        const onSubmit = jest.fn();
+        const { rerender } = render(<DateRangeInput asForm={false} onSubmit={onSubmit} />);
+
+        fireEvent.change(screen.getByLabelText('Day', { selector: '#date-from-day' }), { target: { value: '02' } });
+        fireEvent.change(screen.getByLabelText('Month', { selector: '#date-from-month' }), { target: { value: '01' } });
+        fireEvent.change(screen.getByLabelText('Year', { selector: '#date-from-year' }), { target: { value: '2020' } });
+        rerender(<DateRangeInput asForm={false} onSubmit={onSubmit} />);
+        fireEvent.click(screen.getByRole('button', { name: 'Apply filter' }));
+
+        expect(onSubmit).toHaveBeenCalledWith({ 'date-from': '2020-01-02' });
+    });
+
+    test('does not reset the current range when values has not changed', () => {
+        const onSubmit = jest.fn();
+        const { rerender } = render(
+            <DateRangeInput asForm={false} values={{ 'date-from': '2020-01-01' }} onSubmit={onSubmit} />
+        );
+
+        fireEvent.change(screen.getByLabelText('Day', { selector: '#date-from-day' }), { target: { value: '02' } });
+        rerender(
+            <DateRangeInput asForm={false} values={{ 'date-from': '2020-01-01' }} onSubmit={onSubmit} />
+        );
+        fireEvent.click(screen.getByRole('button', { name: 'Apply filter' }));
+
+        expect(onSubmit).toHaveBeenCalledWith({ 'date-from': '2020-01-02' });
+    });
+
     test('uses secondary button styling for the filter action', () => {
         render(<DateRangeInput />);
 

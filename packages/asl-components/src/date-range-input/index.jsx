@@ -82,7 +82,7 @@ export default function DateRangeInput({
     name = 'date',
     fields,
     dateRangeFields,
-    values = {},
+    values,
     errors = {},
     validate = {},
     buttonText = 'Apply filter',
@@ -92,15 +92,17 @@ export default function DateRangeInput({
     onChange,
     onSubmit
 }) {
-    const [range, setRange] = useState(values);
+    const resolvedValues = values || {};
+    const valuesKey = JSON.stringify(resolvedValues);
+    const [range, setRange] = useState(resolvedValues);
     const [changedFieldName, setChangedFieldName] = useState(null);
     const emitChange = useRef(false);
     const resolvedFields = dateRangeFields || fields || defaultFields;
     const resolvedLegend = legend || label;
 
     useEffect(() => {
-        setRange(values);
-    }, [values]);
+        setRange(resolvedValues);
+    }, [valuesKey]);
 
     useEffect(() => {
         if (emitChange.current) {
