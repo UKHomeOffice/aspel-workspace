@@ -16,6 +16,8 @@ const defaultFields = {
     }
 };
 
+const emptyValues = {};
+
 function getDateError({ name, field, value, errors = {}, validate = {} }) {
     const errorCode = errors[name];
     if (!errorCode) {
@@ -24,8 +26,8 @@ function getDateError({ name, field, value, errors = {}, validate = {} }) {
     return <DateErrorMessage name={name} value={value} errorCode={errorCode} validate={validate[name] || field.validate} dateLabel={field.dateLabel || field.label} />;
 }
 
-function getValue(range, fieldName, key) {
-    return range[fieldName] ?? range[key] ?? '';
+function getValue(range, fieldName) {
+    return range[fieldName] ?? '';
 }
 
 function parseDate(value) {
@@ -61,9 +63,9 @@ function getRangeError({ name, field, fieldName, value, range, fields, errors, c
         return null;
     }
 
-    const fromValue = getValue(range, fromFieldName, 'from');
+    const fromValue = getValue(range, fromFieldName);
     const fromDate = parseDate(fromValue);
-    const toValue = getValue(range, toFieldName, 'to');
+    const toValue = getValue(range, toFieldName);
     const toDate = parseDate(toValue);
 
     if (!fromDate.isValid() || !toDate.isValid() || fromDate.isSameOrBefore(toDate, 'day')) {
@@ -92,7 +94,7 @@ export default function DateRangeInput({
     onChange,
     onSubmit
 }) {
-    const resolvedValues = values || {};
+    const resolvedValues = values || emptyValues;
     const valuesKey = JSON.stringify(resolvedValues);
     const [range, setRange] = useState(resolvedValues);
     const [changedFieldName, setChangedFieldName] = useState(null);
@@ -148,7 +150,7 @@ export default function DateRangeInput({
                         Object.keys(resolvedFields).map(key => {
                             const field = resolvedFields[key];
                             const fieldName = field.name || `${name}-${key}`;
-                            const value = getValue(range, fieldName, key);
+                            const value = getValue(range, fieldName);
                             return (
                                 <div className="date-range-input__field" key={key}>
                                     <DateInput
