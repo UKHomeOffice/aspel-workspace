@@ -33,7 +33,7 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
                     realDate: '{{dateLabel}} must be a real date',
                     past: '{{dateLabel}} must be in the past',
                     future: '{{dateLabel}} must be in the future',
-                    aspelDataStartDate: 'Aspel data started from 31/07/2019'
+                    aspelDataStartDate: 'ASPeL data starts from 31/07/2019'
                 }
             }
         }
@@ -96,6 +96,52 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
                 noLabel
             );
             expect(container.textContent).toBe('Enter a valid date');
+        });
+    });
+
+    describe('a field without a dateLabel (granted date)', () => {
+        test('uses page-required wording over generic date enter', () => {
+            const { container } = renderWith({ name: 'issueDate', value: '--', errorCode: 'required' });
+            expect(container.textContent).toBe('Enter the granted date');
+        });
+
+        test('uses page constraint wording over generic date constraint', () => {
+            const { container } = renderWith({
+                name: 'issueDate',
+                value: '2999-01-01',
+                errorCode: 'dateIsBefore',
+                validate: [{ dateIsBefore: 'now' }]
+            });
+            expect(container.textContent).toBe('Granted date cannot be in the future');
+        });
+    });
+
+    describe('dateEnter literal fallback', () => {
+        test('uses dateEnter when field-specific and generic date-enter keys are absent', () => {
+            const dynamicContent = {
+                fields: {
+                    dynamicDate: { label: 'Dynamic date' }
+                },
+                errors: {
+                    default: {
+                        date: {
+                            enterLiteral: '{{dateEnter}}'
+                        }
+                    }
+                }
+            };
+
+            const { container } = renderWith(
+                {
+                    name: 'dynamicDate',
+                    value: '--',
+                    errorCode: 'required',
+                    dateEnter: 'Enter the date AWERB approved'
+                },
+                dynamicContent
+            );
+
+            expect(container.textContent).toBe('Enter the date AWERB approved');
         });
     });
 });

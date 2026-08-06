@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import moment from 'moment';
 import DateInput from '../date-input';
 import DateErrorMessage from '../date-input/error-message';
@@ -105,19 +105,26 @@ export default function DateRangeInput({
 }) {
     const [range, setRange] = useState(() => values || emptyValues);
     const [changedFieldName, setChangedFieldName] = useState(null);
+    const hasInitialised = useRef(false);
     const fromBoundaryErrorCode = getBoundaryErrorCode(DATE_FROM_FIELD_NAME, range[DATE_FROM_FIELD_NAME] ?? '');
     const toBoundaryErrorCode = getBoundaryErrorCode(DATE_TO_FIELD_NAME, range[DATE_TO_FIELD_NAME] ?? '');
     const hasBoundaryError = Boolean(fromBoundaryErrorCode || toBoundaryErrorCode);
 
+    useEffect(() => {
+        if (!hasInitialised.current) {
+            hasInitialised.current = true;
+            return;
+        }
+        onChange && onChange(range);
+    }, [range, onChange]);
+
     function update(fieldName, value) {
         setChangedFieldName(fieldName);
         setRange(previousRange => {
-            const nextRange = {
+            return {
                 ...previousRange,
                 [fieldName]: value
             };
-            onChange && onChange(nextRange);
-            return nextRange;
         });
     }
 
