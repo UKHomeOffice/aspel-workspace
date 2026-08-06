@@ -86,12 +86,7 @@ export default function DateRangeInput({
     values,
     errors = {},
     validate = {},
-    buttonText = 'Apply filter',
-    action,
-    method = 'GET',
-    asForm = true,
-    onChange,
-    onSubmit
+    onChange
 }) {
     const resolvedValues = values || emptyValues;
     const [range, setRange] = useState(resolvedValues);
@@ -120,23 +115,8 @@ export default function DateRangeInput({
         }));
     }
 
-    function submit(e) {
-        if (onSubmit) {
-            e && e.preventDefault();
-            onSubmit(range);
-        }
-    }
-
-    const Wrapper = asForm ? 'form' : 'div';
-    const wrapperProps = asForm
-        ? { action, method, onSubmit: submit }
-        : {};
-    const buttonProps = asForm
-        ? { type: 'submit' }
-        : { type: 'button', onClick: submit };
-
     return (
-        <Wrapper {...wrapperProps} className="date-range-input">
+        <div className="date-range-input">
             <fieldset className="govuk-fieldset">
                 {resolvedLegend && (
                     <legend className="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -180,8 +160,7 @@ export default function DateRangeInput({
                         })
                     }
                 </div>
-                {buttonText && <button {...buttonProps} className="govuk-button button-secondary">{buttonText}</button>}
             </fieldset>
-        </Wrapper>
+        </div>
     );
 }

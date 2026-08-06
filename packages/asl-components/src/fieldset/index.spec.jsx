@@ -58,7 +58,7 @@ describe('<Fieldset />', () => {
         expect(screen.getByLabelText('Dogs')).toBeInTheDocument();
     });
 
-    test('does not show the date range submit button by default', () => {
+    test('does not show the date range submit button', () => {
         renderFieldset({
             date: {
                 inputType: 'inputDateRange',
