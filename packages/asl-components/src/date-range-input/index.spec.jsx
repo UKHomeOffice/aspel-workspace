@@ -34,7 +34,6 @@ describe('<DateRangeInput />', () => {
         render(
             <DateRangeInput
                 label="Granted dates"
-                name="granted"
                 dateRangeFields={{
                     from: {
                         label: 'Granted from'
@@ -49,8 +48,8 @@ describe('<DateRangeInput />', () => {
         expect(screen.getByRole('heading', { name: 'Granted dates' })).toBeInTheDocument();
         expect(screen.getByRole('group', { name: 'Granted from' })).toBeInTheDocument();
         expect(screen.getByRole('group', { name: 'Granted to' })).toBeInTheDocument();
-        expect(screen.getByLabelText('Day', { selector: '#granted-from-day' })).toBeInTheDocument();
-        expect(screen.getByLabelText('Month', { selector: '#granted-to-month' })).toBeInTheDocument();
+        expect(screen.getByLabelText('Day', { selector: '#date-from-day' })).toBeInTheDocument();
+        expect(screen.getByLabelText('Month', { selector: '#date-to-month' })).toBeInTheDocument();
     });
 
     test('uses GOV.UK-style hints for each date input', () => {
