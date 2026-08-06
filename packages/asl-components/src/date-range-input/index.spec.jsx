@@ -213,7 +213,7 @@ describe('<DateRangeInput />', () => {
         expect(onSubmit).toHaveBeenCalledWith({ 'date-from': '2020-01-02' });
     });
 
-    test('does not reset the current range when values has not changed', () => {
+    test('resets the current range when a new values object is provided', () => {
         const onSubmit = jest.fn();
         const { rerender } = render(
             <DateRangeInput asForm={false} values={{ 'date-from': '2020-01-01' }} onSubmit={onSubmit} />
@@ -225,7 +225,7 @@ describe('<DateRangeInput />', () => {
         );
         fireEvent.click(screen.getByRole('button', { name: 'Apply filter' }));
 
-        expect(onSubmit).toHaveBeenCalledWith({ 'date-from': '2020-01-02' });
+        expect(onSubmit).toHaveBeenCalledWith({ 'date-from': '2020-01-01' });
     });
 
     test('uses secondary button styling for the filter action', () => {

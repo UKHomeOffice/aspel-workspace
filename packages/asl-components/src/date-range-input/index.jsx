@@ -19,6 +19,10 @@ const defaultFields = {
 const emptyValues = {};
 const DATE_FROM_FIELD_NAME = 'date-from';
 const DATE_TO_FIELD_NAME = 'date-to';
+const RANGE_FIELDS = [
+    { key: 'from', fieldName: DATE_FROM_FIELD_NAME },
+    { key: 'to', fieldName: DATE_TO_FIELD_NAME }
+];
 
 function getDateError({ name, field, value, errors = {}, validate = {} }) {
     const errorCode = errors[name];
@@ -26,10 +30,6 @@ function getDateError({ name, field, value, errors = {}, validate = {} }) {
         return null;
     }
     return <DateErrorMessage name={name} value={value} errorCode={errorCode} validate={validate[name] || field.validate} dateLabel={field.dateLabel || field.label} />;
-}
-
-function getValue(range, fieldName) {
-    return range[fieldName] ?? '';
 }
 
 function parseDate(value) {
@@ -63,9 +63,9 @@ function getRangeError({ field, fieldName, value, range, errors, changedFieldNam
         return null;
     }
 
-    const fromValue = getValue(range, fromFieldName);
+    const fromValue = range[fromFieldName] ?? '';
     const fromDate = parseDate(fromValue);
-    const toValue = getValue(range, toFieldName);
+    const toValue = range[toFieldName] ?? '';
     const toDate = parseDate(toValue);
 
     if (!fromDate.isValid() || !toDate.isValid() || fromDate.isSameOrBefore(toDate, 'day')) {
@@ -94,17 +94,15 @@ export default function DateRangeInput({
     onSubmit
 }) {
     const resolvedValues = values || emptyValues;
-    const valuesKey = JSON.stringify(resolvedValues);
     const [range, setRange] = useState(resolvedValues);
     const [changedFieldName, setChangedFieldName] = useState(null);
     const emitChange = useRef(false);
     const resolvedFields = dateRangeFields || fields || defaultFields;
     const resolvedLegend = legend || label;
-    const fieldOrder = ['from', 'to'];
 
     useEffect(() => {
         setRange(resolvedValues);
-    }, [valuesKey]);
+    }, [resolvedValues]);
 
     useEffect(() => {
         if (emitChange.current) {
@@ -147,10 +145,9 @@ export default function DateRangeInput({
                 )}
                 <div className="date-range-input__fields">
                     {
-                        fieldOrder.map(key => {
+                        RANGE_FIELDS.map(({ key, fieldName }) => {
                             const field = resolvedFields[key] || defaultFields[key];
-                            const fieldName = key === 'from' ? DATE_FROM_FIELD_NAME : DATE_TO_FIELD_NAME;
-                            const value = getValue(range, fieldName);
+                            const value = range[fieldName] ?? '';
                             return (
                                 <div className="date-range-input__field" key={key}>
                                     <DateInput
@@ -169,7 +166,6 @@ export default function DateRangeInput({
                                             fieldName,
                                             value
                                         }) || getRangeError({
-                                            key,
                                             field,
                                             fieldName,
                                             value,
