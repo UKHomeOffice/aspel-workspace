@@ -203,7 +203,7 @@ describe('<DateRangeInput />', () => {
         expect(onChange).toHaveBeenLastCalledWith({ 'date-from': '2020-01-02' });
     });
 
-    test('resets the current range when a new values object is provided', () => {
+    test('does not reset the current range when a new values object is provided', () => {
         const onChange = jest.fn();
         const { rerender } = render(
             <DateRangeInput values={{ 'date-from': '2020-01-01' }} onChange={onChange} />
@@ -217,5 +217,21 @@ describe('<DateRangeInput />', () => {
         fireEvent.change(screen.getByLabelText('Day', { selector: '#date-from-day' }), { target: { value: '03' } });
 
         expect(onChange).toHaveBeenLastCalledWith({ 'date-from': '2020-01-03' });
+    });
+
+    test('resets the current range when the component remounts with new values', () => {
+        const onChange = jest.fn();
+        const { rerender } = render(
+            <DateRangeInput key="initial" values={{ 'date-from': '2020-01-01' }} onChange={onChange} />
+        );
+
+        fireEvent.change(screen.getByLabelText('Day', { selector: '#date-from-day' }), { target: { value: '02' } });
+        rerender(
+            <DateRangeInput key="reset" values={{ 'date-from': '2020-01-10' }} onChange={onChange} />
+        );
+
+        fireEvent.change(screen.getByLabelText('Day', { selector: '#date-from-day' }), { target: { value: '11' } });
+
+        expect(onChange).toHaveBeenLastCalledWith({ 'date-from': '2020-01-11' });
     });
 });
