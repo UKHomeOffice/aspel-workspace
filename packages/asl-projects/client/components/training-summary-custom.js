@@ -5,6 +5,7 @@ import TrainingRecordModal from './trainingRecordsModal';
 import { format } from 'date-fns';
 
 const DEFAULT_LABEL = '-';
+const NO_RECORDS_LABEL = 'No training record';
 export default function TrainingSummaryWithChangeHighlighting(
   { certificates = [], comparisons = {}, project = {} }
 ) {
@@ -34,14 +35,20 @@ export default function TrainingSummaryWithChangeHighlighting(
   const uniqueRecords = Array.from(
     new Map(allRecords.map(record => [record.id || record.trainingId, record])).values()
   );
+
+  if (!uniqueRecords.length) {
+    return <p>{NO_RECORDS_LABEL}</p>;
+  }
+
   // check if this is first submission
   const trainingHistoryRecords = versions.length > 1;
   // unset grey badge
   if (versions.length < 3) {
-    comparisons.added[1].ids = [];
-    comparisons.removed[1].ids = [];
-    comparisons.changed[1].ids = [];
-
+    ['added', 'removed', 'changed'].forEach(key => {
+      if (comparisons[key]?.[1]) {
+        comparisons[key][1].ids = [];
+      }
+    });
   }
   return (
     <div className="training-summary-custom">
@@ -90,7 +97,7 @@ export default function TrainingSummaryWithChangeHighlighting(
                     ))}
                   </ul>
                 ) : (
-                  {DEFAULT_LABEL}
+                  DEFAULT_LABEL
                 )}
               </td>
 
