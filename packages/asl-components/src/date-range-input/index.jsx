@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import DateInput from '../date-input';
 import DateErrorMessage from '../date-input/error-message';
@@ -91,7 +91,6 @@ export default function DateRangeInput({
     const resolvedValues = values || emptyValues;
     const [range, setRange] = useState(resolvedValues);
     const [changedFieldName, setChangedFieldName] = useState(null);
-    const emitChange = useRef(false);
     const resolvedFields = dateRangeFields || fields || defaultFields;
     const resolvedLegend = legend || label;
 
@@ -99,20 +98,16 @@ export default function DateRangeInput({
         setRange(resolvedValues);
     }, [resolvedValues]);
 
-    useEffect(() => {
-        if (emitChange.current) {
-            emitChange.current = false;
-            onChange && onChange(range);
-        }
-    }, [range, onChange]);
-
     function update(fieldName, value) {
-        emitChange.current = true;
         setChangedFieldName(fieldName);
-        setRange(previousRange => ({
-            ...previousRange,
-            [fieldName]: value
-        }));
+        setRange(previousRange => {
+            const nextRange = {
+                ...previousRange,
+                [fieldName]: value
+            };
+            onChange && onChange(nextRange);
+            return nextRange;
+        });
     }
 
     return (
