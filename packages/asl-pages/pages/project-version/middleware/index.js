@@ -96,7 +96,7 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
   }
 };
 
-const getComments = (actions = ['grant', 'transfer']) => asyncMiddleware(async (req, res) => {
+const getComments = (actions = ['grant', 'transfer'], type = 'project-versions') => asyncMiddleware(async (req, res) => {
   const task = await getTaskForVersion(req, req.versionId, actions);
 
   req.versionTask = task;
@@ -104,7 +104,14 @@ const getComments = (actions = ['grant', 'transfer']) => asyncMiddleware(async (
     return;
   }
 
-  if (!req.version || req.version.status === 'granted') {
+  // ASL-5161: never expose draft-stage comments (or the granting Inspector's
+  // name) on a granted view. This is decided from the record the requested view
+  // is showing - the retrospective assessment on the RA view, the project
+  // version everywhere else. `req.version` on the RA view is the granted
+  // project version, so it can't be used to make this decision there.
+  const viewed = type === 'retrospective-assessments' ? req.retrospectiveAssessment : req.version;
+
+  if (!viewed || viewed.status === 'granted') {
     return;
   }
 
