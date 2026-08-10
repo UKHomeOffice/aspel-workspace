@@ -77,8 +77,8 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
 **By submitting this application, I confirm that:**
 
   * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the NPRC role
-  * the legally accountable person supports the nomination
-  * they have no significant conflict of interest, and I have sent the declaration form to ASRU Licensing: [asrulicensing@homeoffice.gov.uk](mailto:asrulicensing@homeoffice.gov.uk)`,
+  * the legally accountable person supports the nomination and is satisfied that the nominee has no conflicts of interest, or that any conflicts are adequately managed
+  * the declaration form has been sent to ASRU Licensing`,
     default: `\
 **By submitting this application, I confirm that:**
 
