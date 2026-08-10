@@ -83,7 +83,7 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
     const task = req.closedTasks.find(matches);
 
     // The version id associated with a task is only updated when a draft is submitted
-    if (!task && req.version.status === 'draft') {
+    if (!task && req.version?.status === 'draft') {
       const previousVersion = dropWhile(req.project.versions, version => version.id !== versionId).slice(1).shift();
       if (previousVersion && !['withdrawn', 'granted'].includes(previousVersion.status)) {
         return getTaskForVersion(req, previousVersion.id, actions);
@@ -96,7 +96,7 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
   }
 };
 
-const getComments = (actions = ['grant', 'transfer']) => asyncMiddleware(async (req, res) => {
+const getComments = (actions = ['grant', 'transfer'], type = 'project-versions') => asyncMiddleware(async (req, res) => {
   const task = await getTaskForVersion(req, req.versionId, actions);
 
   req.versionTask = task;
@@ -104,7 +104,10 @@ const getComments = (actions = ['grant', 'transfer']) => asyncMiddleware(async (
     return;
   }
 
-  if (req.version.status === 'granted') {
+  // hide comments on granted views. Check what's actually being viewed  req.version is the granted project version on the RA view.
+  const viewed = type === 'retrospective-assessments' ? req.retrospectiveAssessment : req.version;
+
+  if (!viewed || viewed.status === 'granted') {
     return;
   }
 

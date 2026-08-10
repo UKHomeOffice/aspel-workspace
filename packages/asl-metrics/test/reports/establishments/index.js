@@ -3,7 +3,7 @@ const report = require('../../../lib/reports/establishments');
 let EXAMPLE_PELH = {
   'id': '5b7bad13-f34b-4959-bd08-c6067ae2fcdd',
   'migrated_id': null,
-  'user_id': '304cae96-0f56-492a-9f66-e99c2b3990c7',
+  'user_id': 'ecb58c09-2878-4ae9-a811-a94de94e84d0',
   'title': 'Dr',
   'first_name': 'Bruce',
   'last_name': 'Banner',

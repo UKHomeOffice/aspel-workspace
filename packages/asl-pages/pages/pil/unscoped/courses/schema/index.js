@@ -26,6 +26,7 @@ module.exports = {
   },
   startDate: {
     inputType: 'inputDate',
+    dateLabel: 'Course start date',
     show: true,
     validate: [
       'required',

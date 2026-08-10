@@ -68,6 +68,22 @@ describe('resolveDateError', () => {
                 validate: [{ dateIsAfter: '2017-09-01' }]
             })).toEqual({ key: 'after', context: { date: '1 September 2017' } });
         });
+
+        test('falls back to the today-relative message when the param is a function', () => {
+            expect(resolveDateError({
+                errorCode: 'dateIsBefore',
+                value: '2024-05-10',
+                validate: [{ dateIsBefore: () => 'x' }]
+            })).toEqual({ key: 'past', context: {} });
+        });
+
+        test('falls back to the today-relative message when the param is not a real date', () => {
+            expect(resolveDateError({
+                errorCode: 'dateIsAfter',
+                value: '2024-05-10',
+                validate: [{ dateIsAfter: 'not-a-date' }]
+            })).toEqual({ key: 'future', context: {} });
+        });
     });
 
     test('unknown code -> null (caller falls back to generic message)', () => {

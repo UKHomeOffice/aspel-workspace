@@ -13,6 +13,7 @@ module.exports = {
   },
   dob: {
     inputType: 'inputDate',
+    dateLabel: 'Date of birth',
     validate: [
       'required',
       'validDate',
