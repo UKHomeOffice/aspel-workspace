@@ -237,6 +237,21 @@ describe('<DateRangeInput />', () => {
         expect(onChange).toHaveBeenLastCalledWith({ 'date-from': '2020-01-03' });
     });
 
+    test('does not emit changes when only the onChange callback identity changes', () => {
+        const onChange = jest.fn();
+        const nextOnChange = jest.fn();
+        const { rerender } = render(
+            <DateRangeInput values={{ 'date-from': '2020-01-01' }} onChange={onChange} />
+        );
+
+        rerender(
+            <DateRangeInput values={{ 'date-from': '2020-01-01' }} onChange={nextOnChange} />
+        );
+
+        expect(onChange).not.toHaveBeenCalled();
+        expect(nextOnChange).not.toHaveBeenCalled();
+    });
+
     test('resets the current range when the component remounts with new values', () => {
         const onChange = jest.fn();
         const { rerender } = render(
