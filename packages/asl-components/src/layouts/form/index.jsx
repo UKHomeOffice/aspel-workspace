@@ -13,7 +13,7 @@ const FormLayout = ({
     <div className={classnames('govuk-grid-row', className)}>
         <div className={fullWidth ? 'govuk-grid-column-full' : 'govuk-grid-column-two-thirds'}>
             <OpenTaskWarning openTasks={openTasks} />
-            <ErrorSummary formatters={props.formatters} />
+            <ErrorSummary formatters={props.formatters} renderers={props.renderers} />
             {
                 children
             }

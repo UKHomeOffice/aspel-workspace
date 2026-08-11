@@ -3,7 +3,6 @@ const { get, merge, pick } = require('lodash');
 const form = require('../../../common/routers/form');
 const { populateNamedPeople } = require('../../../common/middleware');
 const { profileReplaced, PELH_OR_NPRC_ROLES } = require('../../helper');
-const { normalizeRoleType } = require('../role-types');
 const { versions } = require('@ukhomeoffice/asl-constants');
 const ROLE_TYPES_WITH_DECLARATION = ['nacwo', 'nio', 'ntco', 'nvs', 'pelh', 'sqp'];
 const SKILLS_AND_EXPERIENCE_FIELDS = ['experience', 'skills', 'authority', 'understanding', 'familiarity', 'communication'];
@@ -19,8 +18,6 @@ const getMandatoryTraining = (req, formId) => {
 
   return mandatory;
 };
-
-const getRoleType = (req, formId) => normalizeRoleType(req.session.form[formId]?.values?.type);
 
 const sendData = (req, formId, params = {}) => {
   const values = req.session.form[formId]?.values || {};
@@ -62,14 +59,8 @@ module.exports = ({ formId } = {}) => {
   app.use(
     form({
       requiresDeclaration: (req) => {
-        const roleType = getRoleType(req, formId);
+        const roleType = req.session.form[formId]?.values?.type;
         return !req.user.profile.asruUser && ROLE_TYPES_WITH_DECLARATION.includes(roleType);
-      },
-      getValidationErrors: (req, res, next) => {
-        if (getRoleType(req, formId) === 'pelh' && req.form.validationErrors.declaration === 'required') {
-          req.form.validationErrors.declaration = 'pelh';
-        }
-        next();
       },
       locals: (req, res, next) => {
         Object.assign(res.locals.static, {
