@@ -37,7 +37,7 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
     declaration: {
       required:
         'Select the checkbox to confirm you agree with {{ agreementDeterminer }} these statements',
-      pelh: 'Select the checkbox to confirm you agree with this statement'
+      pelh: 'Select the checkbox to confirm you have the consent of the PEL holder'
     }
   },
   declarations: {
