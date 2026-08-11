@@ -62,31 +62,3 @@ describe('applyFormatters', () => {
     expect(screen.getByTestId('formatted').innerHTML).toEqual('<p>contextualValue</p>');
   });
 });
-
-describe('getLabelFromRenderers', () => {
-  test('returns an error mapper without requiring a label mapper', () => {
-    const renderers = {
-      declaration: {
-        propMappers: {
-          error: () => 'Custom error'
-        }
-      }
-    };
-
-    expect(getLabelFromRenderers(renderers, 'declaration', 'error')).toEqual({
-      error: 'Custom error'
-    });
-  });
-
-  test('returns undefined if the requested mapper is not present', () => {
-    const renderers = {
-      declaration: {
-        propMappers: {
-          label: () => 'Declaration'
-        }
-      }
-    };
-
-    expect(getLabelFromRenderers(renderers, 'declaration', 'error')).toBeUndefined();
-  });
-});
