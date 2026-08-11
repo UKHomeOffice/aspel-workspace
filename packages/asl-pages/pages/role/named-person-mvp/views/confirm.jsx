@@ -18,18 +18,28 @@ const Confirm = ({
   ...props
 }) => {
   const roleType = (values.type || '').toLowerCase();
+  const declarationRenderContext = {
+    agreementDeterminer: ['nacwo', 'nvs', 'sqp'].includes(roleType) ? 'all' : 'both',
+    roleLabel: namedRoles[roleType]
+  };
+  const declarationError = (error, formatter) => error && <Snippet {...formatter.renderContext ?? {}}>{roleType === 'pelh' ? 'errors.declaration.pelh' : 'errors.declaration.required'}</Snippet>;
 
   const formatters = {
     declaration: {
       propMappers: {
         label: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>{roleType === 'pelh' ? 'pelhAgreement' : 'agreement'}</Snippet>,
-        error: (error, formatter) => error && <Snippet {...formatter.renderContext ?? {}}>{roleType === 'pelh' ? 'errors.declaration.pelh' : 'errors.declaration.required'}</Snippet>,
+        error: declarationError,
         title: () => <Snippet>fields.declaration.title</Snippet>,
         hint: () => roleType === 'pelh' ? null : <Snippet>declarations.{roleType}</Snippet>
       },
-      renderContext: {
-        agreementDeterminer: ['nacwo', 'nvs', 'sqp'].includes(roleType) ? 'all' : 'both',
-        roleLabel: namedRoles[roleType]
+      renderContext: declarationRenderContext
+    }
+  };
+
+  const renderers = {
+    declaration: {
+      propMappers: {
+        error: declarationError
       }
     }
   };
@@ -37,7 +47,7 @@ const Confirm = ({
   const { incompleteTraining = {}, mandatoryTraining } = useSelector(state => state.static);
 
   return (
-    <FormLayout formatters={formatters} renderers={formatters}>
+    <FormLayout formatters={formatters} renderers={renderers}>
       <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
       <Header title={<Snippet>confirmTitle</Snippet>}/>
       <dl>
