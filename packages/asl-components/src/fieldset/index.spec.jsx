@@ -5,7 +5,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import Fieldset from './index';
 
-// guards against empty legend label> regressions screen readers read them as unlabelled
 describe('<Fieldset />', () => {
     const store = configureStore({
         reducer: {
@@ -39,7 +38,7 @@ describe('<Fieldset />', () => {
         expect(screen.queryByRole('heading')).not.toBeInTheDocument();
         expect(screen.getByLabelText('Cats')).toBeInTheDocument();
     });
-    //
+
     test('does not show heading if label is empty', () => {
         renderFieldset({
             species: {
