@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { formatDate, DATE_FORMAT, applyFormatters } from './utils';
+import { formatDate, DATE_FORMAT, applyFormatters, getLabelFromRenderers } from './utils';
 
 describe('formatDate', () => {
   test('formats a valid date', () => {
@@ -60,5 +60,33 @@ describe('applyFormatters', () => {
     expect(screen.getByTestId('unchanged').textContent).toEqual('staticValue');
     expect(screen.getByTestId('added').textContent).toEqual('addedValue');
     expect(screen.getByTestId('formatted').innerHTML).toEqual('<p>contextualValue</p>');
+  });
+});
+
+describe('getLabelFromRenderers', () => {
+  test('returns an error mapper without requiring a label mapper', () => {
+    const renderers = {
+      declaration: {
+        propMappers: {
+          error: () => 'Custom error'
+        }
+      }
+    };
+
+    expect(getLabelFromRenderers(renderers, 'declaration', 'error')).toEqual({
+      error: 'Custom error'
+    });
+  });
+
+  test('returns undefined if the requested mapper is not present', () => {
+    const renderers = {
+      declaration: {
+        propMappers: {
+          label: () => 'Declaration'
+        }
+      }
+    };
+
+    expect(getLabelFromRenderers(renderers, 'declaration', 'error')).toBeUndefined();
   });
 });

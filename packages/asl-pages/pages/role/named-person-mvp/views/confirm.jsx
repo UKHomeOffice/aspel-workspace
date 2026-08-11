@@ -18,6 +18,10 @@ const Confirm = ({
   ...props
 }) => {
   const roleType = (values.type || '').toLowerCase();
+  const declarationRenderContext = {
+    agreementDeterminer: ['nacwo', 'nvs', 'sqp'].includes(roleType) ? 'all' : 'both',
+    roleLabel: namedRoles[roleType]
+  };
 
   const declarationError = (error, formatter) => error && <Snippet {...formatter.renderContext ?? {}}>{roleType === 'pelh' ? 'errors.declaration.pelh' : 'errors.declaration.required'}</Snippet>;
 
@@ -29,10 +33,7 @@ const Confirm = ({
         title: () => <Snippet>fields.declaration.title</Snippet>,
         hint: () => roleType === 'pelh' ? null : <Snippet>declarations.{roleType}</Snippet>
       },
-      renderContext: {
-        agreementDeterminer: ['nacwo', 'nvs', 'sqp'].includes(values.type) ? 'all' : 'both',
-        roleLabel: namedRoles[values.type]
-      }
+      renderContext: declarationRenderContext
     }
   };
 
@@ -40,7 +41,8 @@ const Confirm = ({
     declaration: {
       propMappers: {
         error: declarationError
-      }
+      },
+      renderContext: declarationRenderContext
     }
   };
 
