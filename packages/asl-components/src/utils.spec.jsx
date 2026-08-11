@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { formatDate, DATE_FORMAT, applyFormatters, getLabelFromRenderers } from './utils';
+import { formatDate, DATE_FORMAT, applyFormatters } from './utils';
 
 describe('formatDate', () => {
   test('formats a valid date', () => {
