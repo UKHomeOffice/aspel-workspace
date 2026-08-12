@@ -364,7 +364,7 @@ describe('Versions', () => {
           comment: 'Private inspector note',
           deleted: false,
           createdAt: '2026-06-01T09:00:00.000Z',
-          isNew: false,
+          isNew: true,
           isMine: false,
           changedBy: { firstName: 'Granting', lastName: 'Inspector' },
           event: { meta: { payload: { meta: { field: 'title' } } } }
@@ -375,7 +375,14 @@ describe('Versions', () => {
       ]
     });
 
-    const buildReq = ({ version, versions, openTasks = [], closedTasks = [] }) => {
+    const buildReq = ({
+      version,
+      versions,
+      openTasks = [],
+      closedTasks = [],
+      granted = versions.find(v => v.status === 'granted'),
+      projectStatus = 'active'
+    }) => {
       const api = jest.fn(url => {
         if (url === '/tasks/related') {
           return Promise.resolve({ json: { data: closedTasks } });
@@ -389,6 +396,8 @@ describe('Versions', () => {
         establishmentId: ESTABLISHMENT_ID,
         project: {
           establishmentId: ESTABLISHMENT_ID,
+          status: projectStatus,
+          granted,
           openTasks,
           versions
         },
@@ -403,11 +412,13 @@ describe('Versions', () => {
       });
     };
 
+    const CURRENT_GRANTED = { id: 'granted-version', status: 'granted' };
+    const SUPERSEDED_GRANTED = { id: 'superseded-version', status: 'granted' };
+
     it('does not expose comments on the granted licence view', async () => {
-      const granted = { id: 'granted-version', status: 'granted' };
       const req = buildReq({
-        version: granted,
-        versions: [granted],
+        version: CURRENT_GRANTED,
+        versions: [CURRENT_GRANTED],
         closedTasks: [{ id: 'task-grant', data: { action: 'grant', data: { version: 'granted-version' } } }]
       });
 
@@ -422,7 +433,7 @@ describe('Versions', () => {
       const submitted = { id: 'submitted-version', status: 'submitted' };
       const req = buildReq({
         version: submitted,
-        versions: [submitted],
+        versions: [submitted, CURRENT_GRANTED],
         openTasks: [{ id: 'task-grant', data: { action: 'grant', data: { version: 'submitted-version' } } }]
       });
 
@@ -431,6 +442,64 @@ describe('Versions', () => {
       expect(res.locals.static.comments).toBeDefined();
       expect(res.locals.static.comments.title[0].author).toBe('Granting Inspector');
       expect(req.api).toHaveBeenCalledWith('/tasks/task-grant');
+    });
+
+    // ASL-5180: hiding comments on *every* granted version broke ASL-5113
+    it('exposes comments on a superseded granted version', async () => {
+      const req = buildReq({
+        version: SUPERSEDED_GRANTED,
+        versions: [CURRENT_GRANTED, SUPERSEDED_GRANTED],
+        granted: CURRENT_GRANTED,
+        closedTasks: [{ id: 'task-superseded', data: { action: 'grant', data: { version: 'superseded-version' } } }]
+      });
+
+      const res = await run(req);
+
+      expect(res.locals.static.comments.title[0].author).toBe('Granting Inspector');
+      expect(req.api).toHaveBeenCalledWith('/tasks/task-superseded');
+    });
+
+    // ASL-5113 AC01a: history is displayed, but doesn't flag as new
+    it('does not flag comments from a closed task as new', async () => {
+      const req = buildReq({
+        version: SUPERSEDED_GRANTED,
+        versions: [CURRENT_GRANTED, SUPERSEDED_GRANTED],
+        granted: CURRENT_GRANTED,
+        closedTasks: [{ id: 'task-superseded', data: { action: 'grant', data: { version: 'superseded-version' } } }]
+      });
+
+      const res = await run(req);
+
+      expect(res.locals.static.comments.title[0].isNew).toBe(false);
+    });
+
+    it('leaves comments on the version currently under review flagged as new', async () => {
+      const submitted = { id: 'submitted-version', status: 'submitted' };
+      const req = buildReq({
+        version: submitted,
+        versions: [submitted, CURRENT_GRANTED],
+        openTasks: [{ id: 'task-grant', data: { action: 'grant', data: { version: 'submitted-version' } } }]
+      });
+
+      const res = await run(req);
+
+      expect(res.locals.static.comments.title[0].isNew).toBe(true);
+    });
+
+    // ASL-5113 AC01b: a transferred project has no licence view, its granted
+    // version is only reachable from the previous versions list
+    it('exposes comments on the granted version of a transferred project', async () => {
+      const req = buildReq({
+        version: CURRENT_GRANTED,
+        versions: [CURRENT_GRANTED],
+        projectStatus: 'transferred',
+        closedTasks: [{ id: 'task-transfer', data: { action: 'transfer', data: { version: 'granted-version' } } }]
+      });
+
+      const res = await run(req);
+
+      expect(res.locals.static.comments.title[0].author).toBe('Granting Inspector');
+      expect(req.api).toHaveBeenCalledWith('/tasks/task-transfer');
     });
 
     describe('on the retrospective assessment view', () => {

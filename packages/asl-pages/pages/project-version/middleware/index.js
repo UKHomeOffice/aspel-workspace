@@ -96,6 +96,24 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
   }
 };
 
+/**
+ * ASL-5161: the granted licence itself ("View licence") must never expose the
+ * comments made while it was being drafted, to any user.
+ *
+ * ASL-5180: superseded granted versions are application history, not the
+ * licence, so the comments made against them must still be shown. `granted` is
+ * the *most recent* granted version, so any other granted version is history. A
+ * transferred project has no licence view at all - its granted version is only
+ * reachable from the "previous versions" list.
+ */
+const isGrantedLicence = (project, version) => {
+  if (get(version, 'status') !== 'granted' || get(project, 'status') === 'transferred') {
+    return false;
+  }
+
+  return get(project, 'granted.id') === version.id;
+};
+
 const getComments = (actions = ['grant', 'transfer'], type = 'project-versions') => asyncMiddleware(async (req, res) => {
   const task = await getTaskForVersion(req, req.versionId, actions);
 
@@ -107,12 +125,29 @@ const getComments = (actions = ['grant', 'transfer'], type = 'project-versions')
   // hide comments on granted views. Check what's actually being viewed  req.version is the granted project version on the RA view.
   const viewed = type === 'retrospective-assessments' ? req.retrospectiveAssessment : req.version;
 
-  if (!viewed || viewed.status === 'granted') {
+  if (!viewed) {
+    return;
+  }
+
+  // there is no history of granted RAs, so an RA hides its comments as soon as it's granted
+  const hidden = type === 'retrospective-assessments'
+    ? viewed.status === 'granted'
+    : isGrantedLicence(req.project, viewed);
+
+  if (hidden) {
     return;
   }
 
   const taskResponse = await req.api(`/tasks/${task.id}`);
-  res.locals.static.comments = extractComments(taskResponse.json.data);
+  const comments = extractComments(taskResponse.json.data);
+
+  // ASL-5113 AC01: comments on a version whose task has been closed are history.
+  // They're displayed, but must not raise "new comments" flags.
+  const isOpenTask = get(req.project, 'openTasks', []).some(t => t.id === task.id);
+
+  res.locals.static.comments = isOpenTask
+    ? comments
+    : mapValues(comments, forField => forField.map(comment => ({ ...comment, isNew: false })));
 });
 
 const hasEditPermission = async (req) => {
@@ -619,6 +654,7 @@ module.exports = {
   getVersion,
   getComments,
   getTaskForVersion,
+  isGrantedLicence,
   canComment,
   getPreviousVersion,
   getGrantedVersion,

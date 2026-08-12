@@ -3,7 +3,8 @@ const { page } = require('@asl/service/ui');
 const {
   canComment,
   getAllChanges,
-  getProjectEstablishment
+  getProjectEstablishment,
+  isGrantedLicence
 } = require('../middleware');
 
 module.exports = settings => {
@@ -36,8 +37,9 @@ module.exports = settings => {
     res.locals.static.establishment = req.project.establishment;
     res.locals.static.isActionable = isOpenForVersion;
     // ASL-5161: comments must not display on the granted licence view for any
-    // user. Previous (non-granted) versions still show comments as before.
-    res.locals.static.showComments = !req.isPreview && req.version.status !== 'granted';
+    // user. ASL-5180: superseded granted versions are application history and
+    // still show the comments made against them.
+    res.locals.static.showComments = !req.isPreview && !isGrantedLicence(req.project, req.version);
     res.locals.static.commentable = !req.isPreview && req.user.profile.asruUser && res.locals.static.isCommentable;
 
     const taskId = isOpenForVersion ? task.id : null;
