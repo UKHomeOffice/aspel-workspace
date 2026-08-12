@@ -75,7 +75,7 @@ export default ({
   const addItem = useCallback(() => {
     // Redirect protocol creation to the standard-protocol selector when the feature is enabled.
     if (!addProtocol && type === 'protocols' && standardProtocolsEnabled) {
-      history.push('/standard-protocol');
+      history.push('/standard-protocol', { returnTo: history.location.pathname });
       return Promise.resolve();
     }
 

@@ -179,9 +179,15 @@ describe('protocol section schema', () => {
       });
 
       assert.deepEqual(getFieldState(continuedUseReveal, standardValues), {
-        label: 'Please state the relevant protocol.',
+        label: 'Protocols they may be transferred to',
         hint: undefined,
         type: 'paragraph'
+      });
+
+      assert.deepEqual(getFieldState(continuedUseReveal, editableValues), {
+        label: 'Please state the relevant protocol.',
+        hint: undefined,
+        type: 'texteditor'
       });
     });
 
