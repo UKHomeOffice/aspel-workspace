@@ -17,40 +17,54 @@ const Confirm = ({
   children,
   ...props
 }) => {
+  const roleType = (values.type || '').toLowerCase();
+  const declarationRenderContext = {
+    agreementDeterminer: ['nacwo', 'nvs', 'sqp'].includes(roleType) ? 'all' : 'both',
+    roleLabel: namedRoles[roleType]
+  };
+
+  const declarationError = (error, formatter) => error && <Snippet {...formatter.renderContext ?? {}}>{roleType === 'pelh' ? 'errors.declaration.pelh' : 'errors.declaration.required'}</Snippet>;
+
   const formatters = {
     declaration: {
       propMappers: {
-        label: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>{values.type === 'pelh' ? 'pelhAgreement' : 'agreement'}</Snippet>,
-        error: (error, formatter) => error && <Snippet {...formatter.renderContext ?? {}}>{values.type === 'pelh' ? 'errors.declaration.pelh' : 'errors.declaration.required'}</Snippet>,
+        label: (_, formatter) => <Snippet {...formatter.renderContext ?? {}}>{roleType === 'pelh' ? 'pelhAgreement' : 'agreement'}</Snippet>,
+        error: declarationError,
         title: () => <Snippet>fields.declaration.title</Snippet>,
-        hint: () => values.type === 'pelh' ? null : <Snippet>declarations.{values.type}</Snippet>
+        hint: () => roleType === 'pelh' ? null : <Snippet>declarations.{roleType}</Snippet>
       },
-      renderContext: {
-        agreementDeterminer: ['nacwo', 'nvs', 'sqp'].includes(values.type) ? 'all' : 'both',
-        roleLabel: namedRoles[values.type]
-      }
+      renderContext: declarationRenderContext
+    }
+  };
+
+  const renderers = {
+    declaration: {
+      propMappers: {
+        error: declarationError
+      },
+      renderContext: declarationRenderContext
     }
   };
 
   const { incompleteTraining = {}, mandatoryTraining } = useSelector(state => state.static);
 
   return (
-    <FormLayout formatters={formatters}>
+    <FormLayout formatters={formatters} renderers={renderers}>
       <span className="govuk-caption-l">{`${profile.firstName} ${profile.lastName}`}</span>
       <Header title={<Snippet>confirmTitle</Snippet>}/>
       <dl>
-        <NamedPersonDetails roleType={values.type} profile={profile} props={props} profileReplaced={profileReplaced} roleDetails={values} showEditLink />
+        <NamedPersonDetails roleType={roleType} profile={profile} props={props} profileReplaced={profileReplaced} roleDetails={values} showEditLink />
       </dl>
 
       <dl>
-        <DetailsByRole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} role={values.type} roleDetails={values} showHeading showEditLink />
+        <DetailsByRole incompleteTraining={incompleteTraining} mandatoryTraining={mandatoryTraining} role={roleType} roleDetails={values} showHeading showEditLink />
       </dl>
 
       <dl>
-        <SkillsAndExperience roleType={values.type} profile={profile} values={values} showHeading showEditLink />
+        <SkillsAndExperience roleType={roleType} profile={profile} values={values} showHeading showEditLink />
       </dl>
       {
-        props.action === 'remove' && values.type === 'nacwo' &&
+        props.action === 'remove' && roleType === 'nacwo' &&
           <Warning><Snippet>nacwoWarning</Snippet></Warning>
       }
 

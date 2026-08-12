@@ -26,6 +26,10 @@ body {
   padding-left: 0;
 }
 
+.govuk-fieldset.mandatory-training-hint-spacing > .govuk-hint {
+  margin-top: 8px;
+}
+
 .not-applicable {
   color: $hint-colour;
 }
