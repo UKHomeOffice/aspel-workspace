@@ -55,7 +55,7 @@ export const gaBreadingData = (isStandard = true) => {
                     'adult',
                     'pregnant'
                   ],
-                  continuedUse: isStandard,
+                  continuedUse: true,
                   reuse: ['yes'],
                   reuseDetails: null,
 
