@@ -1,4 +1,7 @@
-module.exports = (roleType) => {
+const { ROLE_TYPES, normalizeRoleType } = require('../role-types');
+
+module.exports = (rawRoleType) => {
+  const roleType = normalizeRoleType(rawRoleType);
 
   const roles = () => [
     {
@@ -46,7 +49,14 @@ module.exports = (roleType) => {
     },
     completeDate: {
       inputType: 'inputDate',
-      dateLabel: 'Training completion date',
+      // Copy deck rows 4 (NACWO) and 11 (NVS): both play the date back as
+      // "Completion date" ("Completion date must be a real date"), but the
+      // "no date entered" message names what is being completed, so it differs
+      // by role. The rest come from the generic GDS templates.
+      dateLabel: 'Completion date',
+      dateEnter: roleType === ROLE_TYPES.nvs
+        ? 'Enter a date when the module will be completed'
+        : 'Enter a date when all mandatory training will be completed',
       hint: 'For example, 27 3 2007',
       nullValue: '',
       validate: [
@@ -57,7 +67,7 @@ module.exports = (roleType) => {
     }
   };
 
-  if (roleType === 'nacwo') {
+  if (roleType === ROLE_TYPES.nacwo) {
     return {
       incomplete: {
         hint: 'Select all that apply.',

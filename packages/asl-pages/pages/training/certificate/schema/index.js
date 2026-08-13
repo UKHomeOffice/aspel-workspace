@@ -37,7 +37,7 @@ module.exports = {
     validate: [
       'required',
       'validDate',
-      { dateIsBefore: 'now' }
+      { dateIsSameOrBefore: 'now' }
     ]
   }
 };
