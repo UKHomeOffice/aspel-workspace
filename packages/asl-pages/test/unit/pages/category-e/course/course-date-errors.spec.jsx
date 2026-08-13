@@ -10,8 +10,7 @@ import pageContent from '../../../../../pages/category-e/course/course-details-f
 import schema from '../../../../../pages/category-e/course/course-details-form/schema';
 import { formatReferenceDate } from '../../../../../pages/category-e/course/reference-date';
 
-// Asserts the date messages this screen actually renders against the copy deck:
-// "Add course and apply for a category E PIL", row 4.
+
 describe('category E course - date errors', () => {
 
   // Mirrors how the service builds res.locals.static.content (asl-service ui/page.js).
