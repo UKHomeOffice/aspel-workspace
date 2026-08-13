@@ -73,8 +73,6 @@ describe('<DateInput />', () => {
     });
 
     test('keeps the highlighting on the submitted parts while the user retypes', () => {
-        // Submitted 10/00/2024, so only the month is blamed. Correcting it must not
-        // move the highlighting until the form is submitted again.
         const { container } = renderInput({
             value: '2024-00-10',
             error: 'Date awarded must be a valid date'
