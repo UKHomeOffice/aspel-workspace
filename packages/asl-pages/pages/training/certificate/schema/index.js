@@ -37,8 +37,6 @@ module.exports = {
     validate: [
       'required',
       'validDate',
-      // A certificate awarded today is valid, so the rule (and therefore the GDS
-      // message) is "today or in the past", not "in the past".
       { dateIsSameOrBefore: 'now' }
     ]
   }
