@@ -23,6 +23,7 @@ import {
     Inset,
     TextAreaWithWordCount,
     DateInput,
+    DateRangeInput,
     Input,
     Select,
     TextArea,
@@ -72,6 +73,7 @@ const fields = {
     inputPassword: props => <Input type="password" { ...props } />,
     declaration: props => <ApplicationConfirm { ...props } />,
     inputDate: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />,
+    inputDateRange: props => <DateRangeInput { ...props } values={props.value || {}} onChange={value => props.onChange({ target: { value } })} />,
     textarea: props => <TextArea { ...omit(props, ['meta']) } autoExpand={true} />,
     textAreaWithWordCount: props => <TextAreaWithWordCount { ...omit(props, ['meta']) } />,
     radioGroup: props => {
