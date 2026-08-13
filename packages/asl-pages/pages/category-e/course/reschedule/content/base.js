@@ -30,9 +30,7 @@ module.exports = merge({},
       courseDuration: {
         required: 'Select whether the course is one day or longer than one day'
       },
-      // See course-details-form content: the GDS templates supply the
-      // "must be a real date" / "must include ..." / "Year must include 4
-      // numbers" wording the copy deck asks for.
+
       courseDate: {
         required: 'Enter a course date',
         dateIsAfter: 'Course date must be in the future',
