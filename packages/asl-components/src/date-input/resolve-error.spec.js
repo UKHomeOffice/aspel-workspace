@@ -1,3 +1,4 @@
+const { describe, expect, test } = require('@jest/globals');
 const { resolveDateError } = require('./resolve-error');
 
 // value is the emitted ISO-ish `year-month-day` string.
@@ -88,5 +89,10 @@ describe('resolveDateError', () => {
 
     test('unknown code -> null (caller falls back to generic message)', () => {
         expect(resolveDateError({ errorCode: 'somethingElse', value: '2024-05-10' })).toBeNull();
+    });
+
+    test('ASPEL data start date -> aspelDataStartDate', () => {
+        expect(resolveDateError({ errorCode: 'aspelDataStartDate', value: '2019-07-30' }))
+            .toEqual({ key: 'aspelDataStartDate', context: {} });
     });
 });

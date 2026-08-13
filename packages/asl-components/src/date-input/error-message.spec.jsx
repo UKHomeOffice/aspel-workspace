@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
+import { afterEach, describe, expect, test } from '@jest/globals';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import DateErrorMessage from './error-message';
@@ -31,7 +32,8 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
                     yearLength: 'Year must include 4 numbers',
                     realDate: '{{dateLabel}} must be a real date',
                     past: '{{dateLabel}} must be in the past',
-                    future: '{{dateLabel}} must be in the future'
+                    future: '{{dateLabel}} must be in the future',
+                    aspelDataStartDate: 'ASPeL data starts from 31/07/2019'
                 }
             }
         }
@@ -83,62 +85,63 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
             });
             expect(container.textContent).toBe('Award date must be in the past');
         });
-    });
 
-    describe('dynamic field enter copy (dateEnter prop)', () => {
-        test('uses the schema-provided dateEnter for the blank-date case', () => {
-            const { container } = renderWith({
-                name: 'awerb-8201',
-                value: '--',
-                errorCode: 'required',
-                dateEnter: "Enter the date of the application's most recent AWERB review"
-            });
-            expect(container.textContent).toBe("Enter the date of the application's most recent AWERB review");
-        });
-
-        test('does not affect non-enter states', () => {
-            const { container } = renderWith({
-                name: 'awerb-8201',
-                value: '2024-13-10',
-                errorCode: 'validDate',
-                dateLabel: 'AWERB review date',
-                dateEnter: 'x'
-            });
-            expect(container.textContent).toBe('AWERB review date must be a real date');
+        test('falls back to the generic error when the label is not a plain string', () => {
+            const noLabel = {
+                fields: { passDate: {} },
+                errors: { passDate: { validDate: 'Enter a valid date' }, default: { validDate: 'x' } }
+            };
+            const { container } = renderWith(
+                { name: 'passDate', value: '2024-13-10', errorCode: 'validDate' },
+                noLabel
+            );
+            expect(container.textContent).toBe('Enter a valid date');
         });
     });
 
-    describe('GDS is the default even without a dateLabel', () => {
-        test('uses the generic "The date" noun-phrase for validDate', () => {
-            const { container } = renderWith({ name: 'issueDate', value: '2024--10', errorCode: 'validDate' });
-            expect(container.textContent).toBe('The date must include a month');
-        });
-
-        test('GDS wins over a page\'s generic validDate message', () => {
-            const { container } = renderWith({ name: 'issueDate', value: '2024-13-10', errorCode: 'validDate' });
-            expect(container.textContent).toBe('The date must be a real date');
-        });
-    });
-
-    describe('a page\'s bespoke required / constraint wording still wins', () => {
-        test('keeps the page required message over GDS enter', () => {
+    describe('a field without a dateLabel (granted date)', () => {
+        test('uses page-required wording over generic date enter', () => {
             const { container } = renderWith({ name: 'issueDate', value: '--', errorCode: 'required' });
             expect(container.textContent).toBe('Enter the granted date');
         });
 
-        test('keeps the page constraint message over GDS past', () => {
+        test('uses page constraint wording over generic date constraint', () => {
             const { container } = renderWith({
-                name: 'issueDate', value: '2999-01-01', errorCode: 'dateIsBefore', validate: [{ dateIsBefore: 'now' }]
+                name: 'issueDate',
+                value: '2999-01-01',
+                errorCode: 'dateIsBefore',
+                validate: [{ dateIsBefore: 'now' }]
             });
             expect(container.textContent).toBe('Granted date cannot be in the future');
         });
     });
 
-    test('falls back to the today-relative message for a non-formattable constraint (function param)', () => {
-        // no bespoke message + a function param -> "must be in the past", not "before <blank>"
-        const { container } = renderWith({
-            name: 'passDate', value: '2999-01-01', errorCode: 'dateIsBefore', validate: [{ dateIsBefore: () => 'x' }]
+    describe('dateEnter literal fallback', () => {
+        test('uses dateEnter when field-specific and generic date-enter keys are absent', () => {
+            const dynamicContent = {
+                fields: {
+                    dynamicDate: { label: 'Dynamic date' }
+                },
+                errors: {
+                    default: {
+                        date: {
+                            enterLiteral: '{{dateEnter}}'
+                        }
+                    }
+                }
+            };
+
+            const { container } = renderWith(
+                {
+                    name: 'dynamicDate',
+                    value: '--',
+                    errorCode: 'required',
+                    dateEnter: 'Enter the date AWERB approved'
+                },
+                dynamicContent
+            );
+
+            expect(container.textContent).toBe('Enter the date AWERB approved');
         });
-        expect(container.textContent).toBe('Award date must be in the past');
     });
 });

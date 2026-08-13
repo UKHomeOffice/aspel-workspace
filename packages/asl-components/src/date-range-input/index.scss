@@ -1,0 +1,36 @@
+.date-range-input {
+  .govuk-fieldset__legend--m {
+    margin-bottom: govuk-spacing(3);
+  }
+
+  .date-range-input__fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: govuk-spacing(4) govuk-spacing(8);
+  }
+
+  .date-range-input__field {
+    min-width: 210px;
+  }
+
+  .govuk-form-group {
+    margin-bottom: govuk-spacing(3);
+  }
+
+  .govuk-fieldset .govuk-fieldset {
+    margin: 0;
+  }
+
+  .govuk-fieldset .govuk-fieldset__legend {
+    margin-bottom: 0;
+  }
+
+  .govuk-fieldset .govuk-fieldset__heading {
+    @include govuk-font($size: 19, $weight: bold);
+    margin: 0;
+  }
+
+  .govuk-hint {
+    margin-bottom: govuk-spacing(1);
+  }
+}

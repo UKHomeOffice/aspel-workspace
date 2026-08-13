@@ -22,6 +22,7 @@ export { default as DiffText } from './diff-text';
 export { default as DocumentHeader } from './document-header';
 export { default as DurationField } from './duration-field';
 export { default as DateInput } from './date-input';
+export { default as DateRangeInput } from './date-range-input';
 export { default as CheckboxGroup } from './checkbox-group';
 export { default as Input } from './input';
 export { default as RadioGroup } from './radio-group';
