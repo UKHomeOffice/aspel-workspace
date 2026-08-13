@@ -34,7 +34,7 @@ module.exports = {
   },
   errors: {
     incomplete: {
-      required: 'Enter which training modules need to be completed'
+      required: 'Select all NACWO training modules that need to be completed'
     },
     delayReason: {
       required: {
@@ -42,10 +42,5 @@ module.exports = {
         default: 'Enter a reason why there is a delay in completing these modules'
       }
     }
-    // completeDate has no bespoke messages: the copy deck wording is exactly what
-    // the generic GDS date templates produce from the schema's `dateLabel`
-    // ("Completion date must be in the future", "... must include a day and
-    // month", "Year must include 4 numbers"). The role-specific "Enter a date
-    // when ..." comes from the schema's `dateEnter`.
   }
 };
