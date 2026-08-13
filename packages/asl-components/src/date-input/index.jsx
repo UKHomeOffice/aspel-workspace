@@ -4,6 +4,14 @@ import { getInvalidDateParts } from './invalid-parts';
 import { describedByIds } from '../aria-describedby';
 
 class DateInput extends BaseDateInput {
+    constructor(options) {
+        super(options);
+        // The parts as submitted. Like the message, the red highlighting describes
+        // the submission and must not move around while the user retypes - it is
+        // recalculated when the form is submitted again.
+        this.submittedValue = this.state.value;
+    }
+
     describedBy() {
         return describedByIds(this.id(), this.props);
     }
@@ -14,7 +22,7 @@ class DateInput extends BaseDateInput {
         if (!this.props.error) {
             return [];
         }
-        const invalid = getInvalidDateParts(this.state.value);
+        const invalid = getInvalidDateParts(this.submittedValue);
         return invalid.length ? invalid : ['day', 'month', 'year'];
     }
 

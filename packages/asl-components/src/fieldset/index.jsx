@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, Fragment } from 'react';
+import React, { useState, useEffect, useMemo, useRef, Fragment } from 'react';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import without from 'lodash/without';
@@ -195,6 +195,12 @@ function Field({
 
     const [fieldValue, setFieldValue] = useState(value);
 
+    // The value as it was submitted. A date error message describes the submission,
+    // so it must stay put while the user edits the field - GDS errors are only
+    // re-evaluated on the next submit. Without this the message rewrites itself on
+    // every keystroke (e.g. "must include a day" -> "must be a real date").
+    const submittedValue = useRef(value);
+
     useEffect(() => {
         if (onChange) {
             onChange({
@@ -263,7 +269,7 @@ function Field({
         hint={isUndefined(hint) ? <Snippet optional {...snippetProps}>{`fields.${name}.hint`}</Snippet> : hint}
         error={error && (
             inputType === 'inputDate' && !(props.renderers && getLabelFromRenderers(props.renderers, name, 'error')?.error)
-                ? <DateErrorMessage name={name} value={fieldValue} errorCode={error} validate={props.validate} dateLabel={props.dateLabel} dateEnter={props.dateEnter} snippetProps={snippetProps} />
+                ? <DateErrorMessage name={name} value={submittedValue.current} errorCode={error} validate={props.validate} dateLabel={props.dateLabel} dateEnter={props.dateEnter} snippetProps={snippetProps} />
                 : <Error name={name} renderers={props.renderers} error={error} snippetProps={snippetProps} />
         )}
         value={fieldValue}

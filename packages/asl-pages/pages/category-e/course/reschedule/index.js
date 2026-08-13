@@ -5,6 +5,7 @@ const changeDates = require('./routers/change-dates');
 const confirm = require('./routers/confirm');
 const { modelFromCourse } = require('../middleware/model-from-course');
 const { render } = require('mustache');
+const { formatReferenceDate } = require('../reference-date');
 
 module.exports = settings => {
   const app = page({
@@ -59,6 +60,22 @@ module.exports = settings => {
     schema,
     configure(req, res, next) {
       req.form.schema = req.page === 'change-dates' ? schema : {};
+      return next();
+    },
+    locals: (req, res, next) => {
+      // The course is fetched with its project attached. Both are needed by the
+      // date error messages, which play the reference date back to the user.
+      const project = req.trainingCourse?.project;
+
+      if (project) {
+        res.locals.static.project = {
+          ...project,
+          formattedExpiryDate: formatReferenceDate(project.expiryDate)
+        };
+      }
+
+      res.locals.static.formattedStartDate = formatReferenceDate(req.form?.values?.startDate);
+
       return next();
     },
     process: (req, res, next) => {

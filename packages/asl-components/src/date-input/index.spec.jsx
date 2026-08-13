@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, cleanup } from '@testing-library/react';
+import { render, cleanup, fireEvent } from '@testing-library/react';
 import DateInput from './';
 
 describe('<DateInput />', () => {
@@ -70,6 +70,21 @@ describe('<DateInput />', () => {
         ['day', 'month', 'year'].forEach(part => {
             expect(container.querySelector(`#passDate-${part}`).classList).not.toContain('govuk-input--error');
         });
+    });
+
+    test('keeps the highlighting on the submitted parts while the user retypes', () => {
+        // Submitted 10/00/2024, so only the month is blamed. Correcting it must not
+        // move the highlighting until the form is submitted again.
+        const { container } = renderInput({
+            value: '2024-00-10',
+            error: 'Date awarded must be a valid date'
+        });
+
+        fireEvent.change(container.querySelector('#passDate-month'), { target: { value: '5' } });
+
+        expect(container.querySelector('#passDate-month').classList).toContain('govuk-input--error');
+        expect(container.querySelector('#passDate-day').classList).not.toContain('govuk-input--error');
+        expect(container.querySelector('#passDate-year').classList).not.toContain('govuk-input--error');
     });
 
     test('emits an ISO yyyy-mm-dd value when parts change', () => {

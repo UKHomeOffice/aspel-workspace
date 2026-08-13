@@ -61,27 +61,28 @@ module.exports = {
     courseDuration: {
       required: 'Select whether the course is one day or longer than one day'
     },
+    // No `validDate` messages here: the copy deck asks for the GDS breakdown
+    // ("Course date must be a real date", "... must include a day and month",
+    // "Year must include 4 numbers"), which the generic templates build from
+    // each field's `dateLabel`.
     courseDate: {
-      required: 'Enter the course date',
-      validDate: 'The course date must be a real date and include a day,' +
-        ' month and year. The year must include 4 numbers',
+      required: 'Enter a course date',
       dateIsAfter: 'Course date must be in the future',
-      dateIsSameOrBefore: 'Course date must be before the PPL expiry' +
-        ' date {{ project.formattedExpiryDate }}'
+      // Wording follows the rule: `dateIsSameOrBefore` allows the expiry date itself.
+      // The date is played back only when we have it, so we never trail a blank.
+      dateIsSameOrBefore: 'Course date must be the same as or before the PPL expiry' +
+        ' date{{#project.formattedExpiryDate}} {{project.formattedExpiryDate}}{{/project.formattedExpiryDate}}'
     },
     startDate: {
-      required: 'Enter the course start date',
-      validDate: 'Course start date must be a real date and include a day,' +
-        ' month and year. The year must include 4 numbers',
+      required: 'Enter a course start date',
       dateIsAfter: 'Course start date must be in the future'
     },
     endDate: {
-      required: 'Enter the course end date',
-      validDate: 'The course end date must be a real date and include a day,' +
-        ' month and year. The year must include 4 numbers',
-      dateIsAfter: 'The course end date must be after the start date.',
-      dateIsSameOrBefore: 'Course end date must be before the PPL expiry' +
-        ' date {{ project.formattedExpiryDate }}'
+      required: 'Enter a course end date',
+      dateIsAfter: 'Course end date must be after the start date' +
+        '{{#formattedStartDate}} {{formattedStartDate}}{{/formattedStartDate}}',
+      dateIsSameOrBefore: 'Course end date must be the same as or before the PPL expiry' +
+        ' date{{#project.formattedExpiryDate}} {{project.formattedExpiryDate}}{{/project.formattedExpiryDate}}'
     },
     species: {
       required: 'Select all animals to be used for this course'

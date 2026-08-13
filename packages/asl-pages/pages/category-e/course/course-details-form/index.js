@@ -5,7 +5,8 @@ const confirm = require('./routers/confirm');
 const { form } = require('../../../common/routers');
 const schema = require('./schema');
 const { pickBy } = require('lodash');
-const { formatDate, ucFirst } = require('../../formatters');
+const { ucFirst } = require('../../formatters');
+const { formatReferenceDate } = require('../reference-date');
 const { modelFromCourse } = require('../middleware/model-from-course');
 
 const getFormId = ({ trainingCourseId }) => trainingCourseId ?? 'new-category-e-course';
@@ -84,8 +85,8 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
     req.api(`/establishment/${req.establishmentId}/projects/${projectId}`)
       .then(response => response.json.data)
       .then(project => {
-        // Full ordinal form ("20th February 2025") for the date error messages.
-        project.formattedExpiryDate = formatDate(project.expiryDate, 'do MMMM yyyy');
+        // GDS plays dates back as "1 September 2026" - no ordinal, no leading zero.
+        project.formattedExpiryDate = formatReferenceDate(project.expiryDate);
 
         onProject(project, req, res);
         next();
@@ -108,6 +109,12 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
     }
   }
 
+  // The end-date error plays the start date back ("must be after the start date
+  // 1 September 2026"), so the submitted start date has to reach the content.
+  const setFormattedStartDate = (req, res) => {
+    res.locals.static.formattedStartDate = formatReferenceDate(req.form?.values?.startDate);
+  };
+
   const parseAndSetDate = (req, key) => {
     const day = req.body[`${key}-day`];
     const month = req.body[`${key}-month`];
@@ -124,10 +131,13 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
       req.form.schema = pickBy(schema, ({page}) => page === req.page);
       return next();
     },
-    locals: buildFetchProjectMiddleware((project, req, res) => {
-      res.locals.static.project = project;
-      setSchemaSpeciesOptions(project, req, res);
-    }),
+    locals: (req, res, next) => {
+      setFormattedStartDate(req, res);
+      return buildFetchProjectMiddleware((project, req, res) => {
+        res.locals.static.project = project;
+        setSchemaSpeciesOptions(project, req, res);
+      })(req, res, next);
+    },
     process: buildFetchProjectMiddleware((project, req, res) => {
       // Model is passed to validators, this is needed to validate against the
       // project expiry date.
