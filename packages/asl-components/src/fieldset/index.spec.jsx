@@ -57,9 +57,6 @@ describe('<Fieldset />', () => {
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
     expect(screen.getByLabelText('Dogs')).toBeInTheDocument();
   });
-
-  // GDS: errors describe what was submitted and are only re-evaluated on the next
-  // submission, so the message must not rewrite itself as the user types.
   test('keeps the date error message describing the submitted value while editing', () => {
     const content = {
       errors: {
