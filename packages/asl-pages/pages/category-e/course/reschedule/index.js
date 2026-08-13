@@ -63,8 +63,6 @@ module.exports = settings => {
       return next();
     },
     locals: (req, res, next) => {
-      // The course is fetched with its project attached. Both are needed by the
-      // date error messages, which play the reference date back to the user.
       const project = req.trainingCourse?.project;
 
       if (project) {
