@@ -381,7 +381,8 @@ describe('Versions', () => {
       openTasks = [],
       closedTasks = [],
       granted = versions.find(v => v.status === 'granted'),
-      projectStatus = 'active'
+      projectStatus = 'active',
+      fullApplication = false
     }) => {
       const api = jest.fn(url => {
         if (url === '/tasks/related') {
@@ -392,6 +393,7 @@ describe('Versions', () => {
       return {
         versionId: version.id,
         version,
+        fullApplication,
         projectId: PROJECT_ID,
         establishmentId: ESTABLISHMENT_ID,
         project: {
@@ -440,6 +442,22 @@ describe('Versions', () => {
       const res = await run(req);
 
       expect(res.locals.static.comments).toBeDefined();
+      expect(res.locals.static.comments.title[0].author).toBe('Granting Inspector');
+      expect(req.api).toHaveBeenCalledWith('/tasks/task-grant');
+    });
+
+    // ASL-5180 AC02: "view latest submission" on the task screen shows the
+    // granted version as an application, where its comments still belong
+    it('exposes comments on the full application view of the granted version', async () => {
+      const req = buildReq({
+        version: CURRENT_GRANTED,
+        versions: [CURRENT_GRANTED],
+        fullApplication: true,
+        closedTasks: [{ id: 'task-grant', data: { action: 'grant', data: { version: 'granted-version' } } }]
+      });
+
+      const res = await run(req);
+
       expect(res.locals.static.comments.title[0].author).toBe('Granting Inspector');
       expect(req.api).toHaveBeenCalledWith('/tasks/task-grant');
     });

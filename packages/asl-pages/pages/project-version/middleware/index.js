@@ -97,21 +97,30 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
 };
 
 /**
- * ASL-5161: the granted licence itself ("View licence") must never expose the
- * comments made while it was being drafted, to any user.
+ * Comments belong to the application, not to the licence it produced.
  *
- * ASL-5180: superseded granted versions are application history, not the
- * licence, so the comments made against them must still be shown. `granted` is
- * the *most recent* granted version, so any other granted version is history. A
- * transferred project has no licence view at all - its granted version is only
- * reachable from the "previous versions" list.
+ * ASL-5161 / ASL-5180 AC01: the licence view ("View licence") must never expose
+ * the comments made while it was being drafted, to any user.
+ *
+ * ASL-5180 AC02: the application/amendment that was granted still shows its
+ * comments when viewed *as an application* - "view latest submission" on the
+ * task screen, which is the full application route.
+ *
+ * ASL-5113 AC01: a superseded granted version is application history too.
+ * `granted` is the *most recent* granted version, so any other granted version
+ * is history. A transferred project has no licence view at all - its granted
+ * version is only reachable from the "previous versions" list.
  */
-const isGrantedLicence = (project, version) => {
-  if (get(version, 'status') !== 'granted' || get(project, 'status') === 'transferred') {
+const isGrantedLicenceView = req => {
+  if (req.fullApplication || get(req.version, 'status') !== 'granted') {
     return false;
   }
 
-  return get(project, 'granted.id') === version.id;
+  if (get(req.project, 'status') === 'transferred') {
+    return false;
+  }
+
+  return get(req.project, 'granted.id') === req.version.id;
 };
 
 const getComments = (actions = ['grant', 'transfer'], type = 'project-versions') => asyncMiddleware(async (req, res) => {
@@ -132,7 +141,7 @@ const getComments = (actions = ['grant', 'transfer'], type = 'project-versions')
   // there is no history of granted RAs, so an RA hides its comments as soon as it's granted
   const hidden = type === 'retrospective-assessments'
     ? viewed.status === 'granted'
-    : isGrantedLicence(req.project, viewed);
+    : isGrantedLicenceView(req);
 
   if (hidden) {
     return;
@@ -654,7 +663,7 @@ module.exports = {
   getVersion,
   getComments,
   getTaskForVersion,
-  isGrantedLicence,
+  isGrantedLicenceView,
   canComment,
   getPreviousVersion,
   getGrantedVersion,

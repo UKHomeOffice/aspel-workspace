@@ -4,7 +4,7 @@ const {
   canComment,
   getAllChanges,
   getProjectEstablishment,
-  isGrantedLicence
+  isGrantedLicenceView
 } = require('../middleware');
 
 module.exports = settings => {
@@ -36,10 +36,9 @@ module.exports = settings => {
     res.locals.static.projectUrl = req.buildRoute('project.read');
     res.locals.static.establishment = req.project.establishment;
     res.locals.static.isActionable = isOpenForVersion;
-    // ASL-5161: comments must not display on the granted licence view for any
-    // user. ASL-5180: superseded granted versions are application history and
-    // still show the comments made against them.
-    res.locals.static.showComments = !req.isPreview && !isGrantedLicence(req.project, req.version);
+    // ASL-5161 / ASL-5180: comments never display on the licence view, but the
+    // application that was granted still shows the comments made against it.
+    res.locals.static.showComments = !req.isPreview && !isGrantedLicenceView(req);
     res.locals.static.commentable = !req.isPreview && req.user.profile.asruUser && res.locals.static.isCommentable;
 
     const taskId = isOpenForVersion ? task.id : null;
