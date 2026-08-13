@@ -6,9 +6,6 @@ import { describedByIds } from '../aria-describedby';
 class DateInput extends BaseDateInput {
     constructor(options) {
         super(options);
-        // The parts as submitted. Like the message, the red highlighting describes
-        // the submission and must not move around while the user retypes - it is
-        // recalculated when the form is submitted again.
         this.submittedValue = this.state.value;
     }
 
@@ -16,8 +13,8 @@ class DateInput extends BaseDateInput {
         return describedByIds(this.id(), this.props);
     }
 
-    // Parts to highlight when in error: only the individually-invalid ones, or
-    // all three when no single part can be blamed (see invalid-parts.js).
+    // highlight when in error: only the individually-invalid ones, or
+  
     erroredParts() {
         if (!this.props.error) {
             return [];
