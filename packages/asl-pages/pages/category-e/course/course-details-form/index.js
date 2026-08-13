@@ -30,16 +30,10 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
       req.session.form = {};
     }
 
-    // A user being linked to the index is starting a new form, clear out session data and redirect to the first page.
     if (req.session.form?.[formId]) {
       delete req.session.form[formId];
     }
 
-    // The same form is used for both creation and updates, but req.trainingCourse will only be set if editing an
-    // existing course.
-    //
-    // If the form is being updated then the user should start on the course details page, which means we also need
-    // to set the project in the session to simulate the user having visited that page.
     if (req.trainingCourse) {
       req.session.form[formId] = {
         values: {
@@ -109,8 +103,6 @@ module.exports = ({ baseRoute = 'categoryE.course.add' }) => settings => {
     }
   }
 
-  // The end-date error plays the start date back ("must be after the start date
-  // 1 September 2026"), so the submitted start date has to reach the content.
   const setFormattedStartDate = (req, res) => {
     res.locals.static.formattedStartDate = formatReferenceDate(req.form?.values?.startDate);
   };
