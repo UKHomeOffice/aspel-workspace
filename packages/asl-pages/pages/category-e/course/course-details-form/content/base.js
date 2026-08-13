@@ -61,15 +61,10 @@ module.exports = {
     courseDuration: {
       required: 'Select whether the course is one day or longer than one day'
     },
-    // No `validDate` messages here: the copy deck asks for the GDS breakdown
-    // ("Course date must be a real date", "... must include a day and month",
-    // "Year must include 4 numbers"), which the generic templates build from
-    // each field's `dateLabel`.
+
     courseDate: {
       required: 'Enter a course date',
       dateIsAfter: 'Course date must be in the future',
-      // Wording follows the rule: `dateIsSameOrBefore` allows the expiry date itself.
-      // The date is played back only when we have it, so we never trail a blank.
       dateIsSameOrBefore: 'Course date must be the same as or before the PPL expiry' +
         ' date{{#project.formattedExpiryDate}} {{project.formattedExpiryDate}}{{/project.formattedExpiryDate}}'
     },
