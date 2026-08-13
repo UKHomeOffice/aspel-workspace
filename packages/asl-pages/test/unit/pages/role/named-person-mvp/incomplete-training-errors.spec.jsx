@@ -75,8 +75,11 @@ describe('named person - incomplete training date errors', () => {
     });
   });
 
-  test('the module checklist error follows the copy deck', () => {
+  // Deliberately diverges from copy deck row 4, which says "Enter which training
+  // modules need to be completed". This is a checkbox group, and GDS asks you to
+  // start those errors with "Select".
+  test('the module checklist error asks the user to select', () => {
     expect(content.errors.incomplete.required)
-      .toBe('Enter which training modules need to be completed');
+      .toBe('Select all NACWO training modules that need to be completed');
   });
 });

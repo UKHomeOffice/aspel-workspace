@@ -10,7 +10,6 @@ import pageContent from '../../../../../pages/category-e/course/course-details-f
 import schema from '../../../../../pages/category-e/course/course-details-form/schema';
 import { formatReferenceDate } from '../../../../../pages/category-e/course/reference-date';
 
-
 describe('category E course - date errors', () => {
 
   // Mirrors how the service builds res.locals.static.content (asl-service ui/page.js).
