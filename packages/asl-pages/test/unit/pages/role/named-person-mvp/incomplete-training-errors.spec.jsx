@@ -9,10 +9,6 @@ import commonContent from '../../../../../pages/common/content';
 import pageContent from '../../../../../pages/role/named-person-mvp/content/incomplete-training';
 import schemaFor from '../../../../../pages/role/named-person-mvp/schema/incomplete-training';
 
-// Asserts the date messages this screen actually renders against the copy deck:
-// "Revised named person role screens Autumn 2025", row 4 (NACWO) and row 11 (NVS).
-// Both rows play the date back as "Completion date"; only the "no date entered"
-// message differs by role.
 describe('named person - incomplete training date errors', () => {
 
   // Mirrors how the service builds res.locals.static.content (asl-service ui/page.js).
