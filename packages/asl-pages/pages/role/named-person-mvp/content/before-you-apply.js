@@ -91,9 +91,9 @@ module.exports = merge({}, baseContent, {
 **Before you nominate someone for an NPRC role you must ensure:**
 
 * they have agreed to be nominated
-* the legally accountable person supports the nomination
+* the legally accountable person supports the nomination and is satisfied that the nominee has no conflicts of interest, or that any conflicts are adequately managed
+* the declaration form has been sent to ASRU Licensing: [asrulicensing@homeoffice.gov.uk](mailto:asrulicensing@homeoffice.gov.uk)
 * you can describe why they are suitable for the role
-* they have no significant conflict of interest, and you have sent the declaration form to ASRU Licensing: [asrulicensing@homeoffice.gov.uk](mailto:asrulicensing@homeoffice.gov.uk)
 * you have added them as an ASPeL user`
     },
     PELH: {
