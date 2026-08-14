@@ -19,7 +19,7 @@ const Confirm = ({
 }) => {
   const roleType = (values.type || '').toLowerCase();
   const declarationRenderContext = {
-    agreementDeterminer: ['nacwo', 'nvs', 'sqp'].includes(roleType) ? 'all' : 'both',
+    agreementDeterminer: ['nacwo', 'nvs', 'sqp', 'nprc'].includes(roleType) ? 'all' : 'both',
     roleLabel: namedRoles[roleType]
   };
 
