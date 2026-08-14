@@ -54,6 +54,10 @@ const CONSTRAINTS = {
 // Returns { key, context } for the message, or null when the code is unknown
 // (caller then falls back to the field's generic error text).
 function resolveDateError({ value, errorCode, validate }) {
+    if (errorCode === 'aspelDataStartDate') {
+        return { key: 'aspelDataStartDate', context: {} };
+    }
+
     if (errorCode === 'required') {
         return { key: 'enter', context: {} };
     }

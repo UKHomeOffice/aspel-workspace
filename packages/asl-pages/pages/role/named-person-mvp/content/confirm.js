@@ -37,7 +37,7 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
     declaration: {
       required:
         'Select the checkbox to confirm you agree with {{ agreementDeterminer }} these statements',
-      pelh: 'Select the checkbox to confirm you agree with this statement'
+      pelh: 'Select the checkbox to confirm you have the consent of the PEL holder'
     }
   },
   declarations: {
@@ -73,6 +73,12 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
   * the NTCO has endorsed {{profile.firstName}}'s training and exemptions
   * the PEL holder (or NPRC) supports the nomination and is satisfied that the nominee has no conflicts of interest, or that any conflicts are adequately managed
   * their declaration form is held on record at the establishment`,
+    nprc: `\
+**By submitting this application, I confirm that:**
+
+  * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the NPRC role
+  * the legally accountable person supports the nomination and is satisfied that the nominee has no conflicts of interest, or that any conflicts are adequately managed
+  * the declaration form has been sent to ASRU Licensing`,
     default: `\
 **By submitting this application, I confirm that:**
 
