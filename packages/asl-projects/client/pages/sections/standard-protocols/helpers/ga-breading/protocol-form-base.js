@@ -5,6 +5,7 @@ import SectionsLink from '../../../../../components/sections-link';
 const ProtocolFormBase = ({
                                       title,
                                       hint,
+                                      selectionErrorMessage,
                                       radioName,
                                       gaBreading,
                                       project,
@@ -35,7 +36,7 @@ const ProtocolFormBase = ({
     event.preventDefault();
 
     if (!selectedTemplate) {
-      setError('Please select a protocol');
+      setError(selectionErrorMessage || hint);
       return;
     }
 
