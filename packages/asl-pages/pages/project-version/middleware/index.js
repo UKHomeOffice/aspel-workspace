@@ -2,6 +2,7 @@ const {
   castArray,
   dropWhile,
   filter,
+  findLast,
   flow,
   get,
   isEmpty,
@@ -58,11 +59,11 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
     return get(req.project, 'openTasks', []).find(task => actionList.includes(get(task, 'data.action')));
   }
 
-  const matches = task =>
+  const matchesVersion = id => task =>
     actionList.includes(get(task, 'data.action')) &&
-    get(task, 'data.data.version') === versionId;
+    get(task, 'data.data.version') === id;
 
-  const openTask = get(req.project, 'openTasks', []).find(matches);
+  const openTask = get(req.project, 'openTasks', []).find(matchesVersion(versionId));
   if (openTask) {
     return openTask;
   }
@@ -80,20 +81,91 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
       req.closedTasks = response?.json?.data ?? [];
     }
 
-    const task = req.closedTasks.find(matches);
+    const task = req.closedTasks.find(matchesVersion(versionId));
+    if (task) {
+      return task;
+    }
 
     // The version id associated with a task is only updated when a draft is submitted
-    if (!task && req.version?.status === 'draft') {
+    if (req.version?.status === 'draft') {
       const previousVersion = dropWhile(req.project.versions, version => version.id !== versionId).slice(1).shift();
       if (previousVersion && !['withdrawn', 'granted'].includes(previousVersion.status)) {
         return getTaskForVersion(req, previousVersion.id, actions);
       }
+      return undefined;
     }
 
-    return task;
+    return getTaskForSupersededIteration(req, versionId, matchesVersion);
   } catch (e) {
     return undefined;
   }
+};
+
+/**
+ * An application that was returned to the applicant is forked into a fresh
+ * draft, leaving the submitted iteration behind - and the task's version
+ * pointer only moves forward on the next submission, so nothing ever points
+ * back at it. The iteration belongs to whichever task holds the nearest later
+ * version, which is the task that was open while it was under review.
+ */
+const getTaskForSupersededIteration = (req, versionId, matchesVersion) => {
+  const versions = get(req.project, 'versions', []);
+  const index = versions.findIndex(version => version.id === versionId);
+
+  if (index < 1) {
+    return undefined;
+  }
+
+  // only a submitted iteration gets orphaned this way. A granted version ends its
+  // own cycle, so if no task points at it there is no task to find - walking on
+  // would wrongly attach it to a later, in-flight amendment.
+  if (get(versions[index], 'status') !== 'submitted') {
+    return undefined;
+  }
+
+  const tasks = [...get(req.project, 'openTasks', []), ...(req.closedTasks || [])];
+
+  // versions are newest first, so walk forwards in time from the one being viewed
+  for (const later of versions.slice(0, index).reverse()) {
+    const owner = tasks.find(matchesVersion(later.id));
+
+    if (owner) {
+      return owner;
+    }
+
+    // a granted version closes off its cycle - don't cross into a later one
+    if (later.status === 'granted') {
+      return undefined;
+    }
+  }
+
+  return undefined;
+};
+
+/**
+ * A task carries every comment from every iteration of its application. The
+ * task's version pointer moves forward on each resubmission and each activity
+ * log entry snapshots it, giving a timeline of which version was under review
+ * at any moment - so a comment can be attributed to its iteration even when it
+ * predates the `versionId` stamp added to newer comments.
+ */
+const commentsForVersion = (task, versionId) => {
+  const timeline = sortBy(
+    (task.activityLog || [])
+      .map(entry => ({ at: entry.createdAt, version: get(entry, 'event.data.data.version') }))
+      .filter(entry => entry.version),
+    'at'
+  );
+
+  const versionUnderReviewAt = createdAt => get(findLast(timeline, entry => entry.at <= createdAt), 'version');
+
+  return {
+    ...task,
+    comments: (task.comments || []).filter(comment => {
+      const stamped = get(comment, 'event.meta.payload.meta.versionId');
+      return (stamped || versionUnderReviewAt(comment.createdAt)) === versionId;
+    })
+  };
 };
 
 /**
@@ -123,6 +195,21 @@ const isGrantedLicenceView = req => {
   return get(req.project, 'granted.id') === req.version.id;
 };
 
+/**
+ * True when the task has moved on past the version being viewed - i.e. it points
+ * at a strictly newer version. Deliberately not `task.version !== req.versionId`:
+ * on the active draft the task still points at the *previous*, submitted version,
+ * and that draft must keep showing the full comment history (ASL-5113 AC02).
+ */
+const isSupersededIteration = (req, task) => {
+  const versions = get(req.project, 'versions', []);
+  const viewedIndex = versions.findIndex(version => version.id === req.versionId);
+  const taskIndex = versions.findIndex(version => version.id === get(task, 'data.data.version'));
+
+  // versions are newest first, so a lower index is a newer version
+  return viewedIndex > -1 && taskIndex > -1 && taskIndex < viewedIndex;
+};
+
 const getComments = (actions = ['grant', 'transfer'], type = 'project-versions') => asyncMiddleware(async (req, res) => {
   const task = await getTaskForVersion(req, req.versionId, actions);
 
@@ -148,13 +235,20 @@ const getComments = (actions = ['grant', 'transfer'], type = 'project-versions')
   }
 
   const taskResponse = await req.api(`/tasks/${task.id}`);
-  const comments = extractComments(taskResponse.json.data);
+  const taskData = taskResponse.json.data;
 
-  // ASL-5113 AC01: comments on a version whose task has been closed are history.
+  // ASL-5113 AC02: the iteration the task is sitting on - the active draft or the
+  // version under review - shows the whole conversation. An iteration the task has
+  // already moved past shows only the comments made while it was under review.
+  const superseded = type === 'project-versions' && isSupersededIteration(req, task);
+
+  const comments = extractComments(superseded ? commentsForVersion(taskData, req.versionId) : taskData);
+
+  // ASL-5113 AC01: comments on a version that is no longer live are history.
   // They're displayed, but must not raise "new comments" flags.
   const isOpenTask = get(req.project, 'openTasks', []).some(t => t.id === task.id);
 
-  res.locals.static.comments = isOpenTask
+  res.locals.static.comments = isOpenTask && !superseded
     ? comments
     : mapValues(comments, forField => forField.map(comment => ({ ...comment, isNew: false })));
 });

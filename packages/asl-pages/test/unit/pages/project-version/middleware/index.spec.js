@@ -520,6 +520,218 @@ describe('Versions', () => {
       expect(req.api).toHaveBeenCalledWith('/tasks/task-transfer');
     });
 
+    // ASL-5113: an application returned to the applicant is forked into a new
+    // draft, so the submitted iteration it leaves behind is pointed at by no
+    // task at all. v1 and v2 below are those orphaned iterations.
+    describe('on a superseded iteration of the same application', () => {
+      const V1 = { id: 'v1', status: 'submitted' };
+      const V2 = { id: 'v2', status: 'submitted' };
+      const V3 = { id: 'v3', status: 'granted' };
+      const VERSIONS = [V3, V2, V1]; // newest first
+
+      const GRANT_TASK = { id: 'task-grant', data: { action: 'grant', data: { version: 'v3' } } };
+
+      const buildComment = (id, createdAt, versionId) => ({
+        id,
+        comment: `comment ${id}`,
+        deleted: false,
+        createdAt,
+        isNew: true,
+        isMine: false,
+        changedBy: { firstName: 'Granting', lastName: 'Inspector' },
+        event: { meta: { payload: { meta: { field: 'title', ...(versionId ? { versionId } : {}) } } } }
+      });
+
+      // the task's version pointer as it moved through each iteration
+      const logEntry = (eventName, createdAt, version) => ({
+        eventName,
+        createdAt,
+        event: { data: { data: { version } } }
+      });
+
+      const TASK_DETAIL = {
+        id: 'task-grant',
+        comments: [
+          buildComment('c1', '2026-01-15T09:00:00.000Z'), // during v1, unstamped (pre-dates versionId)
+          buildComment('c2', '2026-03-15T09:00:00.000Z'), // during v2, unstamped
+          buildComment('c3', '2026-05-15T09:00:00.000Z', 'v3') // during v3, stamped
+        ],
+        activityLog: [
+          logEntry('status:submitted', '2026-01-01T09:00:00.000Z', 'v1'),
+          logEntry('status:returned-to-applicant', '2026-02-01T09:00:00.000Z', 'v1'),
+          logEntry('status:resubmitted', '2026-03-01T09:00:00.000Z', 'v2'),
+          logEntry('status:returned-to-applicant', '2026-04-01T09:00:00.000Z', 'v2'),
+          logEntry('status:resubmitted', '2026-05-01T09:00:00.000Z', 'v3'),
+          logEntry('status:granted', '2026-06-01T09:00:00.000Z', 'v3')
+        ]
+      };
+
+      const buildIterationReq = (version, { fullApplication = false } = {}) => {
+        const api = jest.fn(url => {
+          if (url === '/tasks/related') {
+            return Promise.resolve({ json: { data: [GRANT_TASK] } });
+          }
+          return Promise.resolve({ json: { data: TASK_DETAIL } });
+        });
+        return {
+          versionId: version.id,
+          version,
+          fullApplication,
+          projectId: PROJECT_ID,
+          establishmentId: ESTABLISHMENT_ID,
+          project: {
+            establishmentId: ESTABLISHMENT_ID,
+            status: 'active',
+            granted: V3,
+            openTasks: [],
+            versions: VERSIONS
+          },
+          api
+        };
+      };
+
+      const commentIds = res => (res.locals.static.comments.title || []).map(c => c.id).sort();
+
+      it('resolves the owning task for an iteration no task points at', async () => {
+        const req = buildIterationReq(V1);
+
+        const res = await run(req);
+
+        expect(req.api).toHaveBeenCalledWith('/tasks/task-grant');
+        expect(res.locals.static.comments).toBeDefined();
+      });
+
+      it('shows only the comments made while that iteration was under review', async () => {
+        expect(commentIds(await run(buildIterationReq(V1)))).toEqual(['c1']);
+        expect(commentIds(await run(buildIterationReq(V2)))).toEqual(['c2']);
+      });
+
+      it('attributes unstamped comments by the activity log timeline', async () => {
+        // c1 and c2 carry no meta.versionId - they are placed by when they were made
+        const res = await run(buildIterationReq(V2));
+
+        expect(commentIds(res)).toEqual(['c2']);
+        expect(res.locals.static.comments.title[0].comment).toBe('comment c2');
+      });
+
+      it('does not flag a superseded iteration\'s comments as new', async () => {
+        const res = await run(buildIterationReq(V1));
+
+        expect(res.locals.static.comments.title.every(c => c.isNew === false)).toBe(true);
+      });
+
+      it('shows the whole conversation on the iteration the task ended on', async () => {
+        // v3 is granted, so reachable with comments only via the application view
+        const res = await run(buildIterationReq(V3, { fullApplication: true }));
+
+        expect(commentIds(res)).toEqual(['c1', 'c2', 'c3']);
+      });
+
+      it('keeps the full history and new flags on the draft returned to the applicant', async () => {
+        // the applicant is working on v4, forked when v3 was returned to them, so
+        // the task still points back at v3. AC02 needs that draft to keep the whole
+        // conversation - it must not be mistaken for a superseded iteration.
+        const draft = { id: 'v4', status: 'draft' };
+        const underReview = { id: 'v3', status: 'submitted' };
+        const openTask = { id: 'task-grant', data: { action: 'grant', data: { version: 'v3' } } };
+        const api = jest.fn(url => {
+          if (url === '/tasks/related') {
+            return Promise.resolve({ json: { data: [] } });
+          }
+          return Promise.resolve({ json: { data: TASK_DETAIL } });
+        });
+        const req = {
+          versionId: draft.id,
+          version: draft,
+          fullApplication: false,
+          projectId: PROJECT_ID,
+          establishmentId: ESTABLISHMENT_ID,
+          project: {
+            establishmentId: ESTABLISHMENT_ID,
+            status: 'inactive',
+            openTasks: [openTask],
+            versions: [draft, underReview, V2, V1]
+          },
+          api
+        };
+
+        const res = await run(req);
+
+        expect(commentIds(res)).toEqual(['c1', 'c2', 'c3']);
+        expect(res.locals.static.comments.title.some(c => c.isNew)).toBe(true);
+      });
+
+      it('does not cross into a later amendment cycle', async () => {
+        // s1 belongs to the original application, granted as g1. It must resolve to
+        // that cycle's task, not the one for the later a1 -> a2 amendment.
+        const a2 = { id: 'a2', status: 'granted' };
+        const a1 = { id: 'a1', status: 'submitted' };
+        const g1 = { id: 'g1', status: 'granted' };
+        const s1 = { id: 's1', status: 'submitted' };
+
+        const originalTask = { id: 'task-original', data: { action: 'grant', data: { version: 'g1' } } };
+        const amendmentTask = { id: 'task-amendment', data: { action: 'grant', data: { version: 'a2' } } };
+
+        const api = jest.fn(url => {
+          if (url === '/tasks/related') {
+            return Promise.resolve({ json: { data: [originalTask, amendmentTask] } });
+          }
+          return Promise.resolve({ json: { data: { ...TASK_DETAIL, id: url.replace('/tasks/', '') } } });
+        });
+
+        const req = {
+          versionId: s1.id,
+          version: s1,
+          fullApplication: false,
+          projectId: PROJECT_ID,
+          establishmentId: ESTABLISHMENT_ID,
+          project: {
+            establishmentId: ESTABLISHMENT_ID,
+            status: 'active',
+            granted: a2,
+            openTasks: [],
+            versions: [a2, a1, g1, s1]
+          },
+          api
+        };
+
+        await run(req);
+
+        expect(req.api).toHaveBeenCalledWith('/tasks/task-original');
+        expect(req.api).not.toHaveBeenCalledWith('/tasks/task-amendment');
+      });
+
+      it('finds no task for a granted version that has none, rather than an in-flight amendment\'s', async () => {
+        const amendmentTask = { id: 'task-amendment', data: { action: 'grant', data: { version: 'v-amendment' } } };
+        const api = jest.fn(url => {
+          if (url === '/tasks/related') {
+            return Promise.resolve({ json: { data: [] } });
+          }
+          return Promise.resolve({ json: { data: TASK_DETAIL } });
+        });
+        const req = {
+          versionId: V3.id,
+          version: V3,
+          fullApplication: true,
+          projectId: PROJECT_ID,
+          establishmentId: ESTABLISHMENT_ID,
+          project: {
+            establishmentId: ESTABLISHMENT_ID,
+            status: 'active',
+            granted: V3,
+            openTasks: [amendmentTask],
+            versions: [{ id: 'v-amendment', status: 'submitted' }, V3, V2, V1]
+          },
+          api
+        };
+
+        const res = await run(req);
+
+        expect(res.locals.static.comments).toBeUndefined();
+        expect(req.api).not.toHaveBeenCalledWith('/tasks/task-amendment');
+      });
+    });
+
     describe('on the retrospective assessment view', () => {
       // the RA view loads the *granted* project version alongside the RA, so
       // comment visibility must be decided from the RA itself
