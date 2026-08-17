@@ -143,19 +143,6 @@ const getTaskForSupersededIteration = (req, versionId, matchesVersion) => {
  * A task carries every comment from every iteration of its application, so an
  * iteration shows the round of review it belongs to.
  *
- * A round runs from submission to resubmission and holds both sides of the
- * conversation: the inspector's comments, and the applicant's replies written
- * while the application sat with them. The task's version pointer marks out
- * those rounds - it only moves on resubmission, and every activity log entry
- * snapshots it, giving a timeline of which version was under review at any
- * moment.
- *
- * That timeline is preferred over a comment's own `versionId`, which records
- * the version the author happened to be looking at. An applicant replying to a
- * returned application is looking at their new draft, so trusting the stamp
- * would file their answers against the next version and split them from the
- * questions they answer. The stamp is only a fallback for comments made before
- * any pointer was recorded.
  */
 const commentsForVersion = (task, versionId) => {
   const timeline = sortBy(
@@ -179,17 +166,6 @@ const commentsForVersion = (task, versionId) => {
 /**
  * Comments belong to the application, not to the licence it produced.
  *
- * ASL-5161 / ASL-5180 AC01: the licence view ("View licence") must never expose
- * the comments made while it was being drafted, to any user.
- *
- * ASL-5180 AC02: the application/amendment that was granted still shows its
- * comments when viewed *as an application* - "view latest submission" on the
- * task screen, which is the full application route.
- *
- * ASL-5113 AC01: a superseded granted version is application history too.
- * `granted` is the *most recent* granted version, so any other granted version
- * is history. A transferred project has no licence view at all - its granted
- * version is only reachable from the "previous versions" list.
  */
 const isGrantedLicenceView = req => {
   if (req.fullApplication || get(req.version, 'status') !== 'granted') {
@@ -205,9 +181,6 @@ const isGrantedLicenceView = req => {
 
 /**
  * True when the task has moved on past the version being viewed - i.e. it points
- * at a strictly newer version. Deliberately not `task.version !== req.versionId`:
- * on the active draft the task still points at the *previous*, submitted version,
- * and that draft must keep showing the full comment history.
  */
 const isSupersededIteration = (req, task) => {
   const versions = get(req.project, 'versions', []);
@@ -386,8 +359,6 @@ const getPreviousVersion = (req, type = 'project-versions') => {
   }
 
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${previous.id}`)
-    // swallow error as this will return 403 for receiving establishment viewing a project transfer version
-    // eslint-disable-next-line handle-callback-err
     .catch(() => {});
 };
 
@@ -399,8 +370,6 @@ const getGrantedVersion = (req, type = 'project-versions') => {
   }
 
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${granted.id}`)
-    // swallow error as this will return 403 for receiving establishment viewing a project transfer version
-    // eslint-disable-next-line handle-callback-err
     .catch(() => {});
 };
 
