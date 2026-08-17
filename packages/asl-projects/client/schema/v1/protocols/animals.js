@@ -127,7 +127,7 @@ export default {
       {
         name: 'continued-use',
         label: 'Will any {{ values.speciesLabel }} coming onto this protocol be classed as ‘continued use’?',
-        hint: '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use or animals that have had procedures applied to them in order to be prepared for use in this protocol.',
+        hint: '‘Continued use’ describes animals that are specifically genetically altered and bred for scientific use, or animals that have had procedures applied to them to prepare them for use in this protocol',
         type: 'radio',
         options: [
           {

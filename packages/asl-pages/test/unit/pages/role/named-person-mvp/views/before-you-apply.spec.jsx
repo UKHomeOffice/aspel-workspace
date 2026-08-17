@@ -117,7 +117,7 @@ describe('Before you apply page', () => {
     renderPage('NPRC');
 
     expect(screen.getByText('Before you nominate someone for an NPRC role you must ensure:')).toBeInTheDocument();
-    expect(screen.getByText('the legally accountable person supports the nomination')).toBeInTheDocument();
+    expect(screen.getByText('the legally accountable person supports the nomination and is satisfied that the nominee has no conflicts of interest, or that any conflicts are adequately managed')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'asrulicensing@homeoffice.gov.uk' })).toHaveAttribute(
       'href',
       'mailto:asrulicensing@homeoffice.gov.uk'
