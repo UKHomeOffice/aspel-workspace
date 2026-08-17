@@ -12,9 +12,6 @@ module.exports = settings => {
   app.use(bodyParser.json({ limit: settings.bodySizeLimit }));
 
   app.use((req, res, next) => {
-    // routes.js flags this in a `before` hook, but sub-routes are mounted onto
-    // this router, so that hook runs after the middleware below - and comment
-    // visibility (ASL-5180) has to know which view is being requested.
     req.fullApplication = req.path.startsWith(routes.fullApplication.path);
     next();
   });
