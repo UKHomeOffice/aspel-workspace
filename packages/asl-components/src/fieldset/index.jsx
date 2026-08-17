@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, Fragment } from 'react';
+import React, { useState, useEffect, useMemo, useRef, Fragment } from 'react';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import without from 'lodash/without';
@@ -23,6 +23,7 @@ import {
     Inset,
     TextAreaWithWordCount,
     DateInput,
+    DateRangeInput,
     Input,
     Select,
     TextArea,
@@ -72,6 +73,7 @@ const fields = {
     inputPassword: props => <Input type="password" { ...props } />,
     declaration: props => <ApplicationConfirm { ...props } />,
     inputDate: props => <DateInput { ...props } onChange={value => props.onChange({ target: { value } })} />,
+    inputDateRange: props => <DateRangeInput { ...props } values={props.value || {}} onChange={value => props.onChange({ target: { value } })} />,
     textarea: props => <TextArea { ...omit(props, ['meta']) } autoExpand={true} />,
     textAreaWithWordCount: props => <TextAreaWithWordCount { ...omit(props, ['meta']) } />,
     radioGroup: props => {
@@ -195,6 +197,9 @@ function Field({
 
     const [fieldValue, setFieldValue] = useState(value);
 
+    // The value as it was submitted. A date error message describes the submission
+    const submittedValue = useRef(value);
+
     useEffect(() => {
         if (onChange) {
             onChange({
@@ -263,7 +268,7 @@ function Field({
         hint={isUndefined(hint) ? <Snippet optional {...snippetProps}>{`fields.${name}.hint`}</Snippet> : hint}
         error={error && (
             inputType === 'inputDate' && !(props.renderers && getLabelFromRenderers(props.renderers, name, 'error')?.error)
-                ? <DateErrorMessage name={name} value={fieldValue} errorCode={error} validate={props.validate} dateLabel={props.dateLabel} dateEnter={props.dateEnter} snippetProps={snippetProps} />
+                ? <DateErrorMessage name={name} value={submittedValue.current} errorCode={error} validate={props.validate} dateLabel={props.dateLabel} dateEnter={props.dateEnter} snippetProps={snippetProps} />
                 : <Error name={name} renderers={props.renderers} error={error} snippetProps={snippetProps} />
         )}
         value={fieldValue}

@@ -23,6 +23,7 @@ export default {
         },
         standard: {
           label: 'Permitted outputs from this protocol',
+          hint: null,
           type: 'paragraph'
         }
       }

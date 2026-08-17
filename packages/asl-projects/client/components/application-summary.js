@@ -106,7 +106,8 @@ const ApplicationSummary = () => {
   const getSubsectionLink = key => {
     const hasNoProtocol = !props.values?.protocols?.length;
     if (standardProtocolsEnabled && hasNoProtocol && key === 'protocols') {
-      return '/standard-protocol';
+      // Record the application overview as the screen to return to on cancel.
+      return { pathname: '/standard-protocol', state: { returnTo: '/' } };
     }
     return `/${key}`;
   };

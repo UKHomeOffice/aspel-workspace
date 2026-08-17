@@ -1,19 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 export default function StandardProtocols() {
   const history = useHistory();
+  const location = useLocation();
   const [selection, setSelection] = useState('');
   const [isGuidanceOpen, setIsGuidanceOpen] = useState(false);
   const [error, setError] = useState('');
   const errorSummaryRef = useRef(null);
   const protocolTypeRef = useRef(null);
-
-  useEffect(() => {
-    if (error) {
-      errorSummaryRef.current?.focus();
-    }
-  }, [error]);
 
   useEffect(() => {
     if (error) {
@@ -60,9 +55,11 @@ export default function StandardProtocols() {
     }
   };
 
+  // Return the user to the screen they started from - either the protocols
+  // overview or, if that is where they began, the application overview.
   const onCancel = e => {
     e.preventDefault();
-    history.push('/');
+    history.push(location.state?.returnTo ?? '/');
   };
 
   const onSelectionChange = e => {
@@ -90,6 +87,30 @@ export default function StandardProtocols() {
   return (
     <div className="govuk-grid-column-full">
 
+      {error && (
+        <div
+          className="govuk-error-summary govuk-!-margin-bottom-6"
+          aria-labelledby="error-summary-title"
+          role="alert"
+          tabIndex="-1"
+          ref={errorSummaryRef}
+        >
+          <h2 className="govuk-error-summary__title" id="error-summary-title">
+            There is a problem
+          </h2>
+
+          <div className="govuk-error-summary__body">
+            <ul className="govuk-list govuk-error-summary__list">
+              <li>
+                <a href={`#${options[0].value}`} onClick={focusProtocolType}>
+                  {errorSummaryMessage}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
+
       <h1 className="govuk-heading-l govuk-!-margin-bottom-6">
         Add a protocol
       </h1>
@@ -113,7 +134,7 @@ export default function StandardProtocols() {
             rel="noopener noreferrer"
             className="govuk-link"
           >
-            Read the guidance on writing protocols (opens in new tab)
+            Read the guidance on writing protocols in PPL applications (page 29 - document opens in a new tab)
           </a>
         </p>
       </div>
@@ -128,7 +149,7 @@ export default function StandardProtocols() {
           open={isGuidanceOpen}
           onToggle={e => setIsGuidanceOpen(e.target.open)}
         >
-          <summary>{`${isGuidanceOpen ? 'Hide' : 'Show'} the guidance on 'Standard protocols for breeding genetically altered animals'`}</summary>
+          <summary>{`${isGuidanceOpen ? 'Hide' : 'Show'} the guidance on ‘Standard protocols for breeding genetically altered animals’`}</summary>
           <div className="govuk-inset-text">
 
             <p className="govuk-body">
@@ -144,19 +165,19 @@ export default function StandardProtocols() {
             <ul className="govuk-list govuk-list--bullet govuk-!-margin-top-4">
               <li>number of animals</li>
               <li>locations where procedures will be carried out</li>
-              <li>adverse effects, control measures and humane endpoints for specific strains in moderate breeding and
-                maintenance protocols
+              <li>adverse effects, control measures and humane endpoints for specific strains in the moderate breeding
+                and maintenance (B&M) protocols (‘Genetically altered animals’ section)
               </li>
             </ul>
 
             <p className="govuk-body govuk-!-margin-top-4">
-              For moderate B&M protocols, you will need to replicate adverse effects from experimental protocols using
-              these animals, with modifications to reflect any different harms required for experimental use.
+              For moderate B&M protocols, you will need to replicate adverse effects on experimental protocols using
+              these animals, with modifications to detail any different harms required for experimental use.
             </p>
 
             <p className="govuk-body">
               There is also a template option with prefilled answers that you can edit. You can use this to create a
-              non-standard GA breeding protocol on rare occasions when necessary.
+              non-standard GA breeding protocol on rare occasions, when necessary.
             </p>
 
             <h3 className="govuk-heading-m govuk-!-margin-top-6">
@@ -164,13 +185,14 @@ export default function StandardProtocols() {
             </h3>
 
             <p className="govuk-body">
-              Examples of when you might need to create a non-standard GA breeding protocol include:
+              Examples of when you might need to create a non-standard GA breeding protocol using an editable template
+              include:
             </p>
 
             <ul className="govuk-list govuk-list--bullet govuk-!-margin-top-4">
               <li>using species other than mice, rats or zebrafish</li>
-              <li>carrying out non-standard procedures for creation, breeding or maintenance of GA animals</li>
-              <li>carrying out breeding/maintenance where animals may experience severe harms</li>
+              <li>carrying out non-standard procedures for creating, breeding and/or maintenance of GA animals</li>
+              <li>carrying out breeding and/or maintenance of GA animals that might experience severe harms</li>
             </ul>
 
             <p className="govuk-body govuk-!-margin-top-4">
@@ -179,7 +201,7 @@ export default function StandardProtocols() {
 
             <ul className="govuk-list govuk-list--bullet govuk-!-margin-top-4">
               <li>seek advice from your Named Veterinary Surgeon (NVS)</li>
-              <li>still use standard wording where applicable</li>
+              <li>still use the standard wording, as far as is applicable</li>
               <li>ensure you provide scientific justification for any non-standard procedures</li>
             </ul>
 
@@ -190,7 +212,7 @@ export default function StandardProtocols() {
                 rel="noopener noreferrer"
                 className="govuk-link"
               >
-                Read the guidance on using standard protocols (opens in new tab)
+                Read the guidance on using the standard protocols (on GOV.UK - opens in a new tab)
               </a>
             </p>
 
@@ -213,37 +235,13 @@ export default function StandardProtocols() {
       <div className="govuk-!-margin-bottom-8">
         <form onSubmit={onContinue}>
 
-          {error && (
-            <div
-              className="govuk-error-summary govuk-!-margin-bottom-6"
-              aria-labelledby="error-summary-title"
-              role="alert"
-              tabIndex="-1"
-              ref={errorSummaryRef}
-            >
-              <h2 className="govuk-error-summary__title" id="error-summary-title">
-                There is a problem
-              </h2>
-
-              <div className="govuk-error-summary__body">
-                <ul className="govuk-list govuk-error-summary__list">
-                  <li>
-                    <a href="#" onClick={focusProtocolType} aria-controls="select-protocol-type">
-                      {errorSummaryMessage}
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          )}
-
           <div className={`govuk-form-group${error ? ' govuk-form-group--error' : ''}`}>
             <fieldset
               className="govuk-fieldset"
               aria-describedby={error ? 'select-protocol-type-error' : undefined}
             >
             <legend className="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-4">
-              What type of protocol do you want to add?
+              Which type of protocol do you want to add?
             </legend>
 
               {error && (

@@ -267,7 +267,7 @@ module.exports = async ({ schema, logger, task }) => {
           fullName: 'Your',
           fullNameInSubject: 'You',
           their: 'your',
-          need: 'needs'
+          need: 'need'
         }
       });
       return notifications;

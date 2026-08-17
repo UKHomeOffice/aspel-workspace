@@ -8,6 +8,7 @@ const GABreedingProtocolForm = (props) => (
     {...props}
     title="Add a standard GA breeding protocol"
     hint="Select a protocol"
+    selectionErrorMessage="Select a protocol"
     radioName="standard-protocols"
     gaBreading={gaBreadingData(true)}
     cancelPath="/standard-protocol"
