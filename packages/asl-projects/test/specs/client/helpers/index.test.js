@@ -410,8 +410,6 @@ describe('getNewComments', () => {
       ]
     });
   });
-
-  // ASL-5113 AC01: on a version that is no longer live nothing is new, so counting
   // only new comments hides the whole record and leaves it undiscoverable
   it('counts every comment, including the user\'s own, when includeRead is true', () => {
     const result = getNewComments(comments, 'Inspector Morse', undefined, false, true);
