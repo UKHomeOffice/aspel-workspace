@@ -554,6 +554,10 @@ describe('Versions', () => {
         id: 'task-grant',
         comments: [
           buildComment('c1', '2026-01-15T09:00:00.000Z'), // during v1, unstamped (pre-dates versionId)
+          // the applicant's reply to c1, written after v1 was returned to them. They
+          // were looking at their new draft, so it carries v2's id even though it
+          // answers a question asked in v1's round of review.
+          buildComment('reply-to-c1', '2026-02-15T09:00:00.000Z', 'v2'),
           buildComment('c2', '2026-03-15T09:00:00.000Z'), // during v2, unstamped
           buildComment('c3', '2026-05-15T09:00:00.000Z', 'v3') // during v3, stamped
         ],
@@ -603,7 +607,7 @@ describe('Versions', () => {
       });
 
       it('shows only the comments made while that iteration was under review', async () => {
-        expect(commentIds(await run(buildIterationReq(V1)))).toEqual(['c1']);
+        expect(commentIds(await run(buildIterationReq(V1)))).toEqual(['c1', 'reply-to-c1']);
         expect(commentIds(await run(buildIterationReq(V2)))).toEqual(['c2']);
       });
 
@@ -613,6 +617,16 @@ describe('Versions', () => {
 
         expect(commentIds(res)).toEqual(['c2']);
         expect(res.locals.static.comments.title[0].comment).toBe('comment c2');
+      });
+
+      // both halves of a round belong together: the applicant answers while the
+      // application sits with them, so their reply carries the *next* version's id
+      it('keeps an applicant\'s reply with the question it answers', async () => {
+        const onV1 = commentIds(await run(buildIterationReq(V1)));
+        const onV2 = commentIds(await run(buildIterationReq(V2)));
+
+        expect(onV1).toContain('reply-to-c1');
+        expect(onV2).not.toContain('reply-to-c1');
       });
 
       it('does not flag a superseded iteration\'s comments as new', async () => {
@@ -631,7 +645,7 @@ describe('Versions', () => {
         // v3 is granted, so reachable with comments only via the application view
         const res = await run(buildIterationReq(V3, { fullApplication: true }));
 
-        expect(commentIds(res)).toEqual(['c1', 'c2', 'c3']);
+        expect(commentIds(res)).toEqual(['c1', 'c2', 'c3', 'reply-to-c1']);
       });
 
       it('keeps the full history and new flags on the draft returned to the applicant', async () => {
@@ -664,7 +678,7 @@ describe('Versions', () => {
 
         const res = await run(req);
 
-        expect(commentIds(res)).toEqual(['c1', 'c2', 'c3']);
+        expect(commentIds(res)).toEqual(['c1', 'c2', 'c3', 'reply-to-c1']);
         expect(res.locals.static.comments.title.some(c => c.isNew)).toBe(true);
       });
 

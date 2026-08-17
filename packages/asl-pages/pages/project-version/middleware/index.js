@@ -143,11 +143,22 @@ const getTaskForSupersededIteration = (req, versionId, matchesVersion) => {
 };
 
 /**
- * A task carries every comment from every iteration of its application. The
- * task's version pointer moves forward on each resubmission and each activity
- * log entry snapshots it, giving a timeline of which version was under review
- * at any moment - so a comment can be attributed to its iteration even when it
- * predates the `versionId` stamp added to newer comments.
+ * A task carries every comment from every iteration of its application, so an
+ * iteration shows the round of review it belongs to.
+ *
+ * A round runs from submission to resubmission and holds both sides of the
+ * conversation: the inspector's comments, and the applicant's replies written
+ * while the application sat with them. The task's version pointer marks out
+ * those rounds - it only moves on resubmission, and every activity log entry
+ * snapshots it, giving a timeline of which version was under review at any
+ * moment.
+ *
+ * That timeline is preferred over a comment's own `versionId`, which records
+ * the version the author happened to be looking at. An applicant replying to a
+ * returned application is looking at their new draft, so trusting the stamp
+ * would file their answers against the next version and split them from the
+ * questions they answer. The stamp is only a fallback for comments made before
+ * any pointer was recorded.
  */
 const commentsForVersion = (task, versionId) => {
   const timeline = sortBy(
@@ -163,7 +174,7 @@ const commentsForVersion = (task, versionId) => {
     ...task,
     comments: (task.comments || []).filter(comment => {
       const stamped = get(comment, 'event.meta.payload.meta.versionId');
-      return (stamped || versionUnderReviewAt(comment.createdAt)) === versionId;
+      return (versionUnderReviewAt(comment.createdAt) || stamped) === versionId;
     })
   };
 };
