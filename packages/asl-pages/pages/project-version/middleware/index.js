@@ -236,18 +236,8 @@ const getComments = (actions = ['grant', 'transfer'], type = 'project-versions')
 
   const taskResponse = await req.api(`/tasks/${task.id}`);
   const taskData = taskResponse.json.data;
-
-  // ASL-5113 AC02: the iteration the task is sitting on - the active draft or the
-  // version under review - shows the whole conversation. An iteration the task has
-  // already moved past shows only the comments made while it was under review.
   const superseded = type === 'project-versions' && isSupersededIteration(req, task);
-
   const comments = extractComments(superseded ? commentsForVersion(taskData, req.versionId) : taskData);
-
-  // ASL-5113 AC01: comments on a version that is no longer live are history.
-  // They're displayed, but must not raise "new comments" flags - so they're
-  // flagged as historic instead, letting the badge show a plain count and keep
-  // them findable without claiming anything is new.
   const isOpenTask = get(req.project, 'openTasks', []).some(t => t.id === task.id);
   const historic = superseded || !isOpenTask;
 

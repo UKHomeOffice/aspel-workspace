@@ -647,12 +647,6 @@ html.modal-open, html.modal-open body {
 
     &.comments {
       background: $light-green;
-
-      // nothing is new on a version that is no longer live, so the count is
-      // shown in the neutral grey rather than the "needs attention" green
-      &.historic {
-        background: #4c4c4c;
-      }
     }
 
     &.changed,
