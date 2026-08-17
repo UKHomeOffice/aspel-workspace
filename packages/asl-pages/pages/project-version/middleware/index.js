@@ -245,12 +245,16 @@ const getComments = (actions = ['grant', 'transfer'], type = 'project-versions')
   const comments = extractComments(superseded ? commentsForVersion(taskData, req.versionId) : taskData);
 
   // ASL-5113 AC01: comments on a version that is no longer live are history.
-  // They're displayed, but must not raise "new comments" flags.
+  // They're displayed, but must not raise "new comments" flags - so they're
+  // flagged as historic instead, letting the badge show a plain count and keep
+  // them findable without claiming anything is new.
   const isOpenTask = get(req.project, 'openTasks', []).some(t => t.id === task.id);
+  const historic = superseded || !isOpenTask;
 
-  res.locals.static.comments = isOpenTask && !superseded
-    ? comments
-    : mapValues(comments, forField => forField.map(comment => ({ ...comment, isNew: false })));
+  res.locals.static.historicComments = historic;
+  res.locals.static.comments = historic
+    ? mapValues(comments, forField => forField.map(comment => ({ ...comment, isNew: false })))
+    : comments;
 });
 
 const hasEditPermission = async (req) => {

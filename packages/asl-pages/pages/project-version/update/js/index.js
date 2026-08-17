@@ -33,6 +33,7 @@ start({
     commentable: state.static.commentable,
     establishment: state.static.establishment,
     showComments: state.static.showComments,
+    historicComments: state.static.historicComments,
     readonly: state.model.status !== 'draft' || !state.static.canUpdate,
     user: `${state.static.user.firstName} ${state.static.user.lastName}`,
     basename: state.static.basename,

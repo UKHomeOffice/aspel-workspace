@@ -502,6 +502,7 @@ describe('Versions', () => {
       const res = await run(req);
 
       expect(res.locals.static.comments.title[0].isNew).toBe(true);
+      expect(res.locals.static.historicComments).toBe(false);
     });
 
     // ASL-5113 AC01b: a transferred project has no licence view, its granted
@@ -618,6 +619,12 @@ describe('Versions', () => {
         const res = await run(buildIterationReq(V1));
 
         expect(res.locals.static.comments.title.every(c => c.isNew === false)).toBe(true);
+      });
+
+      it('marks a superseded iteration\'s comments as historic so they still get a count', async () => {
+        const res = await run(buildIterationReq(V1));
+
+        expect(res.locals.static.historicComments).toBe(true);
       });
 
       it('shows the whole conversation on the iteration the task ended on', async () => {

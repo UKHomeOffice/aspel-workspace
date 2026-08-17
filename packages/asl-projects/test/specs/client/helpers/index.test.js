@@ -410,4 +410,26 @@ describe('getNewComments', () => {
       ]
     });
   });
+
+  // ASL-5113 AC01: on a version that is no longer live nothing is new, so counting
+  // only new comments hides the whole record and leaves it undiscoverable
+  it('counts every comment, including the user\'s own, when includeRead is true', () => {
+    const result = getNewComments(comments, 'Inspector Morse', undefined, false, true);
+    assert.deepEqual(result, {
+      'protocols.1.title': [
+        { id: 1, author: 'Applicant', isNew: true, deleted: false },
+        { id: 2, author: 'Inspector Morse', isNew: true, deleted: false }
+      ],
+      'protocols.2.title': [
+        { id: 3, author: 'Inspector Morse', isNew: true, deleted: false },
+        { id: 4, author: 'Inspector Morse', isNew: false, deleted: false }
+      ]
+    });
+  });
+
+  it('still excludes deleted comments when includeRead is true', () => {
+    const result = getNewComments(comments, 'Inspector Morse', undefined, false, true);
+    const ids = Object.values(result).flat().map(c => c.id);
+    assert.equal(ids.includes(5), false);
+  });
 });

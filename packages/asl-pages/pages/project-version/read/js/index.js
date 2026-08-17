@@ -33,6 +33,7 @@ start({
     readonly: true,
     commentable: state.static.commentable,
     showComments: state.static.showComments,
+    historicComments: state.static.historicComments,
     user: `${state.static.user.firstName} ${state.static.user.lastName}`,
     basename: state.static.basename,
     schemaVersion: state.model.project.schemaVersion,
