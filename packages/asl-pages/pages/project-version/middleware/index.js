@@ -116,9 +116,6 @@ const getTaskForSupersededIteration = (req, versionId, matchesVersion) => {
     return undefined;
   }
 
-  // only a submitted iteration gets orphaned this way. A granted version ends its
-  // own cycle, so if no task points at it there is no task to find - walking on
-  // would wrongly attach it to a later, in-flight amendment.
   if (get(versions[index], 'status') !== 'submitted') {
     return undefined;
   }
@@ -210,7 +207,7 @@ const isGrantedLicenceView = req => {
  * True when the task has moved on past the version being viewed - i.e. it points
  * at a strictly newer version. Deliberately not `task.version !== req.versionId`:
  * on the active draft the task still points at the *previous*, submitted version,
- * and that draft must keep showing the full comment history (ASL-5113 AC02).
+ * and that draft must keep showing the full comment history.
  */
 const isSupersededIteration = (req, task) => {
   const versions = get(req.project, 'versions', []);
