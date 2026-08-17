@@ -4,7 +4,7 @@ import classnames from 'classnames';
 
 /**
  * On a version that is no longer live, comments are history - nothing is "new"
- * (ASL-5113 AC01). They still need a count, or they are undiscoverable: the
+ * They still need a count, or they are undiscoverable: the
  * summary would give no hint which of two dozen sections to open.
  */
 const NewComments = ({ comments }) => {
