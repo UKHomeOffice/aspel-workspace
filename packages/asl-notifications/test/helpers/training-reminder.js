@@ -10,7 +10,7 @@ const getTrainingRecordLabel = roleType => roleType === 'nvs' ? 'module' : 'trai
 
 const getSubjectPerspective = ({ fullName, isApplicant = false }) => ({
   fullNameInSubject: isApplicant ? 'You' : fullName,
-  need: 'needs',
+  need: isApplicant ? 'need' : 'needs',
   their: isApplicant ? 'your' : 'their'
 });
 
