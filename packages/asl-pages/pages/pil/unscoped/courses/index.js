@@ -16,6 +16,7 @@ module.exports = () => {
         req.model = trainingCourse;
         res.locals.static.trainingCourse = trainingCourse;
         res.locals.model = trainingCourse;
+        res.locals.pageTitle = [trainingCourse.title, req.establishment.name].filter(Boolean).join(' - ');
         next();
       })
       .catch(next);

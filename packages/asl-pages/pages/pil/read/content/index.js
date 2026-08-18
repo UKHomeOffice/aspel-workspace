@@ -3,6 +3,7 @@ const baseContent = require('../../content');
 const trainingFields = require('../../unscoped/courses/content/fields');
 
 module.exports = merge({}, baseContent, {
+  pageTitle: 'View personal licence',
   title: 'Personal licence',
   page: {
     title: 'Personal licence'

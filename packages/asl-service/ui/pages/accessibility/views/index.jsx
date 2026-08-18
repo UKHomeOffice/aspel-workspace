@@ -1,6 +1,9 @@
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
+import StaticPage from '../../../components/static-page';
 
+// ASL-5095: v2 of the statement (prepared 24 June 2026, tested 31 March 2026 against
+// WCAG 2.2 AA). The "Non-accessible content" list is refreshed as tickets in the WCAG 2.2
+// backlog land; the approved wording is held on Confluence.
 const content = `# Accessibility statement for ASPeL
 
 This website is run by the Home Office. We want as many people as possible to be able to use this website. For example,
@@ -62,14 +65,14 @@ Mobile Applications) (No. 2) Accessibility Regulations 2018.
 
 ### Compliance status
 
-This website is partially compliant with the [Web Content Accessibility Guidelines version 2.1](https://www.w3.org/TR/WCAG21)
+This website is partially compliant with the [Web Content Accessibility Guidelines version 2.2](https://www.w3.org/TR/WCAG22)
 AA standard, due to the non-compliances listed below.
 
 ### Non-accessible content
 
 The content listed below is non-accessible for the following reasons.
 
-*Non-compliance with the accessibility regulations*
+#### Non-compliance with the accessibility regulations
 
  * The data presented in tables, such as the licence holder directories, aren’t optimised for screen reader use,
    particularly as acronyms are often used that lack contextual definitions (WCAG 3.1.4) This is an AAA standard we
@@ -82,27 +85,27 @@ The content listed below is non-accessible for the following reasons.
  * In places, the page heading structure needs to be improved (WCAG 1.3.1).
 
 We are continually improving this website with new features, bug fixes and changes that improve the general usability.
-We regularly review the site from an accessibility point of view, and intend to fix the issues to make the site WCAG 2.1
+We regularly review the site from an accessibility point of view, and intend to fix the issues to make the site WCAG 2.2
 AA compliant.
 
-*Disproportionate burden*
+#### Disproportionate burden
 
 We have not made any disproportionate burden claims.
 
-*Content that’s not within the scope of the accessibility regulations*
+#### Content that’s not within the scope of the accessibility regulations
 
 We consider all content on ASPeL to be within the scope of the accessibility regulations.
 
 ## Preparation of this accessibility statement
 
-This statement was prepared on 14th September 2020. It was last reviewed on 14th September 2020.
+This statement was prepared on 24th June 2026. It was last reviewed on 24th June 2026.
 
-This website was last tested on 11th September 2020. Testing was carried out internally by the Home Office.
+This website was last tested on 31st March 2026. Testing was carried out internally by the Home Office.
 
 We tested the service based on a user's ability to apply for and manage their licences. We also tested the application
 assessment and granting processes.
 `;
 
 export default () => {
-  return <ReactMarkdown escapeHtml={false}>{ content }</ReactMarkdown>;
+  return <StaticPage>{ content }</StaticPage>;
 };

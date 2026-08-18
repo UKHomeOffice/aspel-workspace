@@ -1,12 +1,15 @@
 const { get } = require('lodash');
 const { page } = require('@asl/service/ui');
 const { differenceInYears } = require('date-fns');
+const { setPageTitle } = require('../../common/middleware');
 
 module.exports = settings => {
   const app = page({
     ...settings,
     root: __dirname
   });
+
+  app.use(setPageTitle());
 
   app.use((req, res, next) => {
     const over18 = req.profile.dob ? differenceInYears(new Date(), new Date(req.profile.dob)) >= 18 : false;

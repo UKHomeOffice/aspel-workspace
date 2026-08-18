@@ -3,9 +3,12 @@ const { page } = require('@asl/service/ui');
 const { form } = require('../../common/routers');
 const { buildModel } = require('../../../lib/utils');
 const schema = require('./schema');
+const { setPageTitle } = require('../../common/middleware');
 
 module.exports = settings => {
   const app = page({ root: __dirname });
+
+  app.use(setPageTitle());
 
   app.use((req, res, next) => {
     req.model = {

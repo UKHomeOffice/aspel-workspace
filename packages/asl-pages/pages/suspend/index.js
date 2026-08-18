@@ -3,6 +3,9 @@ const update = require('./routers/update');
 const confirm = require('./routers/confirm');
 const success = require('../success');
 const { get } = require('lodash');
+const { setPageTitle } = require('../common/middleware');
+const licenceTypes = require('./licence-types');
+const content = require('./content');
 
 module.exports = ({ modelType, action }) => () => {
   const app = page({
@@ -25,8 +28,13 @@ module.exports = ({ modelType, action }) => () => {
     res.locals.static.modelType = modelType;
     res.locals.static.action = action;
     res.locals.static.licenceHolder = getLicenceHolder({ req, modelType });
+    res.locals.static.licenceType = licenceTypes[modelType];
     next();
   });
+
+  // /success is titled by the shared success router from the resolved outcome.
+  app.all('/', setPageTitle(content[action].title));
+  app.all('/confirm', setPageTitle(content[action].pageTitleConfirm));
 
   app.use('/', update({ modelType, action }));
   app.use('/confirm', confirm({ modelType, action }));

@@ -3,12 +3,15 @@ const { page } = require('@asl/service/ui');
 const form = require('../../common/routers/form');
 const getSchema = require('./schema');
 const { canTransferPil } = require('../../../lib/utils');
+const { setPageTitle } = require('../../common/middleware');
 
 module.exports = settings => {
   const app = page({
     root: __dirname,
     ...settings
   });
+
+  app.use(setPageTitle());
 
   app.use((req, res, next) => {
     req.model.id = `${req.pil.id}-establishment`;
