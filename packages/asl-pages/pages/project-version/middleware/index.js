@@ -165,18 +165,15 @@ const commentsForVersion = (task, versionId) => {
 
 /**
  * Comments belong to the application, not to the licence it produced.
- *
+ * Only the current granted version is the licence - anything older is history.
  */
 const isGrantedLicenceView = req => {
-  if (req.fullApplication || get(req.version, 'status') !== 'granted') {
-    return false;
-  }
+  const licenceId = get(req.project, 'granted.id');
 
-  if (get(req.project, 'status') === 'transferred') {
-    return false;
-  }
-
-  return get(req.project, 'granted.id') === req.version.id;
+  return !!licenceId &&
+    !req.fullApplication &&
+    get(req.project, 'status') !== 'transferred' &&
+    licenceId === get(req.version, 'id');
 };
 
 /**
