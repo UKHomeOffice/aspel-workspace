@@ -3,27 +3,14 @@ const ntsRenderer = require('@asl/projects/client/components/download-link/rende
 const getNtsSchema = require('@asl/pages/pages/project-version/nts/schema');
 const { Packer } = require('@joefitter/docx');
 const filenamify = require('filenamify');
-const DocxMerger = require('@valentiniljaz/docx-merger');
 const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
 const { NotFoundError } = require('@asl/service/errors');
+const {addPageNumbers} = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
 
 // Converts docx Document instance into a binary Buffer
 const pack = doc => {
   const packer = new Packer(doc);
   return packer.toBuffer(doc);
-};
-
-// Convert docx-merger callback into a Promise
-const mergeBuffers = async (buffers) => {
-  if (!buffers || buffers.length === 0) {
-    throw new Error('No buffers provided to merge.');
-  }
-  if (buffers.length === 1) {
-    return buffers[0];
-  }
-  const docx = new DocxMerger();
-  await docx.initialize({ pageBreak: true }, buffers);
-  return docx.save('nodebuffer');
 };
 
 // Helper to check YYYY-MM-DD format and date check
@@ -88,32 +75,32 @@ module.exports = settings => {
       if (items.length === 0) {
         return res.status(404).send('No projects found during the specified date range.');
       }
-      // Rendering each report buffer individually
-      const bufferPromises = items.map(async item => {
+
+      let mergedDocument = null;
+      for (const item of items) {
         const ntsSections = getNtsSchema(item.application.schemaVersion);
         const isTrainingLicence = !!item.data['training-licence'];
-        const doc = await ntsRenderer({
+
+        mergedDocument = await ntsRenderer({
           application: item.application,
           version: item.data,
           ntsSections,
           isTrainingLicence,
           attachmentsHost: settings.attachments,
-          isBulk: true
+          isBulk: true,
+          mergedDocument
         });
+      }
 
-        // Pack each doc instance into a valid .docx Buffer
-        return pack(doc);
-      });
+      addPageNumbers(mergedDocument);
 
-      const buffers = await Promise.all(bufferPromises);
+      // Pack the final accumulated document into a buffer once all projects are processed
+      const finalBuffer = await pack(mergedDocument);
 
-      // Combine all .docx buffers into a single document
-      const mergedBuffer = await mergeBuffers(buffers);
-
-      // Return the merged file
+      // Return the final combined document to the browser
       const filename = filenamify(`NTS_Combined_Report_${startDate}_to_${endDate}.docx`);
       res.attachment(filename);
-      res.end(Buffer.from(mergedBuffer));
+      res.end(finalBuffer);
     } catch (err) {
       next(err);
     }

@@ -23,10 +23,16 @@ export default async function ntsDocxRenderer(opts) {
     ra,
     raReasons,
     isTrainingLicence,
-    isBulk
+    isBulk,
+    mergedDocument
   } = opts;
 
-  const document = new Document();
+  let document;
+  if (mergedDocument) {
+    document = mergedDocument;
+  } else {
+    document = new Document();
+  }
 
   const renderMarkdown = (markdown, style = 'body') => {
     renderMarkdownContent(document, markdown, style);
@@ -287,6 +293,8 @@ export default async function ntsDocxRenderer(opts) {
 
   addStyles(document);
   renderDocument();
-  addPageNumbers(document);
+  if (!isBulk) {
+    addPageNumbers(document);
+  }
   return document;
 }
