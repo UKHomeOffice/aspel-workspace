@@ -446,8 +446,6 @@ describe('Versions', () => {
       expect(req.api).toHaveBeenCalledWith('/tasks/task-grant');
     });
 
-    // ASL-5180 AC02: "view latest submission" on the task screen shows the
-    // granted version as an application, where its comments still belong
     it('exposes comments on the full application view of the granted version', async () => {
       const req = buildReq({
         version: CURRENT_GRANTED,
@@ -505,8 +503,6 @@ describe('Versions', () => {
       expect(res.locals.static.historicComments).toBe(false);
     });
 
-    // ASL-5113 AC01b: a transferred project has no licence view, its granted
-    // version is only reachable from the previous versions list
     it('exposes comments on the granted version of a transferred project', async () => {
       const req = buildReq({
         version: CURRENT_GRANTED,
@@ -521,9 +517,6 @@ describe('Versions', () => {
       expect(req.api).toHaveBeenCalledWith('/tasks/task-transfer');
     });
 
-    // ASL-5113: an application returned to the applicant is forked into a new
-    // draft, so the submitted iteration it leaves behind is pointed at by no
-    // task at all. v1 and v2 below are those orphaned iterations.
     describe('on a superseded iteration of the same application', () => {
       const V1 = { id: 'v1', status: 'submitted' };
       const V2 = { id: 'v2', status: 'submitted' };
@@ -554,9 +547,6 @@ describe('Versions', () => {
         id: 'task-grant',
         comments: [
           buildComment('c1', '2026-01-15T09:00:00.000Z'), // during v1, unstamped (pre-dates versionId)
-          // the applicant's reply to c1, written after v1 was returned to them. They
-          // were looking at their new draft, so it carries v2's id even though it
-          // answers a question asked in v1's round of review.
           buildComment('reply-to-c1', '2026-02-15T09:00:00.000Z', 'v2'),
           buildComment('c2', '2026-03-15T09:00:00.000Z'), // during v2, unstamped
           buildComment('c3', '2026-05-15T09:00:00.000Z', 'v3') // during v3, stamped
@@ -619,8 +609,6 @@ describe('Versions', () => {
         expect(res.locals.static.comments.title[0].comment).toBe('comment c2');
       });
 
-      // both halves of a round belong together: the applicant answers while the
-      // application sits with them, so their reply carries the *next* version's id
       it('keeps an applicant\'s reply with the question it answers', async () => {
         const onV1 = commentIds(await run(buildIterationReq(V1)));
         const onV2 = commentIds(await run(buildIterationReq(V2)));
@@ -649,9 +637,6 @@ describe('Versions', () => {
       });
 
       it('keeps the full history and new flags on the draft returned to the applicant', async () => {
-        // the applicant is working on v4, forked when v3 was returned to them, so
-        // the task still points back at v3. AC02 needs that draft to keep the whole
-        // conversation - it must not be mistaken for a superseded iteration.
         const draft = { id: 'v4', status: 'draft' };
         const underReview = { id: 'v3', status: 'submitted' };
         const openTask = { id: 'task-grant', data: { action: 'grant', data: { version: 'v3' } } };
