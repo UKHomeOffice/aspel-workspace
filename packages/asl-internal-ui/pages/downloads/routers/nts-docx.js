@@ -71,8 +71,7 @@ module.exports = settings => {
       if (ra === undefined || ra === '') {
         return res.status(400).send('Missing required query parameter: "ra".');
       }
-      const normalizedRa = String(ra).toLowerCase();
-      if (!['true', 'false'].includes(normalizedRa)) {
+      if (!['true', 'false'].includes(String(ra).toLowerCase())) {
         return res.status(400).send('Invalid "ra" parameter. Must be "true" or "false".');
       }
 
@@ -97,7 +96,6 @@ module.exports = settings => {
           application: item.application,
           version: item.data,
           ntsSections,
-          ra: normalizedRa === 'true',
           isTrainingLicence,
           attachmentsHost: settings.attachments,
           isBulk: true

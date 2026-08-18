@@ -1,6 +1,8 @@
 module.exports = () => (req, res, next) => {
   const { knex } = req.models;
   const isRaTrue = req.query.ra === true || req.query.ra === 'true' || req.query.ra === 'true?';
+  const startTimestamp = `${req.query.startDate}T00:00:00.000Z`;
+  const endTimestamp = `${req.query.endDate}T23:59:59.999Z`;
   return knex('projects')
     .select(
       'projects.title',
@@ -11,8 +13,8 @@ module.exports = () => (req, res, next) => {
     )
     .distinctOn('projects.title', 'projects.id')
     .innerJoin('project_versions', 'projects.id', 'project_versions.project_id')
-    .where('projects.issue_date', '>=', req.query.startDate)
-    .where('projects.issue_date', '<', req.query.endDate)
+    .where('projects.issue_date', '>=', startTimestamp)
+    .where('projects.issue_date', '<=', endTimestamp)
     .modify(queryBuilder => {
       if (isRaTrue) {
         queryBuilder.whereNotNull('projects.ra_date');
