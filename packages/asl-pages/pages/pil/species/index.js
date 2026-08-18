@@ -3,11 +3,14 @@ const { page } = require('@asl/service/ui');
 const { form } = require('../../common/routers');
 const schema = require('./schema');
 const { buildModel } = require('../../../lib/utils');
+const { setPageTitle } = require('../../common/middleware');
 
 module.exports = () => {
   const app = page({
     root: __dirname
   });
+
+  app.use(setPageTitle());
 
   app.use((req, res, next) => {
     req.model = merge({ id: `${req.pilId}-species` },
