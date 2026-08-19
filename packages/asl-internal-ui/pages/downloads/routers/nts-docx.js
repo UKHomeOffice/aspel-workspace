@@ -6,6 +6,7 @@ const filenamify = require('filenamify');
 const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
 const { NotFoundError } = require('@asl/service/errors');
 const {addPageNumbers} = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
+const { getRAReasons } = require('@ukhomeoffice/asl-constants');
 
 // Converts docx Document instance into a binary Buffer
 const pack = doc => {
@@ -86,6 +87,7 @@ module.exports = settings => {
           version: item.data,
           ntsSections,
           isTrainingLicence,
+          raReasons: getRAReasons(item.data),
           attachmentsHost: settings.attachments,
           isBulk: true,
           mergedDocument

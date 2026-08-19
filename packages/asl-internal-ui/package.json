@@ -44,7 +44,6 @@
     "@ukhomeoffice/asl-components": "file:../asl-components",
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "@ukhomeoffice/react-components": "^1.6.6",
-    "@valentiniljaz/docx-merger": "^0.3.3",
     "accessible-autocomplete": "^3.0.1",
     "audit-ci": "^7.1.0",
     "babel-loader": "^9.1.3",
