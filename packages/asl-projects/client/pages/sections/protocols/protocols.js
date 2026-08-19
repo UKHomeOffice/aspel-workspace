@@ -228,11 +228,12 @@ const mapStateToProps = ({
     readonly,
     previousProtocols,
     schemaVersion,
-    asruUser
+    asruUser,
+    historicComments
   }
 }) => ({
   protocols: getEnhancedProtocols(project),
-  newComments: getNewComments(comments, user, project, asruUser && keycloakRoles.includes(FEATURE_FLAG_INSPECTOR_OWN_COMMENTS)),
+  newComments: getNewComments(comments, user, project, asruUser && keycloakRoles.includes(FEATURE_FLAG_INSPECTOR_OWN_COMMENTS), historicComments),
   readonly,
   previousProtocols,
   isLegacy: schemaVersion === 0,

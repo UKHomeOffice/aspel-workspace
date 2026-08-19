@@ -2,6 +2,7 @@ const {
   castArray,
   dropWhile,
   filter,
+  findLast,
   flow,
   get,
   isEmpty,
@@ -58,11 +59,11 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
     return get(req.project, 'openTasks', []).find(task => actionList.includes(get(task, 'data.action')));
   }
 
-  const matches = task =>
+  const matchesVersion = id => task =>
     actionList.includes(get(task, 'data.action')) &&
-    get(task, 'data.data.version') === versionId;
+    get(task, 'data.data.version') === id;
 
-  const openTask = get(req.project, 'openTasks', []).find(matches);
+  const openTask = get(req.project, 'openTasks', []).find(matchesVersion(versionId));
   if (openTask) {
     return openTask;
   }
@@ -80,20 +81,111 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
       req.closedTasks = response?.json?.data ?? [];
     }
 
-    const task = req.closedTasks.find(matches);
+    const task = req.closedTasks.find(matchesVersion(versionId));
+    if (task) {
+      return task;
+    }
 
     // The version id associated with a task is only updated when a draft is submitted
-    if (!task && req.version?.status === 'draft') {
+    if (req.version?.status === 'draft') {
       const previousVersion = dropWhile(req.project.versions, version => version.id !== versionId).slice(1).shift();
       if (previousVersion && !['withdrawn', 'granted'].includes(previousVersion.status)) {
         return getTaskForVersion(req, previousVersion.id, actions);
       }
+      return undefined;
     }
 
-    return task;
+    return getTaskForSupersededIteration(req, versionId, matchesVersion);
   } catch (e) {
     return undefined;
   }
+};
+
+/**
+ * An application that was returned to the applicant is forked into a fresh
+ * draft, leaving the submitted iteration behind - and the task's version
+ * pointer only moves forward on the next submission, so nothing ever points
+ * back at it. The iteration belongs to whichever task holds the nearest later
+ * version, which is the task that was open while it was under review.
+ */
+const getTaskForSupersededIteration = (req, versionId, matchesVersion) => {
+  const versions = get(req.project, 'versions', []);
+  const index = versions.findIndex(version => version.id === versionId);
+
+  if (index < 1) {
+    return undefined;
+  }
+
+  if (get(versions[index], 'status') !== 'submitted') {
+    return undefined;
+  }
+
+  const tasks = [...get(req.project, 'openTasks', []), ...(req.closedTasks || [])];
+
+  // versions are newest first, so walk forwards in time from the one being viewed
+  for (const later of versions.slice(0, index).reverse()) {
+    const owner = tasks.find(matchesVersion(later.id));
+
+    if (owner) {
+      return owner;
+    }
+
+    // a granted version closes off its cycle - don't cross into a later one
+    if (later.status === 'granted') {
+      return undefined;
+    }
+  }
+
+  return undefined;
+};
+
+/**
+ * A task carries every comment from every iteration of its application, so an
+ * iteration shows the round of review it belongs to.
+ *
+ */
+const commentsForVersion = (task, versionId) => {
+  const timeline = sortBy(
+    (task.activityLog || [])
+      .map(entry => ({ at: entry.createdAt, version: get(entry, 'event.data.data.version') }))
+      .filter(entry => entry.version),
+    'at'
+  );
+
+  const versionUnderReviewAt = createdAt => get(findLast(timeline, entry => entry.at <= createdAt), 'version');
+
+  return {
+    ...task,
+    comments: (task.comments || []).filter(comment => {
+      const stamped = get(comment, 'event.meta.payload.meta.versionId');
+      return (versionUnderReviewAt(comment.createdAt) || stamped) === versionId;
+    })
+  };
+};
+
+/**
+ * Comments belong to the application, not to the licence it produced.
+ * Only the current granted version is the licence - anything older is history.
+ */
+const isGrantedLicenceView = req => {
+  const licenceId = get(req.project, 'granted.id');
+
+  return !!licenceId &&
+    !req.fullApplication &&
+    get(req.project, 'status') !== 'transferred' &&
+    licenceId === get(req.version, 'id');
+};
+
+/**
+ * True when the task has moved on past the version being viewed - i.e. it points
+ */
+const isSupersededIteration = (req, task) => {
+  const versions = get(req.project, 'versions', []);
+  const viewedIndex = versions.findIndex(version => version.id === req.versionId);
+  const taskIndex = versions.findIndex(version => version.id === get(task, 'data.data.version'));
+
+  // versions are newest first, so a lower index is a newer version
+  return viewedIndex > -1 && taskIndex > -1 && taskIndex < viewedIndex;
 };
 
 const getComments = (actions = ['grant', 'transfer'], type = 'project-versions') => asyncMiddleware(async (req, res) => {
@@ -107,12 +199,32 @@ const getComments = (actions = ['grant', 'transfer'], type = 'project-versions')
   // hide comments on granted views. Check what's actually being viewed  req.version is the granted project version on the RA view.
   const viewed = type === 'retrospective-assessments' ? req.retrospectiveAssessment : req.version;
 
-  if (!viewed || viewed.status === 'granted') {
+  if (!viewed) {
+    return;
+  }
+
+  // there is no history of granted RAs, so an RA hides its comments as soon as it's granted
+  const hidden = type === 'retrospective-assessments'
+    ? viewed.status === 'granted'
+    : isGrantedLicenceView(req);
+
+  if (hidden) {
     return;
   }
 
   const taskResponse = await req.api(`/tasks/${task.id}`);
-  res.locals.static.comments = extractComments(taskResponse.json.data);
+  const taskData = taskResponse.json.data;
+  const superseded = type === 'project-versions' && isSupersededIteration(req, task);
+  const comments = extractComments(superseded ? commentsForVersion(taskData, req.versionId) : taskData);
+  const isOpenTask = get(req.project, 'openTasks', []).some(t => t.id === task.id);
+  const historic = superseded || !isOpenTask;
+
+  // lets the summary show a plain count instead of a "new comments" flag,
+  // so history stays findable without claiming anything is new
+  res.locals.static.historicComments = historic;
+  res.locals.static.comments = historic
+    ? mapValues(comments, forField => forField.map(comment => ({ ...comment, isNew: false })))
+    : comments;
 });
 
 const hasEditPermission = async (req) => {
@@ -246,8 +358,6 @@ const getPreviousVersion = (req, type = 'project-versions') => {
   }
 
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${previous.id}`)
-    // swallow error as this will return 403 for receiving establishment viewing a project transfer version
-    // eslint-disable-next-line handle-callback-err
     .catch(() => {});
 };
 
@@ -259,8 +369,6 @@ const getGrantedVersion = (req, type = 'project-versions') => {
   }
 
   return getCacheableVersion(req, `/establishments/${req.establishmentId}/projects/${req.projectId}/${type}/${granted.id}`)
-    // swallow error as this will return 403 for receiving establishment viewing a project transfer version
-    // eslint-disable-next-line handle-callback-err
     .catch(() => {});
 };
 
@@ -619,6 +727,7 @@ module.exports = {
   getVersion,
   getComments,
   getTaskForVersion,
+  isGrantedLicenceView,
   canComment,
   getPreviousVersion,
   getGrantedVersion,
