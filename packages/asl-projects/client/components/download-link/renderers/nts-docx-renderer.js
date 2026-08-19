@@ -196,7 +196,7 @@ export default async function ntsDocxRenderer(opts) {
       : [];
 
     if (isRequired && raReasons && activeReasons.length) {
-      document.createParagraph('Reason for retrospective assessment').heading3();
+      document.createParagraph('Reasons for retrospective assessment').heading4();
       document.createParagraph('This may include reasons from previous versions of this licence.').style('aside');
       activeReasons.forEach(reason => {
         const p = new Paragraph();
