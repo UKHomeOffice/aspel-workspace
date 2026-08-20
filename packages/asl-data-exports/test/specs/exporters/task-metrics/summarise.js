@@ -27,9 +27,9 @@ describe('Task Metrics', () => {
 
     it('counts submitted tasks', () => {
       let stats = emptyStats();
-      const task1 = { metrics: { taskType: 'pplApplication', wasSubmitted: true } };
-      const task2 = { metrics: { taskType: 'pplApplication', wasSubmitted: true } };
-      const task3 = { metrics: { taskType: 'pplApplication', wasSubmitted: true } };
+      const task1 = { metrics: { taskType: 'pplApplication', wasSubmittedInPeriod: true } };
+      const task2 = { metrics: { taskType: 'pplApplication', wasSubmittedInPeriod: true } };
+      const task3 = { metrics: { taskType: 'pplApplication', wasSubmittedInPeriod: true } };
 
       const expected = merge({}, emptyStats(), {
         pplApplication: {
@@ -46,9 +46,9 @@ describe('Task Metrics', () => {
 
     it('counts resubmitted tasks', () => {
       let stats = emptyStats();
-      const task1 = { metrics: { taskType: 'pplApplication', resubmittedCount: 1 } };
-      const task2 = { metrics: { taskType: 'pplApplication', resubmittedCount: 4 } };
-      const task3 = { metrics: { taskType: 'pplAmendment', resubmittedCount: 8 } };
+      const task1 = { metrics: { taskType: 'pplApplication', resubmittedCountInPeriod: 1 } };
+      const task2 = { metrics: { taskType: 'pplApplication', resubmittedCountInPeriod: 4 } };
+      const task3 = { metrics: { taskType: 'pplAmendment', resubmittedCountInPeriod: 8 } };
 
       const expected = merge({}, emptyStats(), {
         pplApplication: {
@@ -106,9 +106,9 @@ describe('Task Metrics', () => {
 
     it('counts returned tasks', () => {
       let stats = emptyStats();
-      const task1 = { metrics: { taskType: 'pplApplication', returnedCount: 2 } };
-      const task2 = { metrics: { taskType: 'pplApplication', returnedCount: 3 } };
-      const task3 = { metrics: { taskType: 'pplApplication', returnedCount: 5 } };
+      const task1 = { metrics: { taskType: 'pplApplication', returnedCountInPeriod: 2 } };
+      const task2 = { metrics: { taskType: 'pplApplication', returnedCountInPeriod: 3 } };
+      const task3 = { metrics: { taskType: 'pplApplication', returnedCountInPeriod: 5 } };
 
       const expected = merge({}, emptyStats(), {
         pplApplication: {
@@ -146,10 +146,10 @@ describe('Task Metrics', () => {
 
     it('pushes submit to action diffs to submitToActionDays so they can be averaged', () => {
       let stats = emptyStats();
-      const task1 = { metrics: { taskType: 'pplApplication', submitToActionDiff: 3 } };
-      const task2 = { metrics: { taskType: 'pplApplication', submitToActionDiff: 1 } };
+      const task1 = { metrics: { taskType: 'pplApplication', firstSubmitToActionDiff: 3 } };
+      const task2 = { metrics: { taskType: 'pplApplication', firstSubmitToActionDiff: 1 } };
       const task3 = { metrics: { taskType: 'pplApplication' } };
-      const task4 = { metrics: { taskType: 'pplApplication', submitToActionDiff: 0 } };
+      const task4 = { metrics: { taskType: 'pplApplication', firstSubmitToActionDiff: 0 } };
 
       const expected = merge({}, emptyStats(), {
         pplApplication: {
@@ -167,10 +167,10 @@ describe('Task Metrics', () => {
 
     it('pushes assign to action diffs to assignToActionDays so they can be averaged', () => {
       let stats = emptyStats();
-      const task1 = { metrics: { taskType: 'pplApplication', assignToActionDiff: 0 } };
-      const task2 = { metrics: { taskType: 'pplApplication', assignToActionDiff: 2 } };
+      const task1 = { metrics: { taskType: 'pplApplication', firstAssignedToActionDiff: 0 } };
+      const task2 = { metrics: { taskType: 'pplApplication', firstAssignedToActionDiff: 2 } };
       const task3 = { metrics: { taskType: 'pplApplication' } };
-      const task4 = { metrics: { taskType: 'pplApplication', assignToActionDiff: 1 } };
+      const task4 = { metrics: { taskType: 'pplApplication', firstAssignedToActionDiff: 1 } };
 
       const expected = merge({}, emptyStats(), {
         pplApplication: {
