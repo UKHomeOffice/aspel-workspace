@@ -5,7 +5,7 @@ const { Packer } = require('@joefitter/docx');
 const filenamify = require('filenamify');
 const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
 const { NotFoundError } = require('@asl/service/errors');
-const {addPageNumbers} = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
+const { addPageNumbers } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
 const { getRAReasons } = require('@ukhomeoffice/asl-constants');
 
 // Converts docx Document instance into a binary Buffer
@@ -14,7 +14,7 @@ const pack = doc => {
   return packer.toBuffer(doc);
 };
 
-// Helper to check YYYY-MM-DD format and date check
+// Check YYYY-MM-DD format and date check
 const isValidDate = (dateStr) => {
   if (typeof dateStr !== 'string') return false;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
@@ -96,11 +96,11 @@ module.exports = settings => {
 
       addPageNumbers(mergedDocument);
 
-      // Pack the final accumulated document into a buffer once all projects are processed
+      // Pack the final accumulated document into a buffer
       const finalBuffer = await pack(mergedDocument);
 
-      // Return the final combined document to the browser
-      const filename = filenamify(`NTS_Combined_Report_${startDate}_to_${endDate}.docx`);
+      // Return the combined document to the browser
+      const filename = filenamify(`NTS_${startDate}_to_${endDate}_ra_${ra}.docx`);
       res.attachment(filename);
       res.end(finalBuffer);
     } catch (err) {
