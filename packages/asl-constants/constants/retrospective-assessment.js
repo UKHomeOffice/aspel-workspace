@@ -59,13 +59,6 @@ function calculateRA(versionData) {
   };
 }
 
-function isRequired(versionData) {
-  if (!versionData) {
-    return false;
-  }
-  return some(calculateRA(versionData));
-}
-
 function addedByAsru(versionData) {
   if (!versionData) {
     return false;
