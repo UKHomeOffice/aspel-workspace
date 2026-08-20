@@ -2,6 +2,7 @@ const { merge } = require('lodash');
 const baseContent = require('./index');
 
 module.exports = merge({}, baseContent, {
+  pageTitle: 'Check personal licence details',
   fields: {
     comment: {
       label: 'Remarks (optional)',

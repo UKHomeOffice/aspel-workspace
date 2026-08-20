@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Revoke personal licence',
   title: 'Revoke personal licence',
   fields: {
     comments: {

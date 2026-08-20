@@ -4,12 +4,15 @@ const { UnauthorisedError } = require('@asl/service/errors');
 const { form } = require('../../common/routers');
 const success = require('../../success');
 const schema = require('./schema');
+const { setPageTitle } = require('../../common/middleware');
 
 module.exports = () => {
   const app = page({
     root: __dirname,
     paths: ['/success']
   });
+
+  app.all('/', setPageTitle());
 
   app.get('/', (req, res, next) => {
     const params = { ...req.params, establishment: req.establishmentId };

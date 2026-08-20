@@ -4,7 +4,7 @@ const { get } = require('lodash');
 const { page } = require('@asl/service/ui');
 const { NotFoundError } = require('@asl/service/errors');
 const { form, relatedTasks } = require('../../common/routers');
-const { hydrate, enforcementFlags } = require('../../common/middleware');
+const { hydrate, enforcementFlags, setPageTitle } = require('../../common/middleware');
 const schema = require('./schema/form');
 
 module.exports = settings => {
@@ -12,6 +12,8 @@ module.exports = settings => {
     root: __dirname,
     ...settings
   });
+
+  app.use(setPageTitle());
 
   app.get('/', hydrate());
 

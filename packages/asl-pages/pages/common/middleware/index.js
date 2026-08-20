@@ -3,6 +3,7 @@ const { get, set, omit } = require('lodash');
 const { NotFoundError } = require('@asl/service/errors');
 const loadPermissions = require('./load-permissions');
 const enforcementFlags = require('./enforcement-flags');
+const { setPageTitle, prependPageTitle } = require('./page-title');
 const { cleanModel } = require('../../../lib/utils');
 
 const hydrate = () => async (req, res, next) => {
@@ -174,5 +175,7 @@ module.exports = {
   populateEstablishmentProfiles,
   validateUuidParam,
   loadPermissions,
-  enforcementFlags
+  enforcementFlags,
+  setPageTitle,
+  prependPageTitle
 };

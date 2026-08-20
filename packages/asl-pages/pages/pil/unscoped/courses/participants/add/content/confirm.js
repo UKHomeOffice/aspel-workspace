@@ -3,6 +3,7 @@ const baseContent = require('./');
 const trainingContent = require('../../../content');
 
 module.exports = merge({}, trainingContent, baseContent, {
+  pageTitle: 'Check licence details',
   title: 'Check licence details',
   fields: {
     title: {
