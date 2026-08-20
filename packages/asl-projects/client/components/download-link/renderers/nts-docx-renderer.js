@@ -52,7 +52,7 @@ export default async function ntsDocxRenderer(opts) {
     if (!isBulk) {
       document.createParagraph('Non-technical Summary').heading1();
     }
-    document.createParagraph(application.title || version.title || 'Untitled project').heading2();
+    document.createParagraph(application.title || version.title || 'Untitled project').heading1();
     document.createParagraph('\n').style('body');
   };
 
