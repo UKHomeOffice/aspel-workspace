@@ -81,19 +81,36 @@ const getTaskForVersion = async (req, versionId, actions = ['grant', 'transfer']
     }
 
     const task = req.closedTasks.find(matches);
+    if (task) {
+      return task;
+    }
 
     // The version id associated with a task is only updated when a draft is submitted
-    if (!task && req.version?.status === 'draft') {
+    if (req.version?.status === 'draft') {
       const previousVersion = dropWhile(req.project.versions, version => version.id !== versionId).slice(1).shift();
       if (previousVersion && !['withdrawn', 'granted'].includes(previousVersion.status)) {
         return getTaskForVersion(req, previousVersion.id, actions);
       }
+      return undefined;
     }
 
-    return task;
+    return undefined;
   } catch (e) {
     return undefined;
   }
+};
+
+/**
+ * Comments belong to the application, not to the licence it produced.
+ * Only the current granted version is the licence - anything older is history.
+ */
+const isGrantedLicenceView = req => {
+  const licenceId = get(req.project, 'granted.id');
+
+  return !!licenceId &&
+    !req.fullApplication &&
+    get(req.project, 'status') !== 'transferred' &&
+    licenceId === get(req.version, 'id');
 };
 
 const getComments = (actions = ['grant', 'transfer'], type = 'project-versions') => asyncMiddleware(async (req, res) => {
@@ -107,12 +124,29 @@ const getComments = (actions = ['grant', 'transfer'], type = 'project-versions')
   // hide comments on granted views. Check what's actually being viewed  req.version is the granted project version on the RA view.
   const viewed = type === 'retrospective-assessments' ? req.retrospectiveAssessment : req.version;
 
-  if (!viewed || viewed.status === 'granted') {
+  if (!viewed) {
+    return;
+  }
+
+  // there is no history of granted RAs, so an RA hides its comments as soon as it's granted
+  const hidden = type === 'retrospective-assessments'
+    ? viewed.status === 'granted'
+    : isGrantedLicenceView(req);
+
+  if (hidden) {
     return;
   }
 
   const taskResponse = await req.api(`/tasks/${task.id}`);
-  res.locals.static.comments = extractComments(taskResponse.json.data);
+  const comments = extractComments(taskResponse.json.data);
+  const historic = !get(req.project, 'openTasks', []).some(t => t.id === task.id);
+
+  // lets the summary show a plain count instead of a "new comments" flag,
+  // so history stays findable without claiming anything is new
+  res.locals.static.historicComments = historic;
+  res.locals.static.comments = historic
+    ? mapValues(comments, forField => forField.map(comment => ({ ...comment, isNew: false })))
+    : comments;
 });
 
 const hasEditPermission = async (req) => {
@@ -619,6 +653,7 @@ module.exports = {
   getVersion,
   getComments,
   getTaskForVersion,
+  isGrantedLicenceView,
   canComment,
   getPreviousVersion,
   getGrantedVersion,

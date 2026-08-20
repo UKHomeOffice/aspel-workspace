@@ -647,6 +647,10 @@ html.modal-open, html.modal-open body {
 
     &.comments {
       background: $light-green;
+
+      &.historic {
+        background: $light-green;
+      }
     }
 
     &.changed,
