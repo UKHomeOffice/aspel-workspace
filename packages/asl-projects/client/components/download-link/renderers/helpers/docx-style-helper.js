@@ -116,6 +116,13 @@ const addStyles = (document) => {
         .color('#FF0000')
         .bold();
 
+  document.Styles.createParagraphStyle('Heading1', 'Heading 1')
+    .basedOn('Body')
+    .next('Body')
+    .quickFormat()
+    .size(52)
+    .font('Arial');
+
     document.Styles.createParagraphStyle('Heading4', 'Heading 4')
       .basedOn('Body')
       .next('Body')
