@@ -329,10 +329,15 @@ function aliasReusableStepCommentsToReferringSteps(newComments, reusableStepMapp
  * applicant doesn't see a new-comment flag for their own comments. ASRU inspectors should see their own
  * new comments flagged before they act on the application, so this is passed as true for them (behind a
  * feature flag) - see ASL-5097.
+ * @param includeRead If true, every comment counts, not just the new ones. Used on versions that are no
+ * longer live, where nothing is new but the whole record still needs a count so it can be found - see
+ * ASL-5113 AC01.
  * @return A record of field paths mapped to comments that apply to that field
  */
-export const getNewComments = (comments, user, project, includeOwnComments = false) => {
-  const filterNew = field => field.filter(comment => comment.isNew && !comment.deleted && (includeOwnComments || comment.author !== user));
+export const getNewComments = (comments, user, project, includeOwnComments = false, includeRead = false) => {
+  const isCounted = comment => !comment.deleted &&
+    (includeRead || (comment.isNew && (includeOwnComments || comment.author !== user)));
+  const filterNew = field => field.filter(isCounted);
   const newComments = pickBy(mapValues(comments, filterNew), filterNew);
 
   if (project?.reusableSteps) {
