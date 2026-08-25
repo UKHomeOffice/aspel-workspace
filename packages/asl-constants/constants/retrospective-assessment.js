@@ -4,7 +4,6 @@ const {
   flatten,
   isUndefined,
   isPlainObject,
-  some,
   reduce
 } = require('lodash');
 
