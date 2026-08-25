@@ -18,6 +18,7 @@ const fees = require('./constants/fees');
 const trainingCourseDuration = require('./constants/training-course-duration');
 const trainingCoursePurpose = require('./constants/training-course-purpose');
 const versions = require('./constants/versions');
+const getRAReasons = require('./constants/retrospective-assessment');
 
 module.exports = {
   accreditingBodies,
@@ -40,4 +41,5 @@ module.exports = {
   trainingCourseDuration,
   trainingCoursePurpose,
   versions,
+  getRAReasons,
 };

@@ -11,8 +11,10 @@ import schemaVersions from '@asl/projects/client/schema';
 import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
-import { addStyles, renderHorizontalRule, addPageNumbers } from './helpers/docx-style-helper'
-import { renderMarkdown as renderMarkdownContent, renderLabel as renderLabelShared, renderText as renderTextShared, renderTextEditor as renderTextEditorShared } from './helpers/docx-content-renderer'
+import { addStyles, renderHorizontalRule, addPageNumbers } from './helpers/docx-style-helper';
+import { renderMarkdown as renderMarkdownContent, renderLabel as renderLabelShared, renderText as renderTextShared, renderTextEditor as renderTextEditorShared } from './helpers/docx-content-renderer';
+import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
+import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
 
 export default async function ntsDocxRenderer(opts) {
   const {
@@ -22,10 +24,17 @@ export default async function ntsDocxRenderer(opts) {
     includeDraftRa,
     ra,
     raReasons,
-    isTrainingLicence
+    isTrainingLicence,
+    isBulk,
+    mergedDocument
   } = opts;
 
-  const document = new Document();
+  let document;
+  if (mergedDocument) {
+    document = mergedDocument;
+  } else {
+    document = new Document();
+  }
 
   const renderMarkdown = (markdown, style = 'body') => {
     renderMarkdownContent(document, markdown, style);
@@ -41,8 +50,10 @@ export default async function ntsDocxRenderer(opts) {
   };
 
   const renderTitleBlock = () => {
-    document.createParagraph('Non-technical Summary').heading1();
-    document.createParagraph(application.title || version.title || 'Untitled project').heading2();
+    if (!isBulk) {
+      document.createParagraph('Non-technical Summary').heading1();
+    }
+    document.createParagraph(application.title || version.title || 'Untitled project').heading1();
     document.createParagraph('\n').style('body');
   };
 
@@ -177,11 +188,20 @@ export default async function ntsDocxRenderer(opts) {
     const isRequired = raCompulsory || raRequired || application.raDate;
     const text = isRequired ? RAContent.required : RAContent.notRequired;
     document.createParagraph(text).style('body');
-    if (isRequired && raReasons && raReasons.length) {
-      document.createParagraph('Reason for retrospective assessment').heading3();
+
+    // Extract keys set to true and map to their description strings
+    const activeReasons = raReasons
+      ? Object.keys(raReasons)
+        .filter(key => raReasons[key] && raReasonsDescriptions[key])
+        .map(key => raReasonsDescriptions[key])
+      : [];
+
+    if (isRequired && raReasons && activeReasons.length) {
+      document.createParagraph('Reasons for retrospective assessment').heading4();
       document.createParagraph('This may include reasons from previous versions of this licence.').style('aside');
-      raReasons.forEach(reason => {
-        const p = new Paragraph(); p.style('body').bullet();
+      activeReasons.forEach(reason => {
+        const p = new Paragraph();
+        p.style('body').bullet();
         p.addRun(new TextRun(reason));
         document.addParagraph(p);
       });
@@ -195,7 +215,11 @@ export default async function ntsDocxRenderer(opts) {
     const isRequired = raCompulsory || raRequired || application.raDate;
     if (!isRequired) { return; }
     const hasRaDate = !!application.raDate;
-    const raDate = hasRaDate ? application.raDate : null;
+
+    // Format ISO string to '21 January 2031' format
+    const raDate = hasRaDate
+      ? formatDate(application.raDate, DATE_FORMAT.long): null;
+
     const content = Mustache.render(field.content, { raDate, hasRaDate });
     renderMarkdown(content, 'aside');
     renderHorizontalRule(document);
@@ -284,6 +308,8 @@ export default async function ntsDocxRenderer(opts) {
 
   addStyles(document);
   renderDocument();
-  addPageNumbers(document);
+  if (!isBulk) {
+    addPageNumbers(document);
+  }
   return document;
 }

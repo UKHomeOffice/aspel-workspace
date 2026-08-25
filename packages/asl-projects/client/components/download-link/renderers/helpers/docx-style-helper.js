@@ -5,12 +5,12 @@ const addStyles = (document) => {
         .basedOn('Normal')
         .next('Normal')
         .quickFormat()
-        .size(24)
+        .size(28)
         .indent(800)
         .bold()
         .color('#3B3B3B')
-        .font('Helvetica')
-        .spacing({ before: 200, after: 50 });
+        .font('Arial')
+        .spacing({ before: 6, after: 6 });
 
     document.Styles.createParagraphStyle('SectionTitle', 'Section Title')
         .basedOn('Normal')
@@ -82,7 +82,7 @@ const addStyles = (document) => {
         .next('Normal')
         .quickFormat()
         .size(24)
-        .font('Helvetica')
+        .font('Arial')
         .spacing({ before: 200, after: 200 });
 
     document.Styles.createParagraphStyle('ListParagraph', 'List Paragraph')
@@ -99,7 +99,8 @@ const addStyles = (document) => {
         .quickFormat()
         .size(24)
         .color('#999999')
-        .italics();
+        .font('Arial')
+        .spacing({ before: 300, after: 300 });
 
     document.Styles.createParagraphStyle('footerText', 'Footer Text')
         .basedOn('Normal')
@@ -114,6 +115,24 @@ const addStyles = (document) => {
         .quickFormat()
         .color('#FF0000')
         .bold();
+
+  document.Styles.createParagraphStyle('Heading1', 'Heading 1')
+    .basedOn('Body')
+    .next('Body')
+    .quickFormat()
+    .size(52)
+    .font('Arial')
+    .font('Arial')
+    .color('8F23B3');;
+
+    document.Styles.createParagraphStyle('Heading4', 'Heading 4')
+      .basedOn('Body')
+      .next('Body')
+      .quickFormat()
+      .size(24)
+      .bold()
+      .font('Arial');
+
 };
 
 const renderHorizontalRule = doc => {
