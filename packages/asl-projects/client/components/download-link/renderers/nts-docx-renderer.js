@@ -14,6 +14,7 @@ import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose'
 import { addStyles, renderHorizontalRule, addPageNumbers } from './helpers/docx-style-helper';
 import { renderMarkdown as renderMarkdownContent, renderLabel as renderLabelShared, renderText as renderTextShared, renderTextEditor as renderTextEditorShared } from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
+import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
 
 export default async function ntsDocxRenderer(opts) {
   const {
@@ -214,15 +215,11 @@ export default async function ntsDocxRenderer(opts) {
     const isRequired = raCompulsory || raRequired || application.raDate;
     if (!isRequired) { return; }
     const hasRaDate = !!application.raDate;
+
     // Format ISO string to '21 January 2031' format
     const raDate = hasRaDate
-      ? new Date(application.raDate).toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        timeZone: 'UTC'
-      })
-      : null;
+      ? formatDate(application.raDate, DATE_FORMAT.long): null;
+
     const content = Mustache.render(field.content, { raDate, hasRaDate });
     renderMarkdown(content, 'aside');
     renderHorizontalRule(document);

@@ -121,7 +121,9 @@ const addStyles = (document) => {
     .next('Body')
     .quickFormat()
     .size(52)
-    .font('Arial');
+    .font('Arial')
+    .font('Arial')
+    .color('8F23B3');;
 
     document.Styles.createParagraphStyle('Heading4', 'Heading 4')
       .basedOn('Body')
