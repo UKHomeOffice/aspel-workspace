@@ -41,11 +41,6 @@ module.exports = {
         NVS: 'Enter a reason why the module is not yet completed',
         default: 'Enter a reason why there is a delay in completing these modules'
       }
-    },
-    completeDate: {
-      required: 'The date must be a real date and include a day, month and year. The year must include 4 numbers',
-      validDate: 'The date must be a real date and include a day, month and year. The year must include 4 numbers',
-      dateIsAfter: 'The date must be in the future'
     }
   }
 };

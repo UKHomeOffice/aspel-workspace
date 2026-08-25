@@ -9,6 +9,9 @@ module.exports = {
   },
   issueDate: {
     inputType: 'inputDate',
+    // Used by the GDS validDate messages; required/dateIsBefore keep their bespoke
+    // content (see content/index.js) so their e2e-asserted wording is unchanged.
+    dateLabel: 'Granted date',
     validate: [
       'required',
       'validDate',

@@ -61,6 +61,7 @@ module.exports = (role) => {
   return {
     mandatory: {
       inputType: roleType === ROLE_TYPES.sqp ? 'radioGroup' : 'checkboxGroup',
+      className: 'mandatory-training-hint-spacing',
       options: mandatoryOptions(roleType),
       validate: ['required', 'exclusive'],
       hint: MANDATORY_TRAINING_HINT_ROLE_TYPES.includes(roleType)

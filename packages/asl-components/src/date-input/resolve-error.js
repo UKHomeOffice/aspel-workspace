@@ -54,6 +54,10 @@ const CONSTRAINTS = {
 // Returns { key, context } for the message, or null when the code is unknown
 // (caller then falls back to the field's generic error text).
 function resolveDateError({ value, errorCode, validate }) {
+    if (errorCode === 'aspelDataStartDate') {
+        return { key: 'aspelDataStartDate', context: {} };
+    }
+
     if (errorCode === 'required') {
         return { key: 'enter', context: {} };
     }
@@ -65,10 +69,14 @@ function resolveDateError({ value, errorCode, validate }) {
     const constraint = CONSTRAINTS[errorCode];
     if (constraint) {
         const param = ruleParam(validate, errorCode);
-        if (param === 'now' || param == null) {
-            return { key: constraint.now, context: {} };
-        }
-        return { key: constraint.dated, context: { date: formatReferenceDate(param) } };
+        // Only use the "before/after <date>" wording when we can actually format the
+        // reference date. For `'now'`, a function, or a field-reference we can't
+        // format, fall back to the today-relative message so we never render a
+        // dangling "must be before " with a blank date.
+        const date = (param === 'now' || param == null) ? '' : formatReferenceDate(param);
+        return date
+            ? { key: constraint.dated, context: { date } }
+            : { key: constraint.now, context: {} };
     }
 
     return null;

@@ -1,39 +1,27 @@
 import React from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
-import { getStatus, getTrainingRecord, getRemovedTrainingRecords } from '../helpers/trainingRecordsComparison';
+import { useSelector } from 'react-redux';
+import { getStatus, getTrainingRecord } from '../helpers/trainingRecordsComparison';
 import TrainingRecordModal from './trainingRecordsModal';
 import { format } from 'date-fns';
-const DEFAULT_LABEL = '-';
-export default function TrainingSummaryWithChangeHighlighting({
-                                                                certificates = [],
-                                                                comparisons = {},
-                                                                project = {},
-                                                                readonly
 
-                                                              }) {
+const DEFAULT_LABEL = '-';
+const NO_RECORDS_LABEL = 'No training record';
+export default function TrainingSummaryWithChangeHighlighting(
+  { certificates = [], comparisons = {}, project = {} }
+) {
   const dateFormat = 'dd MMMM yyyy';
+
   const trainingHistory = useSelector(state => state.static.previousTraining);
-  const versions = useSelector(state => state.static.project.versions);
-  const previousVersion = useSelector(state => state.static.previousTraining.previous);
-  const firstVersion = useSelector(state => state.static.previousTraining.first);
-  const grantedVersion = useSelector(state => state.static.previousTraining.granted);
-  const removedRecords = getRemovedTrainingRecords(comparisons, trainingHistory);
+  const versions = useSelector(state => state.static.project?.versions ?? []);
+
+  const previousVersion = trainingHistory?.previous;
+  const firstVersion = trainingHistory?.first;
+  const grantedVersion = trainingHistory?.granted;
+
   const applicationGrantedStatus =
     grantedVersion !== null &&
     grantedVersion !== undefined &&
     Object.keys(grantedVersion).length > 0;
-
-  // Map removed by ID for quick lookup
-  const removedMap = removedRecords.reduce((map, r) => {
-    map[r.trainingId || r.id] = r;
-    return map;
-  }, {});
-
-  // Map current by id's
-  const currentMap = certificates.reduce((map, r) => {
-    map[r.trainingId || r.id] = r;
-    return map;
-  }, {});
 
   // Combine all records from previous, first, granted, and current versions
   const allRecords = [
@@ -47,14 +35,20 @@ export default function TrainingSummaryWithChangeHighlighting({
   const uniqueRecords = Array.from(
     new Map(allRecords.map(record => [record.id || record.trainingId, record])).values()
   );
+
+  if (!uniqueRecords.length) {
+    return <p>{NO_RECORDS_LABEL}</p>;
+  }
+
   // check if this is first submission
   const trainingHistoryRecords = versions.length > 1;
   // unset grey badge
   if (versions.length < 3) {
-    comparisons.added[1].ids = [];
-    comparisons.removed[1].ids = [];
-    comparisons.changed[1].ids = [];
-
+    ['added', 'removed', 'changed'].forEach(key => {
+      if (comparisons[key]?.[1]) {
+        comparisons[key][1].ids = [];
+      }
+    });
   }
   return (
     <div className="training-summary-custom">
@@ -103,7 +97,7 @@ export default function TrainingSummaryWithChangeHighlighting({
                     ))}
                   </ul>
                 ) : (
-                  {DEFAULT_LABEL}
+                  DEFAULT_LABEL
                 )}
               </td>
 

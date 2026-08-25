@@ -35,6 +35,7 @@ module.exports = {
         reveal: {
           courseDate: {
             inputType: 'inputDate',
+            dateLabel: 'Course date',
             show: true,
             validate: [
               'required',
@@ -50,6 +51,7 @@ module.exports = {
         reveal: {
           startDate: {
             inputType: 'inputDate',
+            dateLabel: 'Course start date',
             show: true,
             validate: [
               'required',
@@ -59,6 +61,7 @@ module.exports = {
           },
           endDate: {
             inputType: 'inputDate',
+            dateLabel: 'Course end date',
             show: true,
             validate: [
               'required',

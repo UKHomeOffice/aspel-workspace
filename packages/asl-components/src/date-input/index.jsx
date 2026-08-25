@@ -4,17 +4,22 @@ import { getInvalidDateParts } from './invalid-parts';
 import { describedByIds } from '../aria-describedby';
 
 class DateInput extends BaseDateInput {
+    constructor(options) {
+        super(options);
+        this.submittedValue = this.state.value;
+    }
+
     describedBy() {
         return describedByIds(this.id(), this.props);
     }
 
-    // Parts to highlight when in error: only the individually-invalid ones, or
-    // all three when no single part can be blamed (see invalid-parts.js).
+    // highlight when in error: only the individually-invalid ones, or
+
     erroredParts() {
         if (!this.props.error) {
             return [];
         }
-        const invalid = getInvalidDateParts(this.state.value);
+        const invalid = getInvalidDateParts(this.submittedValue);
         return invalid.length ? invalid : ['day', 'month', 'year'];
     }
 

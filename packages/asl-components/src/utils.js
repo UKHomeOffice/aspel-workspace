@@ -78,7 +78,7 @@ function getLabelFromRenderers(renderers, name, label) {
                     .map(([key, mapper]) => [key, mapper(label, renderer)])
             )
             : undefined;
-        if (formatted && formatted.label) {
+        if (formatted && formatted[label]) {
             return formatted;
         }
     }

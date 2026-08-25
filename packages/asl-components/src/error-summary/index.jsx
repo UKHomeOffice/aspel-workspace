@@ -98,6 +98,8 @@ const ErrorSummary = ({
                                                     value={model?.[key]}
                                                     errorCode={errors[key]}
                                                     validate={dateFields.get(key)?.validate}
+                                                    dateLabel={dateFields.get(key)?.dateLabel}
+                                                    dateEnter={dateFields.get(key)?.dateEnter}
                                                     snippetProps={snippetProps}
                                                 />
                                                 :

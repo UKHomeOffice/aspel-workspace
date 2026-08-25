@@ -410,6 +410,9 @@ describe('Versions', () => {
         versions: [granted],
         closedTasks: [{ id: 'task-grant', data: { action: 'grant', data: { version: 'granted-version' } } }]
       });
+      // the API always supplies these; the licence is the most recent granted version
+      req.project.status = 'active';
+      req.project.granted = granted;
 
       const res = await run(req);
 
@@ -431,6 +434,63 @@ describe('Versions', () => {
       expect(res.locals.static.comments).toBeDefined();
       expect(res.locals.static.comments.title[0].author).toBe('Granting Inspector');
       expect(req.api).toHaveBeenCalledWith('/tasks/task-grant');
+    });
+
+    describe('on the retrospective assessment view', () => {
+      // the RA view loads the *granted* project version alongside the RA, so
+      // comment visibility must be decided from the RA itself
+      const buildRaReq = ({ retrospectiveAssessment, openTasks = [] }) => {
+        const api = jest.fn(url => {
+          if (url === '/tasks/related') {
+            return Promise.resolve({ json: { data: [] } });
+          }
+          return Promise.resolve({ json: { data: grantTaskWithComment(url.replace('/tasks/', '')) } });
+        });
+        return {
+          retrospectiveAssessment,
+          version: { id: 'granted-version', status: 'granted' },
+          projectId: PROJECT_ID,
+          establishmentId: ESTABLISHMENT_ID,
+          project: {
+            establishmentId: ESTABLISHMENT_ID,
+            openTasks,
+            versions: []
+          },
+          api
+        };
+      };
+
+      const runRa = req => {
+        const res = { locals: { static: {} } };
+        return new Promise((resolve, reject) => {
+          getComments('grant-ra', 'retrospective-assessments')(req, res, err => (err ? reject(err) : resolve(res)));
+        });
+      };
+
+      it('exposes comments while the RA is still being worked on', async () => {
+        const req = buildRaReq({
+          retrospectiveAssessment: { id: 'ra-1', status: 'draft' },
+          openTasks: [{ id: 'task-grant-ra', data: { action: 'grant-ra' } }]
+        });
+
+        const res = await runRa(req);
+
+        expect(res.locals.static.comments).toBeDefined();
+        expect(res.locals.static.comments.title[0].author).toBe('Granting Inspector');
+        expect(req.api).toHaveBeenCalledWith('/tasks/task-grant-ra');
+      });
+
+      it('does not expose comments once the RA is granted', async () => {
+        const req = buildRaReq({
+          retrospectiveAssessment: { id: 'ra-1', status: 'granted' },
+          openTasks: [{ id: 'task-grant-ra', data: { action: 'grant-ra' } }]
+        });
+
+        const res = await runRa(req);
+
+        expect(res.locals.static.comments).toBeUndefined();
+        expect(req.api).not.toHaveBeenCalledWith('/tasks/task-grant-ra');
+      });
     });
   });
 });

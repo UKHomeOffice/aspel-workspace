@@ -30,27 +30,23 @@ module.exports = merge({},
       courseDuration: {
         required: 'Select whether the course is one day or longer than one day'
       },
+
       courseDate: {
-        required: 'Enter the course date',
-        validDate: 'The course date must be a real date and include a day,' +
-          ' month and year. The year must include 4 numbers',
-        dateIsAfter: 'The course date must be in the future.',
-        dateIsSameOrBefore: 'The course date must be before the PPL expiry' +
-          ' date {{ project.formattedExpiryDate }}'
+        required: 'Enter a course date',
+        dateIsAfter: 'Course date must be in the future',
+        dateIsSameOrBefore: 'Course date must be the same as or before the PPL expiry' +
+          ' date{{#project.formattedExpiryDate}} {{project.formattedExpiryDate}}{{/project.formattedExpiryDate}}'
       },
       startDate: {
-        required: 'Enter the course start date',
-        validDate: 'Course start date must be a real date and include a day,' +
-          ' month and year. The year must include 4 numbers',
-        dateIsAfter: 'The course start date must be in the future.'
+        required: 'Enter a course start date',
+        dateIsAfter: 'Course start date must be in the future'
       },
       endDate: {
-        required: 'Enter the course end date',
-        validDate: 'The course end date must be a real date and include a day,' +
-          ' month and year. The year must include 4 numbers',
-        dateIsAfter: 'The course end date must be after the start date.',
-        dateIsSameOrBefore: 'The course end date must be before the PPL expiry' +
-          ' date {{ project.formattedExpiryDate }}'
+        required: 'Enter a course end date',
+        dateIsAfter: 'Course end date must be after the start date' +
+          '{{#formattedStartDate}} {{formattedStartDate}}{{/formattedStartDate}}',
+        dateIsSameOrBefore: 'Course end date must be the same as or before the PPL expiry' +
+          ' date{{#project.formattedExpiryDate}} {{project.formattedExpiryDate}}{{/project.formattedExpiryDate}}'
       }
     },
     breadcrumbs: {

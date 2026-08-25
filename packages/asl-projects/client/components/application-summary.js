@@ -56,6 +56,7 @@ const getMappedProps = createSelector(
     state => state.application.readonly,
     state => state.application.showComments,
     state => state.application.showConditions,
+    state => state.application.historicComments,
     getProject,
     getComments,
     getUser,
@@ -71,6 +72,7 @@ const getMappedProps = createSelector(
     readonly,
     showComments,
     showConditions,
+    historicComments,
     project,
     comments,
     user,
@@ -85,7 +87,7 @@ const getMappedProps = createSelector(
     readonly,
     showComments,
     showConditions,
-    newComments: getNewComments(comments, user, project, asruUser && keycloakRoles.includes(FEATURE_FLAG_INSPECTOR_OWN_COMMENTS)),
+    newComments: getNewComments(comments, user, project, asruUser && keycloakRoles.includes(FEATURE_FLAG_INSPECTOR_OWN_COMMENTS), historicComments),
     fieldsBySubsection,
     legacy: schemaVersion === 0,
     values: project,
@@ -106,7 +108,8 @@ const ApplicationSummary = () => {
   const getSubsectionLink = key => {
     const hasNoProtocol = !props.values?.protocols?.length;
     if (standardProtocolsEnabled && hasNoProtocol && key === 'protocols') {
-      return '/standard-protocol';
+      // Record the application overview as the screen to return to on cancel.
+      return { pathname: '/standard-protocol', state: { returnTo: '/' } };
     }
     return `/${key}`;
   };

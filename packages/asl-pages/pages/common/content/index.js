@@ -246,7 +246,12 @@ module.exports = {
       // "Award date", "Course date"). A page can override any of these per field
       // under `errors.<field>.date.<key>` when it needs bespoke wording.
       date: {
-        enter: 'Enter {{dateLabel}}',
+        // Generic; pages override `errors.<field>.date.enter` for specific wording
+        // like "Enter the date the certificate was awarded".
+        enter: 'Enter the date',
+        // Passthrough for a schema-provided `dateEnter` literal (dynamic fields
+        // such as AWERB that have no static content slot). Not used directly.
+        enterLiteral: '{{dateEnter}}',
         incomplete: '{{dateLabel}} must include {{missingParts}}',
         yearLength: 'Year must include 4 numbers',
         realDate: '{{dateLabel}} must be a real date',
@@ -257,7 +262,8 @@ module.exports = {
         before: '{{dateLabel}} must be before {{date}}',
         after: '{{dateLabel}} must be after {{date}}',
         sameOrBefore: '{{dateLabel}} must be the same as or before {{date}}',
-        sameOrAfter: '{{dateLabel}} must be the same as or after {{date}}'
+        sameOrAfter: '{{dateLabel}} must be the same as or after {{date}}',
+        aspelDataStartDate: 'ASPeL data starts from 31/07/2019'
       }
     }
   },
