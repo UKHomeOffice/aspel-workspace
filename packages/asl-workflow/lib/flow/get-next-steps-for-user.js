@@ -61,6 +61,10 @@ const isPplApplication = task => {
   return model === 'project' && action === 'grant' && projectStatus === 'inactive';
 };
 
+const isRoleApplication = task => {
+  return task.data.model === 'role' && task.data.action === 'create';
+};
+
 const isPilEndorsementForOwnPil = (task, profile) => {
   if ((task.data.model !== 'pil' && task.data.model !== 'trainingPil') || ![awaitingEndorsement.id, withNtco.id].includes(task.status)) {
     return false;
@@ -102,6 +106,10 @@ module.exports = async (task, profile) => {
       nextSteps = flow.getNextSteps(task).filter(step => step.id !== updated.id); // prevent edit and resubmit
     } else {
       nextSteps = flow.getNextSteps(task);
+    }
+
+    if (isRoleApplication(task)) {
+      nextSteps = nextSteps.map(step => step.id === rejected.id ? refused : step);
     }
   } else if (taskIsOpen(task)) {
     if (userIsApplicant(task, profile) || userCreatedThisTask(task, profile) || userIsEstablishmentAdmin(task, profile)) {
