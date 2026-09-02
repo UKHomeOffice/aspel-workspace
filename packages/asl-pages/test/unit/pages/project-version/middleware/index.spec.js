@@ -410,6 +410,9 @@ describe('Versions', () => {
         versions: [granted],
         closedTasks: [{ id: 'task-grant', data: { action: 'grant', data: { version: 'granted-version' } } }]
       });
+      // the API always supplies these; the licence is the most recent granted version
+      req.project.status = 'active';
+      req.project.granted = granted;
 
       const res = await run(req);
 

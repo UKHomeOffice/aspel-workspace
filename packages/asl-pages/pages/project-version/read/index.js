@@ -3,7 +3,8 @@ const { page } = require('@asl/service/ui');
 const {
   canComment,
   getAllChanges,
-  getProjectEstablishment
+  getProjectEstablishment,
+  isGrantedLicenceView
 } = require('../middleware');
 
 module.exports = settings => {
@@ -35,9 +36,7 @@ module.exports = settings => {
     res.locals.static.projectUrl = req.buildRoute('project.read');
     res.locals.static.establishment = req.project.establishment;
     res.locals.static.isActionable = isOpenForVersion;
-    // ASL-5161: comments must not display on the granted licence view for any
-    // user. Previous (non-granted) versions still show comments as before.
-    res.locals.static.showComments = !req.isPreview && req.version.status !== 'granted';
+    res.locals.static.showComments = !req.isPreview && !isGrantedLicenceView(req);
     res.locals.static.commentable = !req.isPreview && req.user.profile.asruUser && res.locals.static.isCommentable;
 
     const taskId = isOpenForVersion ? task.id : null;
@@ -64,7 +63,6 @@ module.exports = settings => {
     res.locals.static.project = req.project;
     res.locals.static.version = req.version.id;
 
-    // granted legacy PPLs are displayed in "read-only" mode
     // there is no "granted view" of legacy licences
     const isGranted = req.isPreview || (req.project.status === 'active' && req.version.status === 'granted' && !req.fullApplication);
     res.locals.static.isGranted = isGranted && req.project.schemaVersion > 0;
