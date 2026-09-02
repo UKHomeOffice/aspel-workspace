@@ -1,0 +1,512 @@
+{
+  "PP3557248": {
+    "data": {
+      "id": "766bac76-5e56-4fc6-975b-46b9be513a14",
+      "status": "resolved",
+      "data": {
+        "model": "project",
+        "action": "grant",
+        "modelData": {"id": "6d259a43-fd9c-40b4-b765-4cc322f83ee8", "status": "inactive", "licenceNumber": "PP3557248"},
+        "version": "02b0d31a-e0cb-4f9d-aea4-356dec56b10d"
+      },
+      "activity": [
+        {
+          "created_at": "2025-09-05T09:29:30.201+00:00",
+          "event_name": "create",
+          "event": {"status": "new", "assignedTo": null, "version": null}
+        },
+        {
+          "created_at": "2025-09-05T09:29:32.708+00:00",
+          "event_name": "status:new:awaiting-endorsement",
+          "event": {
+            "status": "awaiting-endorsement",
+            "assignedTo": null,
+            "version": "4e28d36d-a70b-4bfe-be8a-b2fbad14ddb4"
+          }
+        },
+        {
+          "created_at": "2025-09-05T09:50:45.646+00:00",
+          "event_name": "status:awaiting-endorsement:endorsed",
+          "event": {"status": "endorsed", "assignedTo": null, "version": "4e28d36d-a70b-4bfe-be8a-b2fbad14ddb4"}
+        },
+        {
+          "created_at": "2025-09-05T09:50:47.405+00:00",
+          "event_name": "status:endorsed:with-inspectorate",
+          "event": {"status": "with-inspectorate", "assignedTo": null, "version": "4e28d36d-a70b-4bfe-be8a-b2fbad14ddb4"}
+        },
+        {
+          "created_at": "2025-10-21T13:51:00.51+00:00",
+          "event_name": "assign",
+          "event": {
+            "status": "with-inspectorate",
+            "assignedTo": "1eec7b32-1e2e-4f34-8baa-1324582fdc51",
+            "version": "4e28d36d-a70b-4bfe-be8a-b2fbad14ddb4"
+          }
+        },
+        {
+          "created_at": "2025-10-21T13:51:10.618+00:00",
+          "event_name": "assign",
+          "event": {"status": "with-inspectorate", "assignedTo": null, "version": "4e28d36d-a70b-4bfe-be8a-b2fbad14ddb4"}
+        },
+        {
+          "created_at": "2025-10-22T07:37:13.34+00:00",
+          "event_name": "assign",
+          "event": {
+            "status": "with-inspectorate",
+            "assignedTo": "82859cb7-868b-4a93-b2da-e9006c3de2e7",
+            "version": "4e28d36d-a70b-4bfe-be8a-b2fbad14ddb4"
+          }
+        },
+        {
+          "created_at": "2025-11-20T17:24:17.102+00:00",
+          "event_name": "status:with-inspectorate:returned-to-applicant",
+          "event": {
+            "status": "returned-to-applicant",
+            "assignedTo": "82859cb7-868b-4a93-b2da-e9006c3de2e7",
+            "version": "4e28d36d-a70b-4bfe-be8a-b2fbad14ddb4"
+          }
+        },
+        {
+          "created_at": "2025-12-18T18:36:29.926+00:00",
+          "event_name": "status:returned-to-applicant:resubmitted",
+          "event": {
+            "status": "resubmitted",
+            "assignedTo": "82859cb7-868b-4a93-b2da-e9006c3de2e7",
+            "version": "67b64d67-3db3-4f3c-9225-07dff0a4977d"
+          }
+        },
+        {
+          "created_at": "2025-12-18T18:36:32.128+00:00",
+          "event_name": "status:resubmitted:awaiting-endorsement",
+          "event": {
+            "status": "awaiting-endorsement",
+            "assignedTo": "82859cb7-868b-4a93-b2da-e9006c3de2e7",
+            "version": "67b64d67-3db3-4f3c-9225-07dff0a4977d"
+          }
+        },
+        {
+          "created_at": "2025-12-22T10:42:39.215+00:00",
+          "event_name": "status:awaiting-endorsement:endorsed",
+          "event": {
+            "status": "endorsed",
+            "assignedTo": "82859cb7-868b-4a93-b2da-e9006c3de2e7",
+            "version": "67b64d67-3db3-4f3c-9225-07dff0a4977d"
+          }
+        },
+        {
+          "created_at": "2025-12-22T10:42:42.898+00:00",
+          "event_name": "status:endorsed:with-inspectorate",
+          "event": {
+            "status": "with-inspectorate",
+            "assignedTo": "82859cb7-868b-4a93-b2da-e9006c3de2e7",
+            "version": "67b64d67-3db3-4f3c-9225-07dff0a4977d"
+          }
+        },
+        {
+          "created_at": "2026-01-28T18:17:33.874+00:00",
+          "event_name": "assign",
+          "event": {
+            "status": "with-inspectorate",
+            "assignedTo": "a2ce4aa3-e22b-4538-9abb-b279e86e3876",
+            "version": "67b64d67-3db3-4f3c-9225-07dff0a4977d"
+          }
+        },
+        {
+          "created_at": "2026-02-05T19:27:10.801+00:00",
+          "event_name": "status:with-inspectorate:returned-to-applicant",
+          "event": {
+            "status": "returned-to-applicant",
+            "assignedTo": "a2ce4aa3-e22b-4538-9abb-b279e86e3876",
+            "version": "67b64d67-3db3-4f3c-9225-07dff0a4977d"
+          }
+        },
+        {
+          "created_at": "2026-02-11T09:35:08.335+00:00",
+          "event_name": "status:returned-to-applicant:resubmitted",
+          "event": {
+            "status": "resubmitted",
+            "assignedTo": "a2ce4aa3-e22b-4538-9abb-b279e86e3876",
+            "version": "5fa067da-d774-4365-a67f-fc432e0e8d54"
+          }
+        },
+        {
+          "created_at": "2026-02-11T09:35:10.952+00:00",
+          "event_name": "status:resubmitted:awaiting-endorsement",
+          "event": {
+            "status": "awaiting-endorsement",
+            "assignedTo": "a2ce4aa3-e22b-4538-9abb-b279e86e3876",
+            "version": "5fa067da-d774-4365-a67f-fc432e0e8d54"
+          }
+        },
+        {
+          "created_at": "2026-02-11T10:18:50.228+00:00",
+          "event_name": "status:awaiting-endorsement:endorsed",
+          "event": {
+            "status": "endorsed",
+            "assignedTo": "a2ce4aa3-e22b-4538-9abb-b279e86e3876",
+            "version": "5fa067da-d774-4365-a67f-fc432e0e8d54"
+          }
+        },
+        {
+          "created_at": "2026-02-11T10:18:54.246+00:00",
+          "event_name": "status:endorsed:with-inspectorate",
+          "event": {
+            "status": "with-inspectorate",
+            "assignedTo": "a2ce4aa3-e22b-4538-9abb-b279e86e3876",
+            "version": "5fa067da-d774-4365-a67f-fc432e0e8d54"
+          }
+        },
+        {
+          "created_at": "2026-02-13T13:59:07.303+00:00",
+          "event_name": "status:with-inspectorate:returned-to-applicant",
+          "event": {
+            "status": "returned-to-applicant",
+            "assignedTo": "a2ce4aa3-e22b-4538-9abb-b279e86e3876",
+            "version": "5fa067da-d774-4365-a67f-fc432e0e8d54"
+          }
+        },
+        {
+          "created_at": "2026-02-13T16:37:25.159+00:00",
+          "event_name": "status:returned-to-applicant:resubmitted",
+          "event": {
+            "status": "resubmitted",
+            "assignedTo": "a2ce4aa3-e22b-4538-9abb-b279e86e3876",
+            "version": "5c280ae6-2e34-4312-9590-37909be1622a"
+          }
+        },
+        {
+          "created_at": "2026-02-13T16:37:27.71+00:00",
+          "event_name": "status:resubmitted:awaiting-endorsement",
+          "event": {
+            "status": "awaiting-endorsement",
+            "assignedTo": "a2ce4aa3-e22b-4538-9abb-b279e86e3876",
+            "version": "5c280ae6-2e34-4312-9590-37909be1622a"
+          }
+        },
+        {
+          "created_at": "2026-02-13T16:39:59.425+00:00",
+          "event_name": "status:awaiting-endorsement:endorsed",
+          "event": {
+            "status": "endorsed",
+            "assignedTo": "a2ce4aa3-e22b-4538-9abb-b279e86e3876",
+            "version": "5c280ae6-2e34-4312-9590-37909be1622a"
+          }
+        },
+        {
+          "created_at": "2026-02-13T16:40:02.428+00:00",
+          "event_name": "status:endorsed:with-inspectorate",
+          "event": {
+            "status": "with-inspectorate",
+            "assignedTo": "a2ce4aa3-e22b-4538-9abb-b279e86e3876",
+            "version": "5c280ae6-2e34-4312-9590-37909be1622a"
+          }
+        },
+        {
+          "created_at": "2026-02-16T15:40:13.074+00:00",
+          "event_name": "status:with-inspectorate:resolved",
+          "event": {
+            "status": "resolved",
+            "assignedTo": "a2ce4aa3-e22b-4538-9abb-b279e86e3876",
+            "version": "5c280ae6-2e34-4312-9590-37909be1622a"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "data": {
+        "action": "grant",
+        "model": "project"
+      },
+      "licenceNumber": "PP3557248",
+      "metrics": {
+        "firstAssignedAt": "2025-10-21",
+        "firstAssignedToActionDiff": 22,
+        "firstReturnedAt": "2025-11-20",
+        "firstReturnedAtInPeriod": "2026-02-05",
+        "firstSubmitToActionDiff": 54,
+        "firstSubmittedAt": "2025-09-05",
+        "firstSubmittedAtInPeriod": "2026-02-11",
+        "isOutstanding": false,
+        "lastAssignedAt": "2026-01-28",
+        "lastResubmittedAt": "2026-02-13",
+        "lastReturnedAt": "2026-02-13",
+        "lastSubmitToActionDiff": 1,
+        "resolvedAt": "2026-02-16",
+        "resubmittedCount": 3,
+        "resubmittedCountInPeriod": 2,
+        "resubmittedDiffs": [30, 2, 1],
+        "returnedCount": 3,
+        "returnedCountInPeriod": 2,
+        "subtasks": [
+          {
+            "action": "returned-to-applicant",
+            "actioned": "2026-02-05",
+            "assigned": "2026-01-28",
+            "isResubmission": true,
+            "isWithAsru": false,
+            "licenceNumber": "PP3557248",
+            "model": "project",
+            "modelId": "6d259a43-fd9c-40b4-b765-4cc322f83ee8",
+            "submitted": "2025-12-22",
+            "taskId": "766bac76-5e56-4fc6-975b-46b9be513a14",
+            "versionId": "67b64d67-3db3-4f3c-9225-07dff0a4977d"
+          },
+          {
+            "action": "returned-to-applicant",
+            "actioned": "2026-02-13",
+            "assigned": "2026-02-11",
+            "isResubmission": true,
+            "isWithAsru": false,
+            "licenceNumber": "PP3557248",
+            "model": "project",
+            "modelId": "6d259a43-fd9c-40b4-b765-4cc322f83ee8",
+            "submitted": "2026-02-11",
+            "taskId": "766bac76-5e56-4fc6-975b-46b9be513a14",
+            "versionId": "5fa067da-d774-4365-a67f-fc432e0e8d54"
+          },
+          {
+            "action": "resolved",
+            "actioned": "2026-02-16",
+            "assigned": "2026-02-13",
+            "isResubmission": true,
+            "isWithAsru": false,
+            "licenceNumber": "PP3557248",
+            "model": "project",
+            "modelId": "6d259a43-fd9c-40b4-b765-4cc322f83ee8",
+            "submitted": "2026-02-13",
+            "taskId": "766bac76-5e56-4fc6-975b-46b9be513a14",
+            "versionId": "5c280ae6-2e34-4312-9590-37909be1622a"
+          }
+        ],
+        "taskType": "pplApplication",
+        "totalDaysAssigned": 30,
+        "totalDaysWithAsru": 87,
+        "wasSubmittedInPeriod": false
+      },
+      "modelId": "6d259a43-fd9c-40b4-b765-4cc322f83ee8",
+      "status": "resolved",
+      "taskId": "766bac76-5e56-4fc6-975b-46b9be513a14"
+    }
+  },
+  "PP0933062": {
+    "data": {
+      "id": "dd930a86-6c11-4bb7-b523-e7c874a7b284",
+      "status": "resolved",
+      "data": {
+        "model": "project",
+        "action": "grant",
+        "modelData": {"id": "6a85010a-9949-443f-82ba-cffc0ab8b587", "status": "inactive", "licenceNumber": "PP0933062"},
+        "version": "02b0d31a-e0cb-4f9d-aea4-356dec56b10d"
+      },
+      "activity": [
+        {
+          "created_at": "2025-08-01T14:21:13.932+00:00",
+          "event_name": "create",
+          "event": {"status": "new", "assignedTo": null, "version": null}
+        },
+        {
+          "created_at": "2025-08-01T14:21:19.325+00:00",
+          "event_name": "status:new:awaiting-endorsement",
+          "event": {
+            "status": "awaiting-endorsement",
+            "assignedTo": null,
+            "version": "e8cdc1e2-7e34-4699-b946-0af21e2dbbf2"
+          }
+        },
+        {
+          "created_at": "2025-08-05T07:00:42.311+00:00",
+          "event_name": "status:awaiting-endorsement:endorsed",
+          "event": {"status": "endorsed", "assignedTo": null, "version": "e8cdc1e2-7e34-4699-b946-0af21e2dbbf2"}
+        },
+        {
+          "created_at": "2025-08-05T07:00:44.2+00:00",
+          "event_name": "status:endorsed:with-inspectorate",
+          "event": {"status": "with-inspectorate", "assignedTo": null, "version": "e8cdc1e2-7e34-4699-b946-0af21e2dbbf2"}
+        },
+        {
+          "created_at": "2025-08-24T07:55:34.83+00:00",
+          "event_name": "assign",
+          "event": {
+            "status": "with-inspectorate",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "e8cdc1e2-7e34-4699-b946-0af21e2dbbf2"
+          }
+        },
+        {
+          "created_at": "2025-09-15T18:25:59.649+00:00",
+          "event_name": "status:with-inspectorate:returned-to-applicant",
+          "event": {
+            "status": "returned-to-applicant",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "e8cdc1e2-7e34-4699-b946-0af21e2dbbf2"
+          }
+        },
+        {
+          "created_at": "2025-09-16T09:13:15.885+00:00",
+          "event_name": "status:returned-to-applicant:resubmitted",
+          "event": {
+            "status": "resubmitted",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "91bb6ee4-d453-4c7c-94a7-f534ad825e60"
+          }
+        },
+        {
+          "created_at": "2025-09-16T09:13:19.149+00:00",
+          "event_name": "status:resubmitted:awaiting-endorsement",
+          "event": {
+            "status": "awaiting-endorsement",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "91bb6ee4-d453-4c7c-94a7-f534ad825e60"
+          }
+        },
+        {
+          "created_at": "2025-09-16T12:01:32.635+00:00",
+          "event_name": "status:awaiting-endorsement:endorsed",
+          "event": {
+            "status": "endorsed",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "91bb6ee4-d453-4c7c-94a7-f534ad825e60"
+          }
+        },
+        {
+          "created_at": "2025-09-16T12:01:35.708+00:00",
+          "event_name": "status:endorsed:with-inspectorate",
+          "event": {
+            "status": "with-inspectorate",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "91bb6ee4-d453-4c7c-94a7-f534ad825e60"
+          }
+        },
+        {
+          "created_at": "2025-11-13T16:28:49.459+00:00",
+          "event_name": "status:with-inspectorate:returned-to-applicant",
+          "event": {
+            "status": "returned-to-applicant",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "91bb6ee4-d453-4c7c-94a7-f534ad825e60"
+          }
+        },
+        {
+          "created_at": "2026-01-14T18:17:07.054+00:00",
+          "event_name": "status:returned-to-applicant:resubmitted",
+          "event": {
+            "status": "resubmitted",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "fbdac200-7029-4234-98c5-77d46152ebff"
+          }
+        },
+        {
+          "created_at": "2026-01-14T18:17:11.802+00:00",
+          "event_name": "status:resubmitted:awaiting-endorsement",
+          "event": {
+            "status": "awaiting-endorsement",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "fbdac200-7029-4234-98c5-77d46152ebff"
+          }
+        },
+        {
+          "created_at": "2026-01-27T11:05:39.729+00:00",
+          "event_name": "status:awaiting-endorsement:returned-to-applicant",
+          "event": {
+            "status": "returned-to-applicant",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "fbdac200-7029-4234-98c5-77d46152ebff"
+          }
+        },
+        {
+          "created_at": "2026-02-09T15:33:49.802+00:00",
+          "event_name": "status:returned-to-applicant:resubmitted",
+          "event": {
+            "status": "resubmitted",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "02b0d31a-e0cb-4f9d-aea4-356dec56b10d"
+          }
+        },
+        {
+          "created_at": "2026-02-09T15:33:53.005+00:00",
+          "event_name": "status:resubmitted:awaiting-endorsement",
+          "event": {
+            "status": "awaiting-endorsement",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "02b0d31a-e0cb-4f9d-aea4-356dec56b10d"
+          }
+        },
+        {
+          "created_at": "2026-02-13T08:46:08.473+00:00",
+          "event_name": "status:awaiting-endorsement:endorsed",
+          "event": {
+            "status": "endorsed",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "02b0d31a-e0cb-4f9d-aea4-356dec56b10d"
+          }
+        },
+        {
+          "created_at": "2026-02-13T08:46:10.889+00:00",
+          "event_name": "status:endorsed:with-inspectorate",
+          "event": {
+            "status": "with-inspectorate",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "02b0d31a-e0cb-4f9d-aea4-356dec56b10d"
+          }
+        },
+        {
+          "created_at": "2026-02-16T20:11:17.174+00:00",
+          "event_name": "status:with-inspectorate:resolved",
+          "event": {
+            "status": "resolved",
+            "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
+            "version": "02b0d31a-e0cb-4f9d-aea4-356dec56b10d"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "data": {
+        "action": "grant",
+        "model": "project"
+      },
+      "licenceNumber": "PP0933062",
+      "metrics": {
+        "firstAssignedAt": "2025-08-24",
+        "firstAssignedToActionDiff": 15,
+        "firstReturnedAt": "2025-09-15",
+        "firstSubmitToActionDiff": 28,
+        "firstSubmittedAt": "2025-08-05",
+        "firstSubmittedAtInPeriod": "2026-02-13",
+        "isOutstanding": false,
+        "lastAssignedAt": "2025-08-24",
+        "lastResubmittedAt": "2026-02-13",
+        "lastReturnedAt": "2025-11-13",
+        "lastSubmitToActionDiff": 1,
+        "resolvedAt": "2026-02-16",
+        "resubmittedCount": 2,
+        "resubmittedCountInPeriod": 1,
+        "resubmittedDiffs": [42, 1],
+        "returnedCount": 2,
+        "returnedCountInPeriod": 0,
+        "subtasks": [
+          {
+            "action": "resolved",
+            "actioned": "2026-02-16",
+            "assigned": "2026-02-13",
+            "isResubmission": true,
+            "isWithAsru": false,
+            "licenceNumber": "PP0933062",
+            "model": "project",
+            "modelId": "6a85010a-9949-443f-82ba-cffc0ab8b587",
+            "submitted": "2026-02-13",
+            "taskId": "dd930a86-6c11-4bb7-b523-e7c874a7b284",
+            "versionId": "02b0d31a-e0cb-4f9d-aea4-356dec56b10d"
+          }
+        ],
+        "taskType": "pplApplication",
+        "totalDaysAssigned": 58,
+        "totalDaysWithAsru": 71,
+        "wasSubmittedInPeriod": false
+      },
+      "modelId": "6a85010a-9949-443f-82ba-cffc0ab8b587",
+      "status": "resolved",
+      "taskId": "dd930a86-6c11-4bb7-b523-e7c874a7b284"
+    }
+  }
+}

@@ -1,5 +1,3 @@
-const assert = require('assert');
-
 const report = require('../../../lib/reports/tasks');
 
 describe('PPL SLA report', () => {
@@ -42,7 +40,7 @@ describe('PPL SLA report', () => {
           return report({}).parse(input);
         })
         .then(result => {
-          assert.equal(result.iterations, 2);
+          expect(result.iterations).toBe(2);
         });
     });
 
@@ -60,7 +58,7 @@ describe('PPL SLA report', () => {
           return report({}).parse(input);
         })
         .then(result => {
-          assert.equal(result.updatedAt, '2019-09-01T12:00:00.000Z');
+          expect(result.updatedAt).toBe('2019-09-01T12:00:00.000Z');
         });
     });
 
@@ -81,7 +79,7 @@ describe('PPL SLA report', () => {
           return report({}).parse(input);
         })
         .then(result => {
-          assert.equal(result.action, 'amendment');
+          expect(result.action).toBe('amendment');
         });
     });
 
@@ -102,7 +100,7 @@ describe('PPL SLA report', () => {
           return report({}).parse(input);
         })
         .then(result => {
-          assert.equal(result.action, 'application');
+          expect(result.action).toBe('application');
         });
     });
 
