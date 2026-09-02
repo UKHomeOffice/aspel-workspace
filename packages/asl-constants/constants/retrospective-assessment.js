@@ -4,7 +4,6 @@ const {
   flatten,
   isUndefined,
   isPlainObject,
-  some,
   reduce
 } = require('lodash');
 
@@ -59,13 +58,6 @@ function calculateRA(versionData) {
   };
 }
 
-function isRequired(versionData) {
-  if (!versionData) {
-    return false;
-  }
-  return some(calculateRA(versionData));
-}
-
 function addedByAsru(versionData) {
   if (!versionData) {
     return false;
@@ -85,7 +77,7 @@ function addedByAsru(versionData) {
   return false;
 }
 
-function getReasons(versionData) {
+function getRAReasons(versionData) {
   if (!versionData) {
     return {};
   }
@@ -103,8 +95,4 @@ function getReasons(versionData) {
   }, {});
 }
 
-module.exports = {
-  isRequired,
-  addedByAsru,
-  getReasons
-};
+module.exports = getRAReasons;
