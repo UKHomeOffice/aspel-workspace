@@ -24,7 +24,7 @@ RUN ls /app/packages
 RUN --mount=type=secret,id=token \
     --mount=type=secret,id=github_token \
     export ART_AUTH_TOKEN=`cat /run/secrets/token` GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` && \
-    npm install -g npm@11.19.0 && \
+    npm install -g npm@11.19.1 && \
     npm ci --omit=optional --ignore-scripts --loglevel=verbose && \
     npm run build -w asl-toolbox && \
     npm prune --omit=dev
@@ -33,7 +33,7 @@ FROM quay.io/ukhomeofficedigital/asl-base:v22.22.0
 
 RUN apk upgrade --no-cache && \
     apk add aws-cli ca-certificates postgresql16-client jq bash --no-cache && \
-    npm install -g npm@11.19.0
+    npm install -g npm@11.19.1
 
 WORKDIR /app
 
