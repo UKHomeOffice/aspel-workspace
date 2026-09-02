@@ -3,12 +3,15 @@ const { page } = require('@asl/service/ui');
 const form = require('../../common/routers/form');
 const schema = require('./schema');
 const { buildModel } = require('../../../lib/utils');
+const { setPageTitle } = require('../../common/middleware');
 
 module.exports = settings => {
   const app = page({
     root: __dirname,
     ...settings
   });
+
+  app.use(setPageTitle());
 
   app.use((req, res, next) => {
     req.model = merge({ id: `${req.pilId}-procedures` },

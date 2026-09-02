@@ -6,6 +6,7 @@ const successMessages = require('./content');
 const { FEATURE_FLAG_NAMED_PERSON_MVP } = require('@asl/service/ui/feature-flag');
 const { versions } = require('@ukhomeoffice/asl-constants');
 const { ROLE_TYPES } = require('../role/named-person-mvp/role-types');
+const { prependPageTitle } = require('../common/middleware');
 
 const headerContent = (title, subtitle) => {
   return {
@@ -224,6 +225,12 @@ module.exports = () => {
       getTaskContent(req.task)
     );
     merge(res.locals.static.content, { success });
+
+    // WCAG 2.4.2: success pages share a single `/success` route per journey, so the
+    // outcome ('Submitted', 'Revoked', ...) is what makes the title descriptive.
+    prependPageTitle(req, res,
+      [get(success, 'panel.title'), get(success, 'header.title')].filter(Boolean).join(' - ')
+    );
 
     Object.assign(res.locals.static, {
       taskId: req.taskId,

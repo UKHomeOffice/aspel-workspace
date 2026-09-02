@@ -4,7 +4,7 @@ const { get, pick, merge, every } = require('lodash');
 const form = require('../../common/routers/form');
 const success = require('../../success');
 const confirm = require('./routers/confirm');
-const { hydrate, updateDataFromTask, redirectToTaskIfOpen } = require('../../common/middleware');
+const { hydrate, updateDataFromTask, redirectToTaskIfOpen, setPageTitle } = require('../../common/middleware');
 const { canUpdateModel, canTransferPil } = require('../../../lib/utils');
 const content = require('./content');
 
@@ -35,6 +35,13 @@ module.exports = settings => {
     root: __dirname,
     paths: ['/confirm', '/success']
   });
+
+  app.all(['/', '/confirm'], setPageTitle((req, res) => {
+    const { content } = res.locals.static;
+    return content.pageTitle ?? (req.model.status === 'active'
+      ? content.pil.pageTitleAmend
+      : content.pil.pageTitle);
+  }));
 
   app.get('/', (req, res, next) => {
     if (!canUpdateModel(req.model)) {
