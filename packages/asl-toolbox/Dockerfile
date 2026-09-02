@@ -23,8 +23,7 @@ RUN ls /app/packages
 
 RUN --mount=type=secret,id=token \
     --mount=type=secret,id=github_token \
-    ART_AUTH_TOKEN=`cat /run/secrets/token` \
-    GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` \
+    export ART_AUTH_TOKEN=`cat /run/secrets/token` GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` && \
     npm install -g npm@11.19.0 && \
     npm ci --omit=optional --ignore-scripts --loglevel=verbose && \
     npm run build -w asl-toolbox && \
