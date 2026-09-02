@@ -50,7 +50,7 @@
     "backpack-transpiled": "0.0.23",
     "body-parser": "^1.20.1",
     "classnames": "^2.3.1",
-    "css-loader": "^5.0.0",
+    "css-loader": "^7.1.5",
     "csv-stringify": "^5.3.6",
     "date-fns": "^3.6.0",
     "docx": "5.0.0-rc4",
