@@ -8,6 +8,8 @@ const logger = require('../../logger');
 const indexName = 'projects-content';
 const BATCH_SIZE = 100;
 const MAX_BATCH_BYTES = 5 * 1024 * 1024; // 5 MB
+const DOCUMENT_TRANSFORM_HIGH_WATER_MARK = 25;
+const BATCH_PROCESSOR_HIGH_WATER_MARK = 25;
 
 const columnsToIndex = [
   'id', 'title', 'status', 'licenceNumber', 'expiryDate', 'issueDate',
@@ -170,7 +172,7 @@ function createDocumentTransform() {
 
   return new Transform({
     objectMode: true,
-    highWaterMark: 1000,
+    highWaterMark: DOCUMENT_TRANSFORM_HIGH_WATER_MARK,
 
     transform(project, encoding, callback) {
       try {
@@ -261,8 +263,9 @@ function createBatchProcessor(esClient) {
   const processBatch = async () => {
     if (batch.length === 0) return;
 
-    const currentBatch = [...batch];
+    const currentBatch = batch;
     batch = [];
+    batchSizeBytes = 0;
 
     try {
       const body = currentBatch.flatMap(({ id, document }) => [
@@ -297,11 +300,11 @@ function createBatchProcessor(esClient) {
 
   return new Transform({
     objectMode: true,
-    highWaterMark: BATCH_SIZE * 2,
+    highWaterMark: BATCH_PROCESSOR_HIGH_WATER_MARK,
 
     async transform(doc, encoding, callback) {
       const docSize = Buffer.byteLength(JSON.stringify(doc)); // measure actual bytes
-      if (batchSizeBytes + docSize > MAX_BATCH_BYTES) {
+      if (batch.length > 0 && batchSizeBytes + docSize > MAX_BATCH_BYTES) {
         logger.debug(
           `Flushing batch of ${batch.length} docs (${(batchSizeBytes / 1024 / 1024).toFixed(2)} MB)`
         );
