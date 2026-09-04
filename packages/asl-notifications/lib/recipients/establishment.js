@@ -247,6 +247,7 @@ module.exports = async ({ schema, logger, task }) => {
       const trainingDueReminderParams = {
         ...params,
         fullName,
+        possessive: '’s',
         fullNameInSubject: fullName,
         name,
         their: 'their',
@@ -266,6 +267,7 @@ module.exports = async ({ schema, logger, task }) => {
         ...trainingDueReminderParams,
         ...{
           fullName: 'Your',
+          possessive: '',
           fullNameInSubject: 'You',
           their: 'your',
           need: 'need'
