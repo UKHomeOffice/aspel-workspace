@@ -16,6 +16,7 @@ const getSubjectPerspective = ({ fullName, isApplicant = false }) => ({
 
 const getTemplateVars = ({ fullName, roleType, isApplicant = false }) => ({
   fullName,
+  possessive: isApplicant ? '' : '’s',
   type: getTrainingType(roleType),
   completeDate,
   name: establishmentName,
@@ -24,9 +25,9 @@ const getTemplateVars = ({ fullName, roleType, isApplicant = false }) => ({
 });
 
 const buildTrainingReminderBody = ({ fullName, roleType, isApplicant = false }) => {
-  const { type, trainingRecordLabel, their } = getTemplateVars({ fullName, roleType, isApplicant });
+  const { possessive, type, trainingRecordLabel, their } = getTemplateVars({ fullName, roleType, isApplicant });
 
-  return `${fullName}’s ${type} is due to be completed by ${completeDate}.
+  return `${fullName}${possessive} ${type} is due to be completed by ${completeDate}.
 Establishment name: ${establishmentName}
 Once completed, ensure the ${trainingRecordLabel} is added to ${their} training record.`;
 };

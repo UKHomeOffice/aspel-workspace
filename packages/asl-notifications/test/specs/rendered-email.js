@@ -99,7 +99,7 @@ You can see more details about this task by visiting ${publicTaskUrl(publicUrl, 
       assertEmail({
         notification,
         content,
-        subject: `Named Person has been removed from the role of ${roleName}`,
+        subject: `Named Person has been removed from the ${roleName} role. This is a PEL amendment.`,
         html: expectedHtml,
         finalEmail,
         debugEmail,
@@ -142,7 +142,7 @@ Establishment name: ${establishmentName}`;
         to: 'vice-chancellor@example.com'
       });
 
-      const expectedHtml = `The request for Named Person to be removed from the role of ${roleName} has been returned.
+      const expectedHtml = `The request to remove Named Person from the role of ${roleName} has been returned.
 
 Establishment name: ${establishmentName}
 
@@ -155,7 +155,7 @@ You can see more details about this task by visiting ${publicTaskUrl(publicUrl, 
       assertEmail({
         notification,
         content,
-        subject: `The request to remove Named Person's ${roleName} role has been returned`,
+        subject: `The request to remove Named Person from the ${roleName} role has been returned`,
         html: expectedHtml,
         finalEmail,
         debugEmail,
@@ -171,7 +171,7 @@ You can see more details about this task by visiting ${publicTaskUrl(publicUrl, 
         to: 'vice-chancellor@example.com'
       });
 
-      const expectedHtml = `The request for Named Person's to be removed from the role of  ${roleName} has been refused.
+      const expectedHtml = `The request to remove Named Person from the ${roleName} role has been refused.
 
 Establishment name: ${establishmentName}
 
@@ -184,7 +184,7 @@ You can see more details about this task by visiting ${publicTaskUrl(publicUrl, 
       assertEmail({
         notification,
         content,
-        subject: `The request to remove Named Person's ${roleName} role has been refused`,
+        subject: `The request to remove Named Person from the ${roleName} role has been refused`,
         html: expectedHtml,
         finalEmail,
         debugEmail,

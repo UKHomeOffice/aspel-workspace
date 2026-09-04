@@ -246,6 +246,47 @@ describe('Role resolver', () => {
           assert.equal(profile.rcvsNumber, '12345');
         });
     });
+
+    it('normalises unpadded training delay completion dates', () => {
+      const opts = {
+        action: 'create',
+        data: {
+          establishmentId: 8201,
+          profileId: PROFILE_ID_2,
+          type: 'nacwo',
+          mandatory: 'delay',
+          incomplete: ['NACWO'],
+          delayReason: 'Training delayed',
+          completeDate: '2026-8-1'
+        }
+      };
+      return Promise.resolve()
+        .then(() => this.role(opts))
+        .then(() => this.models.Role.query().findOne({ establishmentId: 8201, profileId: PROFILE_ID_2, type: 'nacwo' }))
+        .then(role => {
+          assert.ok(role);
+          assert.equal(role.trainingDelayDetails.completeDate, '2026-08-01');
+        });
+    });
+
+    it('rejects invalid training delay completion dates', () => {
+      const opts = {
+        action: 'create',
+        data: {
+          establishmentId: 8201,
+          profileId: PROFILE_ID_2,
+          type: 'nacwo',
+          mandatory: 'delay',
+          incomplete: ['NACWO'],
+          delayReason: 'Training delayed',
+          completeDate: 'not-a-date'
+        }
+      };
+      return assert.rejects(() => this.role(opts), {
+        name: 'ValidationError',
+        message: /trainingDelayDetails.completeDate: must match format "date"/
+      });
+    });
   });
 
   describe('Delete', () => {

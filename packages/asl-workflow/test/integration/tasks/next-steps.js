@@ -1,8 +1,8 @@
 const assert = require('assert');
 const request = require('supertest');
 const workflowHelper = require('../../helpers/workflow');
-const { user, holc, userAtMultipleEstablishments, holc101, asruAdmin, licensing } = require('../../data/profiles');
-const { resubmitted, updated, discardedByAsru } = require('../../../lib/flow/status');
+const { user, holc, userAtMultipleEstablishments, holc101, asruAdmin, licensing, inspector } = require('../../data/profiles');
+const { resubmitted, updated, discardedByAsru, refused, rejected } = require('../../../lib/flow/status');
 const { get } = require('lodash');
 
 const ids = require('../../data/ids');
@@ -136,6 +136,35 @@ describe('Next steps', () => {
       .expect(200)
       .expect(response => {
         assert.deepEqual(response.body.data.nextSteps, [], 'HOLC has no options to update the task');
+      });
+  });
+
+  it('offers refused instead of rejected for role applications', () => {
+    this.workflow.setUser({ profile: inspector });
+
+    return request(this.workflow)
+      .get(`/${ids.task.role.create}`)
+      .expect(200)
+      .expect(response => {
+        assert.ok(response.body.data.nextSteps.find(s => s.id === refused.id), 'Next steps should include refused');
+        assert.ok(!response.body.data.nextSteps.find(s => s.id === rejected.id), 'Next steps should not include rejected');
+      });
+  });
+
+  it('sets role applications to refused', () => {
+    this.workflow.setUser({ profile: inspector });
+
+    return request(this.workflow)
+      .put(`/${ids.task.role.create}/status`)
+      .send({
+        status: refused.id,
+        meta: {
+          comment: 'refusing a role application'
+        }
+      })
+      .expect(200)
+      .expect(response => {
+        assert.equal(response.body.data.status, refused.id);
       });
   });
 

@@ -46,7 +46,7 @@ You can see more details about this task by visiting http://localhost:8080/tasks
       identifierValue: 'University of Croydon',
       taskUrl: 'http://localhost:8080/tasks/task-id?notification=task-id'
     },
-    expected: `The request for Named Person's to be removed from the role of  Home Office liaison contact has been refused.
+    expected: `The request to remove Named Person from the Home Office liaison contact role has been refused.
 
 Establishment name: University of Croydon
 
@@ -60,7 +60,7 @@ You can see more details about this task by visiting http://localhost:8080/tasks
       identifierValue: 'University of Croydon',
       taskUrl: 'http://localhost:8080/tasks/task-id?notification=task-id'
     },
-    expected: `The request for Named Person to be removed from the role of Home Office liaison contact has been returned.
+    expected: `The request to remove Named Person from the role of Home Office liaison contact has been returned.
 
 Establishment name: University of Croydon
 
