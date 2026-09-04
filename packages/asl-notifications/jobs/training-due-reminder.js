@@ -52,7 +52,7 @@ module.exports = async ({ schema, logger, publicUrl }) => {
           firstName: role.firstName,
           lastName: role.lastName,
           name: role.name,
-          completeDate: moment(role.trainingDelayDetails.completeDate).format('DD MMM YYYY')
+          completeDate: moment(role.trainingDelayDetails.completeDate).format('D MMMM YYYY')
         }
       }
     })));

@@ -1,7 +1,7 @@
 const mustache = require('mustache');
 const content = require('../../lib/dispatcher/content');
 
-const completeDate = '01 Aug 2026';
+const completeDate = '5 September 2026';
 const establishmentName = 'University of Croydon';
 
 const getTrainingType = roleType => roleType === 'nvs' ? 'NVS module' : 'NACWO mandatory training';
