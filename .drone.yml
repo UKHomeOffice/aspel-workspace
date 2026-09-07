@@ -103,15 +103,6 @@ steps:
         from_secret: github_token
     commands:
       - npm audit --workspace=asl --audit-level=critical --omit=dev
-  - name: compile
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm run build --workspace asl --production
   - name: docker build
     image: docker:dind
     environment:
@@ -320,7 +311,7 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
-      - npm ci
+      - npm ci --workspace asl-data-exports
   - name: test
     image: node:22.14.0
     environment:
@@ -697,15 +688,6 @@ steps:
         from_secret: github_token
     commands:
       - npm audit --workspace=asl-internal-ui --audit-level=critical --omit=dev
-  - name: compile
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm run build --workspace asl-internal-ui --production
   - name: docker build
     image: docker:dind
     environment:
@@ -1042,7 +1024,6 @@ steps:
       - node ./ci/changeset.js --modules $MODULES
       - git checkout $DRONE_TARGET_BRANCH
       - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
   - name: install
     image: node:22.14.0
     environment:
@@ -1061,15 +1042,6 @@ steps:
         from_secret: github_token
     commands:
       - npm run test --workspace @asl/pages
-  - name: build
-    image: node:22.14.0
-    environment:
-      ART_AUTH_TOKEN:
-        from_secret: art_auth_token
-      GITHUB_AUTH_TOKEN:
-        from_secret: github_token
-    commands:
-      - npm run build --workspace @asl/pages
 
 trigger:
   event:
@@ -1226,7 +1198,6 @@ steps:
       - node ./ci/changeset.js --modules $MODULES
       - git checkout $DRONE_TARGET_BRANCH
       - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
   - name: install
     image: node:22.14.0
     environment:
@@ -1757,7 +1728,6 @@ steps:
       - node ./ci/changeset.js --modules $MODULES
       - git checkout $DRONE_TARGET_BRANCH
       - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
   - name: install
     image: node:22.14.0
     environment:
@@ -1820,7 +1790,6 @@ steps:
       - node ./ci/changeset.js --modules $MODULES
       - git checkout $DRONE_TARGET_BRANCH
       - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
   - name: install
     image: node:22.14.0
     environment:
@@ -2173,7 +2142,6 @@ steps:
       - node ./ci/changeset.js --modules $MODULES
       - git checkout $DRONE_TARGET_BRANCH
       - git merge $DRONE_COMMIT
-      - echo "$(node ./ci/modulepaths.js $MODULES)" > .module-paths
 
   - name: install
     image: node:22.14.0
