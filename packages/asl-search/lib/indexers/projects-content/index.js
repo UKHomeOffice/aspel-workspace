@@ -1,5 +1,6 @@
 const { pick } = require('lodash');
 const { Transform } = require('stream');
+const { pipeline } = require('stream/promises');
 const extractContent = require('./extract-content');
 const extractSpecies = require('../projects/extract-species');
 const deleteIndex = require('../utils/delete-index');
@@ -8,6 +9,8 @@ const logger = require('../../logger');
 const indexName = 'projects-content';
 const BATCH_SIZE = 100;
 const MAX_BATCH_BYTES = 5 * 1024 * 1024; // 5 MB
+const BATCH_METADATA_OVERHEAD_BYTES = 160;
+const BATCH_ESTIMATE_SAFETY_MULTIPLIER = 1.35;
 const DOCUMENT_TRANSFORM_HIGH_WATER_MARK = 25;
 const BATCH_PROCESSOR_HIGH_WATER_MARK = 25;
 
@@ -52,6 +55,58 @@ const FIELD_MAPPINGS = {
   requiresRa: { type: 'boolean' },
   continuation: { type: 'boolean' }
 };
+
+function toByteLength(value) {
+  if (value === null || value === undefined) {
+    return 0;
+  }
+
+  return Buffer.byteLength(String(value));
+}
+
+function estimateContentBytes(content) {
+  if (!content || typeof content !== 'object') {
+    return 0;
+  }
+
+  return Object.values(content).reduce((size, value) => {
+    if (typeof value === 'string') {
+      return size + toByteLength(value);
+    }
+
+    if (value && typeof value === 'object') {
+      return size + Object.values(value).reduce((nestedSize, nestedValue) => {
+        return nestedSize + toByteLength(nestedValue);
+      }, 0);
+    }
+
+    return size;
+  }, 0);
+}
+
+function estimateDocumentBytes(id, document) {
+  const speciesBytes = (document.species || []).reduce((sum, value) => sum + toByteLength(value), 0);
+  const purposesBytes = (document.purposes || []).reduce((sum, value) => sum + toByteLength(value), 0);
+  const protocolsBytes = (document.protocols || []).reduce((sum, protocol) => {
+    return sum + toByteLength(protocol && protocol.title);
+  }, 0);
+
+  const total =
+    BATCH_METADATA_OVERHEAD_BYTES +
+    toByteLength(id) +
+    toByteLength(document.title) +
+    toByteLength(document.status) +
+    toByteLength(document.licenceNumber) +
+    toByteLength(document.licenceHolder && document.licenceHolder.firstName) +
+    toByteLength(document.licenceHolder && document.licenceHolder.lastName) +
+    toByteLength(document.establishment && document.establishment.name) +
+    speciesBytes +
+    purposesBytes +
+    protocolsBytes +
+    estimateContentBytes(document.content);
+
+  return Math.ceil(total * BATCH_ESTIMATE_SAFETY_MULTIPLIER);
+}
 
 function extractPurposes(data) {
   function normalise(value) {
@@ -178,14 +233,14 @@ function createDocumentTransform() {
       try {
         transformCount++;
 
-        if (transformCount % 50000 === 0) {
+        if (transformCount % 1000 === 0) {
           const now = Date.now();
-          const rate = 50000 / ((now - lastLogTime) / 1000);
+          const rate = 1000 / ((now - lastLogTime) / 1000);
           logger.info(`Transformed ${transformCount.toLocaleString()} projects (${Math.round(rate)}/sec)`);
           lastLogTime = now;
         }
 
-        const establishmentId = getField(project, 'establishmentId', ['establishmentIdJoined']);
+        const establishmentId = getField(project, 'establishmentId', ['establishmentJoinedId']);
         const licenceHolderId = getField(project, 'licenceHolderId');
 
         if (!establishmentId) {
@@ -234,11 +289,15 @@ function createDocumentTransform() {
         };
 
         // Progress logging
-        if (transformCount % 10000 === 0) {
+        if (transformCount % 1000 === 0) {
           logger.debug(`Transformed ${transformCount.toLocaleString()} projects`);
         }
 
-        callback(null, { id: project.id, document });
+        callback(null, {
+          id: project.id,
+          document,
+          estimatedBytes: estimateDocumentBytes(project.id, document)
+        });
 
       } catch (error) {
         logger.error(`Failed to transform project ${project.id}: ${error.message ?? JSON.stringify(error)}`, error);
@@ -264,15 +323,25 @@ function createBatchProcessor(esClient) {
     if (batch.length === 0) return;
 
     const currentBatch = batch;
+    const currentBatchLength = currentBatch.length;
+    const body = new Array(currentBatchLength * 2);
+
+    // Reset batch state immediately so new docs can continue without retaining processed wrappers.
     batch = [];
     batchSizeBytes = 0;
 
-    try {
-      const body = currentBatch.flatMap(({ id, document }) => [
-        { index: { _index: indexName, _id: id } },
-        document
-      ]);
+    // Avoid keeping multiple copies of the batch documents in memory.
+    for (let i = 0; i < currentBatchLength; i++) {
+      const { id, document } = currentBatch[i];
+      const bodyIndex = i * 2;
+      body[bodyIndex] = { index: { _index: indexName, _id: id } };
+      body[bodyIndex + 1] = document;
 
+      // Drop batch references as soon as they are copied into the request body.
+      currentBatch[i] = null;
+    }
+
+    try {
       const response = await esClient.bulk({
         refresh: false,
         body,
@@ -286,10 +355,10 @@ function createBatchProcessor(esClient) {
         }
       }
 
-      processedCount += currentBatch.length;
+      processedCount += currentBatchLength;
 
       // Progress logging for large datasets
-      if (processedCount - lastLogged >= 10000 || processedCount % 5000 === 0) {
+      if (processedCount - lastLogged >= 1000) {
         logger.info(`Indexed ${processedCount.toLocaleString()} projects...`);
         lastLogged = processedCount;
       }
@@ -303,7 +372,7 @@ function createBatchProcessor(esClient) {
     highWaterMark: BATCH_PROCESSOR_HIGH_WATER_MARK,
 
     async transform(doc, encoding, callback) {
-      const docSize = Buffer.byteLength(JSON.stringify(doc)); // measure actual bytes
+      const docSize = doc.estimatedBytes || Buffer.byteLength(JSON.stringify(doc));
       if (batch.length > 0 && batchSizeBytes + docSize > MAX_BATCH_BYTES) {
         logger.debug(
           `Flushing batch of ${batch.length} docs (${(batchSizeBytes / 1024 / 1024).toFixed(2)} MB)`
@@ -342,35 +411,28 @@ module.exports = async (db, esClient, options = {}) => {
       await resetIndex(esClient);
     }
 
-    return new Promise((resolve, reject) => {
-      let totalStreamed = 0;
+    let totalStreamed = 0;
 
-      const stream = streamProjectsWithVersions(Project, options);
-      const documentTransform = createDocumentTransform();
-      const batchProcessor = createBatchProcessor(esClient);
+    const stream = streamProjectsWithVersions(Project, options);
+    const documentTransform = createDocumentTransform();
+    const batchProcessor = createBatchProcessor(esClient);
 
-      stream
-        .on('data', () => {
-          totalStreamed++;
-          if (totalStreamed % 10000 === 0) {
-            logger.info(`Streamed ${totalStreamed.toLocaleString()} projects from database...`);
-          }
-        })
-        .on('error', reject)
-        .pipe(documentTransform)
-        .on('error', reject)
-        .pipe(batchProcessor)
-        .on('finish', async () => {
-          try {
-            await esClient.indices.refresh({ index: indexName });
-            logger.info(`Content index refresh completed for ${totalStreamed.toLocaleString()} projects`);
-            resolve(totalStreamed);
-          } catch (error) {
-            reject(error);
-          }
-        })
-        .on('error', reject);
+    const counter = new Transform({
+      objectMode: true,
+      transform(project, encoding, callback) {
+        totalStreamed++;
+        if (totalStreamed % 1000 === 0) {
+          logger.info(`Streamed ${totalStreamed.toLocaleString()} projects from database...`);
+        }
+        callback(null, project);
+      }
     });
+
+    await pipeline(stream, counter, documentTransform, batchProcessor);
+
+    await esClient.indices.refresh({ index: indexName });
+    logger.info(`Content index refresh completed for ${totalStreamed.toLocaleString()} projects`);
+    return totalStreamed;
 
   } catch (error) {
     logger.error(`Failed to index projects content: ${error.message ?? JSON.stringify(error)}`, error);
