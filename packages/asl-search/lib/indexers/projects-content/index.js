@@ -349,9 +349,20 @@ function createBatchProcessor(esClient) {
       });
 
       if (response.errors) {
-        const errors = response.items.filter(item => item.index.error);
-        if (errors.length > 0) {
-          logger.error(`Batch had ${errors.length} indexing failures`);
+        logger.error(JSON.stringify(response.errors));
+
+        let errorCount = 0;
+        let errors = new Set(response.errors);
+        response.items.forEach((item) => {
+          if (item?.index?.error) {
+            errorCount++;
+            if (item.index.error.message) {
+              errors.add(item.index.error.message);
+            }
+          }
+        });
+        if (errorCount > 0) {
+          logger.error(`Batch had ${errors.size} indexing failures, unique messages: ${[...errors].join('; ')}`);
         }
       }
 
