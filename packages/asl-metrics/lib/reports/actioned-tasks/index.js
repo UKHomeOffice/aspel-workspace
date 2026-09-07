@@ -245,6 +245,9 @@ module.exports = ({ db, flow, query: params }) => {
       wasSubmittedInPeriod = true;
     }
 
+    const firstActionedAt = (firstReturnedAt || resolvedAt)?.format('YYYY-MM-DD');
+    const wasFirstActionedInPeriod = firstActionedAt && firstActionedAt.isSameOrAfter(start) && firstActionedAt.isSameOrAfter(end);
+
     if (previousSubmission !== null) {
       totalDaysWithAsru += end.workingDiff(previousSubmission, 'calendarDays');
 
@@ -275,16 +278,18 @@ module.exports = ({ db, flow, query: params }) => {
       ...pick(task, ['data.model', 'data.action']),
       metrics: {
         taskType,
-        firstSubmittedAt: firstSubmittedAt && firstSubmittedAt.format('YYYY-MM-DD'),
-        firstSubmittedAtInPeriod: firstSubmittedAtInPeriod && firstSubmittedAtInPeriod.format('YYYY-MM-DD'),
-        lastResubmittedAt: lastResubmittedAt && lastResubmittedAt.format('YYYY-MM-DD'),
-        firstReturnedAt: firstReturnedAt && firstReturnedAt.format('YYYY-MM-DD'),
-        firstReturnedAtInPeriod: firstReturnedAtInPeriod && firstReturnedAtInPeriod.format('YYYY-MM-DD'),
-        lastReturnedAt: lastReturnedAt && lastReturnedAt.format('YYYY-MM-DD'),
-        firstAssignedAt: firstAssignedAt && firstAssignedAt.format('YYYY-MM-DD'),
-        firstAssignedAtInPeriod: firstAssignedAtInPeriod && firstAssignedAtInPeriod.format('YYYY-MM-DD'),
-        lastAssignedAt: lastAssignedAt && lastAssignedAt.format('YYYY-MM-DD'),
-        resolvedAt: resolvedAt && resolvedAt.format('YYYY-MM-DD'),
+        firstSubmittedAt: firstSubmittedAt?.format('YYYY-MM-DD'),
+        firstSubmittedAtInPeriod: firstSubmittedAtInPeriod?.format('YYYY-MM-DD'),
+        lastResubmittedAt: lastResubmittedAt?.format('YYYY-MM-DD'),
+        firstReturnedAt: firstReturnedAt?.format('YYYY-MM-DD'),
+        firstReturnedAtInPeriod: firstReturnedAtInPeriod?.format('YYYY-MM-DD'),
+        lastReturnedAt: lastReturnedAt?.format('YYYY-MM-DD'),
+        firstAssignedAt: firstAssignedAt?.format('YYYY-MM-DD'),
+        firstAssignedAtInPeriod: firstAssignedAtInPeriod?.format('YYYY-MM-DD'),
+        lastAssignedAt: lastAssignedAt?.format('YYYY-MM-DD'),
+        resolvedAt: resolvedAt?.format('YYYY-MM-DD'),
+        firstActionedAt,
+        wasFirstActionedInPeriod,
         totalDaysWithAsru,
         totalDaysAssigned,
         firstAssignedToActionDiff,
