@@ -27,8 +27,18 @@ describe('accessibility statement', () => {
 
   it('reports compliance against WCAG 2.2', () => {
     assert.ok(html.includes('Web Content Accessibility Guidelines version 2.2'));
-    assert.ok(html.includes('https://www.w3.org/TR/WCAG22'));
     assert.ok(!html.includes('WCAG 2.1'));
+  });
+
+  it('links to the WCAG 2.2 specification', () => {
+    // Compared as whole href values rather than as a substring of the markup, so
+    // a lookalike host such as https://www.w3.org.example.com/TR/WCAG22 fails.
+    const hrefs = [...html.matchAll(/href="([^"]*)"/g)].map(([, href]) => href);
+
+    assert.ok(
+      hrefs.some(href => href === 'https://www.w3.org/TR/WCAG22'),
+      `expected a link to the WCAG 2.2 specification, found: ${hrefs.join(', ')}`
+    );
   });
 
   it('marks up the non-accessible content sub-sections as headings, not italics', () => {
