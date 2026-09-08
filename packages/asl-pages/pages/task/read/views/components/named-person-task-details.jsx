@@ -20,26 +20,24 @@ export const NamedPersonTaskDetails = ({ taskData, profile }) => {
           <SkillsAndExperience roleType={taskData.type} profile={profile} values={taskData} showHeading />
         </div>
 
-        {['nacwo', 'nvs'].includes(taskData.type) && (
-          <>
-            <div className="sticky-nav-anchor">
-              <h2><Snippet>trainingRecord</Snippet></h2>
-              <TrainingSummary certificates={profile.certificates} />
-            </div>
-            <div>
-              <Details
-                summary={`${taskData.type.toUpperCase()} mandatory training requirements`}
-                className="margin-bottom"
-                id="mandatory-training-summary"
-                role="group"
-              >
-                <Inset>
-                  <MandatoryTrainingRequirements roleType={taskData.type} />
-                </Inset>
-              </Details>
-            </div>
-          </>
-        )}
+        <>
+          <div className="sticky-nav-anchor">
+            <h2><Snippet>trainingRecord</Snippet></h2>
+            <TrainingSummary certificates={profile.certificates} />
+          </div>
+          <div>
+            <Details
+              summary={`${taskData.type.toUpperCase()} mandatory training requirements`}
+              className="margin-bottom"
+              id="mandatory-training-summary"
+              role="group"
+            >
+              <Inset>
+                <MandatoryTrainingRequirements roleType={taskData.type} />
+              </Inset>
+            </Details>
+          </div>
+        </>
       </dl>
     </>
   );
