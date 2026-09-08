@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { permissions, fetchOpenTasks } = require('../../middleware');
 const shasum = require('shasum');
 const { BadRequestError, NotFoundError } = require('../../errors');
-const { getReasons } = require('../../helpers/retrospective-assessment');
+const { getRAReasons } = require('@ukhomeoffice/asl-constants');
 const { isEmpty } = require('lodash');
 
 const submit = action => (req, res, next) => {
@@ -73,7 +73,7 @@ const calculateRaReasons = (req, res, next) => {
         .then(versions => {
           let reasons;
           return versions.find(v => {
-            reasons = getReasons(v.data);
+            reasons = getRAReasons(v.data);
             return !isEmpty(reasons);
           }) ? reasons : {};
         });

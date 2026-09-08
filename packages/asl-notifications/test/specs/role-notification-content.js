@@ -72,6 +72,15 @@ const namedPersonMvpOutcomes = [
   }
 ];
 
+const generateRefusedRoleEmail = taskId => renderExpectedEmail({
+  recipientName: 'Bruce Banner',
+  body: [
+    `The ${roleName} role application for Named Person has been refused.`,
+    `Establishment name: ${establishmentName}`,
+    `You can see more details about this task by visiting ${publicTaskUrl(publicUrl, taskId)}`
+  ].join('\n\n')
+});
+
 // Test layer: end-to-end notification content for the establishment recipient.
 // This suite verifies subject + final rendered email for named-person MVP role
 // application outcomes sent to the vice chancellor / establishment contact.
@@ -156,6 +165,18 @@ describe('Role notifications - establishment recipient content', () => {
       const notifications = await sendTaskAndGetNotifications.call(this, task);
 
       assert.deepEqual(notifications, []);
+    });
+
+    it('renders role application copy when a legacy role application is refused', async function () {
+      const task = buildRoleApplicationTask({
+        roleType: 'holc',
+        outcome: 'refused'
+      });
+
+      const { notification, content } = await getRenderedNotification.call(this, task);
+
+      assert.equal(notification.subject, subjectLine('refused'));
+      assert.equal(content, generateRefusedRoleEmail(task.id));
     });
   });
 });

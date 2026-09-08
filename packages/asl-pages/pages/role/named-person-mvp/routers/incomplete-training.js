@@ -2,6 +2,8 @@ const { form } = require('../../../common/routers');
 const { Router } = require('express');
 const schema = require('../schema').incompleteTraining;
 
+const padDatePart = value => `${value}`.padStart(2, '0');
+
 module.exports = ({ formId }) => {
   const app = Router({ mergeParams: true });
 
@@ -17,7 +19,7 @@ module.exports = ({ formId }) => {
         const month = req.body['completeDate-month'];
         const year = req.body['completeDate-year'];
 
-        req.form.values.completeDate = `${year}-${month}-${day}`;
+        req.form.values.completeDate = `${year}-${padDatePart(month)}-${padDatePart(day)}`;
         next();
       },
       locals: (req, res, next) => {

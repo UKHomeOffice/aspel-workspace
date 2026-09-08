@@ -1,7 +1,7 @@
 import React from 'react';
 import map from 'lodash/map';
 
-const descriptions = {
+export const descriptions = {
   hasCatsDogsEquidae: 'Uses cats, dogs or equidae',
   hasNonHumanPrimates: 'Uses non-human primates',
   hasEndangeredAnimals: 'Uses endangered animals',

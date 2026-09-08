@@ -139,7 +139,7 @@ module.exports = async ({ schema, logger, task }) => {
   };
 
   const roleFlow = async params => {
-    if (model === 'role' && (version || action === 'delete')) {
+    if (model === 'role' && (version || ['create', 'delete'].includes(action))) {
       await setRoleParams(params);
       if (version) {
         params.emailTemplate += version;
@@ -237,15 +237,17 @@ module.exports = async ({ schema, logger, task }) => {
 
   if (model === 'role' && action === 'training-due-reminder') {
     const { firstName, lastName, name, type, completeDate } = task.data.data;
+    const roleId = task.data.id;
     const typeUpper = type && type.toUpperCase();
 
     if (typeUpper === 'NACWO' || typeUpper === 'NVS') {
       const fullName = `${firstName} ${lastName}`;
-      const identifier = `${applicant.id}-${completeDate}-${action}`;
+      const identifier = `${applicant.id}-${roleId}-${completeDate}-${action}`;
 
       const trainingDueReminderParams = {
         ...params,
         fullName,
+        possessive: '’s',
         fullNameInSubject: fullName,
         name,
         their: 'their',
@@ -265,6 +267,7 @@ module.exports = async ({ schema, logger, task }) => {
         ...trainingDueReminderParams,
         ...{
           fullName: 'Your',
+          possessive: '',
           fullNameInSubject: 'You',
           their: 'your',
           need: 'need'
@@ -308,6 +311,9 @@ module.exports = async ({ schema, logger, task }) => {
     const taskClosedParams = { ...params, emailTemplate: 'task-closed', logMsg: 'task is closed' };
     if (model === 'role' && task.status === 'discarded-by-applicant') {
       return notifications;
+    }
+    if (model === 'role' && action === 'create' && !version) {
+      taskClosedParams.emailTemplate = 'task-closed2';
     }
     if (model === 'role' && action === 'delete') {
       taskClosedParams.emailTemplate = 'role-removed-refused';

@@ -1,5 +1,6 @@
 const taskMetrics = require('./routers/task-metrics');
 const report = require('./reports');
+const ntsDocx = require('./routers/nts-docx');
 
 module.exports = {
   report: {
@@ -10,6 +11,11 @@ module.exports = {
   taskMetrics: {
     path: '/task-metrics/:exportId',
     router: taskMetrics,
+    breadcrumb: false
+  },
+  nts: {
+    path: '/nts/docx',
+    router: ntsDocx,
     breadcrumb: false
   }
 };
