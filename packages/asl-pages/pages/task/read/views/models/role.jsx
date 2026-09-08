@@ -18,13 +18,11 @@ export default function Role({ task, values, schema }) {
   const { establishment, profile, remainingRoles, allowedActions, openTask, errors } = useSelector(selector, shallowEqual);
   const canUpdateConditions = allowedActions.includes('establishment.updateConditions');
   const taskData = task.data.data;
-  const roleType = (taskData.type || '').toLowerCase();
   const { version } = task.data.meta;
   const isNamedPersonVersion = version === versions.role.NAMED_PERSON_VERSION_ID;
   const isNamedPersonCreate = task.data.action === 'create';
-  const isHolcRole = roleType === 'holc';
   const namedPersonFeatureFlag = useFeatureFlag(FEATURE_FLAG_NAMED_PERSON_MVP);
-  const roleHeadingSnippet = (namedPersonFeatureFlag || isNamedPersonVersion) && isNamedPersonCreate && !isHolcRole
+  const roleHeadingSnippet = (namedPersonFeatureFlag || isNamedPersonVersion) && isNamedPersonCreate
     ? 'sticky-nav.roleApplication'
     : 'sticky-nav.role';
 
