@@ -90,11 +90,11 @@ export default function Role({ task, values, schema }) {
             {isPelHOrNprcRole && (
               <SkillsAndExperience roleType={roleType} profile={profile} values={taskData} showHeading />
             )}
-          </StickyNavAnchor>
-        ),
-        isPelHOrNprcRole && (
-          <StickyNavAnchor id="training" key="training">
-            <TrainingRecord profile={profile} />
+            {isPelHOrNprcRole && (
+              <div className="role-training-record">
+                <TrainingRecord profile={profile} />
+              </div>
+            )}
           </StickyNavAnchor>
         )
       ]
