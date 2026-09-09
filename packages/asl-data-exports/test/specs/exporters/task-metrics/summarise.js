@@ -3,6 +3,10 @@ const { merge } = require('lodash');
 const emptyStats = require('../../../../lib/exporters/task-metrics/empty-stats');
 const summarise = require('../../../../lib/exporters/task-metrics/summarise');
 
+function task(metrics = {}) {
+  return { metrics: { taskType: 'pplApplication', ...metrics } };
+}
+
 describe('Task Metrics', () => {
 
   describe('Summarise results', () => {
@@ -145,11 +149,11 @@ describe('Task Metrics', () => {
     });
 
     it('pushes submit to action diffs to submitToActionDays so they can be averaged', () => {
-      let stats = emptyStats();
-      const task1 = { metrics: { taskType: 'pplApplication', firstSubmitToActionDiff: 3 } };
-      const task2 = { metrics: { taskType: 'pplApplication', firstSubmitToActionDiff: 1 } };
-      const task3 = { metrics: { taskType: 'pplApplication' } };
-      const task4 = { metrics: { taskType: 'pplApplication', firstSubmitToActionDiff: 0 } };
+      const task1 = task({ firstSubmitToActionDiff: 2, wasFirstActionedInPeriod: false });
+      const task2 = task({ firstSubmitToActionDiff: 3, wasFirstActionedInPeriod: true });
+      const task3 = task({ firstSubmitToActionDiff: 1, wasFirstActionedInPeriod: true });
+      const task4 = task({});
+      const task5 = task({ firstSubmitToActionDiff: 0, wasFirstActionedInPeriod: true });
 
       const expected = merge({}, emptyStats(), {
         pplApplication: {
@@ -157,20 +161,17 @@ describe('Task Metrics', () => {
         }
       });
 
-      stats = summarise(stats, task1);
-      stats = summarise(stats, task2);
-      stats = summarise(stats, task3);
-      stats = summarise(stats, task4);
+      const stats = [task1, task2, task3, task4, task5].reduce(summarise, emptyStats());
 
       assert.deepEqual(stats, expected);
     });
 
     it('pushes assign to action diffs to assignToActionDays so they can be averaged', () => {
-      let stats = emptyStats();
-      const task1 = { metrics: { taskType: 'pplApplication', firstAssignedToActionDiff: 0 } };
-      const task2 = { metrics: { taskType: 'pplApplication', firstAssignedToActionDiff: 2 } };
-      const task3 = { metrics: { taskType: 'pplApplication' } };
-      const task4 = { metrics: { taskType: 'pplApplication', firstAssignedToActionDiff: 1 } };
+      const task1 = task({ firstAssignedToActionDiff: 3, wasFirstActionedInPeriod: false });
+      const task2 = task({ firstAssignedToActionDiff: 0, wasFirstActionedInPeriod: true });
+      const task3 = task({ firstAssignedToActionDiff: 2, wasFirstActionedInPeriod: true });
+      const task4 = task({});
+      const task5 = task({ firstAssignedToActionDiff: 1, wasFirstActionedInPeriod: true });
 
       const expected = merge({}, emptyStats(), {
         pplApplication: {
@@ -178,10 +179,7 @@ describe('Task Metrics', () => {
         }
       });
 
-      stats = summarise(stats, task1);
-      stats = summarise(stats, task2);
-      stats = summarise(stats, task3);
-      stats = summarise(stats, task4);
+      const stats = [task1, task2, task3, task4, task5].reduce(summarise, emptyStats());
 
       assert.deepEqual(stats, expected);
     });
