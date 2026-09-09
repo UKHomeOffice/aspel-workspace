@@ -23,7 +23,7 @@ const publicUrl = 'http://localhost:8080';
 // actual and expected training reminder email for that case only.
 
 const buildTrainingReminderTask = ({ roleType = 'nacwo' } = {}) => ({
-  id: `training-due-reminder-${roleType}`,
+  id: `training-due-reminder-task-${roleType}`,
   event: 'direct-notification',
   req: `req-training-due-reminder-${roleType}`,
   data: {
@@ -50,7 +50,7 @@ const expectedFinalEmail = ({ recipientName, fullName, roleType, isApplicant = f
   body: expectedBody({ fullName, roleType, isApplicant })
 });
 
-const trainingReminderIdentifier = `${basic}-${completeDate}-training-due-reminder`;
+const trainingReminderIdentifier = roleType => `${basic}-training-role-${roleType}-${completeDate}-training-due-reminder`;
 
 /**
  *     debugEmail: false | true
@@ -126,7 +126,7 @@ describe('Training notifications - end-to-end rendered emails', () => {
     return this.schema.destroy();
   });
 
-  const sendTaskAndGetNotifications = async function (task, identifier = trainingReminderIdentifier) {
+  const sendTaskAndGetNotifications = async function (task, identifier = trainingReminderIdentifier(task.data.data.type)) {
     await this.emailer(task);
     return this.schema.Notification.query().where({ identifier }).orderBy('to');
   };
@@ -184,13 +184,34 @@ describe('Training notifications - end-to-end rendered emails', () => {
       ]);
     });
 
+    it('sends separate NACWO and NVS reminders for the same applicant and completion date', async function () {
+      const nacwoTask = buildTrainingReminderTask({ roleType: 'nacwo' });
+      const nvsTask = buildTrainingReminderTask({ roleType: 'nvs' });
+
+      await this.emailer(nacwoTask);
+      await this.emailer(nvsTask);
+
+      const notifications = await this.schema.Notification.query()
+        .where('identifier', 'in', [
+          trainingReminderIdentifier('nacwo'),
+          trainingReminderIdentifier('nvs')
+        ])
+        .where({ to: 'basic.user@example.com' })
+        .orderBy('subject');
+
+      assert.deepEqual(notifications.map(row => row.subject), [
+        'Reminder: You need to complete your NACWO mandatory training',
+        'Reminder: You need to complete your NVS module'
+      ]);
+    });
+
     trainingReminderCases.forEach(({ roleType, recipientLabel, to, title, debugEmail, fullName, isApplicant = false }) => {
       it(`renders the reminder email for the ${recipientLabel}`, async function () {
         const task = buildTrainingReminderTask({ roleType });
         const { notification, content } = await getRenderedNotification.call(this, {
           task,
           to,
-          identifier: trainingReminderIdentifier
+          identifier: trainingReminderIdentifier(roleType)
         });
 
         const subject = buildTrainingReminderSubject({ fullName, roleType, isApplicant });

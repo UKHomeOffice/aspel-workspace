@@ -1,5 +1,8 @@
 const { get } = require('lodash');
+const moment = require('moment');
 const updateReminders = require('../utils/update-reminders');
+
+const normaliseDate = date => moment(date, ['YYYY-MM-DD', 'YYYY-M-D'], true).format('YYYY-MM-DD');
 
 module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
   // assignment/removal of a HOLC should not trigger an establishment update
@@ -49,7 +52,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
       mandatory,
       incomplete,
       delayReason,
-      completeDate
+      completeDate: normaliseDate(completeDate)
     } : null;
     return Role.query(transaction).findOne({ establishmentId, profileId, type: typeOfRole })
       .then(existing => {

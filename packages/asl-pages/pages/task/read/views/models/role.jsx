@@ -24,7 +24,7 @@ export default function Role({ task, values, schema }) {
   const isNamedPersonCreate = task.data.action === 'create';
   const isHolcRole = roleType === 'holc';
   const namedPersonFeatureFlag = useFeatureFlag(FEATURE_FLAG_NAMED_PERSON_MVP);
-  const roleHeadingSnippet = namedPersonFeatureFlag && isNamedPersonVersion && isNamedPersonCreate && !isHolcRole
+  const roleHeadingSnippet = (namedPersonFeatureFlag || isNamedPersonVersion) && isNamedPersonCreate && !isHolcRole
     ? 'sticky-nav.roleApplication'
     : 'sticky-nav.role';
 
