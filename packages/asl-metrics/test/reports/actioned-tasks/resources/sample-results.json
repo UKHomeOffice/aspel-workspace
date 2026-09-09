@@ -6,7 +6,13 @@
       "data": {
         "model": "project",
         "action": "grant",
-        "modelData": {"id": "6d259a43-fd9c-40b4-b765-4cc322f83ee8", "status": "inactive", "licenceNumber": "PP3557248"},
+        "modelData": {
+          "id": "6d259a43-fd9c-40b4-b765-4cc322f83ee8",
+          "status": "inactive",
+          "licenceNumber": "PP3557248",
+          "isContinuation": true,
+          "deadline": null
+        },
         "version": "02b0d31a-e0cb-4f9d-aea4-356dec56b10d"
       },
       "activity": [
@@ -218,6 +224,7 @@
         "model": "project"
       },
       "licenceNumber": "PP3557248",
+      "isContinuation": true,
       "metrics": {
         "firstAssignedAt": "2025-10-21",
         "firstAssignedToActionDiff": 22,
@@ -226,6 +233,7 @@
         "firstSubmitToActionDiff": 54,
         "firstSubmittedAt": "2025-09-05",
         "firstSubmittedAtInPeriod": "2026-02-11",
+        "firstActionedAt": "2025-11-20",
         "isOutstanding": false,
         "lastAssignedAt": "2026-01-28",
         "lastResubmittedAt": "2026-02-13",
@@ -239,11 +247,12 @@
         "returnedCountInPeriod": 2,
         "subtasks": [
           {
-            "action": "returned-to-applicant",
+            "taskAction": "grant",
+            "taskType": "pplApplication",
+            "inspectorAction": "returned-to-applicant",
             "actioned": "2026-02-05",
             "assigned": "2026-01-28",
             "isResubmission": true,
-            "isWithAsru": false,
             "licenceNumber": "PP3557248",
             "model": "project",
             "modelId": "6d259a43-fd9c-40b4-b765-4cc322f83ee8",
@@ -252,11 +261,12 @@
             "versionId": "67b64d67-3db3-4f3c-9225-07dff0a4977d"
           },
           {
-            "action": "returned-to-applicant",
+            "taskAction": "grant",
+            "taskType": "pplApplication",
+            "inspectorAction": "returned-to-applicant",
             "actioned": "2026-02-13",
             "assigned": "2026-02-11",
             "isResubmission": true,
-            "isWithAsru": false,
             "licenceNumber": "PP3557248",
             "model": "project",
             "modelId": "6d259a43-fd9c-40b4-b765-4cc322f83ee8",
@@ -264,12 +274,12 @@
             "taskId": "766bac76-5e56-4fc6-975b-46b9be513a14",
             "versionId": "5fa067da-d774-4365-a67f-fc432e0e8d54"
           },
-          {
-            "action": "resolved",
+          {"taskAction": "grant",
+            "taskType": "pplApplication",
+            "inspectorAction": "resolved",
             "actioned": "2026-02-16",
             "assigned": "2026-02-13",
             "isResubmission": true,
-            "isWithAsru": false,
             "licenceNumber": "PP3557248",
             "model": "project",
             "modelId": "6d259a43-fd9c-40b4-b765-4cc322f83ee8",
@@ -280,7 +290,10 @@
         ],
         "taskType": "pplApplication",
         "totalDaysAssigned": 30,
+        "totalDaysAssignedInPeriod": 7,
         "totalDaysWithAsru": 87,
+        "totalDaysWithAsruInPeriod": 7,
+        "wasFirstActionedInPeriod": false,
         "wasSubmittedInPeriod": false
       },
       "modelId": "6d259a43-fd9c-40b4-b765-4cc322f83ee8",
@@ -295,7 +308,13 @@
       "data": {
         "model": "project",
         "action": "grant",
-        "modelData": {"id": "6a85010a-9949-443f-82ba-cffc0ab8b587", "status": "inactive", "licenceNumber": "PP0933062"},
+        "modelData": {
+          "id": "6a85010a-9949-443f-82ba-cffc0ab8b587",
+          "status": "inactive",
+          "licenceNumber": "PP0933062",
+          "isContinuation": false,
+          "deadline": {"extended": "2026-02-16", "standard": "2026-02-13", "isExtended": true}
+        },
         "version": "02b0d31a-e0cb-4f9d-aea4-356dec56b10d"
       },
       "activity": [
@@ -456,7 +475,9 @@
             "status": "resolved",
             "assignedTo": "31b936cd-eadf-4470-a8d7-be902e2e447e",
             "version": "02b0d31a-e0cb-4f9d-aea4-356dec56b10d"
-          }
+          },
+          "comment": "Example grant comment.",
+          "name": "Inspector Morse"
         }
       ]
     },
@@ -465,6 +486,9 @@
         "action": "grant",
         "model": "project"
       },
+      "isContinuation": false,
+      "dueDate": "2026-02-16",
+      "isDueDateExtended": true,
       "licenceNumber": "PP0933062",
       "metrics": {
         "firstAssignedAt": "2025-08-24",
@@ -473,6 +497,7 @@
         "firstSubmitToActionDiff": 28,
         "firstSubmittedAt": "2025-08-05",
         "firstSubmittedAtInPeriod": "2026-02-13",
+        "firstActionedAt": "2025-09-15",
         "isOutstanding": false,
         "lastAssignedAt": "2025-08-24",
         "lastResubmittedAt": "2026-02-13",
@@ -486,11 +511,14 @@
         "returnedCountInPeriod": 0,
         "subtasks": [
           {
-            "action": "resolved",
+            "comment": "Example grant comment.",
+            "inspectorAction": "resolved",
+            "inspectorName": "Inspector Morse",
             "actioned": "2026-02-16",
             "assigned": "2026-02-13",
+            "taskAction": "grant",
+            "taskType": "pplApplication",
             "isResubmission": true,
-            "isWithAsru": false,
             "licenceNumber": "PP0933062",
             "model": "project",
             "modelId": "6a85010a-9949-443f-82ba-cffc0ab8b587",
@@ -501,7 +529,10 @@
         ],
         "taskType": "pplApplication",
         "totalDaysAssigned": 58,
+        "totalDaysAssignedInPeriod": 1,
         "totalDaysWithAsru": 71,
+        "totalDaysWithAsruInPeriod": 1,
+        "wasFirstActionedInPeriod": false,
         "wasSubmittedInPeriod": false
       },
       "modelId": "6a85010a-9949-443f-82ba-cffc0ab8b587",

@@ -35,7 +35,9 @@ module.exports = ({ db, flow, query: params }) => {
              'modelData', JSON_BUILD_OBJECT(
                'id', cases.data->'modelData'->>'id',
                'status', cases.data->'modelData'->>'status',
-               'licenceNumber', cases.data->'modelData'->>'licenceNumber'
+               'licenceNumber', cases.data->'modelData'->>'licenceNumber',
+               'isContinuation', cases.data \\? 'continuation',
+               'deadline', cases.data -> 'deadline'
              )
            ) as data`
         ),
@@ -53,7 +55,9 @@ module.exports = ({ db, flow, query: params }) => {
                    'status', activity_log.event->>'status',
                    'assignedTo', activity_log.event->>'assignedTo',
                    'version', activity_log.event->'data'->'data'->>'version'
-                 )
+                 ),
+                 'name', activity_log.event->'meta'->'user'->'profile'->>'name',
+                 'comment', activity_log.comment
                )
                ORDER BY activity_log.created_at ASC
              ),
@@ -110,9 +114,15 @@ module.exports = ({ db, flow, query: params }) => {
     let previousSubmission = null;
     let previousAssignment = null;
     let totalDaysWithAsru = 0;
+    let totalDaysWithAsruInPeriod = 0;
     let totalDaysAssigned = 0;
+    let totalDaysAssignedInPeriod = 0;
 
     let status = task.status;
+
+    const dueDate = task.data.modelData?.deadline && task.data.modelData.deadline.isExtended
+      ? task.data.modelData.deadline.extended
+      : task.data.modelData?.deadline?.standard;
 
     task.activity
       .filter(Boolean)
@@ -129,16 +139,16 @@ module.exports = ({ db, flow, query: params }) => {
         const isAction = isStatusChange && (isReturn || isResolution);
 
         if (isSubmission) {
-          previousSubmission = moment(eventTime);
+          previousSubmission = eventTime;
 
           if (activityLog.event.assignedTo) {
-            previousAssignment = moment(eventTime);
+            previousAssignment = eventTime;
           }
 
           if (!firstSubmittedAt) {
-            firstSubmittedAt = moment(eventTime);
+            firstSubmittedAt = eventTime;
           } else {
-            lastResubmittedAt = moment(eventTime);
+            lastResubmittedAt = eventTime;
           }
 
           if (eventTime.isBefore(end)) {
@@ -150,20 +160,26 @@ module.exports = ({ db, flow, query: params }) => {
               taskId: task.id,
               model: task.data.model,
               modelId: task.data.modelData?.id,
-              licenceNumber: task.data.modelData?.licenceNumber,
               versionId: activityLog.event?.version,
+              licenceNumber: task.data.modelData?.licenceNumber,
+              taskType,
+              taskAction: task.data.action,
               submitted: previousSubmission?.format('YYYY-MM-DD'),
               assigned: previousAssignment?.format('YYYY-MM-DD'),
               actioned: eventTime?.format('YYYY-MM-DD'),
-              action: activityLog.event?.status,
+              inspectorAction: activityLog.event?.status,
               isResubmission: !!lastResubmittedAt,
-              isWithAsru: false
+              inspectorName: activityLog.name,
+              comment: activityLog.comment
             });
           }
 
           if (isAction && previousSubmission) {
             lastSubmitToActionDiff = eventTime.workingDiff(previousSubmission, 'calendarDays');
             totalDaysWithAsru += lastSubmitToActionDiff;
+            if (eventTime.isSameOrAfter(start)) {
+              totalDaysWithAsruInPeriod += eventTime.workingDiff(moment.max(previousSubmission, start), 'calendarDays');
+            }
             previousSubmission = null;
           }
 
@@ -173,6 +189,9 @@ module.exports = ({ db, flow, query: params }) => {
 
           if (isAction && previousAssignment) {
             totalDaysAssigned += eventTime.workingDiff(previousAssignment, 'calendarDays');
+            if (eventTime.isSameOrAfter(start)) {
+              totalDaysAssignedInPeriod += eventTime.workingDiff(moment.max(previousAssignment, start), 'calendarDays');
+            }
             previousAssignment = null;
           }
 
@@ -190,7 +209,7 @@ module.exports = ({ db, flow, query: params }) => {
             firstAssignedAt = moment(eventTime);
           }
 
-          if (!eventTime.isBefore(start) && !eventTime.isAfter(end) && !firstAssignedAtInPeriod) {
+          if (eventTime.isSameOrAfter(start) && eventTime.isSameOrBefore(end) && !firstAssignedAtInPeriod) {
             firstAssignedAtInPeriod = moment(eventTime);
           }
 
@@ -218,7 +237,7 @@ module.exports = ({ db, flow, query: params }) => {
           resolvedAt = moment(eventTime);
         }
 
-        if (!eventTime.isBefore(start) && !eventTime.isAfter(end)) {
+        if (eventTime.isSameOrAfter(start) && eventTime.isSameOrBefore(end)) {
           if (isSubmission && !firstSubmittedAtInPeriod) {
             firstSubmittedAtInPeriod = moment(eventTime);
           }
@@ -245,29 +264,17 @@ module.exports = ({ db, flow, query: params }) => {
       wasSubmittedInPeriod = true;
     }
 
-    const firstActionedAt = (firstReturnedAt || resolvedAt)?.format('YYYY-MM-DD');
+    const firstActionedAt = (firstReturnedAt || resolvedAt);
     const wasFirstActionedInPeriod = firstActionedAt && firstActionedAt.isSameOrAfter(start) && firstActionedAt.isSameOrAfter(end);
 
     if (previousSubmission !== null) {
       totalDaysWithAsru += end.workingDiff(previousSubmission, 'calendarDays');
-
-      subtasks.push({
-        taskId: task.id,
-        model: task.data.model,
-        modelId: task.data.modelData?.id,
-        licenceNumber: task.data.modelData?.licenceNumber,
-        versionId: task.data?.version,
-        submitted: previousSubmission.format('YYYY-MM-DD'),
-        assigned: previousAssignment?.format('YYYY-MM-DD'),
-        actioned: null,
-        action: null,
-        isResubmission: !!lastResubmittedAt,
-        isWithAsru: true
-      });
+      totalDaysWithAsruInPeriod += end.workingDiff(moment.max(start, previousSubmission), 'calendarDays');
     }
 
     if (previousAssignment !== null) {
       totalDaysAssigned += end.workingDiff(previousAssignment, 'calendarDays');
+      totalDaysAssignedInPeriod += end.workingDiff(moment.max(start, previousAssignment), 'calendarDays');
     }
 
     return {
@@ -276,6 +283,9 @@ module.exports = ({ db, flow, query: params }) => {
       licenceNumber: task.data.modelData?.licenceNumber,
       status,
       ...pick(task, ['data.model', 'data.action']),
+      isContinuation: task.data.model === 'project' ? task.data.modelData?.isContinuation : null,
+      dueDate,
+      isDueDateExtended: task.data.modelData?.deadline?.isExtended,
       metrics: {
         taskType,
         firstSubmittedAt: firstSubmittedAt?.format('YYYY-MM-DD'),
@@ -288,10 +298,12 @@ module.exports = ({ db, flow, query: params }) => {
         firstAssignedAtInPeriod: firstAssignedAtInPeriod?.format('YYYY-MM-DD'),
         lastAssignedAt: lastAssignedAt?.format('YYYY-MM-DD'),
         resolvedAt: resolvedAt?.format('YYYY-MM-DD'),
-        firstActionedAt,
+        firstActionedAt: firstActionedAt?.format('YYYY-MM-DD'),
         wasFirstActionedInPeriod,
         totalDaysWithAsru,
+        totalDaysWithAsruInPeriod,
         totalDaysAssigned,
+        totalDaysAssignedInPeriod,
         firstAssignedToActionDiff,
         firstSubmitToActionDiff,
         lastSubmitToActionDiff,
