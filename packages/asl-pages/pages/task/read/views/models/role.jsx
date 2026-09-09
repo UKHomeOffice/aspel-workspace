@@ -7,6 +7,7 @@ import {
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
+import { SkillsAndExperience } from '../../../../common/components/role-change-summary';
 import { NamedPersonTaskDetails, TrainingRecord } from '../components/named-person-task-details';
 import { useFeatureFlag, FEATURE_FLAG_NAMED_PERSON_MVP } from '@asl/service/ui/feature-flag';
 
@@ -23,9 +24,9 @@ export default function Role({ task, values, schema }) {
   const isNamedPersonVersion = version === versions.role.NAMED_PERSON_VERSION_ID;
   const isNamedPersonCreate = task.data.action === 'create';
   const isHolcRole = roleType === 'holc';
-  const isPelHRole = roleType === 'pelh';
+  const isPelHOrNprcRole = ['pelh', 'nprc'].includes(roleType);
   const namedPersonFeatureFlag = useFeatureFlag(FEATURE_FLAG_NAMED_PERSON_MVP);
-  const roleHeadingSnippet = isPelHRole || (isNamedPersonCreate && ((namedPersonFeatureFlag || isNamedPersonVersion) && !isHolcRole))
+  const roleHeadingSnippet = isPelHOrNprcRole || (isNamedPersonCreate && ((namedPersonFeatureFlag || isNamedPersonVersion) && !isHolcRole))
     ? 'sticky-nav.roleApplication'
     : 'sticky-nav.role';
 
@@ -86,9 +87,12 @@ export default function Role({ task, values, schema }) {
                 </tr>
               </tbody>
             </table>
+            {isPelHOrNprcRole && (
+              <SkillsAndExperience roleType={roleType} profile={profile} values={taskData} showHeading />
+            )}
           </StickyNavAnchor>
         ),
-        isPelHRole && (
+        isPelHOrNprcRole && (
           <StickyNavAnchor id="training" key="training">
             <TrainingRecord profile={profile} />
           </StickyNavAnchor>
