@@ -36,6 +36,7 @@ module.exports = ({ db, flow, query: params }) => {
                'id', cases.data->'modelData'->>'id',
                'status', cases.data->'modelData'->>'status',
                'licenceNumber', cases.data->'modelData'->>'licenceNumber',
+               'role', CASE WHEN cases.data->>'model' = 'role' THEN cases.data->>'type' ELSE NULL END
                'isContinuation', cases.data \\? 'continuation',
                'deadline', cases.data -> 'deadline'
              )
@@ -120,7 +121,7 @@ module.exports = ({ db, flow, query: params }) => {
 
     let status = task.status;
 
-    const dueDate = task.data.modelData?.deadline && task.data.modelData.deadline.isExtended
+    const deadline = task.data.modelData?.deadline && task.data.modelData.deadline.isExtended
       ? task.data.modelData.deadline.extended
       : task.data.modelData?.deadline?.standard;
 
@@ -284,8 +285,9 @@ module.exports = ({ db, flow, query: params }) => {
       status,
       ...pick(task, ['data.model', 'data.action']),
       isContinuation: task.data.model === 'project' ? task.data.modelData?.isContinuation : null,
-      dueDate,
-      isDueDateExtended: task.data.modelData?.deadline?.isExtended,
+      deadline,
+      isDeadlineExtended: task.data.modelData?.deadline?.isExtended,
+      role: task.data.modelData?.role,
       metrics: {
         taskType,
         firstSubmittedAt: firstSubmittedAt?.format('YYYY-MM-DD'),

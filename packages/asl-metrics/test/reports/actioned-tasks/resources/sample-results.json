@@ -487,8 +487,8 @@
         "model": "project"
       },
       "isContinuation": false,
-      "dueDate": "2026-02-16",
-      "isDueDateExtended": true,
+      "deadline": "2026-02-16",
+      "isDeadlineExtended": true,
       "licenceNumber": "PP0933062",
       "metrics": {
         "firstAssignedAt": "2025-08-24",
