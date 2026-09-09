@@ -88,7 +88,9 @@ export default function Role({ task, values, schema }) {
               </tbody>
             </table>
             {isPelHOrNprcRole && (
-              <SkillsAndExperience roleType={roleType} profile={profile} values={taskData} showHeading />
+              <div className="skills-and-experience">
+                <SkillsAndExperience roleType={roleType} profile={profile} values={taskData} showHeading />
+              </div>
             )}
           </StickyNavAnchor>
         ),
