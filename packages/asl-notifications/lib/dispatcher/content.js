@@ -137,6 +137,6 @@ module.exports = {
     'role-removed': '{{ name }} has been removed from the {{ roleName }} role. This is a PEL amendment.',
     'role-removed-returned': 'The request to remove {{ name }} from the {{ roleName }} role has been returned',
     'role-removed-refused': 'The request to remove {{ name }} from the {{ roleName }} role has been refused',
-    'role-removed-subject': '{{ name }} has been removed from the role of {{ roleName }}'
+    'role-removed-subject': '{{ name }} has been removed from the {{ roleName }} role'
   }
 };
