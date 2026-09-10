@@ -36,7 +36,7 @@ module.exports = ({ db, flow, query: params }) => {
                'id', cases.data->'modelData'->>'id',
                'status', cases.data->'modelData'->>'status',
                'licenceNumber', cases.data->'modelData'->>'licenceNumber',
-               'role', CASE WHEN cases.data->>'model' = 'role' THEN cases.data->>'type' ELSE NULL END
+               'role', CASE WHEN cases.data->>'model' = 'role' THEN cases.data->>'type' ELSE NULL END,
                'isContinuation', cases.data \\? 'continuation',
                'deadline', cases.data -> 'deadline'
              )
