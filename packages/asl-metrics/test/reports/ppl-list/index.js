@@ -1,4 +1,3 @@
-const assert = require('assert');
 const { projectSpecies } = require('@ukhomeoffice/asl-constants');
 
 const hasSpecies = require('../../../lib/reports/ppl-list/has-species');
@@ -12,7 +11,7 @@ describe('PPL list hasSpecies helper', () => {
       }
     };
 
-    assert.equal(hasSpecies(project, 'catsOrDogs'), true);
+    expect(hasSpecies(project, 'catsOrDogs')).toBe(true);
   });
 
   it('includes species-other values for legacy schema projects', () => {
@@ -24,7 +23,7 @@ describe('PPL list hasSpecies helper', () => {
       }
     };
 
-    assert.equal(hasSpecies(project, 'equidae'), true);
+    expect(hasSpecies(project, 'equidae')).toBe(true);
   });
 
   it('uses protocol species values for schema v2+ projects', () => {
@@ -41,7 +40,7 @@ describe('PPL list hasSpecies helper', () => {
       }
     };
 
-    assert.equal(hasSpecies(project, 'nhps'), true);
+    expect(hasSpecies(project, 'nhps')).toBe(true);
   });
 
   it('uses other-species-type when speciesId is 28 in schema v2+ projects', () => {
@@ -61,7 +60,7 @@ describe('PPL list hasSpecies helper', () => {
       }
     };
 
-    assert.equal(hasSpecies(project, 'equidae'), true);
+    expect(hasSpecies(project, 'equidae')).toBe(true);
   });
 
   it('returns false when no species match', () => {
@@ -72,7 +71,7 @@ describe('PPL list hasSpecies helper', () => {
       }
     };
 
-    assert.equal(hasSpecies(project, 'nhps'), false);
+    expect(hasSpecies(project, 'nhps')).toBe(false);
   });
 
   it('matches known species labels in schema v2+ projects', () => {
@@ -80,7 +79,7 @@ describe('PPL list hasSpecies helper', () => {
     const allSpecies = Object.values(projectSpecies).reduce((result, group) => result.concat(group), []);
     const matchingSpecies = allSpecies.find(item => equidaeValues.includes(item.value) && item.label !== item.value);
 
-    assert.ok(matchingSpecies, 'Expected at least one equidae species with a label');
+    expect(matchingSpecies).toBeTruthy();
 
     const project = {
       schema_version: 2,
@@ -98,7 +97,7 @@ describe('PPL list hasSpecies helper', () => {
       }
     };
 
-    assert.equal(hasSpecies(project, 'equidae'), true);
+    expect(hasSpecies(project, 'equidae')).toBe(true);
   });
 
   it('handles protocols without species arrays', () => {
@@ -109,7 +108,7 @@ describe('PPL list hasSpecies helper', () => {
       }
     };
 
-    assert.equal(hasSpecies(project, 'nhps'), false);
+    expect(hasSpecies(project, 'nhps')).toBe(false);
   });
 
   it('filters out falsy species values before matching', () => {
@@ -132,7 +131,7 @@ describe('PPL list hasSpecies helper', () => {
       }
     };
 
-    assert.equal(hasSpecies(project, 'catsOrDogs'), false);
+    expect(hasSpecies(project, 'catsOrDogs')).toBe(false);
   });
 
   it('defaults legacy schema species arrays when data is missing', () => {
@@ -140,6 +139,6 @@ describe('PPL list hasSpecies helper', () => {
       schema_version: 1
     };
 
-    assert.equal(hasSpecies(project, 'equidae'), false);
+    expect(hasSpecies(project, 'equidae')).toBe(false);
   });
 });

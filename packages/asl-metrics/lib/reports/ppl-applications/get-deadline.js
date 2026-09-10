@@ -15,12 +15,10 @@ module.exports = task => {
   deadline = { isExtended };
 
   if (deadline.isExtended) {
-    deadline.extendedReason = task.activity.reduce((reason, activity) => {
-      if (!reason && isDeadlineExtension(activity)) {
-        reason = activity.comment;
-      }
-      return reason;
-    }, '');
+    deadline.extendedReason =
+      task.activity
+        .find(activity => isDeadlineExtension(activity))
+        ?.comment;
   }
 
   return deadline;

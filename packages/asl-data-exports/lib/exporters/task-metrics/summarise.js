@@ -5,21 +5,24 @@ module.exports = (summary, task) => {
 
   let {
     taskType,
-    returnedCount = 0,
-    resubmittedCount = 0,
-    wasSubmitted,
+    returnedCountInPeriod = 0,
+    resubmittedCountInPeriod = 0,
+    wasSubmittedInPeriod,
     isOutstanding,
-    submitToActionDiff,
+    firstSubmitToActionDiff,
     resubmittedDiffs = [],
-    assignToActionDiff,
-    resolvedAt
+    firstAssignedToActionDiff,
+    totalDaysWithAsru,
+    totalDaysAssigned,
+    resolvedAt,
+    wasFirstActionedInPeriod
   } = task.metrics;
 
   if (!taskType || taskType === 'other') {
     return summary;
   }
 
-  if (wasSubmitted) {
+  if (wasSubmittedInPeriod) {
     summary[taskType].submitted++;
   }
 
@@ -32,16 +35,24 @@ module.exports = (summary, task) => {
     }
   }
 
-  summary[taskType].resubmitted += (resubmittedCount || 0);
-  summary[taskType].returned += (returnedCount || 0);
+  summary[taskType].resubmitted += (resubmittedCountInPeriod || 0);
+  summary[taskType].returned += (returnedCountInPeriod || 0);
   summary[taskType].outstanding += isOutstanding ? 1 : 0;
 
-  if (typeof submitToActionDiff !== 'undefined') {
-    summary[taskType].submitToActionDays.push(submitToActionDiff);
+  if (wasFirstActionedInPeriod && firstSubmitToActionDiff != null) {
+    summary[taskType].submitToActionDays.push(firstSubmitToActionDiff);
   }
 
-  if (typeof assignToActionDiff !== 'undefined') {
-    summary[taskType].assignToActionDays.push(assignToActionDiff);
+  if (wasFirstActionedInPeriod && firstAssignedToActionDiff != null) {
+    summary[taskType].assignToActionDays.push(firstAssignedToActionDiff);
+  }
+
+  if (totalDaysWithAsru != null) {
+    summary[taskType].totalDaysWithAsru.push(totalDaysWithAsru);
+  }
+
+  if (totalDaysAssigned != null) {
+    summary[taskType].totalDaysAssigned.push(totalDaysAssigned);
   }
 
   summary[taskType].resubmitToActionDays.push(...resubmittedDiffs);
