@@ -1,8 +1,10 @@
 import _ from 'lodash';
+import { format } from 'date-fns';
 import { populateTableHeader } from '../helpers/populate-table-header.mjs';
 import { initializeTable } from '../helpers/initialize-table.mjs';
 
 const { sortBy } = _;
+const DATE_FORMAT = 'dd MMMM yyyy';
 
 export function trainingSummaryRenderer(doc, values) {
   const TRAINING_RECORD_HEADERS = ['Category', 'Modules', 'Animal types', 'Details'];
@@ -32,11 +34,16 @@ export function populateTableWithTrainingRecords(table, training) {
     createBulletedList(record.modules, table.getCell(row, 1));
     createBulletedList(record.species, table.getCell(row, 2));
 
-    const details = [
-      `Certificate number: ${record.certificateNumber}`,
-      `Awarded on: ${record.passDate}`,
-      `Awarded by: ${record.accreditingBody}`
-    ];
+    const details = record.isExemption
+      ? [
+        ...(record.exemptionReason || '-').split('\n'),
+        `Added on: ${record.createdAt ? format(record.createdAt, DATE_FORMAT) : '-'}`
+      ]
+      : [
+        `Certificate number: ${record.certificateNumber}`,
+        `Awarded on: ${record.passDate}`,
+        `Awarded by: ${record.accreditingBody}`
+      ];
     details.forEach(detail => table.getCell(row, 3).createParagraph(detail));
   });
 

@@ -67,9 +67,24 @@ describe('populateTableWithTrainingRecords', () => {
     assert.equal(table.getCell(1, 3).createParagraph.calledWith('Certificate number: 12345'), true);
     assert.equal(table.getCell(1, 3).createParagraph.calledWith('Awarded on: 2021-01-01'), true);
     assert.equal(table.getCell(1, 3).createParagraph.calledWith('Awarded by: Body 1'), true);
-    assert.equal(table.getCell(2, 3).createParagraph.calledWith('Certificate number: 67890'), true);
-    assert.equal(table.getCell(2, 3).createParagraph.calledWith('Awarded on: 2021-02-01'), true);
-    assert.equal(table.getCell(2, 3).createParagraph.calledWith('Awarded by: Body 2'), true);
+    assert.equal(table.getCell(2, 3).createParagraph.calledWith('Reason line 1'), true);
+    assert.equal(table.getCell(2, 3).createParagraph.calledWith('Reason line 2'), true);
+    assert.equal(table.getCell(2, 3).createParagraph.calledWith('Added on: 14 March 2026'), true);
+  });
+
+  it('should render a dash when an exemption has no reason or created date', () => {
+    const training = [
+      {
+        isExemption: true,
+        modules: ['Module A'],
+        species: []
+      }
+    ];
+
+    populateTableWithTrainingRecords(table, training);
+
+    assert.equal(table.getCell(1, 3).createParagraph.calledWith('-'), true);
+    assert.equal(table.getCell(1, 3).createParagraph.calledWith('Added on: -'), true);
   });
 
   it('should handle empty modules and species lists', () => {
@@ -122,8 +137,7 @@ const training = [
     isExemption: true,
     modules: ['Module A'],
     species: ['Species A'],
-    certificateNumber: '67890',
-    passDate: '2021-02-01',
-    accreditingBody: 'Body 2'
+    exemptionReason: 'Reason line 1\nReason line 2',
+    createdAt: '2026-03-14T10:30:00.000Z'
   }
 ];
