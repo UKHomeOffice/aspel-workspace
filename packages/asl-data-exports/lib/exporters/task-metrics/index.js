@@ -1,4 +1,5 @@
 const { omit } = require('lodash');
+const { once } = require('events');
 const csv = require('csv-stringify');
 const archiver = require('archiver');
 const Auth = require('../../clients/auth');
@@ -6,6 +7,14 @@ const Metrics = require('../../clients/metrics');
 const emptyStats = require('./empty-stats');
 const summarise = require('./summarise');
 const calculateAverages = require('./calculate-averages');
+
+const writeAsync = async (writable, chunk) => {
+  // Write will return false if it wants to apply backpressure, in which case we
+  // need to wait for the 'drain' event before continuing to write more data.
+  if (!writable.write(chunk)) {
+    await once(writable, 'drain');
+  }
+};
 
 module.exports = settings => {
   const logger = settings.logger;
@@ -23,11 +32,26 @@ module.exports = settings => {
     const internalDeadlinesCSV = csv({
       header: true,
       bom: true,
-      columns: ['task_id', 'project_title', 'licence_number', 'type', 'resubmitted', 'extended', 'still_open', 'target', 'resolved_at']
+      columns: [
+        'task_id',
+        'project_title',
+        'licence_number',
+        'type',
+        'resubmitted',
+        'extended',
+        'still_open',
+        'target',
+        'resolved_at'
+      ]
     });
 
     logger.debug('fetching internal-deadlines report');
-    const internalDeadlinesData = await metrics('/reports/internal-deadlines', { stream: false, query }, accessToken);
+    const internalDeadlinesData = await metrics(
+      '/reports/internal-deadlines',
+      { stream: false, query },
+      accessToken
+    );
+
     logger.debug('writing internal-deadlines csv');
     internalDeadlinesData.filter(Boolean).forEach(row => internalDeadlinesCSV.write(row));
     internalDeadlinesCSV.end();
@@ -35,7 +59,41 @@ module.exports = settings => {
     const actionedTasksRawCSV = csv({
       header: true,
       bom: true,
-      columns: ['id', 'status', 'model', 'action', 'taskType', 'firstSubmittedAt', 'firstReturnedAt', 'firstAssignedAt', 'resolvedAt', 'assignToActionDiff', 'submitToActionDiff', 'wasSubmitted', 'isOutstanding', 'returnedCount']
+      columns: [
+        'taskId',
+        'status',
+        'model',
+        'modelId',
+        'licenceNumber',
+        'role',
+        'action',
+        'taskType',
+        'isContinuation',
+        'firstSubmittedAt',
+        'firstReturnedAt',
+        'firstAssignedAt',
+        'firstSubmittedAtInPeriod',
+        'firstReturnedAtInPeriod',
+        'firstAssignedAtInPeriod',
+        'lastResubmittedAt',
+        'lastReturnedAt',
+        'lastAssignedAt',
+        'resolvedAt',
+        'deadline',
+        'isDeadlineExtended',
+        'totalDaysAssigned',
+        'totalDaysAssignedInPeriod',
+        'firstSubmitToActionDiff',
+        'lastSubmitToActionDiff',
+        'totalDaysWithAsru',
+        'totalDaysWithAsruInPeriod',
+        'wasSubmittedInPeriod',
+        'isOutstanding',
+        'returnedCount',
+        'returnedCountInPeriod',
+        'resubmittedCount',
+        'resubmittedCountInPeriod'
+      ]
     });
     let actionedTasksSummary = emptyStats();
 
@@ -59,56 +117,84 @@ module.exports = settings => {
       }
     });
 
-    return new Promise((resolve, reject) => {
+    const actionedSubtasksCSV = csv({
+      header: true,
+      bom: true,
+      columns: [
+        'taskId',
+        'model',
+        'modelId',
+        'licenceNumber',
+        'versionId',
+        'taskAction',
+        'taskType',
+        'submitted',
+        'isResubmission',
+        'assigned',
+        'actioned',
+        'inspectorAction',
+        'inspectorName',
+        'comment'
+      ]
+    });
+
+    try {
       logger.debug('fetching actioned-tasks stream');
 
-      return metrics('/reports/actioned-tasks', { stream: true, query }, accessToken)
-        .then(stream => {
-          logger.debug('writing actioned-tasks-raw csv');
-          stream.on('data', task => {
-            actionedTasksRawCSV.write({ ...omit(task, 'data', 'metrics'), ...task.data, ...task.metrics });
-            actionedTasksSummary = summarise(actionedTasksSummary, task);
-          });
-          stream.on('end', () => resolve());
-          stream.on('error', err => reject(err));
-        });
-    })
-      .then(() => {
-        logger.debug('summarising actioned tasks');
-        actionedTasksSummary = calculateAverages(actionedTasksSummary);
+      const stream = await metrics('/reports/actioned-tasks', { stream: true, query }, accessToken);
 
-        Object.keys(actionedTasksSummary).forEach(taskType => {
-          actionedTasksSummaryCSV.write({ taskType, ...actionedTasksSummary[taskType] });
-        });
+      logger.debug('writing actioned-tasks-raw csv');
+      for await (const task of stream) {
+        await writeAsync(
+          actionedTasksRawCSV,
+          {
+            ...omit(task, 'data', 'metrics'),
+            ...task.data,
+            ...omit(task.metrics, 'subtasks')
+          }
+        );
 
-        actionedTasksRawCSV.end();
-        actionedTasksSummaryCSV.end();
-      })
-      .then(() => {
-        logger.debug('creating zip file');
-        const zip = archiver('zip');
+        for (const subTask of (task.metrics?.subtasks ?? [])) {
+          await writeAsync(actionedSubtasksCSV, subTask);
+        }
 
-        zip.on('error', err => {
-          throw new Error(err);
-        });
+        actionedTasksSummary = summarise(actionedTasksSummary, task);
+      }
 
-        zip.append(internalDeadlinesCSV, { name: `internal-deadlines_${start}_${end}.csv` });
-        zip.append(actionedTasksRawCSV, { name: `actioned-tasks-raw_${start}_${end}.csv` });
-        zip.append(actionedTasksSummaryCSV, { name: `actioned-tasks-summary_${start}_${end}.csv` });
-        zip.finalize();
+      logger.debug('summarising actioned tasks');
+      actionedTasksSummary = calculateAverages(actionedTasksSummary);
 
-        logger.debug('uploading zip file');
-
-        return s3Upload({ key: job.id, stream: zip })
-          .then(result => {
-            logger.debug(`upload success, etag: ${result.ETag}`);
-            return { ...job.meta, etag: result.ETag };
-          });
-      })
-      .catch(err => {
-        console.log(err);
-        logger.error(err);
-        throw err;
+      Object.keys(actionedTasksSummary).forEach(taskType => {
+        actionedTasksSummaryCSV.write({ taskType, ...actionedTasksSummary[taskType] });
       });
+
+      actionedTasksRawCSV.end();
+      actionedTasksSummaryCSV.end();
+      actionedSubtasksCSV.end();
+
+      logger.debug('creating zip file');
+      const zip = archiver('zip', undefined);
+
+      zip.on('error', err => {
+        throw new Error(err);
+      });
+
+      zip.append(internalDeadlinesCSV, { name: `internal-deadlines_${start}_${end}.csv` });
+      zip.append(actionedTasksRawCSV, { name: `actioned-tasks-raw_${start}_${end}.csv` });
+      zip.append(actionedTasksSummaryCSV, { name: `actioned-tasks-summary_${start}_${end}.csv` });
+      zip.append(actionedSubtasksCSV, { name: `subtasks-${start}_${end}.csv` });
+      await zip.finalize();
+
+      logger.debug('uploading zip file');
+
+      const result = await s3Upload({ key: job.id, stream: zip });
+      logger.debug(`upload success, etag: ${result.ETag}`);
+      return { ...job.meta, etag: result.ETag };
+    } catch (err) {
+      console.log(err);
+      logger.error(err);
+      throw err;
+    }
+
   };
 };
