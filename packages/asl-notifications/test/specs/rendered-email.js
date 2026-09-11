@@ -86,7 +86,7 @@ describe('Role notifications - end-to-end rendered emails', () => {
         to: 'vice-chancellor@example.com'
       });
 
-      const expectedHtml = `Named Person has been removed from the ${roleName} role.
+      const expectedHtml = `Named Person has been removed from the ${roleName} role. This is a PEL amendment.
 
 Establishment name: ${establishmentName}
 
@@ -99,7 +99,7 @@ You can see more details about this task by visiting ${publicTaskUrl(publicUrl, 
       assertEmail({
         notification,
         content,
-        subject: `Named Person has been removed from the ${roleName} role. This is a PEL amendment.`,
+        subject: `Named Person has been removed from the ${roleName} role`,
         html: expectedHtml,
         finalEmail,
         debugEmail,
@@ -115,7 +115,7 @@ You can see more details about this task by visiting ${publicTaskUrl(publicUrl, 
         to: nomineeEmail
       });
 
-      const expectedHtml = `Named Person has been removed from the ${roleName} role.
+      const expectedHtml = `Named Person has been removed from the ${roleName} role. This is a PEL amendment.
 
 Establishment name: ${establishmentName}`;
       const finalEmail = renderExpectedEmail({
