@@ -79,6 +79,9 @@ module.exports = merge({}, baseContent, skillsAndExperienceContent, {
   * {{profile.firstName}} {{profile.lastName}} has agreed to be nominated for the NPRC role
   * the legally accountable person supports the nomination and is satisfied that the nominee has no conflicts of interest, or that any conflicts are adequately managed
   * the declaration form has been sent to ASRU Licensing`,
+    pelh: `\
+**By submitting this change, I confirm that I have the consent of the PEL holder**`,
+    holc: '',
     default: `\
 **By submitting this application, I confirm that:**
 
