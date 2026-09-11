@@ -5,7 +5,6 @@ const { buildModel } = require('../../../../../../lib/utils');
 const confirm = require('./routers/confirm');
 const participantDetailsSchemaHelper = require('./helpers/participant-details-schema-helper');
 const schema = require('./schema');
-const { setPageTitle } = require('../../../../../common/middleware');
 
 module.exports = () => {
   const app = page({
@@ -14,8 +13,6 @@ module.exports = () => {
   });
 
   let modifiedSchema;
-
-  app.all(['/', '/confirm'], setPageTitle());
 
   app.use((req, res, next) => {
     res.locals.static.course = req.trainingCourse;

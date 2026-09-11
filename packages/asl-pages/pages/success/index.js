@@ -6,7 +6,7 @@ const successMessages = require('./content');
 const { FEATURE_FLAG_NAMED_PERSON_MVP } = require('@asl/service/ui/feature-flag');
 const { versions } = require('@ukhomeoffice/asl-constants');
 const { ROLE_TYPES } = require('../role/named-person-mvp/role-types');
-const { prependPageTitle } = require('../common/middleware');
+const { prependPageTitle } = require('@asl/service/ui/page-title');
 
 const headerContent = (title, subtitle) => {
   return {

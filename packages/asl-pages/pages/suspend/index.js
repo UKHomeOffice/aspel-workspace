@@ -3,7 +3,7 @@ const update = require('./routers/update');
 const confirm = require('./routers/confirm');
 const success = require('../success');
 const { get } = require('lodash');
-const { setPageTitle } = require('../common/middleware');
+const { setPageTitle } = require('@asl/service/ui/page-title');
 const licenceTypes = require('./licence-types');
 const content = require('./content');
 

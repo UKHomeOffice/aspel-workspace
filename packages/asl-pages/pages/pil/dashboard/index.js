@@ -1,10 +1,11 @@
 const { page } = require('@asl/service/ui');
+const { setPageTitle } = require('@asl/service/ui/page-title');
 const UnauthorisedError = require('@asl/service/errors/unauthorised');
 const { get, pick, merge, every } = require('lodash');
 const form = require('../../common/routers/form');
 const success = require('../../success');
 const confirm = require('./routers/confirm');
-const { hydrate, updateDataFromTask, redirectToTaskIfOpen, setPageTitle } = require('../../common/middleware');
+const { hydrate, updateDataFromTask, redirectToTaskIfOpen } = require('../../common/middleware');
 const { canUpdateModel, canTransferPil } = require('../../../lib/utils');
 const content = require('./content');
 
@@ -36,11 +37,11 @@ module.exports = settings => {
     paths: ['/confirm', '/success']
   });
 
-  app.all(['/', '/confirm'], setPageTitle((req, res) => {
-    const { content } = res.locals.static;
-    return content.pageTitle ?? (req.model.status === 'active'
-      ? content.pil.pageTitleAmend
-      : content.pil.pageTitle);
+  // `/confirm` is titled by page() from content.pageTitle; the task list depends on
+  // whether this is a new application or an amendment.
+  app.all('/', setPageTitle((req, res) => {
+    const { pil } = res.locals.static.content;
+    return req.model.status === 'active' ? pil.pageTitleAmend : pil.pageTitle;
   }));
 
   app.get('/', (req, res, next) => {

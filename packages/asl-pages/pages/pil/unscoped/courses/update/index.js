@@ -1,15 +1,12 @@
 const { page } = require('@asl/service/ui');
 const update = require('../routers/update');
 const confirm = require('./routers/confirm');
-const { setPageTitle } = require('../../../../common/middleware');
 
 module.exports = () => {
   const app = page({
     root: __dirname,
     paths: ['/confirm']
   });
-
-  app.all(['/', '/confirm'], setPageTitle());
 
   app.use(update());
 

@@ -4,8 +4,8 @@ const { get } = require('lodash');
  * ASL-5129 / WCAG 2.4.2 Page Titled.
  *
  * Every screen in the PIL journey must declare a page title, and no two screens
- * may share one. Titles are prepended to `<licence holder> - <establishment>`
- * by `setPageTitle`, so the declared label is what distinguishes the pages.
+ * may share one. `page()` in asl-service prepends `content.pageTitle` to
+ * `<licence holder> - <establishment>`, so the declared label is what distinguishes the pages.
  */
 const screens = [
   ['create', require('../../../../pages/pil/create/content'), 'pageTitle'],
