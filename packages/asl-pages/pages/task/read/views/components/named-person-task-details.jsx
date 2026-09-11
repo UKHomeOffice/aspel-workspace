@@ -9,6 +9,13 @@ import {
 import MandatoryTrainingRequirements from '../../../../role/component/mandatory-training-requirements';
 import { MANDATORY_TRAINING_ROLE_TYPES, normalizeRoleType } from '../../../../role/named-person-mvp/role-types';
 
+export const TrainingRecord = ({ profile }) => (
+  <>
+    <h2><Snippet>trainingRecord</Snippet></h2>
+    <TrainingSummary certificates={profile.certificates} />
+  </>
+);
+
 export const NamedPersonTaskDetails = ({ taskData, profile }) => {
   const hasMandatoryTrainingRequirements = MANDATORY_TRAINING_ROLE_TYPES.includes(normalizeRoleType(taskData.type));
 
@@ -24,8 +31,7 @@ export const NamedPersonTaskDetails = ({ taskData, profile }) => {
 
         <>
           <div className="sticky-nav-anchor">
-            <h2><Snippet>trainingRecord</Snippet></h2>
-            <TrainingSummary certificates={profile.certificates} />
+            <TrainingRecord profile={profile} />
           </div>
           {hasMandatoryTrainingRequirements && (
             <div>
