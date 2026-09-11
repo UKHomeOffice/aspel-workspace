@@ -6,7 +6,7 @@ const filenamify = require('filenamify');
 const fetch = require('node-fetch');
 const renderer = require('@asl/projects/client/components/download-link/renderers/docx-renderer').default;
 const ntsRenderer = require('@asl/projects/client/components/download-link/renderers/nts-docx-renderer').default;
-const { loadRa } = require('../middleware');
+const { loadRa, loadDraftTraining } = require('../middleware');
 const getNtsSchema = require('../nts/schema');
 const schema = require('@asl/projects/client/schema').default;
 const { NotFoundError } = require('@asl/service/errors');
@@ -90,7 +90,7 @@ const buildDocxContent = (req) => {
 module.exports = (settings) => {
   const app = Router();
 
-  app.get('/', (req, res, next) => {
+  app.get('/', loadDraftTraining, (req, res, next) => {
     const sections = Object.values(schema[req.project.schemaVersion]());
     const { values, application } = buildDocxContent(req);
 

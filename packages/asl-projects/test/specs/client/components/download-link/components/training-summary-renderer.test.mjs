@@ -34,6 +34,15 @@ describe('trainingSummaryRenderer', () => {
     assert.equal(doc.createParagraph.calledWith('Training record'), true);
     assert.equal(doc.heading4.called, true);
   });
+
+  it('should show whose training record it is and their licence holder status', () => {
+    const application = { status: 'inactive', licenceHolder: { firstName: 'Jane', lastName: 'Doe' } };
+
+    trainingSummaryRenderer(doc, { training }, application);
+
+    assert.equal(doc.createParagraph.calledWith('Jane Doe\'s training record'), true);
+    assert.equal(doc.createParagraph.calledWith('Prospective licence holder'), true);
+  });
 });
 
 describe('populateTableWithTrainingRecords', () => {
