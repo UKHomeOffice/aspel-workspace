@@ -1,6 +1,3 @@
-const assert = require('assert');
-const sinon = require('sinon');
-
 const report = require('../../../lib/reports/establishments');
 
 let EXAMPLE_PELH = {
@@ -58,14 +55,14 @@ const EXAMPLE_ESTABLISHMENT_DB_ROW = {
 
 function buildDbMock() {
   const mockBuilder = {};
-  mockBuilder.count = sinon.fake(arg => {
-    assert.strictEqual(arg, '*');
+  mockBuilder.count = jest.fn(arg => {
+    expect(arg).toBe('*');
     return mockBuilder;
   });
   // eslint-disable-next-line camelcase
-  mockBuilder.where = sinon.fake(({establishment_id, status, deleted}) => {
-    assert.strictEqual(establishment_id, 8202);
-    assert.strictEqual(deleted, null);
+  mockBuilder.where = jest.fn(({establishment_id, status, deleted}) => {
+    expect(establishment_id).toBe(8202);
+    expect(deleted).toBe(null);
     switch (status) {
       case 'active':
         return Promise.resolve([{count: 1}]);
@@ -76,12 +73,12 @@ function buildDbMock() {
     }
   });
   // Inner builders are not checked as function name is enough to determine which count is expected
-  mockBuilder.whereExists = sinon.fake(() => Promise.resolve([{count: 2}]));
-  mockBuilder.whereNotExists = sinon.fake(() => Promise.resolve([{count: 3}]));
+  mockBuilder.whereExists = jest.fn(() => Promise.resolve([{count: 2}]));
+  mockBuilder.whereNotExists = jest.fn(() => Promise.resolve([{count: 3}]));
 
   return {
-    asl: sinon.fake(key => {
-      assert.strictEqual(key, 'projects');
+    asl: jest.fn(key => {
+      expect(key).toBe('projects');
       return mockBuilder;
     })
   };
@@ -94,7 +91,7 @@ describe('Establishment Report', () => {
 
       const reportRow = await report({db: mockDb}).parse(EXAMPLE_ESTABLISHMENT_DB_ROW);
 
-      assert.strictEqual(reportRow['species held'], 'Aquatic species,Cats,Equidae');
+      expect(reportRow['species held']).toBe('Aquatic species,Cats,Equidae');
     });
   });
 });

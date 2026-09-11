@@ -1,8 +1,8 @@
-const { v4: uuid } = require('uuid');
+const { randomUUID } = require('crypto');
 
 module.exports = (type, status = 'new', assignedTo, id) => {
   const task = {
-    id: id || uuid(),
+    id: id || randomUUID(),
     status,
     assigned_to: assignedTo
   };
