@@ -1,4 +1,5 @@
 const { page } = require('@asl/service/ui');
+const { setPageTitle } = require('@asl/service/ui/page-title');
 const UnauthorisedError = require('@asl/service/errors/unauthorised');
 const { get, pick, merge, every } = require('lodash');
 const form = require('../../common/routers/form');
@@ -35,6 +36,13 @@ module.exports = settings => {
     root: __dirname,
     paths: ['/confirm', '/success']
   });
+
+  // `/confirm` is titled by page() from content.pageTitle; the task list depends on
+  // whether this is a new application or an amendment.
+  app.all('/', setPageTitle((req, res) => {
+    const { pil } = res.locals.static.content;
+    return req.model.status === 'active' ? pil.pageTitleAmend : pil.pageTitle;
+  }));
 
   app.get('/', (req, res, next) => {
     if (!canUpdateModel(req.model)) {

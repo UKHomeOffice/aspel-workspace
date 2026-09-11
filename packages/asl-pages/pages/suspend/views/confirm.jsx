@@ -1,13 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Header, FormLayout, Snippet } from '@ukhomeoffice/asl-components';
+import licenceType from '../licence-types';
 import { Warning } from '@ukhomeoffice/react-components';
-
-const licenceType = {
-  pil: 'personal',
-  establishment: 'establishment',
-  project: 'project'
-};
 
 export default function Confirm() {
   const model = useSelector(state => state.model);

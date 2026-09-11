@@ -1,6 +1,7 @@
 module.exports = {
   suspend: {
     title: 'Suspend {{licenceType}} licence',
+    pageTitleConfirm: 'Confirm {{licenceType}} licence suspension',
     fields: {
       comment: {
         label: 'Why are you suspending this licence?'
@@ -17,6 +18,7 @@ module.exports = {
   },
   reinstate: {
     title: 'Reinstate {{licenceType}} licence',
+    pageTitleConfirm: 'Confirm {{licenceType}} licence reinstatement',
     fields: {
       comment: {
         label: 'Why are you reinstating this licence?'

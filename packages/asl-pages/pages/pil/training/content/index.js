@@ -2,6 +2,7 @@ const { merge } = require('lodash');
 const baseContent = require('../../content');
 
 module.exports = merge({}, baseContent, {
+  pageTitle: 'Training',
   title: 'Training',
   intro: 'Applicants must confirm training requirements have been met. This could be through completed training modules or professional experience that makes training unnecessary.',
   'current-modules': 'Training record',
