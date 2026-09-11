@@ -597,6 +597,12 @@ details {
   }
 }
 
+.role-training-record {
+  border-top: 2px solid govuk-colour('grey-1');
+  margin-top: $govuk-gutter;
+  padding-top: $govuk-gutter;
+}
+
 .govuk-checkboxes__item {
   .govuk-hint {
     padding-left: $govuk-gutter-half;
