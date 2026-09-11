@@ -1,6 +1,6 @@
 import { Numbering, TextRun } from 'docx';
 
-const addStyles = (document) => {
+const addStyles = (document, nts) => {
     document.Styles.createParagraphStyle('Question', 'Question')
         .basedOn('Normal')
         .next('Normal')
@@ -116,22 +116,51 @@ const addStyles = (document) => {
         .color('#FF0000')
         .bold();
 
-  document.Styles.createParagraphStyle('Heading1', 'Heading 1')
-    .basedOn('Body')
-    .next('Body')
-    .quickFormat()
-    .size(52)
-    .font('Arial')
-    .font('Arial')
-    .color('8F23B3');;
+    if (nts) {
+      document.Styles.createParagraphStyle('Heading1', 'Heading 1')
+        .basedOn('Body')
+        .next('Body')
+        .quickFormat()
+        .size(52)
+        .font('Arial')
+        .color('8F23B3')
+        .spacing({before: 0, after: 720, line: 1200});
 
-    document.Styles.createParagraphStyle('Heading4', 'Heading 4')
-      .basedOn('Body')
-      .next('Body')
-      .quickFormat()
-      .size(24)
-      .bold()
-      .font('Arial');
+      document.Styles.createParagraphStyle('Heading2', 'Heading 2')
+        .basedOn('Body')
+        .next('Body')
+        .quickFormat()
+        .size(32)
+        .font('Arial')
+        .color('8F23B3')
+        .bold()
+        .spacing({before: 480, after: 240});
+
+      document.Styles.createParagraphStyle('Heading3', 'Heading 3')
+        .basedOn('Body')
+        .next('Body')
+        .quickFormat()
+        .size(28)
+        .font('Arial')
+        .bold()
+        .spacing({before: 120, after: 120});
+
+      document.Styles.createParagraphStyle('Heading4', 'Heading 4')
+        .basedOn('Body')
+        .next('Body')
+        .quickFormat()
+        .size(24)
+        .bold()
+        .font('Arial');
+
+      document.Styles.createParagraphStyle('Bold', 'bold')
+        .basedOn('Body')
+        .next('Body')
+        .quickFormat()
+        .size(24)
+        .font('Arial')
+        .bold();
+    }
 
 };
 

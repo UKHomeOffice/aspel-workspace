@@ -11,10 +11,11 @@ import schemaVersions from '@asl/projects/client/schema';
 import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
-import { addStyles, renderHorizontalRule, addPageNumbers } from './helpers/docx-style-helper';
-import { renderMarkdown as renderMarkdownContent, renderLabel as renderLabelShared, renderText as renderTextShared, renderTextEditor as renderTextEditorShared } from './helpers/docx-content-renderer';
+import { addStyles, addPageNumbers } from './helpers/docx-style-helper';
+import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared } from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
 import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
+import NTSFateOfAnimalFields from '../../../helpers/nts-field';
 
 export default async function ntsDocxRenderer(opts) {
   const {
@@ -37,15 +38,13 @@ export default async function ntsDocxRenderer(opts) {
   }
 
   const renderMarkdown = (markdown, style = 'body') => {
-    renderMarkdownContent(document, markdown, style);
+    renderMarkdownContent(document, markdown, style, {}, true);
   };
-
 
   const renderTextEditor = (value) => {
     return renderTextEditorShared(document, value, {
       onStringFallback: (doc, val) => renderText(val),
-      onError: (doc) => doc.createParagraph('There was a problem rendering this content').style('aside'),
-      separator: doc => renderHorizontalRule(doc)
+      onError: (doc) => doc.createParagraph('There was a problem rendering this content').style('aside')
     });
   };
 
@@ -54,13 +53,16 @@ export default async function ntsDocxRenderer(opts) {
       document.createParagraph('Non-technical Summary').heading1();
     }
     document.createParagraph(application.title || version.title || 'Untitled project').heading1();
-    document.createParagraph('\n').style('body');
+    document.createParagraph('Overview').heading2();
   };
 
-  const renderLabel = (text) => renderLabelShared(document, text);
+  const renderLabel = (text) => {
+    if (!text) { return; }
+    document.createParagraph(text).heading3();
+  };
 
   const renderText = (value) => {
-    return renderTextShared(document, value, { separator: doc => renderHorizontalRule(doc) });
+    return renderTextShared(document, value);
   };
 
   const renderDuration = () => {
@@ -72,7 +74,6 @@ export default async function ntsDocxRenderer(opts) {
     if (months > 12) { months = 0; }
     if (years >= 5 || (!months && !years)) { years = 5; months = 0; }
     document.createParagraph(`${years} years ${months} months`).style('body');
-    renderHorizontalRule(document);
   };
 
   const renderKeywords = () => {
@@ -85,16 +86,14 @@ export default async function ntsDocxRenderer(opts) {
     } else {
       document.createParagraph(list.join(', ')).style('body');
     }
-    renderHorizontalRule(document);
   };
 
   const renderPurpose = (schemaVersion) => {
     if (version['training-licence']) {
       const p = new Paragraph();
-      p.style('body').bullet();
+      p.style('body');
       p.addRun(new TextRun('(f) Higher education and training'));
       document.addParagraph(p);
-      renderHorizontalRule(document);
       return;
     }
     const purposeOptions = schemaVersion === 0
@@ -106,11 +105,10 @@ export default async function ntsDocxRenderer(opts) {
     selected.forEach(val => {
       const opt = purposeOptions.find(o => o.value === val);
       const p = new Paragraph();
-      p.style('body').bullet();
+      p.style('body');
       p.addRun(new TextRun(opt ? opt.label : String(val)));
       document.addParagraph(p);
     });
-    renderHorizontalRule(document);
   };
 
   const speciesLabels = flatten(values(SPECIES));
@@ -120,6 +118,23 @@ export default async function ntsDocxRenderer(opts) {
   };
   const getSpeciesCount = (speciesKey) => version[`reduction-quantities-${speciesKey}`] || 'No answer provided';
 
+  const renderFateOfAnimals = (fields) => {
+    fields.forEach(field => {
+      let fateOfAnimal = NTSFateOfAnimalFields()[field];
+      if (!fateOfAnimal) {
+        if (field === 'used-in-other-projects') {
+          fateOfAnimal = NTSFateOfAnimalFields()['continued-use-2'];
+        } else {
+          return;
+        }
+      }
+      const p = new Paragraph();
+      p.style('body');
+      p.bullet(0);
+      p.addRun(new TextRun(fateOfAnimal.label));
+      document.addParagraph(p);
+    });
+  }
   const renderSpeciesCount = () => {
     const speciesUsed = concat([], version.species, version['species-other']).filter(Boolean);
     if (!speciesUsed.length) { return renderText(null); }
@@ -138,7 +153,6 @@ export default async function ntsDocxRenderer(opts) {
       }
     };
     speciesUsed.forEach(s => renderItem(s));
-    renderHorizontalRule(document);
   };
 
   const lifeStageOptions = schemaV1().protocols.subsections.protocols.sections.animals.fields.find(f => f.name === 'life-stages').options;
@@ -168,18 +182,20 @@ export default async function ntsDocxRenderer(opts) {
   };
 
   const renderSpeciesTable = () => {
+
+    document.createParagraph('Animal types and life stages').heading3();
+
     const speciesDetails = groupSpeciesDetails();
     if (!speciesDetails.length) { return renderText(null); }
-    const table = new Table({ rows: speciesDetails.length + 1, columns: 2, columnWidths: ['8000', '8000'] });
+    const table = new Table({ rows: speciesDetails.length + 1, columns: 2, columnWidths: ['4680', '4680'] });
     // headers
-    table.getCell(0, 0).addParagraph(new Paragraph('Animal types'));
-    table.getCell(0, 1).addParagraph(new Paragraph('Life stages'));
+    table.getCell(0, 0).addParagraph(new Paragraph('Animal types').style('Bold'));
+    table.getCell(0, 1).addParagraph(new Paragraph('Life stages').style('Bold'));
     speciesDetails.forEach((s, i) => {
-      table.getCell(i + 1, 0).addParagraph(new Paragraph(s.name));
-      table.getCell(i + 1, 1).addParagraph(new Paragraph((s.lifeStages || []).join(', ')));
+      table.getCell(i + 1, 0).addParagraph(new Paragraph(s.name).style('body'));
+      table.getCell(i + 1, 1).addParagraph(new Paragraph((s.lifeStages || []).join(', ')).style('body'));
     });
     document.addTable(table);
-    renderHorizontalRule(document);
   };
 
   const renderRetrospectiveDecision = () => {
@@ -198,7 +214,7 @@ export default async function ntsDocxRenderer(opts) {
 
     if (isRequired && raReasons && activeReasons.length) {
       document.createParagraph('Reason for retrospective assessment').heading4();
-      document.createParagraph('This may include reasons from previous versions of this licence.').style('aside');
+      document.createParagraph('This may include reasons from previous versions of this licence.').style('body');
       activeReasons.forEach(reason => {
         const p = new Paragraph();
         p.style('body').bullet();
@@ -206,7 +222,6 @@ export default async function ntsDocxRenderer(opts) {
         document.addParagraph(p);
       });
     }
-    renderHorizontalRule(document);
   };
 
   const renderRetrospectivePlaceholder = (field) => {
@@ -221,13 +236,12 @@ export default async function ntsDocxRenderer(opts) {
       ? formatDate(application.raDate, DATE_FORMAT.long): null;
 
     const content = Mustache.render(field.content, { raDate, hasRaDate });
-    renderMarkdown(content, 'aside');
-    renderHorizontalRule(document);
+    renderMarkdown(content, 'body');
   };
 
   const renderRaSummary = (fieldNames) => {
     if (!ra) { return; }
-    document.createParagraph('Retrospective assessment').heading2();
+    document.createParagraph('Retrospective assessment').heading3().spacing({ before: 240 });
     if (application.raGrantedDate) {
       document.createParagraph(`Published: ${application.raGrantedDate}`).style('body');
     }
@@ -245,9 +259,9 @@ export default async function ntsDocxRenderer(opts) {
   const renderField = (field, schemaVersion) => {
     if (field.heading) {
       if (field.heading === 'Retrospective assessment') {
-        document.createParagraph(field.heading).heading2();
+        document.createParagraph(field.heading).heading3().spacing({ before: 240 });
       } else {
-        document.createParagraph(field.heading).heading3();
+        document.createParagraph(field.heading).style('Bold');
       }
     }
     if (field.label && field.name !== 'species') {
@@ -262,7 +276,7 @@ export default async function ntsDocxRenderer(opts) {
       case 'SpeciesCount':
         return renderSpeciesCount();
       case 'FateOfAnimals':
-        return renderText(get(version, 'fate-of-animals'));
+        return renderFateOfAnimals(get(version, 'fate-of-animals'));
       case 'Purpose':
         return renderPurpose(schemaVersion);
       case 'Keywords':
@@ -290,7 +304,7 @@ export default async function ntsDocxRenderer(opts) {
       document.createParagraph(section.title).heading2();
     }
     if (section.subtitle) {
-      document.createParagraph(section.subtitle).heading3();
+      document.createParagraph(section.subtitle).style('Bold');
     }
     const fields = (section.fields || []).filter(f => isTrainingLicence ? f.training !== false : f.training !== true);
     fields.forEach(field => renderField(field, schemaVersion));
@@ -306,7 +320,7 @@ export default async function ntsDocxRenderer(opts) {
     });
   };
 
-  addStyles(document);
+  addStyles(document, true);
   renderDocument();
   if (!isBulk) {
     addPageNumbers(document);

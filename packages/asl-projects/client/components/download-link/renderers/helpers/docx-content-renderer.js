@@ -50,19 +50,27 @@ const appendTextWithLineBreaks = (paragraph, rawText, { applyTextFilter, marks =
     });
 };
 
-const renderMarkdown = (doc, markdown, style = 'body', { applyTextFilter } = {}) => {
+const renderMarkdown = (doc, markdown, style = 'body', { applyTextFilter } = {}, nts) => {
     const tree = unified().use(remarkParse).parse(markdown || '');
 
     (tree.children || []).forEach(node => {
         switch (node.type) {
             case 'heading': {
                 const text = node.children.find(c => c.type === 'text')?.value || '';
-                doc.createParagraph(applyFilter(text, applyTextFilter)).style(`Heading${node.depth}`);
+                if (nts) {
+                  doc.createParagraph(applyFilter(text, applyTextFilter)).style('Bold');
+                } else {
+                  doc.createParagraph(applyFilter(text, applyTextFilter)).style(`Heading${node.depth}`);
+                }
                 break;
             }
             case 'paragraph': {
                 const text = node.children.find(c => c.type === 'text')?.value || '';
-                doc.createParagraph(applyFilter(text, applyTextFilter)).style(style);
+                if (nts) {
+                  doc.createParagraph(applyFilter(text, applyTextFilter)).style('Bold');
+                } else {
+                  doc.createParagraph(applyFilter(text, applyTextFilter)).style(style);
+                }
                 break;
             }
             case 'list': {

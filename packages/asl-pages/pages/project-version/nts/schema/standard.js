@@ -30,8 +30,7 @@ module.exports = {
   },
   objectives: {
     title: 'Objectives and benefits',
-    subtitle: `Description of the projects objectives, for example the scientific unknowns or clinical or scientific needs
-it's addressing.`,
+    subtitle: `Description of the projects objectives, for example the scientific unknowns or clinical or scientific needs it's addressing.`,
     fields: [
       {
         name: 'project-aim',
@@ -49,9 +48,9 @@ The PPL holder will be required to disclose:
 * Did the project achieve its aims and if not, why not?`
       },
       {
-        heading: `Potential benefits likely to derive from the project, for example how science might be advanced or how humans,
-animals or the environment might benefit - these could be short-term benefits within the duration of the project
-or long-term benefits that accrue after the project has finished.`
+        heading: 'Potential benefits likely to derive from the project, for example how science might be advanced or how humans, ' +
+          'animals or the environment might benefit - these could be short-term benefits within the duration of the project ' +
+          'or long-term benefits that accrue after the project has finished.'
       },
       {
         name: 'project-importance',
