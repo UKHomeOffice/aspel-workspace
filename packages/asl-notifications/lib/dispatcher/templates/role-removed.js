@@ -1,4 +1,4 @@
-const value = `{{ name }} has been removed from the {{ roleName }} role.
+const value = `{{ name }} has been removed from the {{ roleName }} role. This is a PEL amendment.
 
 {{ identifier }}: {{ identifierValue }}
 
