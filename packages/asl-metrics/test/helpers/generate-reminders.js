@@ -1,5 +1,5 @@
 const Knex = require('knex');
-const { v4: uuid } = require('uuid');
+const { randomUUID } = require('crypto');
 const settings = require('../../config');
 
 const randomDate = () => {
@@ -11,7 +11,7 @@ const randomDate = () => {
 
 const defaultProps = () => {
   return {
-    id: uuid(),
+    id: randomUUID(),
     deadline: randomDate(),
     status: 'active'
   };

@@ -135,7 +135,7 @@ function extractPurposes(data) {
   }
 
   if (data['training-licence']) {
-    return 'f';
+    return ['f'];
   }
 
   return [
