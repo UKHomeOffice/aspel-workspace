@@ -20,7 +20,7 @@ const schema = {
 };
 
 const formatters = {
-  licenceNumber: {
+  projectId: {
     format: (licenceNumber, project) => formatProjectLicenceNumber(licenceNumber, project.establishmentId, project.id)
   },
   expiryDate: { format: (expiry) => formatDate(expiry) },
