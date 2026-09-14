@@ -1,4 +1,4 @@
-const value = `The request to remove {{ name }} from the role of {{ roleName }} has been returned.
+const value = `The request to remove {{ name }} from the {{ roleName }} role has been returned.
 
 {{ identifier }}: {{ identifierValue }}
 

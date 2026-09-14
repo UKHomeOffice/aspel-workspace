@@ -7,7 +7,8 @@ import {
 } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import isEmpty from 'lodash/isEmpty';
-import { NamedPersonTaskDetails } from '../components/named-person-task-details';
+import { SkillsAndExperience } from '../../../../common/components/role-change-summary';
+import { NamedPersonTaskDetails, TrainingRecord } from '../components/named-person-task-details';
 import { useFeatureFlag, FEATURE_FLAG_NAMED_PERSON_MVP } from '@asl/service/ui/feature-flag';
 
 const { versions } = require('@ukhomeoffice/asl-constants');
@@ -23,6 +24,7 @@ export default function Role({ task, values, schema }) {
   const isNamedPersonVersion = version === versions.role.NAMED_PERSON_VERSION_ID;
   const isNamedPersonCreate = task.data.action === 'create';
   const isHolcRole = roleType === 'holc';
+  const isPelHOrNprcRole = ['pelh', 'nprc'].includes(roleType);
   const namedPersonFeatureFlag = useFeatureFlag(FEATURE_FLAG_NAMED_PERSON_MVP);
   const roleHeadingSnippet = (namedPersonFeatureFlag || isNamedPersonVersion) && isNamedPersonCreate && !isHolcRole
     ? 'sticky-nav.roleApplication'
@@ -63,29 +65,39 @@ export default function Role({ task, values, schema }) {
     ),
 
     (
-      task.data.action === 'replace' && (
-        <StickyNavAnchor id="role" key="role">
-          <h2><Snippet>{roleHeadingSnippet}</Snippet></h2>
-          <table className="govuk-table">
-            <thead>
-              <tr>
-                <th></th>
-                <th><Snippet>diff.current</Snippet></th>
-                <th><Snippet>diff.proposed</Snippet></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  PELH or NRPC
-                </td>
-                <td>{task.data.data.replaceProfile.firstName} {task.data.data.replaceProfile.lastName}</td>
-                <td><span className="highlight">{`${profile.firstName} ${profile.lastName}`}</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </StickyNavAnchor>
-      )
+      task.data.action === 'replace' && [
+        (
+          <StickyNavAnchor id="role" key="role">
+            <h2><Snippet>{roleHeadingSnippet}</Snippet></h2>
+            <table className="govuk-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th><Snippet>diff.current</Snippet></th>
+                  <th><Snippet>diff.proposed</Snippet></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    PELH or NRPC
+                  </td>
+                  <td>{task.data.data.replaceProfile.firstName} {task.data.data.replaceProfile.lastName}</td>
+                  <td><span className="highlight">{`${profile.firstName} ${profile.lastName}`}</span></td>
+                </tr>
+              </tbody>
+            </table>
+            {isPelHOrNprcRole && (
+              <SkillsAndExperience roleType={roleType} profile={profile} values={taskData} showHeading />
+            )}
+            {isPelHOrNprcRole && (
+              <div className="role-training-record">
+                <TrainingRecord profile={profile} />
+              </div>
+            )}
+          </StickyNavAnchor>
+        )
+      ]
     ),
 
     (
