@@ -51,6 +51,23 @@ describe('<DateRangeInput />', () => {
         expect(screen.getByText('For example 12 12 2020')).toBeInTheDocument();
     });
 
+    test('accepts configurable field names and date labels', () => {
+        render(
+            <DateRangeInput
+                fieldNames={{ from: 'startDate', to: 'endDate' }}
+                fields={{
+                    from: { label: 'Date granted from' },
+                    to: { label: 'Date granted to' }
+                }}
+            />
+        );
+
+        expect(screen.getByRole('group', { name: 'Date granted from' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Date granted to' })).toBeInTheDocument();
+        expect(screen.getByLabelText('Day', { selector: '#startDate-day' })).toBeInTheDocument();
+        expect(screen.getByLabelText('Day', { selector: '#endDate-day' })).toBeInTheDocument();
+    });
+
     test('passes date errors through to each wrapped DateInput', () => {
         const { container } = render(
             <DateRangeInput

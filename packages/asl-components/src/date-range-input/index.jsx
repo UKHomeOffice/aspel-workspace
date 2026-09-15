@@ -4,23 +4,25 @@ import DateInput from '../date-input';
 import DateErrorMessage from '../date-input/error-message';
 
 const ASPEL_DATA_START_DATE = '2019-07-31';
-const DATE_FROM_FIELD_NAME = 'date-from';
-const DATE_TO_FIELD_NAME = 'date-to';
 const ASPEL_DATA_START = moment(ASPEL_DATA_START_DATE, 'YYYY-MM-DD');
 
+const defaultFieldNames = {
+    from: 'date-from',
+    to: 'date-to'
+};
+
 const defaultFields = {
-    [DATE_FROM_FIELD_NAME]: {
+    from: {
         label: 'Date from',
         hint: 'For example 01 01 2020'
     },
-    [DATE_TO_FIELD_NAME]: {
+    to: {
         label: 'Date to',
         hint: 'For example 12 12 2020'
     }
 };
 
 const emptyValues = {};
-const RANGE_FIELDS = [DATE_FROM_FIELD_NAME, DATE_TO_FIELD_NAME];
 
 function getDateLabel(field) {
     return field.dateLabel || field.label;
@@ -38,7 +40,7 @@ function parseDate(value) {
     return moment(value, ['YYYY-MM-DD', 'YYYY-M-D'], true);
 }
 
-function getBoundaryErrorCode(fieldName, value) {
+function getBoundaryErrorCode(fieldName, value, fromFieldName) {
     const date = parseDate(value);
 
     if (!date.isValid()) {
@@ -49,7 +51,7 @@ function getBoundaryErrorCode(fieldName, value) {
         return 'dateIsSameOrBefore';
     }
 
-    if (fieldName === DATE_FROM_FIELD_NAME && date.isBefore(ASPEL_DATA_START, 'day')) {
+    if (fieldName === fromFieldName && date.isBefore(ASPEL_DATA_START, 'day')) {
         return 'aspelDataStartDate';
     }
 
@@ -70,12 +72,12 @@ function getBoundaryError({ field, fieldName, value, errorCode }) {
     />;
 }
 
-function getRangeError({ field, fieldName, value, range, errors, changedFieldName, hasBoundaryError }) {
-    const targetFieldName = changedFieldName === DATE_TO_FIELD_NAME ? DATE_TO_FIELD_NAME : DATE_FROM_FIELD_NAME;
-    const fromValue = range[DATE_FROM_FIELD_NAME] ?? '';
-    const toValue = range[DATE_TO_FIELD_NAME] ?? '';
+function getRangeError({ field, fieldName, value, range, errors, changedFieldName, hasBoundaryError, fromFieldName, toFieldName }) {
+    const targetFieldName = changedFieldName === toFieldName ? toFieldName : fromFieldName;
+    const fromValue = range[fromFieldName] ?? '';
+    const toValue = range[toFieldName] ?? '';
 
-    if (fieldName !== targetFieldName || errors[DATE_FROM_FIELD_NAME] || errors[DATE_TO_FIELD_NAME]) {
+    if (fieldName !== targetFieldName || errors[fromFieldName] || errors[toFieldName]) {
         return null;
     }
 
@@ -90,8 +92,8 @@ function getRangeError({ field, fieldName, value, range, errors, changedFieldNam
         return null;
     }
 
-    const errorCode = targetFieldName === DATE_TO_FIELD_NAME ? 'dateIsAfter' : 'dateIsBefore';
-    const constraintValue = targetFieldName === DATE_TO_FIELD_NAME ? fromValue : toValue;
+    const errorCode = targetFieldName === toFieldName ? 'dateIsAfter' : 'dateIsBefore';
+    const constraintValue = targetFieldName === toFieldName ? fromValue : toValue;
 
     return <DateErrorMessage name={fieldName} value={value} errorCode={errorCode} validate={[{ [errorCode]: constraintValue }]} dateLabel={getDateLabel(field)} />;
 }
@@ -101,12 +103,20 @@ export default function DateRangeInput({
     values,
     errors = {},
     validate = {},
-    onChange
+    onChange,
+    fieldNames = defaultFieldNames,
+    fields = {}
 }) {
+    const fromFieldName = fieldNames.from || defaultFieldNames.from;
+    const toFieldName = fieldNames.to || defaultFieldNames.to;
+    const rangeFields = [
+        { name: fromFieldName, key: 'from' },
+        { name: toFieldName, key: 'to' }
+    ];
     const [range, setRange] = useState(() => values || emptyValues);
     const [changedFieldName, setChangedFieldName] = useState(null);
-    const fromBoundaryErrorCode = getBoundaryErrorCode(DATE_FROM_FIELD_NAME, range[DATE_FROM_FIELD_NAME] ?? '');
-    const toBoundaryErrorCode = getBoundaryErrorCode(DATE_TO_FIELD_NAME, range[DATE_TO_FIELD_NAME] ?? '');
+    const fromBoundaryErrorCode = getBoundaryErrorCode(fromFieldName, range[fromFieldName] ?? '', fromFieldName);
+    const toBoundaryErrorCode = getBoundaryErrorCode(toFieldName, range[toFieldName] ?? '', fromFieldName);
     const hasBoundaryError = Boolean(fromBoundaryErrorCode || toBoundaryErrorCode);
 
     function update(fieldName, value) {
@@ -131,8 +141,11 @@ export default function DateRangeInput({
                 )}
                 <div className="date-range-input__fields">
                     {
-                        RANGE_FIELDS.map(fieldName => {
-                            const field = defaultFields[fieldName];
+                        rangeFields.map(({ name: fieldName, key }) => {
+                            const field = {
+                                ...defaultFields[key],
+                                ...(fields[key] || fields[fieldName] || {})
+                            };
                             const value = range[fieldName] ?? '';
                             const error = getDateError({
                                 name: fieldName,
@@ -144,7 +157,7 @@ export default function DateRangeInput({
                                 field,
                                 fieldName,
                                 value,
-                                errorCode: fieldName === DATE_FROM_FIELD_NAME ? fromBoundaryErrorCode : toBoundaryErrorCode
+                                errorCode: fieldName === fromFieldName ? fromBoundaryErrorCode : toBoundaryErrorCode
                             }) || getRangeError({
                                 field,
                                 fieldName,
@@ -152,7 +165,9 @@ export default function DateRangeInput({
                                 range,
                                 errors,
                                 changedFieldName,
-                                hasBoundaryError
+                                hasBoundaryError,
+                                fromFieldName,
+                                toFieldName
                             });
                             return (
                                 <div className="date-range-input__field" key={fieldName}>

@@ -24,6 +24,22 @@ const isValidDate = (dateStr) => {
   return !isNaN(date.getTime()) && date.toISOString().slice(0, 10) === dateStr;
 };
 
+const getDateQueryValue = (query, name) => {
+  if (query[name]) {
+    return query[name];
+  }
+
+  const day = query[`${name}-day`];
+  const month = query[`${name}-month`];
+  const year = query[`${name}-year`];
+
+  if (!day && !month && !year) {
+    return undefined;
+  }
+
+  return `${year || ''}-${String(month || '').padStart(2, '0')}-${String(day || '').padStart(2, '0')}`;
+};
+
 module.exports = settings => {
   const router = Router({ mergeParams: true });
 
@@ -32,7 +48,9 @@ module.exports = settings => {
       if (!req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
         throw new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.');
       }
-      const { startDate, endDate, ra } = req.query;
+      const startDate = getDateQueryValue(req.query, 'startDate');
+      const endDate = getDateQueryValue(req.query, 'endDate');
+      const { ra } = req.query;
 
       // Validate startDate
       if (!startDate) {

@@ -25,6 +25,27 @@ html, body {
   }
 }
 
+.nts-download-form {
+  margin-bottom: $govuk-gutter;
+
+  form > fieldset:nth-of-type(2) .govuk-fieldset__legend {
+    margin-bottom: $govuk-gutter-half;
+  }
+
+  form > fieldset:nth-of-type(2) .govuk-fieldset__heading {
+    font-size: 24px;
+    line-height: 1.25;
+  }
+
+  form > fieldset:nth-of-type(2) .govuk-radios__label {
+    font-weight: normal;
+  }
+
+  .govuk-radios__item {
+    margin-bottom: $govuk-gutter-half;
+  }
+}
+
 @media (min-width: 1260px) {
   .govuk-width-container,
   .wrapper-header,

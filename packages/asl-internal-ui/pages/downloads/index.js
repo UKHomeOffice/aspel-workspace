@@ -11,6 +11,7 @@ module.exports = settings => {
   app.get('/', (req, res, next) => {
     req.api('/reports/task-metrics')
       .then(response => {
+        res.locals.static.query = req.query;
         res.locals.static.reports = response.json.data.map(report => {
           const end = moment(report.meta.end);
           return { id: report.id, year: end.format('YYYY'), month: end.format('MMMM') };
