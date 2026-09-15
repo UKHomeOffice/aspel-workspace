@@ -28,6 +28,16 @@ html, body {
 .nts-download-form {
   margin-bottom: $govuk-gutter;
 
+  .date-range-input__fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $govuk-gutter $govuk-gutter * 2;
+  }
+
+  .date-range-input__field {
+    min-width: 210px;
+  }
+
   form > fieldset:nth-of-type(2) .govuk-fieldset__legend {
     margin-bottom: $govuk-gutter-half;
   }

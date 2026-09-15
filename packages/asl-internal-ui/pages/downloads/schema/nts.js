@@ -1,6 +1,8 @@
 const dates = {
   dateRange: {
     inputType: 'inputDateRange',
+    label: 'Filter by date granted',
+    hint: 'You can only download data from 31 July 2019, when ASPeL came into use',
     fieldNames: {
       from: 'startDate',
       to: 'endDate'

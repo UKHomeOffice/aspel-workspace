@@ -100,6 +100,7 @@ function getRangeError({ field, fieldName, value, range, errors, changedFieldNam
 
 export default function DateRangeInput({
     label,
+    hint,
     values,
     errors = {},
     validate = {},
@@ -139,6 +140,7 @@ export default function DateRangeInput({
                         <h2 className="govuk-fieldset__heading">{label}</h2>
                     </legend>
                 )}
+                {hint}
                 <div className="date-range-input__fields">
                     {
                         rangeFields.map(({ name: fieldName, key }) => {
