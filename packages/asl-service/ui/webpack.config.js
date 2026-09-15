@@ -5,10 +5,21 @@ const path = require('path');
 const glob = require('glob');
 const mkdir = require('mkdirp');
 const TerserPlugin = require('terser-webpack-plugin');
-const { ProvidePlugin } = require('webpack');
+const { IgnorePlugin, ProvidePlugin } = require('webpack');
 const babelrc = require('../.babelrc.json');
 
-const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development';
+const webpackBabelrc = {
+  ...babelrc,
+  presets: babelrc.presets.map(preset => {
+    if (Array.isArray(preset) && preset[0] === '@babel/preset-env') {
+      return [preset[0], { ...preset[1], modules: false }];
+    }
+    return preset;
+  })
+};
+
+const isProduction = process.env.NODE_ENV !== 'local';
+const mode = isProduction ? 'production' : 'development';
 
 const TEMPLATE_PATH = path.resolve(__dirname, './assets/js/template.jsx');
 const template = fs.readFileSync(TEMPLATE_PATH).toString();
@@ -60,11 +71,17 @@ module.exports = dirs => {
   return {
     entry,
     output: {
-      filename: '[name]/bundle.js'
+      filename: '[name]/bundle.js',
+      chunkFilename: 'chunks/[name].[contenthash:8].js',
+      publicPath: '/public/js/'
     },
     mode,
-    devtool: mode === 'development' && 'inline-source-map',
-    target: 'web',
+    devtool: isProduction ? false : 'eval-cheap-module-source-map',
+    target: ['web', 'es2020'],
+    cache: {
+      type: 'filesystem',
+      allowCollectingMemory: true
+    },
     resolve: {
       extensions: ['.js', '.jsx'],
       fallback: {
@@ -86,12 +103,16 @@ module.exports = dirs => {
             !path.match(/node_modules\/@ukhomeoffice/),
           use: {
             loader: 'babel-loader',
-            options: babelrc
+            options: webpackBabelrc
           }
         }
       ]
     },
     plugins: [
+      new IgnorePlugin({
+        resourceRegExp: /^\.\/locale$/,
+        contextRegExp: /moment$/
+      }),
       // fix "process is not defined" error:
       // (do "npm install process" before running the build)
       new ProvidePlugin({
@@ -100,9 +121,23 @@ module.exports = dirs => {
       })
     ],
     optimization: {
+      minimize: isProduction,
+      moduleIds: isProduction ? 'deterministic' : 'named',
+      chunkIds: isProduction ? 'deterministic' : 'named',
       minimizer: [
         new TerserPlugin({
-          parallel: false
+          parallel: true,
+          extractComments: false,
+          terserOptions: {
+            ecma: 2020,
+            compress: {
+              ecma: 2020,
+              passes: 2
+            },
+            format: {
+              comments: false
+            }
+          }
         })
       ],
       splitChunks: {
@@ -110,7 +145,8 @@ module.exports = dirs => {
           commons: {
             name: 'common',
             chunks: 'initial',
-            minChunks: Math.ceil(Object.keys(entry).length / 2)
+            minChunks: Math.ceil(Object.keys(entry).length / 2),
+            reuseExistingChunk: true
           }
         }
       }
