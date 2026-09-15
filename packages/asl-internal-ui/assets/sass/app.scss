@@ -28,26 +28,28 @@ html, body {
 .nts-download-form {
   margin-bottom: $govuk-gutter;
 
+  .date-range-input > .govuk-fieldset > .govuk-hint {
+    margin-bottom: $govuk-gutter;
+  }
+
   .date-range-input__fields {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $govuk-gutter $govuk-gutter * 2;
+    margin-top: $govuk-gutter-half;
   }
 
-  .date-range-input__field {
-    min-width: 210px;
+  .nts-ra-field {
+    margin-top: $govuk-gutter-half;
   }
 
-  form > fieldset:nth-of-type(2) .govuk-fieldset__legend {
+  .nts-ra-field .govuk-fieldset__legend {
     margin-bottom: $govuk-gutter-half;
   }
 
-  form > fieldset:nth-of-type(2) .govuk-fieldset__heading {
-    font-size: 24px;
-    line-height: 1.25;
+  .nts-ra-field .govuk-fieldset__heading {
+    font-size: 19px;
+    line-height: 1.31579;
   }
 
-  form > fieldset:nth-of-type(2) .govuk-radios__label {
+  .nts-ra-field .govuk-radios__label {
     font-weight: normal;
   }
 

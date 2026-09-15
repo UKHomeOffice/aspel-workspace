@@ -23,8 +23,8 @@ const dates = {
 const ra = {
   ra: {
     inputType: 'radioGroup',
+    className: 'nts-ra-field',
     label: 'Which type of non-technical summary do you want to download? (docx file)',
-    labelAsLegend: true,
     options: [
       {
         label: 'Projects requiring a retrospective assessment (RA)',
