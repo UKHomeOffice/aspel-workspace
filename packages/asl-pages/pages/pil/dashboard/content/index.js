@@ -9,7 +9,7 @@ module.exports = merge({}, baseContent, {
     title: 'Apply for personal licence - Categories A, B, C, D and F',
     titleAmend: 'Amend personal licence - Categories A, B, C, D, and F',
     pageTitle: 'Apply for personal licence',
-    pageTitleAmend: 'Amend personal licence',
+    pageTitleAmend: 'Amend personal licence - {{model.licenceNumber}}',
     summary: 'Please complete all of the following sections.',
     details: {
       title: 'Applicant details'

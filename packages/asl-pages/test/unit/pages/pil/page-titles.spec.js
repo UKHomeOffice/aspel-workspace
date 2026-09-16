@@ -1,4 +1,5 @@
 const { get } = require('lodash');
+const { render } = require('mustache');
 
 /**
  * ASL-5129 / WCAG 2.4.2 Page Titled.
@@ -33,6 +34,13 @@ describe('PIL journey page titles', () => {
     const duplicates = titles.filter((title, i) => titles.indexOf(title) !== i);
 
     expect(duplicates).toEqual([]);
+  });
+
+  it('renders the amended update title with the licence number', () => {
+    const content = require('../../../../pages/pil/dashboard/content');
+
+    expect(render(content.pil.pageTitleAmend, { model: { licenceNumber: 'PIL-1234' } }))
+      .toBe('Amend personal licence - PIL-1234');
   });
 
   it('does not leak a parent page title through content merges', () => {
