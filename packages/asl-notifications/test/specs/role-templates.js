@@ -32,7 +32,7 @@ Establishment name: University of Croydon`
       taskUrl: 'http://localhost:8080/tasks/task-id?notification=task-id',
       statusLine: ' This is a PEL amendment.'
     },
-    expected: `Named Person has been removed from the role of Home Office liaison contact. This is a PEL amendment.
+    expected: `Named Person has been removed from the Home Office liaison contact role. This is a PEL amendment.
 
 Establishment name: University of Croydon
 
@@ -60,7 +60,7 @@ You can see more details about this task by visiting http://localhost:8080/tasks
       identifierValue: 'University of Croydon',
       taskUrl: 'http://localhost:8080/tasks/task-id?notification=task-id'
     },
-    expected: `The request to remove Named Person from the role of Home Office liaison contact has been returned.
+    expected: `The request to remove Named Person from the Home Office liaison contact role has been returned.
 
 Establishment name: University of Croydon
 
@@ -74,7 +74,7 @@ You can see more details about this task by visiting http://localhost:8080/tasks
       identifierValue: 'University of Croydon',
       statusLine: ' This is a PEL amendment.'
     },
-    expected: `Named Person has been removed from the role of Home Office liaison contact. This is a PEL amendment.
+    expected: `Named Person has been removed from the Home Office liaison contact role. This is a PEL amendment.
 
 Establishment name: University of Croydon`
   }

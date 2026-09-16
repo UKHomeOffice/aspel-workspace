@@ -8,6 +8,7 @@ module.exports = merge({}, skillsAndExperienceContent, {
     applicant: 'Applicant',
     role: 'Amendment details',
     roleApplication: 'Role application details',
+    training: 'Training record',
     conditions: 'Establishment conditions'
   },
   mandatoryTrainingRequirements: 'NACWO mandatory training requirements',

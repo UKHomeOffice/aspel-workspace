@@ -135,14 +135,14 @@ export const SkillsAndExperience = ({ roleType, profile, values = {}, showHeadin
 
       {!SHARED_TRAINING_INTRO_ROLE_TYPES.includes(roleType) && contentForRole.desc && (
         <div>
-          <dt><Snippet roleType={namedRoles[roleType]} profile={profile}>{`fields.${contentKey}.desc`}</Snippet></dt>
+          <dt><strong><Snippet roleType={namedRoles[roleType]} profile={profile}>{`fields.${contentKey}.desc`}</Snippet></strong></dt>
           <dd />
         </div>
       )}
 
       {fieldKeys.map(fieldKey => (
         <div key={fieldKey}>
-          <dt><Snippet roleType={namedRoles[roleType]} profile={profile}>{`fields.${contentKey}.${fieldKey}.label`}</Snippet></dt>
+          <dt><strong><Snippet roleType={namedRoles[roleType]} profile={profile}>{`fields.${contentKey}.${fieldKey}.label`}</Snippet></strong></dt>
           <dd>{values[fieldKey]}</dd>
         </div>
       ))}
