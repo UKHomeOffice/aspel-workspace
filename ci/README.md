@@ -7,8 +7,7 @@ This document contains a developer guide to the continuous integration process f
 1. [Introduction](#introduction)
 2. [Pipeline](#pipeline)
 3. [Adding Modules](#adding-modules)
-4. [Optimisation Plan](#optimisation-plan)
-5. [Notes](#notes)
+4. [Notes](#notes)
 
 ## Introduction
 
@@ -143,10 +142,6 @@ BUILD_STAGES: asl asl-attachments <new-module> ...
 ⚠️ Important ⚠️
 
 The name of the build stage must match the corresponding key in the `versions.yml` file used for deployment. This is the key that `deployset` will fill in when it deploys the container manifest.
-
-## Optimisation Plan
-
-For a production-ready proposal covering the existing CI/CD architecture, performance bottlenecks, CVE governance, PR/main/nightly policy, and a phased rollout plan, see [ci-cd-optimization-and-policy-plan.md](./ci-cd-optimization-and-policy-plan.md).
 
 ## Notes
 
