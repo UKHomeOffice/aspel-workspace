@@ -60,7 +60,7 @@ describe('<TrainingSummary />', () => {
         expect(screen.getByText('Added on:').nextSibling).toHaveTextContent('-');
     });
 
-    test('does not render an added date for training certificates', () => {
+    test('Does not render an added date for training certificates', () => {
         renderSummary([
             {
                 id: 'cert-1',
