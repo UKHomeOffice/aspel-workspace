@@ -22,8 +22,11 @@ Ensure you have the consent of the inspector who assessed this application.`,
   errors: {
     upload: {
       fileRequired: 'Choose a replacement HBA file',
+      invalidFileContent: 'The selected file contents do not match a .doc, .docx or .pdf file',
+      malwareDetected: 'The selected file could not be uploaded because it appears to contain malicious content',
       maxSize: 'The harm benefit analysis file should be smaller than 15MB',
-      ext: 'The selected file must be a .doc, .docx or .pdf'
+      ext: 'The selected file must be a .doc, .docx or .pdf',
+      unsupportedFileType: 'The selected file must be a .doc, .docx or .pdf'
     }
   }
 });
