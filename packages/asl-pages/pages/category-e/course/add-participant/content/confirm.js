@@ -14,7 +14,9 @@ module.exports = merge(
     courseDetailsSummary: 'Course details',
     buttons: {
       change: 'Change participant details',
-      submit: 'Send for endorsement',
+      submit:
+        '{{#canEndorseParticipant }}Confirm details{{/canEndorseParticipant}}' +
+        '{{^canEndorseParticipant }}Send for endorsement{{/canEndorseParticipant}}',
       cancel: 'Cancel'
     },
     notifications: {
