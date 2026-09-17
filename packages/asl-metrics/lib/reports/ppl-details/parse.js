@@ -42,7 +42,7 @@ const getHighestSeverity = project => {
     if (protocol.severity) {
       const protocolSeverity = protocol.severity.toLowerCase();
       if (severities.indexOf(protocolSeverity) > severities.indexOf(highestSeverity)) {
-        highestSeverity = protocolSeverity;
+        return protocolSeverity;
       }
     }
     return highestSeverity;

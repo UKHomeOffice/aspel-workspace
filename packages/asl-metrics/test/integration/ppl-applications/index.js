@@ -1,5 +1,4 @@
-const assert = require('assert');
-const { v4: uuid } = require('uuid');
+const { randomUUID } = require('crypto');
 const { flatten } = require('lodash');
 
 const db = require('../helpers/db');
@@ -7,22 +6,24 @@ const flow = require('../helpers/flow');
 const report = require('../../../lib/reports/ppl-applications');
 
 const ids = {
-  task: uuid(),
-  issueDateTask: uuid(),
-  active: uuid(),
-  issueDate: uuid()
+  task: randomUUID(),
+  issueDateTask: randomUUID(),
+  active: randomUUID(),
+  issueDate: randomUUID()
 };
 
 describe('PPL Applications Report', () => {
 
-  before(() => {
-    this.db = db();
-    return this.db.clean();
+  let testDb;
+
+  beforeAll(() => {
+    testDb = db();
+    return testDb.clean();
   });
 
-  before(() => {
+  beforeAll(() => {
     return Promise.resolve()
-      .then(() => this.db.flow('cases').insert([
+      .then(() => testDb.flow('cases').insert([
         {
           id: ids.task,
           status: 'resolved',
@@ -53,7 +54,7 @@ describe('PPL Applications Report', () => {
           created_at: '2020-01-12T12:00:00.000'
         }
       ]))
-      .then(() => this.db.flow('activity_log').insert([
+      .then(() => testDb.flow('activity_log').insert([
         {
           case_id: ids.issueDateTask,
           event_name: 'status:new:awaiting-endorsement',
@@ -102,10 +103,10 @@ describe('PPL Applications Report', () => {
           created_at: '2020-01-26T12:00:00.000'
         }
       ]))
-      .then(() => this.db.asl('establishments').insert({
+      .then(() => testDb.asl('establishments').insert({
         id: 100, name: 'Test Establishment', status: 'active'
       }))
-      .then(() => this.db.asl('projects').insert([
+      .then(() => testDb.asl('projects').insert([
         {
           id: ids.active,
           establishment_id: 100,
@@ -125,7 +126,7 @@ describe('PPL Applications Report', () => {
           created_at: '2020-01-01T12:00:00.000'
         }
       ]))
-      .then(() => this.db.asl('project_versions').insert([
+      .then(() => testDb.asl('project_versions').insert([
         {
           project_id: ids.active,
           data: {
@@ -137,58 +138,58 @@ describe('PPL Applications Report', () => {
       ]));
   });
 
-  after(() => {
-    return this.db.close();
+  afterAll(() => {
+    return testDb.close();
   });
 
   it('returns one row per complete project application', () => {
-    const { query, parse } = report({ db: this.db, flow });
+    const { query, parse } = report({ db: testDb, flow });
     return query()
       .then(result => result.map(parse))
       .then(result => Promise.all(result))
       .then(result => flatten(result))
       .then(result => {
-        assert.equal(result.length, 1);
+        expect(result.length).toBe(1);
       });
   });
 
   it('calculates timing of phases of application', () => {
-    const { query, parse } = report({ db: this.db, flow });
+    const { query, parse } = report({ db: testDb, flow });
     return query()
       .then(result => result.map(parse))
       .then(result => Promise.all(result))
       .then(result => flatten(result))
       .then(result => {
-        assert.equal(result[0].totalTime, 25);
-        assert.equal(result[0].timeDraftingPreSubmission, 10);
-        assert.equal(result[0].timeWithEstablishment, 15);
-        assert.equal(result[0].timeWithInspector, 5);
-        assert.equal(result[0].timeWithLicensing, 5);
-        assert.equal(result[0].timeWithASRU, 10);
-        assert.equal(result[0].timeWithASRUPercentage, '40%');
+        expect(result[0].totalTime).toBe(25);
+        expect(result[0].timeDraftingPreSubmission).toBe(10);
+        expect(result[0].timeWithEstablishment).toBe(15);
+        expect(result[0].timeWithInspector).toBe(5);
+        expect(result[0].timeWithLicensing).toBe(5);
+        expect(result[0].timeWithASRU).toBe(10);
+        expect(result[0].timeWithASRUPercentage).toBe('40%');
       });
   });
 
   it('ignores projects with issue dates pre-aspel', () => {
-    const { query, parse } = report({ db: this.db, flow });
+    const { query, parse } = report({ db: testDb, flow });
     return query()
       .then(result => result.map(parse))
       .then(result => Promise.all(result))
       .then(result => flatten(result))
       .then(result => {
-        assert.ok(result.every(row => row.title !== 'Changed issue date'));
+        expect(result.every(row => row.title !== 'Changed issue date')).toBe(true);
       });
   });
 
   it('includes deadline extension details from update activity', () => {
-    const { query, parse } = report({ db: this.db, flow });
+    const { query, parse } = report({ db: testDb, flow });
     return query()
       .then(result => result.map(parse))
       .then(result => Promise.all(result))
       .then(result => flatten(result))
       .then(result => {
-        assert.equal(result[0].wasExtended, 'Yes');
-        assert.equal(result[0].extendedReason, 'Complex application requires extension');
+        expect(result[0].wasExtended).toBe('Yes');
+        expect(result[0].extendedReason).toBe('Complex application requires extension');
       });
   });
 

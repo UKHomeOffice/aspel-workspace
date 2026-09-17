@@ -6,8 +6,7 @@ require('@babel/register')({
   ]
 });
 
-const assert = require('assert');
-const {v4: uuid} = require('uuid');
+const { randomUUID } = require('crypto');
 
 const dbProvider = require('../helpers/db');
 const report = require('../../../lib/reports/ppl-conditions');
@@ -50,12 +49,12 @@ async function insertProject(
 ) {
   const project = {
     ...projectDefaults,
-    id: uuid(undefined, undefined, undefined),
+    id: randomUUID(),
     ...projectOverrides
   };
 
   const projectVersion = {
-    id: uuid(undefined, undefined, undefined),
+    id: randomUUID(),
     project_id: project.id,
     status: 'granted',
     created_at: '2024-10-01T12:00:00.000',
@@ -80,7 +79,7 @@ async function runReport(db) {
 
 function protocolWithConditions(title, conditions) {
   return {
-    id: uuid(undefined, undefined, undefined),
+    id: randomUUID(),
     title,
     conditions
   };
@@ -89,13 +88,13 @@ function protocolWithConditions(title, conditions) {
 describe('PPL Conditions Report', () => {
   let db;
 
-  before(async () => {
+  beforeAll(async () => {
     db = dbProvider();
     await db.clean();
     await insertTestEstablishment(db.asl);
   });
 
-  after(async () => {
+  afterAll(async () => {
     await db.close();
   });
 
@@ -107,8 +106,8 @@ describe('PPL Conditions Report', () => {
     await insertProject(db.asl, {});
     const result = await runReport(db);
 
-    assert.equal(result.length, 1);
-    assert.deepEqual(result[0], {
+    expect(result.length).toBe(1);
+    expect(result[0]).toEqual({
       ...expectedProjectColumns,
       level: '',
       protocol_name: '',
@@ -130,8 +129,8 @@ describe('PPL Conditions Report', () => {
     );
     const result = await runReport(db);
 
-    assert.equal(result.length, 1);
-    assert.deepEqual(result[0], {
+    expect(result.length).toBe(1);
+    expect(result[0]).toEqual({
       ...expectedProjectColumns,
       level: 'project',
       protocol_name: '',
@@ -160,8 +159,8 @@ describe('PPL Conditions Report', () => {
     );
     const result = await runReport(db);
 
-    assert.equal(result.length, 1);
-    assert.deepEqual(result[0], {
+    expect(result.length).toBe(1);
+    expect(result[0]).toEqual({
       ...expectedProjectColumns,
       level: 'project',
       protocol_name: '',
@@ -188,8 +187,8 @@ describe('PPL Conditions Report', () => {
     );
     const result = await runReport(db);
 
-    assert.equal(result.length, 1);
-    assert.deepEqual(result[0], {
+    expect(result.length).toBe(1);
+    expect(result[0]).toEqual({
       ...expectedProjectColumns,
       level: 'project',
       protocol_name: '',
@@ -218,8 +217,8 @@ describe('PPL Conditions Report', () => {
     );
     const result = await runReport(db);
 
-    assert.equal(result.length, 1);
-    assert.deepEqual(result[0], {
+    expect(result.length).toBe(1);
+    expect(result[0]).toEqual({
       ...expectedProjectColumns,
       level: 'project',
       protocol_name: '',
@@ -265,47 +264,47 @@ describe('PPL Conditions Report', () => {
 
     const result = await runReport(db);
 
-    assert.equal(result.length, 3);
-    assert.deepEqual(
-      result.find(c => c.condition === 'Batch testing'),
-      {
-        ...expectedProjectColumns,
-        level: 'project',
-        protocol_name: '',
-        type: 'condition',
-        condition: 'Batch testing',
-        requires_editing: 'false',
-        edited: '',
-        content: 'For all batch quality control testing using live animals, ...'
-      }
+    expect(result.length).toBe(3);
+    expect(
+      result.find(c => c.condition === 'Batch testing')
+    ).toEqual({
+      ...expectedProjectColumns,
+      level: 'project',
+      protocol_name: '',
+      type: 'condition',
+      condition: 'Batch testing',
+      requires_editing: 'false',
+      edited: '',
+      content: 'For all batch quality control testing using live animals, ...'
+    }
     );
 
-    assert.deepEqual(
-      result.find(c => c.condition === 'Re-use'),
-      {
-        ...expectedProjectColumns,
-        level: 'protocol',
-        protocol_name: 'Protocol 1',
-        type: 'authorisation',
-        condition: 'Re-use',
-        requires_editing: 'false',
-        edited: 'Edited content',
-        content: '<<<INSERT animal type(s) HERE>>> that have been kept alive and maintained under the supervision of a veterinary surgeon or other suitably qualified person at <<<INSERT place HERE>>> may be re-used in this protocol, provided that all criteria in section 14 of the Animals (Scientific Procedures) Act and in this project licence are fulfilled.'
-      }
+    expect(
+      result.find(c => c.condition === 'Re-use')
+    ).toEqual({
+      ...expectedProjectColumns,
+      level: 'protocol',
+      protocol_name: 'Protocol 1',
+      type: 'authorisation',
+      condition: 'Re-use',
+      requires_editing: 'false',
+      edited: 'Edited content',
+      content: '<<<INSERT animal type(s) HERE>>> that have been kept alive and maintained under the supervision of a veterinary surgeon or other suitably qualified person at <<<INSERT place HERE>>> may be re-used in this protocol, provided that all criteria in section 14 of the Animals (Scientific Procedures) Act and in this project licence are fulfilled.'
+    }
     );
 
-    assert.deepEqual(
-      result.find(c => c.condition === 'CUSTOM'),
-      {
-        ...expectedProjectColumns,
-        level: 'protocol',
-        protocol_name: 'Protocol 2',
-        type: 'condition',
-        condition: 'CUSTOM',
-        requires_editing: 'false',
-        edited: '',
-        content: 'Custom condition protocol 2'
-      }
+    expect(
+      result.find(c => c.condition === 'CUSTOM')
+    ).toEqual({
+      ...expectedProjectColumns,
+      level: 'protocol',
+      protocol_name: 'Protocol 2',
+      type: 'condition',
+      condition: 'CUSTOM',
+      requires_editing: 'false',
+      edited: '',
+      content: 'Custom condition protocol 2'
+    }
     );
   });
 });

@@ -7,7 +7,7 @@ const {
   reduce
 } = require('lodash');
 
-const { projectSpecies } = require('@ukhomeoffice/asl-constants');
+const projectSpecies = require('./project-species');
 const species = flatten(values(projectSpecies));
 
 const catsDogsEquidae = [
@@ -18,13 +18,13 @@ const catsDogsEquidae = [
 ];
 
 const nhp = [
-  // current nhps
+  // current NHPs
   'marmosets',
   'cynomolgus',
   'rhesus',
   'other-nhps',
 
-  // legacy nhps
+  // legacy NHPs
   'prosimians',
   'vervets',
   'baboons',
@@ -71,10 +71,7 @@ function addedByAsru(versionData) {
     return !!versionData.retrospectiveAssessment;
   }
   // previous new licences contained a 'retrospective-assessment' condition.
-  if (versionData.conditions && versionData.conditions.find(c => c.key === 'retrospective-assessment')) {
-    return true;
-  }
-  return false;
+  return !!(versionData.conditions && versionData.conditions.find(c => c.key === 'retrospective-assessment'));
 }
 
 function getRAReasons(versionData) {

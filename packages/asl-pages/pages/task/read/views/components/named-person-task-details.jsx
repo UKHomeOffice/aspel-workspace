@@ -7,8 +7,17 @@ import {
   Inset
 } from '@ukhomeoffice/asl-components';
 import MandatoryTrainingRequirements from '../../../../role/component/mandatory-training-requirements';
+import { MANDATORY_TRAINING_ROLE_TYPES, normalizeRoleType } from '../../../../role/named-person-mvp/role-types';
+
+export const TrainingRecord = ({ profile }) => (
+  <>
+    <h2><Snippet>trainingRecord</Snippet></h2>
+    <TrainingSummary certificates={profile.certificates} />
+  </>
+);
 
 export const NamedPersonTaskDetails = ({ taskData, profile }) => {
+  const hasMandatoryTrainingRequirements = MANDATORY_TRAINING_ROLE_TYPES.includes(normalizeRoleType(taskData.type));
 
   return (
     <>
@@ -20,12 +29,11 @@ export const NamedPersonTaskDetails = ({ taskData, profile }) => {
           <SkillsAndExperience roleType={taskData.type} profile={profile} values={taskData} showHeading />
         </div>
 
-        {['nacwo', 'nvs'].includes(taskData.type) && (
-          <>
-            <div className="sticky-nav-anchor">
-              <h2><Snippet>trainingRecord</Snippet></h2>
-              <TrainingSummary certificates={profile.certificates} />
-            </div>
+        <>
+          <div className="sticky-nav-anchor">
+            <TrainingRecord profile={profile} />
+          </div>
+          {hasMandatoryTrainingRequirements && (
             <div>
               <Details
                 summary={`${taskData.type.toUpperCase()} mandatory training requirements`}
@@ -38,8 +46,8 @@ export const NamedPersonTaskDetails = ({ taskData, profile }) => {
                 </Inset>
               </Details>
             </div>
-          </>
-        )}
+          )}
+        </>
       </dl>
     </>
   );

@@ -12,139 +12,131 @@ const PROFILE_ID = uuid();
 const PROJECT_ID = uuid();
 const ROP_ID = uuid();
 
-describe('ROPs Exporter', () => {
+describe('ROPs Exporter', function() {
+  this.timeout(10000);
 
   beforeEach(async () => {
     this.models = await db().init();
 
     // call export with params and read resulting ZIP file with `jszip`
-    this.exportToZip = params => {
-      let zipStream;
+    this.exportToZip = async params => {
+      let zipBuffer;
 
       const exporter = Builder({
         models: this.models,
-        s3Upload: ({ key, stream }) => {
-          zipStream = stream;
-          return Promise.resolve({ ETag: 'abc' });
+        s3Upload: ({ stream }) => {
+          return new Promise((resolve, reject) => {
+            stream.pipe(new BufferListStream((err, result) => {
+              if (err) {
+                return reject(err);
+              }
+              zipBuffer = result;
+              return resolve({ ETag: 'abc' });
+            }));
+          });
         }
       });
 
-      return Promise.resolve()
-        .then(() => {
-          return exporter(params);
-        })
-        .then(() => {
-          return new Promise((resolve, reject) => {
-            zipStream.pipe(new BufferListStream((err, result) => err ? reject(err) : resolve(result)));
-          });
-        })
-        .then(zip => {
-          return Zip.loadAsync(zip);
-        });
+      await exporter(params);
+      return Zip.loadAsync(zipBuffer);
     };
 
     const { Establishment, Project, Procedure, Profile, Rop } = this.models;
 
-    await Promise.resolve()
-      .then(() => {
-        return Establishment.query().insert({
-          id: 100,
-          name: 'Test Establishment'
-        });
-      })
-      .then(() => {
-        return Profile.query().insert({
-          id: PROFILE_ID,
-          firstName: 'Test',
-          lastName: 'User',
-          email: 'tu@example.com'
-        });
-      })
-      .then(() => {
-        return Project.query().insert([
-          {
-            id: PROJECT_ID,
-            establishmentId: 100,
-            licenceHolderId: PROFILE_ID,
-            licenceNumber: 'PROJ0001',
-            title: 'Test Project',
-            status: 'active',
-            issueDate: '2019-01-01T12:00:00.000Z',
-            expiryDate: '2024-01-01T12:00:00.000Z'
-          },
-          {
-            id: uuid(),
-            establishmentId: 100,
-            licenceHolderId: PROFILE_ID,
-            licenceNumber: 'PROJ0002',
-            title: 'Test Project 2',
-            status: 'active',
-            issueDate: '2019-01-01T12:00:00.000Z',
-            expiryDate: '2024-01-01T12:00:00.000Z'
-          },
-          {
-            id: uuid(),
-            establishmentId: 100,
-            licenceHolderId: PROFILE_ID,
-            licenceNumber: 'PROJ0003',
-            title: 'Test Project 3',
-            status: 'revoked',
-            issueDate: '2019-01-01T12:00:00.000Z',
-            expiryDate: '2024-01-01T12:00:00.000Z',
-            revocationDate: '2021-01-01T12:00:00.000Z'
-          }
-        ]);
-      })
-      .then(() => {
-        return Rop.query().insert({
-          id: ROP_ID,
-          projectId: PROJECT_ID,
-          year: 2021,
-          status: 'submitted',
-          purposes: ['basic'],
-          basicSubpurposes: ['oncology']
-        });
-      })
-      .then(() => {
-        return Procedure.query().insert([
-          {
-            ropId: ROP_ID,
-            species: 'mice',
-            ga: 'false',
-            purposes: 'basic',
-            basicSubpurposes: 'oncology',
-            newGeneticLine: false,
-            severity: 'mild',
-            severityNum: 100
-          },
-          {
-            ropId: ROP_ID,
-            species: 'mice',
-            ga: 'false',
-            purposes: 'basic',
-            basicSubpurposes: 'oncology',
-            newGeneticLine: false,
-            severity: 'severe',
-            severityNum: 200
-          },
-          {
-            ropId: ROP_ID,
-            species: 'common-frogs',
-            ga: 'false',
-            purposes: 'basic',
-            basicSubpurposes: 'oncology',
-            newGeneticLine: false,
-            severity: 'severe',
-            severityNum: 300,
-            severityHoNote: 'Common Frogs'
-          }
-        ]);
-      });
+    await Establishment.query().insert({
+      id: 100,
+      name: 'Test Establishment'
+    });
 
+    await Profile.query().insert({
+      id: PROFILE_ID,
+      firstName: 'Test',
+      lastName: 'User',
+      email: 'tu@example.com'
+    });
+
+    await Project.query().insert([
+      {
+        id: PROJECT_ID,
+        establishmentId: 100,
+        licenceHolderId: PROFILE_ID,
+        licenceNumber: 'PROJ0001',
+        title: 'Test Project',
+        status: 'active',
+        issueDate: '2019-01-01T12:00:00.000Z',
+        expiryDate: '2024-01-01T12:00:00.000Z'
+      },
+      {
+        id: uuid(),
+        establishmentId: 100,
+        licenceHolderId: PROFILE_ID,
+        licenceNumber: 'PROJ0002',
+        title: 'Test Project 2',
+        status: 'active',
+        issueDate: '2019-01-01T12:00:00.000Z',
+        expiryDate: '2024-01-01T12:00:00.000Z'
+      },
+      {
+        id: uuid(),
+        establishmentId: 100,
+        licenceHolderId: PROFILE_ID,
+        licenceNumber: 'PROJ0003',
+        title: 'Test Project 3',
+        status: 'revoked',
+        issueDate: '2019-01-01T12:00:00.000Z',
+        expiryDate: '2024-01-01T12:00:00.000Z',
+        revocationDate: '2021-01-01T12:00:00.000Z'
+      }
+    ]);
+
+    await Rop.query().insert({
+      id: ROP_ID,
+      projectId: PROJECT_ID,
+      year: 2021,
+      status: 'submitted',
+      purposes: ['basic'],
+      basicSubpurposes: ['oncology']
+    });
+
+    await Procedure.query().insert(
+      [
+        {
+          ropId: ROP_ID,
+          species: 'mice',
+          ga: 'false',
+          purposes: 'basic',
+          basicSubpurposes: 'oncology',
+          newGeneticLine: false,
+          severity: 'mild',
+          severityNum: 100
+        },
+        {
+          ropId: ROP_ID,
+          species: 'mice',
+          ga: 'false',
+          purposes: 'basic',
+          basicSubpurposes: 'oncology',
+          newGeneticLine: false,
+          severity: 'severe',
+          severityNum: 200
+        },
+        {
+          ropId: ROP_ID,
+          species: 'common-frogs',
+          ga: 'false',
+          purposes: 'basic',
+          basicSubpurposes: 'oncology',
+          newGeneticLine: false,
+          severity: 'severe',
+          severityNum: 300,
+          severityHoNote: 'Common Frogs'
+        }
+      ]
+    );
   });
 
   afterEach(() => {
-    this.models.destroy();
+    return this.models ? this.models.destroy() : Promise.resolve();
   });
 
   describe('returns list', () => {

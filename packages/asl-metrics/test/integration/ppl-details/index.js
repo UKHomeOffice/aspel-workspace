@@ -1,23 +1,22 @@
-const assert = require('assert');
-const { v4: uuid } = require('uuid');
+const { randomUUID } = require('crypto');
 
 const dbProvider = require('../helpers/db');
 const report = require('../../../lib/reports/ppl-details');
 
 const ids = {
-  active: uuid(),
-  draft: uuid()
+  active: randomUUID(),
+  draft: randomUUID()
 };
 
 describe('PPL Details Report', () => {
   let db;
 
-  before(() => {
+  beforeAll(() => {
     db = dbProvider();
     return db.clean();
   });
 
-  before(() => {
+  beforeAll(() => {
     return Promise.resolve()
       .then(() => db.asl('establishments').insert({
         id: 100, name: 'Test Establishment', status: 'active'
@@ -65,7 +64,7 @@ describe('PPL Details Report', () => {
       ]));
   });
 
-  after(() => {
+  afterAll(() => {
     return db.close();
   });
 
@@ -75,8 +74,8 @@ describe('PPL Details Report', () => {
       .then(result => result.map(parse))
       .then(result => Promise.all(result))
       .then(result => {
-        assert.equal(result.length, 1);
-        assert.equal(result[0].licence_number, 'P1234');
+        expect(result.length).toBe(1);
+        expect(result[0].licence_number).toBe('P1234');
       });
   });
 
@@ -86,8 +85,8 @@ describe('PPL Details Report', () => {
       .then(result => result.map(parse))
       .then(result => Promise.all(result))
       .then(result => {
-        assert.equal(result[0].protocol_count, '2');
-        assert.equal(result[0].highest_severity, 'severe');
+        expect(result[0].protocol_count).toBe(2);
+        expect(result[0].highest_severity).toBe('severe');
       });
   });
 

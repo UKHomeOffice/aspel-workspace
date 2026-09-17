@@ -35,7 +35,10 @@ module.exports = {
       hasDeadlineRA: uuid(),
       transfer2: uuid()
     },
-    assignedToLicensing: uuid()
+    assignedToLicensing: uuid(),
+    role: {
+      create: uuid()
+    }
   },
   model: {
     pil: {

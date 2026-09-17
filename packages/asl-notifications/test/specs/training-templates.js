@@ -35,6 +35,7 @@ describe('Dispatcher training templates - direct file rendering', () => {
         completeDate,
         name: establishmentName,
         trainingRecordLabel: getTrainingRecordLabel(roleType),
+        possessive: getTemplateVars({ fullName: 'Basic User', roleType, isApplicant: false }).possessive,
         their: getTemplateVars({ fullName: 'Basic User', roleType, isApplicant: false }).their
       };
       const expected = buildTrainingReminderBody({

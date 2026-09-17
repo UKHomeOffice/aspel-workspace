@@ -1,6 +1,5 @@
-const assert = require('assert');
 const { mapKeys, snakeCase, pick } = require('lodash');
-const { v4: uuid } = require('uuid');
+const { randomUUID } = require('crypto');
 
 const db = require('../helpers/db');
 const flow = require('../helpers/flow');
@@ -13,44 +12,46 @@ const [asruSuper, asruAdmin, inspectorMorse, inspectorGadget, licensing] = asruU
   pick(user, 'id', 'firstName', 'lastName', 'asruInspector', 'asruLicensing')
 );
 
+const emptyStats = {
+  pplApplications: 0,
+  pplAmendments: 0,
+  pils: 0,
+  pels: 0,
+  profiles: 0,
+  total: 0
+};
+
 describe('ASRU workload stats', () => {
 
-  before(() => {
-    this.db = db();
+  let testDb;
 
-    this.emptyStats = {
-      pplApplications: 0,
-      pplAmendments: 0,
-      pils: 0,
-      pels: 0,
-      profiles: 0,
-      total: 0
-    };
+  beforeAll(() => {
+    testDb = db();
 
     const asruUsersSnakeCase = asruUsers.map(user =>
       mapKeys(user, (value, key) => snakeCase(key))
     );
 
     return Promise.resolve()
-      .then(() => this.db.clean())
-      .then(() => this.db.asl('profiles').insert(asruUsersSnakeCase));
+      .then(() => testDb.clean())
+      .then(() => testDb.asl('profiles').insert(asruUsersSnakeCase));
   });
 
   beforeEach(() => {
-    return this.db.clean('flow');
+    return testDb.clean('flow');
   });
 
-  after(() => {
-    return this.db.close();
+  afterAll(() => {
+    return testDb.close();
   });
 
   describe('Open and in progress tasks', () => {
     it('returns zero results if there are no tasks', () => {
       const expected = [];
 
-      return getWorkload({ db: this.db, flow, progress: 'open' })
+      return getWorkload({ db: testDb, flow, progress: 'open' })
         .then(results => {
-          assert.deepEqual(results, expected);
+          expect(results).toEqual(expected);
         });
     });
 
@@ -59,14 +60,14 @@ describe('ASRU workload stats', () => {
 
       return Promise.resolve()
         .then(() => {
-          return this.db.flow('cases').insert([
+          return testDb.flow('cases').insert([
             generateTask('pplApplication', 'resolved')
           ]);
         })
         .then(() => {
-          return getWorkload({ db: this.db, flow, progress: 'open' })
+          return getWorkload({ db: testDb, flow, progress: 'open' })
             .then(results => {
-              assert.deepEqual(results, expected);
+              expect(results).toEqual(expected);
             });
         });
     });
@@ -74,7 +75,7 @@ describe('ASRU workload stats', () => {
     describe('Unassigned tasks', () => {
       it('Can count ppl application tasks', () => {
         const expected = [{
-          ...this.emptyStats,
+          ...emptyStats,
           assignedTo: { id: 'unassigned' },
           pplApplications: 1,
           total: 1
@@ -82,19 +83,19 @@ describe('ASRU workload stats', () => {
 
         return Promise.resolve()
           .then(() => {
-            return this.db.flow('cases').insert(generateTask('pplApplication'));
+            return testDb.flow('cases').insert(generateTask('pplApplication'));
           })
           .then(() => {
-            return getWorkload({ db: this.db, flow, progress: 'open' })
+            return getWorkload({ db: testDb, flow, progress: 'open' })
               .then(results => {
-                assert.deepEqual(results, expected);
+                expect(results).toEqual(expected);
               });
           });
       });
 
       it('Can count ppl amendment tasks', () => {
         const expected = [{
-          ...this.emptyStats,
+          ...emptyStats,
           assignedTo: { id: 'unassigned' },
           pplAmendments: 1,
           total: 1
@@ -102,19 +103,19 @@ describe('ASRU workload stats', () => {
 
         return Promise.resolve()
           .then(() => {
-            return this.db.flow('cases').insert(generateTask('pplAmendment'));
+            return testDb.flow('cases').insert(generateTask('pplAmendment'));
           })
           .then(() => {
-            return getWorkload({ db: this.db, flow, progress: 'open' })
+            return getWorkload({ db: testDb, flow, progress: 'open' })
               .then(results => {
-                assert.deepEqual(results, expected);
+                expect(results).toEqual(expected);
               });
           });
       });
 
       it('Can count pil tasks', () => {
         const expected = [{
-          ...this.emptyStats,
+          ...emptyStats,
           assignedTo: { id: 'unassigned' },
           pils: 2,
           total: 2
@@ -122,22 +123,22 @@ describe('ASRU workload stats', () => {
 
         return Promise.resolve()
           .then(() => {
-            return this.db.flow('cases').insert([
+            return testDb.flow('cases').insert([
               generateTask('pil'),
               generateTask('trainingPil')
             ]);
           })
           .then(() => {
-            return getWorkload({ db: this.db, flow, progress: 'open' })
+            return getWorkload({ db: testDb, flow, progress: 'open' })
               .then(results => {
-                assert.deepEqual(results, expected);
+                expect(results).toEqual(expected);
               });
           });
       });
 
       it('Can count pel tasks', () => {
         const expected = [{
-          ...this.emptyStats,
+          ...emptyStats,
           assignedTo: { id: 'unassigned' },
           pels: 3,
           total: 3
@@ -145,16 +146,16 @@ describe('ASRU workload stats', () => {
 
         return Promise.resolve()
           .then(() => {
-            return this.db.flow('cases').insert([
+            return testDb.flow('cases').insert([
               generateTask('establishment'),
               generateTask('place'),
               generateTask('role')
             ]);
           })
           .then(() => {
-            return getWorkload({ db: this.db, flow, progress: 'open' })
+            return getWorkload({ db: testDb, flow, progress: 'open' })
               .then(results => {
-                assert.deepEqual(results, expected);
+                expect(results).toEqual(expected);
               });
           });
       });
@@ -165,14 +166,14 @@ describe('ASRU workload stats', () => {
       it('Can count tasks assigned to inspectors', () => {
         const expected = [
           {
-            ...this.emptyStats,
+            ...emptyStats,
             assignedTo: inspectorMorse,
             pplApplications: 1,
             pels: 1,
             total: 2
           },
           {
-            ...this.emptyStats,
+            ...emptyStats,
             assignedTo: inspectorGadget,
             pplAmendments: 1,
             profiles: 1,
@@ -182,7 +183,7 @@ describe('ASRU workload stats', () => {
 
         return Promise.resolve()
           .then(() => {
-            return this.db.flow('cases').insert([
+            return testDb.flow('cases').insert([
               generateTask('pplApplication', undefined, inspectorMorse.id),
               generateTask('establishment', undefined, inspectorMorse.id),
               generateTask('profile', undefined, inspectorGadget.id),
@@ -190,9 +191,9 @@ describe('ASRU workload stats', () => {
             ]);
           })
           .then(() => {
-            return getWorkload({ db: this.db, flow, progress: 'open' })
+            return getWorkload({ db: testDb, flow, progress: 'open' })
               .then(results => {
-                assert.deepEqual(results, expected);
+                expect(results).toEqual(expected);
               });
           });
       });
@@ -200,7 +201,7 @@ describe('ASRU workload stats', () => {
       it('Can count tasks assigned to licensing officers', () => {
         const expected = [
           {
-            ...this.emptyStats,
+            ...emptyStats,
             assignedTo: licensing,
             pils: 3,
             total: 3
@@ -209,16 +210,16 @@ describe('ASRU workload stats', () => {
 
         return Promise.resolve()
           .then(() => {
-            return this.db.flow('cases').insert([
+            return testDb.flow('cases').insert([
               generateTask('pil', undefined, licensing.id),
               generateTask('pil', undefined, licensing.id),
               generateTask('pil', undefined, licensing.id)
             ]);
           })
           .then(() => {
-            return getWorkload({ db: this.db, flow, progress: 'open' })
+            return getWorkload({ db: testDb, flow, progress: 'open' })
               .then(results => {
-                assert.deepEqual(results, expected);
+                expect(results).toEqual(expected);
               });
           });
       });
@@ -226,7 +227,7 @@ describe('ASRU workload stats', () => {
 
     describe('Filtering stats', () => {
       beforeEach(() => {
-        return this.db.flow('cases').insert([
+        return testDb.flow('cases').insert([
           generateTask('pplApplication', 'new'), // not with ASRU
           generateTask('pplAmendment', 'awaiting-endorsement'), // not with ASRU
           generateTask('pplAmendment', 'returned-to-applicant', inspectorMorse.id), // not with ASRU but assigned
@@ -242,57 +243,57 @@ describe('ASRU workload stats', () => {
       it('can filter the stats to only count tasks with asru', () => {
         const expected = [
           {
-            ...this.emptyStats,
+            ...emptyStats,
             assignedTo: { id: 'unassigned' },
             pplApplications: 1,
             total: 1
           },
           {
-            ...this.emptyStats,
+            ...emptyStats,
             assignedTo: inspectorMorse,
             pplAmendments: 1,
             total: 1
           },
           {
-            ...this.emptyStats,
+            ...emptyStats,
             assignedTo: inspectorGadget,
             pels: 1,
             total: 1
           },
           {
-            ...this.emptyStats,
+            ...emptyStats,
             assignedTo: licensing,
             pils: 1,
             total: 1
           }
         ];
 
-        return getWorkload({ db: this.db, flow, progress: 'open', withAsru: 'yes' })
+        return getWorkload({ db: testDb, flow, progress: 'open', withAsru: 'yes' })
           .then(results => {
-            assert.deepEqual(results, expected);
+            expect(results).toEqual(expected);
           });
       });
 
       it('can filter the stats to only count tasks with establishments', () => {
         const expected = [
           {
-            ...this.emptyStats,
+            ...emptyStats,
             assignedTo: { id: 'unassigned' },
             pplApplications: 1,
             pplAmendments: 1,
             total: 2
           },
           {
-            ...this.emptyStats,
+            ...emptyStats,
             assignedTo: inspectorMorse,
             pplAmendments: 1,
             total: 1
           }
         ];
 
-        return getWorkload({ db: this.db, flow, progress: 'open', withAsru: 'no' })
+        return getWorkload({ db: testDb, flow, progress: 'open', withAsru: 'no' })
           .then(results => {
-            assert.deepEqual(results, expected);
+            expect(results).toEqual(expected);
           });
       });
     });
@@ -301,11 +302,11 @@ describe('ASRU workload stats', () => {
 
   describe('Completed tasks', () => {
     beforeEach(() => {
-      const resolvedPilId = uuid();
-      const rejectedProfileId = uuid();
-      const discardedRoleId = uuid();
+      const resolvedPilId = randomUUID();
+      const rejectedProfileId = randomUUID();
+      const discardedRoleId = randomUUID();
 
-      return this.db.flow('cases').insert([
+      return testDb.flow('cases').insert([
         generateTask('pplAmendment', 'returned-to-applicant', inspectorMorse.id), // open
         generateTask('pplApplication', 'with-inspectorate'), // open
         generateTask('pil', 'with-licensing', licensing.id), // open
@@ -314,14 +315,14 @@ describe('ASRU workload stats', () => {
         generateTask('role', 'discarded-by-asru', undefined, discardedRoleId) // closed
       ])
         .then(() => {
-          return this.db.flow('activity_log').insert([
-            { case_id: resolvedPilId, changed_by: uuid(), event_name: 'status:endorsed:with-licensing', event: {} },
+          return testDb.flow('activity_log').insert([
+            { case_id: resolvedPilId, changed_by: randomUUID(), event_name: 'status:endorsed:with-licensing', event: {} },
             { case_id: resolvedPilId, changed_by: inspectorMorse.id, event_name: 'status:with-licensing:resolved', event: {} },
 
-            { case_id: rejectedProfileId, changed_by: uuid(), event_name: 'status:new:with-inspectorate', event: {} },
+            { case_id: rejectedProfileId, changed_by: randomUUID(), event_name: 'status:new:with-inspectorate', event: {} },
             { case_id: rejectedProfileId, changed_by: inspectorMorse.id, event_name: 'status:with-inspectorate:rejected', event: {} },
 
-            { case_id: discardedRoleId, changed_by: uuid(), event_name: 'status:new:with-inspectorate', event: {} },
+            { case_id: discardedRoleId, changed_by: randomUUID(), event_name: 'status:new:with-inspectorate', event: {} },
             { case_id: discardedRoleId, changed_by: asruAdmin.id, event_name: 'status:with-inspectorate:discarded-by-asru', event: {} }
           ]);
         });
@@ -330,23 +331,23 @@ describe('ASRU workload stats', () => {
     it('only counts completed tasks', () => {
       const expected = [
         {
-          ...this.emptyStats,
+          ...emptyStats,
           assignedTo: inspectorMorse,
           pils: 1,
           profiles: 1,
           total: 2
         },
         {
-          ...this.emptyStats,
+          ...emptyStats,
           assignedTo: asruAdmin,
           pels: 1,
           total: 1
         }
       ];
 
-      return getWorkload({ db: this.db, flow, progress: 'closed' })
+      return getWorkload({ db: testDb, flow, progress: 'closed' })
         .then(results => {
-          assert.deepEqual(results, expected);
+          expect(results).toEqual(expected);
         });
     });
   });

@@ -9,6 +9,8 @@ const stats = {
   outstanding: 0,
   submitToActionDays: [],
   resubmitToActionDays: [],
+  totalDaysWithAsru: [],
+  totalDaysAssigned: [],
   assignToActionDays: []
 };
 
