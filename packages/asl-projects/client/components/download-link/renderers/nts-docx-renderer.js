@@ -128,9 +128,9 @@ export default async function ntsDocxRenderer(opts) {
           p.style('body');
           p.addRun(new TextRun(opt ? opt.label : String(opt.value)));
           document.addParagraph(p)
-        })
+        });
       }
-    })
+    });
   };
 
   const speciesLabels = flatten(values(SPECIES));
@@ -154,9 +154,10 @@ export default async function ntsDocxRenderer(opts) {
       p.style('body');
       p.bullet(0);
       p.addRun(new TextRun(fateOfAnimal.label));
-      document.addParagraph(p)
+      document.addParagraph(p);
     });
-  }
+  };
+
   const renderSpeciesCount = () => {
     const speciesUsed = concat([], version.species, version['species-other']).filter(Boolean);
     if (!speciesUsed.length) { return renderText(null); }
