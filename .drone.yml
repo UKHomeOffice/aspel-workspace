@@ -328,6 +328,7 @@ steps:
       DATABASE_HOST: postgres
       DATABASE_USERNAME: asl-test
       DATABASE_PASSWORD: test-password
+      S3_LOCALSTACK_URL: http://localstack:4566
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
       GITHUB_AUTH_TOKEN:
@@ -396,6 +397,13 @@ services:
     environment:
       POSTGRES_USER: asl-test
       POSTGRES_PASSWORD: test-password
+  - name: localstack
+    image: localstack/localstack:3.7.2
+    environment:
+      SERVICES: s3
+      DEFAULT_REGION: eu-west-2
+    commands:
+      - bash -lc 'localstack start -d && until curl -sf http://localhost:4566/_localstack/health | grep -q "\"s3\": \"running\""; do sleep 1; done && awslocal s3 mb s3://asl-dev && tail -f /dev/null'
 
 trigger:
   event:
