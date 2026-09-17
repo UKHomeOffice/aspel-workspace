@@ -334,6 +334,10 @@ steps:
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
+      - >-
+        node -e 'const healthUrl = "http://localstack:4566/_localstack/health"; (async () => { for (let attempt = 0; attempt < 120; attempt++) { try { const response = await fetch(healthUrl); if (response.ok) { const health = await response.json(); if (health?.services?.s3 === "running") { return; } } } catch (error) {} await new Promise(resolve => setTimeout(resolve, 1000)); } throw new Error("LocalStack S3 did not become healthy in time"); })().catch(error => { console.error(error); process.exit(1); });'
+      - >-
+        node -e 'const { S3Client, CreateBucketCommand } = require("@aws-sdk/client-s3"); const client = new S3Client({ region: process.env.S3_REGION || "eu-west-2", endpoint: process.env.S3_LOCALSTACK_URL, forcePathStyle: true, credentials: { accessKeyId: process.env.S3_ACCESS_KEY || "test", secretAccessKey: process.env.S3_SECRET || "test" } }); client.send(new CreateBucketCommand({ Bucket: process.env.S3_BUCKET || "asl-dev" })).catch(error => { if (["BucketAlreadyOwnedByYou", "BucketAlreadyExists"].includes(error.name)) { return; } throw error; }).catch(error => { console.error(error); process.exit(1); });'
       - npm run test --workspace asl-data-exports
   - name: audit
     image: node:22.14.0
@@ -402,9 +406,6 @@ services:
     environment:
       SERVICES: s3
       DEFAULT_REGION: eu-west-2
-    commands:
-      - >-
-        bash -lc 'localstack start -d && until curl -sf http://localhost:4566/_localstack/health | grep -q "\"s3\": \"running\""; do sleep 1; done && awslocal s3 mb s3://asl-dev && tail -f /dev/null'
 
 trigger:
   event:
