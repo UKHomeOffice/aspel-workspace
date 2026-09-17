@@ -159,7 +159,8 @@ const addStyles = (document, nts) => {
         .quickFormat()
         .size(24)
         .font('Arial')
-        .bold();
+        .bold()
+        .spacing({before: 0, after: 120, line: 300, lineRule: 'exact'});
     }
 
 };

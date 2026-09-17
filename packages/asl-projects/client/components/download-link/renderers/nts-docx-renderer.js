@@ -100,15 +100,37 @@ export default async function ntsDocxRenderer(opts) {
       ? schemaV0().programmeOfWork.subsections.purpose.fields.find(f => f.name === 'purpose').options
       : schemaV1Purpose.options;
     const valuesSelected = schemaVersion === 0 ? version.purpose : version['permissible-purpose'];
-    const selected = [].concat(valuesSelected || []);
+    let selected = [].concat(valuesSelected || []);
+    const nestedSelected = schemaVersion === 0 ? [] : version['translational-research'];
+    if (nestedSelected) {
+      selected.push('translational-research');
+    }
+    let options = [];
     if (!selected.length) { return renderText(null); }
     selected.forEach(val => {
       const opt = purposeOptions.find(o => o.value === val);
+      options.push(opt);
+    });
+    options = options.sort((a, b) =>
+      a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' })
+    );
+    options.forEach((opt, i) => {
       const p = new Paragraph();
       p.style('body');
-      p.addRun(new TextRun(opt ? opt.label : String(val)));
+      p.addRun(new TextRun(opt ? opt.label : String(opt.value)));
       document.addParagraph(p);
-    });
+      if (opt.reveal) {
+        const matchingOptions = opt?.reveal?.options?.filter(child =>
+          nestedSelected.includes(child.value)
+        ) || [];
+        matchingOptions.forEach((opt, i) => {
+          const p = new Paragraph();
+          p.style('body');
+          p.addRun(new TextRun(opt ? opt.label : String(opt.value)));
+          document.addParagraph(p);
+        })
+      }
+    })
   };
 
   const speciesLabels = flatten(values(SPECIES));
