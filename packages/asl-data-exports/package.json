@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-data-exports#readme",
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.528.0",
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "bl": "^5.0.0",
     "csv-parse": "^4.16.3",
