@@ -1,5 +1,4 @@
 const { omit } = require('lodash');
-const { once } = require('events');
 const csv = require('csv-stringify');
 const archiver = require('archiver');
 const Auth = require('../../clients/auth');
@@ -9,10 +8,11 @@ const summarise = require('./summarise');
 const calculateAverages = require('./calculate-averages');
 
 const writeAsync = async (writable, chunk) => {
-  // Write will return false if it wants to apply backpressure, in which case we
-  // need to wait for the 'drain' event before continuing to write more data.
+  // Backpressure here is best handled by yielding to the event loop rather
+  // than waiting on `drain`, because the downstream ZIP/S3 chain must be given
+  // a chance to keep flowing first.
   if (!writable.write(chunk)) {
-    await once(writable, 'drain');
+    await new Promise(resolve => setImmediate(resolve));
   }
 };
 
@@ -156,6 +156,9 @@ module.exports = settings => {
       logger.debug('starting upload stream to s3');
       const uploadPromise = s3Upload({ key: job.id, stream: zip });
 
+      logger.debug('starting zip finalization');
+      const zipFinalizePromise = zip.finalize();
+
       const internalDeadlinesData = await runPhase(
         'metrics internal-deadlines fetch',
         () => metrics(
@@ -216,7 +219,7 @@ module.exports = settings => {
       actionedSubtasksCSV.end();
       logger.debug('all csv streams ended');
 
-      await runPhase('zip finalize', () => zip.finalize());
+      await runPhase('zip finalize', () => zipFinalizePromise);
 
       const result = await runPhase('s3 upload completion', () => Promise.race([uploadPromise, zipError]));
       logger.debug(`upload success, etag: ${result.ETag}`);
