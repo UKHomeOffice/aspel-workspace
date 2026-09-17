@@ -45,7 +45,9 @@ export function CourseParticipants() {
   }
 
   return <>
-    <h2 id='course-participants-header'><Snippet>participantsHeader</Snippet></h2>
+    <h2 className='govuk-heading-m' id='course-participants-header'>
+      <Snippet>participantsHeader</Snippet>
+    </h2>
     {applyButton}
     <Datatable
       formatters={formatters}
