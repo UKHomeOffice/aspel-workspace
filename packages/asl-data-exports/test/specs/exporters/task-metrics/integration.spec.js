@@ -1,35 +1,18 @@
 const assert = require('assert');
 const crypto = require('crypto');
-const path = require('path');
 const { Readable } = require('stream');
 const fetch = require('node-fetch');
 const Zip = require('jszip');
 const parse = require('csv-parse/lib/sync');
 const s3Upload = require('../../../../lib/clients/s3-upload');
 
-const exporterModulePath = path.resolve(__dirname, '../../../../lib/exporters/task-metrics/index.js');
-const authModulePath = path.resolve(__dirname, '../../../../lib/clients/auth.js');
-const metricsModulePath = path.resolve(__dirname, '../../../../lib/clients/metrics.js');
+const {
+  loadTaskMetricsExporter,
+  mockTaskMetricsClients,
+  resetTaskMetricsMocks
+} = require('./mocks');
 
-const setModuleExport = (modulePath, exportedValue) => {
-  const resolved = require.resolve(modulePath);
-  const original = require.cache[resolved];
-
-  require.cache[resolved] = {
-    id: resolved,
-    filename: resolved,
-    loaded: true,
-    exports: exportedValue
-  };
-
-  return () => {
-    if (original) {
-      require.cache[resolved] = original;
-      return;
-    }
-    delete require.cache[resolved];
-  };
-};
+jest.setTimeout(120000);
 
 const makeLargeTask = taskId => {
   const comment = crypto.randomBytes(2048).toString('hex');
@@ -93,9 +76,7 @@ const makeLargeTask = taskId => {
   };
 };
 
-describe('Task metrics exporter localstack integration', function() {
-  this.timeout(120000);
-
+describe('Task metrics exporter localstack integration', () => {
   const s3Settings = {
     region: process.env.S3_REGION || 'eu-west-2',
     accessKey: process.env.S3_ACCESS_KEY || 'test',
@@ -105,45 +86,34 @@ describe('Task metrics exporter localstack integration', function() {
   };
 
   let exportZip;
-  let restoreAuth;
-  let restoreMetrics;
 
-  before(async function() {
-    restoreAuth = setModuleExport(authModulePath, () => () => Promise.resolve('test-token'));
-    restoreMetrics = setModuleExport(metricsModulePath, () => {
-      return (reportPath, { stream = true } = {}) => {
-        if (reportPath === '/reports/internal-deadlines') {
-          return Promise.resolve([
-            {
-              task_id: 'int-1',
-              project_title: 'Project 1',
-              licence_number: 'PPL-1',
-              type: 'ppl',
-              resubmitted: false,
-              extended: false,
-              still_open: false,
-              target: '2026-08-10',
-              resolved_at: '2026-08-12'
-            }
-          ]);
+  beforeAll(() => {
+    mockTaskMetricsClients({
+      getInternalDeadlines: () => ([
+        {
+          task_id: 'int-1',
+          project_title: 'Project 1',
+          licence_number: 'PPL-1',
+          type: 'ppl',
+          resubmitted: false,
+          extended: false,
+          still_open: false,
+          target: '2026-08-10',
+          resolved_at: '2026-08-12'
         }
+      ]),
+      getActionedTasksStream: () => {
+        const rows = async function * () {
+          for (let index = 0; index < 100; index++) {
+            yield makeLargeTask(index + 1);
+          }
+        };
 
-        if (reportPath === '/reports/actioned-tasks' && stream) {
-          const rows = async function * () {
-            for (let index = 0; index < 100; index++) {
-              yield makeLargeTask(index + 1);
-            }
-          };
-
-          return Promise.resolve(Readable.from(rows(), { objectMode: true }));
-        }
-
-        throw new Error(`Unexpected metrics request: ${reportPath}`);
-      };
+        return Readable.from(rows(), { objectMode: true });
+      }
     });
 
-    delete require.cache[require.resolve(exporterModulePath)];
-    const exporterBuilder = require(exporterModulePath);
+    const exporterBuilder = loadTaskMetricsExporter();
     exportZip = exporterBuilder({
       logger: {
         debug: () => null,
@@ -158,17 +128,11 @@ describe('Task metrics exporter localstack integration', function() {
     });
   });
 
-  after(function() {
-    delete require.cache[require.resolve(exporterModulePath)];
-    if (restoreAuth) {
-      restoreAuth();
-    }
-    if (restoreMetrics) {
-      restoreMetrics();
-    }
+  afterAll(() => {
+    resetTaskMetricsMocks();
   });
 
-  it('streams the full archive to localstack without stalling on large exports', async function() {
+  it('streams the full archive to localstack without stalling on large exports', async () => {
     const job = {
       id: `task-metrics-${Date.now()}`,
       meta: {
