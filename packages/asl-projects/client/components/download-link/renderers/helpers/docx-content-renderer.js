@@ -66,11 +66,7 @@ const renderMarkdown = (doc, markdown, style = 'body', { applyTextFilter } = {},
             }
             case 'paragraph': {
                 const text = node.children.find(c => c.type === 'text')?.value || '';
-                if (nts) {
-                  doc.createParagraph(applyFilter(text, applyTextFilter)).style('Bold');
-                } else {
-                  doc.createParagraph(applyFilter(text, applyTextFilter)).style(style);
-                }
+                doc.createParagraph(applyFilter(text, applyTextFilter)).style(style);
                 break;
             }
             case 'list': {

@@ -160,7 +160,7 @@ const addStyles = (document, nts) => {
         .size(24)
         .font('Arial')
         .bold()
-        .spacing({before: 0, after: 120, line: 300, lineRule: 'exact'});
+        .spacing({before: 0, after: 120, line: 320, lineRule: 'exact'});
     }
 
 };
