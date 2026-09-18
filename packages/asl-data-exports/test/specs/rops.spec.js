@@ -1,5 +1,5 @@
 const assert = require('assert');
-const uuid = require('uuid').v4;
+const { randomUUID } = require('crypto');
 const Zip = require('jszip');
 const { BufferListStream } = require('bl');
 const parse = require('csv-parse/lib/sync');
@@ -8,22 +8,26 @@ const Builder = require('../../lib/exporters/rops');
 
 const db = require('../helpers/db');
 
-const PROFILE_ID = uuid();
-const PROJECT_ID = uuid();
-const ROP_ID = uuid();
+const PROFILE_ID = randomUUID();
+const PROJECT_ID = randomUUID();
+const ROP_ID = randomUUID();
 
-describe('ROPs Exporter', function() {
-  this.timeout(10000);
+jest.setTimeout(10000);
+
+describe('ROPs Exporter', () => {
+  let models;
+  let exportToZip;
+  let returns;
+  let procedures;
 
   beforeEach(async () => {
-    this.models = await db().init();
+    models = await db().init();
 
-    // call export with params and read resulting ZIP file with `jszip`
-    this.exportToZip = async params => {
+    exportToZip = async params => {
       let zipBuffer;
 
       const exporter = Builder({
-        models: this.models,
+        models,
         s3Upload: ({ stream }) => {
           return new Promise((resolve, reject) => {
             stream.pipe(new BufferListStream((err, result) => {
@@ -41,7 +45,7 @@ describe('ROPs Exporter', function() {
       return Zip.loadAsync(zipBuffer);
     };
 
-    const { Establishment, Project, Procedure, Profile, Rop } = this.models;
+    const { Establishment, Project, Procedure, Profile, Rop } = models;
 
     await Establishment.query().insert({
       id: 100,
@@ -67,7 +71,7 @@ describe('ROPs Exporter', function() {
         expiryDate: '2024-01-01T12:00:00.000Z'
       },
       {
-        id: uuid(),
+        id: randomUUID(),
         establishmentId: 100,
         licenceHolderId: PROFILE_ID,
         licenceNumber: 'PROJ0002',
@@ -77,7 +81,7 @@ describe('ROPs Exporter', function() {
         expiryDate: '2024-01-01T12:00:00.000Z'
       },
       {
-        id: uuid(),
+        id: randomUUID(),
         establishmentId: 100,
         licenceHolderId: PROFILE_ID,
         licenceNumber: 'PROJ0003',
@@ -98,59 +102,57 @@ describe('ROPs Exporter', function() {
       basicSubpurposes: ['oncology']
     });
 
-    await Procedure.query().insert(
-      [
-        {
-          ropId: ROP_ID,
-          species: 'mice',
-          ga: 'false',
-          purposes: 'basic',
-          basicSubpurposes: 'oncology',
-          newGeneticLine: false,
-          severity: 'mild',
-          severityNum: 100
-        },
-        {
-          ropId: ROP_ID,
-          species: 'mice',
-          ga: 'false',
-          purposes: 'basic',
-          basicSubpurposes: 'oncology',
-          newGeneticLine: false,
-          severity: 'severe',
-          severityNum: 200
-        },
-        {
-          ropId: ROP_ID,
-          species: 'common-frogs',
-          ga: 'false',
-          purposes: 'basic',
-          basicSubpurposes: 'oncology',
-          newGeneticLine: false,
-          severity: 'severe',
-          severityNum: 300,
-          severityHoNote: 'Common Frogs'
-        }
-      ]
-    );
+    await Procedure.query().insert([
+      {
+        ropId: ROP_ID,
+        species: 'mice',
+        ga: 'false',
+        purposes: 'basic',
+        basicSubpurposes: 'oncology',
+        newGeneticLine: false,
+        severity: 'mild',
+        severityNum: 100
+      },
+      {
+        ropId: ROP_ID,
+        species: 'mice',
+        ga: 'false',
+        purposes: 'basic',
+        basicSubpurposes: 'oncology',
+        newGeneticLine: false,
+        severity: 'severe',
+        severityNum: 200
+      },
+      {
+        ropId: ROP_ID,
+        species: 'common-frogs',
+        ga: 'false',
+        purposes: 'basic',
+        basicSubpurposes: 'oncology',
+        newGeneticLine: false,
+        severity: 'severe',
+        severityNum: 300,
+        severityHoNote: 'Common Frogs'
+      }
+    ]);
   });
 
   afterEach(() => {
-    return this.models ? this.models.destroy() : Promise.resolve();
+    const result = models ? models.destroy() : Promise.resolve();
+    models = null;
+    exportToZip = null;
+    returns = null;
+    procedures = null;
+    return result;
   });
 
   describe('returns list', () => {
-
     beforeEach(() => {
-      return this.exportToZip({ id: '1', key: 2021 })
-        .then(result => {
-          return result.file('returns.csv').async('string');
-        })
+      return exportToZip({ id: '1', key: 2021 })
+        .then(result => result.file('returns.csv').async('string'))
+        .then(csv => parse(csv, { columns: true }))
         .then(csv => {
-          return parse(csv, { columns: true });
-        })
-        .then(csv => {
-          this.returns = csv;
+          returns = csv;
         });
     });
 
@@ -184,15 +186,15 @@ describe('ROPs Exporter', function() {
         'due_date',
         'submission_date'
       ];
-      assert.deepEqual(Object.keys(this.returns[0]), expected);
+      assert.deepEqual(Object.keys(returns[0]), expected);
     });
 
     it('loads project data into returns list', () => {
-      assert.equal(this.returns.length, 3);
+      assert.equal(returns.length, 3);
 
-      const proj1 = this.returns.find(row => row.licence_number === 'PROJ0001');
-      const proj2 = this.returns.find(row => row.licence_number === 'PROJ0002');
-      const proj3 = this.returns.find(row => row.licence_number === 'PROJ0003');
+      const proj1 = returns.find(row => row.licence_number === 'PROJ0001');
+      const proj2 = returns.find(row => row.licence_number === 'PROJ0002');
+      const proj3 = returns.find(row => row.licence_number === 'PROJ0003');
 
       assert.equal(proj1.first_name, 'Test');
       assert.equal(proj1.last_name, 'User');
@@ -206,21 +208,15 @@ describe('ROPs Exporter', function() {
 
       assert.equal(proj3.revocation_date, '2021-01-01T12:00:00.000Z');
     });
-
   });
 
   describe('procedures list', () => {
-
     beforeEach(() => {
-      return this.exportToZip({ id: '1', key: 2021 })
-        .then(result => {
-          return result.file('procedures.csv').async('string');
-        })
+      return exportToZip({ id: '1', key: 2021 })
+        .then(result => result.file('procedures.csv').async('string'))
+        .then(csv => parse(csv, { columns: true }))
         .then(csv => {
-          return parse(csv, { columns: true });
-        })
-        .then(csv => {
-          this.procedures = csv;
+          procedures = csv;
         });
     });
 
@@ -251,19 +247,17 @@ describe('ROPs Exporter', function() {
         'comments_for_personal_use',
         'ppl_number'
       ];
-      assert.deepEqual(Object.keys(this.procedures[0]), expected);
+      assert.deepEqual(Object.keys(procedures[0]), expected);
     });
 
     it('maps sub-purposes to single column', () => {
-      assert.equal(this.procedures[0].sub_purpose, 'oncology');
+      assert.equal(procedures[0].sub_purpose, 'oncology');
     });
 
     it('maps common-frogs to african-frogs', () => {
-      const procedure = this.procedures.find(p => p.comments_for_ho === 'Common Frogs');
+      const procedure = procedures.find(p => p.comments_for_ho === 'Common Frogs');
       assert.ok(procedure);
       assert.equal(procedure.species, 'african-frogs');
     });
-
   });
-
 });
