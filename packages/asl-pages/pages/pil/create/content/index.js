@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Choose personal licence category',
   catAF: {
     title: 'Categories A,B,C,D and F',
     subtitle:

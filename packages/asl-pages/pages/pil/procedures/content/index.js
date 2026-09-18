@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Procedures',
   fields: {
     procedures: {
       label: '',
