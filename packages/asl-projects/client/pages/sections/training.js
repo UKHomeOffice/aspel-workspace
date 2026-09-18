@@ -3,11 +3,14 @@ import { useHistory } from 'react-router-dom';
 import { useSelector, shallowEqual } from 'react-redux';
 import { Button } from '@ukhomeoffice/react-components';
 import { compareTrainingRecords } from '../../helpers/trainingRecordsComparison';
+import { trainingRecordHolder } from '../../helpers/training-record-holder.mjs';
 import TrainingSummaryWithChangeHighlighting from '../../components/training-summary-custom';
 import Fieldset from '../../components/fieldset';
 import ReviewFields from '../../components/review-fields';
 export default function Training(props) {
-  const { training, basename, readonly, canUpdateTraining } = useSelector(state => state.application, shallowEqual);
+  const { training, basename, readonly, canUpdateTraining, licenceHolder } = useSelector(state => state.application, shallowEqual);
+  const projectStatus = useSelector(state => state.application.project?.status);
+  const holder = trainingRecordHolder(licenceHolder, projectStatus);
   const project = useSelector(state => state.project);
   const form = useRef(null);
   const history = useHistory();
@@ -37,7 +40,8 @@ export default function Training(props) {
       {!readonly && <h1>Training</h1>}
       <p>{props.intro}</p>
 
-      <h2>Training record</h2>
+      <h2>{holder ? `${holder.name}'s training record` : 'Training record'}</h2>
+      {holder && <p>{holder.status}</p>}
       <TrainingSummaryWithChangeHighlighting
         certificates={readonly ? project.training : training}
         comparisons={comparisons}
