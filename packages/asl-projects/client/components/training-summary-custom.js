@@ -117,7 +117,16 @@ export default function TrainingSummaryWithChangeHighlighting(
 
               <td className="govuk-table__cell">
                 {record.isExemption ? (
-                  <p className="preserve-whitespace">{record.exemptionReason || '-'}</p>
+                  <>
+                    <p className="exceptionNote">
+                      <span className="label">Added on: </span>
+                      <span className="value">
+                        {record.createdAt ? format(record.createdAt, dateFormat) : '-'}
+                      </span>
+                    </p>
+                    <br />
+                    <p className="preserve-whitespace">{record.exemptionReason || '-'}</p>
+                  </>
                 ) : (
                   <p className="certificate-details">
                     <span className="label">Certificate number: </span>
