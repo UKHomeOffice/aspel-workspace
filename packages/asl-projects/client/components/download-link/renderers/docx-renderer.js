@@ -622,7 +622,7 @@ export default (application, sections, values, updateImageDimensions) => {
       }
       renderProtocolsSection(doc, subsection, values);
     } else if (subsection.docxRenderer != null) {
-      subsection.docxRenderer(doc, values);
+      subsection.docxRenderer(doc, values, application);
     } else {
       renderFields(doc, subsection, values);
     }

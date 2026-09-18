@@ -91,6 +91,41 @@ describe('<TrainingSummaryWithChangeHighlighting />', () => {
       assert.ok(!markup.includes('[object Object]'));
     });
 
+    it('renders the date an exemption was added', () => {
+      const markup = render({
+        certificates: [certificate({
+          isExemption: true,
+          exemptionReason: 'Previously trained abroad',
+          createdAt: '2026-03-14T10:30:00.000Z'
+        })],
+        comparisons: emptyComparisons(),
+        previousTraining: { first: [], previous: [], granted: [] }
+      });
+
+      assert.ok(markup.includes('Previously trained abroad'));
+      assert.ok(markup.includes('Added on: </span><span class="value">14 March 2026</span>'));
+    });
+
+    it('renders a dash when an exemption has no created date', () => {
+      const markup = render({
+        certificates: [certificate({ isExemption: true, exemptionReason: 'Legacy exemption' })],
+        comparisons: emptyComparisons(),
+        previousTraining: { first: [], previous: [], granted: [] }
+      });
+
+      assert.ok(markup.includes('Added on: </span><span class="value">-</span>'));
+    });
+
+    it('does not render an added date for training certificates', () => {
+      const markup = render({
+        certificates: [certificate({ createdAt: '2026-03-14T10:30:00.000Z' })],
+        comparisons: emptyComparisons(),
+        previousTraining: { first: [], previous: [], granted: [] }
+      });
+
+      assert.ok(!markup.includes('Added on'));
+    });
+
     it('does not throw when comparisons have no grey entry', () => {
       assert.doesNotThrow(() => render({
         certificates: [certificate()],
