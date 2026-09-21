@@ -28,11 +28,11 @@ const ra = {
     options: [
       {
         label: 'Projects requiring a retrospective assessment (RA)',
-        value: 'true'
+        value: true
       },
       {
         label: 'Projects not requiring an RA',
-        value: 'false'
+        value: false
       }
     ],
     validate: ['required']
