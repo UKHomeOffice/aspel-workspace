@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import moment from 'moment';
+import { dateValidation } from '@ukhomeoffice/asl-constants';
 import DateInput from '../date-input';
 import DateErrorMessage from '../date-input/error-message';
-
-const ASPEL_DATA_START_DATE = '2019-07-31';
-const ASPEL_DATA_START = moment(ASPEL_DATA_START_DATE, 'YYYY-MM-DD');
 
 const defaultFieldNames = {
     from: 'date-from',
@@ -37,25 +34,11 @@ function getDateError({ name, field, value, errors = {}, validate = {} }) {
 }
 
 function parseDate(value) {
-    return moment(value, ['YYYY-MM-DD', 'YYYY-M-D'], true);
+    return dateValidation.parseDate(value);
 }
 
 function getBoundaryErrorCode(value) {
-    const date = parseDate(value);
-
-    if (!date.isValid()) {
-        return null;
-    }
-
-    if (date.isAfter(moment(), 'day')) {
-        return 'dateIsSameOrBefore';
-    }
-
-    if (date.isBefore(ASPEL_DATA_START, 'day')) {
-        return 'aspelDataStartDate';
-    }
-
-    return null;
+    return dateValidation.getBoundaryErrorCode(value);
 }
 
 function getBoundaryError({ field, fieldName, value, errorCode }) {

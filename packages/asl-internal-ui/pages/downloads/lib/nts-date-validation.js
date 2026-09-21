@@ -1,7 +1,5 @@
-const moment = require('moment');
+const { dateValidation } = require('@ukhomeoffice/asl-constants');
 
-const ASPEL_DATA_START_DATE = '2019-07-31';
-const DATE_FORMATS = ['YYYY-MM-DD', 'YYYY-M-D'];
 const dateFields = ['startDate', 'endDate'];
 
 function hasDateParts(query, name) {
@@ -25,7 +23,7 @@ function getDateQueryValue(query, name) {
 }
 
 function parseDate(value) {
-  return moment(value, DATE_FORMATS, true);
+  return dateValidation.parseDate(value);
 }
 
 function isValidDate(value) {
@@ -58,9 +56,7 @@ function getNtsDateRangeModel(query) {
 }
 
 function hasBoundaryError(value) {
-  const date = parseDate(value);
-
-  return date.isAfter(moment(), 'day') || date.isBefore(ASPEL_DATA_START_DATE, 'day');
+  return Boolean(dateValidation.getBoundaryErrorCode(value));
 }
 
 function validateNtsDateRangeQuery(query) {

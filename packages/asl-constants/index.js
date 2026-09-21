@@ -19,6 +19,7 @@ const trainingCourseDuration = require('./constants/training-course-duration');
 const trainingCoursePurpose = require('./constants/training-course-purpose');
 const versions = require('./constants/versions');
 const getRAReasons = require('./constants/retrospective-assessment');
+const dateValidation = require('./constants/date-validation');
 
 module.exports = {
   accreditingBodies,
@@ -42,4 +43,5 @@ module.exports = {
   trainingCoursePurpose,
   versions,
   getRAReasons,
+  dateValidation,
 };
