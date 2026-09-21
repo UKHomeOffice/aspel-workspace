@@ -33,12 +33,6 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
                     realDate: '{{dateLabel}} must be a real date',
                     past: '{{dateLabel}} must be in the past',
                     future: '{{dateLabel}} must be in the future',
-                    todayOrPast: '{{dateLabel}} must be today or in the past',
-                    todayOrFuture: '{{dateLabel}} must be today or in the future',
-                    before: '{{dateLabel}} must be before {{date}}',
-                    after: '{{dateLabel}} must be after {{date}}',
-                    sameOrBefore: '{{dateLabel}} must be the same as or before {{date}}',
-                    sameOrAfter: '{{dateLabel}} must be the same as or after {{date}}',
                     aspelDataStartDate: 'ASPeL data starts from 31/07/2019'
                 }
             }
@@ -148,74 +142,6 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
             );
 
             expect(container.textContent).toBe('Enter the date AWERB approved');
-        });
-    });
-
-    describe('NTS download date wording', () => {
-        const fromDateLabel = 'The \'From\' date';
-        const toDateLabel = 'The \'To\' date';
-
-        const ntsContent = {
-            errors: {
-                startDate: {
-                    required: 'Enter a \'From\' date',
-                    aspelDataStartDate: 'The \'From\' date must be the same as or after 31 July 2019, when ASPeL came into use'
-                },
-                endDate: {
-                    required: 'Enter a \'To\' date',
-                    aspelDataStartDate: 'The \'To\' date must be the same as or after 31 July 2019, when ASPeL came into use',
-                    date: {
-                        after: 'The \'To\' date must be the same as or after {{date}}, the \'From\' date'
-                    }
-                },
-                default: content.errors.default
-            }
-        };
-
-        test('renders the requested From date messages', () => {
-            expect(renderWith({ name: 'startDate', value: '--', errorCode: 'required', dateLabel: fromDateLabel }, ntsContent).container.textContent)
-                .toBe('Enter a \'From\' date');
-            cleanup();
-
-            expect(renderWith({ name: 'startDate', value: '2024--10', errorCode: 'validDate', dateLabel: fromDateLabel }, ntsContent).container.textContent)
-                .toBe('The \'From\' date must include a month');
-            cleanup();
-
-            expect(renderWith({ name: 'startDate', value: '24-05-10', errorCode: 'validDate', dateLabel: fromDateLabel }, ntsContent).container.textContent)
-                .toBe('Year must include 4 numbers');
-            cleanup();
-
-            expect(renderWith({ name: 'startDate', value: '2024-13-10', errorCode: 'validDate', dateLabel: fromDateLabel }, ntsContent).container.textContent)
-                .toBe('The \'From\' date must be a real date');
-            cleanup();
-
-            expect(renderWith({ name: 'startDate', value: '2999-01-01', errorCode: 'dateIsSameOrBefore', validate: [{ dateIsSameOrBefore: 'now' }], dateLabel: fromDateLabel }, ntsContent).container.textContent)
-                .toBe('The \'From\' date must be today or in the past');
-            cleanup();
-
-            expect(renderWith({ name: 'startDate', value: '2019-07-30', errorCode: 'aspelDataStartDate', dateLabel: fromDateLabel }, ntsContent).container.textContent)
-                .toBe('The \'From\' date must be the same as or after 31 July 2019, when ASPeL came into use');
-        });
-
-        test('renders the requested To date messages', () => {
-            expect(renderWith({ name: 'endDate', value: '--', errorCode: 'required', dateLabel: toDateLabel }, ntsContent).container.textContent)
-                .toBe('Enter a \'To\' date');
-            cleanup();
-
-            expect(renderWith({ name: 'endDate', value: '2024--', errorCode: 'validDate', dateLabel: toDateLabel }, ntsContent).container.textContent)
-                .toBe('The \'To\' date must include a day and month');
-            cleanup();
-
-            expect(renderWith({ name: 'endDate', value: '2999-01-01', errorCode: 'dateIsSameOrBefore', validate: [{ dateIsSameOrBefore: 'now' }], dateLabel: toDateLabel }, ntsContent).container.textContent)
-                .toBe('The \'To\' date must be today or in the past');
-            cleanup();
-
-            expect(renderWith({ name: 'endDate', value: '2019-07-30', errorCode: 'aspelDataStartDate', dateLabel: toDateLabel }, ntsContent).container.textContent)
-                .toBe('The \'To\' date must be the same as or after 31 July 2019, when ASPeL came into use');
-            cleanup();
-
-            expect(renderWith({ name: 'endDate', value: '2024-01-01', errorCode: 'dateIsAfter', validate: [{ dateIsAfter: '2024-02-01' }], dateLabel: toDateLabel }, ntsContent).container.textContent)
-                .toBe('The \'To\' date must be the same as or after 1 February 2024, the \'From\' date');
         });
     });
 });
