@@ -3,10 +3,10 @@ const { Router } = require('express');
 const { NotFoundError } = require('@asl/service/errors');
 const { permissions } = require('../../middleware');
 const { fees } = require('@ukhomeoffice/asl-constants');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 const pastAndCurrentFees = () => {
-  const financialYearStart = moment(`04-06 00:00:00`, 'MM-DD HH:mm:ss');
+  const financialYearStart = dayJs(`04-06 00:00:00`, 'MM-DD HH:mm:ss');
 
   let currentFinancialYear = (new Date()).getFullYear();
   if (financialYearStart.isAfter()) {

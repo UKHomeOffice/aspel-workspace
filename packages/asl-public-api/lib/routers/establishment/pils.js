@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { permissions } = require('../../middleware');
 const { attachReviewDue } = require('../../helpers/pils');
 
@@ -12,8 +12,8 @@ router.get('/reviews',
     const { status } = req.query;
 
     const where = status === 'overdue'
-      ? builder => builder.where('reviewDate', '<', moment())
-      : builder => builder.whereBetween('reviewDate', [moment(), moment().add(2, 'months')]);
+      ? builder => builder.where('reviewDate', '<', dayJs())
+      : builder => builder.whereBetween('reviewDate', [dayJs(), dayJs().add(2, 'months')]);
 
     const query = PIL.query()
       .where('establishmentId', req.establishment.id)

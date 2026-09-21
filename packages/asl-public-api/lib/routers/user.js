@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { pick } = require('lodash');
 const { fetchOpenTasks } = require('../middleware');
 const { UnauthorisedError } = require('../errors');
@@ -108,7 +108,7 @@ module.exports = (settings) => {
     try {
       const invitations = await Invitation.query()
         .where('email', 'iLike', req.user.profile.email)
-        .where('updatedAt', '>', moment().utc().subtract(7, 'days'))
+        .where('updatedAt', '>', dayJs().utc().subtract(7, 'days'))
         .withGraphFetched('establishment')
         .modifyGraph('establishment', (builder) => {
           builder.select('name'); // Specify the fields you want from the related model

@@ -1,5 +1,5 @@
 const { get, some, omit } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { ref } = require('objection');
 const { Router } = require('express');
 const { BadRequestError, NotFoundError } = require('../../errors');
@@ -430,7 +430,7 @@ router.get('/ras-due', (req, res, next) => {
 
   const query = Project.query()
     .where({ establishmentId: req.establishment.id })
-    .where('raDate', '<=', moment().add(1, 'month').toISOString())
+    .where('raDate', '<=', dayJs().add(1, 'month').toISOString())
     .whereNull('raGrantedDate');
 
   Promise.all([

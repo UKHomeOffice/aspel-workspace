@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { BadRequestError } = require('../../errors');
 const { permissions, validateSchema, fetchOpenTasks } = require('../../middleware');
 const { omit, pick } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 const app = Router({ mergeParams: true });
 
@@ -78,8 +78,8 @@ function checkNoLicences(req, res, next) {
 }
 
 function checkCourseNotStarted(req, res, next) {
-  const currentStartDate = moment(req.trainingCourse.startDate, 'YYYY-MM-DD');
-  if (currentStartDate.isBefore(moment().endOf('day'))) {
+  const currentStartDate = dayJs(req.trainingCourse.startDate, 'YYYY-MM-DD');
+  if (currentStartDate.isBefore(dayJs().endOf('day'))) {
     return next(new BadRequestError('Course dates cannot be updated once the course has started'));
   }
 

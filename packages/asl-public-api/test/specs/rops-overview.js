@@ -1,7 +1,7 @@
 const assert = require('assert');
 const request = require('supertest');
 const { stringify } = require('qs');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const apiHelper = require('../helpers/api');
 const ids = require('../data/ids');
 
@@ -53,7 +53,7 @@ describe('ROPs overview', () => {
         assert(response.body.data.length > 0);
         response.body.data.forEach(project => {
           assert.ok(project.ropsDeadline, 'the project should have a rops deadline');
-          assert.ok(moment(project.ropsDeadline).isValid(), 'the rops deadline should be a valid date');
+          assert.ok(dayJs(project.ropsDeadline).isValid(), 'the rops deadline should be a valid date');
         });
       });
   });
@@ -71,7 +71,7 @@ describe('ROPs overview', () => {
         assert(response.body.data.length > 0);
         response.body.data.forEach(project => {
           assert.ok(project.ropsSubmittedDate, 'the project should have a rops submitted date');
-          assert.ok(moment(project.ropsSubmittedDate).isValid(), 'the rops submitted date should be a valid date');
+          assert.ok(dayJs(project.ropsSubmittedDate).isValid(), 'the rops submitted date should be a valid date');
         });
       });
   });

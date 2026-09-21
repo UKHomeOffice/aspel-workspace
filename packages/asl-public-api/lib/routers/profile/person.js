@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { Router } = require('express');
 const isUUID = require('uuid-validate');
 const { get, some } = require('lodash');
@@ -236,7 +236,7 @@ const getPil = (req, res, next) => {
     pilContainer.onlyCatE = true;
 
     if (pilContainer.status === 'revoked') {
-      pilContainer.revocationDate = moment.max(pils.filter(p => p && p.revocationDate).map(d => moment(d.revocationDate))).toISOString();
+      pilContainer.revocationDate = dayJs.max(pils.filter(p => p && p.revocationDate).map(d => dayJs(d.revocationDate))).toISOString();
     }
   }
 
@@ -257,7 +257,7 @@ const getPil = (req, res, next) => {
 
   pilContainer.licenceNumber = req.profile.pilLicenceNumber;
 
-  pilContainer.issueDate = moment.min(pils.filter(p => p && p.issueDate).map(d => moment(d.issueDate))).toISOString();
+  pilContainer.issueDate = dayJs.min(pils.filter(p => p && p.issueDate).map(d => dayJs(d.issueDate))).toISOString();
   pilContainer.updatedAt = getMostRecent(pils).updatedAt;
 
   pilContainer.procedures = (pilContainer.procedures || [])
