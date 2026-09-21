@@ -10,10 +10,12 @@ const dates = {
     fields: {
       from: {
         label: 'Date from',
+        dateLabel: "The 'From' date",
         hint: 'For example 01 01 2020'
       },
       to: {
         label: 'Date to',
+        dateLabel: "The 'To' date",
         hint: 'For example 12 12 2020'
       }
     }

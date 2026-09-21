@@ -40,7 +40,7 @@ function parseDate(value) {
     return moment(value, ['YYYY-MM-DD', 'YYYY-M-D'], true);
 }
 
-function getBoundaryErrorCode(fieldName, value, fromFieldName) {
+function getBoundaryErrorCode(value) {
     const date = parseDate(value);
 
     if (!date.isValid()) {
@@ -51,7 +51,7 @@ function getBoundaryErrorCode(fieldName, value, fromFieldName) {
         return 'dateIsSameOrBefore';
     }
 
-    if (fieldName === fromFieldName && date.isBefore(ASPEL_DATA_START, 'day')) {
+    if (date.isBefore(ASPEL_DATA_START, 'day')) {
         return 'aspelDataStartDate';
     }
 
@@ -73,7 +73,7 @@ function getBoundaryError({ field, fieldName, value, errorCode }) {
 }
 
 function getRangeError({ field, fieldName, value, range, errors, changedFieldName, hasBoundaryError, fromFieldName, toFieldName }) {
-    const targetFieldName = changedFieldName === toFieldName ? toFieldName : fromFieldName;
+    const targetFieldName = changedFieldName || toFieldName;
     const fromValue = range[fromFieldName] ?? '';
     const toValue = range[toFieldName] ?? '';
 
@@ -116,8 +116,8 @@ export default function DateRangeInput({
     ];
     const [range, setRange] = useState(() => values || emptyValues);
     const [changedFieldName, setChangedFieldName] = useState(null);
-    const fromBoundaryErrorCode = getBoundaryErrorCode(fromFieldName, range[fromFieldName] ?? '', fromFieldName);
-    const toBoundaryErrorCode = getBoundaryErrorCode(toFieldName, range[toFieldName] ?? '', fromFieldName);
+    const fromBoundaryErrorCode = getBoundaryErrorCode(range[fromFieldName] ?? '');
+    const toBoundaryErrorCode = getBoundaryErrorCode(range[toFieldName] ?? '');
     const hasBoundaryError = Boolean(fromBoundaryErrorCode || toBoundaryErrorCode);
 
     function update(fieldName, value) {

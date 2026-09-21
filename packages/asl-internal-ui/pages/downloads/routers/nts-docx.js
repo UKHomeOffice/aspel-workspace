@@ -7,6 +7,7 @@ const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
 const { NotFoundError } = require('@asl/service/errors');
 const { addPageNumbers } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
 const { getRAReasons } = require('@ukhomeoffice/asl-constants');
+const { getDateQueryValue } = require('../lib/nts-date-validation');
 
 // Converts docx Document instance into a binary Buffer
 const pack = doc => {
@@ -14,30 +15,23 @@ const pack = doc => {
   return packer.toBuffer(doc);
 };
 
-// Check YYYY-MM-DD format and date check
-const isValidDate = (dateStr) => {
-  if (typeof dateStr !== 'string') return false;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+const getRedirectQuery = query => {
+  const redirectQuery = new URLSearchParams({ tab: 'nts', validateNtsDates: 'true' });
 
-  const date = new Date(dateStr);
-  // Ensures it's a valid date
-  return !isNaN(date.getTime()) && date.toISOString().slice(0, 10) === dateStr;
-};
+  ['startDate', 'endDate'].forEach(name => {
+    ['day', 'month', 'year'].forEach(part => {
+      const key = `${name}-${part}`;
+      if (query[key]) {
+        redirectQuery.set(key, query[key]);
+      }
+    });
+  });
 
-const getDateQueryValue = (query, name) => {
-  if (query[name]) {
-    return query[name];
+  if (query.ra !== undefined) {
+    redirectQuery.set('ra', query.ra);
   }
 
-  const day = query[`${name}-day`];
-  const month = query[`${name}-month`];
-  const year = query[`${name}-year`];
-
-  if (!day && !month && !year) {
-    return undefined;
-  }
-
-  return `${year || ''}-${String(month || '').padStart(2, '0')}-${String(day || '').padStart(2, '0')}`;
+  return redirectQuery.toString();
 };
 
 module.exports = settings => {
@@ -52,25 +46,8 @@ module.exports = settings => {
       const endDate = getDateQueryValue(req.query, 'endDate');
       const { ra } = req.query;
 
-      // Validate startDate
-      if (!startDate) {
-        return res.status(400).send('Missing required query parameter: "startDate".');
-      }
-      if (!isValidDate(startDate)) {
-        return res.status(400).send('Invalid "startDate" parameter. Format must be YYYY-MM-DD.');
-      }
-
-      // Validate endDate
-      if (!endDate) {
-        return res.status(400).send('Missing required query parameter: "endDate".');
-      }
-      if (!isValidDate(endDate)) {
-        return res.status(400).send('Invalid "endDate" parameter. Format must be YYYY-MM-DD.');
-      }
-
-      // Ensure startDate is not after endDate
-      if (new Date(startDate) > new Date(endDate)) {
-        return res.status(400).send('"startDate" cannot be later than "endDate".');
+      if (!startDate || !endDate) {
+        return res.redirect(`/downloads?${getRedirectQuery(req.query)}`);
       }
 
       // Validate ra (REQUIRED & must be 'true' or 'false')

@@ -14,6 +14,19 @@ module.exports = {
   'place-create': 'Approved area additions',
   'place-delete': 'Approved area deletions',
   'profile-update': 'Profile updates',
+  errors: {
+    startDate: {
+      required: "Enter a 'From' date",
+      aspelDataStartDate: "The 'From' date must be the same as or after 31 July 2019, when ASPeL came into use"
+    },
+    endDate: {
+      required: "Enter a 'To' date",
+      aspelDataStartDate: "The 'To' date must be the same as or after 31 July 2019, when ASPeL came into use",
+      date: {
+        after: "The 'To' date must be the same as or after {{date}}, the 'From' date"
+      }
+    }
+  },
   links: {
     taskMetrics: 'Tasks processed by duration and decision for {{month}} {{year}} (ZIP)'
   }
