@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayjs = require('../dayjs.js');
 const { splitDateValue } = require('./invalid-parts');
 
 // Maps a date error to the GOV.UK Design System message model. GDS uses specific,
@@ -28,8 +28,17 @@ function ruleParam(validate = [], code) {
 }
 
 function formatReferenceDate(param) {
-    const m = moment(param, ['YYYY-MM-DD', moment.ISO_8601], true);
-    return m.isValid() ? m.format('D MMMM YYYY') : '';
+    if (typeof param !== 'string') {
+        return '';
+    }
+
+    const strictDate = dayjs(param, 'YYYY-MM-DD', true);
+    if (strictDate.isValid()) {
+        return strictDate.format('D MMMM YYYY');
+    }
+
+    const isoDate = dayjs(param);
+    return isoDate.isValid() ? isoDate.format('D MMMM YYYY') : '';
 }
 
 function resolveIncomplete(parts) {

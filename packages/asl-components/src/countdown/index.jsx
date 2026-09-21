@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
+import dayJs from '../dayjs.js';
 import { Snippet } from '../';
-import {
+const {
     differenceInDays,
     differenceInWeeks,
     differenceInMonths,
     isBefore,
     isToday
-} from 'date-fns';
+} = dayJs;
 import classNames from 'classnames';
 
 const Countdown = ({

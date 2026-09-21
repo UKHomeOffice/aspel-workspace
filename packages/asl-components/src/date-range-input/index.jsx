@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import moment from 'moment';
+import dayjs from '../dayjs.js';
 import DateInput from '../date-input';
 import DateErrorMessage from '../date-input/error-message';
 
 const ASPEL_DATA_START_DATE = '2019-07-31';
 const DATE_FROM_FIELD_NAME = 'date-from';
 const DATE_TO_FIELD_NAME = 'date-to';
-const ASPEL_DATA_START = moment(ASPEL_DATA_START_DATE, 'YYYY-MM-DD');
+const ASPEL_DATA_START = dayjs(ASPEL_DATA_START_DATE, 'YYYY-MM-DD', true);
+const DATE_FORMATS = ['YYYY-MM-DD', 'YYYY-M-D'];
 
 const defaultFields = {
     [DATE_FROM_FIELD_NAME]: {
@@ -35,7 +36,14 @@ function getDateError({ name, field, value, errors = {}, validate = {} }) {
 }
 
 function parseDate(value) {
-    return moment(value, ['YYYY-MM-DD', 'YYYY-M-D'], true);
+    for (const format of DATE_FORMATS) {
+        const date = dayjs(value, format, true);
+        if (date.isValid()) {
+            return date;
+        }
+    }
+
+    return dayjs(value, DATE_FORMATS[0], true);
 }
 
 function getBoundaryErrorCode(fieldName, value) {
@@ -45,7 +53,7 @@ function getBoundaryErrorCode(fieldName, value) {
         return null;
     }
 
-    if (date.isAfter(moment(), 'day')) {
+    if (date.isAfter(dayjs(), 'day')) {
         return 'dateIsSameOrBefore';
     }
 

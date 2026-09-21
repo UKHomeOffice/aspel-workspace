@@ -1,10 +1,11 @@
 import React from 'react';
+import dayJs from '../dayjs.js';
 import { useSelector } from 'react-redux';
 import sortBy from 'lodash/sortBy';
-import { format } from 'date-fns';
 import { ApplyChanges, Snippet, Link } from '../';
 import { getUrl } from '../link';
 
+const { format } = dayJs;
 const dateFormat = 'dd MMMM yyyy';
 
 function List({ items }) {

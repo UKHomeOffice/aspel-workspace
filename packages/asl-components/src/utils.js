@@ -1,7 +1,7 @@
 const { stringify, parse } = require('qs');
 const get = require('lodash/get');
 const url = require('url');
-const { format: dateFormatter } = require('date-fns');
+const { format: dateFormatter } = require('./dayjs.js');
 
 const getValue = ({ row, schema, key }) => {
     const accessor = schema.accessor || key;

@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
+import dayJs from '../dayjs.js';
 import { Countdown } from '../';
-import { format } from 'date-fns';
+const { format } = dayJs;
 
 const ExpiryDate = ({
     date,

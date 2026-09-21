@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Snippet from '../snippet';
 import classnames from 'classnames';
-import { format } from 'date-fns';
+import dayJs from '../dayjs.js';
+const { format } = dayJs;
 
 function LicenceStatusBanner({ licence, licenceType, isPdf, dateFormat='dd MMMM yyyy', colour, title, suspendedEstablishment, children }) {
     const [open, setOpen] = useState(false);
