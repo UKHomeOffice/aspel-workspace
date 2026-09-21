@@ -1,5 +1,5 @@
 const { get } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const taskHelper = require('../utils/task');
 const { subscribedFilter, subscribed, subscribedToCollaborations } = require('../utils/is-subscribed');
 
@@ -46,7 +46,7 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
 
   const project = await Project.query()
     .select('projects.*')
-    .selectRopsDeadline(moment().utc().year())
+    .selectRopsDeadline(dayJs().utc().year())
     .findById(projectId)
     .withGraphFetched('[additionalEstablishments, licenceHolder, collaborators.[emailPreferences,establishments]]');
 
@@ -59,13 +59,13 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
   const applicant = applicantId && await Profile.query().findById(applicantId);
 
   const licenceNumber = project.licenceNumber;
-  const raDate = project.raDate && moment(project.raDate).format(dateFormat);
-  const expiryDate = project.expiryDate && moment(project.expiryDate).format(dateFormat);
-  const revocationDate = project.revocationDate && moment(project.revocationDate).format(dateFormat);
+  const raDate = project.raDate && dayJs(project.raDate).format(dateFormat);
+  const expiryDate = project.expiryDate && dayJs(project.expiryDate).format(dateFormat);
+  const revocationDate = project.revocationDate && dayJs(project.revocationDate).format(dateFormat);
   const endDate = project.revocationDate || project.expiryDate;
-  const ropsDate = endDate && moment(endDate).add(28, 'days').format(dateFormat);
-  const publicationsDate = endDate && moment(endDate).add(6, 'months').format(dateFormat);
-  const continuationDate = project.expiryDate && moment(project.expiryDate).subtract(3, 'months').format(dateFormat);
+  const ropsDate = endDate && dayJs(endDate).add(28, 'days').format(dateFormat);
+  const publicationsDate = endDate && dayJs(endDate).add(6, 'months').format(dateFormat);
+  const continuationDate = project.expiryDate && dayJs(project.expiryDate).subtract(3, 'months').format(dateFormat);
 
   const admins = await Profile.query()
     .withGraphFetched('emailPreferences')
@@ -144,7 +144,7 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
   }
 
   function formatDeadline(date) {
-    return moment(date, 'YYYY-MM-DD').format('DD/MM/YYYY');
+    return dayJs(date, 'YYYY-MM-DD').format('DD/MM/YYYY');
   }
 
   if (taskHelper.isSuspension(task)) {
@@ -153,7 +153,7 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
       modelType: 'project',
       emailTemplate: 'licence-suspended',
       logMsg: 'Project suspended',
-      suspendedDate: project && project.suspendedDate && moment(project.suspendedDate).format(dateFormat),
+      suspendedDate: project && project.suspendedDate && dayJs(project.suspendedDate).format(dateFormat),
       addTaskTypeToSubject: false
     };
 
@@ -170,8 +170,8 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
       modelType: 'project',
       emailTemplate: 'licence-reinstated',
       logMsg: 'Project reinstated',
-      suspendedDate: project && project.suspendedDate && moment(project.suspendedDate).format(dateFormat),
-      reinstatedDate: moment().format(dateFormat),
+      suspendedDate: project && project.suspendedDate && dayJs(project.suspendedDate).format(dateFormat),
+      reinstatedDate: dayJs().format(dateFormat),
       addTaskTypeToSubject: false
     };
 
@@ -236,7 +236,7 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
   if (task.data.action.match(/^rop-reminder-/)) {
     const when = get(task, 'data.when');
     const projectId = task.data.id;
-    const ropsDeadline = project.ropsDeadline && moment(project.ropsDeadline).format(dateFormat);
+    const ropsDeadline = project.ropsDeadline && dayJs(project.ropsDeadline).format(dateFormat);
 
     const reportingUrl = `${publicUrl}/establishments/${establishmentId}/projects/${projectId}#reporting`;
 

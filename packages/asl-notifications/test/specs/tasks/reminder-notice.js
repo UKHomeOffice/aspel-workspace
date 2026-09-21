@@ -1,6 +1,6 @@
 const { v4: uuid } = require('uuid');
 const sinon = require('sinon');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const assert = require('assert');
 const dbHelper = require('../../helpers/db');
 const logger = require('../../helpers/logger');
@@ -48,7 +48,7 @@ describe('Condition reminder notice', () => {
       const reminder = {
         modelType: 'establishment',
         establishmentId: 8201,
-        deadline: moment().add(27, 'days').format('YYYY-MM-DD'),
+        deadline: dayJs().add(27, 'days').format('YYYY-MM-DD'),
         status: 'active'
       };
 
@@ -72,7 +72,7 @@ describe('Condition reminder notice', () => {
       const reminder = {
         modelType: 'establishment',
         establishmentId: 8201,
-        deadline: moment().add(7, 'days').format('YYYY-MM-DD'),
+        deadline: dayJs().add(7, 'days').format('YYYY-MM-DD'),
         status: 'active'
       };
 
@@ -96,7 +96,7 @@ describe('Condition reminder notice', () => {
       const reminder = {
         modelType: 'establishment',
         establishmentId: 8201,
-        deadline: moment().format('YYYY-MM-DD'),
+        deadline: dayJs().format('YYYY-MM-DD'),
         status: 'active'
       };
 
@@ -120,7 +120,7 @@ describe('Condition reminder notice', () => {
       const reminder = {
         modelType: 'establishment',
         establishmentId: 8201,
-        deadline: moment().subtract(1, 'day').format('YYYY-MM-DD'),
+        deadline: dayJs().subtract(1, 'day').format('YYYY-MM-DD'),
         status: 'active'
       };
 
@@ -149,7 +149,7 @@ describe('Condition reminder notice', () => {
         modelType: 'pil',
         modelId: pilId,
         establishmentId: 8201,
-        deadline: moment().add(27, 'days').format('YYYY-MM-DD'),
+        deadline: dayJs().add(27, 'days').format('YYYY-MM-DD'),
         status: 'active'
       };
 
@@ -174,7 +174,7 @@ describe('Condition reminder notice', () => {
         modelType: 'pil',
         modelId: pilId,
         establishmentId: 8201,
-        deadline: moment().add(7, 'days').format('YYYY-MM-DD'),
+        deadline: dayJs().add(7, 'days').format('YYYY-MM-DD'),
         status: 'active'
       };
 
@@ -199,7 +199,7 @@ describe('Condition reminder notice', () => {
         modelType: 'pil',
         modelId: pilId,
         establishmentId: 8201,
-        deadline: moment().format('YYYY-MM-DD'),
+        deadline: dayJs().format('YYYY-MM-DD'),
         status: 'active'
       };
 
@@ -224,7 +224,7 @@ describe('Condition reminder notice', () => {
         modelType: 'pil',
         modelId: pilId,
         establishmentId: 8201,
-        deadline: moment().subtract(1, 'day').format('YYYY-MM-DD'),
+        deadline: dayJs().subtract(1, 'day').format('YYYY-MM-DD'),
         status: 'active'
       };
 
@@ -253,7 +253,7 @@ describe('Condition reminder notice', () => {
         modelType: 'project',
         modelId: projectId,
         establishmentId: 8201,
-        deadline: moment().add(6, 'days').format('YYYY-MM-DD'),
+        deadline: dayJs().add(6, 'days').format('YYYY-MM-DD'),
         status: 'pending'
       };
 
@@ -271,7 +271,7 @@ describe('Condition reminder notice', () => {
         modelType: 'project',
         modelId: projectId,
         establishmentId: 8201,
-        deadline: moment().add(27, 'days').format('YYYY-MM-DD'),
+        deadline: dayJs().add(27, 'days').format('YYYY-MM-DD'),
         status: 'active'
       };
 
@@ -296,7 +296,7 @@ describe('Condition reminder notice', () => {
         modelType: 'project',
         modelId: projectId,
         establishmentId: 8201,
-        deadline: moment().add(7, 'days').format('YYYY-MM-DD'),
+        deadline: dayJs().add(7, 'days').format('YYYY-MM-DD'),
         status: 'active'
       };
 
@@ -321,7 +321,7 @@ describe('Condition reminder notice', () => {
         modelType: 'project',
         modelId: projectId,
         establishmentId: 8201,
-        deadline: moment().format('YYYY-MM-DD'),
+        deadline: dayJs().format('YYYY-MM-DD'),
         status: 'active'
       };
 
@@ -346,7 +346,7 @@ describe('Condition reminder notice', () => {
         modelType: 'project',
         modelId: projectId,
         establishmentId: 8201,
-        deadline: moment().subtract(1, 'day').format('YYYY-MM-DD'),
+        deadline: dayJs().subtract(1, 'day').format('YYYY-MM-DD'),
         status: 'active'
       };
 

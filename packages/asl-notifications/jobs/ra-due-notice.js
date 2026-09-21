@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const Emailer = require('../lib/emailer');
 
 module.exports = ({ schema, logger, publicUrl }) => {
@@ -8,8 +8,8 @@ module.exports = ({ schema, logger, publicUrl }) => {
 
   const raDueNotice = (upper, action) => {
     logger.debug(`Looking for projects due an RA in next ${upper} month(s)`);
-    const ub = upper === 0 ? moment().endOf('day').toISOString() : moment().add(upper, 'months').toISOString();
-    const lb = upper === 0 ? moment().startOf('day').toISOString() : moment().add(upper, 'months').subtract(1, 'week').toISOString();
+    const ub = upper === 0 ? dayJs().endOf('day').toISOString() : dayJs().add(upper, 'months').toISOString();
+    const lb = upper === 0 ? dayJs().startOf('day').toISOString() : dayJs().add(upper, 'months').subtract(1, 'week').toISOString();
 
     return Promise.resolve()
       .then(() => {

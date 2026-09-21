@@ -1,5 +1,5 @@
 const { get } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const taskHelper = require('../utils/task');
 const getTaskType = require('../dispatcher/get-task-type');
 const { subscribedFilter } = require('../utils/is-subscribed');
@@ -62,7 +62,7 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
   const params = {
     establishmentId,
     pilId,
-    pilExpiryDate: trainingPil && moment(trainingPil.expiryDate).format(dateFormat),
+    pilExpiryDate: trainingPil && dayJs(trainingPil.expiryDate).format(dateFormat),
     applicant: licenceHolder,
     licenceHolderName: `${licenceHolder.firstName} ${licenceHolder.lastName}`,
     trainingCourseTitle: trainingCourse.title,

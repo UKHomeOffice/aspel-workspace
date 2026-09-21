@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const Emailer = require('../lib/emailer');
 
 module.exports = ({ schema, logger, publicUrl }) => {
@@ -8,8 +8,8 @@ module.exports = ({ schema, logger, publicUrl }) => {
 
   const expiryNotice = (upper, action) => {
     logger.debug(`Looking for projects expiring in next ${upper} months`);
-    const ub = moment().add(upper, 'months').toISOString();
-    const lb = moment().add(upper, 'months').subtract(1, 'week').toISOString();
+    const ub = dayJs().add(upper, 'months').toISOString();
+    const lb = dayJs().add(upper, 'months').subtract(1, 'week').toISOString();
 
     return Promise.resolve()
       .then(() => {
@@ -37,8 +37,8 @@ module.exports = ({ schema, logger, publicUrl }) => {
 
   const expiredNotice = () => {
     logger.debug('Looking for projects expired in the last week');
-    const ub = moment().startOf('day').toISOString();
-    const lb = moment().startOf('day').subtract(1, 'week').toISOString();
+    const ub = dayJs().startOf('day').toISOString();
+    const lb = dayJs().startOf('day').subtract(1, 'week').toISOString();
 
     return Promise.resolve()
       .then(() => {

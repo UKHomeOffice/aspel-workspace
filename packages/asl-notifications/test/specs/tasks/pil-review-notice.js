@@ -1,6 +1,6 @@
 const { v4: uuid } = require('uuid');
 const sinon = require('sinon');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const assert = require('assert');
 const dbHelper = require('../../helpers/db');
 const logger = require('../../helpers/logger');
@@ -29,7 +29,7 @@ describe('PIL review', () => {
     const pil = {
       id: uuid(),
       profileId: basic,
-      reviewDate: moment().add(3, 'months').subtract(1, 'day').toISOString(),
+      reviewDate: dayJs().add(3, 'months').subtract(1, 'day').toISOString(),
       status: 'active',
       establishmentId: 8201,
       licenceNumber: 'PIL-3-MONTH'
@@ -55,7 +55,7 @@ describe('PIL review', () => {
     const pil = {
       id: uuid(),
       profileId: basic,
-      reviewDate: moment().add(1, 'months').subtract(1, 'day').toISOString(),
+      reviewDate: dayJs().add(1, 'months').subtract(1, 'day').toISOString(),
       status: 'active',
       establishmentId: 8201,
       licenceNumber: 'PIL-1-MONTH'
@@ -81,7 +81,7 @@ describe('PIL review', () => {
     const pil = {
       id: uuid(),
       profileId: basic,
-      reviewDate: moment().subtract(4, 'day').toISOString(),
+      reviewDate: dayJs().subtract(4, 'day').toISOString(),
       status: 'active',
       establishmentId: 8201,
       licenceNumber: 'PIL-OVERDUE'
@@ -110,7 +110,7 @@ describe('PIL review', () => {
     const pil = {
       id: uuid(),
       profileId: basic,
-      reviewDate: moment().subtract(2, 'weeks').toISOString(),
+      reviewDate: dayJs().subtract(2, 'weeks').toISOString(),
       status: 'active',
       establishmentId: 8201,
       licenceNumber: 'PIL-VERY-OVERDUE'
@@ -138,7 +138,7 @@ describe('PIL review', () => {
       {
         id: ids.reviewIn6Months,
         profileId: basic,
-        reviewDate: moment().add(6, 'months').subtract(1, 'day').toISOString(),
+        reviewDate: dayJs().add(6, 'months').subtract(1, 'day').toISOString(),
         status: 'active',
         establishmentId: 8201,
         licenceNumber: 'PIL-6-MONTH'
@@ -146,7 +146,7 @@ describe('PIL review', () => {
       {
         id: ids.reviewIn3Months,
         profileId: basic,
-        reviewDate: moment().add(3, 'months').subtract(1, 'day').toISOString(),
+        reviewDate: dayJs().add(3, 'months').subtract(1, 'day').toISOString(),
         status: 'active',
         establishmentId: 8201,
         licenceNumber: 'PIL-3-MONTH'
@@ -154,7 +154,7 @@ describe('PIL review', () => {
       {
         id: ids.reviewIn1Month,
         profileId: basic,
-        reviewDate: moment().add(1, 'months').subtract(1, 'day').toISOString(),
+        reviewDate: dayJs().add(1, 'months').subtract(1, 'day').toISOString(),
         status: 'active',
         establishmentId: 8201,
         licenceNumber: 'PIL-1-MONTH'
@@ -162,7 +162,7 @@ describe('PIL review', () => {
       {
         id: ids.reviewOverdue,
         profileId: basic,
-        reviewDate: moment().subtract(1, 'day').toISOString(),
+        reviewDate: dayJs().subtract(1, 'day').toISOString(),
         status: 'active',
         establishmentId: 8201,
         licenceNumber: 'PIL-OVERDUE'
@@ -170,7 +170,7 @@ describe('PIL review', () => {
       {
         id: ids.reviewVeryOverdue,
         profileId: basic,
-        reviewDate: moment().subtract(1, 'month').toISOString(),
+        reviewDate: dayJs().subtract(1, 'month').toISOString(),
         status: 'active',
         establishmentId: 8201,
         licenceNumber: 'PIL-VERY-OVERDUE'
@@ -180,7 +180,7 @@ describe('PIL review', () => {
     const alreadyNotified = {
       id: ids.alreadyNotified,
       profileId: basic,
-      reviewDate: moment().add(1, 'months').subtract(1, 'day').toISOString(),
+      reviewDate: dayJs().add(1, 'months').subtract(1, 'day').toISOString(),
       status: 'active',
       establishmentId: 8201,
       licenceNumber: 'PIL-NOTIFIED'

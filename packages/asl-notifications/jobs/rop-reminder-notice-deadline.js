@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const Emailer = require('../lib/emailer');
 const { uniqBy } = require('lodash');
 
@@ -26,7 +26,7 @@ module.exports = async ({ schema, logger, publicUrl }) => {
   const emailer = Emailer({ schema, logger, publicUrl });
 
   const reminderNotice = async ({ deadline = null, actionSuffix, when }) => {
-    const year = moment().utc().year();
+    const year = dayJs().utc().year();
     const action = `rop-reminder-${actionSuffix}`;
 
     const thisYearProjects = await projectsWithRopsOutstanding(deadline, year);
@@ -52,6 +52,6 @@ module.exports = async ({ schema, logger, publicUrl }) => {
     })));
   };
 
-  await reminderNotice({ actionSuffix: 'week', deadline: moment().utc().add('1', 'week'), when: 'in 1 week' });
-  await reminderNotice({ actionSuffix: 'today', deadline: moment().utc(), when: 'today' });
+  await reminderNotice({ actionSuffix: 'week', deadline: dayJs().utc().add('1', 'week'), when: 'in 1 week' });
+  await reminderNotice({ actionSuffix: 'today', deadline: dayJs().utc(), when: 'today' });
 };

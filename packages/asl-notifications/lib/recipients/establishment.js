@@ -1,6 +1,6 @@
 const dictionary = require('@ukhomeoffice/asl-dictionary');
 const { get } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const taskHelper = require('../utils/task');
 const { subscribed } = require('../utils/is-subscribed');
 
@@ -194,7 +194,7 @@ module.exports = async ({ schema, logger, task }) => {
       modelType: 'establishment',
       emailTemplate: 'licence-suspended',
       logMsg: 'Establishment suspended',
-      suspendedDate: establishment.suspendedDate && moment(establishment.suspendedDate).format(dateFormat),
+      suspendedDate: establishment.suspendedDate && dayJs(establishment.suspendedDate).format(dateFormat),
       addTaskTypeToSubject: false
     };
 
@@ -212,8 +212,8 @@ module.exports = async ({ schema, logger, task }) => {
       modelType: 'establishment',
       emailTemplate: 'licence-reinstated',
       logMsg: 'Establishment reinstated',
-      suspendedDate: establishment.suspendedDate && moment(establishment.suspendedDate).format(dateFormat),
-      reinstatedDate: moment().format(dateFormat),
+      suspendedDate: establishment.suspendedDate && dayJs(establishment.suspendedDate).format(dateFormat),
+      reinstatedDate: dayJs().format(dateFormat),
       addTaskTypeToSubject: false
     };
 

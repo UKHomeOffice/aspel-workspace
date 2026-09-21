@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const Emailer = require('../lib/emailer');
 
 const buildRoleQueryWithCompletionDate = ({ Role, dates }) => {
@@ -26,9 +26,9 @@ module.exports = async ({ schema, logger, publicUrl }) => {
   const emailer = Emailer({ schema, logger, publicUrl });
 
   const completeDatesToQuery = [
-    moment().add(3, 'months').format('YYYY-MM-DD'),
-    moment().add(1, 'months').format('YYYY-MM-DD'),
-    moment().add(1, 'days').format('YYYY-MM-DD')
+    dayJs().add(3, 'months').format('YYYY-MM-DD'),
+    dayJs().add(1, 'months').format('YYYY-MM-DD'),
+    dayJs().add(1, 'days').format('YYYY-MM-DD')
   ];
 
   logger.debug(`Finding roles with outstanding training`);
@@ -52,7 +52,7 @@ module.exports = async ({ schema, logger, publicUrl }) => {
           firstName: role.firstName,
           lastName: role.lastName,
           name: role.name,
-          completeDate: moment(role.trainingDelayDetails.completeDate).format('D MMMM YYYY')
+          completeDate: dayJs(role.trainingDelayDetails.completeDate).format('D MMMM YYYY')
         }
       }
     })));

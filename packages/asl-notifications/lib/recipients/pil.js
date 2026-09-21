@@ -1,5 +1,5 @@
 const { get } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const taskHelper = require('../utils/task');
 const { subscribed, subscribedFilter } = require('../utils/is-subscribed');
 
@@ -150,10 +150,10 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
     establishmentId,
     licenceNumber: (applicant && applicant.pilLicenceNumber) || (pil && pil.licenceNumber),
     licenceHolderId: pil && pil.profileId,
-    reviewDate: pil && pil.reviewDate && moment(pil.reviewDate).format(dateFormat),
+    reviewDate: pil && pil.reviewDate && dayJs(pil.reviewDate).format(dateFormat),
     applicant,
     profileUrl: `${publicUrl}/establishments/${establishmentId}/people/${applicantId}`,
-    today: moment().format(dateFormat)
+    today: dayJs().format(dateFormat)
   };
 
   if (applicant) {
@@ -166,7 +166,7 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
       modelType: 'personal',
       emailTemplate: 'licence-suspended',
       logMsg: 'PIL suspended',
-      suspendedDate: pil && pil.suspendedDate && moment(pil.suspendedDate).format(dateFormat),
+      suspendedDate: pil && pil.suspendedDate && dayJs(pil.suspendedDate).format(dateFormat),
       addTaskTypeToSubject: false
     };
 
@@ -183,8 +183,8 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
       modelType: 'personal',
       emailTemplate: 'licence-reinstated',
       logMsg: 'PIL reinstated',
-      suspendedDate: pil && pil.suspendedDate && moment(pil.suspendedDate).format(dateFormat),
-      reinstatedDate: moment().format(dateFormat),
+      suspendedDate: pil && pil.suspendedDate && dayJs(pil.suspendedDate).format(dateFormat),
+      reinstatedDate: dayJs().format(dateFormat),
       addTaskTypeToSubject: false
     };
 
