@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { pick } = require('lodash');
 
 module.exports = () => (req, res, next) => {
@@ -30,7 +30,7 @@ module.exports = () => (req, res, next) => {
               results.push({
                 establishment: project.name,
                 ...pick(project, 'licence_number', 'title', 'status'),
-                issue_date: moment(project.issue_date).format('YYYY-MM-DD'),
+                issue_date: dayJs(project.issue_date).format('YYYY-MM-DD'),
                 conditions: project.data.conditions || [],
                 protocols: (project.data.protocols || []).map(protocol => pick(protocol, ['title', 'conditions']))
               });

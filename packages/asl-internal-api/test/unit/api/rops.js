@@ -1,6 +1,6 @@
 const assert = require('assert');
 const request = require('supertest');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const apiHelper = require('../../helpers/api');
 const ids = require('../../data/ids');
 
@@ -43,7 +43,7 @@ describe('/rops', () => {
   });
 
   describe('rops summary', () => {
-    const currentYear = moment().year();
+    const currentYear = dayJs().year();
 
     before(() => {
       const { Project } = this.db;
@@ -66,10 +66,10 @@ describe('/rops', () => {
           licenceNumber: 'ppl-active',
           schemaVersion: 1,
           status: 'active',
-          issueDate: moment('2020-03-12').toISOString(),
-          expiryDate: moment(`${currentYear + 1}-03-12`).toISOString(),
+          issueDate: dayJs('2020-03-12').toISOString(),
+          expiryDate: dayJs(`${currentYear + 1}-03-12`).toISOString(),
           rops: [
-            { year: 2020, status: 'submitted', submittedDate: moment('2021-01-01').toISOString() }
+            { year: 2020, status: 'submitted', submittedDate: dayJs('2021-01-01').toISOString() }
           ]
         },
         {
@@ -80,8 +80,8 @@ describe('/rops', () => {
           licenceNumber: 'ppl-expired',
           schemaVersion: 1,
           status: 'expired',
-          issueDate: moment('2020-03-12').toISOString(),
-          expiryDate: moment('2020-09-12').toISOString(),
+          issueDate: dayJs('2020-03-12').toISOString(),
+          expiryDate: dayJs('2020-09-12').toISOString(),
           rops: [
             { year: 2020, status: 'draft' }
           ]
@@ -94,9 +94,9 @@ describe('/rops', () => {
           licenceNumber: 'ppl-revoked',
           schemaVersion: 1,
           status: 'revoked',
-          issueDate: moment('2020-03-12').toISOString(),
-          expiryDate: moment(`${currentYear + 1}-03-12`).toISOString(),
-          revocationDate: moment(`2020-12-01`).toISOString()
+          issueDate: dayJs('2020-03-12').toISOString(),
+          expiryDate: dayJs(`${currentYear + 1}-03-12`).toISOString(),
+          revocationDate: dayJs(`2020-12-01`).toISOString()
         }
       ]);
     });
