@@ -66,6 +66,10 @@ function validateNtsDateRangeQuery(query) {
     return error ? { ...fieldErrors, [name]: error } : fieldErrors;
   }, {});
 
+  if (query.ra === undefined || query.ra === '') {
+    errors.ra = 'required';
+  }
+
   const hasDateErrors = Object.keys(errors).length > 0;
   const startDate = parseDate(model.startDate);
   const endDate = parseDate(model.endDate);

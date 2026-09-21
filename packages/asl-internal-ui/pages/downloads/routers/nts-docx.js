@@ -46,14 +46,11 @@ module.exports = settings => {
       const endDate = getDateQueryValue(req.query, 'endDate');
       const { ra } = req.query;
 
-      if (!startDate || !endDate) {
+      if (!startDate || !endDate || ra === undefined || ra === '') {
         return res.redirect(`/downloads?${getRedirectQuery(req.query)}`);
       }
 
       // Validate ra (REQUIRED & must be 'true' or 'false')
-      if (ra === undefined || ra === '') {
-        return res.status(400).send('Missing required query parameter: "ra".');
-      }
       if (!['true', 'false'].includes(String(ra).toLowerCase())) {
         return res.status(400).send('Invalid "ra" parameter. Must be "true" or "false".');
       }

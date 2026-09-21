@@ -25,6 +25,9 @@ module.exports = {
       date: {
         after: "The 'To' date must be the same as or after {{date}}, the 'From' date"
       }
+    },
+    ra: {
+      required: 'Select which type of non-technical summary to download'
     }
   },
   links: {
