@@ -49,10 +49,7 @@ function getDateError(query, name) {
 }
 
 function getNtsDateRangeModel(query) {
-  return dateFields.reduce((model, name) => ({
-    ...model,
-    [name]: getDateQueryValue(query, name)
-  }), {});
+  return Object.fromEntries(dateFields.map(name => [name, getDateQueryValue(query, name)]));
 }
 
 function hasBoundaryError(value) {
@@ -61,10 +58,11 @@ function hasBoundaryError(value) {
 
 function validateNtsDateRangeQuery(query) {
   const model = getNtsDateRangeModel(query);
-  const errors = dateFields.reduce((fieldErrors, name) => {
-    const error = getDateError(query, name);
-    return error ? { ...fieldErrors, [name]: error } : fieldErrors;
-  }, {});
+  const errors = Object.fromEntries(
+    dateFields
+      .map(name => [name, getDateError(query, name)])
+      .filter(([, error]) => error)
+  );
 
   if (query.ra === undefined || query.ra === '') {
     errors.ra = 'required';
