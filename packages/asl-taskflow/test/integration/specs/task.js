@@ -2,7 +2,7 @@ const request = require('supertest');
 const express = require('express');
 const sinon = require('sinon');
 const assert = require('assert');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 const Taskflow = require('../../../');
 const Task = require('../../../lib/db/task');
@@ -341,7 +341,7 @@ describe('/:task', () => {
         .then(() => {
           return ActivityLog.query(this.flow.db).where({ comment: 'testing the activity log' })
             .then(logs => {
-              assert.ok(!moment(logs[0].createdAt).isSame(moment(logs[1].createdAt)));
+              assert.ok(!dayJs(logs[0].createdAt).isSame(dayJs(logs[1].createdAt)));
             });
         });
     });
