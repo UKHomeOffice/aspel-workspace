@@ -4,7 +4,7 @@ try {
   require('dotenv').config();
 } catch (e) {}
 
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const config = require('../config');
 const Logger = require('../lib/utils/logger');
 const logger = Logger(config);
@@ -12,9 +12,9 @@ const db = require('@asl/schema');
 
 const scheduleTaskMetrics = async () => {
   const { Export } = db(config.db);
-  const prevMonth = moment().subtract(1, 'month');
-  const start = moment(prevMonth).startOf('month').format('YYYY-MM-DD');
-  const end = moment(prevMonth).endOf('month').format('YYYY-MM-DD');
+  const prevMonth = dayJs().subtract(1, 'month');
+  const start = dayJs(prevMonth).startOf('month').format('YYYY-MM-DD');
+  const end = dayJs(prevMonth).endOf('month').format('YYYY-MM-DD');
   const key = prevMonth.format('YYYY-MM');
   const type = 'task-metrics';
 
