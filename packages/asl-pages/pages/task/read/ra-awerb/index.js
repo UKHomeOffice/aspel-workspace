@@ -1,6 +1,6 @@
 const { page } = require('@asl/service/ui');
 const { get } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const form = require('../../../common/routers/form');
 const content = require('./content');
 const schema = require('./schema');
@@ -30,7 +30,7 @@ module.exports = () => {
       next();
     },
     saveValues: (req, res, next) => {
-      req.session.form[req.model.id].meta['ra-awerb-date'] = moment(req.form.values['ra-awerb-date'], 'YYYY-MM-DD').format('YYYY-MM-DD');
+      req.session.form[req.model.id].meta['ra-awerb-date'] = dayJs(req.form.values['ra-awerb-date'], 'YYYY-MM-DD').format('YYYY-MM-DD');
       req.session.form[req.model.id].meta.declaration = content.declaration;
       next();
     }

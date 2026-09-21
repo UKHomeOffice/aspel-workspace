@@ -1,9 +1,11 @@
 import React, { Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { shallowEqual, useSelector } from 'react-redux';
 import get from 'lodash/get';
-import { differenceInCalendarDays, isSameDay, isBefore } from 'date-fns';
 import { ReviewFields } from '@asl/projects/client/components/review-fields';
 import { Details, Link, Snippet, Utils } from '@ukhomeoffice/asl-components';
+
+const { differenceInCalendarDays, isSameDay, isBefore } = dayJs;
 
 function DaysSince({ date }) {
   if (isSameDay(date, new Date())) {

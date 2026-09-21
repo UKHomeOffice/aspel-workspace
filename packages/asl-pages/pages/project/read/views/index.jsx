@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { useSelector, shallowEqual } from 'react-redux';
 import get from 'lodash/get';
 import { DocumentHeader, Snippet, Tabs, Link } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
-import { format } from 'date-fns';
 import { dateFormat } from '../../../../constants';
 import ProjectStatusBanner from '../../../project-version/components/project-status-banner';
 import Overview from './sections/overview';
@@ -15,6 +15,8 @@ import AdditionalAvailabilityWarning from './components/additional-availability-
 import EnforcementFlags from '../../../enforcement/components/enforcement-flags';
 import Reminders from '../../../common/components/reminders';
 import FlashBanner from '@ukhomeoffice/asl-components/src/flash-banner';
+
+const { format } = dayJs;
 
 function SectionNav({ sections, activeSection, setActiveSection }) {
   const activeTab = Object.keys(sections).indexOf(activeSection);

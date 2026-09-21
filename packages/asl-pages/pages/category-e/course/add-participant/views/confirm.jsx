@@ -1,8 +1,10 @@
 import React, { useMemo } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { useSelector } from 'react-redux';
 import { Details, FormLayout, Header, Inset, Link, ModelSummary, Snippet } from '@ukhomeoffice/asl-components';
 import CourseSummary from '../components/course-summary';
-import { isBefore, isSameDay, addYears } from 'date-fns';
+
+const { isBefore, isSameDay, addYears } = dayJs;
 
 function isOver18AtStartOfCourse(dob, trainingCourse) {
   const eighteenthBirthday = addYears(dob, 18);

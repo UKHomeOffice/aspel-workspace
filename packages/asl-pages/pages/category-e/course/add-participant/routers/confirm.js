@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { get, omit } = require('lodash');
-const { format } = require('date-fns');
+const { format } = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 module.exports = () => {
   const app = Router({ mergeParams: true });

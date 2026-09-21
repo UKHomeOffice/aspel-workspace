@@ -1,12 +1,15 @@
 import React, { Fragment } from 'react';
 
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import {
   Snippet,
   Link
 } from '@ukhomeoffice/asl-components';
-import { format } from 'date-fns';
 import { dateFormat } from '../../../constants';
 import { Warning } from '@ukhomeoffice/react-components';
+
+const { format } = dayJs;
+
 const namedRoles = require('../../role/content/named-roles');
 const skillsAndExperienceContent = require('../../role/named-person-mvp/content/skills-and-experience');
 const { SHARED_TRAINING_INTRO_ROLE_TYPES } = require('../../role/named-person-mvp/role-types');

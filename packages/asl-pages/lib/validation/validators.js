@@ -1,11 +1,11 @@
 const { isUndefined, isNull, every, castArray, some, zip } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 function normaliseDate(dateSpec, values, model) {
   if (typeof dateSpec === 'function') {
     return dateSpec(values, model);
   } else if (dateSpec === 'now' || dateSpec == null) {
-    return moment();
+    return dayJs();
   } else {
     return zip(dateSpec.split('-'), [4, 2, 2])
       .map(([part, length]) => part.padStart(length, '0'))
@@ -76,27 +76,27 @@ const validators = {
     if (!value.match(/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/)) {
       return false;
     }
-    return isNull(value) || moment(value, 'YYYY-MM-DD').isValid();
+    return isNull(value) || dayJs(value, 'YYYY-MM-DD').isValid();
   },
   lessThanOrEqualToMaxWordCount(fieldName, value, params, values, model, field) {
     return value?.split(/\s+/).filter(Boolean).length <= field.maxWordCount;
   },
   dateIsAfter(field, value, date, values, model) {
     return isNull(value) ||
-      moment(value, 'YYYY-MM-DD').isAfter(normaliseDate(date, values, model));
+      dayJs(value, 'YYYY-MM-DD').isAfter(normaliseDate(date, values, model));
   },
   dateIsSameOrAfter(field, value, date, values, model) {
     return isNull(value) ||
-      moment(value, 'YYYY-MM-DD').isSameOrAfter(normaliseDate(date, values, model));
+      dayJs(value, 'YYYY-MM-DD').isSameOrAfter(normaliseDate(date, values, model));
   },
   dateIsBefore(field, value, date, values, model) {
     return isNull(value) ||
-      moment(value, 'YYYY-MM-DD').isBefore(normaliseDate(date, values, model));
+      dayJs(value, 'YYYY-MM-DD').isBefore(normaliseDate(date, values, model));
   },
   dateIsSameOrBefore(field, value, date, values, model) {
     const threshold = normaliseDate(date, values, model);
     return isNull(value) ||
-      moment(value, 'YYYY-MM-DD').isSameOrBefore(threshold);
+      dayJs(value, 'YYYY-MM-DD').isSameOrBefore(threshold);
   },
   // file validation
   fileRequired(field, value) {

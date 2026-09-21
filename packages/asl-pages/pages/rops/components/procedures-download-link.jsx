@@ -1,7 +1,9 @@
 import React from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { useSelector } from 'react-redux';
 import { Link } from '@ukhomeoffice/asl-components';
-import { format } from 'date-fns';
+
+const { format } = dayJs;
 
 export default function ProceduresDownloadLink({ className }) {
   const year = useSelector(state => state.static.year);

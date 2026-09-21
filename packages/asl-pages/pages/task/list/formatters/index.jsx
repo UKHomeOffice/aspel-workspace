@@ -1,10 +1,12 @@
 import React, { Fragment } from 'react';
 import classnames from 'classnames';
 import get from 'lodash/get';
-import { format, isBefore, differenceInCalendarDays, isSameDay } from 'date-fns';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { dateFormat } from '../../../../constants';
 import { Snippet, Link } from '@ukhomeoffice/asl-components';
 import AssignTask from '../components/assign-task';
+
+const { format, isBefore, differenceInCalendarDays, isSameDay } = dayJs;
 
 const good = ['resolved'];
 const bad = ['rejected', 'withdrawn', 'discarded-by-applicant', 'refused'];

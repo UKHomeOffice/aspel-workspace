@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { page } = require('@asl/service/ui');
 const { form } = require('../../common/routers');
 const schema = require('./schema');
@@ -19,7 +19,7 @@ module.exports = () => {
       next();
     },
     saveValues: (req, res, next) => {
-      req.session.form[req.model.id].values.passDate = moment(req.form.values.passDate, 'YYYY-MM-DD').format('YYYY-MM-DD');
+      req.session.form[req.model.id].values.passDate = dayJs(req.form.values.passDate, 'YYYY-MM-DD').format('YYYY-MM-DD');
       next();
     }
   }));

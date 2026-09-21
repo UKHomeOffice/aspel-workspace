@@ -1,10 +1,12 @@
 import React from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { useSelector } from 'react-redux';
-import { format } from 'date-fns';
 import { dateFormat } from '../../../../../constants';
 import { Snippet, Link } from '@ukhomeoffice/asl-components';
 import { Button } from '@ukhomeoffice/react-components';
 import Subsection from './subsection';
+
+const { format } = dayJs;
 
 export default function RA() {
   const model = useSelector(state => state.model);

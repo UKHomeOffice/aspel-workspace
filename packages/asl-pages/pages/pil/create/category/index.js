@@ -1,5 +1,5 @@
 const { page } = require('@asl/service/ui');
-const { differenceInYears } = require('date-fns');
+const { differenceInYears } = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 module.exports = settings => {
   const app = page({

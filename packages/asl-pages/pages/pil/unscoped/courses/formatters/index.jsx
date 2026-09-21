@@ -1,8 +1,10 @@
 import React from 'react';
-import { format } from 'date-fns';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { Link } from '@ukhomeoffice/asl-components';
 import { dateFormat } from '../../../../../constants';
 import { trainingCoursePurpose } from '@ukhomeoffice/asl-constants';
+
+const { format } = dayJs;
 
 const formatDate = date => format(date, dateFormat.long);
 

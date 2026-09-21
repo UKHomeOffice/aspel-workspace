@@ -1,4 +1,4 @@
-const { differenceInDays, format: dateFormatter, isValid: isValidDate, toDate } = require('date-fns');
+const { differenceInDays, format: dateFormatter, isValid: isValidDate, toDate } = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { get, isEqual, mapValues, isPlainObject, omit, castArray, reduce, isUndefined } = require('lodash');
 // "Deprecation of this API has been shelved ... due to [URL's constructor's] inability to handle partial URLs"
 // eslint-disable-next-line node/no-deprecated-api

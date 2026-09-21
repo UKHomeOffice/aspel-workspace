@@ -1,11 +1,13 @@
 import React from 'react';
-import { getMonth, getYear } from 'date-fns';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { Link, Snippet } from '@ukhomeoffice/asl-components';
 import { formatDate as formatDateUtil } from '@ukhomeoffice/asl-components/src/utils';
 import { dateFormat } from '../../../constants';
 import taskFormatters from '../../task/list/formatters';
 import classnames from 'classnames';
 import { trainingCourseDuration, trainingCoursePurpose } from '@ukhomeoffice/asl-constants';
+
+const { getMonth, getYear } = dayJs;
 
 export const formatDate = (date, formatSpec = dateFormat.medium) =>
   // \u00A0 is non-breaking space to prevent tables flowing the dates onto multiple lines

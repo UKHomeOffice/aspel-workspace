@@ -1,10 +1,12 @@
 import React from 'react';
 import classnames from 'classnames';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { Snippet, Inset } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
-import { addYears, format as formatDate } from 'date-fns';
 import { dateFormat } from '../../../constants';
 import content from '../../common/content';
+
+const { addYears, format: formatDate } = dayJs;
 
 function CaseDetails({ flag }) {
   const flagExpires = addYears(flag.createdAt, 5);

@@ -1,5 +1,5 @@
 const { v4: uuid } = require('uuid');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { get } = require('lodash');
 const { page } = require('@asl/service/ui');
 const { form, relatedTasks } = require('../../common/routers');
@@ -42,7 +42,7 @@ module.exports = settings => {
     },
     saveValues: (req, res, next) => {
       req.session.form[req.model.id].values.deadline = req.form.values.setReminder
-        ? moment(req.form.values.deadline, 'YYYY-MM-DD').format('YYYY-MM-DD')
+        ? dayJs(req.form.values.deadline, 'YYYY-MM-DD').format('YYYY-MM-DD')
         : undefined;
       next();
     }

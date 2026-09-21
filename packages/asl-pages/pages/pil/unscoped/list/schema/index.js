@@ -1,5 +1,5 @@
 const { dateFormat } = require('../../../../../constants');
-const { isValid: isValidDate, toDate, format: dateFormatter } = require('date-fns');
+const { isValid: isValidDate, toDate, format: dateFormatter } = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 function concatArray(arr) {
   return (arr || []).join(', ');

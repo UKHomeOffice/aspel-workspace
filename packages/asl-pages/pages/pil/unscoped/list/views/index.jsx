@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { useSelector } from 'react-redux';
 import {
   Link,
@@ -11,8 +12,9 @@ import {
   Inset
 } from '@ukhomeoffice/asl-components';
 import Page from '../../components/page';
-import { format } from 'date-fns';
 import { dateFormat } from '../../../../../constants';
+
+const { format } = dayJs;
 
 const formatters = {
   profile: {

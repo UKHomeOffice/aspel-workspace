@@ -1,8 +1,10 @@
 import React, { Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { useSelector } from 'react-redux';
 import { Header, Snippet, Datatable, Link } from '@ukhomeoffice/asl-components';
 import { dateFormat } from '../../../../../constants';
-import { format } from 'date-fns';
+
+const { format } = dayJs;
 
 const formatters = {
   subject: {

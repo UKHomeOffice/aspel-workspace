@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { get } = require('lodash');
 const { page } = require('@asl/service/ui');
 const { form } = require('../../../common/routers');
@@ -58,7 +58,7 @@ module.exports = settings => {
       if (!req.body['ra-awerb-date-day'] || !req.canEndorse) {
         return next();
       }
-      req.session.form[req.model.id].values['ra-awerb-date'] = moment(req.form.values['ra-awerb-date'], 'YYYY-MM-DD').format('YYYY-MM-DD');
+      req.session.form[req.model.id].values['ra-awerb-date'] = dayJs(req.form.values['ra-awerb-date'], 'YYYY-MM-DD').format('YYYY-MM-DD');
       next();
     },
     locals: (req, res, next) => {

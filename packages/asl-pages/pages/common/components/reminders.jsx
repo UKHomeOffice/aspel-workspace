@@ -1,9 +1,11 @@
 import React, { Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { useSelector } from 'react-redux';
 import map from 'lodash/map';
 import isEmpty from 'lodash/isEmpty';
-import { addMonths, differenceInCalendarDays, format as formatDate, formatDistance } from 'date-fns';
 import { Warning } from '@ukhomeoffice/react-components';
+
+const { addMonths, differenceInCalendarDays, format: formatDate, formatDistance } = dayJs;
 
 const relativeTime = deadline => {
   const dayDiff = differenceInCalendarDays(deadline, new Date());

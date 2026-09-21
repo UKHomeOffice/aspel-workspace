@@ -1,5 +1,7 @@
-import { getYear, isBefore } from 'date-fns';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { ropsYears } from '../../../../../../constants/index';
+
+const { getYear, isBefore } = dayJs;
 
 export default function getRopDue(project, task) {
   // Draft projects don't need to submit rops
