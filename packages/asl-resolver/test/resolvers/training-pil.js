@@ -1,11 +1,11 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const assert = require('assert');
 const { trainingPil } = require('../../lib/resolvers');
 const db = require('../helpers/db');
 const { v4: uuid } = require('uuid');
 
 function isNowish(date) {
-  return moment(date).isBetween(moment().subtract(5, 'seconds'), moment().add(5, 'seconds'));
+  return dayJs(date).isBetween(dayJs().subtract(5, 'seconds'), dayJs().add(5, 'seconds'));
 }
 
 const ids = {
@@ -52,7 +52,7 @@ const trainingCourse = {
   establishmentId: ids.establishment,
   projectId: ids.project,
   title: 'Test training course',
-  startDate: moment().add(1, 'month').format('YYYY-MM-DD')
+  startDate: dayJs().add(1, 'month').format('YYYY-MM-DD')
 };
 
 const trainingPils = [
@@ -196,7 +196,7 @@ describe('Training pil resolver', () => {
           assert.ok(isNowish(trainingPil.issueDate));
           assert.equal(
             trainingPil.expiryDate,
-            moment(trainingPil.issueDate).add(3, 'months').toISOString()
+            dayJs(trainingPil.issueDate).add(3, 'months').toISOString()
           );
         });
     });

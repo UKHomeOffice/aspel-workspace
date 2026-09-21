@@ -1,5 +1,5 @@
 const { pick } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const resolver = require('./base-resolver');
 const { generateLicenceNumber } = require('../utils');
 
@@ -40,7 +40,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
   if (action === 'grant') {
     const trainingPil = await TrainingPil.query(transaction).findById(id).withGraphFetched('trainingCourse');
     const profile = await Profile.query(transaction).findById(trainingPil.profileId);
-    const issueDate = moment();
+    const issueDate = dayJs();
 
     if (!profile.pilLicenceNumber) {
       const pilLicenceNumber = await generateLicenceNumber({ model: Profile, transaction, type: 'pil', key: 'pilLicenceNumber' });

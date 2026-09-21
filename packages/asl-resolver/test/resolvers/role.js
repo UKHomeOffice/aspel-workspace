@@ -1,5 +1,5 @@
 const assert = require('assert');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const uuid = require('uuid').v4;
 const { role } = require('../../lib/resolvers');
 const db = require('../helpers/db');
@@ -26,7 +26,7 @@ const ESTABLISHMENT_ID = 8201;
 const ESTABLISHMENT_ID_2 = 8202;
 
 const nowish = (a, b, n = 3) => {
-  const diff = moment(a).diff(b, 'seconds');
+  const diff = dayJs(a).diff(b, 'seconds');
   assert.ok(Math.abs(diff) < n, `${a} should be within ${n} seconds of ${b}`);
 };
 

@@ -1,5 +1,5 @@
 const assert = require('assert');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { place } = require('../../lib/resolvers');
 const db = require('../helpers/db');
 const { v4: uuid } = require('uuid');
@@ -12,7 +12,7 @@ const NACWO_ROLE_ID_2 = uuid();
 const REMINDER_ID = uuid();
 
 const nowish = (a, b, n = 3) => {
-  const diff = moment(a).diff(b, 'seconds');
+  const diff = dayJs(a).diff(b, 'seconds');
   assert.ok(Math.abs(diff) < n, `${a} should be within ${n} seconds of ${b}`);
 };
 
@@ -237,7 +237,7 @@ describe('Place resolver', () => {
 
             const nacwo1Relation = placeRoles.find(pr => pr.roleId === NACWO_ROLE_ID_1);
             assert(nacwo1Relation.deleted);
-            assert(moment(nacwo1Relation.deleted).isValid());
+            assert(dayJs(nacwo1Relation.deleted).isValid());
 
             const nacwo2Relation = placeRoles.find(pr => pr.roleId === NACWO_ROLE_ID_2);
             assert(!nacwo2Relation.deleted);
@@ -401,7 +401,7 @@ describe('Place resolver', () => {
           .then(() => this.models.Place.queryWithDeleted().findById(opts.id))
           .then(place => {
             assert(place.deleted);
-            assert(moment(place.deleted).isValid());
+            assert(dayJs(place.deleted).isValid());
           });
       });
 

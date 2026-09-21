@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 function expireModels(Model, beforeTime) {
   return Model.query()
@@ -10,7 +10,7 @@ function expireModels(Model, beforeTime) {
 
 const expire = ({ models, logger }) => {
   const { Project, TrainingPil } = models;
-  const midnightLastNight = moment.utc().startOf('day').toISOString();
+  const midnightLastNight = dayJs.utc().startOf('day').toISOString();
   logger.info(`performing project and cat e pil expiry check with cutoff of ${midnightLastNight}`);
 
   function reportExpiry(models, modelName) {

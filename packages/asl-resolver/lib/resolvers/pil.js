@@ -1,5 +1,5 @@
 const { get, pick, omit } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const resolver = require('./base-resolver');
 const { generateLicenceNumber } = require('../utils');
 
@@ -46,8 +46,8 @@ module.exports = ({ models }) => async ({ action, data, id, changedBy }, transac
       return PIL.query(transaction).insert({
         ...omit(pil, 'id', 'revocationDate'),
         status: 'active',
-        issueDate: moment().toISOString(),
-        reviewDate: moment().add(5, 'years').toISOString(),
+        issueDate: dayJs().toISOString(),
+        reviewDate: dayJs().add(5, 'years').toISOString(),
         species: data.species,
         procedures: data.procedures,
         notesCatD: data.notesCatD,
@@ -55,7 +55,7 @@ module.exports = ({ models }) => async ({ action, data, id, changedBy }, transac
       });
     }
 
-    const issueDate = pil.status === 'active' ? pil.issueDate : moment().toISOString();
+    const issueDate = pil.status === 'active' ? pil.issueDate : dayJs().toISOString();
     const patch = {
       status: 'active',
       issueDate,
@@ -67,7 +67,7 @@ module.exports = ({ models }) => async ({ action, data, id, changedBy }, transac
 
     const submitter = await Profile.query(transaction).findById(changedBy);
     if (!submitter.asruUser) {
-      patch.reviewDate = moment().add(5, 'years').toISOString();
+      patch.reviewDate = dayJs().add(5, 'years').toISOString();
     }
 
     return pil.$query(transaction).patchAndFetch(patch);
@@ -75,7 +75,7 @@ module.exports = ({ models }) => async ({ action, data, id, changedBy }, transac
 
   if (action === 'review') {
     data = {
-      reviewDate: moment().add(5, 'years').toISOString()
+      reviewDate: dayJs().add(5, 'years').toISOString()
     };
     action = 'update';
   }

@@ -1,5 +1,5 @@
 const assert = require('assert');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { pil } = require('../../lib/resolvers');
 const db = require('../helpers/db');
 
@@ -57,7 +57,7 @@ const CONDITIONS_PIL = {
 };
 
 function isThenish(date, expected) {
-  return moment(date).isBetween(moment(expected).subtract(5, 'seconds'), moment(expected).add(5, 'seconds'));
+  return dayJs(date).isBetween(dayJs(expected).subtract(5, 'seconds'), dayJs(expected).add(5, 'seconds'));
 }
 
 describe('PIL resolver', () => {
@@ -202,7 +202,7 @@ describe('PIL resolver', () => {
           .then(() => this.models.PIL.queryWithDeleted().findById(opts.id))
           .then(pil => {
             assert(pil.deleted);
-            assert(moment(pil.deleted).isValid());
+            assert(dayJs(pil.deleted).isValid());
           });
       });
 
@@ -225,7 +225,7 @@ describe('PIL resolver', () => {
           action: 'review',
           id: '9fbe0218-995d-47d3-88e7-641fc046d7d1'
         };
-        const expected = moment().add(5, 'years');
+        const expected = dayJs().add(5, 'years');
 
         return Promise.resolve()
           .then(() => this.pil(opts))
@@ -278,7 +278,7 @@ describe('PIL resolver', () => {
           .then(() => this.models.PIL.query().findById(opts.id))
           .then(pil => {
             assert.ok(pil.suspendedDate, 'it has as a suspended date');
-            assert(moment(pil.suspendedDate).isValid(), 'pil suspended date is a valid date');
+            assert(dayJs(pil.suspendedDate).isValid(), 'pil suspended date is a valid date');
           });
       });
     });
@@ -293,7 +293,7 @@ describe('PIL resolver', () => {
         };
 
         return Promise.resolve()
-          .then(() => this.models.PIL.query().patchAndFetchById(opts.id, { suspendedDate: moment().toISOString() }))
+          .then(() => this.models.PIL.query().patchAndFetchById(opts.id, { suspendedDate: dayJs().toISOString() }))
           .then(() => this.pil(opts))
           .then(() => this.models.PIL.query().findById(opts.id))
           .then(pil => {
@@ -304,7 +304,7 @@ describe('PIL resolver', () => {
   });
 
   describe('Grant', () => {
-    const expectedReviewDate = moment().add(5, 'years');
+    const expectedReviewDate = dayJs().add(5, 'years');
 
     it('can grant a pil', () => {
       return this.models.PIL.query().insert({
@@ -326,16 +326,16 @@ describe('PIL resolver', () => {
             assert.equal(pil.status, 'active', 'pil is active');
             assert(pil.profile.pilLicenceNumber, 'profile has a PIL licence number');
             assert(pil.issueDate, 'pil has an issue date');
-            assert(moment(pil.issueDate).isValid(), 'pil issue date is a valid date');
+            assert(dayJs(pil.issueDate).isValid(), 'pil issue date is a valid date');
             assert(pil.reviewDate, 'pil has a review date');
-            assert(moment(pil.reviewDate).isSame(expectedReviewDate, 'day'), 'pil review date is 5 years from issue date');
+            assert(dayJs(pil.reviewDate).isSame(expectedReviewDate, 'day'), 'pil review date is 5 years from issue date');
           });
       });
     });
 
     it('can re-grant a revoked pil with a new issue date', () => {
-      const originalIssueDate = moment('2019-10-01 12:00:00');
-      const originalRevocationDate = moment('2019-10-02 12:00:00');
+      const originalIssueDate = dayJs('2019-10-01 12:00:00');
+      const originalRevocationDate = dayJs('2019-10-02 12:00:00');
 
       return Promise.resolve()
         .then(() => this.models.PIL.query().insert({
@@ -365,7 +365,7 @@ describe('PIL resolver', () => {
             .then(pil => {
               assert.equal(pil.profile.pilLicenceNumber, 'XYZ-987');
               assert.equal(pil.status, 'revoked', 'old pil should still be revoked');
-              assert(moment(pil.issueDate).isSame(originalIssueDate, 'day'), 'old pil issue date should not have been changed');
+              assert(dayJs(pil.issueDate).isSame(originalIssueDate, 'day'), 'old pil issue date should not have been changed');
             })
             .then(() => this.models.PIL.query().where({ profileId: PILH.id }))
             .then(pils => {
@@ -374,17 +374,17 @@ describe('PIL resolver', () => {
               assert.equal(pil.establishmentId, 8201);
               assert.deepEqual(pil.species, ['mice', 'rats']);
               assert.deepEqual(pil.procedures, ['A', 'B']);
-              assert(moment(pil.issueDate).isSame(moment(), 'day'), 'new pil issue date should be todays date');
-              assert(moment(pil.reviewDate).isSame(moment().add(5, 'years'), 'day'), 'new pil review date should be 5 years time');
+              assert(dayJs(pil.issueDate).isSame(dayJs(), 'day'), 'new pil issue date should be todays date');
+              assert(dayJs(pil.reviewDate).isSame(dayJs().add(5, 'years'), 'day'), 'new pil review date should be 5 years time');
               assert.equal(pil.revocationDate, null);
             });
         });
     });
 
     it('amendments do not reset the issue date but update the review date', () => {
-      const originalIssueDate = moment('2019-10-01 12:00:00');
-      const originalReviewDate = moment('2024-10-01 12:00:00');
-      const expectedReviewDate = moment().add(5, 'years');
+      const originalIssueDate = dayJs('2019-10-01 12:00:00');
+      const originalReviewDate = dayJs('2024-10-01 12:00:00');
+      const expectedReviewDate = dayJs().add(5, 'years');
 
       return this.models.PIL.query().insert({
         id: '318301a9-c73d-42e2-a4c2-b070a9c5135f',
@@ -411,16 +411,16 @@ describe('PIL resolver', () => {
             assert.equal(pil.status, 'active', 'pil is active');
             assert.equal(pil.licenceNumber, 'XYZ-987', 'pil licence number should not be changed');
             assert(pil.issueDate, 'pil has an issue date');
-            assert(moment(pil.issueDate).isSame(originalIssueDate, 'day'), 'pil issue date should not be updated');
+            assert(dayJs(pil.issueDate).isSame(originalIssueDate, 'day'), 'pil issue date should not be updated');
             assert(pil.reviewDate, 'pil has a review date');
-            assert(moment(pil.reviewDate).isSame(expectedReviewDate, 'day'), 'pil review date should be 5 years from current date');
+            assert(dayJs(pil.reviewDate).isSame(expectedReviewDate, 'day'), 'pil review date should be 5 years from current date');
           });
       });
     });
 
     it('amendments by ASRU do not reset the review date', () => {
-      const originalIssueDate = moment('2019-10-01 12:00:00');
-      const originalReviewDate = moment('2024-10-01 12:00:00');
+      const originalIssueDate = dayJs('2019-10-01 12:00:00');
+      const originalReviewDate = dayJs('2024-10-01 12:00:00');
 
       return this.models.PIL.query().insert({
         id: '318301a9-c73d-42e2-a4c2-b070a9c5135f',
@@ -447,7 +447,7 @@ describe('PIL resolver', () => {
             assert.equal(pil.status, 'active', 'pil is active');
             assert.equal(pil.licenceNumber, 'XYZ-987', 'pil licence number should not be changed');
             assert(pil.issueDate, 'pil has an issue date');
-            assert(moment(pil.issueDate).isSame(originalIssueDate, 'day'), 'pil issue date should not be updated');
+            assert(dayJs(pil.issueDate).isSame(originalIssueDate, 'day'), 'pil issue date should not be updated');
             assert(pil.reviewDate, 'pil has a review date');
             assert.equal(pil.reviewDate, originalReviewDate.toISOString(), 'pil review date should be 5 years from original issue date');
           });
@@ -590,7 +590,7 @@ describe('PIL resolver', () => {
             .then(reminders => {
               assert.deepEqual(reminders.length, 1, 'there should be a single deleted reminder');
               assert.ok(reminders[0].deleted, 'the deleted column should be set');
-              assert(moment(reminders[0].deleted).isValid(), 'deleted date is a valid date');
+              assert(dayJs(reminders[0].deleted).isValid(), 'deleted date is a valid date');
             });
         });
     });
