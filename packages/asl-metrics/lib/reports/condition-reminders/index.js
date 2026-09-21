@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const isUUID = require('uuid-validate');
 const { get, flatten } = require('lodash');
 const { default: projectConditions } = require('@asl/projects/client/constants/conditions');
@@ -90,7 +90,7 @@ module.exports = ({ db }) => {
       establishment_id: record.establishment_id,
       establishment_name: record.establishment_name,
       ...getConditions(record),
-      deadline: moment(record.deadline).format('YYYY-MM-DD')
+      deadline: dayJs(record.deadline).format('YYYY-MM-DD')
     };
   };
 

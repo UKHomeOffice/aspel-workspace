@@ -1,5 +1,5 @@
 const { omit, get, concat, pick } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const CONDITIONS_SPEC = require('@asl/projects/client/constants/conditions').default;
 const RA = require('@asl/projects/client/constants/retrospective-assessment').default;
 
@@ -25,7 +25,7 @@ function projectToConditions(project) {
   const row = {
     establishment: project.name,
     ...pick(project, 'licence_number', 'title', 'status', 'schema_version'),
-    issue_date: moment(project.issue_date).format('YYYY-MM-DD'),
+    issue_date: dayJs(project.issue_date).format('YYYY-MM-DD'),
     conditions: project.data.conditions || [],
     protocols: (project.data.protocols || []).map(protocol => pick(protocol, ['title', 'conditions']))
   };

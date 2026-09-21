@@ -1,7 +1,7 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 const formatDate = date => {
-  return date ? moment(date).format('YYYY-MM-DD') : '';
+  return date ? dayJs(date).format('YYYY-MM-DD') : '';
 };
 
 module.exports = ({ db }) => {

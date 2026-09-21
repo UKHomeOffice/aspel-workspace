@@ -1,8 +1,8 @@
 const { get } = require('lodash');
 
-const moment = require('moment-business-time');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-moment.updateLocale('en', { holidays: bankHolidays });
+dayJs.updateLocale('en', { holidays: bankHolidays });
 
 const LONGEST_DEADLINE = 55;
 const SHORTEST_DEADLINE = 15;
@@ -25,19 +25,19 @@ function yesNo(v) {
 
 module.exports = ({ db, query: params }) => {
 
-  if (!params.start || moment(params.start).format('YYYY-MM-DD') !== params.start) {
+  if (!params.start || dayJs(params.start).format('YYYY-MM-DD') !== params.start) {
     throw Error('valid start date must be provided');
   }
 
-  if (!params.end || moment(params.end).format('YYYY-MM-DD') !== params.end) {
+  if (!params.end || dayJs(params.end).format('YYYY-MM-DD') !== params.end) {
     throw Error('valid end date must be provided');
   }
 
   // if the task was last updated more than 55 days before our start date (longest deadline)
   // or created after 15 days before the end date (shortest deadline)
   // then it cannot have passed the deadline during the requested report period and therefore we can safely ignore it
-  const earliest = moment(params.start).subtractWorkingTime(LONGEST_DEADLINE, 'days').format('YYYY-MM-DD');
-  const latest = moment(params.end).subtractWorkingTime(SHORTEST_DEADLINE, 'days').format('YYYY-MM-DD');
+  const earliest = dayJs(params.start).subtractWorkingTime(LONGEST_DEADLINE, 'days').format('YYYY-MM-DD');
+  const latest = dayJs(params.end).subtractWorkingTime(SHORTEST_DEADLINE, 'days').format('YYYY-MM-DD');
 
   const query = () => {
     const q = db.flow('cases')
@@ -103,7 +103,7 @@ module.exports = ({ db, query: params }) => {
           return; // skip any activity before internal deadline is set
         }
 
-        const activityDate = moment(activity.updated_at).format('YYYY-MM-DD');
+        const activityDate = dayJs(activity.updated_at).format('YYYY-MM-DD');
         resubmitted = get(activity, 'event.data.internalDeadline.resubmitted');
 
         if (targetClearingStatuses.includes(activity.event.status) && activityDate <= target) {

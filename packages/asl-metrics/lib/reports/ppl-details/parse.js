@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { get } = require('lodash');
 const getPermissiblePurposes = require('../ppl-list/get-permissible-purposes');
 const hasSpecies = require('../ppl-list/has-species');
@@ -136,7 +136,7 @@ const parse = project => {
     duration: formatDuration(project),
     establishment: project.establishmentName,
     establishmentLicenceNumber: project.establishmentLicenceNumber,
-    raDate: project.ra_date ? moment(project.ra_date).format('YYYY-MM-DD') : '',
+    raDate: project.ra_date ? dayJs(project.ra_date).format('YYYY-MM-DD') : '',
     nhps: hasSpecies(project, 'nhps') ? 'yes' : 'no',
     catsOrDogs: hasSpecies(project, 'catsOrDogs') ? 'yes' : 'no',
     equidae: hasSpecies(project, 'equidae') ? 'yes' : 'no',
@@ -145,9 +145,9 @@ const parse = project => {
     legacy: isLegacy(project),
     establishment_name: project.establishment_name,
     status: project.status,
-    issue_date: moment(project.issue_date).format('YYYY-MM-DD'),
-    expiry_date: moment(project.expiry_date).format('YYYY-MM-DD'),
-    revocation_date: project.revocation_date ? moment(project.revocation_date).format('YYYY-MM-DD') : '',
+    issue_date: dayJs(project.issue_date).format('YYYY-MM-DD'),
+    expiry_date: dayJs(project.expiry_date).format('YYYY-MM-DD'),
+    revocation_date: project.revocation_date ? dayJs(project.revocation_date).format('YYYY-MM-DD') : '',
     has_auto_RA: hasAutoRA(project),
     has_inspector_RA: hasInspectorRA(project),
     permissible_purposes: getPermissiblePurposes(project),

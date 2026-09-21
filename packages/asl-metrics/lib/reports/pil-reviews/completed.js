@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 module.exports = ({ db }) => {
   const query = () => {
@@ -27,7 +27,7 @@ module.exports = ({ db }) => {
           establishment: pil.establishment,
           licenceHolder: `${pil.first_name} ${pil.last_name}`,
           status: pil.status,
-          reviewDate: moment(c.updated_at).format('YYYY-MM-DD')
+          reviewDate: dayJs(c.updated_at).format('YYYY-MM-DD')
         };
       });
   };

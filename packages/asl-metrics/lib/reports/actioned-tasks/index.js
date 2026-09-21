@@ -1,22 +1,22 @@
 const { get, pick } = require('lodash');
-const moment = require('moment-business-time');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-moment.updateLocale('en', { holidays: bankHolidays });
+dayJs.updateLocale('en', { holidays: bankHolidays });
 
 const getTaskType = require('./get-task-type');
 
 module.exports = ({ db, flow, query: params }) => {
 
-  if (!params.start || moment(params.start).format('YYYY-MM-DD') !== params.start) {
+  if (!params.start || dayJs(params.start).format('YYYY-MM-DD') !== params.start) {
     throw Error('valid start date must be provided');
   }
 
-  if (!params.end || moment(params.end).format('YYYY-MM-DD') !== params.end) {
+  if (!params.end || dayJs(params.end).format('YYYY-MM-DD') !== params.end) {
     throw Error('valid end date must be provided');
   }
 
-  const start = moment(params.start).startOf('day');
-  const end = moment(params.end).endOf('day');
+  const start = dayJs(params.start).startOf('day');
+  const end = dayJs(params.end).endOf('day');
 
   const openStatuses = flow.open;
   const closedStatuses = flow.closed;
@@ -128,7 +128,7 @@ module.exports = ({ db, flow, query: params }) => {
     task.activity
       .filter(Boolean)
       .forEach(activityLog => {
-        const eventTime = moment(activityLog.created_at);
+        const eventTime = dayJs(activityLog.created_at);
         const eventStatus = get(activityLog, 'event.status');
         const isStatusChange = activityLog.event_name.match(/^status:/);
         status = eventStatus || status;
@@ -179,7 +179,7 @@ module.exports = ({ db, flow, query: params }) => {
             lastSubmitToActionDiff = eventTime.workingDiff(previousSubmission, 'calendarDays');
             totalDaysWithAsru += lastSubmitToActionDiff;
             if (eventTime.isSameOrAfter(start)) {
-              totalDaysWithAsruInPeriod += eventTime.workingDiff(moment.max(previousSubmission, start), 'calendarDays');
+              totalDaysWithAsruInPeriod += eventTime.workingDiff(dayJs.max(previousSubmission, start), 'calendarDays');
             }
             previousSubmission = null;
           }
@@ -191,7 +191,7 @@ module.exports = ({ db, flow, query: params }) => {
           if (isAction && previousAssignment) {
             totalDaysAssigned += eventTime.workingDiff(previousAssignment, 'calendarDays');
             if (eventTime.isSameOrAfter(start)) {
-              totalDaysAssignedInPeriod += eventTime.workingDiff(moment.max(previousAssignment, start), 'calendarDays');
+              totalDaysAssignedInPeriod += eventTime.workingDiff(dayJs.max(previousAssignment, start), 'calendarDays');
             }
             previousAssignment = null;
           }
@@ -203,15 +203,15 @@ module.exports = ({ db, flow, query: params }) => {
         }
 
         if (activityLog.event_name === 'assign') {
-          previousAssignment = moment(eventTime);
-          lastAssignedAt = moment(eventTime);
+          previousAssignment = dayJs(eventTime);
+          lastAssignedAt = dayJs(eventTime);
 
           if (!firstAssignedAt && activityLog.event_name === 'assign') {
-            firstAssignedAt = moment(eventTime);
+            firstAssignedAt = dayJs(eventTime);
           }
 
           if (eventTime.isSameOrAfter(start) && eventTime.isSameOrBefore(end) && !firstAssignedAtInPeriod) {
-            firstAssignedAtInPeriod = moment(eventTime);
+            firstAssignedAtInPeriod = dayJs(eventTime);
           }
 
           return;
@@ -219,15 +219,15 @@ module.exports = ({ db, flow, query: params }) => {
 
         if (isReturn) {
           returnedCount++;
-          lastReturnedAt = moment(eventTime);
+          lastReturnedAt = dayJs(eventTime);
 
           if (!firstReturnedAt) {
-            firstReturnedAt = moment(eventTime);
+            firstReturnedAt = dayJs(eventTime);
           }
         }
 
         if (isAction && lastResubmittedAt) {
-          resubmittedDiffs.push(moment(eventTime).workingDiff(lastResubmittedAt, 'calendarDays'));
+          resubmittedDiffs.push(dayJs(eventTime).workingDiff(lastResubmittedAt, 'calendarDays'));
         }
 
         if (isResubmission) {
@@ -235,12 +235,12 @@ module.exports = ({ db, flow, query: params }) => {
         }
 
         if (isResolution) {
-          resolvedAt = moment(eventTime);
+          resolvedAt = dayJs(eventTime);
         }
 
         if (eventTime.isSameOrAfter(start) && eventTime.isSameOrBefore(end)) {
           if (isSubmission && !firstSubmittedAtInPeriod) {
-            firstSubmittedAtInPeriod = moment(eventTime);
+            firstSubmittedAtInPeriod = dayJs(eventTime);
           }
 
           if (isResubmission) {
@@ -251,7 +251,7 @@ module.exports = ({ db, flow, query: params }) => {
             returnedCountInPeriod++;
 
             if (!firstReturnedAtInPeriod) {
-              firstReturnedAtInPeriod = moment(eventTime);
+              firstReturnedAtInPeriod = dayJs(eventTime);
             }
           }
         }
@@ -270,12 +270,12 @@ module.exports = ({ db, flow, query: params }) => {
 
     if (previousSubmission !== null) {
       totalDaysWithAsru += end.workingDiff(previousSubmission, 'calendarDays');
-      totalDaysWithAsruInPeriod += end.workingDiff(moment.max(start, previousSubmission), 'calendarDays');
+      totalDaysWithAsruInPeriod += end.workingDiff(dayJs.max(start, previousSubmission), 'calendarDays');
     }
 
     if (previousAssignment !== null) {
       totalDaysAssigned += end.workingDiff(previousAssignment, 'calendarDays');
-      totalDaysAssignedInPeriod += end.workingDiff(moment.max(start, previousAssignment), 'calendarDays');
+      totalDaysAssignedInPeriod += end.workingDiff(dayJs.max(start, previousAssignment), 'calendarDays');
     }
 
     return {
