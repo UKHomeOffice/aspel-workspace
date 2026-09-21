@@ -1,5 +1,5 @@
 const express = require('express');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const sinon = require('sinon');
 const profile = require('../../../lib/auth/profile');
 const assert = require('assert');
@@ -55,7 +55,7 @@ describe('cache profile loading in service/auth', () => {
         firstName: 'Someone',
         lastName: 'Else',
         userId: 'abc123',
-        expiresAt: moment.utc(moment().add(60, 'seconds')).valueOf()
+        expiresAt: dayJs.utc(dayJs().add(60, 'seconds')).valueOf()
       }
     };
 
@@ -74,7 +74,7 @@ describe('cache profile loading in service/auth', () => {
         firstName: 'Someone',
         lastName: 'Else',
         userId: 'abc123',
-        expiresAt: moment.utc(moment().subtract(660, 'seconds')).valueOf()
+        expiresAt: dayJs.utc(dayJs().subtract(660, 'seconds')).valueOf()
       }
     };
 
@@ -93,7 +93,7 @@ describe('cache profile loading in service/auth', () => {
         firstName: 'Someone',
         lastName: 'Else',
         userId: 'abc123',
-        expiresAt: moment.utc(moment().add(60, 'seconds')).valueOf()
+        expiresAt: dayJs.utc(dayJs().add(60, 'seconds')).valueOf()
       }
     };
 

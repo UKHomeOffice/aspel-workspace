@@ -1,5 +1,5 @@
 const api = require('../api');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 module.exports = (endpoint) => {
 
@@ -30,7 +30,7 @@ module.exports = (endpoint) => {
           .then(({ json: { data, meta } }) => {
             return {
               ...data,
-              expiresAt: moment.utc(moment().add(600, 'seconds')).valueOf(),
+              expiresAt: dayJs.utc(dayJs().add(600, 'seconds')).valueOf(),
               allowedActions: meta.allowedActions
             };
           });
