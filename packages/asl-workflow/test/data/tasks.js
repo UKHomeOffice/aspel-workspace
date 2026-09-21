@@ -1,10 +1,10 @@
 const { v4: uuid } = require('uuid');
 const { user, user101, userAtMultipleEstablishments, holc, inspector, licensing, ntco, userWithActivePil, asruSuper } = require('./profiles');
 const ids = require('./ids');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 const generateDates = daysAgo => {
-  const date = moment().subtract(daysAgo, 'days').toISOString();
+  const date = dayJs().subtract(daysAgo, 'days').toISOString();
   return {
     createdAt: date,
     updatedAt: date
@@ -1247,7 +1247,7 @@ const tasks = [
         status: 'inactive'
       },
       intentionToRefuse: {
-        deadline: moment().add(1, 'day').format('YYYY-MM-DD'),
+        deadline: dayJs().add(1, 'day').format('YYYY-MM-DD'),
         markddown: 'This is the reason for refusal',
         inspectorId: inspector.id
       },
@@ -1275,7 +1275,7 @@ const tasks = [
         status: 'inactive'
       },
       intentionToRefuse: {
-        deadline: moment().subtract(1, 'day').format('YYYY-MM-DD'),
+        deadline: dayJs().subtract(1, 'day').format('YYYY-MM-DD'),
         markddown: 'This is the reason for refusal',
         inspectorId: inspector.id
       },
@@ -1303,7 +1303,7 @@ const tasks = [
         status: 'inactive'
       },
       intentionToRefuse: {
-        deadline: moment().add(1, 'day').format('YYYY-MM-DD'),
+        deadline: dayJs().add(1, 'day').format('YYYY-MM-DD'),
         markddown: 'This is the reason for refusal',
         inspectorId: inspector.id
       },
@@ -1331,7 +1331,7 @@ const tasks = [
         status: 'inactive'
       },
       intentionToRefuse: {
-        deadline: moment().subtract(1, 'day').format('YYYY-MM-DD'),
+        deadline: dayJs().subtract(1, 'day').format('YYYY-MM-DD'),
         markddown: 'This is the reason for refusal',
         inspectorId: inspector.id
       },

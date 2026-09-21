@@ -7,7 +7,7 @@ try {
 }
 
 const { raw } = require('objection');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const Database = require('@ukhomeoffice/asl-taskflow/lib/db');
 const Task = require('@ukhomeoffice/asl-taskflow/lib/models/task');
 const settings = require('../config');
@@ -20,7 +20,7 @@ const migrate = async () => {
   const notify = notifyHook(settings);
 
   try {
-    const today = moment().format('YYYY-MM-DD');
+    const today = dayJs().format('YYYY-MM-DD');
 
     const tasks = await Task.query(transaction)
       .select('*')

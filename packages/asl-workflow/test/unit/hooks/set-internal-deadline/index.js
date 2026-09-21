@@ -1,7 +1,7 @@
 const assert = require('assert');
 const sinon = require('sinon');
 const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-const moment = require('moment-business-time');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const History = require('../../../helpers/history');
 const { withInspectorate, returnedToApplicant } = require('../../../../lib/flow/status');
 
@@ -10,7 +10,7 @@ const hook = require('../../../../lib/hooks/set-internal-deadline');
 const runHook = hook({});
 
 // configure bank holidays
-moment.updateLocale('en', { holidays: bankHolidays });
+dayJs.updateLocale('en', { holidays: bankHolidays });
 
 describe('Set internal deadline hook', () => {
 
@@ -80,7 +80,7 @@ describe('Set internal deadline hook', () => {
           }
         },
         activityLog: [],
-        updatedAt: moment().format('YYYY-MM-DD'),
+        updatedAt: dayJs().format('YYYY-MM-DD'),
         patch: sinon.stub()
       };
 
@@ -89,8 +89,8 @@ describe('Set internal deadline hook', () => {
 
       const expected = {
         internalDeadline: {
-          standard: moment().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
-          extended: moment().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
+          standard: dayJs().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
+          extended: dayJs().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
           resubmitted: false
         }
       };
@@ -118,7 +118,7 @@ describe('Set internal deadline hook', () => {
           }
         },
         activityLog: [],
-        updatedAt: moment().format('YYYY-MM-DD'),
+        updatedAt: dayJs().format('YYYY-MM-DD'),
         patch: sinon.stub()
       };
 
@@ -129,8 +129,8 @@ describe('Set internal deadline hook', () => {
 
       const expected = {
         internalDeadline: {
-          standard: moment().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
-          extended: moment().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
+          standard: dayJs().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
+          extended: dayJs().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
           resubmitted: true
         }
       };
@@ -158,7 +158,7 @@ describe('Set internal deadline hook', () => {
           }
         },
         activityLog: [],
-        updatedAt: moment().format('YYYY-MM-DD'),
+        updatedAt: dayJs().format('YYYY-MM-DD'),
         patch: sinon.stub()
       };
 
@@ -167,8 +167,8 @@ describe('Set internal deadline hook', () => {
 
       const expected = {
         internalDeadline: {
-          standard: moment().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
-          extended: moment().addWorkingTime(55, 'days').format('YYYY-MM-DD'),
+          standard: dayJs().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
+          extended: dayJs().addWorkingTime(55, 'days').format('YYYY-MM-DD'),
           resubmitted: false
         }
       };
@@ -196,7 +196,7 @@ describe('Set internal deadline hook', () => {
           }
         },
         activityLog: [],
-        updatedAt: moment().format('YYYY-MM-DD'),
+        updatedAt: dayJs().format('YYYY-MM-DD'),
         patch: sinon.stub()
       };
 
@@ -207,8 +207,8 @@ describe('Set internal deadline hook', () => {
 
       const expected = {
         internalDeadline: {
-          standard: moment().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
-          extended: moment().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
+          standard: dayJs().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
+          extended: dayJs().addWorkingTime(40, 'days').format('YYYY-MM-DD'),
           resubmitted: true
         }
       };

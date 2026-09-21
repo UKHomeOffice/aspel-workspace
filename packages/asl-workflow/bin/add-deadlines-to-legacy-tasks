@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const { get, isEmpty } = require('lodash');
-const moment = require('moment-business-time');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { bankHolidays } = require('@ukhomeoffice/asl-constants');
 const Database = require('@ukhomeoffice/asl-taskflow/lib/db');
 const Task = require('@ukhomeoffice/asl-taskflow/lib/models/task');
@@ -8,7 +8,7 @@ const settings = require('../config');
 const { withASRU } = require('../lib/flow');
 
 // configure bank holidays
-moment.updateLocale('en', { holidays: bankHolidays });
+dayJs.updateLocale('en', { holidays: bankHolidays });
 
 const STANDARD_DEADLINE = 40;
 const EXTENDED_DEADLINE = 55;
@@ -29,8 +29,8 @@ const patchTaskDeadline = async (taskId, transaction) => {
 
       if (isCompleteAndCorrect) {
         return {
-          standard: moment(activity.createdAt).addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-          extended: moment(activity.createdAt).addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
+          standard: dayJs(activity.createdAt).addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
+          extended: dayJs(activity.createdAt).addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
           isExtended: false,
           isExtendable: true
         };

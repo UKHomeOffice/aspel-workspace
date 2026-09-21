@@ -1,6 +1,6 @@
-const moment = require('moment-business-time');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-moment.updateLocale('en', { holidays: bankHolidays });
+dayJs.updateLocale('en', { holidays: bankHolidays });
 
 const STANDARD_DEADLINE = 40;
 const EXTENDED_DEADLINE = 55;
@@ -12,8 +12,8 @@ const projects = [
     licenceNumber: 'INTDL-FUT',
     data: {
       internalDeadline: {
-        standard: moment().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: moment().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD')
+        standard: dayJs().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD')
       }
     }
   },
@@ -22,34 +22,34 @@ const projects = [
     licenceNumber: 'INTDL-URG',
     data: {
       internalDeadline: {
-        standard: moment().addWorkingTime(5, 'days').format('YYYY-MM-DD'),
-        extended: moment().addWorkingTime(20, 'days').format('YYYY-MM-DD')
+        standard: dayJs().addWorkingTime(5, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().addWorkingTime(20, 'days').format('YYYY-MM-DD')
       }
     },
-    date: moment().subtractWorkingTime(STANDARD_DEADLINE - 5, 'days').format('YYYY-MM-DD')
+    date: dayJs().subtractWorkingTime(STANDARD_DEADLINE - 5, 'days').format('YYYY-MM-DD')
   },
   {
     title: 'Internal deadline past',
     licenceNumber: 'INTDL-PAST',
     data: {
       internalDeadline: {
-        standard: moment().subtractWorkingTime(2, 'days').format('YYYY-MM-DD'),
-        extended: moment().subtractWorkingTime(2, 'days').format('YYYY-MM-DD')
+        standard: dayJs().subtractWorkingTime(2, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().subtractWorkingTime(2, 'days').format('YYYY-MM-DD')
       }
     },
-    date: moment().subtractWorkingTime(STANDARD_DEADLINE + 2, 'days').format('YYYY-MM-DD')
+    date: dayJs().subtractWorkingTime(STANDARD_DEADLINE + 2, 'days').format('YYYY-MM-DD')
   },
   {
     title: 'Internal deadline future, statutory deadline future (same date)',
     licenceNumber: 'INTDL-STAT-FUT',
     data: {
       internalDeadline: {
-        standard: moment().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: moment().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD')
+        standard: dayJs().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD')
       },
       deadline: {
-        standard: moment().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: moment().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
+        standard: dayJs().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
         isExtended: false
       }
     }
@@ -59,12 +59,12 @@ const projects = [
     licenceNumber: 'INTDL-EARLY-STAT',
     data: {
       internalDeadline: {
-        standard: moment().addWorkingTime(RESUBMISSION_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: moment().addWorkingTime(RESUBMISSION_DEADLINE, 'days').format('YYYY-MM-DD')
+        standard: dayJs().addWorkingTime(RESUBMISSION_DEADLINE, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().addWorkingTime(RESUBMISSION_DEADLINE, 'days').format('YYYY-MM-DD')
       },
       deadline: {
-        standard: moment().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: moment().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
+        standard: dayJs().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
         isExtended: false
       }
     }
@@ -74,32 +74,32 @@ const projects = [
     licenceNumber: 'INTDL-PAST-STAT-FUT',
     data: {
       internalDeadline: {
-        standard: moment().subtractWorkingTime(2, 'days').format('YYYY-MM-DD'),
-        extended: moment().subtractWorkingTime(2, 'days').format('YYYY-MM-DD')
+        standard: dayJs().subtractWorkingTime(2, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().subtractWorkingTime(2, 'days').format('YYYY-MM-DD')
       },
       deadline: {
-        standard: moment().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: moment().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
+        standard: dayJs().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
         isExtended: false
       }
     },
-    date: moment().subtractWorkingTime(RESUBMISSION_DEADLINE + 2, 'days').format('YYYY-MM-DD')
+    date: dayJs().subtractWorkingTime(RESUBMISSION_DEADLINE + 2, 'days').format('YYYY-MM-DD')
   },
   {
     title: 'Internal deadline past, statutory deadline past',
     licenceNumber: 'INTDL-PAST-STAT-PAST',
     data: {
       internalDeadline: {
-        standard: moment().subtractWorkingTime(2, 'days').format('YYYY-MM-DD'),
-        extended: moment().subtractWorkingTime(13, 'days').format('YYYY-MM-DD')
+        standard: dayJs().subtractWorkingTime(2, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().subtractWorkingTime(13, 'days').format('YYYY-MM-DD')
       },
       deadline: {
-        standard: moment().subtractWorkingTime(2, 'days').format('YYYY-MM-DD'),
-        extended: moment().addWorkingTime(13, 'days').format('YYYY-MM-DD'),
+        standard: dayJs().subtractWorkingTime(2, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().addWorkingTime(13, 'days').format('YYYY-MM-DD'),
         isExtended: false
       }
     },
-    date: moment().subtractWorkingTime(STANDARD_DEADLINE + 2, 'days').format('YYYY-MM-DD')
+    date: dayJs().subtractWorkingTime(STANDARD_DEADLINE + 2, 'days').format('YYYY-MM-DD')
   }
 ];
 

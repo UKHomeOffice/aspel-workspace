@@ -1,10 +1,10 @@
 const { v4: uuid } = require('uuid');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const ids = require('./ids');
 const { asruSuper } = require('./profiles');
 
 const generateDates = daysAgo => {
-  const date = moment().subtract(daysAgo, 'days').toISOString();
+  const date = dayJs().subtract(daysAgo, 'days').toISOString();
   return {
     createdAt: date,
     updatedAt: date

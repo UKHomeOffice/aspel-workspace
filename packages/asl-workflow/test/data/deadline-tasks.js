@@ -1,7 +1,7 @@
 const { v4: uuid } = require('uuid');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
-const now = moment();
+const now = dayJs();
 
 const getTimestamps = () => {
   now.add(1, 'ms');
@@ -20,8 +20,8 @@ module.exports = [
         licenceHolderId: uuid()
       },
       internalDeadline: {
-        standard: moment().add(40, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(55, 'days').format('YYYY-MM-DD')
+        standard: dayJs().add(40, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().add(55, 'days').format('YYYY-MM-DD')
       },
       id: uuid(),
       initiatedByAsru: false,
@@ -46,8 +46,8 @@ module.exports = [
         licenceHolderId: uuid()
       },
       internalDeadline: {
-        standard: moment().subtract(10, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(5, 'days').format('YYYY-MM-DD')
+        standard: dayJs().subtract(10, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().add(5, 'days').format('YYYY-MM-DD')
       },
       id: uuid(),
       initiatedByAsru: false,
@@ -73,13 +73,13 @@ module.exports = [
       },
       meta: { authority: true, awerb: true, ready: true },
       deadline: {
-        standard: moment().add(40, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(55, 'days').format('YYYY-MM-DD'),
+        standard: dayJs().add(40, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().add(55, 'days').format('YYYY-MM-DD'),
         isExtended: false
       },
       internalDeadline: {
-        standard: moment().add(40, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(55, 'days').format('YYYY-MM-DD')
+        standard: dayJs().add(40, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().add(55, 'days').format('YYYY-MM-DD')
       },
       id: uuid(),
       initiatedByAsru: false,
@@ -105,12 +105,12 @@ module.exports = [
       },
       meta: { authority: true, awerb: true, ready: true },
       deadline: {
-        standard: moment().add(40, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(55, 'days').format('YYYY-MM-DD'),
+        standard: dayJs().add(40, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().add(55, 'days').format('YYYY-MM-DD'),
         isExtended: false
       },
       internalDeadline: {
-        standard: moment().add(20, 'days').format('YYYY-MM-DD'),
+        standard: dayJs().add(20, 'days').format('YYYY-MM-DD'),
         resubmitted: true
       },
       id: uuid(),
@@ -137,12 +137,12 @@ module.exports = [
       },
       meta: { authority: true, awerb: true, ready: true },
       deadline: {
-        standard: moment().add(35, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(50, 'days').format('YYYY-MM-DD'),
+        standard: dayJs().add(35, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().add(50, 'days').format('YYYY-MM-DD'),
         isExtended: false
       },
       internalDeadline: {
-        standard: moment().subtract(5, 'days').format('YYYY-MM-DD'),
+        standard: dayJs().subtract(5, 'days').format('YYYY-MM-DD'),
         resubmitted: true
       },
       id: uuid(),
@@ -169,12 +169,12 @@ module.exports = [
       },
       meta: { authority: true, awerb: true, ready: true },
       deadline: {
-        standard: moment().subtract(30, 'days').format('YYYY-MM-DD'),
-        extended: moment().subtract(15, 'days').format('YYYY-MM-DD'),
+        standard: dayJs().subtract(30, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().subtract(15, 'days').format('YYYY-MM-DD'),
         isExtended: false
       },
       internalDeadline: {
-        standard: moment().subtract(50, 'days').format('YYYY-MM-DD')
+        standard: dayJs().subtract(50, 'days').format('YYYY-MM-DD')
       },
       id: uuid(),
       initiatedByAsru: false,
@@ -200,13 +200,13 @@ module.exports = [
       },
       meta: { authority: true, awerb: true, ready: true },
       deadline: {
-        standard: moment().add(40, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(55, 'days').format('YYYY-MM-DD'),
+        standard: dayJs().add(40, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().add(55, 'days').format('YYYY-MM-DD'),
         isExtended: true
       },
       internalDeadline: {
-        standard: moment().add(40, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(55, 'days').format('YYYY-MM-DD')
+        standard: dayJs().add(40, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().add(55, 'days').format('YYYY-MM-DD')
       },
       id: uuid(),
       initiatedByAsru: false,
@@ -232,13 +232,13 @@ module.exports = [
       },
       meta: { authority: true, awerb: true, ready: true },
       deadline: {
-        standard: moment().add(20, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(35, 'days').format('YYYY-MM-DD'),
+        standard: dayJs().add(20, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().add(35, 'days').format('YYYY-MM-DD'),
         isExtended: true
       },
       internalDeadline: {
-        standard: moment().subtract(20, 'days').format('YYYY-MM-DD'),
-        extended: moment().subtract(5, 'days').format('YYYY-MM-DD')
+        standard: dayJs().subtract(20, 'days').format('YYYY-MM-DD'),
+        extended: dayJs().subtract(5, 'days').format('YYYY-MM-DD')
       },
       id: uuid(),
       initiatedByAsru: false,

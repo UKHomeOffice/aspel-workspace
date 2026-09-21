@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const cases = require('../data/cases.json');
 const createTask = require('../helpers/create-task');
 const commentCount = require('../data/comment-count');
@@ -18,8 +18,8 @@ module.exports = {
     return Promise.all(cases.map(c => {
       if (c.id === '71bd42e1-7cd7-4d51-8d99-694bd4c14810') {
         // keep the dates current so that the deadline is in the future
-        c.created_at = moment().subtract(1, 'month').toISOString();
-        c.updated_at = moment().subtract(1, 'month').toISOString();
+        c.created_at = dayJs().subtract(1, 'month').toISOString();
+        c.updated_at = dayJs().subtract(1, 'month').toISOString();
       }
 
       return knex('cases')
