@@ -1,5 +1,5 @@
 const { page } = require('@asl/service/ui');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const routes = require('./routes');
 
 module.exports = settings => {
@@ -12,7 +12,7 @@ module.exports = settings => {
     req.api('/reports/task-metrics')
       .then(response => {
         res.locals.static.reports = response.json.data.map(report => {
-          const end = moment(report.meta.end);
+          const end = dayJs(report.meta.end);
           return { id: report.id, year: end.format('YYYY'), month: end.format('MMMM') };
         });
         next();

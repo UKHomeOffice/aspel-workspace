@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 module.exports = {
   newIssueDate: {
@@ -9,7 +9,7 @@ module.exports = {
     validate: [
       'required',
       'validDate',
-      { dateIsBefore: () => moment().endOf('day') }
+      { dateIsBefore: () => dayJs().endOf('day') }
     ]
   }
 };

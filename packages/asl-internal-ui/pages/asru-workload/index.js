@@ -1,5 +1,5 @@
 const { set, get, pick } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { page } = require('@asl/service/ui');
 const datatable = require('@asl/pages/pages/common/routers/datatable');
 const schema = require('./schema');
@@ -20,8 +20,8 @@ module.exports = settings => {
       req.query.progress = req.query.progress || 'open';
 
       if (req.query.progress !== 'open') {
-        req.query.start = req.query.start || moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD');
-        req.query.end = req.query.end || moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
+        req.query.start = req.query.start || dayJs().subtract(1, 'month').startOf('month').format('YYYY-MM-DD');
+        req.query.end = req.query.end || dayJs().subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
       }
 
       if (!get(req.query, 'filters.withAsru')) {

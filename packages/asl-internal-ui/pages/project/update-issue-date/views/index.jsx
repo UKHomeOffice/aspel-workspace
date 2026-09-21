@@ -1,6 +1,6 @@
 import React from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { useSelector } from 'react-redux';
-import {format as formatDate} from 'date-fns';
 import { dateFormat } from '@asl/pages/constants';
 
 import {
@@ -9,6 +9,8 @@ import {
   FormLayout
 } from '@ukhomeoffice/asl-components';
 import formatters from '@asl/pages/pages/project/formatters';
+
+const {format: formatDate} = dayJs;
 
 export default function ProjectLandingPage() {
   const model = useSelector(state => state.model);

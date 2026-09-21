@@ -1,10 +1,12 @@
 import React, { Fragment, useState } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { useSelector } from 'react-redux';
 import { Header, Link, Snippet, Metric } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
-import { isBefore } from 'date-fns';
 
 import MetricsFilter from '../../../views/components/metrics-filter';
+
+const { isBefore } = dayJs;
 
 export default function Deadlines() {
 

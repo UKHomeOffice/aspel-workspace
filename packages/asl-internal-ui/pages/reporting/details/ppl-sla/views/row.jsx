@@ -1,9 +1,11 @@
 import React, { useState, Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { Inset, Snippet, Form } from '@ukhomeoffice/asl-components';
 import { Button } from '@ukhomeoffice/react-components';
-import { format } from 'date-fns';
 import Markdown from 'react-markdown';
 import { dateFormat } from '@asl/pages/constants';
+
+const { format } = dayJs;
 
 const schema = {
   comment: {

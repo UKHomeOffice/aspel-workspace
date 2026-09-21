@@ -1,7 +1,9 @@
 import React from 'react';
-import { format } from 'date-fns';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { dateFormat } from '@asl/pages/constants';
 import { Link } from '@ukhomeoffice/asl-components';
+
+const { format } = dayJs;
 
 export default {
   deadlinePassedDate: {

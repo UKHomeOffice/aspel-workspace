@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { useSelector } from 'react-redux';
-import {format as formatDate} from 'date-fns';
 import { dateFormat } from '@asl/pages/constants';
 import {
   Search,
@@ -11,6 +11,8 @@ import {
   Header,
   Tabs
 } from '@ukhomeoffice/asl-components';
+
+const {format: formatDate} = dayJs;
 
 const formatters = {
   name: {
