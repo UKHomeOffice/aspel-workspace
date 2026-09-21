@@ -1,5 +1,5 @@
 const sinon = require('sinon');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const uuid = require('uuid');
 const assert = require('assert');
 const { get, map } = require('lodash');
@@ -38,7 +38,7 @@ describe('transform', () => {
       'project-continuation': [
         {
           'licence-number': 'P12345678',
-          'expiry-date': moment().format(DATE_FORMAT)
+          'expiry-date': dayJs().format(DATE_FORMAT)
         }
       ]
     };

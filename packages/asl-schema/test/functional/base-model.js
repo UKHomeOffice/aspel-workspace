@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const assert = require('assert');
 const knex = require('knex');
 const {test} = require('../../knexfile.js');
@@ -63,7 +63,7 @@ describe('Base Model', () => {
     it('marks the entry with a deleted timestamp', async () => {
       await Model.query(dbHelper.init().knex).findById('6d9c921f-ac0d-401b-ace4-e4d55b4ea2d2').delete();
       const model = await Model.queryWithDeleted().findById('6d9c921f-ac0d-401b-ace4-e4d55b4ea2d2');
-      assert(moment(model.deleted).isValid());
+      assert(dayJs(model.deleted).isValid());
     });
 
     it('has an undelete method which restores the model', async () => {

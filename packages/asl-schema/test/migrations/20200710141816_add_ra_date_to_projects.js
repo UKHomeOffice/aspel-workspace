@@ -1,6 +1,6 @@
 const { v4: uuid } = require('uuid');
 const assert = require('assert');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const db = require('./helpers/db');
 const { getRaDate, up } = require('../../migrations/20200710141816_add_ra_date_to_projects');
 
@@ -32,9 +32,9 @@ describe('getRaDate', () => {
     };
     const project = {
       status: 'active',
-      expiry_date: moment().add(1, 'year').toISOString()
+      expiry_date: dayJs().add(1, 'year').toISOString()
     };
-    const expected = moment(project.expiry_date).add(6, 'months').toISOString();
+    const expected = dayJs(project.expiry_date).add(6, 'months').toISOString();
 
     assert.equal(getRaDate(version, project), expected);
   });
@@ -46,10 +46,10 @@ describe('getRaDate', () => {
     };
     const project = {
       status: 'revoked',
-      expiry_date: moment().add(1, 'year').toISOString(),
-      revocation_date: moment().subtract(2, 'months').toISOString()
+      expiry_date: dayJs().add(1, 'year').toISOString(),
+      revocation_date: dayJs().subtract(2, 'months').toISOString()
     };
-    const expected = moment(project.revocation_date).add(6, 'months').toISOString();
+    const expected = dayJs(project.revocation_date).add(6, 'months').toISOString();
 
     assert.equal(getRaDate(version, project), expected);
   });
@@ -63,9 +63,9 @@ describe('getRaDate', () => {
     };
     const project = {
       status: 'active',
-      expiry_date: moment().add(1, 'year').toISOString()
+      expiry_date: dayJs().add(1, 'year').toISOString()
     };
-    const expected = moment(project.expiry_date).add(6, 'months').toISOString();
+    const expected = dayJs(project.expiry_date).add(6, 'months').toISOString();
 
     assert.equal(getRaDate(version, project), expected);
   });
@@ -81,9 +81,9 @@ describe('getRaDate', () => {
     };
     const project = {
       status: 'active',
-      expiry_date: moment().add(1, 'year').toISOString()
+      expiry_date: dayJs().add(1, 'year').toISOString()
     };
-    const expected = moment(project.expiry_date).add(6, 'months').toISOString();
+    const expected = dayJs(project.expiry_date).add(6, 'months').toISOString();
 
     assert.equal(getRaDate(version, project), expected);
   });
@@ -101,9 +101,9 @@ describe('getRaDate', () => {
     };
     const project = {
       status: 'active',
-      expiry_date: moment().add(1, 'year').toISOString()
+      expiry_date: dayJs().add(1, 'year').toISOString()
     };
-    const expected = moment(project.expiry_date).add(6, 'months').toISOString();
+    const expected = dayJs(project.expiry_date).add(6, 'months').toISOString();
 
     assert.equal(getRaDate(version, project), expected);
   });
@@ -150,8 +150,8 @@ describe('up', () => {
       licence_holder_id: licenceHolder.id,
       status: 'revoked',
       schema_version: 1,
-      expiry_date: moment().add(3, 'months').toISOString(),
-      revocation_date: moment().subtract(2, 'months').toISOString()
+      expiry_date: dayJs().add(3, 'months').toISOString(),
+      revocation_date: dayJs().subtract(2, 'months').toISOString()
     },
     {
       id: ids.expiredProject,
@@ -159,7 +159,7 @@ describe('up', () => {
       licence_holder_id: licenceHolder.id,
       status: 'expired',
       schema_version: 1,
-      expiry_date: moment().subtract(3, 'months').toISOString()
+      expiry_date: dayJs().subtract(3, 'months').toISOString()
     },
     {
       id: ids.legacyRa,
@@ -167,7 +167,7 @@ describe('up', () => {
       licence_holder_id: licenceHolder.id,
       status: 'active',
       schema_version: 0,
-      expiry_date: moment().add(1, 'year').toISOString()
+      expiry_date: dayJs().add(1, 'year').toISOString()
     },
     {
       id: ids.activeRA,
@@ -175,7 +175,7 @@ describe('up', () => {
       licence_holder_id: licenceHolder.id,
       status: 'active',
       schema_version: 1,
-      expiry_date: moment().add(1, 'year').toISOString()
+      expiry_date: dayJs().add(1, 'year').toISOString()
     },
     {
       id: ids.activeNoRA,
@@ -183,7 +183,7 @@ describe('up', () => {
       licence_holder_id: licenceHolder.id,
       status: 'active',
       schema_version: 1,
-      expiry_date: moment().add(1, 'year').toISOString()
+      expiry_date: dayJs().add(1, 'year').toISOString()
     },
     {
       id: ids.multipleVersionsLatestNoRa,
@@ -191,7 +191,7 @@ describe('up', () => {
       licence_holder_id: licenceHolder.id,
       status: 'active',
       schema_version: 1,
-      expiry_date: moment().add(1, 'year').toISOString()
+      expiry_date: dayJs().add(1, 'year').toISOString()
     },
     {
       id: ids.multipleVersionsLatestRa,
@@ -199,7 +199,7 @@ describe('up', () => {
       licence_holder_id: licenceHolder.id,
       status: 'active',
       schema_version: 1,
-      expiry_date: moment().add(1, 'year').toISOString()
+      expiry_date: dayJs().add(1, 'year').toISOString()
     }
   ];
 
@@ -273,7 +273,7 @@ describe('up', () => {
           'mice'
         ]
       },
-      created_at: moment().subtract(3, 'months').toISOString()
+      created_at: dayJs().subtract(3, 'months').toISOString()
     },
     {
       project_id: ids.multipleVersionsLatestNoRa,
@@ -284,7 +284,7 @@ describe('up', () => {
           'marmosets'
         ]
       },
-      created_at: moment().subtract(4, 'months').toISOString()
+      created_at: dayJs().subtract(4, 'months').toISOString()
     },
     {
       project_id: ids.multipleVersionsLatestRa,
@@ -295,7 +295,7 @@ describe('up', () => {
           'marmosets'
         ]
       },
-      created_at: moment().subtract(3, 'months').toISOString()
+      created_at: dayJs().subtract(3, 'months').toISOString()
     },
     {
       project_id: ids.multipleVersionsLatestRa,
@@ -306,7 +306,7 @@ describe('up', () => {
           'mice'
         ]
       },
-      created_at: moment().subtract(4, 'months').toISOString()
+      created_at: dayJs().subtract(4, 'months').toISOString()
     }
   ];
 
@@ -345,8 +345,8 @@ describe('up', () => {
       .then(() => up(this.knex))
       .then(() => this.knex('projects').where('id', ids.revokedProject).first())
       .then(project => {
-        const expected = moment(project.revocation_date).add(6, 'months');
-        assert.ok(moment(project.ra_date).isSame(expected));
+        const expected = dayJs(project.revocation_date).add(6, 'months');
+        assert.ok(dayJs(project.ra_date).isSame(expected));
       });
   });
 
@@ -355,8 +355,8 @@ describe('up', () => {
       .then(() => up(this.knex))
       .then(() => this.knex('projects').where('id', ids.expiredProject).first())
       .then(project => {
-        const expected = moment(project.expiry_date).add(6, 'months');
-        assert.ok(moment(project.ra_date).isSame(expected));
+        const expected = dayJs(project.expiry_date).add(6, 'months');
+        assert.ok(dayJs(project.ra_date).isSame(expected));
       });
   });
 
@@ -365,8 +365,8 @@ describe('up', () => {
       .then(() => up(this.knex))
       .then(() => this.knex('projects').where('id', ids.legacyRa).first())
       .then(project => {
-        const expected = moment(project.expiry_date).add(6, 'months');
-        assert.ok(moment(project.ra_date).isSame(expected));
+        const expected = dayJs(project.expiry_date).add(6, 'months');
+        assert.ok(dayJs(project.ra_date).isSame(expected));
       });
   });
 
@@ -375,8 +375,8 @@ describe('up', () => {
       .then(() => up(this.knex))
       .then(() => this.knex('projects').where('id', ids.activeRA).first())
       .then(project => {
-        const expected = moment(project.expiry_date).add(6, 'months');
-        assert.ok(moment(project.ra_date).isSame(expected));
+        const expected = dayJs(project.expiry_date).add(6, 'months');
+        assert.ok(dayJs(project.ra_date).isSame(expected));
       });
   });
 
@@ -403,8 +403,8 @@ describe('up', () => {
       .then(() => up(this.knex))
       .then(() => this.knex('projects').where('id', ids.multipleVersionsLatestRa).first())
       .then(project => {
-        const expected = moment(project.expiry_date).add(6, 'months');
-        assert.ok(moment(project.ra_date).isSame(expected));
+        const expected = dayJs(project.expiry_date).add(6, 'months');
+        assert.ok(dayJs(project.ra_date).isSame(expected));
       });
   });
 });

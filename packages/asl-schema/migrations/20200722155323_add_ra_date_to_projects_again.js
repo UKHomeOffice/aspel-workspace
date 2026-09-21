@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { addedByAsru } = require('../lib/retrospective-assessment');
 
 function getRaDate(version, project) {
@@ -13,7 +13,7 @@ function getRaDate(version, project) {
     ? project.revocation_date
     : project.expiry_date;
 
-  return moment(date).add(6, 'months').toISOString();
+  return dayJs(date).add(6, 'months').toISOString();
 }
 
 exports.getRaDate = getRaDate;

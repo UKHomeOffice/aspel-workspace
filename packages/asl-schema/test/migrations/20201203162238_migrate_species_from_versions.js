@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const assert = require('assert');
 const { v4: uuid } = require('uuid');
 const db = require('./helpers/db');
@@ -241,7 +241,7 @@ describe('up', () => {
       data: {
         species: ['mice']
       },
-      created_at: moment().subtract(2, 'weeks').toISOString()
+      created_at: dayJs().subtract(2, 'weeks').toISOString()
     },
     {
       project_id: ids.project.activeMultipleVersions,
@@ -249,7 +249,7 @@ describe('up', () => {
       data: {
         species: ['mice', 'rats']
       },
-      created_at: moment().subtract(1, 'week').toISOString()
+      created_at: dayJs().subtract(1, 'week').toISOString()
     },
     {
       project_id: ids.project.activeMultipleVersions,
@@ -257,7 +257,7 @@ describe('up', () => {
       data: {
         species: ['mice', 'rats', 'cats']
       },
-      created_at: moment().toISOString()
+      created_at: dayJs().toISOString()
     },
     {
       project_id: ids.project.draft,

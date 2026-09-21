@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { v4: uuid } = require('uuid');
 const assert = require('assert');
 const db = require('./helpers/db');
@@ -11,7 +11,7 @@ const ids = {
 };
 
 function isSame(timestamp1, timestamp2) {
-  return moment(timestamp1).isSame(moment(timestamp2));
+  return dayJs(timestamp1).isSame(dayJs(timestamp2));
 }
 
 describe('Add review date migration', () => {
@@ -82,7 +82,7 @@ describe('Add review date migration', () => {
       .then(() => up(this.knex))
       .then(() => this.knex('pils'))
       .then(results => {
-        const expected = moment(pils[1].updated_at).add(5, 'years').toISOString();
+        const expected = dayJs(pils[1].updated_at).add(5, 'years').toISOString();
         assert.ok(
           isSame(
             results.find(p => p.id === ids.reviewSet).review_date,

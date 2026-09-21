@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 exports.up = function(knex) {
   return knex
@@ -8,7 +8,7 @@ exports.up = function(knex) {
     .then(pils => {
       return pils.reduce((promise, pil) => {
         const { id, updated_at } = pil;
-        const review_date = moment(updated_at).add(5, 'years').toISOString();
+        const review_date = dayJs(updated_at).add(5, 'years').toISOString();
         return promise.then(() => {
           return knex('pils')
             .where({ id })

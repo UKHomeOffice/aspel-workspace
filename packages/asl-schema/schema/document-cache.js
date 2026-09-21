@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { Model } = require('objection');
 
 class DocumentCache extends Model {
@@ -24,7 +24,7 @@ class DocumentCache extends Model {
                 updatedAt: document.updatedAt
               }
             });
-            if (ttl && moment(document.updatedAt).isAfter(moment().subtract(ttl, 'seconds'))) {
+            if (ttl && dayJs(document.updatedAt).isAfter(dayJs().subtract(ttl, 'seconds'))) {
               return resolve(document.document);
             }
 

@@ -3,7 +3,7 @@ const Knex = require('knex');
 const Schema = require('./schema');
 
 const types = require('pg').types;
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 
 const TIMESTAMPTZ_OID = 1184;
 const TIMESTAMP_OID = 1114;
@@ -12,11 +12,11 @@ const INT4_OID = 23;
 const INT8_OID = 20;
 
 const parseFn = val => {
-  return val === null ? null : moment(val).toISOString();
+  return val === null ? null : dayJs(val).toISOString();
 };
 
 const dateParseFn = val => {
-  return val === null ? null : moment(val).format('YYYY-MM-DD');
+  return val === null ? null : dayJs(val).format('YYYY-MM-DD');
 };
 
 const intParseFn = val => {

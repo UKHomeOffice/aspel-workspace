@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
 const { get } = require('lodash');
 const { Value } = require('slate');
 const csv = require('csv-stringify');
@@ -43,13 +43,13 @@ const transform = (data, versionId, writeCsvLine) => {
     const day = matched[1];
     const month = matched[3];
     const year = matched[7];
-    date = moment(`${day} ${month} ${year}`, 'DD MMM YY');
+    date = dayJs(`${day} ${month} ${year}`, 'DD MMM YY');
   } else if (text.match(EXPIRYLONG2)) {
     const matched = text.match(EXPIRYLONG2);
     const day = matched[25];
     const month = matched[1];
     const year = matched[29];
-    date = moment(`${day} ${month} ${year}`, 'DD MMM YY');
+    date = dayJs(`${day} ${month} ${year}`, 'DD MMM YY');
   } else if (text.match(EXPIRYSHORT)) {
     const matched = text.match(EXPIRYSHORT);
     let day = matched[1];
@@ -61,7 +61,7 @@ const transform = (data, versionId, writeCsvLine) => {
     if (month.length === 1) {
       month = '0' + month;
     }
-    date = moment(`${day} ${month} ${year}`, 'DD MM YY');
+    date = dayJs(`${day} ${month} ${year}`, 'DD MM YY');
   }
 
   if (writeCsvLine) {
