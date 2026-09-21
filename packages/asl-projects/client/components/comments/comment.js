@@ -1,12 +1,14 @@
 import React, { Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import { format } from 'date-fns';
 import { Button } from '@ukhomeoffice/react-components';
 import { Markdown } from '@ukhomeoffice/asl-components';
 import { deleteComment } from '../../actions/comments';
 
 import { DATE_FORMAT } from '../../constants';
+
+const { format } = dayJs;
 
 const Comment = ({
   field,

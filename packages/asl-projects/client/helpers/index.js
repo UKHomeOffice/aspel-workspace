@@ -4,13 +4,15 @@ import castArray from 'lodash/castArray';
 import pickBy from 'lodash/pickBy';
 import mapValues from 'lodash/mapValues';
 import map from 'lodash/map';
-import { format as dateFormatter } from 'date-fns';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { JSONPath } from 'jsonpath-plus';
 import LEGACY_SPECIES from '../constants/legacy-species';
 import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 import CONDITIONS from '../constants/conditions';
 import React, { Fragment } from 'react';
 import classnames from 'classnames';
+
+const { format: dateFormatter } = dayJs;
 
 export const formatDate = (date, format) => {
   try {

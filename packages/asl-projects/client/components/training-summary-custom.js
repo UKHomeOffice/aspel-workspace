@@ -1,9 +1,10 @@
 import React from 'react';
+import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { useSelector } from 'react-redux';
 import { getStatus, getTrainingRecord } from '../helpers/trainingRecordsComparison';
 import TrainingRecordModal from './trainingRecordsModal';
-import { format } from 'date-fns';
 
+const { format } = dayJs;
 const DEFAULT_LABEL = '-';
 const NO_RECORDS_LABEL = 'No training record';
 export default function TrainingSummaryWithChangeHighlighting(
