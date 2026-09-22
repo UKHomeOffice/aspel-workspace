@@ -18,7 +18,7 @@ const pack = doc => {
 const getRedirectQuery = query => {
   const redirectQuery = new URLSearchParams({ tab: 'nts', validateNtsDates: 'true' });
 
-  ['startDate', 'endDate'].forEach(name => {
+  ['date-from', 'date-to'].forEach(name => {
     ['day', 'month', 'year'].forEach(part => {
       const key = `${name}-${part}`;
       if (query[key]) {
@@ -42,8 +42,8 @@ module.exports = settings => {
       if (!req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
         throw new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.');
       }
-      const startDate = getDateQueryValue(req.query, 'startDate');
-      const endDate = getDateQueryValue(req.query, 'endDate');
+      const startDate = getDateQueryValue(req.query, 'date-from');
+      const endDate = getDateQueryValue(req.query, 'date-to');
       const { ra } = req.query;
 
       if (!startDate || !endDate || ra === undefined || ra === '') {

@@ -15,11 +15,11 @@ module.exports = {
   'place-delete': 'Approved area deletions',
   'profile-update': 'Profile updates',
   errors: {
-    startDate: {
+    'date-from': {
       required: "Enter a 'From' date",
       aspelDataStartDate: "The 'From' date must be the same as or after 31 July 2019, when ASPeL came into use"
     },
-    endDate: {
+    'date-to': {
       required: "Enter a 'To' date",
       aspelDataStartDate: "The 'To' date must be the same as or after 31 July 2019, when ASPeL came into use",
       date: {

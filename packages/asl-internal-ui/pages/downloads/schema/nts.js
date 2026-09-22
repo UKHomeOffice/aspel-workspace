@@ -2,23 +2,7 @@ const dates = {
   dateRange: {
     inputType: 'inputDateRange',
     label: 'Filter by date granted',
-    hint: 'You can only download data from 31 July 2019, when ASPeL came into use',
-    fieldNames: {
-      from: 'startDate',
-      to: 'endDate'
-    },
-    fields: {
-      from: {
-        label: 'Date from',
-        dateLabel: "The 'From' date",
-        hint: 'For example 01 01 2020'
-      },
-      to: {
-        label: 'Date to',
-        dateLabel: "The 'To' date",
-        hint: 'For example 12 12 2020'
-      }
-    }
+    hint: 'You can only download data from 31 July 2019, when ASPeL came into use'
   }
 };
 

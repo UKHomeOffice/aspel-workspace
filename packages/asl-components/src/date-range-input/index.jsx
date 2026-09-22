@@ -3,11 +3,6 @@ import { dateValidation } from '@ukhomeoffice/asl-constants';
 import DateInput from '../date-input';
 import DateErrorMessage from '../date-input/error-message';
 
-const defaultFieldNames = {
-    from: 'date-from',
-    to: 'date-to'
-};
-
 const defaultFields = {
     from: {
         label: 'Date from',
@@ -21,16 +16,12 @@ const defaultFields = {
 
 const emptyValues = {};
 
-function getDateLabel(field) {
-    return field.dateLabel || field.label;
-}
-
 function getDateError({ name, field, value, errors = {}, validate = {} }) {
     const errorCode = errors[name];
     if (!errorCode) {
         return null;
     }
-    return <DateErrorMessage name={name} value={value} errorCode={errorCode} validate={validate[name] || field.validate} dateLabel={getDateLabel(field)} />;
+    return <DateErrorMessage name={name} value={value} errorCode={errorCode} validate={validate[name] || field.validate} />;
 }
 
 function parseDate(value) {
@@ -41,7 +32,7 @@ function getBoundaryErrorCode(value) {
     return dateValidation.getBoundaryErrorCode(value);
 }
 
-function getBoundaryError({ field, fieldName, value, errorCode }) {
+function getBoundaryError({ fieldName, value, errorCode }) {
     if (!errorCode) {
         return null;
     }
@@ -51,16 +42,15 @@ function getBoundaryError({ field, fieldName, value, errorCode }) {
         value={value}
         errorCode={errorCode}
         validate={errorCode === 'dateIsSameOrBefore' ? [{ dateIsSameOrBefore: 'now' }] : undefined}
-        dateLabel={getDateLabel(field)}
     />;
 }
 
-function getRangeError({ field, fieldName, value, range, errors, changedFieldName, hasBoundaryError, fromFieldName, toFieldName }) {
-    const targetFieldName = changedFieldName || toFieldName;
-    const fromValue = range[fromFieldName] ?? '';
-    const toValue = range[toFieldName] ?? '';
+function getRangeError({ fieldName, value, range, errors, changedFieldName, hasBoundaryError }) {
+    const targetFieldName = changedFieldName || 'date-to';
+    const fromValue = range['date-from'] ?? '';
+    const toValue = range['date-to'] ?? '';
 
-    if (fieldName !== targetFieldName || errors[fromFieldName] || errors[toFieldName]) {
+    if (fieldName !== targetFieldName || errors['date-from'] || errors['date-to']) {
         return null;
     }
 
@@ -75,10 +65,10 @@ function getRangeError({ field, fieldName, value, range, errors, changedFieldNam
         return null;
     }
 
-    const errorCode = targetFieldName === toFieldName ? 'dateIsAfter' : 'dateIsBefore';
-    const constraintValue = targetFieldName === toFieldName ? fromValue : toValue;
+    const errorCode = targetFieldName === 'date-to' ? 'dateIsAfter' : 'dateIsBefore';
+    const constraintValue = targetFieldName === 'date-to' ? fromValue : toValue;
 
-    return <DateErrorMessage name={fieldName} value={value} errorCode={errorCode} validate={[{ [errorCode]: constraintValue }]} dateLabel={getDateLabel(field)} />;
+    return <DateErrorMessage name={fieldName} value={value} errorCode={errorCode} validate={[{ [errorCode]: constraintValue }]} />;
 }
 
 export default function DateRangeInput({
@@ -87,20 +77,16 @@ export default function DateRangeInput({
     values,
     errors = {},
     validate = {},
-    onChange,
-    fieldNames = defaultFieldNames,
-    fields = {}
+    onChange
 }) {
-    const fromFieldName = fieldNames.from || defaultFieldNames.from;
-    const toFieldName = fieldNames.to || defaultFieldNames.to;
     const rangeFields = [
-        { name: fromFieldName, key: 'from' },
-        { name: toFieldName, key: 'to' }
+        { name: 'date-from', key: 'from' },
+        { name: 'date-to', key: 'to' }
     ];
     const [range, setRange] = useState(() => values || emptyValues);
     const [changedFieldName, setChangedFieldName] = useState(null);
-    const fromBoundaryErrorCode = getBoundaryErrorCode(range[fromFieldName] ?? '');
-    const toBoundaryErrorCode = getBoundaryErrorCode(range[toFieldName] ?? '');
+    const fromBoundaryErrorCode = getBoundaryErrorCode(range['date-from'] ?? '');
+    const toBoundaryErrorCode = getBoundaryErrorCode(range['date-to'] ?? '');
     const hasBoundaryError = Boolean(fromBoundaryErrorCode || toBoundaryErrorCode);
 
     function update(fieldName, value) {
@@ -127,10 +113,7 @@ export default function DateRangeInput({
                 <div className="date-range-input__fields">
                     {
                         rangeFields.map(({ name: fieldName, key }) => {
-                            const field = {
-                                ...defaultFields[key],
-                                ...(fields[key] || fields[fieldName] || {})
-                            };
+                            const field = defaultFields[key];
                             const value = range[fieldName] ?? '';
                             const error = getDateError({
                                 name: fieldName,
@@ -142,7 +125,7 @@ export default function DateRangeInput({
                                 field,
                                 fieldName,
                                 value,
-                                errorCode: fieldName === fromFieldName ? fromBoundaryErrorCode : toBoundaryErrorCode
+                                errorCode: fieldName === 'date-from' ? fromBoundaryErrorCode : toBoundaryErrorCode
                             }) || getRangeError({
                                 field,
                                 fieldName,
@@ -150,9 +133,7 @@ export default function DateRangeInput({
                                 range,
                                 errors,
                                 changedFieldName,
-                                hasBoundaryError,
-                                fromFieldName,
-                                toFieldName
+                                hasBoundaryError
                             });
                             return (
                                 <div className="date-range-input__field" key={fieldName}>

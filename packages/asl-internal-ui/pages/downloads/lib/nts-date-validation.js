@@ -1,6 +1,6 @@
 const { dateValidation } = require('@ukhomeoffice/asl-constants');
 
-const dateFields = ['startDate', 'endDate'];
+const dateFields = ['date-from', 'date-to'];
 
 function hasDateParts(query, name) {
   return ['day', 'month', 'year'].some(part => query[`${name}-${part}`]);
@@ -69,9 +69,9 @@ function validateNtsDateRangeQuery(query) {
   }
 
   const hasDateErrors = Object.keys(errors).length > 0;
-  const startDate = parseDate(model.startDate);
-  const endDate = parseDate(model.endDate);
-  const hasInvalidBoundaries = !hasDateErrors && (hasBoundaryError(model.startDate) || hasBoundaryError(model.endDate));
+  const startDate = parseDate(model['date-from']);
+  const endDate = parseDate(model['date-to']);
+  const hasInvalidBoundaries = !hasDateErrors && (hasBoundaryError(model['date-from']) || hasBoundaryError(model['date-to']));
   const hasInvalidRange = !hasDateErrors && startDate.isAfter(endDate, 'day');
 
   return {
