@@ -1,13 +1,21 @@
 import _ from 'lodash';
+import { format } from 'date-fns';
 import { populateTableHeader } from '../helpers/populate-table-header.mjs';
 import { initializeTable } from '../helpers/initialize-table.mjs';
+import { trainingRecordHolder } from '../../../helpers/training-record-holder.mjs';
 
 const { sortBy } = _;
+const DATE_FORMAT = 'dd MMMM yyyy';
 
-export function trainingSummaryRenderer(doc, values) {
+export function trainingSummaryRenderer(doc, values, application = {}) {
   const TRAINING_RECORD_HEADERS = ['Category', 'Modules', 'Animal types', 'Details'];
+  const holder = trainingRecordHolder(application.licenceHolder, application.status);
 
-  doc.createParagraph('Training record').heading4();
+  doc.createParagraph(holder ? `${holder.name}'s training record` : 'Training record').heading4();
+
+  if (holder) {
+    doc.createParagraph(holder.status);
+  }
 
   if (!values?.training?.length) {
     doc.createParagraph('No training records found');
@@ -32,11 +40,16 @@ export function populateTableWithTrainingRecords(table, training) {
     createBulletedList(record.modules, table.getCell(row, 1));
     createBulletedList(record.species, table.getCell(row, 2));
 
-    const details = [
-      `Certificate number: ${record.certificateNumber}`,
-      `Awarded on: ${record.passDate}`,
-      `Awarded by: ${record.accreditingBody}`
-    ];
+    const details = record.isExemption
+      ? [
+        ...(record.exemptionReason || '-').split('\n'),
+        `Added on: ${record.createdAt ? format(record.createdAt, DATE_FORMAT) : '-'}`
+      ]
+      : [
+        `Certificate number: ${record.certificateNumber}`,
+        `Awarded on: ${record.passDate}`,
+        `Awarded by: ${record.accreditingBody}`
+      ];
     details.forEach(detail => table.getCell(row, 3).createParagraph(detail));
   });
 
