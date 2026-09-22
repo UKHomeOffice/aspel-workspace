@@ -46,10 +46,11 @@ function Row({ certificate, actions, basePage }) {
                     certificate.isExemption
                         ? (
                             <>
+                              <p>
+                                <span>Added on: </span><span>{certificate.createdAt ? format(certificate.createdAt, dateFormat) : '-'}</span>
+                              </p>
                                 <p className="preserve-whitespace">{certificate.exemptionReason}</p>
-                                <p>
-                                    <span>Added on: </span><span>{certificate.createdAt ? format(certificate.createdAt, dateFormat) : '-'}</span>
-                                </p>
+
                             </>
                         )
                         : (
