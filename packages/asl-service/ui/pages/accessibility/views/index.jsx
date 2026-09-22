@@ -69,7 +69,7 @@ AA standard, due to the non-compliances listed below.
 
 The content listed below is non-accessible for the following reasons.
 
-*Non-compliance with the accessibility regulations*
+#### Non-compliance with the accessibility regulations
 
  * The data presented in tables, such as the licence holder directories, aren’t optimised for screen reader use,
    particularly as acronyms are often used that lack contextual definitions (WCAG 3.1.4) This is an AAA standard we
@@ -85,19 +85,19 @@ We are continually improving this website with new features, bug fixes and chang
 We regularly review the site from an accessibility point of view, and intend to fix the issues to make the site WCAG 2.1
 AA compliant.
 
-*Disproportionate burden*
+#### Disproportionate burden
 
 We have not made any disproportionate burden claims.
 
-*Content that’s not within the scope of the accessibility regulations*
+#### Content that’s not within the scope of the accessibility regulations
 
 We consider all content on ASPeL to be within the scope of the accessibility regulations.
 
 ## Preparation of this accessibility statement
 
-This statement was prepared on 14th September 2020. It was last reviewed on 14th September 2020.
+This statement was prepared on 24th June 2026. It was last reviewed on 24th June 2026.
 
-This website was last tested on 11th September 2020. Testing was carried out internally by the Home Office.
+This website was last tested on 31st March 2026. Testing was carried out internally by the Home Office.
 
 We tested the service based on a user's ability to apply for and manage their licences. We also tested the application
 assessment and granting processes.
