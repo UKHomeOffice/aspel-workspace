@@ -3,6 +3,7 @@ import difference from 'lodash/difference';
 import omitBy from 'lodash/omitBy';
 import isUndefined from 'lodash/isUndefined';
 import getLocations from './get-locations';
+import { isStepEmpty } from './steps';
 
 const establishmentsKeys = [
   'establishments',
@@ -25,6 +26,27 @@ function changesShouldTriggerCleanup(changed) {
 
 function changesShouldTriggerEstablishmentCleanup(changed) {
   return intersection(Object.keys(changed), establishmentsKeys).length > 0;
+}
+
+export function cleanProtocolSteps(protocols = [], previousProtocols = []) {
+  return (protocols || []).map(protocol => {
+    const cleanedSteps = (protocol.steps || []).filter(step => {
+      if (step.deleted === true) {
+        const oldSteps = (previousProtocols || []).flatMap(p => (p.steps || []).map(s => s.id));
+        return oldSteps.includes(step.id);
+      }
+      return !isStepEmpty(step);
+    });
+
+    if (cleanedSteps.length === (protocol.steps || []).length) {
+      return protocol;
+    }
+
+    return {
+      ...protocol,
+      steps: cleanedSteps
+    };
+  });
 }
 
 export default function cleanProtocols({ state, savedState, changed = {}, establishment, schemaVersion }) {
@@ -112,6 +134,8 @@ export default function cleanProtocols({ state, savedState, changed = {}, establ
       };
     });
   }
+
+  project.protocols = cleanProtocolSteps(project.protocols, (savedState || {}).protocols);
 
   return project;
 }
