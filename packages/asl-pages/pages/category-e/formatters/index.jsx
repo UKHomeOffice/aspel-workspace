@@ -1,7 +1,7 @@
 import React from 'react';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { Link, Snippet } from '@ukhomeoffice/asl-components';
-import { formatDate as formatDateUtil } from '@ukhomeoffice/asl-components/src/utils';
+import { formatDate as formatDateUtil } from '@ukhomeoffice/asl-components/utils';
 import { dateFormat } from '../../../constants';
 import taskFormatters from '../../task/list/formatters';
 import classnames from 'classnames';

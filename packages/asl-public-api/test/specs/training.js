@@ -2,12 +2,13 @@ const apiHelper = require('../helpers/api');
 const openAPI = require('../helpers/open-api');
 const assert = require('assert');
 const ids = require('../data/ids');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { formatIsoDate } = dayJs;
 const { v4: uuid } = require('uuid');
 
 const courseDefaults = {
   establishmentId: ids.establishments.trainingEstablishment,
-  startDate: dayJs().add(1, 'month').format('YYYY-MM-DD'),
+  startDate: formatIsoDate(dayJs().add(1, 'month')),
   species: ['Mice', 'Rats'],
   coursePurpose: 'training'
 };

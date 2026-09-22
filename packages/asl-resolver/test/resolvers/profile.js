@@ -1,4 +1,4 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const assert = require('assert');
 const { profile } = require('../../lib/resolvers');
 const db = require('../helpers/db');

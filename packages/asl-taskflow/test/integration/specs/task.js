@@ -2,7 +2,7 @@ const request = require('supertest');
 const express = require('express');
 const sinon = require('sinon');
 const assert = require('assert');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
 const Taskflow = require('../../../');
 const Task = require('../../../lib/db/task');

@@ -1,5 +1,5 @@
 const sinon = require('sinon');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const uuid = require('uuid');
 const assert = require('assert');
 const { get, map } = require('lodash');

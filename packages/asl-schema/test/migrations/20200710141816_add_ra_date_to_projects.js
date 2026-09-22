@@ -1,6 +1,6 @@
 const { v4: uuid } = require('uuid');
 const assert = require('assert');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const db = require('./helpers/db');
 const { getRaDate, up } = require('../../migrations/20200710141816_add_ra_date_to_projects');
 

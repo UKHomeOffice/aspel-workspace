@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector } from 'react-redux';
 import { Header, Link, Snippet, Metric } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';

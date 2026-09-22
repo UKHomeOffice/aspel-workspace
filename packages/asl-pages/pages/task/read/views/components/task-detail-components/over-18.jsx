@@ -1,4 +1,4 @@
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import React, { Fragment } from 'react';
 import { Snippet } from '@ukhomeoffice/asl-components';
 

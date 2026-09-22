@@ -1,8 +1,10 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { trainingCoursePurpose } = require('@ukhomeoffice/asl-constants');
 
+const { formatIsoDate } = dayJs;
+
 const formatDate = date => {
-  return date ? dayJs(date).format('YYYY-MM-DD') : '';
+  return date ? formatIsoDate(date) : '';
 };
 
 module.exports = ({ db }) => {

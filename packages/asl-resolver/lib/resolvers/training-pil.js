@@ -1,5 +1,5 @@
 const { pick } = require('lodash');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const resolver = require('./base-resolver');
 const { generateLicenceNumber } = require('../utils');
 

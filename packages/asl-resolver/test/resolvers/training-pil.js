@@ -1,4 +1,5 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { formatIsoDate } = dayJs;
 const assert = require('assert');
 const { trainingPil } = require('../../lib/resolvers');
 const db = require('../helpers/db');
@@ -52,7 +53,7 @@ const trainingCourse = {
   establishmentId: ids.establishment,
   projectId: ids.project,
   title: 'Test training course',
-  startDate: dayJs().add(1, 'month').format('YYYY-MM-DD')
+  startDate: formatIsoDate(dayJs().add(1, 'month'))
 };
 
 const trainingPils = [

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector } from 'react-redux';
 import fetch from 'r2';
 import { Inset, Snippet, Form } from '@ukhomeoffice/asl-components';

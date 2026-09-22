@@ -1,9 +1,8 @@
 const { randomUUID } = require('crypto');
 const { omit, cloneDeep } = require('lodash');
 
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-dayJs.updateLocale('en', { holidays: bankHolidays });
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { addWorkingDaysIso } = dayJs;
 
 const generateTask = ({
   model = 'project',
@@ -62,7 +61,7 @@ const generateTask = ({
       if (resubmission) {
         const interval = this.type === 'amendment' ? 15 : 20;
         this.data.internalDeadline = {
-          standard: dayJs(this.updated_at).addWorkingTime(interval, 'days').format('YYYY-MM-DD'),
+          standard: addWorkingDaysIso(this.updated_at, interval),
           resubmitted: true
         };
       }

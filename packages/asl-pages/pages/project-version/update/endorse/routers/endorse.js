@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { pick, get, set, omit } = require('lodash');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { STRICT_DATE_FORMATS, formatIsoDate, parseDate } = dayJs;
 const form = require('../../../../common/routers/form');
 const { userCanEndorse } = require('../middleware');
 const { getSchema } = require('../schema');
@@ -107,7 +108,7 @@ module.exports = (settings = {}) => {
         if (req.processAwerbDates && req.form.values['awerb-exempt'] !== true) {
           const primaryEstablishment = req.project.establishment;
           req.session.form[req.model.id].meta['awerb-dates'] = req.awerbEstablishments.map(e => {
-            return { ...pick(e, 'id', 'name'), date: dayJs(req.form.values[`awerb-${e.id}`], 'YYYY-MM-DD').format('YYYY-MM-DD'), primary: e.id === primaryEstablishment.id };
+            return { ...pick(e, 'id', 'name'), date: formatIsoDate(parseDate(req.form.values[`awerb-${e.id}`], STRICT_DATE_FORMATS, true)), primary: e.id === primaryEstablishment.id };
           });
         }
         if (res.locals.static.isEndorsement) {

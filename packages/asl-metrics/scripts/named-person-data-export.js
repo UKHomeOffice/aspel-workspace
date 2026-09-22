@@ -32,7 +32,7 @@ const knexASL = require('knex')({
   client: 'pg',
   connection: settings.asldb
 });
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const minimist = require('minimist');
 
 // Parse command-line arguments

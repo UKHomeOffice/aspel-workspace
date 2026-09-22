@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { get } = require('lodash');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { formatIsoDate } = dayJs;
 const { render } = require('mustache');
 const refusalNoticeContent = require('../content/refusal-notice');
 const { dateFormat } = require('../../../../constants');
@@ -47,7 +48,7 @@ module.exports = () => {
     const { values, meta } = get(req, `session.form[${req.task.id}]`);
 
     meta.refusalNotice = {
-      deadline: dayJs().add(28, 'days').format('YYYY-MM-DD'),
+      deadline: formatIsoDate(dayJs().add(28, 'days')),
       markdown: getRefusalNoticeMarkdown(req.task, req.user.profile, meta.comment),
       inspectorId: req.user.profile.id
     };

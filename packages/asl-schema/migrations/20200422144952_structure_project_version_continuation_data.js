@@ -1,4 +1,4 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { get } = require('lodash');
 const { Value } = require('slate');
 const csv = require('csv-stringify');

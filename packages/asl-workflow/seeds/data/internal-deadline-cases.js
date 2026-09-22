@@ -1,6 +1,5 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-dayJs.updateLocale('en', { holidays: bankHolidays });
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { formatIsoDate } = dayJs;
 
 const STANDARD_DEADLINE = 40;
 const EXTENDED_DEADLINE = 55;
@@ -12,8 +11,8 @@ const projects = [
     licenceNumber: 'INTDL-FUT',
     data: {
       internalDeadline: {
-        standard: dayJs().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().addWorkingTime(STANDARD_DEADLINE, 'days')),
+        extended: formatIsoDate(dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days'))
       }
     }
   },
@@ -22,34 +21,34 @@ const projects = [
     licenceNumber: 'INTDL-URG',
     data: {
       internalDeadline: {
-        standard: dayJs().addWorkingTime(5, 'days').format('YYYY-MM-DD'),
-        extended: dayJs().addWorkingTime(20, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().addWorkingTime(5, 'days')),
+        extended: formatIsoDate(dayJs().addWorkingTime(20, 'days'))
       }
     },
-    date: dayJs().subtractWorkingTime(STANDARD_DEADLINE - 5, 'days').format('YYYY-MM-DD')
+    date: formatIsoDate(dayJs().subtractWorkingTime(STANDARD_DEADLINE - 5, 'days'))
   },
   {
     title: 'Internal deadline past',
     licenceNumber: 'INTDL-PAST',
     data: {
       internalDeadline: {
-        standard: dayJs().subtractWorkingTime(2, 'days').format('YYYY-MM-DD'),
-        extended: dayJs().subtractWorkingTime(2, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().subtractWorkingTime(2, 'days')),
+        extended: formatIsoDate(dayJs().subtractWorkingTime(2, 'days'))
       }
     },
-    date: dayJs().subtractWorkingTime(STANDARD_DEADLINE + 2, 'days').format('YYYY-MM-DD')
+    date: formatIsoDate(dayJs().subtractWorkingTime(STANDARD_DEADLINE + 2, 'days'))
   },
   {
     title: 'Internal deadline future, statutory deadline future (same date)',
     licenceNumber: 'INTDL-STAT-FUT',
     data: {
       internalDeadline: {
-        standard: dayJs().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().addWorkingTime(STANDARD_DEADLINE, 'days')),
+        extended: formatIsoDate(dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days'))
       },
       deadline: {
-        standard: dayJs().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
+        standard: formatIsoDate(dayJs().addWorkingTime(STANDARD_DEADLINE, 'days')),
+        extended: formatIsoDate(dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days')),
         isExtended: false
       }
     }
@@ -59,12 +58,12 @@ const projects = [
     licenceNumber: 'INTDL-EARLY-STAT',
     data: {
       internalDeadline: {
-        standard: dayJs().addWorkingTime(RESUBMISSION_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: dayJs().addWorkingTime(RESUBMISSION_DEADLINE, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().addWorkingTime(RESUBMISSION_DEADLINE, 'days')),
+        extended: formatIsoDate(dayJs().addWorkingTime(RESUBMISSION_DEADLINE, 'days'))
       },
       deadline: {
-        standard: dayJs().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
+        standard: formatIsoDate(dayJs().addWorkingTime(STANDARD_DEADLINE, 'days')),
+        extended: formatIsoDate(dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days')),
         isExtended: false
       }
     }
@@ -74,32 +73,32 @@ const projects = [
     licenceNumber: 'INTDL-PAST-STAT-FUT',
     data: {
       internalDeadline: {
-        standard: dayJs().subtractWorkingTime(2, 'days').format('YYYY-MM-DD'),
-        extended: dayJs().subtractWorkingTime(2, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().subtractWorkingTime(2, 'days')),
+        extended: formatIsoDate(dayJs().subtractWorkingTime(2, 'days'))
       },
       deadline: {
-        standard: dayJs().addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
+        standard: formatIsoDate(dayJs().addWorkingTime(STANDARD_DEADLINE, 'days')),
+        extended: formatIsoDate(dayJs().addWorkingTime(EXTENDED_DEADLINE, 'days')),
         isExtended: false
       }
     },
-    date: dayJs().subtractWorkingTime(RESUBMISSION_DEADLINE + 2, 'days').format('YYYY-MM-DD')
+    date: formatIsoDate(dayJs().subtractWorkingTime(RESUBMISSION_DEADLINE + 2, 'days'))
   },
   {
     title: 'Internal deadline past, statutory deadline past',
     licenceNumber: 'INTDL-PAST-STAT-PAST',
     data: {
       internalDeadline: {
-        standard: dayJs().subtractWorkingTime(2, 'days').format('YYYY-MM-DD'),
-        extended: dayJs().subtractWorkingTime(13, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().subtractWorkingTime(2, 'days')),
+        extended: formatIsoDate(dayJs().subtractWorkingTime(13, 'days'))
       },
       deadline: {
-        standard: dayJs().subtractWorkingTime(2, 'days').format('YYYY-MM-DD'),
-        extended: dayJs().addWorkingTime(13, 'days').format('YYYY-MM-DD'),
+        standard: formatIsoDate(dayJs().subtractWorkingTime(2, 'days')),
+        extended: formatIsoDate(dayJs().addWorkingTime(13, 'days')),
         isExtended: false
       }
     },
-    date: dayJs().subtractWorkingTime(STANDARD_DEADLINE + 2, 'days').format('YYYY-MM-DD')
+    date: formatIsoDate(dayJs().subtractWorkingTime(STANDARD_DEADLINE + 2, 'days'))
   }
 ];
 

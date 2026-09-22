@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Provider } from 'react-redux';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import Wrapper from './wrapper';
 import { LicenceStatusBanner } from '@ukhomeoffice/asl-components';
 import ProjectStatusBanner from '../../../project-version/components/project-status-banner';

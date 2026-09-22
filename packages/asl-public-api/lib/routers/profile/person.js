@@ -1,4 +1,4 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { Router } = require('express');
 const isUUID = require('uuid-validate');
 const { get, some } = require('lodash');

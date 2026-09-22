@@ -1,5 +1,5 @@
 const assert = require('assert');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const sinon = require('sinon');
 
 const calculateExpiryDate = require('../../lib/helpers/calculate-expiry-date.js');

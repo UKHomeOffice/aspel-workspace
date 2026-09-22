@@ -1,5 +1,5 @@
 const { trainingCoursePurpose } = require('@ukhomeoffice/asl-constants');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const castArray = require('lodash/castArray');
 
 module.exports = {

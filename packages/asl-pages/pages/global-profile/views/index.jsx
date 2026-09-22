@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
 import { useSelector, shallowEqual } from 'react-redux';
 import sortBy from 'lodash/sortBy';
 import {
@@ -13,12 +12,11 @@ import {
 } from '@ukhomeoffice/asl-components';
 
 import { dateFormat } from '../../../constants';
+import { formatDate } from '../../../lib/utils';
 
 import Profile from '../../profile/read/views/profile';
 import RelatedTasks from '../../task/list/views/related-tasks';
 import AsruRoles from '../components/asru-roles';
-
-const { format: dateFormatter } = dayJs;
 
 const selector = ({
   model,
@@ -33,8 +31,6 @@ const selector = ({
   asruUser,
   isOwnProfile
 });
-
-const formatDate = (date, format) => (date ? dateFormatter(date, format) : '-');
 
 const ProfileMerges = ({ profile }) => {
   if (!profile.profileMerges || profile.profileMerges.length === 0) {

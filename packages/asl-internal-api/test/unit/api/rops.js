@@ -1,6 +1,6 @@
 const assert = require('assert');
 const request = require('supertest');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const apiHelper = require('../../helpers/api');
 const ids = require('../../data/ids');
 

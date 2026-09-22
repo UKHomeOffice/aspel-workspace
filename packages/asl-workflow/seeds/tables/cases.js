@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const cases = require('../data/cases.json');
 const createTask = require('../helpers/create-task');
 const commentCount = require('../data/comment-count');

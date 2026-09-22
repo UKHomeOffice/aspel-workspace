@@ -1,4 +1,4 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { v4: uuid } = require('uuid');
 const assert = require('assert');
 const sinon = require('sinon');

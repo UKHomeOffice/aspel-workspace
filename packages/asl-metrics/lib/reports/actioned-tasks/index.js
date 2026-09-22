@@ -1,17 +1,27 @@
 const { get, pick } = require('lodash');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-dayJs.updateLocale('en', { holidays: bankHolidays });
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+
+const { formatIsoDate } = dayJs;
 
 const getTaskType = require('./get-task-type');
 
+const isValidIsoDate = value => {
+  try {
+    return formatIsoDate(value) === value;
+  } catch (e) {
+    return false;
+  }
+};
+
+const maybeFormatIsoDate = value => value ? formatIsoDate(value) : undefined;
+
 module.exports = ({ db, flow, query: params }) => {
 
-  if (!params.start || dayJs(params.start).format('YYYY-MM-DD') !== params.start) {
+  if (!params.start || !isValidIsoDate(params.start)) {
     throw Error('valid start date must be provided');
   }
 
-  if (!params.end || dayJs(params.end).format('YYYY-MM-DD') !== params.end) {
+  if (!params.end || !isValidIsoDate(params.end)) {
     throw Error('valid end date must be provided');
   }
 
@@ -29,7 +39,7 @@ module.exports = ({ db, flow, query: params }) => {
         'cases.status',
         db.flow.raw(
           `JSON_BUILD_OBJECT(
-             'model', cases.data->>'model', 
+             'model', cases.data->>'model',
              'action', cases.data->>'action',
              'version', cases.data->>'version',
              'modelData', JSON_BUILD_OBJECT(
@@ -46,7 +56,7 @@ module.exports = ({ db, flow, query: params }) => {
       ])
       .joinRaw(
         `LEFT JOIN LATERAL (
-         SELECT 
+         SELECT
            COALESCE(
              JSON_AGG(
                JSON_BUILD_OBJECT(
@@ -72,9 +82,8 @@ module.exports = ({ db, flow, query: params }) => {
         { end: end.toISOString() }
       )
       .where('cases.status', '!=', 'autoresolved')
-      .where('cases.created_at', '<=', end.toISOString()) // ignore tasks created after report period
+      .where('cases.created_at', '<=', end.toISOString())
       .where(builder =>
-        // ignore tasks closed before the report period
         builder.whereIn('cases.status', openStatuses)
           .orWhere(b =>
             b.whereIn('cases.status', closedStatuses)
@@ -165,9 +174,9 @@ module.exports = ({ db, flow, query: params }) => {
               licenceNumber: task.data.modelData?.licenceNumber,
               taskType,
               taskAction: task.data.action,
-              submitted: previousSubmission?.format('YYYY-MM-DD'),
-              assigned: previousAssignment?.format('YYYY-MM-DD'),
-              actioned: eventTime?.format('YYYY-MM-DD'),
+              submitted: maybeFormatIsoDate(previousSubmission),
+              assigned: maybeFormatIsoDate(previousAssignment),
+              actioned: maybeFormatIsoDate(eventTime),
               inspectorAction: activityLog.event?.status,
               isResubmission: !!lastResubmittedAt,
               inspectorName: activityLog.name,
@@ -258,7 +267,7 @@ module.exports = ({ db, flow, query: params }) => {
       });
 
     if (!firstSubmittedAt) {
-      return null; // task was never with ASRU, ignore
+      return null;
     }
 
     if (firstSubmittedAt.isSameOrAfter(start) && firstSubmittedAt.isSameOrBefore(end)) {
@@ -290,17 +299,17 @@ module.exports = ({ db, flow, query: params }) => {
       role: task.data.modelData?.role,
       metrics: {
         taskType,
-        firstSubmittedAt: firstSubmittedAt?.format('YYYY-MM-DD'),
-        firstSubmittedAtInPeriod: firstSubmittedAtInPeriod?.format('YYYY-MM-DD'),
-        lastResubmittedAt: lastResubmittedAt?.format('YYYY-MM-DD'),
-        firstReturnedAt: firstReturnedAt?.format('YYYY-MM-DD'),
-        firstReturnedAtInPeriod: firstReturnedAtInPeriod?.format('YYYY-MM-DD'),
-        lastReturnedAt: lastReturnedAt?.format('YYYY-MM-DD'),
-        firstAssignedAt: firstAssignedAt?.format('YYYY-MM-DD'),
-        firstAssignedAtInPeriod: firstAssignedAtInPeriod?.format('YYYY-MM-DD'),
-        lastAssignedAt: lastAssignedAt?.format('YYYY-MM-DD'),
-        resolvedAt: resolvedAt?.format('YYYY-MM-DD'),
-        firstActionedAt: firstActionedAt?.format('YYYY-MM-DD'),
+        firstSubmittedAt: maybeFormatIsoDate(firstSubmittedAt),
+        firstSubmittedAtInPeriod: maybeFormatIsoDate(firstSubmittedAtInPeriod),
+        lastResubmittedAt: maybeFormatIsoDate(lastResubmittedAt),
+        firstReturnedAt: maybeFormatIsoDate(firstReturnedAt),
+        firstReturnedAtInPeriod: maybeFormatIsoDate(firstReturnedAtInPeriod),
+        lastReturnedAt: maybeFormatIsoDate(lastReturnedAt),
+        firstAssignedAt: maybeFormatIsoDate(firstAssignedAt),
+        firstAssignedAtInPeriod: maybeFormatIsoDate(firstAssignedAtInPeriod),
+        lastAssignedAt: maybeFormatIsoDate(lastAssignedAt),
+        resolvedAt: maybeFormatIsoDate(resolvedAt),
+        firstActionedAt: maybeFormatIsoDate(firstActionedAt),
         wasFirstActionedInPeriod,
         totalDaysWithAsru,
         totalDaysWithAsruInPeriod,

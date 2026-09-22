@@ -3,14 +3,12 @@ jest.mock('../snippet', () => (props) => (
 ));
 
 import React from 'react';
-import dayJs from '../dayjs.js';
+import { addWeeks } from '../dayjs.js';
 import { cleanup, render, screen } from '@testing-library/react';
 import { expect, jest } from '@jest/globals';
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
 import ExpiryDate from './';
-
-const { addWeeks } = dayJs;
 
 describe('<ExpiryDate />', () => {
   afterEach(() => {
@@ -41,3 +39,4 @@ describe('<ExpiryDate />', () => {
     expect(screen.queryByTestId('countdown')).not.toBeInTheDocument();
   });
 });
+

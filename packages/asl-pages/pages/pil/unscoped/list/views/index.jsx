@@ -1,6 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector } from 'react-redux';
 import {
   Link,

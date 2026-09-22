@@ -1,6 +1,6 @@
 const { pick, merge } = require('lodash');
 const { dateFormat } = require('../../../constants');
-const { isValid: isValidDate, toDate, format: dateFormatter } = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const { isValid: isValidDate, toDate, format: dateFormatter } = require('@ukhomeoffice/asl-components/dayjs');
 
 function formatCSVDate(date) {
   return isValidDate(toDate(date)) ? dateFormatter(date, dateFormat.long) : '-';

@@ -1,4 +1,4 @@
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { Link, Snippet } from '@ukhomeoffice/asl-components';
 import React from 'react';
 import { useSelector } from 'react-redux';

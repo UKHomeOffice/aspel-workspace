@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector, shallowEqual } from 'react-redux';
 import classnames from 'classnames';
 import { dateFormat } from '../../../../constants';

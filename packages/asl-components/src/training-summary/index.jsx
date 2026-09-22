@@ -4,9 +4,10 @@ import { useSelector } from 'react-redux';
 import sortBy from 'lodash/sortBy';
 import { ApplyChanges, Snippet, Link } from '../';
 import { getUrl } from '../link';
+import { DATE_FORMAT } from '../utils';
 
 const { format } = dayJs;
-const dateFormat = 'dd MMMM yyyy';
+const dateFormat = DATE_FORMAT.long;
 
 function List({ items }) {
     if (!items || !items.length) {
@@ -108,3 +109,4 @@ export default function SummaryTable({ certificates, actions, emptyLabel = 'No t
         </table>
     );
 }
+

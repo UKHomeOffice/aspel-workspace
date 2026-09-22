@@ -1,5 +1,5 @@
 const { page } = require('@asl/service/ui');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const routes = require('./routes');
 
 module.exports = settings => {

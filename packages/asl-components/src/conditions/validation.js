@@ -1,5 +1,7 @@
 const dayjs = require('../dayjs.js');
 
+const { STRICT_DATE_FORMATS, parseDate } = dayjs;
+
 module.exports = (reminders) => {
     const deadline = reminders[0]?.deadline;
 
@@ -7,7 +9,7 @@ module.exports = (reminders) => {
         return 'Please provide a valid date';
     }
 
-    const parsedDeadline = dayjs(deadline, 'YYYY-MM-DD', true);
+    const parsedDeadline = parseDate(deadline, STRICT_DATE_FORMATS, true);
     if (!parsedDeadline.isValid()) {
         return 'Please provide a valid date';
     }

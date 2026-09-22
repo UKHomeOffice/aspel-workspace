@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import isEmpty from 'lodash/isEmpty';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { Button } from '@ukhomeoffice/react-components';
 import { Snippet, Link, Tabs } from '@ukhomeoffice/asl-components';
 import { formatDate } from '../../../../lib/utils';

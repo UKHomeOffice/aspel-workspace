@@ -1,5 +1,5 @@
 import React from 'react';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector } from 'react-redux';
 import { pick, omit } from 'lodash';
 import { FormLayout, Header, Snippet, ModelSummary } from '@ukhomeoffice/asl-components';

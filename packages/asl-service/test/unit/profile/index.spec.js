@@ -1,5 +1,5 @@
 const express = require('express');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const sinon = require('sinon');
 const profile = require('../../../lib/auth/profile');
 const assert = require('assert');

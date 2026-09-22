@@ -1,4 +1,6 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+
+const { formatIsoDate } = dayJs;
 
 module.exports = ({ db }) => {
 
@@ -17,7 +19,7 @@ module.exports = ({ db }) => {
       licenceNumber: pil.licence_number,
       establishment: pil.establishment,
       licenceHolder: `${pil.first_name} ${pil.last_name}`,
-      reviewDate: dayJs(pil.review_date).format('YYYY-MM-DD')
+      reviewDate: formatIsoDate(pil.review_date)
     };
   };
 

@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import classnames from 'classnames';
 import sortBy from 'lodash/sortBy';
 import get from 'lodash/get';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { ExpiryDate, Link, Markdown, Snippet } from '@ukhomeoffice/asl-components';
 import ProjectSearchResult from '../views/components/project-search-result';
 import { projectTitle } from '@asl/pages/pages/common/formatters';

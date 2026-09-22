@@ -1,16 +1,14 @@
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const getDeadline = require('./get-deadline');
 
-// configure bank holidays
-dayJs.updateLocale('en', { holidays: bankHolidays });
+const { formatIsoDate } = dayJs;
 
 const formatTime = time => {
   const day = 24 * 60 * 60 * 1000;
   return Math.round(time / day);
 };
 
-module.exports = ({ db, query: params, flow }) => {
+module.exports = ({ db, flow }) => {
   const query = () => {
     return db.flow('cases')
       .select('cases.*')
@@ -118,10 +116,10 @@ module.exports = ({ db, query: params, flow }) => {
       establishment: project.name,
       licenceNumber: project.licence_number,
       licenceHolder: `${project.first_name} ${project.last_name}`,
-      created: dayJs(project.created_at).format('YYYY-MM-DD'),
-      submitted: dayJs(record.created_at).format('YYYY-MM-DD'),
-      granted: dayJs(record.updated_at).format('YYYY-MM-DD'),
-      issue_date: dayJs(project.issue_date).format('YYYY-MM-DD'),
+      created: formatIsoDate(project.created_at),
+      submitted: formatIsoDate(record.created_at),
+      granted: formatIsoDate(record.updated_at),
+      issue_date: formatIsoDate(project.issue_date),
       isContinuation: isContinuation ? 'Yes' : 'No',
       continuationExpiry,
       totalTime: formatTime(timers.total),

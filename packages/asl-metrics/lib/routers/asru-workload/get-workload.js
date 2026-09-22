@@ -1,5 +1,5 @@
 const { intersection, values } = require('lodash');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
 const getAsruUsers = db => {
   return db.asl('profiles')

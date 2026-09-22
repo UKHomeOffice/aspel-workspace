@@ -1,8 +1,10 @@
 const dictionary = require('@ukhomeoffice/asl-dictionary');
 const { get } = require('lodash');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const taskHelper = require('../utils/task');
 const { subscribed } = require('../utils/is-subscribed');
+
+const { DATE_FORMAT, formatDate } = dayJs;
 
 module.exports = async ({ schema, logger, task }) => {
   logger.verbose('generating notifications for establishment task');
@@ -13,7 +15,6 @@ module.exports = async ({ schema, logger, task }) => {
   const establishmentId = get(task, 'data.establishmentId') || get(task, 'data.modelData.id') || get(task, 'data.id');
   const action = get(task, 'data.action');
   const model = get(task, 'data.model');
-  const dateFormat = 'D MMM YYYY';
   let version = get(task, 'data.meta.version');
   let subject;
 
@@ -194,7 +195,7 @@ module.exports = async ({ schema, logger, task }) => {
       modelType: 'establishment',
       emailTemplate: 'licence-suspended',
       logMsg: 'Establishment suspended',
-      suspendedDate: establishment.suspendedDate && dayJs(establishment.suspendedDate).format(dateFormat),
+      suspendedDate: establishment.suspendedDate && formatDate(establishment.suspendedDate, DATE_FORMAT.medium),
       addTaskTypeToSubject: false
     };
 
@@ -212,8 +213,8 @@ module.exports = async ({ schema, logger, task }) => {
       modelType: 'establishment',
       emailTemplate: 'licence-reinstated',
       logMsg: 'Establishment reinstated',
-      suspendedDate: establishment.suspendedDate && dayJs(establishment.suspendedDate).format(dateFormat),
-      reinstatedDate: dayJs().format(dateFormat),
+      suspendedDate: establishment.suspendedDate && formatDate(establishment.suspendedDate, DATE_FORMAT.medium),
+      reinstatedDate: formatDate(new Date(), DATE_FORMAT.medium),
       addTaskTypeToSubject: false
     };
 

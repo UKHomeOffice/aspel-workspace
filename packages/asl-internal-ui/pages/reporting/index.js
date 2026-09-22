@@ -1,5 +1,6 @@
 const { page } = require('@asl/service/ui');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { formatIsoDate } = dayJs;
 const reducer = require('./helpers/reduce-stream');
 const { pick } = require('lodash');
 
@@ -32,8 +33,8 @@ module.exports = settings => {
   app.use((req, res, next) => {
     req.model = {
       id: 'metrics-filter',
-      start: dayJs().subtract(1, 'month').startOf('month').format('YYYY-MM-DD'),
-      end: dayJs().subtract(1, 'month').endOf('month').format('YYYY-MM-DD')
+      start: formatIsoDate(dayJs().subtract(1, 'month').startOf('month')),
+      end: formatIsoDate(dayJs().subtract(1, 'month').endOf('month'))
     };
     next();
   });

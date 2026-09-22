@@ -1,6 +1,6 @@
 const request = require('supertest');
 const assert = require('assert');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const workflowHelper = require('../../helpers/workflow');
 const { holc } = require('../../data/profiles');
 const ids = require('../../data/ids');

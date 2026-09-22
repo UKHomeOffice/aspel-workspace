@@ -1,7 +1,7 @@
 const BaseModel = require('./base-model');
 const { projectStatuses } = require('@ukhomeoffice/asl-constants');
 const { uuid } = require('../lib/regex-validation');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { get } = require('lodash');
 
 const QueryBuilder = require('./query-builder');

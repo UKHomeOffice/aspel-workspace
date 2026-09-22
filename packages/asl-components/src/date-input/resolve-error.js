@@ -1,8 +1,5 @@
-const dayjs = require('../dayjs.js');
+const { formatReferenceDate } = require('../date-extend-dayJs/utils');
 const { splitDateValue } = require('./invalid-parts');
-
-// Maps a date error to the GOV.UK Design System message model. GDS uses specific,
-// https://design-system.service.gov.uk/components/date-input/#error-messages
 
 const ORDER = ['day', 'month', 'year'];
 
@@ -10,7 +7,6 @@ function emptyParts(parts) {
     return ORDER.filter(part => String(parts[part] ?? '').trim() === '');
 }
 
-// "a day" / "a day and month" / "a day, month and year"
 function describeMissing(names) {
     if (names.length === 1) {
         return `a ${names[0]}`;
@@ -21,24 +17,9 @@ function describeMissing(names) {
     return `a ${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
 }
 
-// The param a dateIs* rule was configured with, e.g. { dateIsBefore: 'now' }.
 function ruleParam(validate = [], code) {
     const rule = (validate || []).find(r => r && typeof r === 'object' && code in r);
     return rule ? rule[code] : undefined;
-}
-
-function formatReferenceDate(param) {
-    if (typeof param !== 'string') {
-        return '';
-    }
-
-    const strictDate = dayjs(param, 'YYYY-MM-DD', true);
-    if (strictDate.isValid()) {
-        return strictDate.format('D MMMM YYYY');
-    }
-
-    const isoDate = dayjs(param);
-    return isoDate.isValid() ? isoDate.format('D MMMM YYYY') : '';
 }
 
 function resolveIncomplete(parts) {
@@ -46,7 +27,6 @@ function resolveIncomplete(parts) {
     if (missing.length) {
         return { key: 'incomplete', context: { missingParts: describeMissing(missing) } };
     }
-    // Everything is filled in but the year isn't four digits.
     if (!/^\d{4}$/.test(String(parts.year ?? '').trim())) {
         return { key: 'yearLength', context: {} };
     }
@@ -60,8 +40,6 @@ const CONSTRAINTS = {
     dateIsSameOrAfter: { now: 'todayOrFuture', dated: 'sameOrAfter' }
 };
 
-// Returns { key, context } for the message, or null when the code is unknown
-// (caller then falls back to the field's generic error text).
 function resolveDateError({ value, errorCode, validate }) {
     if (errorCode === 'aspelDataStartDate') {
         return { key: 'aspelDataStartDate', context: {} };
@@ -78,10 +56,6 @@ function resolveDateError({ value, errorCode, validate }) {
     const constraint = CONSTRAINTS[errorCode];
     if (constraint) {
         const param = ruleParam(validate, errorCode);
-        // Only use the "before/after <date>" wording when we can actually format the
-        // reference date. For `'now'`, a function, or a field-reference we can't
-        // format, fall back to the today-relative message so we never render a
-        // dangling "must be before " with a blank date.
         const date = (param === 'now' || param == null) ? '' : formatReferenceDate(param);
         return date
             ? { key: constraint.dated, context: { date } }
@@ -92,3 +66,4 @@ function resolveDateError({ value, errorCode, validate }) {
 }
 
 module.exports = { resolveDateError };
+

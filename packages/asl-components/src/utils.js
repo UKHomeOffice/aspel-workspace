@@ -1,7 +1,10 @@
 const { stringify, parse } = require('qs');
 const get = require('lodash/get');
 const url = require('url');
-const { format: dateFormatter } = require('./dayjs.js');
+const { format: dateFormatter } = require('./date-extend-dayJs/core.js');
+const { DATE_FORMAT, STRICT_DATE_FORMATS } = require('./date-extend-dayJs/formats');
+const { parseDate } = require('./date-extend-dayJs/parse');
+const { formatReferenceDate } = require('./date-extend-dayJs/utils');
 
 const getValue = ({ row, schema, key }) => {
     const accessor = schema.accessor || key;
@@ -36,12 +39,6 @@ const getSort = (column, state) => ({
     column,
     ascending: state.column === column ? !state.ascending : true
 });
-
-const DATE_FORMAT = {
-    long: 'd MMMM yyyy',
-    medium: 'd MMM yyyy',
-    short: 'd/M/yyyy'
-};
 
 const formatDate = (date, format = DATE_FORMAT.long) => {
     try {
@@ -91,6 +88,9 @@ module.exports = {
     getSort,
     formatDate,
     DATE_FORMAT,
+    STRICT_DATE_FORMATS,
+    parseDate,
+    formatReferenceDate,
     applyFormatters,
     getLabelFromRenderers,
 };

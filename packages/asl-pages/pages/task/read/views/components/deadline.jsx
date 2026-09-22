@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { shallowEqual, useSelector } from 'react-redux';
 import get from 'lodash/get';
 import { ReviewFields } from '@asl/projects/client/components/review-fields';

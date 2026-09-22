@@ -1,6 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { Snippet, Inset } from '@ukhomeoffice/asl-components';
 import { Warning } from '@ukhomeoffice/react-components';
 import { dateFormat } from '../../../constants';

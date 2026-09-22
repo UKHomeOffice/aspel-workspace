@@ -20,13 +20,16 @@ function partIsInvalid(kind, raw) {
     if (kind === DAY) {
         return n < 1 || n > 31;
     }
-    // month
     return n < 1 || n > 12;
 }
 
 // Returns the invalid parts in visual order (day, month, year); [] when no
 // single part can be blamed.
 function getInvalidDateParts(parts = {}) {
+    if (typeof parts === 'string') {
+        parts = splitDateValue(parts);
+    }
+
     return [DAY, MONTH, YEAR].filter(kind => partIsInvalid(kind, parts[kind]));
 }
 

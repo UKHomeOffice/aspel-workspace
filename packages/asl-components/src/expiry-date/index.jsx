@@ -1,12 +1,14 @@
 import React, { Fragment } from 'react';
 import dayJs from '../dayjs.js';
 import { Countdown } from '../';
+import { DATE_FORMAT } from '../utils';
+
 const { format } = dayJs;
 
 const ExpiryDate = ({
     date,
     expiry,
-    dateFormat = 'dd MMMM yyyy',
+    dateFormat = DATE_FORMAT.long,
     unit = 'month',
     showUrgent = 3,
     showNotice = true
@@ -31,3 +33,4 @@ const ExpiryDate = ({
 };
 
 export default ExpiryDate;
+

@@ -1,4 +1,4 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
 const attachReviewDue = (pil, n = 3, unit = 'months') => {
   if (pil.status !== 'active') {

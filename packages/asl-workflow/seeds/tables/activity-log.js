@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const activity = require('../data/activity-log.json');
 
 module.exports = {

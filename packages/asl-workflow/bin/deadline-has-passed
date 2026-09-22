@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const { raw } = require('objection');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { todayIso } = dayJs;
 const Database = require('@ukhomeoffice/asl-taskflow/lib/db');
 const Task = require('@ukhomeoffice/asl-taskflow/lib/models/task');
 const settings = require('../config');
@@ -13,7 +14,7 @@ const migrate = async () => {
 
   try {
     const withAsru = withASRU();
-    const today = dayJs().format('YYYY-MM-DD');
+    const today = todayIso();
 
     const tasks = await Task.query(transaction)
       .select('*')

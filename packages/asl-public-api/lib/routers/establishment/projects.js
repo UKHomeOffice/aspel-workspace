@@ -1,5 +1,5 @@
 const { get, some, omit } = require('lodash');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { ref } = require('objection');
 const { Router } = require('express');
 const { BadRequestError, NotFoundError } = require('../../errors');

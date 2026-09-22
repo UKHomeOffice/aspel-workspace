@@ -1,4 +1,5 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { STRICT_DATE_FORMATS, formatIsoDate, parseDate } = dayJs;
 const { page } = require('@asl/service/ui');
 const { form } = require('../../common/routers');
 const schema = require('./schema');
@@ -19,7 +20,7 @@ module.exports = () => {
       next();
     },
     saveValues: (req, res, next) => {
-      req.session.form[req.model.id].values.passDate = dayJs(req.form.values.passDate, 'YYYY-MM-DD').format('YYYY-MM-DD');
+      req.session.form[req.model.id].values.passDate = formatIsoDate(parseDate(req.form.values.passDate, STRICT_DATE_FORMATS, true));
       next();
     }
   }));

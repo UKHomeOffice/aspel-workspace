@@ -1,6 +1,6 @@
 const glob = require('glob');
 const { omit } = require('lodash');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
 const fixtureProfiles = require('../data/profiles.json');
 

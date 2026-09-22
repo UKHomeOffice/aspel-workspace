@@ -1,5 +1,5 @@
 import React from 'react';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import classnames from 'classnames';
 import { Inset, Markdown, Snippet, Utils } from '@ukhomeoffice/asl-components';
 

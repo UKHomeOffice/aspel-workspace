@@ -1,5 +1,7 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const Emailer = require('../lib/emailer');
+
+const { formatIsoDate, todayIso } = dayJs;
 
 module.exports = async ({ schema, logger, publicUrl }) => {
   const { Reminder } = schema;
@@ -16,21 +18,21 @@ module.exports = async ({ schema, logger, publicUrl }) => {
 
     switch (unit) {
       case 'overdue':
-        query.where('deadline', '=', dayJs().subtract(1, 'day').format('YYYY-MM-DD'));
+        query.where('deadline', '=', formatIsoDate(dayJs().subtract(1, 'day')));
         break;
 
       case 'today':
-        query.where('deadline', '=', dayJs().format('YYYY-MM-DD'));
+        query.where('deadline', '=', todayIso());
         break;
 
       case 'week':
-        query.where('deadline', '>', dayJs().format('YYYY-MM-DD'))
-          .where('deadline', '<=', dayJs().add(value, 'week').format('YYYY-MM-DD'));
+        query.where('deadline', '>', todayIso())
+          .where('deadline', '<=', formatIsoDate(dayJs().add(value, 'week')));
         break;
 
       case 'month':
-        query.where('deadline', '>', dayJs().add(1, 'week').format('YYYY-MM-DD'))
-          .where('deadline', '<=', dayJs().add(value, 'month').format('YYYY-MM-DD'));
+        query.where('deadline', '>', formatIsoDate(dayJs().add(1, 'week')))
+          .where('deadline', '<=', formatIsoDate(dayJs().add(value, 'month')));
         break;
     }
 

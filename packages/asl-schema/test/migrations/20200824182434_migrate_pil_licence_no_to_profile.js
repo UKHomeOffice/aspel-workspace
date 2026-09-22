@@ -1,5 +1,5 @@
 const { v4: uuid } = require('uuid');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const assert = require('assert');
 const { up } = require('../../migrations/20200824182434_migrate_pil_licence_no_to_profile');
 const db = require('./helpers/db');

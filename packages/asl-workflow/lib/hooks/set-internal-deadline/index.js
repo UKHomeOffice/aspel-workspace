@@ -1,6 +1,7 @@
 const { get } = require('lodash');
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+
+const { addWorkingDaysIso } = dayJs;
 
 const STANDARD_DEADLINE = 40;
 const EXTENDED_DEADLINE = 55;
@@ -8,9 +9,6 @@ const RESUBMISSION_DEADLINE = 40;
 
 const AMENDMENT_DEADLINE = 40;
 const AMENDMENT_RESUBMISSION_DEADLINE = 40;
-
-// configure bank holidays
-dayJs.updateLocale('en', { holidays: bankHolidays });
 
 module.exports = () => {
   return task => {
@@ -28,7 +26,7 @@ module.exports = () => {
 
     if (isAmendment) {
       const interval = resubmitted ? AMENDMENT_RESUBMISSION_DEADLINE : AMENDMENT_DEADLINE;
-      const amendmentDeadline = dayJs(task.updatedAt).addWorkingTime(interval, 'days').format('YYYY-MM-DD');
+      const amendmentDeadline = addWorkingDaysIso(task.updatedAt, interval);
       internalDeadline = {
         standard: amendmentDeadline,
         extended: amendmentDeadline, // amendment deadline can't be extended
@@ -36,7 +34,7 @@ module.exports = () => {
       };
     } else {
       if (resubmitted) {
-        const resubmissionDeadline = dayJs(task.updatedAt).addWorkingTime(RESUBMISSION_DEADLINE, 'days').format('YYYY-MM-DD');
+        const resubmissionDeadline = addWorkingDaysIso(task.updatedAt, RESUBMISSION_DEADLINE);
         internalDeadline = {
           standard: resubmissionDeadline,
           extended: resubmissionDeadline, // resubmission deadline can't be extended
@@ -44,8 +42,8 @@ module.exports = () => {
         };
       } else {
         internalDeadline = {
-          standard: dayJs(task.updatedAt).addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-          extended: dayJs(task.updatedAt).addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
+          standard: addWorkingDaysIso(task.updatedAt, STANDARD_DEADLINE),
+          extended: addWorkingDaysIso(task.updatedAt, EXTENDED_DEADLINE),
           resubmitted
         };
       }

@@ -1,4 +1,4 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const resolver = require('./base-resolver');
 
 module.exports = ({ models, keycloak, emailer, logger, jwt }) => ({ action, data, id }, transaction) => {

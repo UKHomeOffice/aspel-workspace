@@ -1,6 +1,6 @@
 const { get } = require('lodash');
 const { page } = require('@asl/service/ui');
-const { differenceInYears } = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const { differenceInYears } = require('@ukhomeoffice/asl-components/dayjs');
 
 module.exports = settings => {
   const app = page({

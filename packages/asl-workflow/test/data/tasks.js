@@ -1,7 +1,9 @@
 const { v4: uuid } = require('uuid');
 const { user, user101, userAtMultipleEstablishments, holc, inspector, licensing, ntco, userWithActivePil, asruSuper } = require('./profiles');
 const ids = require('./ids');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+
+const { formatIsoDate } = dayJs;
 
 const generateDates = daysAgo => {
   const date = dayJs().subtract(daysAgo, 'days').toISOString();
@@ -1247,7 +1249,7 @@ const tasks = [
         status: 'inactive'
       },
       intentionToRefuse: {
-        deadline: dayJs().add(1, 'day').format('YYYY-MM-DD'),
+        deadline: formatIsoDate(dayJs().add(1, 'day')),
         markddown: 'This is the reason for refusal',
         inspectorId: inspector.id
       },
@@ -1275,7 +1277,7 @@ const tasks = [
         status: 'inactive'
       },
       intentionToRefuse: {
-        deadline: dayJs().subtract(1, 'day').format('YYYY-MM-DD'),
+        deadline: formatIsoDate(dayJs().subtract(1, 'day')),
         markddown: 'This is the reason for refusal',
         inspectorId: inspector.id
       },
@@ -1303,7 +1305,7 @@ const tasks = [
         status: 'inactive'
       },
       intentionToRefuse: {
-        deadline: dayJs().add(1, 'day').format('YYYY-MM-DD'),
+        deadline: formatIsoDate(dayJs().add(1, 'day')),
         markddown: 'This is the reason for refusal',
         inspectorId: inspector.id
       },
@@ -1331,7 +1333,7 @@ const tasks = [
         status: 'inactive'
       },
       intentionToRefuse: {
-        deadline: dayJs().subtract(1, 'day').format('YYYY-MM-DD'),
+        deadline: formatIsoDate(dayJs().subtract(1, 'day')),
         markddown: 'This is the reason for refusal',
         inspectorId: inspector.id
       },

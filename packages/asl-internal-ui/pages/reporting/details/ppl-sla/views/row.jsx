@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { Inset, Snippet, Form } from '@ukhomeoffice/asl-components';
 import { Button } from '@ukhomeoffice/react-components';
 import Markdown from 'react-markdown';

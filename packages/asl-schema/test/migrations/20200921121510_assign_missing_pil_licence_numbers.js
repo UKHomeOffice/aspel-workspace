@@ -1,6 +1,6 @@
 const assert = require('assert');
 const { v4: uuid } = require('uuid');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { up } = require('../../migrations/20200921121510_assign_missing_pil_licence_numbers');
 const db = require('./helpers/db');
 

@@ -2,7 +2,7 @@ const { v4: uuid } = require('uuid');
 const { every } = require('lodash');
 const assert = require('assert');
 const db = require('./helpers/db');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
 const ids = {
   collaborator: uuid(),

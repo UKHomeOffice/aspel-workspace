@@ -1,5 +1,7 @@
 const { isUndefined, isNull, every, castArray, some, zip } = require('lodash');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+
+const { STRICT_DATE_FORMATS, parseDate } = dayJs;
 
 function normaliseDate(dateSpec, values, model) {
   if (typeof dateSpec === 'function') {
@@ -76,27 +78,27 @@ const validators = {
     if (!value.match(/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/)) {
       return false;
     }
-    return isNull(value) || dayJs(value, 'YYYY-MM-DD').isValid();
+    return isNull(value) || parseDate(value, STRICT_DATE_FORMATS, true).isValid();
   },
   lessThanOrEqualToMaxWordCount(fieldName, value, params, values, model, field) {
     return value?.split(/\s+/).filter(Boolean).length <= field.maxWordCount;
   },
   dateIsAfter(field, value, date, values, model) {
     return isNull(value) ||
-      dayJs(value, 'YYYY-MM-DD').isAfter(normaliseDate(date, values, model));
+      parseDate(value, STRICT_DATE_FORMATS, true).isAfter(normaliseDate(date, values, model));
   },
   dateIsSameOrAfter(field, value, date, values, model) {
     return isNull(value) ||
-      dayJs(value, 'YYYY-MM-DD').isSameOrAfter(normaliseDate(date, values, model));
+      parseDate(value, STRICT_DATE_FORMATS, true).isSameOrAfter(normaliseDate(date, values, model));
   },
   dateIsBefore(field, value, date, values, model) {
     return isNull(value) ||
-      dayJs(value, 'YYYY-MM-DD').isBefore(normaliseDate(date, values, model));
+      parseDate(value, STRICT_DATE_FORMATS, true).isBefore(normaliseDate(date, values, model));
   },
   dateIsSameOrBefore(field, value, date, values, model) {
     const threshold = normaliseDate(date, values, model);
     return isNull(value) ||
-      dayJs(value, 'YYYY-MM-DD').isSameOrBefore(threshold);
+      parseDate(value, STRICT_DATE_FORMATS, true).isSameOrBefore(threshold);
   },
   // file validation
   fileRequired(field, value) {

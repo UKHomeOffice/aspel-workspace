@@ -1,5 +1,5 @@
 const assert = require('assert');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const db = require('../helpers/db');
 const expireTask = require('../../tasks/expire');
 const Logger = require('../../lib/utils/logger');

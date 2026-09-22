@@ -1,15 +1,11 @@
 const { get } = require('lodash');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { withInspectorate } = require('../../flow/status');
+
+const { addWorkingDaysIso, daysSinceDate } = dayJs;
 
 const STANDARD_DEADLINE = 40;
 const EXTENDED_DEADLINE = 55;
-
-// configure bank holidays
-dayJs.updateLocale('en', { holidays: bankHolidays });
-
-const daysSinceDate = date => dayJs().diff(dayJs(date), 'days');
 
 module.exports = task => {
   let deadline = get(task, 'data.deadline');
@@ -26,8 +22,8 @@ module.exports = task => {
     const isExtended = (deadline && deadline.isExtended) || get(task, 'data.extended', false); // old location of extended flag for BC
 
     deadline = {
-      standard: dayJs(lastSubmitted).addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-      extended: dayJs(lastSubmitted).addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
+      standard: addWorkingDaysIso(lastSubmitted, STANDARD_DEADLINE),
+      extended: addWorkingDaysIso(lastSubmitted, EXTENDED_DEADLINE),
       isExtended,
       isExtendable: !!(task.isOpen && !isExtended)
     };

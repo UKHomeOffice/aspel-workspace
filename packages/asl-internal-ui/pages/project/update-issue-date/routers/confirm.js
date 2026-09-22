@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { get } = require('lodash');
 
 module.exports = () => {

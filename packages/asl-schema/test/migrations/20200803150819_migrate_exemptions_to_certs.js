@@ -1,5 +1,5 @@
 const { v4: uuid } = require('uuid');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { isMatch } = require('lodash');
 const assert = require('assert');
 const db = require('./helpers/db');

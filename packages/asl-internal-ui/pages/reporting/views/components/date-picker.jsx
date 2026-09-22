@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from 'react';
 import DatePicker from 'backpack-transpiled/bpk-component-datepicker';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { dateFormat } from '@asl/pages/constants';
 
 const { format } = dayJs;

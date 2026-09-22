@@ -3,13 +3,14 @@ const { Router } = require('express');
 const { NotFoundError } = require('@asl/service/errors');
 const { permissions } = require('../../middleware');
 const { fees } = require('@ukhomeoffice/asl-constants');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
 const pastAndCurrentFees = () => {
-  const financialYearStart = dayJs(`04-06 00:00:00`, 'MM-DD HH:mm:ss');
+  const today = dayJs();
+  const financialYearStart = today.clone().month(3).date(6).startOf('day');
 
-  let currentFinancialYear = (new Date()).getFullYear();
-  if (financialYearStart.isAfter()) {
+  let currentFinancialYear = today.year();
+  if (financialYearStart.isAfter(today)) {
     currentFinancialYear--;
   }
 

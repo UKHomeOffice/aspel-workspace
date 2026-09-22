@@ -1,4 +1,4 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { addedByAsru } = require('../lib/retrospective-assessment');
 
 function getRaDate(version, project) {

@@ -1,5 +1,5 @@
-const dayjs = require('@ukhomeoffice/asl-components/src/dayjs.js');
-const { format, isValid } = dayjs;
+const dayjs = require('@ukhomeoffice/asl-components/dayjs');
+const { STRICT_DATE_FORMATS, format, formatIsoDate, isValid, parseDate } = dayjs;
 const { dateFormat } = require('../../../constants');
 
 const invalidDate = () => new Date(Number.NaN);
@@ -20,13 +20,13 @@ const parseReferenceDate = (value) => {
   }
 
   if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(trimmed)) {
-    const parsed = dayjs(trimmed, ['YYYY-MM-DD', 'YYYY-M-D'], true);
+    const parsed = parseDate(trimmed, STRICT_DATE_FORMATS, true);
     return parsed.isValid() ? parsed.toDate() : invalidDate();
   }
 
   if (/^\d{4}-\d{2}-\d{2}T/.test(trimmed)) {
     const parsed = dayjs(trimmed);
-    return parsed.isValid() && parsed.format('YYYY-MM-DD') === trimmed.slice(0, 10)
+    return parsed.isValid() && formatIsoDate(parsed) === trimmed.slice(0, 10)
       ? parsed.toDate()
       : invalidDate();
   }

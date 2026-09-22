@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { Header, Link, Metric } from '@ukhomeoffice/asl-components';
 
 import MetricsFilter from './components/metrics-filter';

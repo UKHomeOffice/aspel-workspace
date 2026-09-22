@@ -1,4 +1,4 @@
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const thisYear = dayJs().format('YYYY');
 const lastYear = dayJs().subtract(1, 'year').format('YYYY');
 const nextYear = dayJs().add(1, 'year').format('YYYY');

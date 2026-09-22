@@ -2,12 +2,7 @@ const { Router } = require('express');
 const { get, omit, isEmpty } = require('lodash');
 const { ref } = require('objection');
 const router = Router({ mergeParams: true });
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
 const { UnauthorisedError } = require('@asl/service/errors');
-
-// configure bank holidays
-dayJs.updateLocale('en', { holidays: bankHolidays });
 
 module.exports = taskflow => {
   const Task = taskflow.Task;

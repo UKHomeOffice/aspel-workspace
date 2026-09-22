@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector } from 'react-redux';
 import { Details, FormLayout, Header, Inset, Link, ModelSummary, Snippet } from '@ukhomeoffice/asl-components';
 import CourseSummary from '../components/course-summary';

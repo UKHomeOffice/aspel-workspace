@@ -1,5 +1,5 @@
 const { get } = require('lodash');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { Task } = require('@ukhomeoffice/asl-taskflow');
 const { withASRU } = require('../../flow');
 

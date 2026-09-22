@@ -1,14 +1,12 @@
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
 const { get } = require('lodash');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
-// configure bank holidays
-dayJs.updateLocale('en', { holidays: bankHolidays });
+const { STRICT_DATE_FORMATS, formatIsoDate, parseDate } = dayJs;
 
 module.exports = ({ db, query: params }) => {
 
-  const start = (params && params.start) ? dayJs(params.start, 'YYYY-MM-DD').format('YYYY-MM-DD') : null;
-  const end = (params && params.end) ? dayJs(params.end, 'YYYY-MM-DD').format('YYYY-MM-DD') : null;
+  const start = (params && params.start) ? formatIsoDate(parseDate(params.start, STRICT_DATE_FORMATS, true)) : null;
+  const end = (params && params.end) ? formatIsoDate(parseDate(params.end, STRICT_DATE_FORMATS, true)) : null;
 
   const query = () => {
     const q = db.flow('cases')
@@ -56,7 +54,7 @@ module.exports = ({ db, query: params }) => {
           title: project.title,
           establishment: project.name,
           licence_holder: `${project.first_name} ${project.last_name}`,
-          submitted: dayJs(deadline).subtractWorkingTime(extended ? 55 : 40, 'days').format('YYYY-MM-DD'),
+          submitted: formatIsoDate(dayJs(deadline).subtractWorkingTime(extended ? 55 : 40, 'days')),
           deadline,
           extended,
           task: record.id

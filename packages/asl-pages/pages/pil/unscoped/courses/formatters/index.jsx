@@ -1,5 +1,5 @@
 import React from 'react';
-import dayJs from '@ukhomeoffice/asl-components/src/dayjs.js';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { Link } from '@ukhomeoffice/asl-components';
 import { dateFormat } from '../../../../../constants';
 import { trainingCoursePurpose } from '@ukhomeoffice/asl-constants';

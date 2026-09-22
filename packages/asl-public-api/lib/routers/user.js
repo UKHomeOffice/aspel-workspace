@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const dayJs = require('@ukhomeoffice/asl-components/src/dayjs.js');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { pick } = require('lodash');
 const { fetchOpenTasks } = require('../middleware');
 const { UnauthorisedError } = require('../errors');
