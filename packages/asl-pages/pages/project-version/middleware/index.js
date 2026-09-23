@@ -725,6 +725,20 @@ const loadRa = (req, res, next) => {
     .catch(next);
 };
 
+// drafts can hold a stale training snapshot, e.g. copied from a template
+const loadDraftTraining = (req, res, next) => {
+  if (req.version.status !== 'draft') {
+    return next();
+  }
+
+  return req.api(`/establishment/${req.establishmentId}/profile/${req.project.licenceHolderId}/certificates`, { query: { projectId: req.project.id } })
+    .then(response => {
+      req.version.data = { ...req.version.data, training: response.json.data };
+    })
+    .then(() => next())
+    .catch(next);
+};
+
 module.exports = {
   getVersion,
   getComments,
@@ -737,5 +751,6 @@ module.exports = {
   getVersionsForDiff,
   getChangedValues,
   getProjectEstablishment,
-  loadRa
+  loadRa,
+  loadDraftTraining
 };
