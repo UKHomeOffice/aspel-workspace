@@ -8,30 +8,12 @@ const { NotFoundError } = require('@asl/service/errors');
 const { addPageNumbers } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
 const { getRAReasons } = require('@ukhomeoffice/asl-constants');
 const { getDateQueryValue, validateNtsDateRangeQuery } = require('../lib/nts-date-validation');
+const getNtsRedirectQuery = require('../lib/nts-redirect-query');
 
 // Converts docx Document instance into a binary Buffer
 const pack = doc => {
   const packer = new Packer(doc);
   return packer.toBuffer(doc);
-};
-
-const getRedirectQuery = query => {
-  const redirectQuery = new URLSearchParams({ tab: 'nts', validateNtsDates: 'true' });
-
-  ['date-from', 'date-to'].forEach(name => {
-    ['day', 'month', 'year'].forEach(part => {
-      const key = `${name}-${part}`;
-      if (query[key]) {
-        redirectQuery.set(key, query[key]);
-      }
-    });
-  });
-
-  if (query.ra !== undefined) {
-    redirectQuery.set('ra', query.ra);
-  }
-
-  return redirectQuery.toString();
 };
 
 module.exports = settings => {
@@ -48,12 +30,12 @@ module.exports = settings => {
       const validation = validateNtsDateRangeQuery(req.query);
 
       if (!validation.isValid) {
-        return res.redirect(`/downloads?${getRedirectQuery(req.query)}`);
+        return res.redirect(`/downloads?${getNtsRedirectQuery(req.query)}`);
       }
 
       // Validate ra (REQUIRED & must be 'true' or 'false')
       if (!['true', 'false'].includes(String(ra).toLowerCase())) {
-        return res.redirect(`/downloads?${getRedirectQuery(req.query)}`);
+        return res.redirect(`/downloads?${getNtsRedirectQuery(req.query)}`);
       }
 
       // Build the api/db query params
