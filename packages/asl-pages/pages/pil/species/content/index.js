@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Animal types',
   title: 'What types of animals are used for this personal licence?',
   fields: {
     species: {

@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Enter participant details',
   title: 'Enter participant details',
   description:
     'You are applying for a PIL-E on behalf of this participant. A PIL-E is a personal licence for higher education and training courses.',
