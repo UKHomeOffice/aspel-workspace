@@ -1,2 +1,2 @@
-module.exports = require('./src/date-extend-dayJs');
+module.exports = require('./src/dayjs');
 
