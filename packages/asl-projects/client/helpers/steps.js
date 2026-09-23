@@ -129,47 +129,8 @@ export const getRepeatedFromProtocolIndex = (step, currentProtocolId) => {
 };
 
 export const isStepEmpty = (step = {}) => {
-  const ignoredKeys = [
-    'id',
-    'deleted',
-    'completed',
-    'existingValues',
-    'addExisting',
-    'reusable',
-    'reusableStepId',
-    'usedInProtocols',
-    'reusedStep',
-    'saved',
-    'protocolName',
-    'isStandardProtocol',
-    'standardProtocolType',
-    'isStandard',
-    'standardProtocolsEnabled'
-  ];
-
-  return Object.entries(step)
-    .filter(([key]) => !ignoredKeys.includes(key))
-    .every(([, value]) => {
-      if (value === null || typeof value === 'undefined') {
-        return true;
-      }
-
-      if (typeof value === 'boolean') {
-        return value === false;
-      }
-
-      if (typeof value === 'string') {
-        return value.trim() === '';
-      }
-
-      if (Array.isArray(value)) {
-        return value.length === 0;
-      }
-
-      if (typeof value === 'object') {
-        return Object.keys(value).length === 0;
-      }
-
-      return false;
-    });
+  const hasDescription = step.description?.trim();
+  const hasReference = step.reference?.trim();
+  
+  return !hasDescription && !hasReference;
 };
