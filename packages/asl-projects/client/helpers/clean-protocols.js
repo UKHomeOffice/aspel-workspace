@@ -29,11 +29,14 @@ function changesShouldTriggerEstablishmentCleanup(changed) {
 }
 
 export function cleanProtocolSteps(protocols = [], previousProtocols = []) {
+  const oldSteps = new Set(
+    (previousProtocols || []).flatMap(protocol => (protocol.steps || []).map(step => step.id))
+  );
+
   return (protocols || []).map(protocol => {
     const cleanedSteps = (protocol.steps || []).filter(step => {
       if (step.deleted === true) {
-        const oldSteps = (previousProtocols || []).flatMap(p => (p.steps || []).map(s => s.id));
-        return oldSteps.includes(step.id);
+        return oldSteps.has(step.id);
       }
       return !isStepEmpty(step);
     });
