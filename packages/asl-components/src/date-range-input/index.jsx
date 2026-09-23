@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { dateValidation } from '@ukhomeoffice/asl-constants';
 import DateInput from '../date-input';
 import DateErrorMessage from '../date-input/error-message';
+const dateValidation = require('./date-validation');
 
 const defaultFields = {
     from: {

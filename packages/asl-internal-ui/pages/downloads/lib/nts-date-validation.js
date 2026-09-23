@@ -1,4 +1,4 @@
-const { dateValidation } = require('@ukhomeoffice/asl-constants');
+const dateValidation = require('@ukhomeoffice/asl-components/src/date-range-input/date-validation');
 
 const dateFields = ['date-from', 'date-to'];
 
