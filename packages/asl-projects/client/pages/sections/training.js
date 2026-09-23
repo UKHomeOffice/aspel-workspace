@@ -40,8 +40,8 @@ export default function Training(props) {
       {!readonly && <h1>Training</h1>}
       <p>{props.intro}</p>
 
-      <h2>{holder ? `${holder.name}'s training record` : 'Training record'}</h2>
       {holder && <p>{holder.status}</p>}
+      <h2>{holder ? `${holder.name}'s training record` : 'Training record'}</h2>
       <TrainingSummaryWithChangeHighlighting
         certificates={readonly ? project.training : training}
         comparisons={comparisons}
