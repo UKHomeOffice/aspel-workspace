@@ -7,7 +7,7 @@ const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
 const { NotFoundError } = require('@asl/service/errors');
 const { addPageNumbers } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
 const { getRAReasons } = require('@ukhomeoffice/asl-constants');
-const { getDateQueryValue } = require('../lib/nts-date-validation');
+const { getDateQueryValue, validateNtsDateRangeQuery } = require('../lib/nts-date-validation');
 
 // Converts docx Document instance into a binary Buffer
 const pack = doc => {
@@ -45,14 +45,15 @@ module.exports = settings => {
       const startDate = getDateQueryValue(req.query, 'date-from');
       const endDate = getDateQueryValue(req.query, 'date-to');
       const { ra } = req.query;
+      const validation = validateNtsDateRangeQuery(req.query);
 
-      if (!startDate || !endDate || ra === undefined || ra === '') {
+      if (!validation.isValid) {
         return res.redirect(`/downloads?${getRedirectQuery(req.query)}`);
       }
 
       // Validate ra (REQUIRED & must be 'true' or 'false')
       if (!['true', 'false'].includes(String(ra).toLowerCase())) {
-        return res.status(400).send('Invalid "ra" parameter. Must be "true" or "false".');
+        return res.redirect(`/downloads?${getRedirectQuery(req.query)}`);
       }
 
       // Build the api/db query params
