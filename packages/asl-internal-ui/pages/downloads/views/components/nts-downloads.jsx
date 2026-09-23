@@ -8,6 +8,10 @@ export default function NTSDownloads() {
   const initialValidation = useSelector(state => state.static.ntsDateRangeValidation) || {};
   const [errors, setErrors] = useState(initialValidation.errors || {});
   const model = initialValidation.model || {};
+  const dateRangeErrors = {
+    'date-from': errors['date-from'],
+    'date-to': errors['date-to']
+  };
 
   const validate = event => {
     const query = Object.fromEntries(new FormData(event.currentTarget).entries());
@@ -25,7 +29,7 @@ export default function NTSDownloads() {
   return (
     <div className="nts-download-form">
       <form method="GET" action="/downloads/nts/docx" onSubmit={validate}>
-        <Fieldset schema={schema.dates} model={model} errors={errors} />
+        <Fieldset schema={schema.dates} model={model} errors={{ dateRange: dateRangeErrors }} />
         <Fieldset schema={schema.ra} model={model} errors={errors} />
         <button type="submit" className="govuk-button">Download document</button>
       </form>

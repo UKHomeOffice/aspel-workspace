@@ -66,6 +66,8 @@ function validateNtsDateRangeQuery(query) {
 
   if (query.ra === undefined || query.ra === '') {
     errors.ra = 'required';
+  } else if (!['true', 'false'].includes(String(query.ra).toLowerCase())) {
+    errors.ra = 'invalid';
   }
 
   const hasDateErrors = Object.keys(errors).length > 0;
