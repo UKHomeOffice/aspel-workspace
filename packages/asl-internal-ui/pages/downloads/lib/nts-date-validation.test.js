@@ -86,3 +86,27 @@ test('rejects a date range where the start is after the end', () => {
   assert.deepStrictEqual(result.errors, {});
   assert.strictEqual(result.isValid, false);
 });
+
+test('allows a date range of exactly six months', () => {
+  const result = validateNtsDateRangeQuery({
+    'date-from': '2024-01-01',
+    'date-to': '2024-07-01',
+    ra: 'false'
+  });
+
+  assert.strictEqual(result.isValid, true);
+  assert.deepStrictEqual(result.errors, {});
+});
+
+test('rejects a date range longer than six months', () => {
+  const result = validateNtsDateRangeQuery({
+    'date-from': '2024-01-01',
+    'date-to': '2024-07-02',
+    ra: 'true'
+  });
+
+  assert.strictEqual(result.isValid, false);
+  assert.deepStrictEqual(result.errors, {
+    'date-to': 'maximumDateRange'
+  });
+});

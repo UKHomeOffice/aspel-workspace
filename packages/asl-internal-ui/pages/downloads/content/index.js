@@ -22,6 +22,7 @@ module.exports = {
     'date-to': {
       required: "Enter a 'To' date",
       aspelDataStartDate: "The 'To' date must be the same as or after 31 July 2019, when ASPeL came into use",
+      maximumDateRange: 'The date range cannot be more than 6 months',
       date: {
         after: "The 'To' date must be the same as or after {{date}}, the 'From' date"
       }

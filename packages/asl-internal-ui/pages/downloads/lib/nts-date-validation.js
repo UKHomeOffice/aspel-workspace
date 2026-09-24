@@ -75,9 +75,14 @@ function validateNtsDateRangeQuery(query) {
   const endDate = parseDate(model['date-to']);
   const hasInvalidBoundaries = !hasDateErrors && (hasBoundaryError(model['date-from']) || hasBoundaryError(model['date-to']));
   const hasInvalidRange = !hasDateErrors && startDate.isAfter(endDate, 'day');
+  const exceedsMaximumRange = !hasDateErrors && endDate.isAfter(startDate.clone().add(6, 'months'), 'day');
+
+  if (exceedsMaximumRange) {
+    errors['date-to'] = 'maximumDateRange';
+  }
 
   return {
-    isValid: !hasDateErrors && !hasInvalidBoundaries && !hasInvalidRange,
+    isValid: !hasDateErrors && !hasInvalidBoundaries && !hasInvalidRange && !exceedsMaximumRange,
     errors,
     model
   };

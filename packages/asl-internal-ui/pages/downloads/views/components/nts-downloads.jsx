@@ -13,6 +13,25 @@ export default function NTSDownloads() {
     'date-to': errors['date-to']
   };
 
+  const validateDateRange = values => {
+    const validation = validateNtsDateRangeQuery({
+      ...values.dateRange,
+      ra: 'true'
+    });
+
+    setErrors(currentErrors => {
+      const nextErrors = { ...currentErrors };
+
+      if (validation.errors['date-to'] === 'maximumDateRange') {
+        nextErrors['date-to'] = 'maximumDateRange';
+      } else if (nextErrors['date-to'] === 'maximumDateRange') {
+        delete nextErrors['date-to'];
+      }
+
+      return nextErrors;
+    });
+  };
+
   const validate = event => {
     const query = Object.fromEntries(new FormData(event.currentTarget).entries());
     const validation = validateNtsDateRangeQuery(query);
@@ -29,7 +48,7 @@ export default function NTSDownloads() {
   return (
     <div className="nts-download-form">
       <form method="GET" action="/downloads/nts/docx" onSubmit={validate}>
-        <Fieldset schema={schema.dates} model={model} errors={dateRangeErrors} />
+        <Fieldset schema={schema.dates} model={model} errors={dateRangeErrors} onChange={validateDateRange} />
         <Fieldset schema={schema.ra} model={model} errors={errors} />
         <button type="submit" className="govuk-button">Download document</button>
       </form>
