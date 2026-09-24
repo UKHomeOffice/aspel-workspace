@@ -7,6 +7,7 @@ const { validateNtsDateRangeQuery } = require('../../lib/nts-date-validation');
 export default function NTSDownloads() {
   const initialValidation = useSelector(state => state.static.ntsDateRangeValidation) || {};
   const [errors, setErrors] = useState(initialValidation.errors || {});
+  const [downloadStarted, setDownloadStarted] = useState(false);
   const model = initialValidation.model || {};
   const dateRangeErrors = {
     'date-from': errors['date-from'],
@@ -19,6 +20,7 @@ export default function NTSDownloads() {
       ra: 'true'
     });
 
+    setDownloadStarted(false);
     setErrors(currentErrors => {
       const nextErrors = { ...currentErrors };
 
@@ -32,6 +34,8 @@ export default function NTSDownloads() {
     });
   };
 
+  const handleRaChange = () => setDownloadStarted(false);
+
   const validate = event => {
     const query = Object.fromEntries(new FormData(event.currentTarget).entries());
     const validation = validateNtsDateRangeQuery(query);
@@ -43,14 +47,15 @@ export default function NTSDownloads() {
     }
 
     setErrors({});
+    setDownloadStarted(true);
   };
 
   return (
     <div className="nts-download-form">
       <form method="GET" action="/downloads/nts/docx" onSubmit={validate}>
         <Fieldset schema={schema.dates} model={model} errors={dateRangeErrors} onChange={validateDateRange} />
-        <Fieldset schema={schema.ra} model={model} errors={errors} />
-        <button type="submit" className="govuk-button">Download document</button>
+        <Fieldset schema={schema.ra} model={model} errors={errors} onChange={handleRaChange} />
+        <button type="submit" className="govuk-button" disabled={downloadStarted}>Download document</button>
       </form>
     </div>
   );
