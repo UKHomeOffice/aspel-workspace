@@ -15,7 +15,11 @@ function getAspelDataStart() {
 }
 
 function formatIsoDate(date) {
-    return dayjs.format(date, DATE_FORMAT.iso);
+    if(date && dayjs.isValid(date)) {
+        return dayjs.format(date, DATE_FORMAT.iso);
+    }
+
+    return '';
 }
 
 function todayIso() {

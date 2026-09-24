@@ -13,8 +13,6 @@ const isValidIsoDate = value => {
   }
 };
 
-const maybeFormatIsoDate = value => value ? formatIsoDate(value) : undefined;
-
 module.exports = ({ db, flow, query: params }) => {
 
   if (!params.start || !isValidIsoDate(params.start)) {
@@ -174,9 +172,9 @@ module.exports = ({ db, flow, query: params }) => {
               licenceNumber: task.data.modelData?.licenceNumber,
               taskType,
               taskAction: task.data.action,
-              submitted: maybeFormatIsoDate(previousSubmission),
-              assigned: maybeFormatIsoDate(previousAssignment),
-              actioned: maybeFormatIsoDate(eventTime),
+              submitted: formatIsoDate(previousSubmission),
+              assigned: formatIsoDate(previousAssignment),
+              actioned: formatIsoDate(eventTime),
               inspectorAction: activityLog.event?.status,
               isResubmission: !!lastResubmittedAt,
               inspectorName: activityLog.name,
@@ -299,17 +297,17 @@ module.exports = ({ db, flow, query: params }) => {
       role: task.data.modelData?.role,
       metrics: {
         taskType,
-        firstSubmittedAt: maybeFormatIsoDate(firstSubmittedAt),
-        firstSubmittedAtInPeriod: maybeFormatIsoDate(firstSubmittedAtInPeriod),
-        lastResubmittedAt: maybeFormatIsoDate(lastResubmittedAt),
-        firstReturnedAt: maybeFormatIsoDate(firstReturnedAt),
-        firstReturnedAtInPeriod: maybeFormatIsoDate(firstReturnedAtInPeriod),
-        lastReturnedAt: maybeFormatIsoDate(lastReturnedAt),
-        firstAssignedAt: maybeFormatIsoDate(firstAssignedAt),
-        firstAssignedAtInPeriod: maybeFormatIsoDate(firstAssignedAtInPeriod),
-        lastAssignedAt: maybeFormatIsoDate(lastAssignedAt),
-        resolvedAt: maybeFormatIsoDate(resolvedAt),
-        firstActionedAt: maybeFormatIsoDate(firstActionedAt),
+        firstSubmittedAt: formatIsoDate(firstSubmittedAt),
+        firstSubmittedAtInPeriod: formatIsoDate(firstSubmittedAtInPeriod),
+        lastResubmittedAt: formatIsoDate(lastResubmittedAt),
+        firstReturnedAt: formatIsoDate(firstReturnedAt),
+        firstReturnedAtInPeriod: formatIsoDate(firstReturnedAtInPeriod),
+        lastReturnedAt: formatIsoDate(lastReturnedAt),
+        firstAssignedAt: formatIsoDate(firstAssignedAt),
+        firstAssignedAtInPeriod: formatIsoDate(firstAssignedAtInPeriod),
+        lastAssignedAt: formatIsoDate(lastAssignedAt),
+        resolvedAt: formatIsoDate(resolvedAt),
+        firstActionedAt: formatIsoDate(firstActionedAt),
         wasFirstActionedInPeriod,
         totalDaysWithAsru,
         totalDaysWithAsruInPeriod,
