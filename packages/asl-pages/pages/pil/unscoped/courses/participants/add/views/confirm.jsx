@@ -1,13 +1,15 @@
 import React from 'react';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector } from 'react-redux';
 import { pick, omit } from 'lodash';
 import { FormLayout, Header, Snippet, ModelSummary } from '@ukhomeoffice/asl-components';
-import { format } from 'date-fns';
 import { dateFormat } from '../../../../../../../constants';
 import participantSchema from '../schema';
 import courseSchema from '../../../schema';
 import formatters from '../../../formatters';
 import participantDetailsSchemaHelper from '../helpers/participant-details-schema-helper';
+
+const { format } = dayJs;
 
 const localFormatters = {
   dob: {

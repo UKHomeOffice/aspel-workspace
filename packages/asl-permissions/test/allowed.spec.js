@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { v4: uuid } = require('uuid');
 const assert = require('assert');
 const sinon = require('sinon');
@@ -514,29 +514,29 @@ describe('allowed', () => {
             id: ids.latestGranted,
             status: 'granted',
             projectId: ids.activeProject,
-            createdAt: moment().toISOString(),
-            updatedAt: moment().toISOString()
+            createdAt: dayJs().toISOString(),
+            updatedAt: dayJs().toISOString()
           },
           {
             id: ids.previousGranted,
             status: 'granted',
             projectId: ids.activeProject,
-            createdAt: moment().subtract(5, 'minutes').toISOString(),
-            updatedAt: moment().subtract(5, 'minutes').toISOString()
+            createdAt: dayJs().subtract(5, 'minutes').toISOString(),
+            updatedAt: dayJs().subtract(5, 'minutes').toISOString()
           },
           {
             id: ids.latestDraft,
             status: 'draft',
             projectId: ids.draftProject,
-            createdAt: moment().toISOString(),
-            updatedAt: moment().toISOString()
+            createdAt: dayJs().toISOString(),
+            updatedAt: dayJs().toISOString()
           },
           {
             id: ids.previousDraft,
             status: 'draft',
             projectId: ids.draftProject,
-            createdAt: moment().subtract(5, 'minutes').toISOString(),
-            updatedAt: moment().subtract(5, 'minutes').toISOString()
+            createdAt: dayJs().subtract(5, 'minutes').toISOString(),
+            updatedAt: dayJs().subtract(5, 'minutes').toISOString()
           }
         ]))
         .then(() => this.models.Permission.query().insert([

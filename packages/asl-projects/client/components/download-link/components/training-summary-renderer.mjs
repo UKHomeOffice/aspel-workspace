@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import { format } from 'date-fns';
 import { populateTableHeader } from '../helpers/populate-table-header.mjs';
 import { initializeTable } from '../helpers/initialize-table.mjs';
 import { trainingRecordHolder } from '../../../helpers/training-record-holder.mjs';
+import { formatDate } from '../../../helpers/index.js';
+import { DATE_FORMAT } from '../../../constants/index.js';
 
 const { sortBy } = _;
-const DATE_FORMAT = 'dd MMMM yyyy';
 
 export function trainingSummaryRenderer(doc, values, application = {}) {
   const TRAINING_RECORD_HEADERS = ['Category', 'Modules', 'Animal types', 'Details'];
@@ -43,7 +43,7 @@ export function populateTableWithTrainingRecords(table, training) {
     const details = record.isExemption
       ? [
         ...(record.exemptionReason || '-').split('\n'),
-        `Added on: ${record.createdAt ? format(record.createdAt, DATE_FORMAT) : '-'}`
+        `Added on: ${formatDate(record.createdAt, DATE_FORMAT.long)}`
       ]
       : [
         `Certificate number: ${record.certificateNumber}`,

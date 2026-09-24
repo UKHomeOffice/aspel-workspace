@@ -1,8 +1,8 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
 const generateExports = () => {
-  const earliest = moment('2021-05-01');
-  const latest = moment().subtract(1, 'month').startOf('month');
+  const earliest = dayJs('2021-05-01');
+  const latest = dayJs().subtract(1, 'month').startOf('month');
   let date = earliest;
   const dataExports = [];
 
@@ -14,7 +14,7 @@ const generateExports = () => {
       ready: false,
       meta: {
         start: date.format('YYYY-MM-DD'),
-        end: moment(date).endOf('month').format('YYYY-MM-DD')
+        end: dayJs(date).endOf('month').format('YYYY-MM-DD')
       }
     });
     date.add(1, 'month');

@@ -1,16 +1,20 @@
-const moment = require('moment');
+const dayjs = require('../dayjs.js');
+
+const { STRICT_DATE_FORMATS, parseDate } = dayjs;
 
 module.exports = (reminders) => {
-    if (!reminders[0]) {
+    const deadline = reminders[0]?.deadline;
+
+    if (!deadline) {
         return 'Please provide a valid date';
     }
-    const deadline = reminders[0].deadline;
-    // Check date is valid
-    if (!deadline.match(/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/)) {
+
+    const parsedDeadline = parseDate(deadline, STRICT_DATE_FORMATS, true);
+    if (!parsedDeadline.isValid()) {
         return 'Please provide a valid date';
     }
-    // Check date is after today
-    if (!moment(deadline, 'YYYY-MM-DD').isAfter(moment())) {
+
+    if (!parsedDeadline.isAfter(dayjs(), 'day')) {
         return 'The date must be in the future';
     }
     return false;

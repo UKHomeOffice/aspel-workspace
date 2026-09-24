@@ -2,7 +2,7 @@ const { v4: uuid } = require('uuid');
 const { every } = require('lodash');
 const assert = require('assert');
 const db = require('./helpers/db');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
 const ids = {
   collaborator: uuid(),
@@ -85,8 +85,8 @@ describe('Project model', () => {
           id: uuid(),
           establishmentId: ids.establishmentId,
           title: 'Some expired research',
-          issueDate: moment().subtract(66, 'M').format(),
-          expiryDate: moment().subtract(6, 'M').format(),
+          issueDate: dayJs().subtract(66, 'M').format(),
+          expiryDate: dayJs().subtract(6, 'M').format(),
           licenceHolderId: ids.vincentMalloy,
           status: 'expired'
         },
@@ -101,8 +101,8 @@ describe('Project model', () => {
           id: uuid(),
           establishmentId: ids.establishmentId,
           title: 'Some more expired research',
-          issueDate: moment().subtract(61, 'M').format(),
-          expiryDate: moment().subtract(1, 'M').format(),
+          issueDate: dayJs().subtract(61, 'M').format(),
+          expiryDate: dayJs().subtract(1, 'M').format(),
           licenceHolderId: ids.vincentMalloy,
           status: 'expired'
         },
@@ -110,8 +110,8 @@ describe('Project model', () => {
           id: uuid(),
           establishmentId: ids.establishmentId,
           title: 'Hair loss prevention',
-          issueDate: moment().subtract(54, 'M').format(),
-          expiryDate: moment().add(6, 'M').format(),
+          issueDate: dayJs().subtract(54, 'M').format(),
+          expiryDate: dayJs().add(6, 'M').format(),
           licenceHolderId: ids.sterlingArcher,
           status: 'active'
         },
@@ -119,8 +119,8 @@ describe('Project model', () => {
           id: ids.collaborationProject,
           establishmentId: ids.establishmentId,
           title: 'Collaboration',
-          issueDate: moment().subtract(54, 'M').format(),
-          expiryDate: moment().add(6, 'M').format(),
+          issueDate: dayJs().subtract(54, 'M').format(),
+          expiryDate: dayJs().add(6, 'M').format(),
           licenceHolderId: ids.sterlingArcher,
           status: 'active'
         },
@@ -128,8 +128,8 @@ describe('Project model', () => {
           id: ids.additionalProject,
           establishmentId: ids.establishmentId,
           title: 'Additional availability',
-          issueDate: moment().subtract(54, 'M').format(),
-          expiryDate: moment().add(6, 'M').format(),
+          issueDate: dayJs().subtract(54, 'M').format(),
+          expiryDate: dayJs().add(6, 'M').format(),
           licenceHolderId: ids.sterlingArcher,
           status: 'active'
         },
@@ -137,8 +137,8 @@ describe('Project model', () => {
           id: ids.draftAdditionalProject,
           establishmentId: ids.additionalEstablishment,
           title: 'Draft additional availability',
-          issueDate: moment().subtract(54, 'M').format(),
-          expiryDate: moment().add(6, 'M').format(),
+          issueDate: dayJs().subtract(54, 'M').format(),
+          expiryDate: dayJs().add(6, 'M').format(),
           licenceHolderId: ids.sterlingArcher,
           status: 'active'
         },

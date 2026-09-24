@@ -1,5 +1,7 @@
 const { pick, groupBy } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+
+const { formatIsoDate } = dayJs;
 
 const isAsruOrLicenceHolder = (profile, model) => {
   const isAsru = !!profile.asruUser;
@@ -43,7 +45,7 @@ module.exports = modelType => async (req, res, next) => {
         return next();
       }
 
-      const oneMonthFromNow = moment().add(1, 'month').format('YYYY-MM-DD');
+      const oneMonthFromNow = formatIsoDate(dayJs().add(1, 'month'));
 
       const imminentReminders = await remindersQuery({ modelType: 'project', modelId: req.project.id })
         .where('reminders.deadline', '<=', oneMonthFromNow)

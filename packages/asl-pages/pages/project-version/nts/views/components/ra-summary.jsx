@@ -1,9 +1,11 @@
 import React, { Fragment } from 'react';
 import flatten from 'lodash/flatten';
-import { format } from 'date-fns';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import getSchema from '@asl/projects/client/schema';
 import Field from './field';
 import { dateFormat } from '../../../../../constants';
+
+const { format } = dayJs;
 
 export default function RaSummary({ project, fields, includeDraftRa = false, isPdf = false }) {
   const ra = includeDraftRa ? project.draftRa : project.grantedRa;

@@ -1,6 +1,6 @@
 const glob = require('glob');
 const { omit } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
 const fixtureProfiles = require('../data/profiles.json');
 
@@ -54,9 +54,9 @@ const insertPils = async (knex, pils, permissions, profileId) => {
 
     if (typeof reviewDate === 'object') {
       const { unit, method, num } = reviewDate;
-      reviewDate = moment()[method](num, unit).toISOString();
+      reviewDate = dayJs()[method](num, unit).toISOString();
     } else {
-      reviewDate = reviewDate || moment(pil.issueDate).add(5, 'years').toISOString();
+      reviewDate = reviewDate || dayJs(pil.issueDate).add(5, 'years').toISOString();
     }
 
     const [pilId] = await knex('pils').insert({

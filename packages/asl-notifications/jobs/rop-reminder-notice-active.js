@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const Emailer = require('../lib/emailer');
 
 module.exports = async ({ schema, logger, publicUrl }) => {
@@ -7,7 +7,7 @@ module.exports = async ({ schema, logger, publicUrl }) => {
   const emailer = Emailer({ schema, logger, publicUrl });
 
   const monthReminderNotice = async () => {
-    const year = moment().year();
+    const year = dayJs().year();
     const action = `rop-reminder-month`;
     const when = 'in 1 month';
 

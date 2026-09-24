@@ -1,18 +1,14 @@
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-const moment = require('moment-business-time');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const getDeadline = require('./get-deadline');
 
-// configure bank holidays
-moment.updateLocale('en', { holidays: bankHolidays });
+const { formatIsoDate } = dayJs;
 
 const formatTime = time => {
   const day = 24 * 60 * 60 * 1000;
-  const days = Math.round(time / day);
-  return days;
+  return Math.round(time / day);
 };
 
-module.exports = ({ db, query: params, flow }) => {
-
+module.exports = ({ db, flow }) => {
   const query = () => {
     return db.flow('cases')
       .select('cases.*')
@@ -77,9 +73,9 @@ module.exports = ({ db, query: params, flow }) => {
       licensing: 0
     };
 
-    let last = moment(record.created_at).valueOf();
+    let last = dayJs(record.created_at).valueOf();
     statusActivity.forEach(log => {
-      const diff = moment(log.created_at).valueOf() - last;
+      const diff = dayJs(log.created_at).valueOf() - last;
       const status = log.event_name.split(':')[1];
       if (flow.all[status].withASRU) {
         timers.asru += diff;
@@ -93,14 +89,14 @@ module.exports = ({ db, query: params, flow }) => {
         timers.licensing += diff;
       }
       timers.total += diff;
-      last = moment(log.created_at).valueOf();
+      last = dayJs(log.created_at).valueOf();
     });
 
     // ignore PPLs which have had their issue date changed to pre-aspel
     if (!project) {
       return [];
     }
-    const draftingTime = project.created_at ? moment(record.created_at).diff(project.created_at) : 0;
+    const draftingTime = project.created_at ? dayJs(record.created_at).diff(project.created_at) : 0;
 
     timers.total += draftingTime;
     timers.establishment += draftingTime;
@@ -120,10 +116,10 @@ module.exports = ({ db, query: params, flow }) => {
       establishment: project.name,
       licenceNumber: project.licence_number,
       licenceHolder: `${project.first_name} ${project.last_name}`,
-      created: moment(project.created_at).format('YYYY-MM-DD'),
-      submitted: moment(record.created_at).format('YYYY-MM-DD'),
-      granted: moment(record.updated_at).format('YYYY-MM-DD'),
-      issue_date: moment(project.issue_date).format('YYYY-MM-DD'),
+      created: formatIsoDate(project.created_at),
+      submitted: formatIsoDate(record.created_at),
+      granted: formatIsoDate(record.updated_at),
+      issue_date: formatIsoDate(project.issue_date),
       isContinuation: isContinuation ? 'Yes' : 'No',
       continuationExpiry,
       totalTime: formatTime(timers.total),

@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { get, isUndefined } = require('lodash');
 const router = Router({ mergeParams: true });
 
@@ -29,8 +29,8 @@ const buildQuery = filters => {
 
   const query = Task.query()
     .andWhere(status === '*' ? true : { status })
-    .andWhere('updatedAt', '>', moment(start).startOf('day').toISOString())
-    .andWhere('updatedAt', '<', moment(end).endOf('day').toISOString())
+    .andWhere('updatedAt', '>', dayJs(start).startOf('day').toISOString())
+    .andWhere('updatedAt', '<', dayJs(end).endOf('day').toISOString())
     .andWhereRaw(`(data->>'establishmentId' != '1502162' or data->>'establishmentId' is null)`);
 
   if (model) {

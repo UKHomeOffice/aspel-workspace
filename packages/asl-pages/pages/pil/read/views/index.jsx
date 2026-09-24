@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector, shallowEqual } from 'react-redux';
 import classnames from 'classnames';
 import { dateFormat } from '../../../../constants';
 import { formatDate, canUpdateModel } from '../../../../lib/utils';
-import { differenceInCalendarDays } from 'date-fns';
 import omit from 'lodash/omit';
 import isEmpty from 'lodash/isEmpty';
 import schema from '../schema';
@@ -20,6 +20,8 @@ import { Warning } from '@ukhomeoffice/react-components';
 import RelatedTasks from '../../../task/list/views/related-tasks';
 import EnforcementFlags from '../../../enforcement/components/enforcement-flags';
 import Reminders from '../../../common/components/reminders';
+
+const { differenceInCalendarDays } = dayJs;
 
 function SuspendReinstateLicence({ pil }) {
   const canSuspend = useSelector(state => state.static.canSuspend);

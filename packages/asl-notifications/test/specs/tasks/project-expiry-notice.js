@@ -1,6 +1,6 @@
 const { v4: uuid } = require('uuid');
 const sinon = require('sinon');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const assert = require('assert');
 const dbHelper = require('../../helpers/db');
 const logger = require('../../helpers/logger');
@@ -29,7 +29,7 @@ describe('Project expiry', () => {
     const project = {
       id: uuid(),
       licenceHolderId: basic,
-      expiryDate: moment().add(1, 'year').subtract(1, 'day').toISOString(),
+      expiryDate: dayJs().add(1, 'year').subtract(1, 'day').toISOString(),
       status: 'active',
       establishmentId: 8201,
       licenceNumber: 'XYZ12345'
@@ -60,7 +60,7 @@ describe('Project expiry', () => {
   it('adds 6 month notification for a project due to expire in 6 months', () => {
     const project = {
       licenceHolderId: basic,
-      expiryDate: moment().add(6, 'months').subtract(1, 'day').toISOString(),
+      expiryDate: dayJs().add(6, 'months').subtract(1, 'day').toISOString(),
       status: 'active',
       establishmentId: 8201,
       licenceNumber: 'XYZ12345'
@@ -89,7 +89,7 @@ describe('Project expiry', () => {
   it('adds 3 month notification for a project due to expire in 3 months', () => {
     const project = {
       licenceHolderId: basic,
-      expiryDate: moment().add(3, 'months').subtract(1, 'day').toISOString(),
+      expiryDate: dayJs().add(3, 'months').subtract(1, 'day').toISOString(),
       status: 'active',
       establishmentId: 8201,
       licenceNumber: 'XYZ12345'
@@ -119,7 +119,7 @@ describe('Project expiry', () => {
     const project = {
       id: uuid(),
       licenceHolderId: basic,
-      expiryDate: moment().subtract(1, 'day').toISOString(),
+      expiryDate: dayJs().subtract(1, 'day').toISOString(),
       status: 'expired',
       establishmentId: 8201,
       licenceNumber: 'XYZ12345'
@@ -150,7 +150,7 @@ describe('Project expiry', () => {
   it('doesn\'t add an expiry notification for a project that has expired over a week ago', () => {
     const project = {
       licenceHolderId: basic,
-      expiryDate: moment().subtract(9, 'days').toISOString(),
+      expiryDate: dayJs().subtract(9, 'days').toISOString(),
       status: 'expired',
       establishmentId: 8201,
       licenceNumber: 'XYZ12345'
@@ -168,7 +168,7 @@ describe('Project expiry', () => {
   it('doesn\'t add an expiry notification for a project that is expiring on the same day', () => {
     const project = {
       licenceHolderId: basic,
-      expiryDate: moment().startOf('day').add(1, 'minute').toISOString(),
+      expiryDate: dayJs().startOf('day').add(1, 'minute').toISOString(),
       status: 'expired',
       establishmentId: 8201,
       licenceNumber: 'XYZ12345'
@@ -196,7 +196,7 @@ describe('Project expiry', () => {
       {
         id: ids.notExpired,
         licenceHolderId: basic,
-        expiryDate: moment().add(13, 'months').toISOString(),
+        expiryDate: dayJs().add(13, 'months').toISOString(),
         status: 'active',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
@@ -204,7 +204,7 @@ describe('Project expiry', () => {
       {
         id: ids.expiringIn12Months,
         licenceHolderId: basic,
-        expiryDate: moment().add(12, 'months').toISOString(),
+        expiryDate: dayJs().add(12, 'months').toISOString(),
         status: 'active',
         establishmentId: 8201,
         licenceNumber: 'XYZ12346'
@@ -212,7 +212,7 @@ describe('Project expiry', () => {
       {
         id: ids.expiringIn6Months,
         licenceHolderId: basic,
-        expiryDate: moment().add(6, 'months').toISOString(),
+        expiryDate: dayJs().add(6, 'months').toISOString(),
         status: 'active',
         establishmentId: 8201,
         licenceNumber: 'XYZ12347'
@@ -220,7 +220,7 @@ describe('Project expiry', () => {
       {
         id: ids.expiringIn3Months,
         licenceHolderId: basic,
-        expiryDate: moment().add(3, 'months').toISOString(),
+        expiryDate: dayJs().add(3, 'months').toISOString(),
         status: 'active',
         establishmentId: 8201,
         licenceNumber: 'XYZ12348'
@@ -228,7 +228,7 @@ describe('Project expiry', () => {
       {
         id: ids.expired,
         licenceHolderId: basic,
-        expiryDate: moment().subtract(1, 'day').toISOString(),
+        expiryDate: dayJs().subtract(1, 'day').toISOString(),
         status: 'expired',
         establishmentId: 8201,
         licenceNumber: 'XYZ12349'
@@ -238,7 +238,7 @@ describe('Project expiry', () => {
     const alreadyNotified = {
       id: ids.alreadyNotified,
       licenceHolderId: basic,
-      expiryDate: moment().add(6, 'months').toISOString(),
+      expiryDate: dayJs().add(6, 'months').toISOString(),
       status: 'active',
       establishmentId: 8201,
       licenceNumber: 'XYZ12340'
@@ -279,7 +279,7 @@ describe('Project expiry', () => {
       .then(notifications => {
         assert.equal(notifications.length, 3, 'Expected expiry notice to be sent');
       })
-      .then(() => this.schema.Project.query().findById(ids.expiringIn12Months).patch({ expiryDate: moment().add(6, 'months').toISOString() }))
+      .then(() => this.schema.Project.query().findById(ids.expiringIn12Months).patch({ expiryDate: dayJs().add(6, 'months').toISOString() }))
       .then(() => expiryNotice({ schema: this.schema, logger, publicUrl }))
       .then(() => this.schema.Notification.query().where('identifier', `${ids.expiringIn12Months}-project-expiring-6`))
       .then(notifications => {
@@ -293,12 +293,12 @@ describe('Project expiry', () => {
       const project = {
         id: uuid(),
         licenceHolderId: basic,
-        expiryDate: moment().add(1, 'year').subtract(1, 'day').toISOString(),
+        expiryDate: dayJs().add(1, 'year').subtract(1, 'day').toISOString(),
         status: 'active',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
       };
-      const publicationsDate = moment(project.expiryDate).add(6, 'months').format('D MMM YYYY');
+      const publicationsDate = dayJs(project.expiryDate).add(6, 'months').format('D MMM YYYY');
 
       return Promise.resolve()
         .then(() => this.schema.Project.query().insert(project))
@@ -316,12 +316,12 @@ describe('Project expiry', () => {
       const project = {
         id: uuid(),
         licenceHolderId: basic,
-        expiryDate: moment().subtract(1, 'day').toISOString(),
+        expiryDate: dayJs().subtract(1, 'day').toISOString(),
         status: 'expired',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
       };
-      const publicationsDate = moment(project.expiryDate).add(6, 'months').format('D MMM YYYY');
+      const publicationsDate = dayJs(project.expiryDate).add(6, 'months').format('D MMM YYYY');
 
       return Promise.resolve()
         .then(() => this.schema.Project.query().insert(project))
@@ -339,8 +339,8 @@ describe('Project expiry', () => {
       const project = {
         id: uuid(),
         licenceHolderId: basic,
-        expiryDate: moment().add(1, 'year').subtract(1, 'day').toISOString(),
-        raDate: moment('2025-05-31').toISOString(),
+        expiryDate: dayJs().add(1, 'year').subtract(1, 'day').toISOString(),
+        raDate: dayJs('2025-05-31').toISOString(),
         status: 'active',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
@@ -363,8 +363,8 @@ describe('Project expiry', () => {
       const project = {
         id: uuid(),
         licenceHolderId: basic,
-        expiryDate: moment().subtract(1, 'day').toISOString(),
-        raDate: moment('2025-05-31').toISOString(),
+        expiryDate: dayJs().subtract(1, 'day').toISOString(),
+        raDate: dayJs('2025-05-31').toISOString(),
         status: 'expired',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
@@ -387,12 +387,12 @@ describe('Project expiry', () => {
       const project = {
         id: uuid(),
         licenceHolderId: basic,
-        expiryDate: moment().add(1, 'year').subtract(1, 'day').toISOString(),
+        expiryDate: dayJs().add(1, 'year').subtract(1, 'day').toISOString(),
         status: 'active',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
       };
-      const continuationDate = moment(project.expiryDate).subtract(3, 'months').format('D MMM YYYY');
+      const continuationDate = dayJs(project.expiryDate).subtract(3, 'months').format('D MMM YYYY');
 
       return Promise.resolve()
         .then(() => this.schema.Project.query().insert(project))

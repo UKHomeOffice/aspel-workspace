@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 import { Provider } from 'react-redux';
-import moment from 'moment';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import Wrapper from './wrapper';
 import { LicenceStatusBanner } from '@ukhomeoffice/asl-components';
 import ProjectStatusBanner from '../../../project-version/components/project-status-banner';
 
-const format = date => moment(date).format('DD MMM YY');
+const format = date => dayJs(date).format('DD MMM YY');
 
 const Header = ({ store, model, licenceType, nonce, version, officialSensitive = true, hasStatusBanner = true }) => (
   <Wrapper name="header" nonce={nonce}>
@@ -29,7 +29,7 @@ const Header = ({ store, model, licenceType, nonce, version, officialSensitive =
             <Fragment> | Granted: <strong>{format(model.issueDate)}</strong></Fragment>
           }
 
-          { ['pil', 'pel'].includes(licenceType) && model.status === 'active' && (moment(model.updatedAt).isAfter(model.issueDate, 'day')) &&
+          { ['pil', 'pel'].includes(licenceType) && model.status === 'active' && (dayJs(model.updatedAt).isAfter(model.issueDate, 'day')) &&
             <Fragment> | Amended: <strong>{format(model.updatedAt)}</strong></Fragment>
           }
 

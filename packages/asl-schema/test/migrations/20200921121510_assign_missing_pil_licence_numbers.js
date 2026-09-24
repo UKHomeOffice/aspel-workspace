@@ -1,6 +1,6 @@
 const assert = require('assert');
 const { v4: uuid } = require('uuid');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { up } = require('../../migrations/20200921121510_assign_missing_pil_licence_numbers');
 const db = require('./helpers/db');
 
@@ -53,20 +53,20 @@ describe('generateLicenceNumber', () => {
       status: 'active',
       establishment_id: 100,
       profile_id: ids.hasLicenceNumber,
-      issue_date: moment().toISOString(),
-      deleted: moment().toISOString()
+      issue_date: dayJs().toISOString(),
+      deleted: dayJs().toISOString()
     },
     {
       status: 'active',
       establishment_id: 100,
       profile_id: ids.missingLicenceNumber,
-      issue_date: moment().toISOString()
+      issue_date: dayJs().toISOString()
     },
     {
       status: 'inactive',
       establishment_id: 100,
       profile_id: ids.hasInactivePil,
-      issue_date: moment().toISOString()
+      issue_date: dayJs().toISOString()
     }
   ];
 

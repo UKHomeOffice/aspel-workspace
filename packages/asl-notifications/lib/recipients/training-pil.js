@@ -1,8 +1,10 @@
 const { get } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const taskHelper = require('../utils/task');
 const getTaskType = require('../dispatcher/get-task-type');
 const { subscribedFilter } = require('../utils/is-subscribed');
+
+const { DATE_FORMAT, formatDate } = dayJs;
 
 module.exports = async ({ schema, logger, task, publicUrl }) => {
   logger.verbose('generating notifications for Training PIL task');
@@ -12,7 +14,6 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
 
   const pilId = get(task, 'data.id');
   const action = get(task, 'data.action');
-  const dateFormat = 'D MMM YYYY';
 
   const allowedActions = [
     'grant',
@@ -62,7 +63,7 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
   const params = {
     establishmentId,
     pilId,
-    pilExpiryDate: trainingPil && moment(trainingPil.expiryDate).format(dateFormat),
+    pilExpiryDate: trainingPil && formatDate(trainingPil.expiryDate, DATE_FORMAT.medium),
     applicant: licenceHolder,
     licenceHolderName: `${licenceHolder.firstName} ${licenceHolder.lastName}`,
     trainingCourseTitle: trainingCourse.title,

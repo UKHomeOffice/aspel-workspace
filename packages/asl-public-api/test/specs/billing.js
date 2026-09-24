@@ -1,5 +1,5 @@
 const assert = require('assert');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const request = require('supertest');
 const apiHelper = require('../helpers/api');
 const ids = require('../data/ids');
@@ -22,7 +22,7 @@ describe('/billing', () => {
       .get(`/establishment/${ids.establishments.croydon}/billing`)
       .expect(200)
       .expect(response => {
-        assert.equal(response.body.meta.year, moment().subtract(1, 'year').format('YYYY'));
+        assert.equal(response.body.meta.year, dayJs().subtract(1, 'year').format('YYYY'));
       });
   });
 

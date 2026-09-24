@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const ids = require('./ids');
 const { v4: uuid } = require('uuid');
 const { userAtMultipleEstablishments, ntco101, user, userWithActivePil, holc } = require('./profiles');
@@ -619,7 +619,7 @@ module.exports = models => {
             title: 'Test course',
             establishmentId: 101,
             projectId: ids.model.project.marvellTest,
-            startDate: moment().add(3, 'months').format('YYYY-MM-DD'),
+            startDate: dayJs.formatIsoDate(dayJs().add(3, 'months')),
             trainingPils: [
               {
                 id: ids.model.trainingPil.hasPil,

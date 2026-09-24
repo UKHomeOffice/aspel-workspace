@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import moment from 'moment';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { Header, Link, Metric } from '@ukhomeoffice/asl-components';
 
 import MetricsFilter from './components/metrics-filter';
@@ -8,8 +8,8 @@ import MetricsFilter from './components/metrics-filter';
 function DateRange() {
   const { start, end } = useSelector(state => {
     return {
-      start: moment(state.model.start),
-      end: moment(state.model.end)
+      start: dayJs(state.model.start),
+      end: dayJs(state.model.end)
     };
   });
 
@@ -25,7 +25,7 @@ function DateRange() {
 function EndDate() {
   const { end } = useSelector(state => {
     return {
-      end: moment(state.model.end)
+      end: dayJs(state.model.end)
     };
   });
   return `${end.format('D MMMM YYYY')}`;

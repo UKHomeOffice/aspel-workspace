@@ -1,13 +1,11 @@
 const { get } = require('lodash');
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-const moment = require('moment-business-time');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const completeAndCorrect = require('../../decorators/deadline/complete-and-correct');
+
+const { addWorkingDaysIso } = dayJs;
 
 const STANDARD_DEADLINE = 40;
 const EXTENDED_DEADLINE = 55;
-
-// configure bank holidays
-moment.updateLocale('en', { holidays: bankHolidays });
 
 module.exports = () => {
   return model => {
@@ -17,8 +15,8 @@ module.exports = () => {
 
     if (type === 'project' && action === 'grant' && !isAmendment && completeAndCorrect(model.data.meta)) {
       const deadline = {
-        standard: moment(model.updatedAt).addWorkingTime(STANDARD_DEADLINE, 'days').format('YYYY-MM-DD'),
-        extended: moment(model.updatedAt).addWorkingTime(EXTENDED_DEADLINE, 'days').format('YYYY-MM-DD'),
+        standard: addWorkingDaysIso(model.updatedAt, STANDARD_DEADLINE),
+        extended: addWorkingDaysIso(model.updatedAt, EXTENDED_DEADLINE),
         isExtended: false,
         isExtendable: true
       };

@@ -3,8 +3,8 @@ jest.mock('../snippet', () => (props) => (
 ));
 
 import React from 'react';
+import { addWeeks } from '../dayjs.js';
 import { cleanup, render, screen } from '@testing-library/react';
-import { addWeeks } from 'date-fns';
 import { expect, jest } from '@jest/globals';
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
@@ -39,3 +39,4 @@ describe('<ExpiryDate />', () => {
     expect(screen.queryByTestId('countdown')).not.toBeInTheDocument();
   });
 });
+

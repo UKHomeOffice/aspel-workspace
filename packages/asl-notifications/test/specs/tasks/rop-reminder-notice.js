@@ -1,6 +1,6 @@
 const { v4: uuid } = require('uuid');
 const sinon = require('sinon');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const assert = require('assert');
 const dbHelper = require('../../helpers/db');
 const logger = require('../../helpers/logger');
@@ -65,7 +65,7 @@ describe('ROP reminder notice', () => {
         id: uuid(),
         projectId: projectId,
         status: 'submitted',
-        year: moment().year()
+        year: dayJs().year()
       };
 
       return Promise.resolve()
@@ -110,11 +110,11 @@ describe('ROP reminder notice', () => {
         id: uuid(),
         projectId: projectId,
         status: 'submitted',
-        year: moment().year()
+        year: dayJs().year()
       };
 
       return Promise.resolve()
-        .then(() => aProject({ expiryDate: moment().utc().subtract(28, 'days') }))
+        .then(() => aProject({ expiryDate: dayJs().utc().subtract(28, 'days') }))
         .then(() => this.schema.Rop.query().insert(rop))
         .then(() => ropReminderNotice({ schema: this.schema, logger, publicUrl }))
         .then(() => this.schema.Notification.query())
@@ -126,7 +126,7 @@ describe('ROP reminder notice', () => {
     it('adds notifications for active project ROPs due in 1 week', () => {
 
       return Promise.resolve()
-        .then(() => aProject({ expiryDate: moment().utc().subtract(21, 'days') }))
+        .then(() => aProject({ expiryDate: dayJs().utc().subtract(21, 'days') }))
         .then(() => ropReminderNotice({ schema: this.schema, logger, publicUrl }))
         .then(() => this.schema.Notification.query())
         .then(notifications => {
@@ -143,7 +143,7 @@ describe('ROP reminder notice', () => {
     it('adds notifications for expired project ROPs due in 1 week', () => {
 
       return Promise.resolve()
-        .then(() => aProject({ status: 'expired', expiryDate: moment().utc().subtract(21, 'days') }))
+        .then(() => aProject({ status: 'expired', expiryDate: dayJs().utc().subtract(21, 'days') }))
         .then(() => ropReminderNotice({ schema: this.schema, logger, publicUrl }))
         .then(() => this.schema.Notification.query())
         .then(notifications => {
@@ -160,7 +160,7 @@ describe('ROP reminder notice', () => {
     it('adds notifications for ROPs due today', () => {
       Mockdate.set('2022-07-25 19:20:21');
       return Promise.resolve()
-        .then(() => aProject({ expiryDate: moment().utc().subtract(28, 'days') }))
+        .then(() => aProject({ expiryDate: dayJs().utc().subtract(28, 'days') }))
         .then(() => ropReminderNotice({ schema: this.schema, logger, publicUrl }))
         .then(() => this.schema.Notification.query())
         .then(notifications => {
@@ -174,7 +174,7 @@ describe('ROP reminder notice', () => {
     it('adds notifications for expired project ROPs due today', () => {
       Mockdate.set('2022-12-22 19:20:21');
       return Promise.resolve()
-        .then(() => aProject({ status: 'expired', expiryDate: moment().utc().subtract(28, 'days') }))
+        .then(() => aProject({ status: 'expired', expiryDate: dayJs().utc().subtract(28, 'days') }))
         .then(() => ropReminderNotice({ schema: this.schema, logger, publicUrl }))
         .then(() => this.schema.Notification.query())
         .then(notifications => {
@@ -189,7 +189,7 @@ describe('ROP reminder notice', () => {
     it('adds notifications for revoked project ROPs due today', () => {
       Mockdate.set('2022-11-25 13:20:21');
       return Promise.resolve()
-        .then(() => aProject({ status: 'revoked', revocationDate: moment().utc().subtract(28, 'days') }))
+        .then(() => aProject({ status: 'revoked', revocationDate: dayJs().utc().subtract(28, 'days') }))
         .then(() => ropReminderNotice({ schema: this.schema, logger, publicUrl }))
         .then(() => this.schema.Notification.query())
         .then(notifications => {
@@ -205,7 +205,7 @@ describe('ROP reminder notice', () => {
       Mockdate.set('2023-01-23 11:20:21');
 
       return Promise.resolve()
-        .then(() => aProject({ id: '11111111-58e1-4e1f-831b-1b807fb30767', status: 'revoked', revocationDate: moment('2022-12-26 14:50:00') }))
+        .then(() => aProject({ id: '11111111-58e1-4e1f-831b-1b807fb30767', status: 'revoked', revocationDate: dayJs('2022-12-26 14:50:00') }))
         .then(() => ropReminderNotice({ schema: this.schema, logger, publicUrl }))
         .then(() => this.schema.Notification.query())
         .then(notifications => {
@@ -221,7 +221,7 @@ describe('ROP reminder notice', () => {
       Mockdate.set('2023-01-31 11:20:21');
 
       return Promise.resolve()
-        .then(() => aProject({ id: projectId, status: 'revoked', revocationDate: moment('2023-01-03 14:50:00') }))
+        .then(() => aProject({ id: projectId, status: 'revoked', revocationDate: dayJs('2023-01-03 14:50:00') }))
         .then(() => ropReminderNotice({ schema: this.schema, logger, publicUrl }))
         .then(() => this.schema.Notification.query())
         .then(notifications => {
@@ -244,7 +244,7 @@ describe('ROP reminder notice', () => {
       };
 
       return Promise.resolve()
-        .then(() => aProject({ id: projectId, status: 'revoked', revocationDate: moment('2022-12-26 14:50:00') }))
+        .then(() => aProject({ id: projectId, status: 'revoked', revocationDate: dayJs('2022-12-26 14:50:00') }))
         .then(() => this.schema.Rop.query().insert(rop))
         .then(() => ropReminderNotice({ schema: this.schema, logger, publicUrl }))
         .then(() => this.schema.Notification.query())
