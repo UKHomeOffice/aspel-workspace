@@ -29,7 +29,7 @@ export default function NTSDownloads() {
   return (
     <div className="nts-download-form">
       <form method="GET" action="/downloads/nts/docx" onSubmit={validate}>
-        <Fieldset schema={schema.dates} model={model} errors={{ dateRange: dateRangeErrors }} />
+        <Fieldset schema={schema.dates} model={model} errors={dateRangeErrors} />
         <Fieldset schema={schema.ra} model={model} errors={errors} />
         <button type="submit" className="govuk-button">Download document</button>
       </form>
