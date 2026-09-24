@@ -22,6 +22,10 @@ module.exports = settings => {
             errors: validateNtsDateRangeQuery(req.query).errors
           };
         }
+        res.locals.static.ntsNoResults = req.query.noResults === 'true';
+        if (req.query.noResults === 'true') {
+          res.locals.static.errors = { noResults: 'noResults' };
+        }
         res.locals.static.reports = response.json.data.map(report => {
           const end = moment(report.meta.end);
           return { id: report.id, year: end.format('YYYY'), month: end.format('MMMM') };

@@ -49,7 +49,7 @@ module.exports = settings => {
       const items = response.json.data || [];
 
       if (items.length === 0) {
-        return res.status(404).send('No projects found during the specified date range.');
+        return res.redirect(`/downloads?${getNtsRedirectQuery(req.query)}&noResults=true`);
       }
 
       let mergedDocument = null;
