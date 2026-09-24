@@ -17,7 +17,7 @@ module.exports = settings => {
           res.locals.static.ntsDateRangeValidation = {
             model: {
               dateRange: getNtsDateRangeModel(req.query),
-              ra: req.query.ra
+              ra: req.query.ra === 'true' ? true : req.query.ra === 'false' ? false : req.query.ra
             },
             errors: validateNtsDateRangeQuery(req.query).errors
           };

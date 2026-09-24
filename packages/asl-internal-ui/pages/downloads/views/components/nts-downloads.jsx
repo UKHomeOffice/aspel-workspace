@@ -9,7 +9,6 @@ export default function NTSDownloads() {
   const initialNoResults = useSelector(state => state.static.ntsNoResults);
   const [errors, setErrors] = useState(initialValidation.errors || {});
   const [downloadStarted, setDownloadStarted] = useState(false);
-  const [noResults, setNoResults] = useState(initialNoResults);
   const model = initialValidation.model || {};
   const dateRangeErrors = {
     'date-from': errors['date-from'],
@@ -29,7 +28,6 @@ export default function NTSDownloads() {
     });
 
     setDownloadStarted(false);
-    setNoResults(false);
     setErrors(currentErrors => {
       const nextErrors = { ...currentErrors };
 
@@ -50,7 +48,6 @@ export default function NTSDownloads() {
     }
 
     setDownloadStarted(false);
-    setNoResults(false);
   };
 
   const validate = event => {
@@ -69,7 +66,7 @@ export default function NTSDownloads() {
 
   return (
     <div className="nts-download-form">
-      {noResults && <ErrorSummary />}
+      {initialNoResults && <ErrorSummary />}
       <form method="GET" action="/downloads/nts/docx" onSubmit={validate}>
         <Fieldset schema={schema.dates} model={model} errors={dateRangeErrors} onChange={validateDateRange} />
         <Fieldset schema={schema.ra} model={model} errors={errors} onChange={handleRaChange} />
