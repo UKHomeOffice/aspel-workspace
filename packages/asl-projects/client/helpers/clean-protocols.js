@@ -36,7 +36,7 @@ export function cleanProtocolSteps(protocols = [], previousProtocols = []) {
   return (protocols || []).map(protocol => {
     const cleanedSteps = (protocol.steps || []).filter(step => {
       if (step.deleted === true) {
-        return oldSteps.has(step.id);
+        return oldSteps.has(step.id) || !isStepEmpty(step);
       }
       return !isStepEmpty(step);
     });
