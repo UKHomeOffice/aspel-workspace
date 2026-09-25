@@ -11,11 +11,11 @@ export function trainingSummaryRenderer(doc, values, application = {}) {
   const TRAINING_RECORD_HEADERS = ['Category', 'Modules', 'Animal types', 'Details'];
   const holder = trainingRecordHolder(application.licenceHolder, application.status);
 
-  doc.createParagraph(holder ? `${holder.name}'s training record` : 'Training record').heading4();
-
   if (holder) {
     doc.createParagraph(holder.status);
   }
+
+  doc.createParagraph(holder ? `${holder.name}'s training record` : 'Training record').heading4();
 
   if (!values?.training?.length) {
     doc.createParagraph('No training records found');
