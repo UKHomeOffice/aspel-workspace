@@ -51,7 +51,6 @@ function Row({ certificate, actions, basePage }) {
                                 </p>
                               <br/>
                               <p className="preserve-whitespace">{certificate.exemptionReason}</p>
-
                             </>
                         )
                         : (
