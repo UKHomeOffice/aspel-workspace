@@ -65,14 +65,14 @@ describe('<DateRangeInput />', () => {
         expect(container.querySelector('#date-to-day').classList).toContain('govuk-input--error');
     });
 
-    test('shows an error when the from date is not before the to date', () => {
+    test('shows an error on the to date when the submitted range is invalid', () => {
         render(
             <DateRangeInput
                 values={{ 'date-from': '2024-02-01', 'date-to': '2024-01-01' }}
             />
         );
 
-        expect(screen.getByText('error:date-from:dateIsBefore')).toBeInTheDocument();
+        expect(screen.getByText('error:date-to:dateIsAfter')).toBeInTheDocument();
     });
 
     test('does not show an error when the from date is the same as the to date', () => {
@@ -116,6 +116,16 @@ describe('<DateRangeInput />', () => {
         );
 
         expect(screen.getByText('error:date-from:aspelDataStartDate')).toBeInTheDocument();
+    });
+
+    test('shows an error when date to is before ASPEL data started', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2019-07-31', 'date-to': '2019-07-30' }}
+            />
+        );
+
+        expect(screen.getByText('error:date-to:aspelDataStartDate')).toBeInTheDocument();
     });
 
     test('allows date from to be the day ASPEL data started', () => {
