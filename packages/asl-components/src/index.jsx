@@ -39,6 +39,7 @@ export { default as Filters } from './filters';
 export { default as FilterSummary } from './filter-summary';
 export { default as FilterTable } from './filter-table';
 export { default as Form } from './form';
+export { FormLayout } from './layouts';
 export { default as FormControls } from './form-controls';
 export { default as Header } from './header';
 export { default as Inset } from './inset';
