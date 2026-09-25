@@ -101,20 +101,20 @@ export default async function ntsDocxRenderer(opts) {
       : schemaV1Purpose.options;
     const valuesSelected = schemaVersion === 0 ? version.purpose : version['permissible-purpose'];
     let selected = [].concat(valuesSelected || []);
-    const nestedSelected = schemaVersion === 0 ? [] : (version?.['translational-research'] ?? []);
-    if (nestedSelected.length > 0) {
+    const nestedSelected = schemaVersion === 0 ? [] : version['translational-research'];
+    if (nestedSelected) {
       selected.push('translational-research');
     }
     let options = [];
     if (!selected.length) { return renderText(null); }
-    selected?.forEach(val => {
+    selected.forEach(val => {
       const opt = purposeOptions.find(o => o.value === val);
       options.push(opt);
     });
-    options = options?.sort((a, b) =>
+    options = options.sort((a, b) =>
       a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' })
     );
-    options?.forEach((opt, i) => {
+    options.forEach((opt, i) => {
       const p = new Paragraph();
       p.style('body');
       p.addRun(new TextRun(opt ? opt.label : String(opt.value)));
@@ -141,7 +141,7 @@ export default async function ntsDocxRenderer(opts) {
   const getSpeciesCount = (speciesKey) => version[`reduction-quantities-${speciesKey}`] || 'No answer provided';
 
   const renderFateOfAnimals = (fields) => {
-    fields?.forEach(field => {
+    fields.forEach(field => {
       let fateOfAnimal = NTSFateOfAnimalFields()[field];
       if (!fateOfAnimal) {
         if (field === 'used-in-other-projects') {
