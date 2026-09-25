@@ -31,7 +31,7 @@ module.exports = {
       required: 'Select which type of non-technical summary to download'
     },
     noResults: {
-      noResults: 'No projects found during the specified date range.'
+      noResults: 'There are no projects for this date range'
     }
   },
   links: {
