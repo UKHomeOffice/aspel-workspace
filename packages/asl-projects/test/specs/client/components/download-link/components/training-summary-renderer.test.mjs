@@ -76,9 +76,9 @@ describe('populateTableWithTrainingRecords', () => {
     assert.equal(table.getCell(1, 3).createParagraph.calledWith('Certificate number: 12345'), true);
     assert.equal(table.getCell(1, 3).createParagraph.calledWith('Awarded on: 2021-01-01'), true);
     assert.equal(table.getCell(1, 3).createParagraph.calledWith('Awarded by: Body 1'), true);
+    assert.equal(table.getCell(2, 3).createParagraph.calledWith('Added on: 14 March 2026'), true);
     assert.equal(table.getCell(2, 3).createParagraph.calledWith('Reason line 1'), true);
     assert.equal(table.getCell(2, 3).createParagraph.calledWith('Reason line 2'), true);
-    assert.equal(table.getCell(2, 3).createParagraph.calledWith('Added on: 14 March 2026'), true);
   });
 
   it('should render a dash when an exemption has no reason or created date', () => {
