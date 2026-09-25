@@ -42,8 +42,8 @@ export function populateTableWithTrainingRecords(table, training) {
 
     const details = record.isExemption
       ? [
-        `Added on: ${record.createdAt ? format(record.createdAt, DATE_FORMAT) : '-'}`,
-        ...(record.exemptionReason || '-').split('\n')
+        ...(record.exemptionReason || '-').split('\n'),
+        `Added on: ${record.createdAt ? format(record.createdAt, DATE_FORMAT) : '-'}`
       ]
       : [
         `Certificate number: ${record.certificateNumber}`,
