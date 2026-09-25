@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import dayJs from '../dayjs.js';
 import { Snippet } from '../';
+import classNames from 'classnames';
+
 const {
     differenceInDays,
     differenceInWeeks,
@@ -8,7 +10,6 @@ const {
     isBefore,
     isToday
 } = dayJs;
-import classNames from 'classnames';
 
 const Countdown = ({
     expiry,

@@ -19,7 +19,7 @@ function formatIsoDate(date) {
         return dayjs.format(date, DATE_FORMAT.iso);
     }
 
-    return '';
+    return undefined;
 }
 
 function todayIso() {

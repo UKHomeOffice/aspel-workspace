@@ -1,11 +1,11 @@
 import _ from 'lodash';
+import aslComponentUtils from '@ukhomeoffice/asl-components/utils.js';
 import { populateTableHeader } from '../helpers/populate-table-header.mjs';
 import { initializeTable } from '../helpers/initialize-table.mjs';
 import { trainingRecordHolder } from '../../../helpers/training-record-holder.mjs';
-import { formatDate } from '../../../helpers/index.js';
-import { DATE_FORMAT } from '../../../constants/index.js';
 
 const { sortBy } = _;
+const { formatDate, DATE_FORMAT } = aslComponentUtils;
 
 export function trainingSummaryRenderer(doc, values, application = {}) {
   const TRAINING_RECORD_HEADERS = ['Category', 'Modules', 'Animal types', 'Details'];

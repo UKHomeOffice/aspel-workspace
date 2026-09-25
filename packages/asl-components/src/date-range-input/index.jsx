@@ -1,41 +1,24 @@
 import React, { useMemo, useState } from 'react';
 import DateInput from '../date-input';
 import DateErrorMessage from '../date-input/error-message';
-import { parseDate, getAspelDataStart } from '../date-extend-dayJs';
+import {
+    getAspelDataStart,
+    getDateBoundaryError,
+    isInvalidDateValue,
+    parseOptionalDate
+} from '../date-extend-dayJs';
 
 const DATE_FROM = 'date-from';
 const DATE_TO = 'date-to';
 
-function isPresent(value) {
-    return !!String(value || '').trim();
-}
-
-function parse(value) {
-    if (!isPresent(value)) {
-        return null;
-    }
-    const parsed = parseDate(value);
-    return parsed.isValid() ? parsed : null;
-}
-
-function isInvalidDate(value) {
-    return isPresent(value) && !parse(value);
-}
-
 function getBoundaryError(name, parsed) {
-    if (!parsed) {
-        return null;
-    }
-
-    if (name === DATE_FROM && parsed.isBefore(getAspelDataStart(), 'day')) {
-        return 'aspelDataStartDate';
-    }
-
-    if (parsed.isAfter(parseDate(new Date()), 'day')) {
-        return 'dateIsSameOrBefore';
-    }
-
-    return null;
+    return getDateBoundaryError({
+        parsed,
+        minDate: name === DATE_FROM ? getAspelDataStart() : null,
+        minDateErrorCode: name === DATE_FROM ? 'aspelDataStartDate' : null,
+        maxDate: new Date(),
+        maxDateErrorCode: 'dateIsSameOrBefore'
+    });
 }
 
 function getRangeErrors({ parsedFrom, parsedTo, boundaryErrors, lastChanged }) {
@@ -74,15 +57,15 @@ export default function DateRangeInput({ label = 'Date range', values, errors = 
     const [lastChanged, setLastChanged] = useState(DATE_FROM);
 
     const validation = useMemo(() => {
-        const parsedFrom = parse(currentValues[DATE_FROM]);
-        const parsedTo = parse(currentValues[DATE_TO]);
+        const parsedFrom = parseOptionalDate(currentValues[DATE_FROM]);
+        const parsedTo = parseOptionalDate(currentValues[DATE_TO]);
 
         const boundaryErrors = {
-            [DATE_FROM]: errors[DATE_FROM] || (isInvalidDate(currentValues[DATE_FROM]) ? null : getBoundaryError(DATE_FROM, parsedFrom)),
-            [DATE_TO]: errors[DATE_TO] || (isInvalidDate(currentValues[DATE_TO]) ? null : getBoundaryError(DATE_TO, parsedTo))
+            [DATE_FROM]: errors[DATE_FROM] || (isInvalidDateValue(currentValues[DATE_FROM]) ? null : getBoundaryError(DATE_FROM, parsedFrom)),
+            [DATE_TO]: errors[DATE_TO] || (isInvalidDateValue(currentValues[DATE_TO]) ? null : getBoundaryError(DATE_TO, parsedTo))
         };
 
-        const rangeErrors = isInvalidDate(currentValues[DATE_FROM]) || isInvalidDate(currentValues[DATE_TO])
+        const rangeErrors = isInvalidDateValue(currentValues[DATE_FROM]) || isInvalidDateValue(currentValues[DATE_TO])
             ? {}
             : getRangeErrors({ parsedFrom, parsedTo, boundaryErrors, lastChanged });
 
