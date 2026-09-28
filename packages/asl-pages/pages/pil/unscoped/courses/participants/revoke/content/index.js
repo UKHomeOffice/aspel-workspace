@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Revoke category E licence',
   title: 'Revoke category E licence',
   summary: 'If {{name}} has a category A, B, C, D or F personal licence, only the category E will be removed.',
   fields: {

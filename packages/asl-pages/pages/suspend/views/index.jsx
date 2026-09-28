@@ -1,12 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Header, Snippet, FormLayout } from '@ukhomeoffice/asl-components';
-
-const licenceType = {
-  pil: 'personal',
-  establishment: 'establishment',
-  project: 'project'
-};
+import licenceType from '../licence-types';
 
 const getLicenceName = ({ modelType, model, licenceHolder }) => {
   const licenceName = {

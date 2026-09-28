@@ -1,4 +1,5 @@
 module.exports = {
+  pageTitle: 'Confirm personal licence is up to date',
   title: 'Confirm this personal licence is up to date',
   content: 'You confirm this licence is still required and all the animal types and procedures are up to date.',
   buttons: {

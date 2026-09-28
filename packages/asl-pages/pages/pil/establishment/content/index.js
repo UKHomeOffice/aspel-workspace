@@ -2,6 +2,7 @@ const { merge } = require('lodash');
 const baseContent = require('../../content');
 
 module.exports = merge({}, baseContent, {
+  pageTitle: 'Transfer personal licence',
   title: 'Transfer personal licence',
   description: `With a personal licence you can work at multiple establishments.
 

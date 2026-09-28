@@ -2,6 +2,7 @@ const { merge } = require('lodash');
 const path = require('path');
 const findRoot = require('find-root');
 const { Router } = require('express');
+const { prependPageTitle } = require('./page-title');
 
 const lookup = (...args) => {
   if (!args.length) {
@@ -69,7 +70,7 @@ module.exports = ({
         .concat(req.user.profile.allowedActions[req.establishmentId])
         .filter(Boolean);
     }
-    res.locals.pageTitle = res.locals.pageTitle || res.locals.static.content.pageTitle;
+    prependPageTitle(req, res, res.locals.static.content.pageTitle);
     res.template = pages[req.path]?.template;
     req.page = filename;
     return next();
