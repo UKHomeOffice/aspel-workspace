@@ -127,10 +127,3 @@ export const reusableStepFieldKeys = (protocol) => {
 export const getRepeatedFromProtocolIndex = (step, currentProtocolId) => {
   return (step.usedInProtocols || []).length > 0 && step.usedInProtocols[0].protocolId !== currentProtocolId ? step.usedInProtocols[0].protocolNumber : undefined;
 };
-
-export const isStepEmpty = (step = {}) => {
-  const hasDescription = step.description?.trim();
-  const hasReference = step.reference?.trim();
-  
-  return !hasDescription && !hasReference;
-};
