@@ -39,7 +39,7 @@ module.exports = merge(
       applicantLearningUse: {
         label:
         'How will the participant use this learning in future scientific work using living animals?',
-        checkAnswerLabel: 'Education or training outcomes',
+        checkAnswerLabel: 'Higher education or training outcomes',
         hint: 'Explain how they intend to use it to design, conduct or analyse research.'
       },
       jobTitleOrQualification: {
