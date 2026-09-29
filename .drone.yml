@@ -328,11 +328,13 @@ steps:
       DATABASE_HOST: postgres
       DATABASE_USERNAME: asl-test
       DATABASE_PASSWORD: test-password
+      S3_LOCALSTACK_URL: http://localstack:4566
       ART_AUTH_TOKEN:
         from_secret: art_auth_token
       GITHUB_AUTH_TOKEN:
         from_secret: github_token
     commands:
+      - sh ./packages/asl-data-exports/test/ci/setup.sh
       - npm run test --workspace asl-data-exports
   - name: audit
     image: node:22.14.0
@@ -396,6 +398,11 @@ services:
     environment:
       POSTGRES_USER: asl-test
       POSTGRES_PASSWORD: test-password
+  - name: localstack
+    image: localstack/localstack:3.7.2
+    environment:
+      SERVICES: s3
+      DEFAULT_REGION: eu-west-2
 
 trigger:
   event:
