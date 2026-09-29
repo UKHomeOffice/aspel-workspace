@@ -8,43 +8,22 @@ function splitDateValue(value = '') {
     return { day, month, year };
 }
 
-function getEndOfMonth(year, month) {
-    const y = Number(year);
-    const m = Number(month);
-
-    switch (m) {
-        case 2:
-            return y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0) ? 29 : 28;
-        case 4:
-        case 6:
-        case 9:
-        case 11:
-            return 30;
-            // This also applies when month is invalid (e.g. 0, 13, or NaN)
-        default:
-            return 31;
-    }
-}
-
-function partIsInvalid(datePart, raw, { day, month, year } = {}) {
+function partIsInvalid(datePart, raw) {
     const normalised = Number(raw);
     if (isNaN(normalised)) {
         return true;
     }
 
     if (datePart === YEAR) {
-        return normalised < 1000
-          || normalised > 9999
-          || (Number(month) === 2 && Number(day) === 29 && getEndOfMonth(normalised, month) !== 29);
+        return normalised < 1000 || normalised > 9999;
     }
     if (datePart === DAY) {
-        return normalised < 1 || normalised > getEndOfMonth(year, month);
+        // For months with <31 days - the whole date field will be highlighted.
+        return normalised < 1 || normalised > 31;
     }
 
     if (datePart === MONTH) {
-        return normalised < 1
-          || normalised > 12
-          || (day <= 31 && day > getEndOfMonth(year, normalised));
+        return normalised < 1 || normalised > 12;
     }
 
     throw new Error(`Unknown date part ${datePart}. Expected one of ${DAY}, ${MONTH}, ${YEAR}`);
@@ -53,7 +32,19 @@ function partIsInvalid(datePart, raw, { day, month, year } = {}) {
 // Returns the invalid parts in visual order (day, month, year); [] when no
 // single part can be blamed.
 function getInvalidDateParts(parts = {}) {
-    return [DAY, MONTH, YEAR].filter(kind => partIsInvalid(kind, parts[kind], parts));
+    const missing = [DAY, MONTH, YEAR].filter(key => !parts[key]);
+
+    const invalid =  [DAY, MONTH, YEAR]
+        .filter(key => !missing.includes(key))
+        .filter(key => partIsInvalid(key, parts[key]));
+
+    // highlight the date as a whole if there’s incorrect information in more than one field.
+    // https://design-system.service.gov.uk/components/date-input/#if-the-date-entered-cannot-be-correct
+    if(invalid.length > 1) {
+        return [DAY, MONTH, YEAR];
+    }
+
+    return [DAY, MONTH, YEAR].filter(key => missing.includes(key) || invalid.includes(key));
 }
 
 module.exports = { splitDateValue, getInvalidDateParts };

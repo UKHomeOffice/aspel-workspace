@@ -35,22 +35,14 @@ describe('getInvalidDateParts', () => {
     });
 
     test('returns [] when every part is individually valid', () => {
-        expect(getInvalidDateParts({ day: '31', month: '01', year: '2024' })).toEqual([]);
+        expect(getInvalidDateParts({ day: '31', month: '02', year: '2024' })).toEqual([]);
+    });
+
+    test('returns all inputs when two parts are present, but invalid', () => {
+        expect(getInvalidDateParts({ day: '32', month: '13', year: '2024' })).toEqual(['day', 'month', 'year']);
     });
 
     test('returns all parts for a fully blank date', () => {
         expect(getInvalidDateParts({ day: '', month: '', year: '' })).toEqual(['day', 'month', 'year']);
     });
-
-    describe('handles variable month ends', () => {
-      test('returns month and day if the month doesn\'t have that day', () => {
-        expect(getInvalidDateParts({ day: '31', month: '4', year: '2026' })).toEqual(['day', 'month']);
-        expect(getInvalidDateParts({ day: '30', month: '2', year: '2026' })).toEqual(['day', 'month']);
-      });
-
-      test('returns all three if 29th Feb and not a leap year', () => {
-        expect(getInvalidDateParts({ day: '29', month: '2', year: '2025' })).toEqual(['day', 'month', 'year']);
-        expect(getInvalidDateParts({ day: '29', month: '2', year: '2100' })).toEqual(['day', 'month', 'year']);
-      })
-    })
 });
