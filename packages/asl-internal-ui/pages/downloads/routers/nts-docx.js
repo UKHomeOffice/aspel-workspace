@@ -7,6 +7,9 @@ const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
 const { NotFoundError } = require('@asl/service/errors');
 const { addPageNumbers } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
 const { getRAReasons } = require('@ukhomeoffice/asl-constants');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+
+const { STRICT_DATE_FORMATS, formatIsoDate, parseDate } = dayJs;
 
 // Converts docx Document instance into a binary Buffer
 const pack = doc => {
@@ -14,14 +17,13 @@ const pack = doc => {
   return packer.toBuffer(doc);
 };
 
-// Check YYYY-MM-DD format and date check
-const isValidDate = (dateStr) => {
-  if (typeof dateStr !== 'string') return false;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+const parseIsoDate = dateStr => {
+  if (typeof dateStr !== 'string') {
+    return null;
+  }
 
-  const date = new Date(dateStr);
-  // Ensures it's a valid date
-  return !isNaN(date.getTime()) && date.toISOString().slice(0, 10) === dateStr;
+  const parsed = parseDate(dateStr, STRICT_DATE_FORMATS, true);
+  return parsed.isValid() && formatIsoDate(parsed) === dateStr ? parsed : null;
 };
 
 module.exports = settings => {
@@ -33,12 +35,14 @@ module.exports = settings => {
         throw new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.');
       }
       const { startDate, endDate, ra } = req.query;
+      const parsedStartDate = parseIsoDate(startDate);
+      const parsedEndDate = parseIsoDate(endDate);
 
       // Validate startDate
       if (!startDate) {
         return res.status(400).send('Missing required query parameter: "startDate".');
       }
-      if (!isValidDate(startDate)) {
+      if (!parsedStartDate) {
         return res.status(400).send('Invalid "startDate" parameter. Format must be YYYY-MM-DD.');
       }
 
@@ -46,12 +50,12 @@ module.exports = settings => {
       if (!endDate) {
         return res.status(400).send('Missing required query parameter: "endDate".');
       }
-      if (!isValidDate(endDate)) {
+      if (!parsedEndDate) {
         return res.status(400).send('Invalid "endDate" parameter. Format must be YYYY-MM-DD.');
       }
 
       // Ensure startDate is not after endDate
-      if (new Date(startDate) > new Date(endDate)) {
+      if (parsedStartDate.isAfter(parsedEndDate)) {
         return res.status(400).send('"startDate" cannot be later than "endDate".');
       }
 

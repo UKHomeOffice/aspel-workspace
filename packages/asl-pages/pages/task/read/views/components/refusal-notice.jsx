@@ -1,7 +1,9 @@
 import React from 'react';
-import { addDays } from 'date-fns';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import classnames from 'classnames';
 import { Inset, Markdown, Snippet, Utils } from '@ukhomeoffice/asl-components';
+
+const { addDays } = dayJs;
 
 export default function RefusalNotice({ project, licenceHolder, inspector, refusalReason, editUrl, dateOfNotice = new Date() }) {
   const respondBy = addDays(dateOfNotice, 28);

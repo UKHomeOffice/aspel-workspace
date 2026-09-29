@@ -1,12 +1,14 @@
 import React, { Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector, shallowEqual } from 'react-redux';
 import { Details, Header, Snippet, WidthContainer, Tabs, Link, Inset, ErrorSummary } from '@ukhomeoffice/asl-components';
 import { Warning, Select } from '@ukhomeoffice/react-components';
 import { getUrl } from '@ukhomeoffice/asl-components/src/link';
-import { format, isFuture } from 'date-fns';
 import { dateFormat } from '../../../../constants';
 import { numberWithCommas } from '../../../../lib/utils';
 import EstablishmentHeader from '../../../common/components/establishment-header';
+
+const { format, isFuture } = dayJs;
 
 function Fee({ type }) {
   const fees = useSelector(state => state.static.fees);

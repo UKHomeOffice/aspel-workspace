@@ -27,7 +27,13 @@ function partIsInvalid(kind, raw) {
 // Returns the invalid parts in visual order (day, month, year); [] when no
 // single part can be blamed.
 function getInvalidDateParts(parts = {}) {
-    return [DAY, MONTH, YEAR].filter(kind => partIsInvalid(kind, parts[kind]));
+    const dateParts = typeof parts === 'string'
+        ? splitDateValue(parts)
+        : parts;
+
+    return [DAY, MONTH, YEAR].filter(
+        kind => partIsInvalid(kind, dateParts[kind])
+    );
 }
 
 module.exports = { splitDateValue, getInvalidDateParts };

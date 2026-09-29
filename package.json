@@ -10,6 +10,7 @@
     "dev": "sh -c 'cmd=$(source .env && echo ${DEV_SERVICES:-\"asl asl-internal-ui\"} | xargs -n1 -I {} printf \"\\\"npm run dev -w %s\\\" \" {}); eval concurrently --kill-others-on-fail $cmd'",
     "reset": "find . -type d -name \"node_modules\" -exec rm -rf {} +",
     "test": "node --test $(find . -type f -name \"*.test.js\" ! -path \"./node_modules/*\" ! -path \"./packages/*\")",
+    "test:unit": "npm run test:unit --workspaces --if-present",
     "build": "bash scripts/build-aspel-containers.sh"
   },
   "devDependencies": {

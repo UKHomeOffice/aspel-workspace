@@ -1,6 +1,8 @@
 const { get } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const flow = require('./index');
+
+const { todayIso } = dayJs;
 const {
   updated,
   recalledByApplicant,
@@ -84,7 +86,7 @@ const notifiedOfIntentionToRefuse = task => {
 };
 
 const intentionToRefuseDeadlinePassed = task => {
-  return !!(task.data.intentionToRefuse && task.data.intentionToRefuse.deadline < moment().format('YYYY-MM-DD'));
+  return !!(task.data.intentionToRefuse && task.data.intentionToRefuse.deadline < todayIso());
 };
 
 module.exports = async (task, profile) => {

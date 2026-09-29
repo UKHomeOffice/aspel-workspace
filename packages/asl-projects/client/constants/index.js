@@ -1,4 +1,2 @@
-export const DATE_FORMAT = {
-  long: 'dd MMMM yyyy',
-  short: 'dd/MM/yyyy'
-};
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-components/utils');
+module.exports = DATE_FORMAT;

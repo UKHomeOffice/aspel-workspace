@@ -14,7 +14,7 @@ import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose'
 import { addStyles, addPageNumbers } from './helpers/docx-style-helper';
 import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared } from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
-import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
+import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/utils';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
 
 export default async function ntsDocxRenderer(opts) {

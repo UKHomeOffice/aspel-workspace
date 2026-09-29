@@ -1,6 +1,6 @@
 const { v4: uuid } = require('uuid');
 const sinon = require('sinon');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const assert = require('assert');
 const dbHelper = require('../../helpers/db');
 const logger = require('../../helpers/logger');
@@ -30,8 +30,8 @@ describe('Retrospective assessment due', () => {
       const project = {
         id: uuid(),
         licenceHolderId: basic,
-        expiryDate: moment().subtract(3, 'months').toISOString(),
-        raDate: moment().add(3, 'months').subtract(1, 'day').toISOString(),
+        expiryDate: dayJs().subtract(3, 'months').toISOString(),
+        raDate: dayJs().add(3, 'months').subtract(1, 'day').toISOString(),
         status: 'expired',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
@@ -63,8 +63,8 @@ describe('Retrospective assessment due', () => {
       const project = {
         id: uuid(),
         licenceHolderId: basic,
-        expiryDate: moment().subtract(5, 'months').toISOString(),
-        raDate: moment().add(1, 'months').subtract(1, 'day').toISOString(),
+        expiryDate: dayJs().subtract(5, 'months').toISOString(),
+        raDate: dayJs().add(1, 'months').subtract(1, 'day').toISOString(),
         status: 'expired',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
@@ -96,8 +96,8 @@ describe('Retrospective assessment due', () => {
       const project = {
         id: uuid(),
         licenceHolderId: basic,
-        expiryDate: moment().subtract(6, 'months').toISOString(),
-        raDate: moment().toISOString(),
+        expiryDate: dayJs().subtract(6, 'months').toISOString(),
+        raDate: dayJs().toISOString(),
         status: 'expired',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
@@ -130,8 +130,8 @@ describe('Retrospective assessment due', () => {
         id: uuid(),
         title: 'Email test',
         licenceHolderId: basic,
-        expiryDate: moment().subtract(6, 'months').toISOString(),
-        raDate: moment().toISOString(),
+        expiryDate: dayJs().subtract(6, 'months').toISOString(),
+        raDate: dayJs().toISOString(),
         status: 'expired',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
@@ -145,7 +145,7 @@ describe('Retrospective assessment due', () => {
         .then(notifications => {
           notifications.forEach(notification => {
             assert.ok(notification.html.includes(project.title));
-            assert.ok(notification.html.includes(moment(project.raDate).format('D MMM YYYY')));
+            assert.ok(notification.html.includes(dayJs(project.raDate).format('D MMM YYYY')));
           });
         });
     });
@@ -156,8 +156,8 @@ describe('Retrospective assessment due', () => {
       const project = {
         id: uuid(),
         licenceHolderId: basic,
-        revocationDate: moment().subtract(3, 'months').toISOString(),
-        raDate: moment().add(3, 'months').subtract(1, 'day').toISOString(),
+        revocationDate: dayJs().subtract(3, 'months').toISOString(),
+        raDate: dayJs().add(3, 'months').subtract(1, 'day').toISOString(),
         status: 'revoked',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
@@ -189,8 +189,8 @@ describe('Retrospective assessment due', () => {
       const project = {
         id: uuid(),
         licenceHolderId: basic,
-        revocationDate: moment().subtract(5, 'months').toISOString(),
-        raDate: moment().add(1, 'months').subtract(1, 'day').toISOString(),
+        revocationDate: dayJs().subtract(5, 'months').toISOString(),
+        raDate: dayJs().add(1, 'months').subtract(1, 'day').toISOString(),
         status: 'revoked',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
@@ -222,8 +222,8 @@ describe('Retrospective assessment due', () => {
       const project = {
         id: uuid(),
         licenceHolderId: basic,
-        revocationDate: moment().subtract(6, 'months').toISOString(),
-        raDate: moment().toISOString(),
+        revocationDate: dayJs().subtract(6, 'months').toISOString(),
+        raDate: dayJs().toISOString(),
         status: 'revoked',
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
@@ -256,8 +256,8 @@ describe('Retrospective assessment due', () => {
     const project = {
       id: uuid(),
       licenceHolderId: basic,
-      expiryDate: moment().subtract(5, 'months').toISOString(),
-      raDate: moment().add(1, 'months').subtract(1, 'day').toISOString(),
+      expiryDate: dayJs().subtract(5, 'months').toISOString(),
+      raDate: dayJs().add(1, 'months').subtract(1, 'day').toISOString(),
       status: 'expired',
       establishmentId: 8201,
       licenceNumber: 'XYZ12345',
@@ -279,8 +279,8 @@ describe('Retrospective assessment due', () => {
     const project = {
       id: uuid(),
       licenceHolderId: basic,
-      expiryDate: moment().subtract(5, 'months').toISOString(),
-      raDate: moment().add(1, 'months').subtract(1, 'day').toISOString(),
+      expiryDate: dayJs().subtract(5, 'months').toISOString(),
+      raDate: dayJs().add(1, 'months').subtract(1, 'day').toISOString(),
       status: 'expired',
       establishmentId: 8201,
       licenceNumber: 'XYZ12345',
@@ -302,8 +302,8 @@ describe('Retrospective assessment due', () => {
     const project = {
       id: uuid(),
       licenceHolderId: basic,
-      revocationDate: moment().subtract(7, 'months').toISOString(),
-      raDate: moment().subtract(1, 'week').toISOString(),
+      revocationDate: dayJs().subtract(7, 'months').toISOString(),
+      raDate: dayJs().subtract(1, 'week').toISOString(),
       status: 'expired',
       establishmentId: 8201,
       licenceNumber: 'XYZ12345'

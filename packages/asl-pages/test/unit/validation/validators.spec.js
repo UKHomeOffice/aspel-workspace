@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import sinon from 'sinon';
 import validators from '../../../lib/validation/validators';
 
@@ -172,7 +172,7 @@ describe('validation', () => {
 
     beforeEach(() => {
       clock = sinon.useFakeTimers({
-        now: moment('2020-01-20').valueOf()
+        now: dayJs('2020-01-20').valueOf()
       });
     });
 
@@ -210,12 +210,12 @@ describe('validation', () => {
           '2020-01-16'
         ];
         describe('before', () => {
-          before.forEach(value => doTest(null, value, () => moment().subtract(5, 'days'), 'dateIsBefore', true));
-          before.forEach(value => doTest(null, value, () => moment().subtract(5, 'days'), 'dateIsAfter', false));
+          before.forEach(value => doTest(null, value, () => dayJs().subtract(5, 'days'), 'dateIsBefore', true));
+          before.forEach(value => doTest(null, value, () => dayJs().subtract(5, 'days'), 'dateIsAfter', false));
         });
         describe('after', () => {
-          after.forEach(value => doTest(null, value, () => moment().subtract(5, 'days'), 'dateIsBefore', false));
-          after.forEach(value => doTest(null, value, () => moment().subtract(5, 'days'), 'dateIsAfter', true));
+          after.forEach(value => doTest(null, value, () => dayJs().subtract(5, 'days'), 'dateIsBefore', false));
+          after.forEach(value => doTest(null, value, () => dayJs().subtract(5, 'days'), 'dateIsAfter', true));
         });
       });
 

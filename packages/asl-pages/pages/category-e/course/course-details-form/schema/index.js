@@ -1,5 +1,5 @@
 const { trainingCoursePurpose } = require('@ukhomeoffice/asl-constants');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const castArray = require('lodash/castArray');
 
 module.exports = {
@@ -41,7 +41,7 @@ module.exports = {
               'required',
               'validDate',
               { dateIsAfter: 'now' },
-              { dateIsSameOrBefore: (_values, model) => moment(model?.project?.expiryDate) }
+              { dateIsSameOrBefore: (_values, model) => dayJs(model?.project?.expiryDate) }
             ]
           }
         }
@@ -68,7 +68,7 @@ module.exports = {
               'validDate',
               { dateIsAfter: (values) => values.startDate },
               { dateIsSameOrBefore: (_values, model) =>
-                moment(model?.project?.expiryDate)
+                dayJs(model?.project?.expiryDate)
               }
             ]
           }

@@ -1,5 +1,6 @@
 const { Router } = require('express');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { STRICT_DATE_FORMATS, formatIsoDate, parseDate } = dayJs;
 const { form } = require('../../../../common/routers');
 const schema = require('../schema/update');
 
@@ -33,7 +34,7 @@ module.exports = () => {
       next();
     },
     saveValues: (req, res, next) => {
-      req.session.form[req.model.id].values.startDate = moment(req.form.values.startDate, 'YYYY-MM-DD').format('YYYY-MM-DD');
+      req.session.form[req.model.id].values.startDate = formatIsoDate(parseDate(req.form.values.startDate, STRICT_DATE_FORMATS, true));
       next();
     }
   }));

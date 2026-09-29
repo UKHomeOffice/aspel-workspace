@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const resolver = require('./base-resolver');
 
 module.exports = ({ models, keycloak, emailer, logger, jwt }) => ({ action, data, id }, transaction) => {
@@ -25,7 +25,7 @@ module.exports = ({ models, keycloak, emailer, logger, jwt }) => ({ action, data
   };
 
   if (action === 'updateLastLogin') {
-    const patch = { lastLogin: moment().toISOString() };
+    const patch = { lastLogin: dayJs().toISOString() };
     return Profile.query(transaction).patchAndFetchById(id, patch)
       .then(() => patch);
   }

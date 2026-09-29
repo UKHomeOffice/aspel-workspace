@@ -1,6 +1,6 @@
 const request = require('supertest');
 const assert = require('assert');
-const moment = require('moment-business-time');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const workflowHelper = require('../../helpers/workflow');
 const { holc } = require('../../data/profiles');
 const ids = require('../../data/ids');
@@ -39,7 +39,7 @@ describe('Project deadlines', () => {
       .then(response => response.body)
       .then(body => {
         assert.ok(body.data.data.internalDeadline.standard);
-        assert.equal(moment(body.data.data.internalDeadline.standard).workingDiff(moment(), 'calendarDays'), 40);
+        assert.equal(dayJs(body.data.data.internalDeadline.standard).workingDiff(dayJs(), 'calendarDays'), 40);
       });
   });
 
@@ -62,7 +62,7 @@ describe('Project deadlines', () => {
       .then(response => response.body)
       .then(body => {
         assert.ok(body.data.data.internalDeadline.standard);
-        assert.equal(moment(body.data.data.internalDeadline.standard).workingDiff(moment(), 'calendarDays'), 40);
+        assert.equal(dayJs(body.data.data.internalDeadline.standard).workingDiff(dayJs(), 'calendarDays'), 40);
       });
   });
 
@@ -89,8 +89,8 @@ describe('Project deadlines', () => {
       .then(response => response.body)
       .then(body => {
         assert.ok(body.data.data.deadline);
-        assert.equal(moment(body.data.data.deadline.standard).workingDiff(moment(), 'calendarDays'), 40);
-        assert.equal(moment(body.data.data.deadline.extended).workingDiff(moment(), 'calendarDays'), 55);
+        assert.equal(dayJs(body.data.data.deadline.standard).workingDiff(dayJs(), 'calendarDays'), 40);
+        assert.equal(dayJs(body.data.data.deadline.extended).workingDiff(dayJs(), 'calendarDays'), 55);
       });
   });
 

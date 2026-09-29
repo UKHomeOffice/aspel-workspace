@@ -1,5 +1,5 @@
 const assert = require('assert');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { project } = require('../../lib/resolvers');
 const db = require('../helpers/db');
 const { v4: generateUuid } = require('uuid');
@@ -20,14 +20,14 @@ const uuid =
 
 const establishmentId = 8201;
 
-const issueYear = moment().subtract(2, 'year').format('YYYY');
-const amendYear = moment().subtract(1, 'year').format('YYYY');
-const expiryYear = moment().add(3, 'year').format('YYYY');
+const issueYear = dayJs().subtract(2, 'year').format('YYYY');
+const amendYear = dayJs().subtract(1, 'year').format('YYYY');
+const expiryYear = dayJs().add(3, 'year').format('YYYY');
 
 const isNowish = (date) => {
-  return moment(date).isBetween(
-    moment().subtract(5, 'seconds'),
-    moment().add(5, 'seconds')
+  return dayJs(date).isBetween(
+    dayJs().subtract(5, 'seconds'),
+    dayJs().add(5, 'seconds')
   );
 };
 
@@ -171,7 +171,7 @@ describe('Project resolver', () => {
             ) {
               assert(version.deleted);
               assert(
-                moment(version.deleted).isValid(),
+                dayJs(version.deleted).isValid(),
                 'version was soft deleted'
               );
             }
@@ -640,7 +640,7 @@ describe('Project resolver', () => {
                 foo: 'bar'
               },
               status: 'draft',
-              createdAt: moment().subtract(1, 'day').toISOString()
+              createdAt: dayJs().subtract(1, 'day').toISOString()
             },
             {
               projectId,
@@ -648,7 +648,7 @@ describe('Project resolver', () => {
                 foo: 'baz'
               },
               status: 'draft',
-              createdAt: moment().toISOString()
+              createdAt: dayJs().toISOString()
             }
           ];
 
@@ -683,7 +683,7 @@ describe('Project resolver', () => {
                 foo: 'bar'
               },
               status: 'submitted',
-              createdAt: moment().subtract(1, 'day').toISOString()
+              createdAt: dayJs().subtract(1, 'day').toISOString()
             },
             {
               projectId,
@@ -691,7 +691,7 @@ describe('Project resolver', () => {
                 foo: 'baz'
               },
               status: 'submitted',
-              createdAt: moment().toISOString()
+              createdAt: dayJs().toISOString()
             }
           ];
 
@@ -728,7 +728,7 @@ describe('Project resolver', () => {
                 foo: 'bar'
               },
               status: 'submitted',
-              createdAt: moment().subtract(1, 'day').toISOString()
+              createdAt: dayJs().subtract(1, 'day').toISOString()
             },
             {
               projectId,
@@ -736,7 +736,7 @@ describe('Project resolver', () => {
                 foo: 'baz'
               },
               status: 'granted',
-              createdAt: moment().toISOString()
+              createdAt: dayJs().toISOString()
             }
           ];
 
@@ -773,13 +773,13 @@ describe('Project resolver', () => {
                 foo: 'bar'
               },
               status: 'submitted',
-              createdAt: moment().subtract(1, 'day').toISOString()
+              createdAt: dayJs().subtract(1, 'day').toISOString()
             },
             {
               projectId,
               data: {},
               status: 'draft',
-              createdAt: moment().toISOString()
+              createdAt: dayJs().toISOString()
             }
           ];
           return Promise.resolve()
@@ -802,7 +802,7 @@ describe('Project resolver', () => {
             {
               projectId,
               status: 'draft',
-              createdAt: moment().toISOString()
+              createdAt: dayJs().toISOString()
             }
           ];
           return Promise.resolve()
@@ -860,7 +860,7 @@ describe('Project resolver', () => {
             )
             .then((ra) => {
               assert.ok(
-                ra.deleted && moment(ra.deleted).isValid(),
+                ra.deleted && dayJs(ra.deleted).isValid(),
                 'ra should have a valid deleted date'
               );
             });
@@ -1053,7 +1053,7 @@ describe('Project resolver', () => {
         .then(() => this.project(opts))
         .then(() => this.models.Project.query().findById(projectId))
         .then((project) => {
-          const expiryDate = moment(project.issueDate)
+          const expiryDate = dayJs(project.issueDate)
             .add({ years: 5, months: 0 })
             .subtract(1, 'days')
             .endOf('day')
@@ -1141,7 +1141,7 @@ describe('Project resolver', () => {
         .then(() => this.project(opts))
         .then(() => this.models.Project.query().findById(projectId))
         .then((project) => {
-          const expectedRADate = moment(project.expiryDate)
+          const expectedRADate = dayJs(project.expiryDate)
             .add({ months: 6 })
             .toISOString();
           assert.equal(project.raDate, expectedRADate);
@@ -1160,7 +1160,7 @@ describe('Project resolver', () => {
           title: 'title of non RA project'
         }
       };
-      const raDate = moment().add({ years: 5, months: 6 }).toISOString();
+      const raDate = dayJs().add({ years: 5, months: 6 }).toISOString();
       return Promise.resolve()
         .then(() =>
           this.models.Project.query().findById(projectId).patch({ raDate })
@@ -1572,7 +1572,7 @@ describe('Project resolver', () => {
           .then(() => this.project(opts))
           .then(() => this.models.Project.query().findById(projectId))
           .then((project) => {
-            const expiryDate = moment(project.issueDate)
+            const expiryDate = dayJs(project.issueDate)
               .add(version.data.duration)
               .subtract(1, 'days')
               .endOf('day')
@@ -1608,7 +1608,7 @@ describe('Project resolver', () => {
           .then(() => this.project(opts))
           .then(() => this.models.Project.query().findById(projectId))
           .then((project) => {
-            const expiryDate = moment(project.issueDate)
+            const expiryDate = dayJs(project.issueDate)
               .add({ years: 5, months: 0 })
               .subtract(1, 'days')
               .endOf('day')
@@ -1657,8 +1657,8 @@ describe('Project resolver', () => {
               .then(() => this.project(opts))
               .then(() => this.models.Project.query().findById(projectId))
               .then((project) => {
-                const issueDate = moment(project.issueDate);
-                const expiryDate = moment(project.expiryDate);
+                const issueDate = dayJs(project.issueDate);
+                const expiryDate = dayJs(project.expiryDate);
                 let diff;
 
                 // handle dates where the expiry month has more days than the issue month
@@ -2726,7 +2726,7 @@ describe('Project resolver', () => {
               establishmentId: 8201,
               licenceHolderId: profileId,
               issueDate: new Date().toISOString(),
-              expiryDate: moment(new Date()).add(5, 'years').toISOString()
+              expiryDate: dayJs(new Date()).add(5, 'years').toISOString()
             }
           ])
         )
@@ -2740,12 +2740,12 @@ describe('Project resolver', () => {
             {
               projectId,
               status: 'submitted',
-              createdAt: moment().subtract(5, 'minutes').toISOString()
+              createdAt: dayJs().subtract(5, 'minutes').toISOString()
             },
             {
               projectId,
               status: 'withdrawn',
-              createdAt: moment().subtract(10, 'minutes').toISOString()
+              createdAt: dayJs().subtract(10, 'minutes').toISOString()
             },
             {
               projectId: projectId2,
@@ -2755,17 +2755,17 @@ describe('Project resolver', () => {
             {
               projectId: projectId2,
               status: 'submitted',
-              createdAt: moment().subtract(5, 'minutes').toISOString()
+              createdAt: dayJs().subtract(5, 'minutes').toISOString()
             },
             {
               projectId: projectId2,
               status: 'granted',
-              createdAt: moment().subtract(10, 'minutes').toISOString()
+              createdAt: dayJs().subtract(10, 'minutes').toISOString()
             },
             {
               projectId: projectId2,
               status: 'withdrawn',
-              createdAt: moment().subtract(15, 'minutes').toISOString()
+              createdAt: dayJs().subtract(15, 'minutes').toISOString()
             }
           ])
         );
@@ -2880,8 +2880,8 @@ describe('Project resolver', () => {
               id: projectId,
               status: 'active',
               title: 'Active project to be revoked',
-              issueDate: moment().toISOString(),
-              expiryDate: moment().add(5, 'years').toISOString(),
+              issueDate: dayJs().toISOString(),
+              expiryDate: dayJs().add(5, 'years').toISOString(),
               establishmentId: 8201,
               licenceHolderId: profileId
             },
@@ -2889,8 +2889,8 @@ describe('Project resolver', () => {
               id: expiredProjectId,
               status: 'expired',
               title: 'Expired project',
-              issueDate: moment(`${issueYear}-07-01`).toISOString(),
-              expiryDate: moment(`${issueYear}-06-30`).toISOString(),
+              issueDate: dayJs(`${issueYear}-07-01`).toISOString(),
+              expiryDate: dayJs(`${issueYear}-06-30`).toISOString(),
               establishmentId: 8201,
               licenceHolderId: profileId
             }
@@ -2928,7 +2928,7 @@ describe('Project resolver', () => {
         .then((project) => {
           assert.equal(project.status, 'revoked');
           assert.ok(
-            project.revocationDate && moment(project.revocationDate).isValid(),
+            project.revocationDate && dayJs(project.revocationDate).isValid(),
             'revocation date should be set'
           );
         });
@@ -2976,7 +2976,7 @@ describe('Project resolver', () => {
         .then(() => this.project(opts))
         .then(() => this.models.Project.query().findById(projectId))
         .then((project) => {
-          const expected = moment(project.revocationDate)
+          const expected = dayJs(project.revocationDate)
             .add(6, 'months')
             .toISOString();
           assert.equal(project.raDate, expected);
@@ -3006,7 +3006,7 @@ describe('Project resolver', () => {
         .then(() => this.project(opts))
         .then(() => this.models.Project.query().findById(projectId))
         .then((project) => {
-          const expected = moment(project.revocationDate)
+          const expected = dayJs(project.revocationDate)
             .add(6, 'months')
             .toISOString();
           assert.equal(project.raDate, expected);
@@ -3027,7 +3027,7 @@ describe('Project resolver', () => {
         retrospectiveAssessment: false
       };
 
-      const raDate = moment().add(6, 'months').toISOString();
+      const raDate = dayJs().add(6, 'months').toISOString();
 
       return Promise.resolve()
         .then(() =>
@@ -3116,7 +3116,7 @@ describe('Project resolver', () => {
         .then(() => this.models.Project.query().findById(projectId))
         .then((project) => {
           assert.ok(
-            project.refusedDate && moment(project.refusedDate).isValid(),
+            project.refusedDate && dayJs(project.refusedDate).isValid(),
             'refused date should be set'
           );
         });
@@ -3152,7 +3152,7 @@ describe('Project resolver', () => {
         .then((project) => {
           assert.ok(project.suspendedDate, 'it has as a suspended date');
           assert(
-            moment(project.suspendedDate).isValid(),
+            dayJs(project.suspendedDate).isValid(),
             'suspended date is a valid date'
           );
         });
@@ -3169,7 +3169,7 @@ describe('Project resolver', () => {
             title: 'Active project',
             establishmentId: 8201,
             licenceHolderId: profileId,
-            suspendedDate: moment().toISOString()
+            suspendedDate: dayJs().toISOString()
           }
         ])
       );
@@ -3667,9 +3667,9 @@ describe('Project resolver', () => {
       const draftDate = new Date(`${amendYear}-02-28 12:00:00`).toISOString();
 
       const conversionTitle = 'Digitised Paper Licence';
-      const expectedExpiryYear = moment(issueDate).add(4, 'years').add(6, 'months').format('YYYY');
+      const expectedExpiryYear = dayJs(issueDate).add(4, 'years').add(6, 'months').format('YYYY');
       const expectedExpiryDate = `${expectedExpiryYear}-11-14T22:59:59.999Z`;
-      const expectedRaDate = moment(expectedExpiryDate).add(6, 'months').toISOString();
+      const expectedRaDate = dayJs(expectedExpiryDate).add(6, 'months').toISOString();
 
       return Promise.resolve()
         .then(() =>
@@ -3853,13 +3853,13 @@ describe('Project resolver', () => {
             .then((project) => {
               assert(project.deleted, 'the project should be deleted');
               assert(
-                moment(project.deleted).isValid(),
+                dayJs(project.deleted).isValid(),
                 'the project deleted date should be valid'
               );
               project.version.map((version) => {
                 assert(version.deleted, 'the version should be deleted');
                 assert(
-                  moment(version.deleted).isValid(),
+                  dayJs(version.deleted).isValid(),
                   'the version deleted date should be valid'
                 );
               });
