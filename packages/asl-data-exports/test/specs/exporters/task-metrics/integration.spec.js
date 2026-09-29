@@ -1,7 +1,6 @@
 const assert = require('assert');
 const crypto = require('crypto');
 const { Readable } = require('stream');
-const { HeadBucketCommand, S3Client } = require('@aws-sdk/client-s3');
 const fetch = require('node-fetch');
 const Zip = require('jszip');
 const parse = require('csv-parse/lib/sync');
@@ -16,7 +15,6 @@ const {
 jest.setTimeout(120000);
 
 const makeLargeTask = taskId => {
-  // noinspection JSCheckFunctionSignatures false error https://nodejs.org/api/buffer.html#buftostringencoding-start-end
   const comment = crypto.randomBytes(2048).toString('hex');
 
   return {
@@ -87,30 +85,9 @@ describe('Task metrics exporter localstack integration', () => {
     localstackUrl: process.env.S3_LOCALSTACK_URL || 'http://localhost:4566'
   };
 
-  const s3Client = new S3Client({
-    region: s3Settings.region,
-    endpoint: s3Settings.localstackUrl,
-    forcePathStyle: true,
-    credentials: {
-      accessKeyId: s3Settings.accessKey,
-      secretAccessKey: s3Settings.secret
-    }
-  });
-
   let exportZip;
 
-  beforeAll(async () => {
-    try {
-      await s3Client.send(new HeadBucketCommand({ Bucket: s3Settings.bucket }));
-    } catch (error) {
-      throw new Error(
-        `Unable to access LocalStack S3 bucket "${s3Settings.bucket}" at ${s3Settings.localstackUrl}. 
-Start LocalStack with S3 enabled, for example via asl-conductor. 
-
-Original error: ${error.message}`
-      );
-    }
-
+  beforeAll(() => {
     mockTaskMetricsClients({
       getInternalDeadlines: () => ([
         {
