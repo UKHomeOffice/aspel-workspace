@@ -11,8 +11,8 @@ describe('trainingRecordHolder', () => {
     });
   });
 
-  it('shows the licence holder on an amendment or granted licence', () => {
-    assert.equal(trainingRecordHolder(licenceHolder, 'active').status, 'Licence holder');
+  it('shows the project licence holder on an amendment or granted licence', () => {
+    assert.equal(trainingRecordHolder(licenceHolder, 'active').status, 'Project licence holder');
   });
 
   it('returns null when there is no licence holder', () => {

@@ -40,8 +40,19 @@ describe('trainingSummaryRenderer', () => {
 
     trainingSummaryRenderer(doc, { training }, application);
 
-    assert.equal(doc.createParagraph.calledWith('Jane Doe\'s training record'), true);
+    assert.equal(doc.createParagraph.firstCall.args[0], 'Prospective licence holder');
+    assert.equal(doc.createParagraph.secondCall.args[0], 'Jane Doe\'s training record');
     assert.equal(doc.createParagraph.calledWith('Prospective licence holder'), true);
+    assert.equal(doc.createParagraph.calledWith('Jane Doe\'s training record'), true);
+  });
+
+  it('should show the project licence holder label for active projects and amendments', () => {
+    const application = { status: 'active', licenceHolder: { firstName: 'Jane', lastName: 'Doe' } };
+
+    trainingSummaryRenderer(doc, { training }, application);
+
+    assert.equal(doc.createParagraph.firstCall.args[0], 'Project licence holder');
+    assert.equal(doc.createParagraph.secondCall.args[0], 'Jane Doe\'s training record');
   });
 });
 

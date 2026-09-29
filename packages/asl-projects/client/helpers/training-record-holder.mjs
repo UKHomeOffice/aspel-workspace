@@ -5,6 +5,6 @@ export function trainingRecordHolder(licenceHolder, projectStatus) {
 
   return {
     name: `${licenceHolder.firstName} ${licenceHolder.lastName}`,
-    status: projectStatus === 'inactive' ? 'Prospective licence holder' : 'Licence holder'
+    status: projectStatus === 'inactive' ? 'Prospective licence holder' : 'Prospective licence holder'
   };
 }
