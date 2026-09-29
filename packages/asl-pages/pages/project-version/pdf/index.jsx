@@ -4,7 +4,7 @@ import { get } from 'lodash';
 import filenamify from 'filenamify';
 import { Router } from 'express';
 import createStore from '@asl/projects/client/store';
-import { getProjectEstablishment, loadRa } from '../middleware';
+import { getProjectEstablishment, loadRa, loadDraftTraining } from '../middleware';
 import Licence from './views';
 import Protocols from './views/protocols';
 import NTS from './views/nts';
@@ -125,6 +125,7 @@ module.exports = settings => {
   );
 
   app.get('/',
+    loadDraftTraining,
     setupPdf(),
     renderLicence,
     convertToPdf

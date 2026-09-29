@@ -1,5 +1,4 @@
 const { omit } = require('lodash');
-const { once } = require('events');
 const csv = require('csv-stringify');
 const archiver = require('archiver');
 const Auth = require('../../clients/auth');
@@ -9,10 +8,11 @@ const summarise = require('./summarise');
 const calculateAverages = require('./calculate-averages');
 
 const writeAsync = async (writable, chunk) => {
-  // Write will return false if it wants to apply backpressure, in which case we
-  // need to wait for the 'drain' event before continuing to write more data.
+  // Backpressure here is best handled by yielding to the event loop rather
+  // than waiting on `drain`, because the downstream ZIP/S3 chain must be given
+  // a chance to keep flowing first.
   if (!writable.write(chunk)) {
-    await once(writable, 'drain');
+    await new Promise(resolve => setImmediate(resolve));
   }
 };
 
@@ -23,6 +23,19 @@ module.exports = settings => {
   const s3Upload = settings.s3Upload;
 
   return async job => {
+    const runPhase = async (phase, action) => {
+      const started = Date.now();
+      logger.info(`[phase:start] ${phase}`);
+      try {
+        const result = await action();
+        logger.info(`[phase:done] ${phase} (${Date.now() - started}ms)`);
+        return result;
+      } catch (err) {
+        logger.error(`[phase:error] ${phase} (${Date.now() - started}ms): ${err.message}`);
+        throw err;
+      }
+    };
+
     logger.debug('fetching access token from keycloak');
     const accessToken = await getAccessToken();
 
@@ -44,17 +57,6 @@ module.exports = settings => {
         'resolved_at'
       ]
     });
-
-    logger.debug('fetching internal-deadlines report');
-    const internalDeadlinesData = await metrics(
-      '/reports/internal-deadlines',
-      { stream: false, query },
-      accessToken
-    );
-
-    logger.debug('writing internal-deadlines csv');
-    internalDeadlinesData.filter(Boolean).forEach(row => internalDeadlinesCSV.write(row));
-    internalDeadlinesCSV.end();
 
     const actionedTasksRawCSV = csv({
       header: true,
@@ -139,27 +141,70 @@ module.exports = settings => {
     });
 
     try {
+      logger.info(`starting task-metrics export for job ${job.id} (${start} to ${end})`);
+
+      logger.debug('creating zip stream');
+      const zip = archiver('zip', undefined);
+      const zipError = new Promise((resolve, reject) => zip.once('error', reject));
+      zipError.catch(() => null);
+
+      zip.append(internalDeadlinesCSV, { name: `internal-deadlines_${start}_${end}.csv` });
+      zip.append(actionedTasksRawCSV, { name: `actioned-tasks-raw_${start}_${end}.csv` });
+      zip.append(actionedTasksSummaryCSV, { name: `actioned-tasks-summary_${start}_${end}.csv` });
+      zip.append(actionedSubtasksCSV, { name: `subtasks-${start}_${end}.csv` });
+
+      logger.debug('starting upload stream to s3');
+      const uploadPromise = s3Upload({ key: job.id, stream: zip });
+
+      logger.debug('starting zip finalization');
+      const zipFinalizePromise = zip.finalize();
+
+      const internalDeadlinesData = await runPhase(
+        'metrics internal-deadlines fetch',
+        () => metrics(
+          '/reports/internal-deadlines',
+          { stream: false, query },
+          accessToken
+        )
+      );
+
+      const internalDeadlinesCount = internalDeadlinesData.filter(Boolean).length;
+      logger.info(`internal-deadlines fetched: ${internalDeadlinesCount} rows`);
+
+      internalDeadlinesData.filter(Boolean).forEach(row => internalDeadlinesCSV.write(row));
+      internalDeadlinesCSV.end();
+      logger.debug('internal-deadlines csv completed');
+
       logger.debug('fetching actioned-tasks stream');
 
-      const stream = await metrics('/reports/actioned-tasks', { stream: true, query }, accessToken);
+      await runPhase('metrics actioned-tasks stream fetch', async () => {
+        const stream = await metrics('/reports/actioned-tasks', { stream: true, query }, accessToken);
 
-      logger.debug('writing actioned-tasks-raw csv');
-      for await (const task of stream) {
-        await writeAsync(
-          actionedTasksRawCSV,
-          {
-            ...omit(task, 'data', 'metrics'),
-            ...task.data,
-            ...omit(task.metrics, 'subtasks')
+        let taskCount = 0;
+        let subTaskCount = 0;
+        for await (const task of stream) {
+          await writeAsync(
+            actionedTasksRawCSV,
+            {
+              ...omit(task, 'data', 'metrics'),
+              ...task.data,
+              ...omit(task.metrics, 'subtasks')
+            }
+          );
+          taskCount++;
+
+          for (const subTask of (task.metrics?.subtasks ?? [])) {
+            await writeAsync(actionedSubtasksCSV, subTask);
+            subTaskCount++;
           }
-        );
 
-        for (const subTask of (task.metrics?.subtasks ?? [])) {
-          await writeAsync(actionedSubtasksCSV, subTask);
+          actionedTasksSummary = summarise(actionedTasksSummary, task);
+
+          if (taskCount % 100 === 0) {
+            logger.info(`actioned-tasks progress: ${taskCount} tasks, ${subTaskCount} subtasks`);
+          }
         }
-
-        actionedTasksSummary = summarise(actionedTasksSummary, task);
-      }
+      });
 
       logger.debug('summarising actioned tasks');
       actionedTasksSummary = calculateAverages(actionedTasksSummary);
@@ -167,27 +212,16 @@ module.exports = settings => {
       Object.keys(actionedTasksSummary).forEach(taskType => {
         actionedTasksSummaryCSV.write({ taskType, ...actionedTasksSummary[taskType] });
       });
+      logger.info(`actioned-tasks summary completed: ${Object.keys(actionedTasksSummary).length} task types`);
 
       actionedTasksRawCSV.end();
       actionedTasksSummaryCSV.end();
       actionedSubtasksCSV.end();
+      logger.debug('all csv streams ended');
 
-      logger.debug('creating zip file');
-      const zip = archiver('zip', undefined);
+      await runPhase('zip finalize', () => zipFinalizePromise);
 
-      zip.on('error', err => {
-        throw new Error(err);
-      });
-
-      zip.append(internalDeadlinesCSV, { name: `internal-deadlines_${start}_${end}.csv` });
-      zip.append(actionedTasksRawCSV, { name: `actioned-tasks-raw_${start}_${end}.csv` });
-      zip.append(actionedTasksSummaryCSV, { name: `actioned-tasks-summary_${start}_${end}.csv` });
-      zip.append(actionedSubtasksCSV, { name: `subtasks-${start}_${end}.csv` });
-      await zip.finalize();
-
-      logger.debug('uploading zip file');
-
-      const result = await s3Upload({ key: job.id, stream: zip });
+      const result = await runPhase('s3 upload completion', () => Promise.race([uploadPromise, zipError]));
       logger.debug(`upload success, etag: ${result.ETag}`);
       return { ...job.meta, etag: result.ETag };
     } catch (err) {
