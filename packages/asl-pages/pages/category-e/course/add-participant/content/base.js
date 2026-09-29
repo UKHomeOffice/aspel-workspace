@@ -72,8 +72,6 @@ module.exports = merge(
       },
       dob: {
         required: 'Enter the participant\'s date of birth',
-        validDate: 'The date must be a real date and include a day, month and' +
-          ' year. The year must include 4 numbers',
         dateIsBefore: 'Date of birth must be in the past'
       },
       trainingNeed: {
