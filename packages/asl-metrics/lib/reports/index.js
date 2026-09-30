@@ -52,6 +52,8 @@ module.exports = (settings) => {
 
   const router = Router({ mergeParams: true });
 
+  // rate-limit rm, configurable via NGINX.
+
   router.use(getWorkflowStatuses(settings));
 
   router.get('/:report', (req, res, next) => {
