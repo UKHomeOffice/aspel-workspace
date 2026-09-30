@@ -2,7 +2,6 @@ const { Router } = require('express');
 const { pipeline } = require('stream');
 const through = require('through2');
 const { flatten } = require('lodash');
-const rateLimit = require('express-rate-limit');
 
 const getWorkflowStatuses = require('../middleware/get-workflow-statuses');
 
