@@ -76,6 +76,26 @@ test('rejects dates outside the date boundaries', () => {
   assert.strictEqual(result.isValid, false);
 });
 
+test('rejects a from date before ASPeL data started', () => {
+  const result = validateNtsDateRangeQuery({
+    'date-from': '2019-07-30',
+    'date-to': '2019-07-31',
+    ra: 'true'
+  });
+
+  assert.strictEqual(result.isValid, false);
+});
+
+test('rejects a to date before ASPeL data started', () => {
+  const result = validateNtsDateRangeQuery({
+    'date-from': '2019-07-29',
+    'date-to': '2019-07-30',
+    ra: 'true'
+  });
+
+  assert.strictEqual(result.isValid, false);
+});
+
 test('rejects a date range where the start is after the end', () => {
   const result = validateNtsDateRangeQuery({
     'date-from': '2024-05-31',

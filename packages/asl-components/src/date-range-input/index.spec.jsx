@@ -89,6 +89,7 @@ describe('<DateRangeInput />', () => {
     test('shows an error when either date is in the future', () => {
         render(
             <DateRangeInput
+                maxDate="now"
                 values={{ 'date-from': '2024-05-30', 'date-to': '2024-05-30' }}
             />
         );
@@ -111,6 +112,8 @@ describe('<DateRangeInput />', () => {
     test('shows an error when date from is before ASPEL data started', () => {
         render(
             <DateRangeInput
+                minDate="2019-07-31"
+                minDateErrorCode="aspelDataStartDate"
                 values={{ 'date-from': '2019-07-30', 'date-to': '2019-07-31' }}
             />
         );
@@ -121,6 +124,8 @@ describe('<DateRangeInput />', () => {
     test('shows an error when date to is before ASPEL data started', () => {
         render(
             <DateRangeInput
+                minDate="2019-07-31"
+                minDateErrorCode="aspelDataStartDate"
                 values={{ 'date-from': '2019-07-31', 'date-to': '2019-07-30' }}
             />
         );
@@ -131,6 +136,7 @@ describe('<DateRangeInput />', () => {
     test('allows date from to be the day ASPEL data started', () => {
         render(
             <DateRangeInput
+                minDate="2019-07-31"
                 values={{ 'date-from': '2019-07-31', 'date-to': '2019-07-31' }}
             />
         );
@@ -167,6 +173,7 @@ describe('<DateRangeInput />', () => {
     test('does not show a range error while the other date has a future-date boundary error', () => {
         render(
             <DateRangeInput
+                maxDate="now"
                 values={{ 'date-from': '2024-06-20', 'date-to': '2024-06-21' }}
             />
         );
@@ -180,6 +187,8 @@ describe('<DateRangeInput />', () => {
     test('does not show a range error while date from has an ASPEL-start boundary error', () => {
         render(
             <DateRangeInput
+                minDate="2019-07-31"
+                minDateErrorCode="aspelDataStartDate"
                 values={{ 'date-from': '2019-08-01', 'date-to': '2019-08-10' }}
             />
         );
@@ -188,6 +197,28 @@ describe('<DateRangeInput />', () => {
 
         expect(screen.getByText('error:date-from:aspelDataStartDate')).toBeInTheDocument();
         expect(screen.queryByText('error:date-from:dateIsBefore')).not.toBeInTheDocument();
+    });
+
+    test('allows dates outside boundaries when none are configured', () => {
+        render(
+            <DateRangeInput
+                values={{ 'date-from': '2019-07-30', 'date-to': '2024-05-30' }}
+            />
+        );
+
+        expect(screen.queryByText('error:date-from:aspelDataStartDate')).not.toBeInTheDocument();
+        expect(screen.queryByText('error:date-to:dateIsSameOrBefore')).not.toBeInTheDocument();
+    });
+
+    test('uses the generic minimum-date error when configured without an override', () => {
+        render(
+            <DateRangeInput
+                minDate="2020-01-01"
+                values={{ 'date-from': '2019-12-31', 'date-to': '2020-01-01' }}
+            />
+        );
+
+        expect(screen.getByText('error:date-from:dateIsSameOrAfter')).toBeInTheDocument();
     });
 
     test('does not show a range error while either date is invalid', () => {

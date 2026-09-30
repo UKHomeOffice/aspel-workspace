@@ -28,11 +28,11 @@ function parseDate(value) {
     return dateValidation.parseDate(value);
 }
 
-function getBoundaryErrorCode(value) {
-    return dateValidation.getBoundaryErrorCode(value);
+function getBoundaryErrorCode(value, boundaries) {
+    return dateValidation.getBoundaryErrorCode(value, boundaries);
 }
 
-function getBoundaryError({ fieldName, value, errorCode }) {
+function getBoundaryError({ fieldName, value, errorCode, minDate, maxDate }) {
     if (!errorCode) {
         return null;
     }
@@ -41,7 +41,8 @@ function getBoundaryError({ fieldName, value, errorCode }) {
         name={fieldName}
         value={value}
         errorCode={errorCode}
-        validate={errorCode === 'dateIsSameOrBefore' ? [{ dateIsSameOrBefore: 'now' }] : undefined}
+        validate={errorCode === 'dateIsSameOrBefore' ? [{ dateIsSameOrBefore: maxDate }] :
+            errorCode === 'dateIsSameOrAfter' ? [{ dateIsSameOrAfter: minDate }] : undefined}
     />;
 }
 
@@ -77,6 +78,9 @@ export default function DateRangeInput({
     values,
     errors = {},
     validate = {},
+    minDate,
+    maxDate,
+    minDateErrorCode,
     onChange
 }) {
     const rangeFields = [
@@ -85,8 +89,9 @@ export default function DateRangeInput({
     ];
     const [range, setRange] = useState(() => values || emptyValues);
     const [changedFieldName, setChangedFieldName] = useState(null);
-    const fromBoundaryErrorCode = getBoundaryErrorCode(range['date-from'] ?? '');
-    const toBoundaryErrorCode = getBoundaryErrorCode(range['date-to'] ?? '');
+    const boundaries = { minDate, maxDate, minDateErrorCode };
+    const fromBoundaryErrorCode = getBoundaryErrorCode(range['date-from'] ?? '', boundaries);
+    const toBoundaryErrorCode = getBoundaryErrorCode(range['date-to'] ?? '', boundaries);
     const hasBoundaryError = Boolean(fromBoundaryErrorCode || toBoundaryErrorCode);
 
     function update(fieldName, value) {
@@ -125,7 +130,9 @@ export default function DateRangeInput({
                                 field,
                                 fieldName,
                                 value,
-                                errorCode: fieldName === 'date-from' ? fromBoundaryErrorCode : toBoundaryErrorCode
+                                errorCode: fieldName === 'date-from' ? fromBoundaryErrorCode : toBoundaryErrorCode,
+                                minDate,
+                                maxDate
                             }) || getRangeError({
                                 field,
                                 fieldName,

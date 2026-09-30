@@ -16,7 +16,7 @@ describe('getBoundaryErrorCode', () => {
     });
 
     test('returns dateIsSameOrBefore for a date in the future', () => {
-        expect(getBoundaryErrorCode('2024-05-30')).toBe('dateIsSameOrBefore');
+        expect(getBoundaryErrorCode('2024-05-30', { maxDate: 'now' })).toBe('dateIsSameOrBefore');
     });
 
     test('allows today', () => {
@@ -24,14 +24,28 @@ describe('getBoundaryErrorCode', () => {
     });
 
     test('returns aspelDataStartDate for a date before ASPEL data started', () => {
-        expect(getBoundaryErrorCode('2019-07-30')).toBe('aspelDataStartDate');
+        expect(getBoundaryErrorCode('2019-07-30', { minDate: '2019-07-31', minDateErrorCode: 'aspelDataStartDate' })).toBe('aspelDataStartDate');
     });
 
     test('allows the ASPEL data start date', () => {
-        expect(getBoundaryErrorCode('2019-07-31')).toBeNull();
+        expect(getBoundaryErrorCode('2019-07-31', { minDate: '2019-07-31' })).toBeNull();
     });
 
     test('allows a valid date within the boundaries', () => {
         expect(getBoundaryErrorCode('2024-05-28')).toBeNull();
+    });
+
+    test('allows dates outside unconfigured boundaries', () => {
+        expect(getBoundaryErrorCode('2019-07-30')).toBeNull();
+        expect(getBoundaryErrorCode('2024-05-30')).toBeNull();
+    });
+
+    test('uses the generic error for a configured minimum date', () => {
+        expect(getBoundaryErrorCode('2019-07-30', { minDate: '2019-07-31' })).toBe('dateIsSameOrAfter');
+    });
+
+    test('accepts a configured maximum date', () => {
+        expect(getBoundaryErrorCode('2024-05-30', { maxDate: '2024-05-31' })).toBeNull();
+        expect(getBoundaryErrorCode('2024-06-01', { maxDate: '2024-05-31' })).toBe('dateIsSameOrBefore');
     });
 });

@@ -2,7 +2,10 @@ const dates = {
   dateRange: {
     inputType: 'inputDateRange',
     label: 'Filter by date granted',
-    hint: 'You can only download data from 31 July 2019, when ASPeL came into use'
+    hint: 'You can only download data from 31 July 2019, when ASPeL came into use',
+    minDate: '2019-07-31',
+    maxDate: 'now',
+    minDateErrorCode: 'aspelDataStartDate'
   }
 };
 

@@ -1,4 +1,5 @@
 const dateValidation = require('@ukhomeoffice/asl-components/src/date-range-input/date-validation');
+const { dates } = require('../schema/nts');
 
 const dateFields = ['date-from', 'date-to'];
 
@@ -53,7 +54,7 @@ function getNtsDateRangeModel(query) {
 }
 
 function hasBoundaryError(value) {
-  return Boolean(dateValidation.getBoundaryErrorCode(value));
+  return Boolean(dateValidation.getBoundaryErrorCode(value, dates.dateRange));
 }
 
 function validateNtsDateRangeQuery(query) {
