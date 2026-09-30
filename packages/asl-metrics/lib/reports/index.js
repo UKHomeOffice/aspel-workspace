@@ -51,12 +51,7 @@ const step = fn => {
 module.exports = (settings) => {
 
   const router = Router({ mergeParams: true });
-  const limiter = rateLimit({
-    windowMs: settings.reportsRateLimitWindowMs,
-    max: settings.reportsRateLimitMax
-  });
 
-  router.use(limiter);
   router.use(getWorkflowStatuses(settings));
 
   router.get('/:report', (req, res, next) => {
