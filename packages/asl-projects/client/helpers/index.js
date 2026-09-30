@@ -7,11 +7,12 @@ import map from 'lodash/map';
 import { JSONPath } from 'jsonpath-plus';
 import LEGACY_SPECIES from '../constants/legacy-species';
 import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import CONDITIONS from '../constants/conditions';
 import React, { Fragment } from 'react';
 import classnames from 'classnames';
 
-import { DATE_FORMAT, formatDate as formatDateUtil } from '@ukhomeoffice/asl-components/utils';
+import { formatDate as formatDateUtil } from '@ukhomeoffice/asl-components/utils';
 
 export const formatDate = (date, format = DATE_FORMAT.long) => formatDateUtil(date, format);
 

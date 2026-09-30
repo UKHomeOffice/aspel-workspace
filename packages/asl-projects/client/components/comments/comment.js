@@ -1,9 +1,10 @@
 import React, { Fragment } from 'react';
 import classnames from 'classnames';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import { Button } from '@ukhomeoffice/react-components';
 import { Markdown } from '@ukhomeoffice/asl-components';
 import { deleteComment } from '../../actions/comments';
-import { DATE_FORMAT, formatDate } from '@ukhomeoffice/asl-components/utils';
+import { formatDate } from '@ukhomeoffice/asl-components/utils';
 import { connect } from 'react-redux';
 
 const Comment = ({

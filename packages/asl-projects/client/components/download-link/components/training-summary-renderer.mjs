@@ -1,11 +1,13 @@
 import _ from 'lodash';
+import aslConstants from '@ukhomeoffice/asl-constants';
 import aslComponentUtils from '@ukhomeoffice/asl-components/utils.js';
 import { populateTableHeader } from '../helpers/populate-table-header.mjs';
 import { initializeTable } from '../helpers/initialize-table.mjs';
 import { trainingRecordHolder } from '../../../helpers/training-record-holder.mjs';
 
 const { sortBy } = _;
-const { formatDate, DATE_FORMAT } = aslComponentUtils;
+const { DATE_FORMAT } = aslConstants;
+const { formatDate } = aslComponentUtils;
 
 export function trainingSummaryRenderer(doc, values, application = {}) {
   const TRAINING_RECORD_HEADERS = ['Category', 'Modules', 'Animal types', 'Details'];
@@ -47,7 +49,7 @@ export function populateTableWithTrainingRecords(table, training) {
       ]
       : [
         `Certificate number: ${record.certificateNumber}`,
-        `Awarded on: ${record.passDate}`,
+        `Awarded on: ${formatDate(record.passDate, DATE_FORMAT.long)}`,
         `Awarded by: ${record.accreditingBody}`
       ];
     details.forEach(detail => table.getCell(row, 3).createParagraph(detail));

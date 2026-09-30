@@ -1,10 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import aslComponentUtils from '@ukhomeoffice/asl-components/utils.js';
 import { getStatus, getTrainingRecord } from '../helpers/trainingRecordsComparison';
 import TrainingRecordModal from './trainingRecordsModal';
 
-const { formatDate, DATE_FORMAT } = aslComponentUtils;
+const { formatDate } = aslComponentUtils;
 const DEFAULT_LABEL = '-';
 const NO_RECORDS_LABEL = 'No training record';
 

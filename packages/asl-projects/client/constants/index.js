@@ -1,2 +1,2 @@
-const { DATE_FORMAT } = require('@ukhomeoffice/asl-components/utils');
-module.exports = DATE_FORMAT;
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
+module.exports = { DATE_FORMAT };
