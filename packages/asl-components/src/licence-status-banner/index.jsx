@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import Snippet from '../snippet';
 import classnames from 'classnames';
 import dayJs from '../dayjs.js';
-import { DATE_FORMAT } from '../utils';
 
 const { format } = dayJs;
 

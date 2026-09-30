@@ -1,4 +1,4 @@
-const { DATE_FORMAT } = require('@ukhomeoffice/asl-components/utils');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 function getRopsYears(start) {
   let end = (new Date()).getFullYear();
   // array length should be 1 when start and end are the same

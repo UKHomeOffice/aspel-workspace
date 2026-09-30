@@ -1,8 +1,8 @@
 const { stringify, parse } = require('qs');
 const get = require('lodash/get');
 const url = require('url');
+const { DATE_FORMAT, STRICT_DATE_FORMATS } = require('@ukhomeoffice/asl-constants');
 const { format: dateFormatter } = require('./date-extend-dayJs/core.js');
-const { DATE_FORMAT, STRICT_DATE_FORMATS } = require('./date-extend-dayJs/formats');
 const { parseDate } = require('./date-extend-dayJs/parse');
 const { formatReferenceDate } = require('./date-extend-dayJs/utils');
 

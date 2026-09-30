@@ -63,7 +63,7 @@ module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
   if (action === 'revoke') {
     return TrainingPil.query(transaction).patchAndFetchById(id, {
       status: 'revoked',
-      revocationDate: new Date().toISOString()
+      revocationDate: dayJs().toISOString()
     });
   }
 

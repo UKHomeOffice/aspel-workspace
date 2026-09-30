@@ -23,7 +23,7 @@ function formatIsoDate(date) {
 }
 
 function todayIso() {
-    return formatIsoDate(new Date());
+    return formatIsoDate(dayjs());
 }
 
 function addWorkingDaysIso(date, amount) {
@@ -31,7 +31,7 @@ function addWorkingDaysIso(date, amount) {
     return dayjs(date).addWorkingTime(amount, 'days').format(DATE_FORMAT.iso);
 }
 
-function daysSinceDate(date, from = new Date()) {
+function daysSinceDate(date, from = dayjs()) {
     return dayjs(from).diff(dayjs(date), 'days');
 }
 

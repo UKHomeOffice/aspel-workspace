@@ -1,10 +1,10 @@
 import React from 'react';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import dayJs from '../dayjs.js';
 import { useSelector } from 'react-redux';
 import sortBy from 'lodash/sortBy';
 import { ApplyChanges, Snippet, Link } from '../';
 import { getUrl } from '../link';
-import { DATE_FORMAT } from '../utils';
 
 const { format } = dayJs;
 const dateFormat = DATE_FORMAT.long;

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import dayJs from '../dayjs.js';
 import { Countdown } from '../';
-import { DATE_FORMAT } from '../utils';
 
 const { format } = dayJs;
 
