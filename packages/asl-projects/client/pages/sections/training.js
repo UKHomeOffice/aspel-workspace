@@ -39,9 +39,8 @@ export default function Training(props) {
     <Fragment>
       {!readonly && <h1>Training</h1>}
       <p>{props.intro}</p>
-
-      <h2>{holder ? `${holder.name}'s training record` : 'Training record'}</h2>
-      {holder && <p>{holder.status}</p>}
+      {holder && <span class="govuk-caption-m">{holder.status}</span>}
+      <h2 class="govuk-heading-m">{holder ? `${holder.name}'s training record` : 'Training record'}</h2>
       <TrainingSummaryWithChangeHighlighting
         certificates={readonly ? project.training : training}
         comparisons={comparisons}
