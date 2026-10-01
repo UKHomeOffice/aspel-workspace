@@ -57,7 +57,7 @@ describe('<TrainingSummary />', () => {
             }
         ]);
 
-        expect(screen.getByText('Added on:').nextSibling).toHaveTextContent('-');
+        expect(screen.getByText('Date exemption added:').nextSibling).toHaveTextContent('-');
     });
 
     test('Does not render an added date for training certificates', () => {
