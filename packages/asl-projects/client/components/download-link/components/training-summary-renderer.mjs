@@ -49,7 +49,7 @@ export function populateTableWithTrainingRecords(table, training) {
       ]
       : [
         `Certificate number: ${record.certificateNumber}`,
-        `Awarded on: ${formatDate(record.passDate, DATE_FORMAT.long)}`,
+        `Awarded on: ${record.passDate}`,
         `Awarded by: ${record.accreditingBody}`
       ];
     details.forEach(detail => table.getCell(row, 3).createParagraph(detail));
