@@ -42,7 +42,7 @@ describe('<TrainingSummary />', () => {
         ]);
 
         expect(screen.getByText('Previously trained abroad')).toBeInTheDocument();
-        expect(screen.getByText('Added on:')).toBeInTheDocument();
+        expect(screen.getByText('Date exemption added:')).toBeInTheDocument();
         expect(screen.getByText('14 March 2026')).toBeInTheDocument();
     });
 
@@ -75,6 +75,6 @@ describe('<TrainingSummary />', () => {
         ]);
 
         expect(screen.getByText('ABC123')).toBeInTheDocument();
-        expect(screen.queryByText('Added on:')).not.toBeInTheDocument();
+        expect(screen.queryByText('Date exemption added:')).not.toBeInTheDocument();
     });
 });
