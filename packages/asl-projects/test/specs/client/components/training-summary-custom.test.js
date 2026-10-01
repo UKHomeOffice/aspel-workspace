@@ -113,7 +113,7 @@ describe('<TrainingSummaryWithChangeHighlighting />', () => {
         previousTraining: { first: [], previous: [], granted: [] }
       });
 
-      assert.ok(markup.includes('Added on: </span><span class="value">-</span>'));
+      assert.ok(markup.includes('Date exemption added: </span><span class="value">-</span>'));
     });
 
     it('does not render an added date for training certificates', () => {
