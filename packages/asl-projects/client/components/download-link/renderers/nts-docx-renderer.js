@@ -1,4 +1,4 @@
-import {Document, Paragraph, TextRun, Table, WidthType} from 'docx';
+import {Document, Paragraph, TextRun, Table} from 'docx';
 import get from 'lodash/get';
 import uniq from 'lodash/uniq';
 import concat from 'lodash/concat';
