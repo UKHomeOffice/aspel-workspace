@@ -119,7 +119,7 @@ export default function TrainingSummaryWithChangeHighlighting(
                 {record.isExemption ? (
                   <>
                     <p className="exceptionNote">
-                      <span className="label">Added on: </span>
+                      <span className="label">Date exemption added: </span>
                       <span className="value">
                         {record.createdAt ? format(record.createdAt, dateFormat) : '-'}
                       </span>
