@@ -38,7 +38,7 @@ export default function Training(props) {
 
   const RecordHeader = ({ children }) => {
     return readonly ? <h3 className="govuk-heading-m">{children}</h3> : <h2 className="govuk-heading-m">{children}</h2>;
-  }
+  };
 
   return (
     <Fragment>
