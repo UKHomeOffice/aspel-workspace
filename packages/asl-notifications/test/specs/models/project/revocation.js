@@ -1,5 +1,6 @@
 const assert = require('assert');
 const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 const dbHelper = require('../../../helpers/db');
 const logger = require('../../../helpers/logger');
 const Recipients = require('../../../../lib/recipients');
@@ -46,7 +47,7 @@ describe('Project revocations', () => {
     });
 
     it('includes the publications date in the email', () => {
-      const expected = dayJs(projectRevocation.data.modelData.revocationDate).add(6, 'months').format('D MMM YYYY');
+      const expected = dayJs(projectRevocation.data.modelData.revocationDate).add(6, 'months').format(DATE_FORMAT.medium);
       return this.recipientBuilder.getNotifications(projectRevocation)
         .then(recipients => {
           assert.equal(recipients.get(basic).publicationsDate, expected);
@@ -54,7 +55,7 @@ describe('Project revocations', () => {
     });
 
     it('includes the ROP due date in the email', () => {
-      const expected = dayJs(projectRevocation.data.modelData.revocationDate).add(28, 'days').format('D MMM YYYY');
+      const expected = dayJs(projectRevocation.data.modelData.revocationDate).add(28, 'days').format(DATE_FORMAT.medium);
       return this.recipientBuilder.getNotifications(projectRevocation)
         .then(recipients => {
           assert.equal(recipients.get(basic).ropsDate, expected);

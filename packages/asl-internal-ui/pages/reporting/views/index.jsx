@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import dayJs from '@ukhomeoffice/asl-components/dayjs';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import { Header, Link, Metric } from '@ukhomeoffice/asl-components';
 
 import MetricsFilter from './components/metrics-filter';
@@ -28,7 +29,7 @@ function EndDate() {
       end: dayJs(state.model.end)
     };
   });
-  return `${end.format('D MMMM YYYY')}`;
+  return `${end.format(DATE_FORMAT.long)}`;
 }
 
 export default function Index() {

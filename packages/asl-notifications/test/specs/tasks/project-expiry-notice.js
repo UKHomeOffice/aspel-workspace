@@ -1,6 +1,7 @@
 const { v4: uuid } = require('uuid');
 const sinon = require('sinon');
 const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 const assert = require('assert');
 const dbHelper = require('../../helpers/db');
 const logger = require('../../helpers/logger');
@@ -298,7 +299,7 @@ describe('Project expiry', () => {
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
       };
-      const publicationsDate = dayJs(project.expiryDate).add(6, 'months').format('D MMM YYYY');
+      const publicationsDate = dayJs(project.expiryDate).add(6, 'months').format(DATE_FORMAT.medium);
 
       return Promise.resolve()
         .then(() => this.schema.Project.query().insert(project))
@@ -321,7 +322,7 @@ describe('Project expiry', () => {
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
       };
-      const publicationsDate = dayJs(project.expiryDate).add(6, 'months').format('D MMM YYYY');
+      const publicationsDate = dayJs(project.expiryDate).add(6, 'months').format(DATE_FORMAT.medium);
 
       return Promise.resolve()
         .then(() => this.schema.Project.query().insert(project))
@@ -392,7 +393,7 @@ describe('Project expiry', () => {
         establishmentId: 8201,
         licenceNumber: 'XYZ12345'
       };
-      const continuationDate = dayJs(project.expiryDate).subtract(3, 'months').format('D MMM YYYY');
+      const continuationDate = dayJs(project.expiryDate).subtract(3, 'months').format(DATE_FORMAT.medium);
 
       return Promise.resolve()
         .then(() => this.schema.Project.query().insert(project))

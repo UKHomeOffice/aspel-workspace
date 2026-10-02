@@ -202,6 +202,10 @@ function getMostRecent(pils) {
   return pils.filter(p => p && p.updatedAt).sort((a, b) => b.updatedAt - a.updatedAt).pop();
 }
 
+function toISOStringOrNull(value) {
+  return value ? value.toISOString() : null;
+}
+
 function getStatus(pils) {
   if (some(pils, p => p && p.status === 'active')) {
     return 'active';
@@ -236,7 +240,7 @@ const getPil = (req, res, next) => {
     pilContainer.onlyCatE = true;
 
     if (pilContainer.status === 'revoked') {
-      pilContainer.revocationDate = dayJs.max(pils.filter(p => p && p.revocationDate).map(d => dayJs(d.revocationDate))).toISOString();
+      pilContainer.revocationDate = toISOStringOrNull(dayJs.max(pils.filter(p => p && p.revocationDate).map(d => dayJs(d.revocationDate))));
     }
   }
 
@@ -257,8 +261,8 @@ const getPil = (req, res, next) => {
 
   pilContainer.licenceNumber = req.profile.pilLicenceNumber;
 
-  pilContainer.issueDate = dayJs.min(pils.filter(p => p && p.issueDate).map(d => dayJs(d.issueDate))).toISOString();
-  pilContainer.updatedAt = getMostRecent(pils).updatedAt;
+  pilContainer.issueDate = toISOStringOrNull(dayJs.min(pils.filter(p => p && p.issueDate).map(d => dayJs(d.issueDate))));
+  pilContainer.updatedAt = getMostRecent(pils)?.updatedAt || null;
 
   pilContainer.procedures = (pilContainer.procedures || [])
     .concat(activeTrainingPils.map(p => ({ key: 'E', ...p })))

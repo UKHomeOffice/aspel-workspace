@@ -1,6 +1,7 @@
 const { v4: uuid } = require('uuid');
 const sinon = require('sinon');
 const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 const assert = require('assert');
 const dbHelper = require('../../helpers/db');
 const logger = require('../../helpers/logger');
@@ -145,7 +146,7 @@ describe('Retrospective assessment due', () => {
         .then(notifications => {
           notifications.forEach(notification => {
             assert.ok(notification.html.includes(project.title));
-            assert.ok(notification.html.includes(dayJs(project.raDate).format('D MMM YYYY')));
+            assert.ok(notification.html.includes(dayJs(project.raDate).format(DATE_FORMAT.medium)));
           });
         });
     });
