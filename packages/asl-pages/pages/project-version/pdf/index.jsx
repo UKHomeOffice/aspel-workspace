@@ -96,6 +96,7 @@ module.exports = settings => {
 
   const renderLicence = (req, res, next) => {
     req.pdf.body = renderToStaticMarkup(<Licence store={req.pdf.store} nonce={req.pdf.nonce} />);
+
     next();
   };
 

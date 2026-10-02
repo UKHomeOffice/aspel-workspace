@@ -35,12 +35,21 @@ export default function Training(props) {
     }
     form.current.submit();
   }
+
+  const RecordHeader = ({ children }) => {
+    return readonly ? <h3 className="govuk-heading-m">{children}</h3> : <h2 className="govuk-heading-m">{children}</h2>;
+  }
+
   return (
     <Fragment>
-      {!readonly && <h1>Training</h1>}
-      <p>{props.intro}</p>
-      {holder && <span class="govuk-caption-m">{holder.status}</span>}
-      <h2 class="govuk-heading-m">{holder ? `${holder.name}'s training record` : 'Training record'}</h2>
+      {readonly
+        ? <h2>Training record</h2>
+        : <><h1>Training</h1><p>{props.intro}</p></>
+      }
+      <div className='heading-wrapper'>
+        {holder && <span className="govuk-caption-m">{holder.status}</span>}
+        <RecordHeader>{holder ? `${holder.name}'s training record` : 'Training record'}</RecordHeader>
+      </div>
       <TrainingSummaryWithChangeHighlighting
         certificates={readonly ? project.training : training}
         comparisons={comparisons}
@@ -49,7 +58,7 @@ export default function Training(props) {
       />
 
       {(readonly || !canUpdateTraining)
-        ? <ReviewFields {...props} fields={fields} />
+        ? <ReviewFields {...props} fields={fields} showTitle={false}/>
         : (
           <form
             ref={form}
