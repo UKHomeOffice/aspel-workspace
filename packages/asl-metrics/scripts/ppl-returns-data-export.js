@@ -74,7 +74,7 @@ function buildQuestionMetadataLookup() {
   const generalQuestionMetadata = {};
   const protocolQuestionMetadata = {};
 
-  const createMetadataRecorder = metadataByFieldKey => (fieldKey, questionLabel, hasQuestionLabel, sectionTitle, subsectionTitle) => {
+  const recordQuestionMetadata = (metadataByFieldKey, fieldKey, questionLabel, hasQuestionLabel, sectionTitle, subsectionTitle) => {
     const existing = metadataByFieldKey[fieldKey];
     // a question label always beats a fallback title, otherwise first definition wins
     if (existing && (existing.hasQuestionLabel || !hasQuestionLabel)) {
@@ -99,13 +99,13 @@ function buildQuestionMetadataLookup() {
       return;
     }
 
-    const recordMetadata = createMetadataRecorder(metadataByFieldKey);
     if (typeof schemaNode.name === 'string') {
       const resolvedLabel = resolveLabel(schemaNode.label);
-      const [questionLabel, hasQuestionLabel] = resolvedLabel ? [resolvedLabel, true] : [schemaNode.title, false];
+      const hasQuestionLabel = Boolean(resolvedLabel);
+      const questionLabel = resolvedLabel || schemaNode.title;
       if (typeof questionLabel === 'string' && questionLabel) {
-        recordMetadata(schemaNode.name, questionLabel, hasQuestionLabel, sectionTitle, subsectionTitle);
-        recordMetadata(`${parentFieldKey}.${schemaNode.name}`, questionLabel, hasQuestionLabel, sectionTitle, subsectionTitle);
+        recordQuestionMetadata(metadataByFieldKey, schemaNode.name, questionLabel, hasQuestionLabel, sectionTitle, subsectionTitle);
+        recordQuestionMetadata(metadataByFieldKey, `${parentFieldKey}.${schemaNode.name}`, questionLabel, hasQuestionLabel, sectionTitle, subsectionTitle);
       }
     }
 
@@ -134,13 +134,13 @@ function buildQuestionMetadataLookup() {
     const metadataByFieldKey = sectionKey === 'protocols' ? protocolQuestionMetadata : generalQuestionMetadata;
     Object.entries(sectionDefinition.subsections || {}).forEach(([subsectionKey, subsectionDefinition]) => {
       collectQuestionMetadata(metadataByFieldKey, subsectionDefinition, subsectionKey, sectionTitle, subsectionDefinition.title || '', new WeakSet());
-      createMetadataRecorder(metadataByFieldKey)(subsectionKey, subsectionDefinition.title, false, sectionTitle, subsectionDefinition.title);
+      recordQuestionMetadata(metadataByFieldKey, subsectionKey, subsectionDefinition.title, false, sectionTitle, subsectionDefinition.title);
     });
   });
 
   Object.entries(protocolSchemaSections || {}).forEach(([subsectionKey, subsectionDefinition]) => {
     collectQuestionMetadata(protocolQuestionMetadata, subsectionDefinition, subsectionKey, 'Protocols', subsectionDefinition.title || '', new WeakSet());
-    createMetadataRecorder(protocolQuestionMetadata)(subsectionKey, subsectionDefinition.title, false, 'Protocols', subsectionDefinition.title);
+    recordQuestionMetadata(protocolQuestionMetadata, subsectionKey, subsectionDefinition.title, false, 'Protocols', subsectionDefinition.title);
   });
 
   // protocol-level keys rendered by the repeater rather than declared as schema fields
