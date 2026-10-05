@@ -72,10 +72,13 @@ section.continuedreuse .review {
     .grey {
       display: block;
       margin-top: -$govuk-gutter-half; // remove gap between question and hint
-      font-style: italic;
       color: $dark-grey;
     }
   }
+}
+
+.govuk-hint {
+  color: $dark-grey;
 }
 
 section > h2 {
