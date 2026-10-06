@@ -58,7 +58,7 @@ const renderMarkdown = (doc, markdown, style = 'body', { applyTextFilter } = {},
             case 'heading': {
                 const text = node.children.find(c => c.type === 'text')?.value || '';
                 if (nts) {
-                  doc.createParagraph(applyFilter(text, applyTextFilter)).style('Bold');
+                  doc.createParagraph(applyFilter(text, applyTextFilter)).style('Bold').spacing({ before: 240 });
                 } else {
                   doc.createParagraph(applyFilter(text, applyTextFilter)).style(`Heading${node.depth}`);
                 }
