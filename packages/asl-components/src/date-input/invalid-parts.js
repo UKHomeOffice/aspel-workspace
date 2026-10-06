@@ -8,26 +8,43 @@ function splitDateValue(value = '') {
     return { day, month, year };
 }
 
-function partIsInvalid(kind, raw) {
-    const s = String(raw ?? '').trim();
-    if (kind === YEAR) {
-        return !/^\d{4}$/.test(s) || Number(s) < 1;
-    }
-    if (!/^\d+$/.test(s)) {
+function partIsInvalid(datePart, raw) {
+    const normalised = Number(raw);
+    if (isNaN(normalised)) {
         return true;
     }
-    const n = Number(s);
-    if (kind === DAY) {
-        return n < 1 || n > 31;
+
+    if (datePart === YEAR) {
+        return normalised < 1000 || normalised > 9999;
     }
-    // month
-    return n < 1 || n > 12;
+    if (datePart === DAY) {
+        // For months with <31 days - the whole date field will be highlighted.
+        return normalised < 1 || normalised > 31;
+    }
+
+    if (datePart === MONTH) {
+        return normalised < 1 || normalised > 12;
+    }
+
+    throw new Error(`Unknown date part ${datePart}. Expected one of ${DAY}, ${MONTH}, ${YEAR}`);
 }
 
 // Returns the invalid parts in visual order (day, month, year); [] when no
 // single part can be blamed.
 function getInvalidDateParts(parts = {}) {
-    return [DAY, MONTH, YEAR].filter(kind => partIsInvalid(kind, parts[kind]));
+    const missing = [DAY, MONTH, YEAR].filter(key => !parts[key]);
+
+    const invalid =  [DAY, MONTH, YEAR]
+        .filter(key => !missing.includes(key))
+        .filter(key => partIsInvalid(key, parts[key]));
+
+    // highlight the date as a whole if there’s incorrect information in more than one field.
+    // https://design-system.service.gov.uk/components/date-input/#if-the-date-entered-cannot-be-correct
+    if(invalid.length > 1) {
+        return [DAY, MONTH, YEAR];
+    }
+
+    return [DAY, MONTH, YEAR].filter(key => missing.includes(key) || invalid.includes(key));
 }
 
 module.exports = { splitDateValue, getInvalidDateParts };
