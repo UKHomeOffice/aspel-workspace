@@ -3,6 +3,7 @@ const { form } = require('../../../common/routers');
 const { buildModel } = require('../../../../lib/utils');
 const confirm = require('./routers/confirm');
 const details = require('./routers/details');
+const endorse = require('./routers/endorse');
 const schema = require('./schema');
 const { omit } = require('lodash');
 
@@ -24,7 +25,8 @@ module.exports = () => {
     index: false,
     paths: [
       '/details',
-      '/confirm'
+      '/confirm',
+      '/endorse'
     ]
   });
 
@@ -58,7 +60,24 @@ module.exports = () => {
 
   app.use('/:page', form({
     configure: (req, res, next) => {
-      req.form.schema = req.page === 'confirm' ? {} : res.locals.static.modelSchema;
+      switch (req.page) {
+        case 'details':
+          req.form.schema = res.locals.static.modelSchema;
+          break;
+        case 'confirm':
+          req.form.schema = {};
+          break;
+        case 'endorse':
+          req.form.schema = {
+            comments: {
+              inputType: 'textarea'
+            }
+          };
+          break;
+        default:
+          return next(new Error(`Unknown page: ${req.page}`));
+      }
+
       next();
     },
     process: (req, res, next) => {
@@ -78,6 +97,7 @@ module.exports = () => {
 
   app.use('/details', details());
   app.use('/confirm', confirm());
+  app.use('/endorse', endorse());
 
   app.get('/', (req, res) => res.sendResponse());
 
