@@ -160,11 +160,17 @@ export default function NTS() {
                 return (
                   <section key={sectionName} className={classnames({ hidden: sectionName !== activeSection })}>
                     <h1>{section.title}</h1>
-                    { section.subtitle && <h2>{section.subtitle}</h2> }
+                    { section.subtitle && <p className='govuk-hint'>{section.subtitle}</p> }
                     {
                       fields.map((field, index) => (
                         <Fragment key={index}>
-                          { field.heading && <h2>{field.heading}</h2> }
+                          {
+                            field.heading && (
+                              field.heading === 'Retrospective assessment'
+                                ? <h2>{field.heading}</h2>
+                                : <p className='govuk-hint'>{field.heading}</p>
+                            )
+                          }
                           { field.label && <h3>{field.label}</h3> }
                           {
                             (field.type !== 'RetrospectivePlaceholder' || !grantedRa) &&
