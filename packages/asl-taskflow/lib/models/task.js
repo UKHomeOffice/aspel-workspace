@@ -74,7 +74,9 @@ class Task {
         payload
       },
       transaction: this.transaction,
-      handler: () => Task.query(this.transaction).context({ preserveUpdatedAt: true }).patchAndFetchById(this.id, { assignedTo })
+      handler: () => Task.query(this.transaction)
+        .context({ preserveUpdatedAt: true })
+        .patchAndFetchById(this.id, { assignedTo })
     });
   }
 
@@ -219,13 +221,19 @@ class Task {
       sort.ascending = sort.ascending === 'true';
     }
 
-    if (sort.column?.startsWith('data.')) {
-      const column = asJsonAccessor(sort.column);
-      return query.orderByRaw(`${column} ${sort.ascending ? 'ASC' : 'DESC'}`);
-    }
+    const sortColumns = Array.isArray(sort.column) ? sort.column : [sort.column];
 
-    return query
-      .orderBy(sort.column, sort.ascending ? 'asc' : 'desc');
+    return sortColumns.reduce(
+      (query, column) => {
+        if (column.startsWith('data.')) {
+          const jsonColumn = asJsonAccessor(column);
+          return query.orderByRaw(`${jsonColumn} ${sort.ascending ? 'ASC' : 'DESC'}`);
+        }
+
+        return query.orderBy(sort.column, sort.ascending ? 'asc' : 'desc');
+      },
+      query
+    );
   }
 
   static filterBySearchTerm(query, term, fields) {
