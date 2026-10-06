@@ -10,8 +10,12 @@ const DATE_FORMAT = {
 
 const STRICT_DATE_FORMATS = ['YYYY-MM-DD', 'YYYY-M-D'];
 
+// ASPEL project start date - all historical data begins from this date
+const ASPEL_DATA_START_DATE = '2019-07-31';
+
 module.exports = {
   DATE_FORMAT,
-  STRICT_DATE_FORMATS
+  STRICT_DATE_FORMATS,
+  ASPEL_DATA_START_DATE
 };
 

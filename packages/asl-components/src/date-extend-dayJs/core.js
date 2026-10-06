@@ -9,6 +9,7 @@ const updateLocale = require('dayjs/plugin/updateLocale');
 const relativeTime = require('dayjs/plugin/relativeTime');
 const duration = require('dayjs/plugin/duration');
 const objectSupport = require('dayjs/plugin/objectSupport');
+const { STRICT_DATE_FORMATS } = require('@ukhomeoffice/asl-constants');
 
 coreDayjs.extend(customParseFormat);
 coreDayjs.extend(isSameOrBefore);
@@ -107,8 +108,7 @@ function toDayjs(value, format, strict = false) {
             return coreDayjs(invalidDate());
         }
 
-        const strictDateFormats = ['YYYY-MM-DD', 'YYYY-M-D'];
-        for (const candidate of strictDateFormats) {
+        for (const candidate of STRICT_DATE_FORMATS) {
             const parsed = coreDayjs(trimmed, candidate, true);
             if (parsed.isValid()) {
                 return parsed;

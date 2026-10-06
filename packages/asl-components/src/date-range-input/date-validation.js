@@ -1,9 +1,8 @@
 const { parseDate: dayJsParseDate } = require('../date-extend-dayJs');
-
-const DATE_FORMATS = ['YYYY-MM-DD', 'YYYY-M-D'];
+const { STRICT_DATE_FORMATS } = require('@ukhomeoffice/asl-constants');
 
 function parseDate(value) {
-    return dayJsParseDate(value, DATE_FORMATS, true);
+    return dayJsParseDate(value, STRICT_DATE_FORMATS, true);
 }
 
 function getBoundaryErrorCode(value, { minDate, maxDate, minDateErrorCode = 'dateIsSameOrAfter' } = {}) {

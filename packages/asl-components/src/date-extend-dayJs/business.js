@@ -1,9 +1,8 @@
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
+const { bankHolidays, ASPEL_DATA_START_DATE } = require('@ukhomeoffice/asl-constants');
 const dayjs = require('./core.js');
 const { DATE_FORMAT } = require('./formats');
 const { parseDate } = require('./parse');
 
-const ASPEL_DATA_START_DATE = '2019-07-31';
 
 function configureBusinessDays() {
     dayjs.updateLocale('en', { holidays: bankHolidays });
