@@ -234,6 +234,13 @@ Testing was carried out internally by the Home Office. We tested the service bas
 and manage their licences. We also tested the application assessment and granting processes.
 `;
 
+const components = {
+  h1: ({ children }) => <h1 className="govuk-heading-xl">{children}</h1>,
+  h2: ({ children }) => <h2 className="govuk-heading-l">{children}</h2>,
+  h3: ({ children }) => <h3 className="govuk-heading-m">{children}</h3>,
+  h4: ({ children }) => <h4 className="govuk-heading-s">{children}</h4>
+};
+
 export default () => {
-  return <ReactMarkdown escapeHtml={false}>{ content }</ReactMarkdown>;
+  return <ReactMarkdown escapeHtml={false} components={components}>{ content }</ReactMarkdown>;
 };
