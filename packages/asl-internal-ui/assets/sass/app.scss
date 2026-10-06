@@ -25,6 +25,39 @@ html, body {
   }
 }
 
+.nts-download-form {
+  margin-bottom: $govuk-gutter;
+
+  .date-range-input > .govuk-fieldset > .govuk-hint {
+    margin-bottom: $govuk-gutter;
+  }
+
+  .date-range-input__fields {
+    margin-top: $govuk-gutter-half;
+  }
+
+  .nts-ra-field {
+    margin-top: $govuk-gutter-half;
+  }
+
+  .nts-ra-field .govuk-fieldset__legend {
+    margin-bottom: $govuk-gutter-half;
+  }
+
+  .nts-ra-field .govuk-fieldset__heading {
+    font-size: 19px;
+    line-height: 1.31579;
+  }
+
+  .nts-ra-field .govuk-radios__label {
+    font-weight: normal;
+  }
+
+  .govuk-radios__item {
+    margin-bottom: $govuk-gutter-half;
+  }
+}
+
 @media (min-width: 1260px) {
   .govuk-width-container,
   .wrapper-header,
