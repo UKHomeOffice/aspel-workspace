@@ -1,7 +1,10 @@
-const dayJs = require('@ukhomeoffice/asl-components/dayjs');
-const { get } = require('lodash');
-const { Value } = require('slate');
+const rawDayjs = require('dayjs');
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+const {get} = require('lodash');
+const {Value} = require('slate');
 const csv = require('csv-stringify');
+
+rawDayjs.extend(customParseFormat);
 
 const LICENCE_NUMBER = /((7|3)0(0|\/|\-)[0-9]{4})|P[0-9A-Z]{8}/g;
 const EXPIRYLONG = /([0-9]{1,2})(st|nd|rd|th)? (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)(r?uary|ch|il|e|y|ust|tember|ober|ember)?  ?((20)?(19|20|21))/;
@@ -43,13 +46,13 @@ const transform = (data, versionId, writeCsvLine) => {
     const day = matched[1];
     const month = matched[3];
     const year = matched[7];
-    date = dayJs(`${day} ${month} ${year}`, 'DD MMM YY');
+    date = rawDayjs(`${day} ${month} ${year}`, 'DD MMM YY');
   } else if (text.match(EXPIRYLONG2)) {
     const matched = text.match(EXPIRYLONG2);
     const day = matched[25];
     const month = matched[1];
     const year = matched[29];
-    date = dayJs(`${day} ${month} ${year}`, 'DD MMM YY');
+    date = rawDayjs(`${day} ${month} ${year}`, 'DD MMM YY');
   } else if (text.match(EXPIRYSHORT)) {
     const matched = text.match(EXPIRYSHORT);
     let day = matched[1];
@@ -61,7 +64,7 @@ const transform = (data, versionId, writeCsvLine) => {
     if (month.length === 1) {
       month = '0' + month;
     }
-    date = dayJs(`${day} ${month} ${year}`, 'DD MM YY');
+    date = rawDayjs(`${day} ${month} ${year}`, 'DD MM YY');
   }
 
   if (writeCsvLine) {
@@ -106,7 +109,7 @@ const transform = (data, versionId, writeCsvLine) => {
 
 exports.transform = transform;
 
-exports.up = function(knex) {
+exports.up = function (knex) {
   const stringifier = csv();
   stringifier.write(['Type', 'Project ID', 'Version ID', 'Establishment ID', 'Project Title', 'Project Status', 'Version Status', 'Text input']);
   return Promise.resolve()
@@ -114,7 +117,7 @@ exports.up = function(knex) {
       return knex('project_versions')
         .select('project_versions.id', 'data')
         .join('projects', 'project_versions.project_id', 'projects.id')
-        .where({ 'schema_version': 1 })
+        .where({'schema_version': 1})
         .whereRaw('cast(data->>\'transfer-expiring\' as boolean) IS TRUE');
     })
     .then(versions => {
@@ -126,7 +129,7 @@ exports.up = function(knex) {
             return knex('project_versions')
               .join('projects', 'project_versions.project_id', 'projects.id')
               .select('project_versions.id', 'data', 'project_versions.status', 'projects.status as projectStatus', 'project_id', 'projects.establishment_id', 'projects.title')
-              .where({ 'project_versions.id': version.id })
+              .where({'project_versions.id': version.id})
               .first()
               .then(version => {
 
@@ -149,8 +152,8 @@ exports.up = function(knex) {
                   return Promise.resolve();
                 }
                 return knex('project_versions')
-                  .where({ id: version.id })
-                  .update({ data: { ...version.data, ...data } });
+                  .where({id: version.id})
+                  .update({data: {...version.data, ...data}});
               })
               .then(() => {
                 console.log(`finshed patching version: ${version.id}, ${index + 1} of ${versions.length}`);
@@ -170,6 +173,6 @@ exports.up = function(knex) {
     .catch(() => stringifier.end());
 };
 
-exports.down = function(knex) {
+exports.down = function (knex) {
   return Promise.resolve();
 };

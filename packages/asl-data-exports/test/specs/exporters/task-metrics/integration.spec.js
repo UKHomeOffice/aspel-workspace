@@ -1,8 +1,7 @@
 const assert = require('assert');
 const crypto = require('crypto');
-const { Readable } = require('stream');
+const {Readable} = require('stream');
 const fetch = require('node-fetch');
-const { HeadBucketCommand, S3Client } = require('@aws-sdk/client-s3');
 const Zip = require('jszip');
 const parse = require('csv-parse/lib/sync');
 const s3Upload = require('../../../../lib/clients/s3-upload');
@@ -86,41 +85,11 @@ describe('Task metrics exporter localstack integration', () => {
     localstackUrl: process.env.S3_LOCALSTACK_URL || 'http://localhost:4566'
   };
 
-  const s3Client = new S3Client({
-    region: s3Settings.region,
-    endpoint: s3Settings.localstackUrl,
-    credentials: {
-      accessKeyId: s3Settings.accessKey,
-      secretAccessKey: s3Settings.secret
-    }
-  });
-
   let exportZip;
-  let skipReason;
 
-  beforeAll(async () => {
-    try {
-      await s3Client.send(
-        new HeadBucketCommand({
-          Bucket: s3Settings.bucket
-        })
-      );
-    } catch (error) {
-      const message = `Unable to access LocalStack S3 bucket "${s3Settings.bucket}" at ${s3Settings.localstackUrl}.
-Start LocalStack with S3 enabled, for example via asl-conductor.
-
-Original error: ${error.message}`;
-
-      if (process.env.CI) {
-        throw new Error(message);
-      }
-
-      skipReason = message;
-      return;
-    }
-
+  beforeAll(() => {
     mockTaskMetricsClients({
-      getInternalDeadlines: () => [
+      getInternalDeadlines: () => ([
         {
           task_id: 'int-1',
           project_title: 'Project 1',
@@ -132,8 +101,7 @@ Original error: ${error.message}`;
           target: '2026-08-10',
           resolved_at: '2026-08-12'
         }
-      ],
-
+      ]),
       getActionedTasksStream: () => {
         const rows = async function * () {
           for (let index = 0; index < 100; index++) {
@@ -141,7 +109,7 @@ Original error: ${error.message}`;
           }
         };
 
-        return Readable.from(rows(), { objectMode: true });
+        return Readable.from(rows(), {objectMode: true});
       }
     });
 
@@ -165,10 +133,6 @@ Original error: ${error.message}`;
   });
 
   it('streams the full archive to localstack without stalling on large exports', async () => {
-    if (skipReason) {
-      return;
-    }
-
     const job = {
       id: `task-metrics-${Date.now()}`,
       meta: {
@@ -188,8 +152,8 @@ Original error: ${error.message}`;
     const rawCsv = await zip.file(`actioned-tasks-raw_${job.meta.start}_${job.meta.end}.csv`).async('string');
     const subtasksCsv = await zip.file(`subtasks-${job.meta.start}_${job.meta.end}.csv`).async('string');
 
-    const rawRows = parse(rawCsv, { columns: true, bom: true });
-    const subtaskRows = parse(subtasksCsv, { columns: true, bom: true });
+    const rawRows = parse(rawCsv, {columns: true, bom: true});
+    const subtaskRows = parse(subtasksCsv, {columns: true, bom: true});
 
     assert.equal(rawRows.length, 100);
     assert.equal(subtaskRows.length, 100);
