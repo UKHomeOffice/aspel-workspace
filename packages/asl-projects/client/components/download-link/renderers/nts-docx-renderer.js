@@ -1,4 +1,4 @@
-import { Document, Paragraph, TextRun, Table } from 'docx';
+import {Document, Paragraph, TextRun, Table} from 'docx';
 import get from 'lodash/get';
 import uniq from 'lodash/uniq';
 import concat from 'lodash/concat';
@@ -151,7 +151,7 @@ export default async function ntsDocxRenderer(opts) {
         }
       }
       const p = new Paragraph();
-      p.style('body');
+      p.style('ListParagraph');
       p.bullet(0);
       p.addRun(new TextRun(fateOfAnimal.label));
       document.addParagraph(p);
@@ -165,12 +165,12 @@ export default async function ntsDocxRenderer(opts) {
       if (speciesKey.startsWith('other-')) {
         const sub = version[`species-${speciesKey}`] || [];
         if (!sub.length) { return; }
-        const p = new Paragraph(); p.style('body'); p.bullet(depth);
+        const p = new Paragraph(); p.style('ListParagraph'); p.bullet(depth);
         p.addRun(new TextRun(getSpeciesLabel(speciesKey)));
         document.addParagraph(p);
         sub.forEach(s => renderItem(s, depth + 1));
       } else {
-        const p = new Paragraph(); p.style('body'); p.bullet(depth);
+        const p = new Paragraph(); p.style('ListParagraph'); p.bullet(depth);
         p.addRun(new TextRun(`${getSpeciesLabel(speciesKey)}: ${getSpeciesCount(speciesKey)}`));
         document.addParagraph(p);
       }
@@ -210,12 +210,23 @@ export default async function ntsDocxRenderer(opts) {
 
     const speciesDetails = groupSpeciesDetails();
     if (!speciesDetails.length) { return renderText(null); }
-    const table = new Table({ rows: speciesDetails.length + 1, columns: 2, columnWidths: ['4680', '4680'] });
+    const table = new Table({
+      rows: speciesDetails.length + 1,
+      columns: 2,
+      columnWidths: ['4680', '4680'],
+      margins: {
+        top: 120,
+        bottom: 120,
+        left: 200,
+        right: 200,
+      },
+    });
+
     // headers
     table.getCell(0, 0).addParagraph(new Paragraph('Animal types').style('Bold'));
     table.getCell(0, 1).addParagraph(new Paragraph('Life stages').style('Bold'));
     speciesDetails.forEach((s, i) => {
-      table.getCell(i + 1, 0).addParagraph(new Paragraph(s.name).style('body'));
+      table.getCell(i + 1, 0).addParagraph(new Paragraph(s.name).style('tablebody'));
       table.getCell(i + 1, 1).addParagraph(new Paragraph((s.lifeStages || []).join(', ')).style('body'));
     });
     document.addTable(table);
@@ -240,7 +251,7 @@ export default async function ntsDocxRenderer(opts) {
       document.createParagraph('This may include reasons from previous versions of this licence.').style('body');
       activeReasons.forEach(reason => {
         const p = new Paragraph();
-        p.style('body').bullet();
+        p.style('ListParagraph').bullet();
         p.addRun(new TextRun(reason));
         document.addParagraph(p);
       });
