@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react';
 import { Provider } from 'react-redux';
 import dayJs from '@ukhomeoffice/asl-components/dayjs';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import Wrapper from './wrapper';
 import { LicenceStatusBanner } from '@ukhomeoffice/asl-components';
 import ProjectStatusBanner from '../../../project-version/components/project-status-banner';
 
-const format = date => dayJs(date).format('DD MMM YY');
+const format = date => dayJs(date).format(DATE_FORMAT.shortYear);
 
 const Header = ({ store, model, licenceType, nonce, version, officialSensitive = true, hasStatusBanner = true }) => (
   <Wrapper name="header" nonce={nonce}>

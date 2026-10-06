@@ -99,14 +99,14 @@ function CategoryCell({ record, comparisons, trainingHistory, trainingHistoryRec
 }
 
 function DetailsCell({ record }) {
-  if (record.isExemption) {
-    return (
-      <td className="govuk-table__cell">
-        <>
-          <p className="exceptionNote">
-            <span className="label">Added on: </span>
-            <span className="value">{record.createdAt ? formatDate(record.createdAt, DATE_FORMAT.long) : DEFAULT_LABEL}</span>
-          </p>
+   if (record.isExemption) {
+     return (
+       <td className="govuk-table__cell">
+         <>
+           <p className="exceptionNote">
+             <span className="label">Date exemption added: </span>
+             <span className="value">{record.createdAt ? formatDate(record.createdAt, DATE_FORMAT.long) : DEFAULT_LABEL}</span>
+           </p>
           <br />
           <p className="preserve-whitespace">{record.exemptionReason || DEFAULT_LABEL}</p>
         </>

@@ -15,12 +15,12 @@ function DateRange() {
   });
 
   if (!start.isSame(end, 'year')) {
-    return `From ${start.format('Do MMMM YYYY')} to ${end.format('Do MMMM YYYY')}`;
+    return `From ${start.format(DATE_FORMAT.ordinalLong)} to ${end.format(DATE_FORMAT.ordinalLong)}`;
   }
   if (!start.isSame(end, 'month')) {
-    return `From ${start.format('Do MMMM')} to ${end.format('Do MMMM YYYY')}`;
+    return `From ${start.format(DATE_FORMAT.ordinalMonthYear)} to ${end.format(DATE_FORMAT.ordinalLong)}`;
   }
-  return `From ${start.format('Do')} to ${end.format('Do MMMM YYYY')}`;
+  return `From ${start.format(DATE_FORMAT.ordinalDay)} to ${end.format(DATE_FORMAT.ordinalLong)}`;
 }
 
 function EndDate() {

@@ -99,21 +99,21 @@ describe('category E course - date errors', () => {
   test('course date after the PPL expiry date plays the expiry date back', () => {
     messageFor('courseDate', { value: '2027-08-14', errorCode: 'dateIsSameOrBefore' });
     expect(
-      screen.getByText('Course date must be the same as or before the PPL expiry date 1 September 2026')
+      screen.getByText('Course date must be the same as or before the PPL expiry date 01 September 2026')
     ).toBeInTheDocument();
   });
 
   test('course end date after the PPL expiry date plays the expiry date back', () => {
     messageFor('endDate', { value: '2027-08-14', errorCode: 'dateIsSameOrBefore' });
     expect(
-      screen.getByText('Course end date must be the same as or before the PPL expiry date 1 September 2026')
+      screen.getByText('Course end date must be the same as or before the PPL expiry date 01 September 2026')
     ).toBeInTheDocument();
   });
 
   test('course end date before the start date plays the start date back', () => {
     messageFor('endDate', { value: '2026-08-14', errorCode: 'dateIsAfter' });
     expect(
-      screen.getByText('Course end date must be after the start date 1 September 2026')
+      screen.getByText('Course end date must be after the start date 01 September 2026')
     ).toBeInTheDocument();
   });
 

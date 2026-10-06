@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { get, isUndefined } = require('lodash');
+const { ASPEL_DATA_START_DATE } = require('@ukhomeoffice/asl-constants');
 const router = Router({ mergeParams: true });
 
 const { NotFoundError } = require('@asl/service/errors');
@@ -17,7 +18,7 @@ const {
 const buildQuery = filters => {
   const {
     status = 'resolved',
-    start = '2019-07-01',
+    start = ASPEL_DATA_START_DATE,
     end = new Date(),
     model,
     action,

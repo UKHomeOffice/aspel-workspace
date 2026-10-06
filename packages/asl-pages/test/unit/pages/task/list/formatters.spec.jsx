@@ -6,7 +6,7 @@ import { render, screen } from '@testing-library/react';
 import formatters from '../../../../../pages/task/list/formatters/index';
 import { MockReduxProvider } from '../../../../util/mock-redux';
 
-const RENDERED_DEADLINE = '8 Sep 2023';
+const RENDERED_DEADLINE = '08 Sep 2023';
 const RAW_DEADLINE = '2023-09-08 17:00:00';
 
 const REDUX_STATE = {

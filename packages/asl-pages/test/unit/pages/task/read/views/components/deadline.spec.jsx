@@ -62,7 +62,7 @@ describe('Deadline component', () => {
     MockDate.set('2023-09-07 08:00:00');
     renderDeadline({ date: '2023-09-08' });
 
-    expect(screen.getByText('8 September 2023')).toBeInTheDocument();
+    expect(screen.getByText('08 September 2023')).toBeInTheDocument();
     expect(screen.queryByText('(Deadline is today)')).not.toBeInTheDocument();
     expect(screen.queryByText('(Deadline passed 1 day ago)')).not.toBeInTheDocument();
   });
@@ -71,7 +71,7 @@ describe('Deadline component', () => {
     MockDate.set('2023-09-08 08:00:00');
     renderDeadline({ date: '2023-09-08' });
 
-    expect(screen.getByText('8 September 2023')).toBeInTheDocument();
+    expect(screen.getByText('08 September 2023')).toBeInTheDocument();
     expect(screen.getByText('(Deadline is today)')).toBeInTheDocument();
   });
 
@@ -79,7 +79,7 @@ describe('Deadline component', () => {
     MockDate.set('2023-09-09 00:01:00');
     renderDeadline({ date: '2023-09-08' });
 
-    expect(screen.getByText('8 September 2023')).toBeInTheDocument();
+    expect(screen.getByText('08 September 2023')).toBeInTheDocument();
     expect(screen.getByText('(Deadline passed 1 day ago)')).toBeInTheDocument();
   });
 
@@ -87,7 +87,7 @@ describe('Deadline component', () => {
     MockDate.set('2023-09-09 23:59:59');
     renderDeadline({ date: '2023-09-08' });
 
-    expect(screen.getByText('8 September 2023')).toBeInTheDocument();
+    expect(screen.getByText('08 September 2023')).toBeInTheDocument();
     expect(screen.getByText('(Deadline passed 1 day ago)')).toBeInTheDocument();
   });
 
@@ -95,7 +95,7 @@ describe('Deadline component', () => {
     MockDate.set('2023-09-11 23:59:59');
     renderDeadline({ date: '2023-09-08' });
 
-    expect(screen.getByText('8 September 2023')).toBeInTheDocument();
+    expect(screen.getByText('08 September 2023')).toBeInTheDocument();
     expect(screen.getByText('(Deadline passed 3 days ago)')).toBeInTheDocument();
   });
 });

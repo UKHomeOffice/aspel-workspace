@@ -42,16 +42,16 @@ export function populateTableWithTrainingRecords(table, training) {
     createBulletedList(record.modules, table.getCell(row, 1));
     createBulletedList(record.species, table.getCell(row, 2));
 
-    const details = record.isExemption
-      ? [
-        `Added on: ${formatDate(record.createdAt, DATE_FORMAT.long)}`,
-        ...(record.exemptionReason || '-').split('\n')
-      ]
-      : [
-        `Certificate number: ${record.certificateNumber}`,
-        `Awarded on: ${record.passDate}`,
-        `Awarded by: ${record.accreditingBody}`
-      ];
+     const details = record.isExemption
+       ? [
+         `Date exemption added: ${formatDate(record.createdAt, DATE_FORMAT.long)}`,
+         ...(record.exemptionReason || '-').split('\n')
+       ]
+       : [
+         `Certificate number: ${record.certificateNumber}`,
+         `Awarded on: ${record.passDate}`,
+         `Awarded by: ${record.accreditingBody}`
+       ];
     details.forEach(detail => table.getCell(row, 3).createParagraph(detail));
   });
 

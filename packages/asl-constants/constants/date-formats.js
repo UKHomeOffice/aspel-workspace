@@ -1,11 +1,14 @@
 const DATE_FORMAT = {
   long: 'DD MMMM YYYY',
-  medium: 'D MMM YYYY',
+  medium: 'DD MMM YYYY',
   short: 'D/M/YYYY',
-  shortPadded: 'DD/MM/YYYY',
+  shortYear: 'DD MMM YY',
   iso: 'YYYY-MM-DD',
-  datetime: 'D MMMM YYYY h:mm',
-  datetimeLong: 'DD MMMM YYYY h:mm'
+  ordinalLong: 'Do MMMM YYYY',
+  ordinalMonthYear: 'Do MMMM',
+  ordinalDay: 'Do',
+  year: 'YYYY',
+  month: 'MMMM'
 };
 
 const STRICT_DATE_FORMATS = ['YYYY-MM-DD', 'YYYY-M-D'];
