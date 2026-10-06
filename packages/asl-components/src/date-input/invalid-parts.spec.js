@@ -1,4 +1,5 @@
 const { splitDateValue, getInvalidDateParts } = require('./invalid-parts');
+const { expect } = require('@jest/globals');
 
 describe('splitDateValue', () => {
     test('splits an ISO year-month-day string', () => {
@@ -33,8 +34,12 @@ describe('getInvalidDateParts', () => {
         expect(getInvalidDateParts({ day: '', month: 'ab', year: '2024' })).toEqual(['day', 'month']);
     });
 
-    test('returns [] when every part is individually valid (e.g. 31/02)', () => {
+    test('returns [] when every part is individually valid', () => {
         expect(getInvalidDateParts({ day: '31', month: '02', year: '2024' })).toEqual([]);
+    });
+
+    test('returns all inputs when two parts are present, but invalid', () => {
+        expect(getInvalidDateParts({ day: '32', month: '13', year: '2024' })).toEqual(['day', 'month', 'year']);
     });
 
     test('returns all parts for a fully blank date', () => {
