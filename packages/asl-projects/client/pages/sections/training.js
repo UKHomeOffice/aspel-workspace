@@ -19,6 +19,7 @@ export default function Training(props) {
     return f.name === 'training-complete' ? { ...f, type: 'comments-only' } : f;
   });
   const trainingHistory = useSelector(state => state.static.previousTraining);
+  const {isPdf} = useSelector(state => state.static);
 
   const comparisons = useMemo(
     () => compareTrainingRecords(
@@ -43,8 +44,12 @@ export default function Training(props) {
   return (
     <Fragment>
       {readonly
-        ? <h2>Training record</h2>
+        ? (isPdf ? <h2>Training record</h2> : null)
         : <><h1>Training</h1><p>{props.intro}</p></>
+      }
+      {!readonly || !isPdf
+        ? <p>{props.intro}</p>
+        : null
       }
       <div className='heading-wrapper'>
         {holder && <span className="govuk-caption-m">{holder.status}</span>}
