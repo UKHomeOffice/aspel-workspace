@@ -22,8 +22,8 @@ export const formatCourseTitle = (title, trainingCourseId) =>
     />
     : (title ?? '-');
 
-export const formatProjectLicenceNumber = (licenceNumber, establishmentId, projectId) =>
-  projectId && establishmentId
+export const formatProjectLicenceNumber = (licenceNumber, establishmentId, projectId) => {
+  return projectId && establishmentId
     ? <Link
       page="project.read"
       establishmentId={establishmentId}
@@ -31,6 +31,7 @@ export const formatProjectLicenceNumber = (licenceNumber, establishmentId, proje
       label={licenceNumber}
     />
     : (licenceNumber ?? '-');
+};
 
 export const ucFirst = (str) => str.charAt(0).toLocaleUpperCase() + str.slice(1);
 export const formatSpecies = species =>

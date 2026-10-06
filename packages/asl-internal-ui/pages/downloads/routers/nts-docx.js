@@ -7,23 +7,13 @@ const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
 const { NotFoundError } = require('@asl/service/errors');
 const { addPageNumbers } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
 const { getRAReasons } = require('@ukhomeoffice/asl-constants');
-const dayJs = require('@ukhomeoffice/asl-components/dayjs');
-
-const { STRICT_DATE_FORMATS, formatIsoDate, parseDate } = dayJs;
+const { getDateQueryValue, validateNtsDateRangeQuery } = require('../lib/nts-date-validation');
+const getNtsRedirectQuery = require('../lib/nts-redirect-query');
 
 // Converts docx Document instance into a binary Buffer
 const pack = doc => {
   const packer = new Packer(doc);
   return packer.toBuffer(doc);
-};
-
-const parseIsoDate = dateStr => {
-  if (typeof dateStr !== 'string') {
-    return null;
-  }
-
-  const parsed = parseDate(dateStr, STRICT_DATE_FORMATS, true);
-  return parsed.isValid() && formatIsoDate(parsed) === dateStr ? parsed : null;
 };
 
 module.exports = settings => {
@@ -34,37 +24,19 @@ module.exports = settings => {
       if (!req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
         throw new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.');
       }
-      const { startDate, endDate, ra } = req.query;
-      const parsedStartDate = parseIsoDate(startDate);
-      const parsedEndDate = parseIsoDate(endDate);
 
-      // Validate startDate
-      if (!startDate) {
-        return res.status(400).send('Missing required query parameter: "startDate".');
-      }
-      if (!parsedStartDate) {
-        return res.status(400).send('Invalid "startDate" parameter. Format must be YYYY-MM-DD.');
-      }
+      const startDate = getDateQueryValue(req.query, 'date-from');
+      const endDate = getDateQueryValue(req.query, 'date-to');
+      const { ra } = req.query;
+      const validation = validateNtsDateRangeQuery(req.query);
 
-      // Validate endDate
-      if (!endDate) {
-        return res.status(400).send('Missing required query parameter: "endDate".');
-      }
-      if (!parsedEndDate) {
-        return res.status(400).send('Invalid "endDate" parameter. Format must be YYYY-MM-DD.');
-      }
-
-      // Ensure startDate is not after endDate
-      if (parsedStartDate.isAfter(parsedEndDate)) {
-        return res.status(400).send('"startDate" cannot be later than "endDate".');
+      if (!validation.isValid) {
+        return res.redirect(`/downloads?${getNtsRedirectQuery(req.query)}`);
       }
 
       // Validate ra (REQUIRED & must be 'true' or 'false')
-      if (ra === undefined || ra === '') {
-        return res.status(400).send('Missing required query parameter: "ra".');
-      }
       if (!['true', 'false'].includes(String(ra).toLowerCase())) {
-        return res.status(400).send('Invalid "ra" parameter. Must be "true" or "false".');
+        return res.redirect(`/downloads?${getNtsRedirectQuery(req.query)}`);
       }
 
       // Build the api/db query params
@@ -78,7 +50,7 @@ module.exports = settings => {
       const items = response.json.data || [];
 
       if (items.length === 0) {
-        return res.status(404).send('No projects found during the specified date range.');
+        return res.redirect(`/downloads?${getNtsRedirectQuery(req.query)}&noResults=true`);
       }
 
       let mergedDocument = null;
