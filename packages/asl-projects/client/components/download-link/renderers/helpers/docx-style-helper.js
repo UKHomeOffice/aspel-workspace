@@ -116,7 +116,37 @@ const addStyles = (document, nts) => {
         .color('#FF0000')
         .bold();
 
+    document.Styles.createParagraphStyle('caption', 'Caption')
+      .basedOn('Body')
+      .next('Body')
+      .quickFormat()
+      .font('Arial')
+      .color('#3B3B3B')
+      .spacing({ before: 400, after: 0 });
+
+    document.Styles.createParagraphStyle('captionedH4', 'Captioned Heading 4')
+      .basedOn('Heading4')
+      .next('Body')
+      .quickFormat()
+      .spacing({ before: 0, after: 200 });
+
     if (nts) {
+      document.Styles.createParagraphStyle('body', 'Body')
+        .basedOn('Normal')
+        .next('Normal')
+        .quickFormat()
+        .size(24)
+        .font('Arial')
+        .spacing({ before: 0, after: 240, line: 320, lineRule: 'exact' });
+
+      document.Styles.createParagraphStyle('tablebody', 'Table Body')
+        .basedOn('Normal')
+        .next('Normal')
+        .quickFormat()
+        .size(24)
+        .font('Arial')
+        .spacing({ before: 0, after: 0, line: 320, lineRule: 'exact' });
+
       document.Styles.createParagraphStyle('Heading1', 'Heading 1')
         .basedOn('Body')
         .next('Body')
@@ -124,7 +154,7 @@ const addStyles = (document, nts) => {
         .size(52)
         .font('Arial')
         .color('8F23B3')
-        .spacing({before: 0, after: 720, line: 1200});
+        .spacing({ before: 360, after: 720, line: 600, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('Heading2', 'Heading 2')
         .basedOn('Body')
@@ -134,7 +164,7 @@ const addStyles = (document, nts) => {
         .font('Arial')
         .color('8F23B3')
         .bold()
-        .spacing({before: 480, after: 240});
+          .spacing({ before: 480, after: 240, line: 440, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('Heading3', 'Heading 3')
         .basedOn('Body')
@@ -143,7 +173,7 @@ const addStyles = (document, nts) => {
         .size(28)
         .font('Arial')
         .bold()
-        .spacing({before: 120, after: 120});
+        .spacing({ before: 120, after: 120, line: 320, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('Heading4', 'Heading 4')
         .basedOn('Body')
@@ -151,7 +181,8 @@ const addStyles = (document, nts) => {
         .quickFormat()
         .size(24)
         .bold()
-        .font('Arial');
+            .font('Arial')
+            .spacing({ before: 0, after: 120, line: 320, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('Bold', 'bold')
         .basedOn('Body')
@@ -160,7 +191,15 @@ const addStyles = (document, nts) => {
         .size(24)
         .font('Arial')
         .bold()
-        .spacing({before: 0, after: 120, line: 320, lineRule: 'exact'});
+        .spacing({ before: 0, after: 240, line: 320, lineRule: 'exact' });
+
+        document.Styles.createParagraphStyle('ListParagraph', 'List Paragraph')
+          .basedOn('Body')
+          .next('Body')
+          .quickFormat()
+          .size(24)
+          .font('Arial')
+          .spacing({ before: 0, after: 120, line: 320, lineRule: 'exact' });
     }
 
 };
