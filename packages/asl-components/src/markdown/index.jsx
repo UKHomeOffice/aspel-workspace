@@ -42,10 +42,8 @@ function RenderUnorderedList({ children }) {
     return <ul className="govuk-list govuk-list--bullet">{children}</ul>;
 }
 
-// create correct tag and class for headings based on level
 function RenderHeading({ level, children }) {
-
-  const headingClasses = {
+    const headingClasses = {
         1: 'govuk-heading-xl',
         2: 'govuk-heading-l',
         3: 'govuk-heading-m',
