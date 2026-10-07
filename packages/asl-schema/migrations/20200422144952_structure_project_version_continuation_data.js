@@ -3,6 +3,7 @@ const customParseFormat = require('dayjs/plugin/customParseFormat');
 const {get} = require('lodash');
 const {Value} = require('slate');
 const csv = require('csv-stringify');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 
 rawDayjs.extend(customParseFormat);
 
@@ -101,7 +102,7 @@ const transform = (data, versionId, writeCsvLine) => {
     'project-continuation': [
       {
         'licence-number': get(ppl, 0, null),
-        'expiry-date': date ? date.format('YYYY-MM-DD') : null
+        'expiry-date': date ? date.format(DATE_FORMAT.iso) : null
       }
     ]
   };

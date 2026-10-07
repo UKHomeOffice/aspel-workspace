@@ -1,5 +1,6 @@
 const assert = require('assert');
 const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 const { project } = require('../../lib/resolvers');
 const db = require('../helpers/db');
 const { v4: generateUuid } = require('uuid');
@@ -20,9 +21,9 @@ const uuid =
 
 const establishmentId = 8201;
 
-const issueYear = dayJs().subtract(2, 'year').format('YYYY');
-const amendYear = dayJs().subtract(1, 'year').format('YYYY');
-const expiryYear = dayJs().add(3, 'year').format('YYYY');
+const issueYear = dayJs().subtract(2, 'year').format(DATE_FORMAT.year);
+const amendYear = dayJs().subtract(1, 'year').format(DATE_FORMAT.year);
+const expiryYear = dayJs().add(3, 'year').format(DATE_FORMAT.year);
 
 const isNowish = (date) => {
   return dayJs(date).isBetween(
@@ -3667,7 +3668,7 @@ describe('Project resolver', () => {
       const draftDate = new Date(`${amendYear}-02-28 12:00:00`).toISOString();
 
       const conversionTitle = 'Digitised Paper Licence';
-      const expectedExpiryYear = dayJs(issueDate).add(4, 'years').add(6, 'months').format('YYYY');
+      const expectedExpiryYear = dayJs(issueDate).add(4, 'years').add(6, 'months').format(DATE_FORMAT.year);
       const expectedExpiryDate = `${expectedExpiryYear}-11-14T22:59:59.999Z`;
       const expectedRaDate = dayJs(expectedExpiryDate).add(6, 'months').toISOString();
 

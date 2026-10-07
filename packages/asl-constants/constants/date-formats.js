@@ -8,7 +8,10 @@ const DATE_FORMAT = {
   ordinalMonthYear: 'Do MMMM',
   ordinalDay: 'Do',
   year: 'YYYY',
-  month: 'MMMM'
+  month: 'MMMM',
+  monthYear: 'MMMM YYYY',
+  timestampShort: 'DD/MM/YY HH:mm:ss',
+  yearMonth: 'YYYY-MM'
 };
 
 const STRICT_DATE_FORMATS = ['YYYY-MM-DD', 'YYYY-M-D'];

@@ -1,5 +1,6 @@
 const { get, omit } = require('lodash');
 const dayjs = require('@ukhomeoffice/asl-components/dayjs');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 
 module.exports = {
   submitParticipantForm: (messageFn) => (req, res, next) => {
@@ -13,7 +14,7 @@ module.exports = {
       json: {
         data: {
           ...omit(values, ['id', 'dob']),
-          dob: dayjs(values.dob).format('YYYY-MM-DD')
+          dob: dayjs(values.dob).format(DATE_FORMAT.iso)
         },
         meta
       }
