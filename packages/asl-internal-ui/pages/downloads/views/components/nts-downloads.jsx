@@ -5,7 +5,6 @@ import schema from '../../schema/nts';
 
 export default function NTSDownloads() {
   const initialValidation = useSelector(state => state.static.ntsDateRangeValidation) || {};
-  const initialNoResults = useSelector(state => state.static.ntsNoResults);
   const errors = initialValidation.errors || {};
   const model = initialValidation.model || {};
   const dateRangeErrors = {
@@ -18,7 +17,7 @@ export default function NTSDownloads() {
 
   return (
     <div className="nts-download-form">
-      {initialNoResults && <ErrorSummary />}
+      <ErrorSummary />
       <form method="GET" action="/downloads/nts/docx" noValidate>
         <Fieldset schema={schema.dates} model={model} errors={dateRangeErrors} validate={dateRangeValidate} />
         <Fieldset schema={schema.ra} model={model} errors={errors} />
