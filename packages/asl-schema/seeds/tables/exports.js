@@ -7,7 +7,6 @@ const generateExports = () => {
   let date = earliest;
   const dataExports = [];
 
-  // eslint-disable-next-line no-unmodified-loop-condition
   while (date <= latest) {
     dataExports.push({
       type: 'task-metrics',
@@ -18,7 +17,7 @@ const generateExports = () => {
         end: dayJs(date).endOf('month').format(DATE_FORMAT.iso)
       }
     });
-    date.add(1, 'month');
+    date = date.add(1, 'month');
   }
 
   return dataExports;
