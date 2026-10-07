@@ -1,7 +1,7 @@
 const DATE_FORMAT = {
   long: 'DD MMMM YYYY',
   medium: 'DD MMM YYYY',
-  short: 'D/M/YYYY',
+  short: 'DD/MM/YYYY',
   shortYear: 'DD MMM YY',
   iso: 'YYYY-MM-DD',
   ordinalLong: 'Do MMMM YYYY',

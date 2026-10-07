@@ -7,14 +7,14 @@ const generateExports = () => {
   let date = earliest;
   const dataExports = [];
 
-  while (date <= latest) {
+  while (date.isSameOrBefore(latest)) {
     dataExports.push({
       type: 'task-metrics',
       key: date.format(DATE_FORMAT.yearMonth),
       ready: false,
       meta: {
         start: date.format(DATE_FORMAT.iso),
-        end: dayJs(date).endOf('month').format(DATE_FORMAT.iso)
+        end: date.clone().endOf('month').format(DATE_FORMAT.iso)
       }
     });
     date = date.add(1, 'month');

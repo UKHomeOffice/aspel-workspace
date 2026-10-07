@@ -199,7 +199,7 @@ const getSingleProfile = req => {
 };
 
 function getMostRecent(pils) {
-  return pils.filter(p => p && p.updatedAt).sort((a, b) => b.updatedAt - a.updatedAt).pop();
+  return pils.filter(p => p && p.updatedAt).sort((a, b) => b.updatedAt < a.updatedAt ? -1 : 1).pop();
 }
 
 function toISOStringOrNull(value) {

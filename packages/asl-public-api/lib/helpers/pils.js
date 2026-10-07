@@ -4,11 +4,12 @@ const attachReviewDue = (pil, n = 3, unit = 'months') => {
   if (pil.status !== 'active') {
     return pil;
   }
-  pil.reviewDate = pil.reviewDate || dayJs(pil.updatedAt).add(5, 'years').toISOString();
+  const reviewDate = pil.reviewDate || dayJs(pil.updatedAt).add(5, 'years').toISOString();
   return {
     ...pil,
-    reviewDue: dayJs(pil.reviewDate).isBefore(dayJs().add(n, unit)),
-    reviewOverdue: dayJs(pil.reviewDate).isBefore(dayJs())
+    reviewDate,
+    reviewDue: dayJs(reviewDate).isBefore(dayJs().add(n, unit)),
+    reviewOverdue: dayJs(reviewDate).isBefore(dayJs())
   };
 };
 
