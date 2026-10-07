@@ -10,6 +10,8 @@ describe('trainingSummaryRenderer', () => {
     doc = {
       createParagraph: sinon.stub().returnsThis(),
       heading4: sinon.stub().returnsThis(),
+      style: sinon.stub().returnsThis(),
+      keepNext: sinon.stub().returnsThis(),
       addTable: sinon.stub()
     };
   });
