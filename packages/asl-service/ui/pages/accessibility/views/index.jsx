@@ -235,5 +235,17 @@ and manage their licences. We also tested the application assessment and grantin
 `;
 
 export default () => {
-  return <Markdown escapeHtml={false}>{ content }</Markdown>;
+  return (
+    <Markdown
+      escapeHtml={false}
+      components={{
+        h1: (props) => <h1 className="govuk-heading-xl" {...props} />,
+        h2: (props) => <h2 className="govuk-heading-l" {...props} />,
+        h3: (props) => <h3 className="govuk-heading-m" {...props} />,
+        h4: (props) => <h4 className="govuk-heading-s" {...props} />
+      }}
+    >
+      { content }
+    </Markdown>
+  );
 };
