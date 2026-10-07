@@ -53,8 +53,8 @@ function getNtsDateRangeModel(query) {
   return Object.fromEntries(dateFields.map(name => [name, getDateQueryValue(query, name)]));
 }
 
-function hasBoundaryError(value) {
-  return Boolean(dateValidation.getBoundaryErrorCode(value, dates.dateRange));
+function getBoundaryErrorCode(value) {
+  return dateValidation.getBoundaryErrorCode(value, dates.dateRange);
 }
 
 function validateNtsDateRangeQuery(query) {
@@ -71,19 +71,33 @@ function validateNtsDateRangeQuery(query) {
     errors.ra = 'invalid';
   }
 
-  const hasDateErrors = Object.keys(errors).length > 0;
+  const hasDateErrors = dateFields.some(name => errors[name]);
   const startDate = parseDate(model['date-from']);
   const endDate = parseDate(model['date-to']);
-  const hasInvalidBoundaries = !hasDateErrors && (hasBoundaryError(model['date-from']) || hasBoundaryError(model['date-to']));
-  const hasInvalidRange = !hasDateErrors && startDate.isAfter(endDate, 'day');
-  const exceedsMaximumRange = !hasDateErrors && endDate.isAfter(startDate.clone().add(6, 'months'), 'day');
+  let hasInvalidBoundaries = false;
 
-  if (exceedsMaximumRange) {
+  if (!hasDateErrors) {
+    dateFields.forEach(name => {
+      const boundaryError = getBoundaryErrorCode(model[name]);
+      if (boundaryError) {
+        errors[name] = boundaryError;
+        hasInvalidBoundaries = true;
+      }
+    });
+  }
+
+  const hasInvalidRange = !hasDateErrors && !hasInvalidBoundaries && startDate.isAfter(endDate, 'day');
+  const exceedsMaximumRange = !hasDateErrors && !hasInvalidBoundaries && !hasInvalidRange &&
+    endDate.isAfter(startDate.clone().add(6, 'months'), 'day');
+
+  if (hasInvalidRange) {
+    errors['date-to'] = 'dateIsAfter';
+  } else if (exceedsMaximumRange) {
     errors['date-to'] = 'maximumDateRange';
   }
 
   return {
-    isValid: !hasDateErrors && !hasInvalidBoundaries && !hasInvalidRange && !exceedsMaximumRange,
+    isValid: Object.keys(errors).length === 0,
     errors,
     model
   };
