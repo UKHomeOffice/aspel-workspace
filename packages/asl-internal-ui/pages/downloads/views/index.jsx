@@ -9,7 +9,7 @@ export default function Index() {
   const { reports } = useSelector(state => state.static);
   const query = useSelector(state => state.static.query);
   const tab = query && query.tab;
-  const hasNtsDocxFlag = useFeatureFlag(FEATURE_FLAG_NTS_DOCX) || true;
+  const hasNtsDocxFlag = useFeatureFlag(FEATURE_FLAG_NTS_DOCX);
   const tabs = hasNtsDocxFlag ? ['csv', 'nts'] : ['csv'];
   const activeTab = tabs.includes(tab) ? tab : 'csv';
 
