@@ -42,6 +42,20 @@ function RenderUnorderedList({ children }) {
     return <ul className="govuk-list govuk-list--bullet">{children}</ul>;
 }
 
+// create correct tag and class for headings based on level
+function RenderHeading({ level, children }) {
+
+  const headingClasses = {
+        1: 'govuk-heading-xl',
+        2: 'govuk-heading-l',
+        3: 'govuk-heading-m',
+        4: 'govuk-heading-s'
+    };
+    const Tag = `h${level}`;
+
+    return <Tag className={headingClasses[level]}>{children}</Tag>;
+}
+
 function getTagName(reactElement) {
     if(typeof reactElement.type === 'string') {
         return reactElement.type;
@@ -121,6 +135,10 @@ export default function Markdown({
                     linkReference: RenderLinkReference,
                     ul: RenderUnorderedList
                 }),
+                h1: props => <RenderHeading level={1} {...props} />,
+                h2: props => <RenderHeading level={2} {...props} />,
+                h3: props => <RenderHeading level={3} {...props} />,
+                h4: props => <RenderHeading level={4} {...props} />,
                 p: (props) => (
                     <ParagraphComponent
                         unwrapSingleLine={unwrapSingleLine}

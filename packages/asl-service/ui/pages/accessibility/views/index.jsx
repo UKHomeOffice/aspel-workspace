@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
+import { Markdown } from '@ukhomeoffice/asl-components';
 
 const content = `# Accessibility statement for ASPeL
 
@@ -25,14 +25,14 @@ about in the ‘Non-accessible content’ section of this statement.
 
 ## Feedback and contact information
 
-If you need information from this system in a different format, or if you need to apply for or amend a licence but are unable to use this site, contact us and we will make alternative arrangements: email [aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk)
+If you need information from this system in a different format, or if you need to apply for or amend a licence but are unable to use this site, contact us and we will make alternative arrangements: email&nbsp;[aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk)
 
 Our working hours are Monday to Friday, 9am to 5pm, excluding bank holidays. We’ll consider your request and get back to you in 3 working days.
 
 ## Reporting accessibility problems with this system
 
 We’re always looking to improve the accessibility of this system. If you find any problems not listed on this page or
-think we’re not meeting accessibility requirements, you can report this to us: [aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk)
+think we’re not meeting accessibility requirements, you can report this to us: email&nbsp;[aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk)
 
 Our working hours are Monday to Friday, 9am to 5pm, excluding bank holidays. We’ll consider your request
 and get back to you in 3 working days.
@@ -234,13 +234,6 @@ Testing was carried out internally by the Home Office. We tested the service bas
 and manage their licences. We also tested the application assessment and granting processes.
 `;
 
-const components = {
-  h1: ({ children }) => <h1 className="govuk-heading-xl">{children}</h1>,
-  h2: ({ children }) => <h2 className="govuk-heading-l">{children}</h2>,
-  h3: ({ children }) => <h3 className="govuk-heading-m">{children}</h3>,
-  h4: ({ children }) => <h4 className="govuk-heading-s">{children}</h4>
-};
-
 export default () => {
-  return <ReactMarkdown escapeHtml={false} components={components}>{ content }</ReactMarkdown>;
+  return <Markdown escapeHtml={false}>{ content }</Markdown>;
 };
