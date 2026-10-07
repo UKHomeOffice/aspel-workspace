@@ -7,6 +7,29 @@ const URLSearchParams = require('url-search-params');
 const can = require('./can');
 const Profile = require('./profile');
 
+// The value Keycloak redirects back to once it has logged the session out.
+// Referer/Origin reflect whatever page the browser was on when it followed
+// the link to /logout, which a third-party page can set just by linking to
+// this app's own /logout URL. Without this check an attacker's page would
+// control where a signed-out ASPeL user lands next. Only a value that
+// shares this request's own origin is trusted; anything else falls back to
+// this app's own root, which is also the behaviour when neither header is
+// present at all (a manual navigation to /logout, say).
+const safePostLogoutRedirectUri = req => {
+  const ownOrigin = `${req.protocol}://${req.get('host')}`;
+  const candidate = req.headers.referer || req.headers.origin;
+  if (candidate) {
+    try {
+      if (new URL(candidate).origin === new URL(ownOrigin).origin) {
+        return candidate;
+      }
+    } catch {
+      // Not a parseable absolute URL. Fall through to the safe default.
+    }
+  }
+  return ownOrigin;
+};
+
 module.exports = settings => {
 
   const router = Router();
@@ -44,7 +67,7 @@ module.exports = settings => {
 
   router.use('/logout', (req, res) => {
     // ASPeL URL
-    const postLogoutRedirectUri = req.headers.referer || req.headers.origin;
+    const postLogoutRedirectUri = safePostLogoutRedirectUri(req);
     const idTokenHint = req.kauth?.grant?.id_token?.token; // Extract ID token if available
 
     const logoutUrl = new URL(`${settings.url}/realms/${settings.realm}/protocol/openid-connect/logout`);
@@ -157,3 +180,5 @@ module.exports = settings => {
     protect: rules => keycloak.protect(rules)
   };
 };
+
+module.exports.safePostLogoutRedirectUri = safePostLogoutRedirectUri;
