@@ -71,29 +71,28 @@ function validateNtsDateRangeQuery(query) {
     errors.ra = 'invalid';
   }
 
-  const hasDateErrors = dateFields.some(name => errors[name]);
   const startDate = parseDate(model['date-from']);
   const endDate = parseDate(model['date-to']);
-  let hasInvalidBoundaries = false;
+  dateFields.forEach(name => {
+    if (errors[name]) {
+      return;
+    }
 
-  if (!hasDateErrors) {
-    dateFields.forEach(name => {
-      const boundaryError = getBoundaryErrorCode(model[name]);
-      if (boundaryError) {
-        errors[name] = boundaryError;
-        hasInvalidBoundaries = true;
-      }
-    });
-  }
+    const boundaryError = getBoundaryErrorCode(model[name]);
+    if (boundaryError) {
+      errors[name] = boundaryError;
+    }
+  });
 
-  const hasInvalidRange = !hasDateErrors && !hasInvalidBoundaries && startDate.isAfter(endDate, 'day');
-  const exceedsMaximumRange = !hasDateErrors && !hasInvalidBoundaries && !hasInvalidRange &&
+  const bothDatesValid = startDate.isValid() && endDate.isValid();
+  const hasInvalidRange = bothDatesValid && startDate.isAfter(endDate, 'day');
+  const exceedsMaximumRange = bothDatesValid && !hasInvalidRange &&
     endDate.isAfter(startDate.clone().add(6, 'months'), 'day');
 
-  if (hasInvalidRange) {
+  if (hasInvalidRange && !errors['date-to']) {
     errors['date-to'] = 'dateIsAfter';
   } else if (exceedsMaximumRange) {
-    errors['date-to'] = 'maximumDateRange';
+    errors.dateRange = 'maximumDateRange';
   }
 
   return {

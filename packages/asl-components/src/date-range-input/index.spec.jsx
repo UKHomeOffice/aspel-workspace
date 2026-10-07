@@ -4,7 +4,7 @@ import { afterEach, describe, expect, jest, test } from '@jest/globals';
 import DateRangeInput from './';
 
 function MockDateErrorMessage(props) {
-    return <span id={`${props.name}-error`}>error:{props.name}:{props.errorCode}</span>;
+    return <span id={`${props.name}-error`} data-date-label={props.dateLabel}>error:{props.name}:{props.errorCode}</span>;
 }
 
 jest.mock('../date-input/error-message', () => MockDateErrorMessage);
@@ -61,8 +61,24 @@ describe('<DateRangeInput />', () => {
 
         expect(screen.getByText('error:date-from:validDate')).toBeInTheDocument();
         expect(screen.getByText('error:date-to:validDate')).toBeInTheDocument();
+        expect(screen.getByText('error:date-from:validDate')).toHaveAttribute('data-date-label', "The 'From' date");
+        expect(screen.getByText('error:date-to:validDate')).toHaveAttribute('data-date-label', "The 'To' date");
         expect(container.querySelector('#date-from-month').classList).toContain('govuk-input--error');
         expect(container.querySelector('#date-to-day').classList).toContain('govuk-input--error');
+    });
+
+    test('renders a range error and highlights both dates', () => {
+        const { container } = render(
+            <DateRangeInput
+                name="dateRange"
+                label="Filter by date granted"
+                error="The date range cannot be more than 6 months"
+            />
+        );
+
+        expect(screen.getByText('The date range cannot be more than 6 months')).toBeInTheDocument();
+        expect(container.querySelector('#dateRange-legend')).toBeInTheDocument();
+        expect(container.querySelectorAll('.govuk-input--error')).toHaveLength(6);
     });
 
     test('only displays validation errors supplied by the server', () => {

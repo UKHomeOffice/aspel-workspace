@@ -24,9 +24,11 @@ module.exports = settings => {
           };
           res.locals.static.errors = validation.errors;
           res.locals.static.schema = {
-            'date-from': { inputType: 'inputDate' },
+            dateRange: schema.dates.dateRange,
+            'date-from': { inputType: 'inputDate', dateLabel: "The 'From' date" },
             'date-to': {
               inputType: 'inputDate',
+              dateLabel: "The 'To' date",
               validate: [{ dateIsAfter: dateRange['date-from'] }]
             },
             ...schema.ra

@@ -5,10 +5,12 @@ import DateErrorMessage from '../date-input/error-message';
 const defaultFields = {
     from: {
         label: 'Date from',
+        dateLabel: 'The \'From\' date',
         hint: 'For example 1 6 2026'
     },
     to: {
         label: 'Date to',
+        dateLabel: 'The \'To\' date',
         hint: 'For example 30 6 2026'
     }
 };
@@ -20,15 +22,23 @@ function getDateError({ name, field, value, errors = {}, validate = {} }) {
     if (!errorCode) {
         return null;
     }
-    return <DateErrorMessage name={name} value={value} errorCode={errorCode} validate={validate[name] || field.validate} />;
+    return <DateErrorMessage
+        name={name}
+        value={value}
+        errorCode={errorCode}
+        validate={validate[name] || field.validate}
+        dateLabel={field.dateLabel}
+    />;
 }
 
 export default function DateRangeInput({
+    name,
     label,
     hint,
     values,
     errors = {},
     validate = {},
+    error: rangeError,
     onChange
 }) {
     const rangeFields = [
@@ -50,11 +60,20 @@ export default function DateRangeInput({
 
     return (
         <div className="date-range-input">
-            <fieldset className="govuk-fieldset">
+            <fieldset
+                id={name}
+                className="govuk-fieldset"
+                aria-describedby={rangeError ? `${name}-error` : undefined}
+            >
                 {label && (
                     <legend className="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h2 className="govuk-fieldset__heading">{label}</h2>
+                        <h2 className="govuk-fieldset__heading" id={name ? `${name}-legend` : undefined}>{label}</h2>
                     </legend>
+                )}
+                {rangeError && (
+                    <div className="govuk-form-group govuk-form-group--error">
+                        <span className="govuk-error-message" id={`${name}-error`}>{rangeError}</span>
+                    </div>
                 )}
                 {hint && <div className="govuk-hint">{hint}</div>}
                 <div className="date-range-input__fields">
@@ -76,6 +95,7 @@ export default function DateRangeInput({
                                         name={fieldName}
                                         value={value}
                                         error={error}
+                                        highlightError={Boolean(rangeError)}
                                         onChange={value => update(fieldName, value)}
                                     />
                                 </div>

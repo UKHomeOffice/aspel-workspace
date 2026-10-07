@@ -15,7 +15,7 @@ function getDateFields(schema = {}, fields = new Map()) {
         if (!field || typeof field !== 'object') {
             return;
         }
-        if (field.inputType === 'inputDate') {
+        if (field.inputType === 'inputDate' || field.inputType === 'inputDateRange') {
             fields.set(key, field);
         }
         (field.options || []).forEach(option => {
@@ -81,7 +81,7 @@ const ErrorSummary = ({
                         Object.keys(errors).map(key => {
                             const snippetProps = formatters[key]?.renderContext ?? {};
                             const href = dateFields.has(key)
-                                ? getDateHref(key, model)
+                                ? dateFields.get(key).inputType === 'inputDateRange' ? `#${key}-legend` : getDateHref(key, model)
                                 : choiceFields.has(key)
                                     ? firstOptionHref(key, choiceFields.get(key))
                                     : `#${key}`;
