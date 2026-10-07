@@ -41,20 +41,26 @@ const transform = (data, versionId, writeCsvLine) => {
 
   const ppl = text.match(LICENCE_NUMBER) || [];
 
-  let date;
-  if (text.match(EXPIRYLONG)) {
-    const matched = text.match(EXPIRYLONG);
-    const day = matched[1];
-    const month = matched[3];
-    const year = matched[7];
-    date = rawDayjs(`${day} ${month} ${year}`, 'DD MMM YY');
-  } else if (text.match(EXPIRYLONG2)) {
-    const matched = text.match(EXPIRYLONG2);
-    const day = matched[25];
-    const month = matched[1];
-    const year = matched[29];
-    date = rawDayjs(`${day} ${month} ${year}`, 'DD MMM YY');
-  } else if (text.match(EXPIRYSHORT)) {
+   let date;
+   if (text.match(EXPIRYLONG)) {
+     const matched = text.match(EXPIRYLONG);
+     let day = matched[1];
+     const month = matched[3];
+     const year = matched[7];
+     if (day.length === 1) {
+       day = '0' + day;
+     }
+     date = rawDayjs(`${day} ${month} ${year}`, 'DD MMM YY');
+   } else if (text.match(EXPIRYLONG2)) {
+     const matched = text.match(EXPIRYLONG2);
+     let day = matched[3];
+     const month = matched[1];
+     const year = matched[5];
+     if (day.length === 1) {
+       day = '0' + day;
+     }
+     date = rawDayjs(`${day} ${month} ${year}`, 'DD MMM YY');
+   } else if (text.match(EXPIRYSHORT)) {
     const matched = text.match(EXPIRYSHORT);
     let day = matched[1];
     let month = matched[3];
