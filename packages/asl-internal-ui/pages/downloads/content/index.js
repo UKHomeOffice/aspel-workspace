@@ -14,6 +14,19 @@ module.exports = {
   'place-create': 'Approved area additions',
   'place-delete': 'Approved area deletions',
   'profile-update': 'Profile updates',
+  fields: {
+    dateRange: {
+      label: 'Filter by date granted',
+      hint: 'You can only download data:\n\n- from 31 July 2019, when ASPeL came into use\n- for date ranges of 6 months or less'
+    },
+    ra: {
+      label: 'Which type of non-technical summary do you want to download? (docx file)',
+      options: {
+        true: 'Projects requiring a retrospective assessment (RA)',
+        false: 'Projects not requiring an RA'
+      }
+    }
+  },
   errors: {
     dateRange: {
       maximumDateRange: 'The date range cannot be more than 6 months'
