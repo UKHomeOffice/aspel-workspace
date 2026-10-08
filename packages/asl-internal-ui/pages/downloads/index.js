@@ -14,10 +14,13 @@ module.exports = settings => {
     req.api('/reports/task-metrics')
       .then(response => {
         res.locals.static.query = req.query;
-        if (req.query.validateNtsDates === 'true') {
-          const dateRange = getNtsDateRangeModel(req.query);
-          const ra = req.query.ra === 'true' ? true : req.query.ra === 'false' ? false : req.query.ra;
-          const validation = validateNtsDateRangeQuery(req.query);
+        const ntsDownload = req.session.ntsDownload;
+        delete req.session.ntsDownload;
+        if (ntsDownload) {
+          const { values } = ntsDownload;
+          const dateRange = getNtsDateRangeModel(values);
+          const ra = values.ra === 'true' ? true : values.ra === 'false' ? false : values.ra;
+          const validation = validateNtsDateRangeQuery(values);
           res.locals.static.ntsDateRangeValidation = {
             model: { dateRange, ra },
             errors: validation.errors
@@ -35,8 +38,8 @@ module.exports = settings => {
           };
           res.locals.model = { ...dateRange, ra };
         }
-        res.locals.static.ntsNoResults = req.query.noResults === 'true';
-        if (req.query.noResults === 'true') {
+        res.locals.static.ntsNoResults = !!ntsDownload?.noResults;
+        if (ntsDownload?.noResults) {
           res.locals.static.errors = { noResults: 'noResults' };
         }
         res.locals.static.reports = response.json.data.map(report => {

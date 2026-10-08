@@ -8,7 +8,7 @@ const { NotFoundError } = require('@asl/service/errors');
 const { addPageNumbers } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
 const { getRAReasons } = require('@ukhomeoffice/asl-constants');
 const { getDateQueryValue, validateNtsDateRangeQuery } = require('../lib/nts-date-validation');
-const getNtsRedirectQuery = require('../lib/nts-redirect-query');
+const getNtsFormValues = require('../lib/nts-form-values');
 
 // Converts docx Document instance into a binary Buffer
 const pack = doc => {
@@ -28,14 +28,18 @@ module.exports = settings => {
       const endDate = getDateQueryValue(req.query, 'date-to');
       const { ra } = req.query;
       const validation = validateNtsDateRangeQuery(req.query);
+      const redirectToForm = (noResults = false) => {
+        req.session.ntsDownload = { values: getNtsFormValues(req.query), noResults };
+        return res.redirect('/downloads?tab=nts');
+      };
 
       if (!validation.isValid) {
-        return res.redirect(`/downloads?${getNtsRedirectQuery(req.query)}`);
+        return redirectToForm();
       }
 
       // Validate ra (REQUIRED & must be 'true' or 'false')
       if (!['true', 'false'].includes(String(ra).toLowerCase())) {
-        return res.redirect(`/downloads?${getNtsRedirectQuery(req.query)}`);
+        return redirectToForm();
       }
 
       // Build the api/db query params
@@ -49,7 +53,7 @@ module.exports = settings => {
       const items = response.json.data || [];
 
       if (items.length === 0) {
-        return res.redirect(`/downloads?${getNtsRedirectQuery(req.query)}&noResults=true`);
+        return redirectToForm(true);
       }
 
       let mergedDocument = null;
