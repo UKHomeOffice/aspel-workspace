@@ -1,7 +1,9 @@
 import React, { useState, Fragment } from 'react';
 import DatePicker from 'backpack-transpiled/bpk-component-datepicker';
-import { format } from 'date-fns';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { dateFormat } from '@asl/pages/constants';
+
+const { format } = dayJs;
 
 const formatDate = date => format(date, dateFormat.medium);
 const formatDateFull = date => format(date, dateFormat.long);

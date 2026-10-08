@@ -663,7 +663,7 @@ export default (application, sections, values, updateImageDimensions) => {
 
   const renderDocument = (sections, values) => {
     values = values || {};
-    const now = new Date();
+    const exportedOn = formatDate(new Date(), DATE_FORMAT.long);
     const primaryEstablishment = application.establishment.name;
 
     // inject the project licence holder into introductory details
@@ -676,7 +676,7 @@ export default (application, sections, values, updateImageDimensions) => {
     values['holder'] = application.licenceHolder;
 
     document.createParagraph(values.title).heading1();
-    document.createParagraph(`Document exported on ${now}`).style('body');
+    document.createParagraph(`Document exported on ${exportedOn}`).style('body');
 
     document.createParagraph('\n').style('body');
     document.createParagraph('\n').style('body');

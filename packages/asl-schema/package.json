@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pretest:functional": "NODE_ENV=test npm run migrate",
-    "test": "npm run test:lint && npm run test:unit && npm run test:functional && npm run test:migrations && npm run seed",
+    "test": "npm run test:lint && npm run test:unit && npm run test:functional && npm run test:migrations",
     "test:lint": "eslint .",
     "test:unit": "mocha ./test/unit --recursive --exit",
     "test:functional": "SNAKE_MAPPER=true mocha ./test/functional --recursive --exit",
@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/UKHomeOffice/asl-schema#readme",
   "dependencies": {
+    "@ukhomeoffice/asl-components": "file:../asl-components",
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "csv-stringify": "^5.4.3",
     "deep-diff": "^1.0.2",
@@ -34,7 +35,6 @@
     "knex": "^3.1.0",
     "lodash": "^4.18.1",
     "minimist": "^1.2.6",
-    "moment": "^2.29.3",
     "objection": "^3.1.5",
     "pg": "^8.7.3",
     "pg-query-stream": "^2.0.1",

@@ -15,7 +15,6 @@ describe('resolveDateError', () => {
         });
 
         test('two missing parts are listed with "and"', () => {
-            // year present, day and month missing
             expect(resolveDateError({ errorCode: 'validDate', value: '2024--' }))
                 .toEqual({ key: 'incomplete', context: { missingParts: 'a day and month' } });
         });
@@ -67,7 +66,23 @@ describe('resolveDateError', () => {
                 errorCode: 'dateIsAfter',
                 value: '2024-05-10',
                 validate: [{ dateIsAfter: '2017-09-01' }]
-            })).toEqual({ key: 'after', context: { date: '1 September 2017' } });
+            })).toEqual({ key: 'after', context: { date: '01 September 2017' } });
+        });
+
+        test('supports Date params', () => {
+            expect(resolveDateError({
+                errorCode: 'dateIsAfter',
+                value: '2024-05-10',
+                validate: [{ dateIsAfter: new Date('2017-09-01T12:00:00.000Z') }]
+            })).toEqual({ key: 'after', context: { date: '01 September 2017' } });
+        });
+
+        test('supports numeric timestamp params', () => {
+            expect(resolveDateError({
+                errorCode: 'dateIsAfter',
+                value: '2024-05-10',
+                validate: [{ dateIsAfter: Date.parse('2017-09-01T12:00:00.000Z') }]
+            })).toEqual({ key: 'after', context: { date: '01 September 2017' } });
         });
 
         test('falls back to the today-relative message when the param is a function', () => {
@@ -96,3 +111,4 @@ describe('resolveDateError', () => {
             .toEqual({ key: 'aspelDataStartDate', context: {} });
     });
 });
+

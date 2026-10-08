@@ -1,30 +1,34 @@
 import React, { Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector } from 'react-redux';
 import { Snippet, Link } from '@ukhomeoffice/asl-components';
 import { Button } from '@ukhomeoffice/react-components';
-import { format, getYear, isBefore, isAfter, endOfDay, addDays, subMilliseconds } from 'date-fns';
 import { dateFormat } from '../../../../../constants';
 import { formatDate } from '../../../../../lib/utils';
 import partition from 'lodash/partition';
 import pick from 'lodash/pick';
 import Subsection from '../components/subsection';
 
+const { format, getYear, isBefore, isAfter, endOfDay, addDays, subMilliseconds, isValid } = dayJs;
+
 function getDeadline(ropYear, project) {
   const endOfJan = endOfDay(new Date(`${ropYear + 1}-01-31`));
 
   function getRefDate(date) {
-    return subMilliseconds(addDays(new Date(date), 29), 1);
+    return isValid(date)
+      ? subMilliseconds(addDays(new Date(date), 29), 1)
+      : null;
   }
 
   switch (project.status) {
     case 'active':
-      return isBefore(getRefDate(project.expiryDate), endOfJan)
+      return getRefDate(project.expiryDate) && isBefore(getRefDate(project.expiryDate), endOfJan)
         ? getRefDate(project.expiryDate)
         : endOfJan;
     case 'expired':
-      return getRefDate(project.expiryDate);
+      return getRefDate(project.expiryDate) || endOfJan;
     case 'revoked':
-      return getRefDate(project.revocationDate);
+      return getRefDate(project.revocationDate) || endOfJan;
     default:
       return endOfJan;
   }
@@ -33,7 +37,7 @@ function getDeadline(ropYear, project) {
 export function Rop({ rop, project, active, url }) {
   const endOfYear = new Date(`${rop.year}-12-31`);
   const projEnd = project.revocationDate || project.expiryDate;
-  const expiresMidYear = isBefore(projEnd, endOfYear);
+  const expiresMidYear = isValid(projEnd) && isBefore(projEnd, endOfYear);
   const endDate = format(expiresMidYear ? projEnd : endOfYear, dateFormat.long);
   const ropsDeadline = getDeadline(rop.year, project);
 

@@ -1,10 +1,10 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { formatDate, DATE_FORMAT, applyFormatters } from './utils';
+import {render, screen} from '@testing-library/react';
+import {applyFormatters, DATE_FORMAT, formatDate} from './utils';
 
 describe('formatDate', () => {
   test('formats a valid date', () => {
-    expect(formatDate('2024-01-01', DATE_FORMAT.short)).toBe('1/1/2024');
+    expect(formatDate('2024-01-01', DATE_FORMAT.short)).toBe('01/01/2024');
   });
 
   test('returns "-" for empty dates', () => {
@@ -22,7 +22,7 @@ describe('formatDate', () => {
 describe('applyFormatters', () => {
   test('formats component props', () => {
     const ExampleComponent = (props) => {
-      const { mapped, unchanged, added, formatted } = applyFormatters(props);
+      const {mapped, unchanged, added, formatted} = applyFormatters(props);
 
       return (
         <div>

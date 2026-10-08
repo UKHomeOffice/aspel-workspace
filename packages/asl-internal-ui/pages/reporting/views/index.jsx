@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import moment from 'moment';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import { Header, Link, Metric } from '@ukhomeoffice/asl-components';
 
 import MetricsFilter from './components/metrics-filter';
@@ -8,27 +9,27 @@ import MetricsFilter from './components/metrics-filter';
 function DateRange() {
   const { start, end } = useSelector(state => {
     return {
-      start: moment(state.model.start),
-      end: moment(state.model.end)
+      start: dayJs(state.model.start),
+      end: dayJs(state.model.end)
     };
   });
 
   if (!start.isSame(end, 'year')) {
-    return `From ${start.format('Do MMMM YYYY')} to ${end.format('Do MMMM YYYY')}`;
+    return `From ${start.format(DATE_FORMAT.ordinalLong)} to ${end.format(DATE_FORMAT.ordinalLong)}`;
   }
   if (!start.isSame(end, 'month')) {
-    return `From ${start.format('Do MMMM')} to ${end.format('Do MMMM YYYY')}`;
+    return `From ${start.format(DATE_FORMAT.ordinalMonthYear)} to ${end.format(DATE_FORMAT.ordinalLong)}`;
   }
-  return `From ${start.format('Do')} to ${end.format('Do MMMM YYYY')}`;
+  return `From ${start.format(DATE_FORMAT.ordinalDay)} to ${end.format(DATE_FORMAT.ordinalLong)}`;
 }
 
 function EndDate() {
   const { end } = useSelector(state => {
     return {
-      end: moment(state.model.end)
+      end: dayJs(state.model.end)
     };
   });
-  return `${end.format('D MMMM YYYY')}`;
+  return `${end.format(DATE_FORMAT.long)}`;
 }
 
 export default function Index() {

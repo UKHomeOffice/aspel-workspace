@@ -24,6 +24,7 @@ module.exports = settings => {
       if (!req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
         throw new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.');
       }
+
       const startDate = getDateQueryValue(req.query, 'date-from');
       const endDate = getDateQueryValue(req.query, 'date-to');
       const { ra } = req.query;

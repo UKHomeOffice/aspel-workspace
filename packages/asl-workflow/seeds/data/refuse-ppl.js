@@ -1,6 +1,5 @@
-const moment = require('moment-business-time');
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-moment.updateLocale('en', { holidays: bankHolidays });
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { formatIsoDate } = dayJs;
 
 module.exports = async makeTask => {
   const defaultOpts = {
@@ -12,7 +11,7 @@ module.exports = async makeTask => {
   const inspectorId = 'a942ffc7-e7ca-4d76-a001-0b5048a057d1';
 
   const applicationSubmittedTask = async () => {
-    const eventTime = moment().subtract(1, 'day');
+    const eventTime = dayJs().subtract(1, 'day');
 
     await makeTask({
       ...defaultOpts,
@@ -23,7 +22,7 @@ module.exports = async makeTask => {
   };
 
   const applicationSubmittedWithNoLicenceHolderTask = async () => {
-    const eventTime = moment().subtract(1, 'day');
+    const eventTime = dayJs().subtract(1, 'day');
 
     await makeTask({
       ...defaultOpts,
@@ -35,7 +34,7 @@ module.exports = async makeTask => {
   };
 
   const canResubmitTask = async () => {
-    const eventTime = moment().subtract(1, 'day');
+    const eventTime = dayJs().subtract(1, 'day');
 
     const task = await makeTask({
       ...defaultOpts,
@@ -43,7 +42,7 @@ module.exports = async makeTask => {
       title: 'Refuse PPL: can resubmit',
       data: {
         intentionToRefuse: {
-          deadline: moment(eventTime).add(28, 'days').format('YYYY-MM-DD'),
+          deadline: formatIsoDate(dayJs(eventTime).add(28, 'days')),
           markdown: 'My reason for refusing this project',
           inspectorId
         }
@@ -56,7 +55,7 @@ module.exports = async makeTask => {
   };
 
   const deadlineFutureWithApplicantTask = async () => {
-    const eventTime = moment().subtract(1, 'day');
+    const eventTime = dayJs().subtract(1, 'day');
 
     const task = await makeTask({
       ...defaultOpts,
@@ -64,7 +63,7 @@ module.exports = async makeTask => {
       title: 'Refuse PPL: deadline future with applicant',
       data: {
         intentionToRefuse: {
-          deadline: moment(eventTime).add(28, 'days').format('YYYY-MM-DD'),
+          deadline: formatIsoDate(dayJs(eventTime).add(28, 'days')),
           markdown: 'My reason for refusing this project',
           inspectorId
         }
@@ -77,7 +76,7 @@ module.exports = async makeTask => {
   };
 
   const deadlineFutureWithAsruTask = async () => {
-    const eventTime = moment().subtract(1, 'day');
+    const eventTime = dayJs().subtract(1, 'day');
 
     const task = await makeTask({
       ...defaultOpts,
@@ -85,7 +84,7 @@ module.exports = async makeTask => {
       title: 'Refuse PPL: deadline future with asru',
       data: {
         intentionToRefuse: {
-          deadline: moment(eventTime).add(28, 'days').format('YYYY-MM-DD'),
+          deadline: formatIsoDate(dayJs(eventTime).add(28, 'days')),
           markdown: 'My reason for refusing this project',
           inspectorId
         }
@@ -99,7 +98,7 @@ module.exports = async makeTask => {
   };
 
   const deadlinePassedWithApplicantTask = async ({uuid, title}) => {
-    const eventTime = moment().subtract(30, 'days');
+    const eventTime = dayJs().subtract(30, 'days');
 
     const task = await makeTask({
       ...defaultOpts,
@@ -107,7 +106,7 @@ module.exports = async makeTask => {
       title,
       data: {
         intentionToRefuse: {
-          deadline: moment(eventTime).add(28, 'days').format('YYYY-MM-DD'),
+          deadline: formatIsoDate(dayJs(eventTime).add(28, 'days')),
           markdown: 'My reason for refusing this project',
           inspectorId
         }
@@ -128,7 +127,7 @@ module.exports = async makeTask => {
   };
 
   const refusedTask = async () => {
-    const eventTime = moment().subtract(30, 'days');
+    const eventTime = dayJs().subtract(30, 'days');
 
     const task = await makeTask({
       ...defaultOpts,
@@ -136,7 +135,7 @@ module.exports = async makeTask => {
       title: 'Refuse PPL: refused',
       data: {
         intentionToRefuse: {
-          deadline: moment(eventTime).add(28, 'days').format('YYYY-MM-DD'),
+          deadline: formatIsoDate(dayJs(eventTime).add(28, 'days')),
           markdown: 'My reason for refusing this project',
           inspectorId
         }

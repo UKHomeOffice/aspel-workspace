@@ -1,5 +1,5 @@
 const { get } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { Task } = require('@ukhomeoffice/asl-taskflow');
 const { withASRU } = require('../../flow');
 
@@ -23,7 +23,7 @@ const getActiveDeadline = task => {
   const statutoryDate = get(statutoryDeadline, isExtended ? 'extended' : 'standard');
   const internalDeadline = get(task, 'data.internalDeadline');
   const internalDate = get(internalDeadline, isExtended ? 'extended' : 'standard');
-  const internalPassed = internalDate && moment(internalDate).isBefore(now);
+  const internalPassed = internalDate && dayJs(internalDate).isBefore(now);
   const earliestDate = [internalDate, statutoryDate].filter(Boolean).sort().shift();
 
   return (!internalPassed || !statutoryDate) && earliestDate

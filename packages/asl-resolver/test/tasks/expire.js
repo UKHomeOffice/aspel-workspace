@@ -1,5 +1,5 @@
 const assert = require('assert');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const db = require('../helpers/db');
 const expireTask = require('../../tasks/expire');
 const Logger = require('../../lib/utils/logger');
@@ -36,7 +36,7 @@ describe('Project expiry', () => {
         {
           title: 'Active project with expiry 1 month ago (should expire)',
           status: 'active',
-          expiryDate: moment().subtract(1, 'month').toISOString(),
+          expiryDate: dayJs().subtract(1, 'month').toISOString(),
           licenceNumber: 'active-expires-minus-1-month',
           establishmentId,
           licenceHolderId: profileId
@@ -44,7 +44,7 @@ describe('Project expiry', () => {
         {
           title: 'Active project with expiry 1 week ago (should expire)',
           status: 'active',
-          expiryDate: moment().subtract(1, 'week').toISOString(),
+          expiryDate: dayJs().subtract(1, 'week').toISOString(),
           licenceNumber: 'active-epires-minus-1-week',
           establishmentId,
           licenceHolderId: profileId
@@ -52,7 +52,7 @@ describe('Project expiry', () => {
         {
           title: 'Active project with expiry 1 day ago (should expire)',
           status: 'active',
-          expiryDate: moment().subtract(1, 'day').toISOString(),
+          expiryDate: dayJs().subtract(1, 'day').toISOString(),
           licenceNumber: 'active-expires-minus-1-day',
           establishmentId,
           licenceHolderId: profileId
@@ -60,7 +60,7 @@ describe('Project expiry', () => {
         {
           title: 'Active project with expiry 1 second before midnight last night (should expire)',
           status: 'active',
-          expiryDate: moment().subtract(1, 'day').endOf('day').toISOString(),
+          expiryDate: dayJs().subtract(1, 'day').endOf('day').toISOString(),
           licenceNumber: 'active-expires-minus-1-second',
           establishmentId,
           licenceHolderId: profileId
@@ -68,7 +68,7 @@ describe('Project expiry', () => {
         {
           title: 'Active project with expiry today (should not expire)',
           status: 'active',
-          expiryDate: moment().toISOString(),
+          expiryDate: dayJs().toISOString(),
           licenceNumber: 'active-expires-today',
           establishmentId,
           licenceHolderId: profileId
@@ -76,7 +76,7 @@ describe('Project expiry', () => {
         {
           title: 'Active project with expiry next week (should not expire)',
           status: 'active',
-          expiryDate: moment().add(1, 'week').toISOString(),
+          expiryDate: dayJs().add(1, 'week').toISOString(),
           licenceNumber: 'active-expires-plus-1-week',
           establishmentId,
           licenceHolderId: profileId
@@ -92,7 +92,7 @@ describe('Project expiry', () => {
         {
           title: 'Revoked project with expiry 1 month ago (should not expire)',
           status: 'revoked',
-          expiryDate: moment().subtract(1, 'month').toISOString(),
+          expiryDate: dayJs().subtract(1, 'month').toISOString(),
           licenceNumber: 'revoked-expires-minus-1-month',
           establishmentId,
           licenceHolderId: profileId

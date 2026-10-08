@@ -1,12 +1,11 @@
 import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
 import classnames from 'classnames';
-import { format } from 'date-fns';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import { Button } from '@ukhomeoffice/react-components';
 import { Markdown } from '@ukhomeoffice/asl-components';
 import { deleteComment } from '../../actions/comments';
-
-import { DATE_FORMAT } from '../../constants';
+import { formatDate } from '@ukhomeoffice/asl-components/utils';
+import { connect } from 'react-redux';
 
 const Comment = ({
   field,
@@ -25,7 +24,7 @@ const Comment = ({
     <div className="header">
       <strong>{`${index + 1}. ${author}`}</strong>
       {
-        !deleted && <span className="date">{ createdAt ? format(createdAt, DATE_FORMAT.short) : 'New' }</span>
+        !deleted && <span className="date">{ createdAt ? formatDate(createdAt, DATE_FORMAT.short) : 'New' }</span>
       }
     </div>
     <div className="content">

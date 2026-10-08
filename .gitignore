@@ -5,7 +5,7 @@ env
 
 packages/**/node_modules
 packages/**/.env
-
+packages/**/.env.example
 packages/**/coverage
 
 packages/asl/public

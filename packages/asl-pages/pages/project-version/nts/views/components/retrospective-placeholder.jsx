@@ -1,8 +1,10 @@
 import React from 'react';
-import { format } from 'date-fns';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { Markdown } from '@ukhomeoffice/asl-components';
 import { dateFormat } from '../../../../../constants';
 import { render } from 'mustache';
+
+const { format } = dayJs;
 
 export default function RetrospectivePlaceholder({ project, version, field }) {
   const raCompulsory = version.raCompulsory;

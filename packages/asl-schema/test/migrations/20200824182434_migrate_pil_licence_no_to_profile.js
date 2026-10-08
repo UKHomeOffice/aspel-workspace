@@ -1,5 +1,5 @@
 const { v4: uuid } = require('uuid');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const assert = require('assert');
 const { up } = require('../../migrations/20200824182434_migrate_pil_licence_no_to_profile');
 const db = require('./helpers/db');
@@ -32,29 +32,29 @@ describe('up', () => {
       establishment_id: 100,
       profile_id: ids.profile,
       licence_number: 'DELETED LICENCE',
-      issue_date: moment().toISOString(),
-      deleted: moment().toISOString()
+      issue_date: dayJs().toISOString(),
+      deleted: dayJs().toISOString()
     },
     {
       status: 'active',
       establishment_id: 100,
       profile_id: ids.profile,
       licence_number: LICENCE_NUMBER,
-      issue_date: moment().subtract(1, 'month').toISOString()
+      issue_date: dayJs().subtract(1, 'month').toISOString()
     },
     {
       status: 'revoked',
       establishment_id: 100,
       profile_id: ids.profile,
       licence_number: 'REVOKED LICENCE',
-      issue_date: moment().subtract(2, 'months').toISOString()
+      issue_date: dayJs().subtract(2, 'months').toISOString()
     },
     {
       status: 'active',
       establishment_id: 100,
       profile_id: ids.profile,
       licence_number: 'SUPERSEDED LICENCE',
-      issue_date: moment().subtract(2, 'months').toISOString()
+      issue_date: dayJs().subtract(2, 'months').toISOString()
     }
   ];
 

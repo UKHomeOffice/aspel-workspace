@@ -1,5 +1,6 @@
 const dateValidation = require('@ukhomeoffice/asl-components/src/date-range-input/date-validation');
 const { dates } = require('../schema/nts');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 
 const dateFields = ['date-from', 'date-to'];
 
@@ -32,7 +33,7 @@ function isValidDate(value) {
 }
 
 function normaliseDate(value) {
-  return parseDate(value).format('YYYY-MM-DD');
+  return parseDate(value).format(DATE_FORMAT.iso);
 }
 
 function getDateError(query, name) {

@@ -5,7 +5,7 @@ import concat from 'lodash/concat';
 import flatten from 'lodash/flatten';
 import values from 'lodash/values';
 import Mustache from 'mustache';
-import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
+import { DATE_FORMAT, projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 import RAContent from '@asl/projects/client/constants/retrospective-assessment';
 import schemaVersions from '@asl/projects/client/schema';
 import schemaV0 from '@asl/projects/client/schema/v0';
@@ -14,7 +14,7 @@ import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose'
 import { addStyles, addPageNumbers } from './helpers/docx-style-helper';
 import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared } from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
-import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
+import { formatDate } from '@ukhomeoffice/asl-components/utils';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
 
 export default async function ntsDocxRenderer(opts) {
@@ -277,7 +277,7 @@ export default async function ntsDocxRenderer(opts) {
     if (!ra) { return; }
     document.createParagraph('Retrospective assessment').heading3().spacing({ before: 240 });
     if (application.raGrantedDate) {
-      document.createParagraph(`Published: ${application.raGrantedDate}`).style('body');
+      document.createParagraph(`Published: ${formatDate(application.raGrantedDate, DATE_FORMAT.long)}`).style('body');
     }
     const raSchema = schemaVersions['RA']();
     const allFields = flatten(Object.values(raSchema.introduction.subsections).map(s => s.fields));

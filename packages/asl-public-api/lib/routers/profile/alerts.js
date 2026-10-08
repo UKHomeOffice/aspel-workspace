@@ -1,9 +1,9 @@
-const { Router } = require('express');
-const moment = require('moment');
-const { permissions } = require('../../middleware');
+const {Router} = require('express');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const {permissions} = require('../../middleware');
 
 const raDueQuery = models => {
-  const { Project } = models;
+  const {Project} = models;
 
   return Project.query()
     .whereIn('projects.status', ['expired', 'revoked'])
@@ -15,7 +15,7 @@ const raDueQuery = models => {
 };
 
 const ropsDueQuery = (models, ropsYear) => {
-  const { Project } = models;
+  const {Project} = models;
 
   return Project.query()
     .select('projects.*')
@@ -37,26 +37,26 @@ const getPersonalAlerts = async (profile, models, ropsYears) => {
     });
   }
 
-  const raProjects = await raDueQuery(models).where({ licenceHolderId: profile.id });
+  const raProjects = await raDueQuery(models).where({licenceHolderId: profile.id});
 
   raProjects.forEach(project => {
     alerts.push({
       type: 'raDue',
       model: project,
       deadline: project.raDate,
-      overdue: moment(project.raDate).isBefore(moment())
+      overdue: dayJs(project.raDate).isBefore(dayJs())
     });
   });
 
   for (const ropsYear of ropsYears) {
-    const ropsProjects = await ropsDueQuery(models, ropsYear).where({ licenceHolderId: profile.id });
+    const ropsProjects = await ropsDueQuery(models, ropsYear).where({licenceHolderId: profile.id});
 
     ropsProjects.forEach(project => {
       alerts.push({
         type: 'ropDue',
         model: project,
         deadline: project.ropsDeadline,
-        overdue: moment(project.ropsDeadline).isBefore(moment()),
+        overdue: dayJs(project.ropsDeadline).isBefore(dayJs()),
         ropsYear
       });
     });
@@ -76,11 +76,11 @@ const getEstablishmentAlerts = async (profile, models, ropsYears) => {
   const pilReviewEstablishments = adminAtEstablishments.concat(ntcoAtEstablishments);
 
   if (pilReviewEstablishments.length > 0) {
-    const { PIL } = models;
+    const {PIL} = models;
 
     const pilReviews = await PIL.query()
-      .where({ status: 'active' })
-      .where('reviewDate', '<', moment().add(1, 'month'))
+      .where({status: 'active'})
+      .where('reviewDate', '<', dayJs().add(1, 'month').toISOString())
       .whereIn('establishmentId', pilReviewEstablishments.map(e => e.id));
 
     pilReviews.forEach(pil => {
@@ -89,7 +89,7 @@ const getEstablishmentAlerts = async (profile, models, ropsYears) => {
         model: pil,
         establishmentId: pil.establishmentId,
         deadline: pil.reviewDate,
-        overdue: moment(pil.reviewDate).isBefore(moment())
+        overdue: dayJs(pil.reviewDate).isBefore(dayJs())
       });
     });
   }
@@ -104,7 +104,7 @@ const getEstablishmentAlerts = async (profile, models, ropsYears) => {
         model: project,
         establishmentId: project.establishmentId,
         deadline: project.raDate,
-        overdue: moment(project.raDate).isBefore(moment())
+        overdue: dayJs(project.raDate).isBefore(dayJs())
       });
     });
 
@@ -118,7 +118,7 @@ const getEstablishmentAlerts = async (profile, models, ropsYears) => {
           model: project,
           establishmentId: project.establishmentId,
           deadline: project.ropsDeadline,
-          overdue: moment(project.ropsDeadline).isBefore(moment()),
+          overdue: dayJs(project.ropsDeadline).isBefore(dayJs()),
           ropsYear
         });
       });
@@ -129,14 +129,14 @@ const getEstablishmentAlerts = async (profile, models, ropsYears) => {
 };
 
 module.exports = () => {
-  const router = Router({ mergeParams: true });
+  const router = Router({mergeParams: true});
 
   router.get('/',
-    permissions('profile.alerts', req => ({ profileId: req.profile.id })),
+    permissions('profile.alerts', req => ({profileId: req.profile.id})),
     async (req, res, next) => {
-      const personalCutoff = moment().add(3, 'months');
-      const ropsCutoff = moment().add(1, 'month');
-      const establishmentCutoff = moment().add(1, 'month');
+      const personalCutoff = dayJs().add(3, 'months');
+      const ropsCutoff = dayJs().add(1, 'month');
+      const establishmentCutoff = dayJs().add(1, 'month');
 
       const now = new Date();
       const ropsYears = [now.getFullYear() - 1, now.getFullYear()];
@@ -145,8 +145,8 @@ module.exports = () => {
       const establishmentAlerts = await getEstablishmentAlerts(req.profile, req.models, ropsYears);
 
       res.response = {
-        personal: personalAlerts.filter(a => moment(a.deadline).isBefore(a.type === 'ropDue' ? ropsCutoff : personalCutoff)),
-        establishments: establishmentAlerts.filter(a => moment(a.deadline).isBefore(establishmentCutoff))
+        personal: personalAlerts.filter(a => dayJs(a.deadline).isBefore(a.type === 'ropDue' ? ropsCutoff : personalCutoff)),
+        establishments: establishmentAlerts.filter(a => dayJs(a.deadline).isBefore(establishmentCutoff))
       };
       next();
     }
