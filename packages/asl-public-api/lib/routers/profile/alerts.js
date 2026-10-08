@@ -1,9 +1,9 @@
-const { Router } = require('express');
+const {Router} = require('express');
 const dayJs = require('@ukhomeoffice/asl-components/dayjs');
-const { permissions } = require('../../middleware');
+const {permissions} = require('../../middleware');
 
 const raDueQuery = models => {
-  const { Project } = models;
+  const {Project} = models;
 
   return Project.query()
     .whereIn('projects.status', ['expired', 'revoked'])
@@ -15,7 +15,7 @@ const raDueQuery = models => {
 };
 
 const ropsDueQuery = (models, ropsYear) => {
-  const { Project } = models;
+  const {Project} = models;
 
   return Project.query()
     .select('projects.*')
@@ -37,7 +37,7 @@ const getPersonalAlerts = async (profile, models, ropsYears) => {
     });
   }
 
-  const raProjects = await raDueQuery(models).where({ licenceHolderId: profile.id });
+  const raProjects = await raDueQuery(models).where({licenceHolderId: profile.id});
 
   raProjects.forEach(project => {
     alerts.push({
@@ -49,7 +49,7 @@ const getPersonalAlerts = async (profile, models, ropsYears) => {
   });
 
   for (const ropsYear of ropsYears) {
-    const ropsProjects = await ropsDueQuery(models, ropsYear).where({ licenceHolderId: profile.id });
+    const ropsProjects = await ropsDueQuery(models, ropsYear).where({licenceHolderId: profile.id});
 
     ropsProjects.forEach(project => {
       alerts.push({
@@ -76,11 +76,11 @@ const getEstablishmentAlerts = async (profile, models, ropsYears) => {
   const pilReviewEstablishments = adminAtEstablishments.concat(ntcoAtEstablishments);
 
   if (pilReviewEstablishments.length > 0) {
-    const { PIL } = models;
+    const {PIL} = models;
 
     const pilReviews = await PIL.query()
-      .where({ status: 'active' })
-      .where('reviewDate', '<', dayJs().add(1, 'month'))
+      .where({status: 'active'})
+      .where('reviewDate', '<', dayJs().add(1, 'month').toISOString())
       .whereIn('establishmentId', pilReviewEstablishments.map(e => e.id));
 
     pilReviews.forEach(pil => {
@@ -129,10 +129,10 @@ const getEstablishmentAlerts = async (profile, models, ropsYears) => {
 };
 
 module.exports = () => {
-  const router = Router({ mergeParams: true });
+  const router = Router({mergeParams: true});
 
   router.get('/',
-    permissions('profile.alerts', req => ({ profileId: req.profile.id })),
+    permissions('profile.alerts', req => ({profileId: req.profile.id})),
     async (req, res, next) => {
       const personalCutoff = dayJs().add(3, 'months');
       const ropsCutoff = dayJs().add(1, 'month');

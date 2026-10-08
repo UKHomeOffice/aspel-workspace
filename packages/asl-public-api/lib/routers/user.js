@@ -1,8 +1,8 @@
-const { Router } = require('express');
+const {Router} = require('express');
 const dayJs = require('@ukhomeoffice/asl-components/dayjs');
-const { pick } = require('lodash');
-const { fetchOpenTasks } = require('../middleware');
-const { UnauthorisedError } = require('../errors');
+const {pick} = require('lodash');
+const {fetchOpenTasks} = require('../middleware');
+const {UnauthorisedError} = require('../errors');
 const personRouter = require('./profile/person');
 const emailPreferencesRouter = require('./profile/email-preferences');
 const notificationsRouter = require('./profile/notifications');
@@ -28,14 +28,14 @@ module.exports = (settings) => {
   });
 
   router.post('/verify', (req, res, next) => {
-    const { username, password } = req.body;
+    const {username, password} = req.body;
     Promise.resolve()
       .then(() => req.user.verifyPassword(username, password))
       .then(isValid => {
         if (!isValid) {
           next(new UnauthorisedError());
         }
-        res.response = { isValid };
+        res.response = {isValid};
       })
       .then(() => next())
       .catch(next);
@@ -104,11 +104,11 @@ module.exports = (settings) => {
   router.use('/alerts', alertsRouter(settings));
 
   router.get('/', async (req, res, next) => {
-    const { Invitation } = await req.models;
+    const {Invitation} = await req.models;
     try {
       const invitations = await Invitation.query()
         .where('email', 'iLike', req.user.profile.email)
-        .where('updatedAt', '>', dayJs().utc().subtract(7, 'days'))
+        .where('updatedAt', '>', dayJs().utc().subtract(7, 'days').toISOString())
         .withGraphFetched('establishment')
         .modifyGraph('establishment', (builder) => {
           builder.select('name'); // Specify the fields you want from the related model

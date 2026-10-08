@@ -1,24 +1,24 @@
-const { Router } = require('express');
+const {Router} = require('express');
 const dayJs = require('@ukhomeoffice/asl-components/dayjs');
-const { permissions } = require('../../middleware');
-const { attachReviewDue } = require('../../helpers/pils');
+const {permissions} = require('../../middleware');
+const {attachReviewDue} = require('../../helpers/pils');
 
-const router = Router({ mergeParams: true });
+const router = Router({mergeParams: true});
 
 router.get('/reviews',
   permissions('pil.list'),
   (req, res, next) => {
-    const { PIL } = req.models;
-    const { status } = req.query;
+    const {PIL} = req.models;
+    const {status} = req.query;
 
     const where = status === 'overdue'
-      ? builder => builder.where('reviewDate', '<', dayJs())
-      : builder => builder.whereBetween('reviewDate', [dayJs(), dayJs().add(2, 'months')]);
+      ? builder => builder.where('reviewDate', '<', dayJs().toISOString())
+      : builder => builder.whereBetween('reviewDate', [dayJs().toISOString(), dayJs().add(2, 'months').toISOString()]);
 
     const query = PIL.query()
       .where('establishmentId', req.establishment.id)
       .where(where)
-      .where({ status: 'active' });
+      .where({status: 'active'});
 
     Promise.all([
       query
@@ -39,8 +39,8 @@ router.get('/reviews',
 router.get('/',
   permissions('pil.list'),
   (req, res, next) => {
-    const { PIL } = req.models;
-    const { search, sort, limit, offset } = req.query;
+    const {PIL} = req.models;
+    const {search, sort, limit, offset} = req.query;
 
     Promise.all([
       PIL.count(req.establishment.id),
