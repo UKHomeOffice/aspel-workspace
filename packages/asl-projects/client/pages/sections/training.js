@@ -45,7 +45,7 @@ export default function Training(props) {
     <Fragment>
       {readonly
         ? (isPdf ? <h2>Training record</h2> : null)
-        : <><h1>Training</h1><p>{props.intro}</p></>
+        : <h1>Training</h1>
       }
       {!readonly || !isPdf
         ? <p>{props.intro}</p>
