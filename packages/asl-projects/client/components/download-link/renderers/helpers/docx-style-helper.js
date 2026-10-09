@@ -191,7 +191,7 @@ const addStyles = (document, nts) => {
         .size(24)
         .font('Arial')
         .bold()
-        .spacing({ before: 0, after: 240, line: 320, lineRule: 'exact' });
+        .spacing({ before: 0, after: 0, line: 320, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('Hint', 'Hint')
         .basedOn('Body')

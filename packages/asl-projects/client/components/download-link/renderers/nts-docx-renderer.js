@@ -216,7 +216,7 @@ export default async function ntsDocxRenderer(opts) {
       columnWidths: ['4680', '4680'],
       margins: {
         top: 120,
-        bottom: 0,
+        bottom: 120,
         left: 200,
         right: 200,
       },
@@ -227,7 +227,7 @@ export default async function ntsDocxRenderer(opts) {
     table.getCell(0, 1).addParagraph(new Paragraph('Life stages').style('Bold'));
     speciesDetails.forEach((s, i) => {
       table.getCell(i + 1, 0).addParagraph(new Paragraph(s.name).style('tablebody'));
-      table.getCell(i + 1, 1).addParagraph(new Paragraph((s.lifeStages || []).join(', ')).style('body'));
+      table.getCell(i + 1, 1).addParagraph(new Paragraph((s.lifeStages || []).join(', ')).style('tablebody'));
     });
     document.addTable(table);
   };
