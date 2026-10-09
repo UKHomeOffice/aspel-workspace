@@ -28,8 +28,22 @@ html, body {
 .nts-download-form {
   margin-bottom: $govuk-gutter;
 
+  .date-range-input > .govuk-fieldset > .govuk-fieldset__legend {
+    margin-bottom: $govuk-gutter-half;
+  }
+
   .date-range-input > .govuk-fieldset > .govuk-hint {
     margin-bottom: $govuk-gutter;
+
+    p {
+      margin-top: 0;
+      margin-bottom: 5px;
+    }
+
+    .govuk-list {
+      color: inherit;
+      margin-bottom: 0;
+    }
   }
 
   .date-range-input__fields {

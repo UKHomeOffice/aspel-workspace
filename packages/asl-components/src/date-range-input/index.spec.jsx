@@ -1,23 +1,17 @@
 import React from 'react';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
+import { afterEach, describe, expect, jest, test } from '@jest/globals';
 import DateRangeInput from './';
 
 function MockDateErrorMessage(props) {
-    return <span id={`${props.name}-error`}>error:{props.name}:{props.errorCode}</span>;
+    return <span id={`${props.name}-error`} data-date-label={props.dateLabel}>error:{props.name}:{props.errorCode}</span>;
 }
 
 jest.mock('../date-input/error-message', () => MockDateErrorMessage);
 
 describe('<DateRangeInput />', () => {
-    beforeEach(() => {
-        jest.useFakeTimers();
-        jest.setSystemTime(new Date('2024-05-29T12:00:00Z'));
-    });
-
     afterEach(() => {
         cleanup();
-        jest.useRealTimers();
     });
 
     test('renders a fieldset with date from and date to inputs', () => {
@@ -47,8 +41,14 @@ describe('<DateRangeInput />', () => {
     test('uses GOV.UK-style hints for each date input', () => {
         render(<DateRangeInput />);
 
-        expect(screen.getByText('For example 01 01 2020')).toBeInTheDocument();
-        expect(screen.getByText('For example 12 12 2020')).toBeInTheDocument();
+        expect(screen.getByText('For example 1 6 2026')).toBeInTheDocument();
+        expect(screen.getByText('For example 30 6 2026')).toBeInTheDocument();
+    });
+
+    test('renders the date range hint with GOV.UK hint styling', () => {
+        render(<DateRangeInput hint="You can only download data" />);
+
+        expect(screen.getByText('You can only download data').closest('.govuk-hint')).not.toBeNull();
     });
 
     test('passes date errors through to each wrapped DateInput', () => {
@@ -61,173 +61,36 @@ describe('<DateRangeInput />', () => {
 
         expect(screen.getByText('error:date-from:validDate')).toBeInTheDocument();
         expect(screen.getByText('error:date-to:validDate')).toBeInTheDocument();
+        expect(screen.getByText('error:date-from:validDate')).toHaveAttribute('data-date-label', "The 'From' date");
+        expect(screen.getByText('error:date-to:validDate')).toHaveAttribute('data-date-label', "The 'To' date");
         expect(container.querySelector('#date-from-month').classList).toContain('govuk-input--error');
         expect(container.querySelector('#date-to-day').classList).toContain('govuk-input--error');
     });
 
-    test('shows an error on the to date when the submitted range is invalid', () => {
+    test('renders a range error and highlights both dates', () => {
+        const { container } = render(
+            <DateRangeInput
+                name="dateRange"
+                label="Filter by date granted"
+                error="The date range cannot be more than 6 months"
+            />
+        );
+
+        expect(screen.getByText('The date range cannot be more than 6 months')).toBeInTheDocument();
+        expect(container.querySelector('#dateRange-legend')).toBeInTheDocument();
+        expect(container.querySelectorAll('.govuk-input--error')).toHaveLength(6);
+    });
+
+    test('only displays validation errors supplied by the server', () => {
         render(
             <DateRangeInput
                 values={{ 'date-from': '2024-02-01', 'date-to': '2024-01-01' }}
+                errors={{ 'date-to': 'maximumDateRange' }}
             />
         );
 
-        expect(screen.getByText('error:date-to:dateIsAfter')).toBeInTheDocument();
-    });
-
-    test('does not show an error when the from date is the same as the to date', () => {
-        render(
-            <DateRangeInput
-                values={{ 'date-from': '2024-01-01', 'date-to': '2024-01-01' }}
-            />
-        );
-
-        expect(screen.queryByText('error:date-from:dateIsBefore')).not.toBeInTheDocument();
+        expect(screen.getByText('error:date-to:maximumDateRange')).toBeInTheDocument();
         expect(screen.queryByText('error:date-to:dateIsAfter')).not.toBeInTheDocument();
-    });
-
-    test('shows an error when either date is in the future', () => {
-        render(
-            <DateRangeInput
-                maxDate="now"
-                values={{ 'date-from': '2024-05-30', 'date-to': '2024-05-30' }}
-            />
-        );
-
-        expect(screen.getByText('error:date-from:dateIsSameOrBefore')).toBeInTheDocument();
-        expect(screen.getByText('error:date-to:dateIsSameOrBefore')).toBeInTheDocument();
-    });
-
-    test('allows either date to be today', () => {
-        render(
-            <DateRangeInput
-                values={{ 'date-from': '2024-05-29', 'date-to': '2024-05-29' }}
-            />
-        );
-
-        expect(screen.queryByText('error:date-from:dateIsSameOrBefore')).not.toBeInTheDocument();
-        expect(screen.queryByText('error:date-to:dateIsSameOrBefore')).not.toBeInTheDocument();
-    });
-
-    test('shows an error when date from is before ASPEL data started', () => {
-        render(
-            <DateRangeInput
-                minDate="2019-07-31"
-                minDateErrorCode="aspelDataStartDate"
-                values={{ 'date-from': '2019-07-30', 'date-to': '2019-07-31' }}
-            />
-        );
-
-        expect(screen.getByText('error:date-from:aspelDataStartDate')).toBeInTheDocument();
-    });
-
-    test('shows an error when date to is before ASPEL data started', () => {
-        render(
-            <DateRangeInput
-                minDate="2019-07-31"
-                minDateErrorCode="aspelDataStartDate"
-                values={{ 'date-from': '2019-07-31', 'date-to': '2019-07-30' }}
-            />
-        );
-
-        expect(screen.getByText('error:date-to:aspelDataStartDate')).toBeInTheDocument();
-    });
-
-    test('allows date from to be the day ASPEL data started', () => {
-        render(
-            <DateRangeInput
-                minDate="2019-07-31"
-                values={{ 'date-from': '2019-07-31', 'date-to': '2019-07-31' }}
-            />
-        );
-
-        expect(screen.queryByText('error:date-from:aspelDataStartDate')).not.toBeInTheDocument();
-    });
-
-    test('shows the range error on the to date when it is the date being changed', () => {
-        render(
-            <DateRangeInput
-                values={{ 'date-from': '2024-02-01', 'date-to': '2024-03-01' }}
-            />
-        );
-
-        fireEvent.change(screen.getByLabelText('Month', { selector: '#date-to-month' }), { target: { value: '01' } });
-
-        expect(screen.getByText('error:date-to:dateIsAfter')).toBeInTheDocument();
-        expect(screen.queryByText('error:date-from:dateIsBefore')).not.toBeInTheDocument();
-    });
-
-    test('shows the range error on the from date when it is the date being changed', () => {
-        render(
-            <DateRangeInput
-                values={{ 'date-from': '2024-01-01', 'date-to': '2024-03-01' }}
-            />
-        );
-
-        fireEvent.change(screen.getByLabelText('Month', { selector: '#date-from-month' }), { target: { value: '04' } });
-
-        expect(screen.getByText('error:date-from:dateIsBefore')).toBeInTheDocument();
-        expect(screen.queryByText('error:date-to:dateIsAfter')).not.toBeInTheDocument();
-    });
-
-    test('does not show a range error while the other date has a future-date boundary error', () => {
-        render(
-            <DateRangeInput
-                maxDate="now"
-                values={{ 'date-from': '2024-06-20', 'date-to': '2024-06-21' }}
-            />
-        );
-
-        fireEvent.change(screen.getByLabelText('Month', { selector: '#date-to-month' }), { target: { value: '05' } });
-
-        expect(screen.getByText('error:date-from:dateIsSameOrBefore')).toBeInTheDocument();
-        expect(screen.queryByText('error:date-to:dateIsAfter')).not.toBeInTheDocument();
-    });
-
-    test('does not show a range error while date from has an ASPEL-start boundary error', () => {
-        render(
-            <DateRangeInput
-                minDate="2019-07-31"
-                minDateErrorCode="aspelDataStartDate"
-                values={{ 'date-from': '2019-08-01', 'date-to': '2019-08-10' }}
-            />
-        );
-
-        fireEvent.change(screen.getByLabelText('Month', { selector: '#date-from-month' }), { target: { value: '07' } });
-
-        expect(screen.getByText('error:date-from:aspelDataStartDate')).toBeInTheDocument();
-        expect(screen.queryByText('error:date-from:dateIsBefore')).not.toBeInTheDocument();
-    });
-
-    test('allows dates outside boundaries when none are configured', () => {
-        render(
-            <DateRangeInput
-                values={{ 'date-from': '2019-07-30', 'date-to': '2024-05-30' }}
-            />
-        );
-
-        expect(screen.queryByText('error:date-from:aspelDataStartDate')).not.toBeInTheDocument();
-        expect(screen.queryByText('error:date-to:dateIsSameOrBefore')).not.toBeInTheDocument();
-    });
-
-    test('uses the generic minimum-date error when configured without an override', () => {
-        render(
-            <DateRangeInput
-                minDate="2020-01-01"
-                values={{ 'date-from': '2019-12-31', 'date-to': '2020-01-01' }}
-            />
-        );
-
-        expect(screen.getByText('error:date-from:dateIsSameOrAfter')).toBeInTheDocument();
-    });
-
-    test('does not show a range error while either date is invalid', () => {
-        render(
-            <DateRangeInput
-                values={{ 'date-from': '2024--01', 'date-to': '2024-01-01' }}
-            />
-        );
-
         expect(screen.queryByText('error:date-from:dateIsBefore')).not.toBeInTheDocument();
     });
 

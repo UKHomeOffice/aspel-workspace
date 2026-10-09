@@ -72,7 +72,10 @@ test('rejects dates outside the date boundaries', () => {
     ra: 'true'
   });
 
-  assert.deepStrictEqual(result.errors, {});
+  assert.deepStrictEqual(result.errors, {
+    'date-from': 'dateIsSameOrBefore',
+    'date-to': 'aspelDataStartDate'
+  });
   assert.strictEqual(result.isValid, false);
 });
 
@@ -84,6 +87,7 @@ test('rejects a from date before ASPeL data started', () => {
   });
 
   assert.strictEqual(result.isValid, false);
+  assert.deepStrictEqual(result.errors, { 'date-from': 'aspelDataStartDate' });
 });
 
 test('rejects a to date before ASPeL data started', () => {
@@ -94,6 +98,10 @@ test('rejects a to date before ASPeL data started', () => {
   });
 
   assert.strictEqual(result.isValid, false);
+  assert.deepStrictEqual(result.errors, {
+    'date-from': 'aspelDataStartDate',
+    'date-to': 'aspelDataStartDate'
+  });
 });
 
 test('rejects a date range where the start is after the end', () => {
@@ -103,8 +111,23 @@ test('rejects a date range where the start is after the end', () => {
     ra: 'false'
   });
 
-  assert.deepStrictEqual(result.errors, {});
+  assert.deepStrictEqual(result.errors, {
+    'date-to': 'dateIsAfter'
+  });
   assert.strictEqual(result.isValid, false);
+});
+
+test('reports date order even when the from date is outside the allowed boundary', () => {
+  const result = validateNtsDateRangeQuery({
+    'date-from': '2026-10-10',
+    'date-to': '2026-10-07',
+    ra: 'true'
+  });
+
+  assert.deepStrictEqual(result.errors, {
+    'date-from': 'dateIsSameOrBefore',
+    'date-to': 'dateIsAfter'
+  });
 });
 
 test('allows a date range of exactly six months', () => {
@@ -127,6 +150,6 @@ test('rejects a date range longer than six months', () => {
 
   assert.strictEqual(result.isValid, false);
   assert.deepStrictEqual(result.errors, {
-    'date-to': 'maximumDateRange'
+    dateRange: 'maximumDateRange'
   });
 });

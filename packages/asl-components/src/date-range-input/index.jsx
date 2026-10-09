@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import DateInput from '../date-input';
 import DateErrorMessage from '../date-input/error-message';
-const dateValidation = require('./date-validation');
 
 const defaultFields = {
     from: {
         label: 'Date from',
-        hint: 'For example 01 01 2020'
+        dateLabel: 'The \'From\' date',
+        hint: 'For example 1 6 2026'
     },
     to: {
         label: 'Date to',
-        hint: 'For example 12 12 2020'
+        dateLabel: 'The \'To\' date',
+        hint: 'For example 30 6 2026'
     }
 };
 
@@ -21,66 +22,23 @@ function getDateError({ name, field, value, errors = {}, validate = {} }) {
     if (!errorCode) {
         return null;
     }
-    return <DateErrorMessage name={name} value={value} errorCode={errorCode} validate={validate[name] || field.validate} />;
-}
-
-function parseDate(value) {
-    return dateValidation.parseDate(value);
-}
-
-function getBoundaryErrorCode(value, boundaries) {
-    return dateValidation.getBoundaryErrorCode(value, boundaries);
-}
-
-function getBoundaryError({ fieldName, value, errorCode, minDate, maxDate }) {
-    if (!errorCode) {
-        return null;
-    }
-
     return <DateErrorMessage
-        name={fieldName}
+        name={name}
         value={value}
         errorCode={errorCode}
-        validate={errorCode === 'dateIsSameOrBefore' ? [{ dateIsSameOrBefore: maxDate }] :
-            errorCode === 'dateIsSameOrAfter' ? [{ dateIsSameOrAfter: minDate }] : undefined}
+        validate={validate[name] || field.validate}
+        dateLabel={field.dateLabel}
     />;
 }
 
-function getRangeError({ fieldName, value, range, errors, changedFieldName, hasBoundaryError }) {
-    const targetFieldName = changedFieldName || 'date-to';
-    const fromValue = range['date-from'] ?? '';
-    const toValue = range['date-to'] ?? '';
-
-    if (fieldName !== targetFieldName || errors['date-from'] || errors['date-to']) {
-        return null;
-    }
-
-    if (hasBoundaryError) {
-        return null;
-    }
-
-    const fromDate = parseDate(fromValue);
-    const toDate = parseDate(toValue);
-
-    if (!fromDate.isValid() || !toDate.isValid() || fromDate.isSameOrBefore(toDate, 'day')) {
-        return null;
-    }
-
-    const errorCode = targetFieldName === 'date-to' ? 'dateIsAfter' : 'dateIsBefore';
-    const constraintValue = targetFieldName === 'date-to' ? fromValue : toValue;
-
-    return <DateErrorMessage name={fieldName} value={value} errorCode={errorCode} validate={[{ [errorCode]: constraintValue }]} />;
-}
-
 export default function DateRangeInput({
+    name,
     label,
     hint,
     values,
     errors = {},
     validate = {},
-    minDate,
-    maxDate,
-    minDateErrorCode,
+    error: rangeError,
     onChange
 }) {
     const rangeFields = [
@@ -88,14 +46,8 @@ export default function DateRangeInput({
         { name: 'date-to', key: 'to' }
     ];
     const [range, setRange] = useState(() => values || emptyValues);
-    const [changedFieldName, setChangedFieldName] = useState(null);
-    const boundaries = { minDate, maxDate, minDateErrorCode };
-    const fromBoundaryErrorCode = getBoundaryErrorCode(range['date-from'] ?? '', boundaries);
-    const toBoundaryErrorCode = getBoundaryErrorCode(range['date-to'] ?? '', boundaries);
-    const hasBoundaryError = Boolean(fromBoundaryErrorCode || toBoundaryErrorCode);
 
     function update(fieldName, value) {
-        setChangedFieldName(fieldName);
         setRange(previousRange => {
             const nextRange = {
                 ...previousRange,
@@ -108,13 +60,22 @@ export default function DateRangeInput({
 
     return (
         <div className="date-range-input">
-            <fieldset className="govuk-fieldset">
+            <fieldset
+                id={name}
+                className="govuk-fieldset"
+                aria-describedby={rangeError ? `${name}-error` : undefined}
+            >
                 {label && (
                     <legend className="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h2 className="govuk-fieldset__heading">{label}</h2>
+                        <h2 className="govuk-fieldset__heading" id={name ? `${name}-legend` : undefined}>{label}</h2>
                     </legend>
                 )}
-                {hint}
+                {rangeError && (
+                    <div className="govuk-form-group govuk-form-group--error">
+                        <span className="govuk-error-message" id={`${name}-error`}>{rangeError}</span>
+                    </div>
+                )}
+                {hint && <div className="govuk-hint">{hint}</div>}
                 <div className="date-range-input__fields">
                     {
                         rangeFields.map(({ name: fieldName, key }) => {
@@ -126,21 +87,6 @@ export default function DateRangeInput({
                                 value,
                                 errors,
                                 validate
-                            }) || getBoundaryError({
-                                field,
-                                fieldName,
-                                value,
-                                errorCode: fieldName === 'date-from' ? fromBoundaryErrorCode : toBoundaryErrorCode,
-                                minDate,
-                                maxDate
-                            }) || getRangeError({
-                                field,
-                                fieldName,
-                                value,
-                                range,
-                                errors,
-                                changedFieldName,
-                                hasBoundaryError
                             });
                             return (
                                 <div className="date-range-input__field" key={fieldName}>
@@ -149,6 +95,7 @@ export default function DateRangeInput({
                                         name={fieldName}
                                         value={value}
                                         error={error}
+                                        highlightError={Boolean(rangeError)}
                                         onChange={value => update(fieldName, value)}
                                     />
                                 </div>

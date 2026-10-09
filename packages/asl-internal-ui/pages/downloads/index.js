@@ -1,6 +1,7 @@
 const { page } = require('@asl/service/ui');
 const moment = require('moment');
 const routes = require('./routes');
+const schema = require('./schema/nts');
 const { getNtsDateRangeModel, validateNtsDateRangeQuery } = require('./lib/nts-date-validation');
 
 module.exports = settings => {
@@ -13,17 +14,32 @@ module.exports = settings => {
     req.api('/reports/task-metrics')
       .then(response => {
         res.locals.static.query = req.query;
-        if (req.query.validateNtsDates === 'true') {
+        const ntsDownload = req.session.ntsDownload;
+        delete req.session.ntsDownload;
+        if (ntsDownload) {
+          const { values } = ntsDownload;
+          const dateRange = getNtsDateRangeModel(values);
+          const ra = values.ra === 'true' ? true : values.ra === 'false' ? false : values.ra;
+          const validation = validateNtsDateRangeQuery(values);
           res.locals.static.ntsDateRangeValidation = {
-            model: {
-              dateRange: getNtsDateRangeModel(req.query),
-              ra: req.query.ra === 'true' ? true : req.query.ra === 'false' ? false : req.query.ra
-            },
-            errors: validateNtsDateRangeQuery(req.query).errors
+            model: { dateRange, ra },
+            errors: validation.errors
           };
+          res.locals.static.errors = validation.errors;
+          res.locals.static.schema = {
+            dateRange: schema.dates.dateRange,
+            'date-from': { inputType: 'inputDate', dateLabel: "The 'From' date" },
+            'date-to': {
+              inputType: 'inputDate',
+              dateLabel: "The 'To' date",
+              validate: [{ dateIsAfter: dateRange['date-from'] }]
+            },
+            ...schema.ra
+          };
+          res.locals.model = { ...dateRange, ra };
         }
-        res.locals.static.ntsNoResults = req.query.noResults === 'true';
-        if (req.query.noResults === 'true') {
+        res.locals.static.ntsNoResults = !!ntsDownload?.noResults;
+        if (ntsDownload?.noResults) {
           res.locals.static.errors = { noResults: 'noResults' };
         }
         res.locals.static.reports = response.json.data.map(report => {
