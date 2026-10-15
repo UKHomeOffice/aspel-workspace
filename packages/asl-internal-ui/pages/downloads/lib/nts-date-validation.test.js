@@ -118,9 +118,11 @@ test('rejects a date range where the start is after the end', () => {
 });
 
 test('reports date order even when the from date is outside the allowed boundary', () => {
+  const startDate = moment().add(10, 'days').format('YYYY-MM-DD');
+  const endDate = moment().subtract(1, 'day').format('YYYY-MM-DD');
   const result = validateNtsDateRangeQuery({
-    'date-from': '2026-10-10',
-    'date-to': '2026-10-07',
+    'date-from': startDate,
+    'date-to': endDate,
     ra: 'true'
   });
 
