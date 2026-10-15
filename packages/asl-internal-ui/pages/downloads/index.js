@@ -2,7 +2,7 @@ const { page } = require('@asl/service/ui');
 const moment = require('moment');
 const routes = require('./routes');
 const schema = require('./schema/nts');
-const { getNtsDateRangeModel, validateNtsDateRangeQuery } = require('./lib/nts-date-validation');
+const { getNtsDateRangeModel, normaliseDate, validateNtsDateRangeQuery } = require('./lib/nts-date-validation');
 
 module.exports = settings => {
   const app = page({
@@ -21,9 +21,12 @@ module.exports = settings => {
           const dateRange = getNtsDateRangeModel(values);
           const ra = values.ra === 'true' ? true : values.ra === 'false' ? false : values.ra;
           const validation = validateNtsDateRangeQuery(values);
+          // Built from unpadded parts (e.g. 2025-5-1), which the error formatter can't parse strictly.
+          const startDate = normaliseDate(dateRange['date-from']);
           res.locals.static.ntsDateRangeValidation = {
             model: { dateRange, ra },
-            errors: validation.errors
+            errors: validation.errors,
+            startDate
           };
           res.locals.static.errors = validation.errors;
           res.locals.static.schema = {
@@ -32,7 +35,7 @@ module.exports = settings => {
             'date-to': {
               inputType: 'inputDate',
               dateLabel: "The 'To' date",
-              validate: [{ dateIsAfter: dateRange['date-from'] }]
+              validate: [{ dateIsAfter: startDate }]
             },
             ...schema.ra
           };

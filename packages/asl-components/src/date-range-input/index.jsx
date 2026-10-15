@@ -4,12 +4,12 @@ import DateErrorMessage from '../date-input/error-message';
 
 const defaultFields = {
     from: {
-        label: 'Date from',
+        label: 'Start date',
         dateLabel: 'The \'From\' date',
         hint: 'For example 1 6 2026'
     },
     to: {
-        label: 'Date to',
+        label: 'End date',
         dateLabel: 'The \'To\' date',
         hint: 'For example 30 6 2026'
     }

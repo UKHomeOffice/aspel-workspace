@@ -16,7 +16,7 @@ export default function NTSDownloads() {
     'date-to': displayedErrors['date-to']
   };
   const dateRangeValidate = {
-    'date-to': [{ dateIsAfter: model.dateRange?.['date-from'] }]
+    'date-to': [{ dateIsAfter: initialValidation.startDate }]
   };
   const handleSubmit = () => {
     setSubmitted(true);
@@ -30,7 +30,7 @@ export default function NTSDownloads() {
       <form method="GET" action="/downloads/nts/docx" noValidate onSubmit={handleSubmit}>
         <Fieldset schema={schema.dates} model={model} errors={dateRangeErrors} validate={dateRangeValidate} onChange={handleCriteriaChange} />
         <Fieldset schema={schema.ra} model={model} errors={displayedErrors} onChange={handleCriteriaChange} />
-        <button type="submit" className="govuk-button" disabled={downloadStarted}>Download document</button>
+        <button type="submit" className="govuk-button" disabled={downloadStarted}>Start download</button>
       </form>
     </div>
   );
