@@ -18,8 +18,8 @@ describe('<DateRangeInput />', () => {
         render(<DateRangeInput label="Filter by date granted" />);
 
         expect(screen.getByRole('heading', { name: 'Filter by date granted' })).toBeInTheDocument();
-        expect(screen.getByRole('group', { name: 'Date from' })).toBeInTheDocument();
-        expect(screen.getByRole('group', { name: 'Date to' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Start date' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'End date' })).toBeInTheDocument();
         expect(screen.getByLabelText('Day', { selector: '#date-from-day' })).toBeInTheDocument();
         expect(screen.getByLabelText('Month', { selector: '#date-to-month' })).toBeInTheDocument();
     });
@@ -32,8 +32,8 @@ describe('<DateRangeInput />', () => {
         );
 
         expect(screen.getByRole('heading', { name: 'Granted dates' })).toBeInTheDocument();
-        expect(screen.getByRole('group', { name: 'Date from' })).toBeInTheDocument();
-        expect(screen.getByRole('group', { name: 'Date to' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Start date' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'End date' })).toBeInTheDocument();
         expect(screen.getByLabelText('Day', { selector: '#date-from-day' })).toBeInTheDocument();
         expect(screen.getByLabelText('Month', { selector: '#date-to-month' })).toBeInTheDocument();
     });
