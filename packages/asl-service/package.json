@@ -51,7 +51,6 @@
     "keycloak-connect": "^26.1.1",
     "lodash": "^4.18.1",
     "mkdirp": "^0.5.1",
-    "moment": "^2.29.4",
     "morgan": "^1.11.0",
     "mustache": "^2.3.2",
     "on-finished": "^2.3.0",

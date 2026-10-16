@@ -11,8 +11,8 @@ import {
   Inset
 } from '@ukhomeoffice/asl-components';
 
-import { format as dateFormatter } from 'date-fns';
 import { dateFormat } from '../../../constants';
+import { formatDate } from '../../../lib/utils';
 
 import Profile from '../../profile/read/views/profile';
 import RelatedTasks from '../../task/list/views/related-tasks';
@@ -31,8 +31,6 @@ const selector = ({
   asruUser,
   isOwnProfile
 });
-
-const formatDate = (date, format) => (date ? dateFormatter(date, format) : '-');
 
 const ProfileMerges = ({ profile }) => {
   if (!profile.profileMerges || profile.profileMerges.length === 0) {

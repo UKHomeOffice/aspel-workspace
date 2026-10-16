@@ -2,12 +2,7 @@ const { Router } = require('express');
 const { get, omit, isEmpty } = require('lodash');
 const { ref } = require('objection');
 const router = Router({ mergeParams: true });
-const moment = require('moment-business-time');
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
 const { UnauthorisedError } = require('@asl/service/errors');
-
-// configure bank holidays
-moment.updateLocale('en', { holidays: bankHolidays });
 
 module.exports = taskflow => {
   const Task = taskflow.Task;

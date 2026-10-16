@@ -6,12 +6,12 @@ const defaultFields = {
     from: {
         label: 'Start date',
         dateLabel: 'The \'From\' date',
-        hint: 'For example 1 6 2026'
+        hint: 'For example, 1 6 2026'
     },
     to: {
         label: 'End date',
         dateLabel: 'The \'To\' date',
-        hint: 'For example 30 6 2026'
+        hint: 'For example, 30 6 2026'
     }
 };
 

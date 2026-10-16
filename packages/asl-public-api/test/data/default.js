@@ -1,5 +1,5 @@
 const { v4: uuid } = require('uuid');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const ids = require('./ids');
 
 module.exports = models => {
@@ -414,8 +414,8 @@ module.exports = models => {
         title: 'Training with rodents',
         status: 'active',
         schemaVersion: 1,
-        issueDate: moment().subtract(1, 'year').toISOString(),
-        expiryDate: moment().subtract(4, 'years').toISOString(),
+        issueDate: dayJs().subtract(1, 'year').toISOString(),
+        expiryDate: dayJs().subtract(4, 'years').toISOString(),
         licenceNumber: 'TR-RODENT',
         licenceHolderId: ids.profiles.trainingAdmin,
         species: ['Mice', 'Rats']
@@ -426,8 +426,8 @@ module.exports = models => {
         title: 'Training with fish',
         status: 'active',
         schemaVersion: 1,
-        issueDate: moment().subtract(1, 'year').toISOString(),
-        expiryDate: moment().subtract(4, 'years').toISOString(),
+        issueDate: dayJs().subtract(1, 'year').toISOString(),
+        expiryDate: dayJs().subtract(4, 'years').toISOString(),
         licenceNumber: 'TR-FISHES',
         licenceHolderId: ids.profiles.trainingAdmin,
         species: ['Zebra fish (Danio rerio)']
@@ -438,8 +438,8 @@ module.exports = models => {
         title: 'Non-training licemce',
         status: 'active',
         schemaVersion: 1,
-        issueDate: moment().subtract(1, 'year').toISOString(),
-        expiryDate: moment().subtract(4, 'years').toISOString(),
+        issueDate: dayJs().subtract(1, 'year').toISOString(),
+        expiryDate: dayJs().subtract(4, 'years').toISOString(),
         licenceNumber: 'NOT-TRAIN',
         licenceHolderId: ids.profiles.trainingAdmin,
         species: ['wombats']
@@ -671,7 +671,7 @@ module.exports = models => {
         projectId: ids.projects.croydon.hasMarvellAvailability,
         establishmentId: ids.establishments.marvell,
         status: 'active',
-        issueDate: moment().toISOString()
+        issueDate: dayJs().toISOString()
       },
       {
         projectId: ids.projects.croydon.draftProjectWithMarvellAvailability,
@@ -840,7 +840,7 @@ module.exports = models => {
         procedures: ['F'],
         notesCatF: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         updatedAt: '2020-01-01T12:00:00Z',
-        reviewDate: moment().subtract(1, 'month').toISOString()
+        reviewDate: dayJs().subtract(1, 'month').toISOString()
       },
       {
         id: ids.pils.multipleEstablishments,

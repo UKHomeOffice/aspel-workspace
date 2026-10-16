@@ -1,7 +1,8 @@
 const assert = require('assert');
 // eslint-disable-next-line implicit-dependencies/no-implicit
 const test = require('node:test');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 const { validateNtsDateRangeQuery } = require('./nts-date-validation');
 
 test('validates a complete date range query', () => {
@@ -67,7 +68,7 @@ test('requires ra', () => {
 
 test('rejects dates outside the date boundaries', () => {
   const result = validateNtsDateRangeQuery({
-    'date-from': moment().add(1, 'day').format('YYYY-MM-DD'),
+    'date-from': dayJs().add(1, 'day').format(DATE_FORMAT.iso),
     'date-to': '2019-07-30',
     ra: 'true'
   });
@@ -118,8 +119,8 @@ test('rejects a date range where the start is after the end', () => {
 });
 
 test('reports date order even when the from date is outside the allowed boundary', () => {
-  const startDate = moment().add(10, 'days').format('YYYY-MM-DD');
-  const endDate = moment().subtract(1, 'day').format('YYYY-MM-DD');
+  const startDate = dayJs().add(10, 'days').format(DATE_FORMAT.iso);
+  const endDate = dayJs().subtract(1, 'day').format(DATE_FORMAT.iso);
   const result = validateNtsDateRangeQuery({
     'date-from': startDate,
     'date-to': endDate,

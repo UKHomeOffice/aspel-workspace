@@ -32,14 +32,14 @@ const knexASL = require('knex')({
   client: 'pg',
   connection: settings.asldb
 });
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const minimist = require('minimist');
 
 // Parse command-line arguments
 const args = minimist(process.argv.slice(2));
 
 // Get the current year and last year
-const currentYear = moment().year();
+const currentYear = dayJs().year();
 const lastYear = currentYear - 1;
 
 // Default start and end dates
@@ -112,8 +112,8 @@ function formatTimeTaken(seconds) {
 async function exportToCsv(startDate, endDate) {
   try {
     // Define the start and end dates in ISO format
-    const start = moment(startDate).startOf('day').toISOString();
-    const end = moment(endDate).endOf('day').toISOString();
+    const start = dayJs(startDate).startOf('day').toISOString();
+    const end = dayJs(endDate).endOf('day').toISOString();
 
     // Determine the output stream using the helper function
     const outputStream = getOutputStream(fileName);
@@ -212,7 +212,7 @@ async function exportToCsv(startDate, endDate) {
       row.establishment_id = establishmentName; // Directly replace the establishment_id with the name
 
       // Format time_taken (in seconds) to a more detailed format
-      const timeTakenInSeconds = moment(row.updated_at).diff(moment(row.created_at), 'seconds');
+      const timeTakenInSeconds = dayJs(row.updated_at).diff(dayJs(row.created_at), 'seconds');
       row.time_taken = formatTimeTaken(timeTakenInSeconds);
 
       // Write the updated row to the CSV (this writes to the output stream)

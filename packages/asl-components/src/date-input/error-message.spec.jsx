@@ -33,7 +33,7 @@ describe('<DateErrorMessage /> (GOV.UK date error messages)', () => {
                     realDate: '{{dateLabel}} must be a real date',
                     past: '{{dateLabel}} must be in the past',
                     future: '{{dateLabel}} must be in the future',
-                    aspelDataStartDate: 'ASPeL data starts from 31/07/2019'
+                    aspelDataStartDate: 'ASPeL data starts from 31 July 2019'
                 }
             }
         }
