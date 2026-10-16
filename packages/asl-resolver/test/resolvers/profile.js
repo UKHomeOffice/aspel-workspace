@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const assert = require('assert');
 const { profile } = require('../../lib/resolvers');
 const db = require('../helpers/db');
@@ -12,7 +12,7 @@ const EST_1 = 8201;
 const EST_2 = 8202;
 
 const isNowish = (date) => {
-  return moment(date).isBetween(moment().subtract(5, 'seconds'), moment().add(5, 'seconds'));
+  return dayJs(date).isBetween(dayJs().subtract(5, 'seconds'), dayJs().add(5, 'seconds'));
 };
 
 describe('Profile resolver', () => {

@@ -1,7 +1,9 @@
 const { get } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const taskHelper = require('../utils/task');
 const { subscribed, subscribedFilter } = require('../utils/is-subscribed');
+
+const { DATE_FORMAT, formatDate } = dayJs;
 
 module.exports = async ({ schema, logger, task, publicUrl }) => {
   logger.verbose('generating notifications for PIL task');
@@ -12,7 +14,6 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
   const pilId = get(task, 'data.id');
   const action = get(task, 'data.action');
   const months = get(task, 'data.months');
-  const dateFormat = 'D MMM YYYY';
 
   const allowedActions = [
     'transfer',
@@ -150,10 +151,10 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
     establishmentId,
     licenceNumber: (applicant && applicant.pilLicenceNumber) || (pil && pil.licenceNumber),
     licenceHolderId: pil && pil.profileId,
-    reviewDate: pil && pil.reviewDate && moment(pil.reviewDate).format(dateFormat),
+    reviewDate: pil && pil.reviewDate && formatDate(pil.reviewDate, DATE_FORMAT.medium),
     applicant,
     profileUrl: `${publicUrl}/establishments/${establishmentId}/people/${applicantId}`,
-    today: moment().format(dateFormat)
+    today: formatDate(new Date(), DATE_FORMAT.medium)
   };
 
   if (applicant) {
@@ -166,7 +167,7 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
       modelType: 'personal',
       emailTemplate: 'licence-suspended',
       logMsg: 'PIL suspended',
-      suspendedDate: pil && pil.suspendedDate && moment(pil.suspendedDate).format(dateFormat),
+      suspendedDate: pil && pil.suspendedDate && formatDate(pil.suspendedDate, DATE_FORMAT.medium),
       addTaskTypeToSubject: false
     };
 
@@ -183,8 +184,8 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
       modelType: 'personal',
       emailTemplate: 'licence-reinstated',
       logMsg: 'PIL reinstated',
-      suspendedDate: pil && pil.suspendedDate && moment(pil.suspendedDate).format(dateFormat),
-      reinstatedDate: moment().format(dateFormat),
+      suspendedDate: pil && pil.suspendedDate && formatDate(pil.suspendedDate, DATE_FORMAT.medium),
+      reinstatedDate: formatDate(new Date(), DATE_FORMAT.medium),
       addTaskTypeToSubject: false
     };
 

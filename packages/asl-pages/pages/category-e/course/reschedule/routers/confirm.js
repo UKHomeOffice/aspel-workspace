@@ -1,10 +1,10 @@
 const { Router } = require('express');
 const { get } = require('lodash');
-const { trainingCourseDuration } = require('@ukhomeoffice/asl-constants');
-const { format } = require('date-fns');
+const { trainingCourseDuration, DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
+const { format } = require('@ukhomeoffice/asl-components/dayjs');
 
 const normaliseDate = (dateStr) => {
-  return format(dateStr, 'yyyy-MM-dd');
+  return format(dateStr, DATE_FORMAT.iso);
 };
 
 const normaliseDates = ({courseDuration, courseDate, startDate, endDate}) => {

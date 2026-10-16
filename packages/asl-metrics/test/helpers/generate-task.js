@@ -1,9 +1,8 @@
 const { randomUUID } = require('crypto');
 const { omit, cloneDeep } = require('lodash');
 
-const moment = require('moment-business-time');
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-moment.updateLocale('en', { holidays: bankHolidays });
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { addWorkingDaysIso } = dayJs;
 
 const generateTask = ({
   model = 'project',
@@ -16,7 +15,7 @@ const generateTask = ({
   const id = randomUUID();
 
   // add a second to avoid falling directly on midnight
-  const normalisedCreatedAt = moment(createdAt).add(1, 'second').toISOString();
+  const normalisedCreatedAt = dayJs(createdAt).add(1, 'second').toISOString();
 
   return {
     id,
@@ -54,7 +53,7 @@ const generateTask = ({
         eventName = `status:${previousStatus}:${status}`;
       }
 
-      this.updated_at = moment(this.updated_at)
+      this.updated_at = dayJs(this.updated_at)
         .addWorkingTime(daysOffset, 'days')
         .add(this.activity.length, 'milliseconds') // add some ms to spread out activity
         .toISOString();
@@ -62,7 +61,7 @@ const generateTask = ({
       if (resubmission) {
         const interval = this.type === 'amendment' ? 15 : 20;
         this.data.internalDeadline = {
-          standard: moment(this.updated_at).addWorkingTime(interval, 'days').format('YYYY-MM-DD'),
+          standard: addWorkingDaysIso(this.updated_at, interval),
           resubmitted: true
         };
       }

@@ -1,4 +1,5 @@
-const { differenceInDays, format: dateFormatter, isValid: isValidDate, toDate } = require('date-fns');
+const { differenceInDays } = require('@ukhomeoffice/asl-components/dayjs');
+const { formatDate: sharedFormatDate } = require('@ukhomeoffice/asl-components/utils');
 const { get, isEqual, mapValues, isPlainObject, omit, castArray, reduce, isUndefined } = require('lodash');
 // "Deprecation of this API has been shelved ... due to [URL's constructor's] inability to handle partial URLs"
 // eslint-disable-next-line node/no-deprecated-api
@@ -6,7 +7,7 @@ const { parse } = require('url');
 const qs = require('qs');
 const striptags = require('striptags');
 const { dateFormat } = require('../../constants');
-const {render} = require('mustache');
+const { render } = require('mustache');
 
 const toTitleCase = str =>
   str.replace(/\w\S*/g, txt => `${txt.charAt(0).toUpperCase()}${txt.substr(1)}`);
@@ -129,8 +130,7 @@ const canTransferPil = ({ pil, user }) => {
     });
 };
 
-const formatDate = (date, format = dateFormat.medium) =>
-  isValidDate(toDate(date)) ? dateFormatter(date, format) : '-';
+const formatDate = (date, format = dateFormat.medium) => sharedFormatDate(date, format);
 
 const daysSinceDate = (date, from = new Date()) => differenceInDays(from, date);
 

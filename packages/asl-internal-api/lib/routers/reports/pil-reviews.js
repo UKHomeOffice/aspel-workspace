@@ -1,4 +1,6 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+
+const { formatIsoDate } = dayJs;
 
 module.exports = () => (req, res, next) => {
   const { PIL } = req.models;
@@ -6,7 +8,7 @@ module.exports = () => (req, res, next) => {
     .then(() => {
       return PIL.query()
         .withGraphFetched('[profile,establishment]')
-        .where('reviewDate', '<', moment().add(3, 'months').toISOString())
+        .where('reviewDate', '<', dayJs().add(3, 'months').toISOString())
         .where({ status: 'active' });
     })
     .then(pils => {
@@ -15,7 +17,7 @@ module.exports = () => (req, res, next) => {
           licenceNumber: pil.profile.pilLicenceNumber,
           establishment: pil.establishment.name,
           licenceHolder: `${pil.profile.firstName} ${pil.profile.lastName}`,
-          reviewDate: moment(pil.reviewDate).format('YYYY-MM-DD')
+          reviewDate: formatIsoDate(pil.reviewDate)
         };
       });
     })
