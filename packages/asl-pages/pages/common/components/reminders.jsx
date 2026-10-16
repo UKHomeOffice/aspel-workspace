@@ -1,9 +1,12 @@
 import React, { Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import { useSelector } from 'react-redux';
 import map from 'lodash/map';
 import isEmpty from 'lodash/isEmpty';
-import { addMonths, differenceInCalendarDays, format as formatDate, formatDistance } from 'date-fns';
 import { Warning } from '@ukhomeoffice/react-components';
+
+const { addMonths, differenceInCalendarDays, format: formatDate, formatDistance } = dayJs;
 
 const relativeTime = deadline => {
   const dayDiff = differenceInCalendarDays(deadline, new Date());
@@ -26,7 +29,7 @@ const relativeTime = deadline => {
 function Reminder({ reminder, licenceType, licenceNumber }) {
   const { profile } = useSelector(state => state.static);
   const previouslyDismissed = !!(reminder.dismissed || []).find(dismissal => dismissal.profileId === profile.id);
-  const oneMonthFromNow = formatDate(addMonths(new Date(), 1), 'yyyy-MM-dd');
+  const oneMonthFromNow = formatDate(addMonths(new Date(), 1), DATE_FORMAT.iso);
 
   if (previouslyDismissed || reminder.deadline > oneMonthFromNow) {
     return null;

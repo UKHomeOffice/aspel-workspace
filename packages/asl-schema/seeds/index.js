@@ -14,7 +14,9 @@ exports.seed = async knex => {
     .from('information_schema.tables')
     .whereRaw('table_schema = current_schema()')
     .where('table_catalog', knex.client.database())
-    .then(results => results.map(r => r.tableName).filter(tableName => !tableName.includes('knex_')));
+    .then(results => results
+      .map(r => r.table_name)
+      .filter(tableName => tableName && !tableName.includes('knex_')));
 
   await Promise.all(tables.map(table => knex.raw(`TRUNCATE TABLE ${table} CASCADE`)));
 

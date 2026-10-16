@@ -1,5 +1,6 @@
 const { page } = require('@asl/service/ui');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 const routes = require('./routes');
 const schema = require('./schema/nts');
 const { getNtsDateRangeModel, normaliseDate, validateNtsDateRangeQuery } = require('./lib/nts-date-validation');
@@ -46,8 +47,8 @@ module.exports = settings => {
           res.locals.static.errors = { noResults: 'noResults' };
         }
         res.locals.static.reports = response.json.data.map(report => {
-          const end = moment(report.meta.end);
-          return { id: report.id, year: end.format('YYYY'), month: end.format('MMMM') };
+          const end = dayJs(report.meta.end);
+          return { id: report.id, year: end.format(DATE_FORMAT.year), month: end.format(DATE_FORMAT.month) };
         });
         next();
       })

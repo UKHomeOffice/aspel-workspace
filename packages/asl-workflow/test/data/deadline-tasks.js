@@ -1,7 +1,9 @@
 const { v4: uuid } = require('uuid');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
-const now = moment();
+const { formatIsoDate } = dayJs;
+
+const now = dayJs();
 
 const getTimestamps = () => {
   now.add(1, 'ms');
@@ -20,8 +22,8 @@ module.exports = [
         licenceHolderId: uuid()
       },
       internalDeadline: {
-        standard: moment().add(40, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(55, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().add(40, 'days')),
+        extended: formatIsoDate(dayJs().add(55, 'days'))
       },
       id: uuid(),
       initiatedByAsru: false,
@@ -46,8 +48,8 @@ module.exports = [
         licenceHolderId: uuid()
       },
       internalDeadline: {
-        standard: moment().subtract(10, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(5, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().subtract(10, 'days')),
+        extended: formatIsoDate(dayJs().add(5, 'days'))
       },
       id: uuid(),
       initiatedByAsru: false,
@@ -73,13 +75,13 @@ module.exports = [
       },
       meta: { authority: true, awerb: true, ready: true },
       deadline: {
-        standard: moment().add(40, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(55, 'days').format('YYYY-MM-DD'),
+        standard: formatIsoDate(dayJs().add(40, 'days')),
+        extended: formatIsoDate(dayJs().add(55, 'days')),
         isExtended: false
       },
       internalDeadline: {
-        standard: moment().add(40, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(55, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().add(40, 'days')),
+        extended: formatIsoDate(dayJs().add(55, 'days'))
       },
       id: uuid(),
       initiatedByAsru: false,
@@ -105,12 +107,12 @@ module.exports = [
       },
       meta: { authority: true, awerb: true, ready: true },
       deadline: {
-        standard: moment().add(40, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(55, 'days').format('YYYY-MM-DD'),
+        standard: formatIsoDate(dayJs().add(40, 'days')),
+        extended: formatIsoDate(dayJs().add(55, 'days')),
         isExtended: false
       },
       internalDeadline: {
-        standard: moment().add(20, 'days').format('YYYY-MM-DD'),
+        standard: formatIsoDate(dayJs().add(20, 'days')),
         resubmitted: true
       },
       id: uuid(),
@@ -137,12 +139,12 @@ module.exports = [
       },
       meta: { authority: true, awerb: true, ready: true },
       deadline: {
-        standard: moment().add(35, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(50, 'days').format('YYYY-MM-DD'),
+        standard: formatIsoDate(dayJs().add(35, 'days')),
+        extended: formatIsoDate(dayJs().add(50, 'days')),
         isExtended: false
       },
       internalDeadline: {
-        standard: moment().subtract(5, 'days').format('YYYY-MM-DD'),
+        standard: formatIsoDate(dayJs().subtract(5, 'days')),
         resubmitted: true
       },
       id: uuid(),
@@ -169,12 +171,12 @@ module.exports = [
       },
       meta: { authority: true, awerb: true, ready: true },
       deadline: {
-        standard: moment().subtract(30, 'days').format('YYYY-MM-DD'),
-        extended: moment().subtract(15, 'days').format('YYYY-MM-DD'),
+        standard: formatIsoDate(dayJs().subtract(30, 'days')),
+        extended: formatIsoDate(dayJs().subtract(15, 'days')),
         isExtended: false
       },
       internalDeadline: {
-        standard: moment().subtract(50, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().subtract(50, 'days'))
       },
       id: uuid(),
       initiatedByAsru: false,
@@ -200,13 +202,13 @@ module.exports = [
       },
       meta: { authority: true, awerb: true, ready: true },
       deadline: {
-        standard: moment().add(40, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(55, 'days').format('YYYY-MM-DD'),
+        standard: formatIsoDate(dayJs().add(40, 'days')),
+        extended: formatIsoDate(dayJs().add(55, 'days')),
         isExtended: true
       },
       internalDeadline: {
-        standard: moment().add(40, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(55, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().add(40, 'days')),
+        extended: formatIsoDate(dayJs().add(55, 'days'))
       },
       id: uuid(),
       initiatedByAsru: false,
@@ -232,13 +234,13 @@ module.exports = [
       },
       meta: { authority: true, awerb: true, ready: true },
       deadline: {
-        standard: moment().add(20, 'days').format('YYYY-MM-DD'),
-        extended: moment().add(35, 'days').format('YYYY-MM-DD'),
+        standard: formatIsoDate(dayJs().add(20, 'days')),
+        extended: formatIsoDate(dayJs().add(35, 'days')),
         isExtended: true
       },
       internalDeadline: {
-        standard: moment().subtract(20, 'days').format('YYYY-MM-DD'),
-        extended: moment().subtract(5, 'days').format('YYYY-MM-DD')
+        standard: formatIsoDate(dayJs().subtract(20, 'days')),
+        extended: formatIsoDate(dayJs().subtract(5, 'days'))
       },
       id: uuid(),
       initiatedByAsru: false,
