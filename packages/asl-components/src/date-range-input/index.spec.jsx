@@ -81,6 +81,22 @@ describe('<DateRangeInput />', () => {
         expect(container.querySelectorAll('.govuk-input--error')).toHaveLength(6);
     });
 
+    test('renders the range error after the hint and before the date inputs', () => {
+        const { container } = render(
+            <DateRangeInput
+                name="dateRange"
+                hint="You can only download data for date ranges of 6 months or less"
+                error="End date must be within 6 months of the start date"
+            />
+        );
+
+        const hint = container.querySelector('.govuk-hint');
+        const error = container.querySelector('#dateRange-error');
+        const inputs = container.querySelector('.date-range-input__fields');
+        expect(hint.compareDocumentPosition(error) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+        expect(error.compareDocumentPosition(inputs) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+
     test('only displays validation errors supplied by the server', () => {
         render(
             <DateRangeInput
