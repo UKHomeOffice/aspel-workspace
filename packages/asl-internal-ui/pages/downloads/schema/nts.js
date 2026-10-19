@@ -32,7 +32,13 @@ module.exports = {
       'required',
       'validDate',
       { dateIsSameOrAfter: '2019-07-31' },
-      { dateIsSameOrBefore: 'now' }
+      { dateIsSameOrBefore: 'now' },
+      { customValidate: (value, values) => {
+        const formats = ['YYYY-MM-DD', 'YYYY-M-D'];
+        const start = moment(values['date-from'], formats, true);
+        const end = moment(value, formats, true);
+        return !start.isValid() || !end.isValid() || !end.isBefore(start, 'day');
+      } }
     ]
   },
   ra: {

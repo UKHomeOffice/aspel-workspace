@@ -101,7 +101,7 @@ test('enforces date boundaries, real dates, date order and the six-month limit',
     [{ 'date-to-year': '2019', 'date-to-month': '7', 'date-to-day': '30' }, 'date-to', 'dateIsSameOrAfter'],
     [{ 'date-from-month': '2', 'date-from-day': '31' }, 'date-from', 'validDate'],
     [{ 'date-to-month': '2', 'date-to-day': '31' }, 'date-to', 'validDate'],
-    [{ 'date-from-month': '8' }, 'date-to', 'dateIsAfter'],
+    [{ 'date-from-month': '8' }, 'date-to', 'customValidate'],
     [{ 'date-to-day': '2' }, 'dateRange', 'customValidate'],
     [{
       'date-to-year': moment().add(1, 'day').format('YYYY'),
@@ -122,6 +122,29 @@ test('enforces date boundaries, real dates, date order and the six-month limit',
 test('allows the same start and end date', async () => {
   const { app } = setup();
   await request(app).post('/downloads?tab=nts').type('form').send({ ...values, 'date-to-month': '1' }).expect(200);
+});
+
+test('shows date-order and missing RA errors together', async () => {
+  const { app, downloads } = setup();
+  const input = {
+    ...values,
+    'date-from-year': '2025',
+    'date-from-month': '5',
+    'date-to-year': '2025',
+    'date-to-month': '1'
+  };
+  delete input.ra;
+  await request(app).post('/downloads?tab=nts').type('form').send(input)
+    .expect(302).expect('Location', '/downloads?tab=nts');
+  const response = await request(app).get('/downloads?tab=nts').expect(200);
+  assert.deepStrictEqual(response.body.static.errors, {
+    'date-to': 'dateIsAfter',
+    ra: 'required'
+  });
+  assert.ok(response.body.static.schema['date-to'].validate.some(rule =>
+    rule.dateIsAfter === '2025-05-01'
+  ));
+  assert.strictEqual(downloads.length, 0);
 });
 
 test('preserves the existing date-order message and supplies the start date', async () => {

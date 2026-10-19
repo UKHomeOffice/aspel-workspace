@@ -37,14 +37,8 @@ module.exports = settings => {
       if (validationErrors.ra === 'definedValues') {
         validationErrors.ra = 'required';
       }
-      next();
-    },
-    validate: (req, res, next) => {
-      const formats = ['YYYY-MM-DD', 'YYYY-M-D'];
-      const start = moment(req.form.values['date-from'], formats, true);
-      const end = moment(req.form.values['date-to'], formats, true);
-      if (start.isValid() && end.isValid() && end.isBefore(start, 'day')) {
-        return next({ validation: { 'date-to': 'dateIsAfter' } });
+      if (validationErrors['date-to'] === 'customValidate') {
+        validationErrors['date-to'] = 'dateIsAfter';
       }
       next();
     },
