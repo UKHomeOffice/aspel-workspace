@@ -70,12 +70,12 @@ export default function DateRangeInput({
                         <h2 className="govuk-fieldset__heading" id={name ? `${name}-legend` : undefined}>{label}</h2>
                     </legend>
                 )}
+                {hint && <div className="govuk-hint">{hint}</div>}
                 {rangeError && (
                     <div className="govuk-form-group govuk-form-group--error">
                         <span className="govuk-error-message" id={`${name}-error`}>{rangeError}</span>
                     </div>
                 )}
-                {hint && <div className="govuk-hint">{hint}</div>}
                 <div className="date-range-input__fields">
                     {
                         rangeFields.map(({ name: fieldName, key }) => {

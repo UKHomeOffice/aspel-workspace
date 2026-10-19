@@ -1,8 +1,11 @@
 const { page } = require('@asl/service/ui');
 const moment = require('moment');
+const form = require('@asl/pages/pages/common/routers/form');
 const routes = require('./routes');
 const schema = require('./schema/nts');
-const { getNtsDateRangeModel, normaliseDate, validateNtsDateRangeQuery } = require('./lib/nts-date-validation');
+const ntsDocx = require('./routers/nts-docx');
+const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
+const { NotFoundError } = require('@asl/service/errors');
 
 module.exports = settings => {
   const app = page({
@@ -10,41 +13,66 @@ module.exports = settings => {
     root: __dirname
   });
 
+  app.use((req, res, next) => {
+    req.model = { id: 'nts-download' };
+    next();
+  });
+
+  app.use(form({
+    schema,
+    getValidationErrors: (req, res, next) => {
+      const { validationErrors } = req.form;
+      if (validationErrors.form === 'noResults') {
+        delete validationErrors.form;
+        validationErrors.noResults = 'noResults';
+      }
+      if (validationErrors.dateRange === 'customValidate') {
+        validationErrors.dateRange = 'maximumDateRange';
+      }
+      ['date-from', 'date-to'].forEach(field => {
+        if (validationErrors[field] === 'dateIsSameOrAfter') {
+          validationErrors[field] = 'aspelDataStartDate';
+        }
+      });
+      if (validationErrors.ra === 'definedValues') {
+        validationErrors.ra = 'required';
+      }
+      if (validationErrors['date-to'] === 'customValidate') {
+        validationErrors['date-to'] = 'dateIsAfter';
+      }
+      next();
+    },
+    locals: (req, res, next) => {
+      const start = moment(req.form.values['date-from'], ['YYYY-MM-DD', 'YYYY-M-D'], true);
+      if (start.isValid()) {
+        req.form.schema['date-to'].validate.push({
+          dateIsAfter: start.format('YYYY-MM-DD')
+        });
+      }
+      next();
+    },
+    configure: (req, res, next) => {
+      if (req.method === 'POST' && !req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
+        return next(new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.'));
+      }
+      next();
+    },
+    process: (req, res, next) => {
+      ['date-from', 'date-to'].forEach(key => {
+        const day = req.body[`${key}-day`] || '';
+        const month = req.body[`${key}-month`] || '';
+        const year = req.body[`${key}-year`] || '';
+        req.form.values[key] = `${year}-${month}-${day}`;
+      });
+      next();
+    },
+    saveValues: ntsDocx(settings)
+  }));
+
   app.get('/', (req, res, next) => {
     req.api('/reports/task-metrics')
       .then(response => {
         res.locals.static.query = req.query;
-        const ntsDownload = req.session.ntsDownload;
-        delete req.session.ntsDownload;
-        if (ntsDownload) {
-          const { values } = ntsDownload;
-          const dateRange = getNtsDateRangeModel(values);
-          const ra = values.ra === 'true' ? true : values.ra === 'false' ? false : values.ra;
-          const validation = validateNtsDateRangeQuery(values);
-          // Built from unpadded parts (e.g. 2025-5-1), which the error formatter can't parse strictly.
-          const startDate = normaliseDate(dateRange['date-from']);
-          res.locals.static.ntsDateRangeValidation = {
-            model: { dateRange, ra },
-            errors: validation.errors,
-            startDate
-          };
-          res.locals.static.errors = validation.errors;
-          res.locals.static.schema = {
-            dateRange: schema.dates.dateRange,
-            'date-from': { inputType: 'inputDate', dateLabel: "The 'From' date" },
-            'date-to': {
-              inputType: 'inputDate',
-              dateLabel: "The 'To' date",
-              validate: [{ dateIsAfter: startDate }]
-            },
-            ...schema.ra
-          };
-          res.locals.model = { ...dateRange, ra };
-        }
-        res.locals.static.ntsNoResults = !!ntsDownload?.noResults;
-        if (ntsDownload?.noResults) {
-          res.locals.static.errors = { noResults: 'noResults' };
-        }
         res.locals.static.reports = response.json.data.map(report => {
           const end = moment(report.meta.end);
           return { id: report.id, year: end.format('YYYY'), month: end.format('MMMM') };

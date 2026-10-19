@@ -1,6 +1,6 @@
 const taskMetrics = require('./routers/task-metrics');
 const report = require('./reports');
-const ntsDocx = require('./routers/nts-docx');
+const { Router } = require('express');
 
 module.exports = {
   report: {
@@ -15,7 +15,7 @@ module.exports = {
   },
   nts: {
     path: '/nts/docx',
-    router: ntsDocx,
+    router: () => Router().get('/', (req, res) => res.redirect('/downloads?tab=nts')),
     breadcrumb: false
   }
 };
