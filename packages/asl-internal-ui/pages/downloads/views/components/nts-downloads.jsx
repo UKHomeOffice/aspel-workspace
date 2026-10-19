@@ -16,7 +16,16 @@ export default function NTSDownloads() {
     <div id="noResults" className="nts-download-form">
       {!submitted && <ErrorSummary />}
       <Form
-        schema={{ dateRange: schema.dateRange, ra: schema.ra }}
+        schema={{
+          dateRange: {
+            ...schema.dateRange,
+            validate: {
+              'date-from': schema['date-from'].validate,
+              'date-to': schema['date-to'].validate
+            }
+          },
+          ra: schema.ra
+        }}
         model={model}
         errors={submitted ? {} : errors}
         onChange={() => setDownloadStarted(false)}
