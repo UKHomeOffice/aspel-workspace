@@ -58,9 +58,9 @@ const renderMarkdown = (doc, markdown, style = 'body', { applyTextFilter } = {},
             case 'heading': {
                 const text = node.children.find(c => c.type === 'text')?.value || '';
                 if (nts) {
-                  const para = doc.createParagraph(applyFilter(text, applyTextFilter)).style('RAStatusHeading').spacing({ before: 360 });
-                  para.Borders.addTopBorder('8F23B3', '6', 'single', '18');
-                  para.createBorder();
+                  const raStatusHeading = doc.createParagraph(applyFilter(text, applyTextFilter)).style('RAStatusHeading').spacing({ before: 360 });
+                  raStatusHeading.Borders.addTopBorder('8F23B3', '6', 'single', '18');
+                  raStatusHeading.createBorder();
                 } else {
                   doc.createParagraph(applyFilter(text, applyTextFilter)).style(`Heading${node.depth}`);
                 }
