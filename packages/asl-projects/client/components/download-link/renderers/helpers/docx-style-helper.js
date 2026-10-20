@@ -184,6 +184,15 @@ const addStyles = (document, nts) => {
         .font('Arial')
         .spacing({ before: 0, after: 120, line: 320, lineRule: 'exact' });
 
+      document.Styles.createParagraphStyle('RAStatusHeading', 'RA Status Heading')
+        .basedOn('Body')
+        .next('Body')
+        .quickFormat()
+        .size(28)
+        .font('Arial')
+        .bold()
+        .spacing({ before: 120, after: 120, line: 340, lineRule: 'exact' });
+
       document.Styles.createParagraphStyle('Bold', 'bold')
         .basedOn('Body')
         .next('Body')
@@ -218,6 +227,14 @@ const addStyles = (document, nts) => {
           .size(24)
           .font('Arial')
           .spacing({ before: 0, after: 120, line: 320, lineRule: 'exact' });
+
+        document.Styles.createParagraphStyle('HorizontalRule', 'Horizontal Rule')
+          .basedOn('Body')
+          .next('Body')
+          .quickFormat()
+          .size(2)
+          .font('Arial')
+          .spacing({ before: 0, after: 0, line: 40, lineRule: 'exact' });
     }
 
 };

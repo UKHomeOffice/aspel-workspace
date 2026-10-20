@@ -58,7 +58,9 @@ const renderMarkdown = (doc, markdown, style = 'body', { applyTextFilter } = {},
             case 'heading': {
                 const text = node.children.find(c => c.type === 'text')?.value || '';
                 if (nts) {
-                  doc.createParagraph(applyFilter(text, applyTextFilter)).style('Bold').spacing({ before: 240 });
+                  const para = doc.createParagraph(applyFilter(text, applyTextFilter)).style('RAStatusHeading').spacing({ before: 360 });
+                  para.Borders.addTopBorder('8F23B3', '6', 'single', '18');
+                  para.createBorder();
                 } else {
                   doc.createParagraph(applyFilter(text, applyTextFilter)).style(`Heading${node.depth}`);
                 }
@@ -77,11 +79,21 @@ const renderMarkdown = (doc, markdown, style = 'body', { applyTextFilter } = {},
                     p.bullet(0);
                     doc.addParagraph(p);
                 });
+                if (nts) {
+                  renderHorizontalRule(doc).spacing({after: '240'});
+                }
                 break;
             }
         }
     });
 };
+
+function renderHorizontalRule(doc) {
+  const para = doc.createParagraph().style('HorizontalRule');
+  para.Borders.addBottomBorder('8F23B3', '1', 'single', '18');
+  para.createBorder();
+  return para;
+}
 
 const renderLabel = (doc, text) => {
     if (!text) { return; }
@@ -241,4 +253,4 @@ const renderTextEditor = (doc, value, { onStringFallback, onError, separator, ap
     }
 };
 
-export { appendTextWithLineBreaks, renderMarkdown, renderLabel, renderNull, renderText, renderTextEditor, renderNode, splitTextIntoSegments };
+export { appendTextWithLineBreaks, renderMarkdown, renderLabel, renderNull, renderText, renderTextEditor, renderNode, splitTextIntoSegments, renderHorizontalRule };

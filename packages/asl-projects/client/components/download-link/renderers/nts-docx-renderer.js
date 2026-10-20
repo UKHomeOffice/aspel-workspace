@@ -12,7 +12,7 @@ import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
 import { addStyles, addPageNumbers } from './helpers/docx-style-helper';
-import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared } from './helpers/docx-content-renderer';
+import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared, renderHorizontalRule } from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
 import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
@@ -256,6 +256,7 @@ export default async function ntsDocxRenderer(opts) {
         document.addParagraph(p);
       });
     }
+    renderHorizontalRule(document).spacing({after: '240'});
   };
 
   const renderRetrospectivePlaceholder = (field) => {
@@ -275,7 +276,7 @@ export default async function ntsDocxRenderer(opts) {
 
   const renderRaSummary = (fieldNames) => {
     if (!ra) { return; }
-    document.createParagraph('Retrospective assessment').heading3().spacing({ before: 480 });
+    document.createParagraph('Retrospective assessment').style('RAStatusHeading').spacing({ before: 480 });
     if (application.raGrantedDate) {
       document.createParagraph(`Published: ${application.raGrantedDate}`).style('body');
     }
@@ -293,10 +294,12 @@ export default async function ntsDocxRenderer(opts) {
   const renderField = (field, schemaVersion) => {
     if (field.heading) {
       if (field.heading === 'Retrospective assessment') {
-        document.createParagraph(field.heading).heading3().spacing({ before: 480 });
+        const para = document.createParagraph(field.heading).style('RAStatusHeading').spacing({ before: 480 });
+        para.Borders.addTopBorder('8F23B3', '6', 'single', '18');
+        para.createBorder();
       } else {
         document.createParagraph(field.heading).style('HeadingHint');
-        console.log('heading', field.heading);
+        console.log('heading310', field.heading);
       }
     }
     if (field.label && field.name !== 'species') {
