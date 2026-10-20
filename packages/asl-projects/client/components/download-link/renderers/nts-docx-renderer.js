@@ -299,9 +299,9 @@ export default async function ntsDocxRenderer(opts) {
   const renderField = (field, schemaVersion) => {
     if (field.heading) {
       if (field.heading === 'Retrospective assessment') {
-        const para = document.createParagraph(field.heading).style('RAStatusHeading').spacing({ before: 480 });
-        para.Borders.addTopBorder('8F23B3', '6', 'single', '18');
-        para.createBorder();
+        const raStatusHeading = document.createParagraph(field.heading).style('RAStatusHeading').spacing({ before: 480 });
+        raStatusHeading.Borders.addTopBorder('8F23B3', '6', 'single', '18');
+        raStatusHeading.createBorder();
       } else {
         document.createParagraph(field.heading).style('HeadingHint');
       }

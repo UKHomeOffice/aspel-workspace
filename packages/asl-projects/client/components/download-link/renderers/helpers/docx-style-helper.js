@@ -193,6 +193,15 @@ const addStyles = (document, nts) => {
         .bold()
         .spacing({ before: 120, after: 120, line: 340, lineRule: 'exact' });
 
+      document.Styles.createParagraphStyle('RASectionHeading', 'RA Section Heading')
+        .basedOn('Body')
+        .next('Body')
+        .quickFormat()
+        .size(28)
+        .font('Arial')
+        .bold()
+        .spacing({ before: 120, after: 120, line: 340, lineRule: 'exact' });
+
       document.Styles.createParagraphStyle('Bold', 'bold')
         .basedOn('Body')
         .next('Body')
