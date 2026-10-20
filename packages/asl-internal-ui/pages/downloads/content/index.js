@@ -49,7 +49,7 @@ module.exports = {
         yearLength: 'Year must include 4 numbers',
         realDate: 'End date must be a real date',
         todayOrPast: 'End date must be today or in the past',
-        after: 'End date must be the same as or before {{date}}, the start date'
+        after: 'End date must be the same as or after the {{date}}, the start date'
       }
     },
     ra: {
