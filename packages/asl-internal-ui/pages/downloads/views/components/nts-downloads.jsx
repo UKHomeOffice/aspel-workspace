@@ -7,7 +7,11 @@ export default function NTSDownloads() {
   const model = useSelector(state => state.model);
   const [submitted, setSubmitted] = useState(false);
   const [downloadStarted, setDownloadStarted] = useState(false);
-  const handleSubmit = () => {
+  const handleSubmit = event => {
+    if (downloadStarted) {
+      event.preventDefault();
+      return;
+    }
     setSubmitted(true);
     setDownloadStarted(true);
   };
@@ -28,10 +32,13 @@ export default function NTSDownloads() {
         }}
         model={model}
         errors={submitted ? {} : errors}
-        onChange={() => setDownloadStarted(false)}
-        onSubmit={handleSubmit}
         submit={false}
-        formProps={{ id: 'form', action: '/downloads?tab=nts' }}
+        formProps={{
+          id: 'form',
+          action: '/downloads?tab=nts',
+          onSubmit: handleSubmit,
+          onChange: () => setDownloadStarted(false)
+        }}
         declaration={
           <button type="submit" className="govuk-button" disabled={downloadStarted}>
             Start download
