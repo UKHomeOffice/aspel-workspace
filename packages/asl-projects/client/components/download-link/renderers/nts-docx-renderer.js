@@ -304,7 +304,6 @@ export default async function ntsDocxRenderer(opts) {
         para.createBorder();
       } else {
         document.createParagraph(field.heading).style('HeadingHint');
-        console.log('heading310', field.heading);
       }
     }
     if (field.label && field.name !== 'species') {
@@ -348,7 +347,6 @@ export default async function ntsDocxRenderer(opts) {
     }
     if (section.subtitle) {
       document.createParagraph(section.subtitle).style('Hint');
-      console.log('subtitle', section.subtitle);
     }
     const fields = (section.fields || []).filter(f => isTrainingLicence ? f.training !== false : f.training !== true);
     fields.forEach(field => renderField(field, schemaVersion));
