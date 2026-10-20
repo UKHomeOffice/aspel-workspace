@@ -18,8 +18,8 @@ describe('<DateRangeInput />', () => {
         render(<DateRangeInput label="Filter by date granted" />);
 
         expect(screen.getByRole('heading', { name: 'Filter by date granted' })).toBeInTheDocument();
-        expect(screen.getByRole('group', { name: 'Date from' })).toBeInTheDocument();
-        expect(screen.getByRole('group', { name: 'Date to' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Start date' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'End date' })).toBeInTheDocument();
         expect(screen.getByLabelText('Day', { selector: '#date-from-day' })).toBeInTheDocument();
         expect(screen.getByLabelText('Month', { selector: '#date-to-month' })).toBeInTheDocument();
     });
@@ -32,8 +32,8 @@ describe('<DateRangeInput />', () => {
         );
 
         expect(screen.getByRole('heading', { name: 'Granted dates' })).toBeInTheDocument();
-        expect(screen.getByRole('group', { name: 'Date from' })).toBeInTheDocument();
-        expect(screen.getByRole('group', { name: 'Date to' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Start date' })).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'End date' })).toBeInTheDocument();
         expect(screen.getByLabelText('Day', { selector: '#date-from-day' })).toBeInTheDocument();
         expect(screen.getByLabelText('Month', { selector: '#date-to-month' })).toBeInTheDocument();
     });
@@ -79,6 +79,22 @@ describe('<DateRangeInput />', () => {
         expect(screen.getByText('The date range cannot be more than 6 months')).toBeInTheDocument();
         expect(container.querySelector('#dateRange-legend')).toBeInTheDocument();
         expect(container.querySelectorAll('.govuk-input--error')).toHaveLength(6);
+    });
+
+    test('renders the range error after the hint and before the date inputs', () => {
+        const { container } = render(
+            <DateRangeInput
+                name="dateRange"
+                hint="You can only download data for date ranges of 6 months or less"
+                error="End date must be within 6 months of the start date"
+            />
+        );
+
+        const hint = container.querySelector('.govuk-hint');
+        const error = container.querySelector('#dateRange-error');
+        const inputs = container.querySelector('.date-range-input__fields');
+        expect(hint.compareDocumentPosition(error) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+        expect(error.compareDocumentPosition(inputs) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     });
 
     test('only displays validation errors supplied by the server', () => {

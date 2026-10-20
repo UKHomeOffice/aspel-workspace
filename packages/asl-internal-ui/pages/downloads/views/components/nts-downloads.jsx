@@ -1,37 +1,43 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Fieldset, ErrorSummary } from '@ukhomeoffice/asl-components';
-import schema from '../../schema/nts';
+import { Form, ErrorSummary } from '@ukhomeoffice/asl-components';
 
 export default function NTSDownloads() {
-  const initialValidation = useSelector(state => state.static.ntsDateRangeValidation) || {};
+  const { schema, errors } = useSelector(state => state.static);
+  const model = useSelector(state => state.model);
   const [submitted, setSubmitted] = useState(false);
   const [downloadStarted, setDownloadStarted] = useState(false);
-  const errors = initialValidation.errors || {};
-  const model = initialValidation.model || {};
-  const displayedErrors = submitted ? {} : errors;
-  const dateRangeErrors = {
-    dateRange: displayedErrors.dateRange,
-    'date-from': displayedErrors['date-from'],
-    'date-to': displayedErrors['date-to']
-  };
-  const dateRangeValidate = {
-    'date-to': [{ dateIsAfter: model.dateRange?.['date-from'] }]
-  };
   const handleSubmit = () => {
     setSubmitted(true);
     setDownloadStarted(true);
   };
-  const handleCriteriaChange = () => setDownloadStarted(false);
 
   return (
-    <div className="nts-download-form">
+    <div id="noResults" className="nts-download-form">
       {!submitted && <ErrorSummary />}
-      <form method="GET" action="/downloads/nts/docx" noValidate onSubmit={handleSubmit}>
-        <Fieldset schema={schema.dates} model={model} errors={dateRangeErrors} validate={dateRangeValidate} onChange={handleCriteriaChange} />
-        <Fieldset schema={schema.ra} model={model} errors={displayedErrors} onChange={handleCriteriaChange} />
-        <button type="submit" className="govuk-button" disabled={downloadStarted}>Download document</button>
-      </form>
+      <Form
+        schema={{
+          dateRange: {
+            ...schema.dateRange,
+            validate: {
+              'date-from': schema['date-from'].validate,
+              'date-to': schema['date-to'].validate
+            }
+          },
+          ra: schema.ra
+        }}
+        model={model}
+        errors={submitted ? {} : errors}
+        onChange={() => setDownloadStarted(false)}
+        onSubmit={handleSubmit}
+        submit={false}
+        formProps={{ id: 'form', action: '/downloads?tab=nts' }}
+        declaration={
+          <button type="submit" className="govuk-button" disabled={downloadStarted}>
+            Start download
+          </button>
+        }
+      />
     </div>
   );
 }

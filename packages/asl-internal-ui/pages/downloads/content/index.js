@@ -29,22 +29,31 @@ module.exports = {
   },
   errors: {
     dateRange: {
-      maximumDateRange: 'The date range cannot be more than 6 months'
+      maximumDateRange: 'End date must be within 6 months of the start date'
     },
     'date-from': {
-      required: "Enter a 'From' date",
-      aspelDataStartDate: "The 'From' date must be the same as or after 31 July 2019, when ASPeL came into use"
+      required: 'Enter a start date',
+      aspelDataStartDate: 'Start date must be the same as or after 31 July 2019, when ASPeL came into use',
+      date: {
+        incomplete: 'Start date must include {{missingParts}}',
+        yearLength: 'Year must include 4 numbers',
+        realDate: 'Start date must be a real date',
+        todayOrPast: 'Start date must be today or in the past'
+      }
     },
     'date-to': {
-      required: "Enter a 'To' date",
-      aspelDataStartDate: "The 'To' date must be the same as or after 31 July 2019, when ASPeL came into use",
-      maximumDateRange: 'The date range cannot be more than 6 months',
+      required: 'Enter an end date',
+      aspelDataStartDate: 'End date must be the same as or after 31 July 2019, when ASPeL came into use',
       date: {
-        after: "The 'To' date must be the same as or after {{date}}, the 'From' date"
+        incomplete: 'End date must include {{missingParts}}',
+        yearLength: 'Year must include 4 numbers',
+        realDate: 'End date must be a real date',
+        todayOrPast: 'End date must be today or in the past',
+        after: 'End date must be the same as or before {{date}}, the start date'
       }
     },
     ra: {
-      required: 'Select which type of non-technical summary to download'
+      required: 'Select which type of non-technical summary you want to download'
     },
     noResults: {
       noResults: 'There are no projects for this date range'
