@@ -153,7 +153,7 @@ const addStyles = (document, nts) => {
         .quickFormat()
         .size(52)
         .font('Arial')
-        .color('8F23B3')
+        .color(PURPLE)
         .spacing({ before: 0, after: 720, line: 600, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('Heading2', 'Heading 2')
@@ -162,7 +162,7 @@ const addStyles = (document, nts) => {
         .quickFormat()
         .size(32)
         .font('Arial')
-        .color('8F23B3')
+        .color(PURPLE)
         .bold()
         .spacing({ before: 480, after: 240, line: 400, lineRule: 'exact' });
 
@@ -264,4 +264,6 @@ const addPageNumbers = (document) => {
         .right();
 };
 
-export { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers };
+const PURPLE = '8F23B3';
+
+export { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers, PURPLE };

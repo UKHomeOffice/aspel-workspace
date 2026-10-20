@@ -11,7 +11,7 @@ import schemaVersions from '@asl/projects/client/schema';
 import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
-import { addStyles, addPageNumbers } from './helpers/docx-style-helper';
+import { addStyles, addPageNumbers, PURPLE } from './helpers/docx-style-helper';
 import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared, renderHorizontalRule } from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
 import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
@@ -300,7 +300,7 @@ export default async function ntsDocxRenderer(opts) {
     if (field.heading) {
       if (field.heading === 'Retrospective assessment') {
         const raStatusHeading = document.createParagraph(field.heading).style('RAStatusHeading').spacing({ before: 480 });
-        raStatusHeading.Borders.addTopBorder('8F23B3', '6', 'single', '18');
+        raStatusHeading.Borders.addTopBorder(PURPLE, '6', 'single', '18');
         raStatusHeading.createBorder();
       } else {
         document.createParagraph(field.heading).style('HeadingHint');

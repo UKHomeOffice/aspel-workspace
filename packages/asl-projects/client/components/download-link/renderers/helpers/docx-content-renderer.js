@@ -1,5 +1,5 @@
 import { Paragraph, TextRun, Indent } from 'docx';
-import { numbering, abstract } from './docx-style-helper'
+import { numbering, abstract, PURPLE } from './docx-style-helper'
 import unified from 'unified';
 import remarkParse from 'remark-parse';
 import get from 'lodash/get';
@@ -59,7 +59,7 @@ const renderMarkdown = (doc, markdown, style = 'body', { applyTextFilter } = {},
                 const text = node.children.find(c => c.type === 'text')?.value || '';
                 if (nts) {
                   const raSectionHeading = doc.createParagraph(applyFilter(text, applyTextFilter)).style('RASectionHeading').spacing({ before: 360 });
-                  raSectionHeading.Borders.addTopBorder('8F23B3', '6', 'single', '18');
+                  raSectionHeading.Borders.addTopBorder(PURPLE, '6', 'single', '18');
                   raSectionHeading.createBorder();
                 } else {
                   doc.createParagraph(applyFilter(text, applyTextFilter)).style(`Heading${node.depth}`);
@@ -90,7 +90,7 @@ const renderMarkdown = (doc, markdown, style = 'body', { applyTextFilter } = {},
 
 function renderHorizontalRule(doc) {
   const para = doc.createParagraph().style('HorizontalRule');
-  para.Borders.addBottomBorder('8F23B3', '1', 'single', '18');
+  para.Borders.addBottomBorder(PURPLE, '1', 'single', '18');
   para.createBorder();
   return para;
 }
