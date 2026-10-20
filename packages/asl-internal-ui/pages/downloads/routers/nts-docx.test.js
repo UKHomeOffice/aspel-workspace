@@ -24,14 +24,12 @@ function setup(items = []) {
         }
       }
     },
-    '@asl/service/ui/feature-flag': { FEATURE_FLAG_NTS_DOCX: 'nts-docx' },
     '@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper': {
       addPageNumbers: value => assert.strictEqual(value, document)
     },
     '@ukhomeoffice/asl-constants': { getRAReasons: () => [] }
   })({ attachments: '/attachments' });
   const req = {
-    hasFeatureFlag: () => true,
     form: { values: { 'date-from': '2024-1-1', 'date-to': '2024-7-1', ra: false } },
     api: async path => {
       assert.strictEqual(path, '/reports/nts-docx?startDate=2024-01-01&endDate=2024-07-01&ra=false');

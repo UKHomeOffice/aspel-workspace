@@ -2,8 +2,6 @@ const ntsRenderer = require('@asl/projects/client/components/download-link/rende
 const getNtsSchema = require('@asl/pages/pages/project-version/nts/schema');
 const { Packer } = require('@joefitter/docx');
 const filenamify = require('filenamify');
-const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
-const { NotFoundError } = require('@asl/service/errors');
 const { addPageNumbers } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
 const { getRAReasons } = require('@ukhomeoffice/asl-constants');
 const moment = require('moment');
@@ -17,9 +15,6 @@ const pack = doc => {
 module.exports = settings => {
   return async (req, res, next) => {
     try {
-      if (!req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
-        throw new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.');
-      }
       const startDate = moment(req.form.values['date-from'], 'YYYY-MM-DD').format('YYYY-MM-DD');
       const endDate = moment(req.form.values['date-to'], 'YYYY-MM-DD').format('YYYY-MM-DD');
       const { ra } = req.form.values;
