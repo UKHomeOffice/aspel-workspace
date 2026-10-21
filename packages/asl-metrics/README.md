@@ -13,6 +13,17 @@ FLOW_URL=http://localhost:8083/flow
 
 Copy (.env.example)[./.env.example] to `.env` and replace secret values (e.g. Keycloak secret).
 
+## PPL returns data export
+
+With the database environment variables configured, run the ASL-5165 export from the workspace root:
+
+```sh
+cd packages/asl-metrics
+node scripts/ppl-returns-data-export.js --startDate=2024-09-01 --endDate=2026-09-01 --file=asl-5165
+```
+
+This writes `asl-5165-return-reasons.csv`, `asl-5165-field-comments.csv`, and `asl-5165-field-comment-counts.csv` to the current directory.
+
 ## Reports
 
 The code for a report should consist of a function that receives the inbound request returns two methods: `query` and `parse`.
