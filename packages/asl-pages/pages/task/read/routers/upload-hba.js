@@ -3,11 +3,10 @@ const bodyParser = require('body-parser');
 const { UnauthorisedError } = require('@asl/service/errors');
 const { form } = require('../../../common/routers');
 const schema = require('../../schema/upload-hba');
-const FormData = require('form-data');
-const { default: axios } = require('axios');
 const { getActionAdjustedWording } = require('../views/adjusted-wording');
+const uploadToAttachments = require('../../../../lib/upload-to-attachments');
 
-module.exports = (config) => {
+module.exports = config => {
   const app = Router({ mergeParams: true });
 
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -18,7 +17,7 @@ module.exports = (config) => {
         req.buildRoute('task.read', { suffix: 'confirm-hba' })
       );
     }
-    next();
+    return next();
   });
 
   app.use((req, res, next) => {
@@ -29,7 +28,7 @@ module.exports = (config) => {
         )
       );
     }
-    next();
+    return next();
   });
 
   app.use(
@@ -39,25 +38,19 @@ module.exports = (config) => {
         res.locals.static.establishment = req.establishment;
         res.locals.static.task = req.task;
         req.form.values.action = getActionAdjustedWording(req.task.data.action, req.task.type);
-        next();
+        return next();
       },
       process: async (req, res, next) => {
-        const file = req.files?.upload?.[0];
+        const file = req.files && req.files.upload && req.files.upload[0];
         if (!file) {
           return next();
         }
-        const formData = new FormData();
-
-        // File parsed by multer from incoming request
-        formData.append('file', file.buffer, file.originalname);
 
         try {
-          const { data } = await axios.post(config.attachments, formData, {
-            headers: { ...formData.getHeaders() }
-          });
+          const data = await uploadToAttachments(config.attachments, file);
           req.form.values.hbaToken = data.token;
           req.form.values.hbaFilename = file.originalname;
-          next();
+          return next();
         } catch (error) {
           return next(error);
         }

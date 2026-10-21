@@ -1,10 +1,9 @@
 const { page } = require('@asl/service/ui');
 const { form } = require('../../common/routers');
 const schema = require('../../task/schema/upload-hba');
-const FormData = require('form-data');
-const { default: axios } = require('axios');
+const uploadToAttachments = require('../../../lib/upload-to-attachments');
 
-module.exports = (settings) => {
+module.exports = settings => {
   const app = page({
     ...settings,
     root: __dirname
@@ -15,28 +14,23 @@ module.exports = (settings) => {
       schema,
       locals(req, res, next) {
         res.locals.static.establishment = req.establishment;
-        next();
+        return next();
       },
       process: async (req, res, next) => {
-        const file = req.files?.upload?.[0];
+        const file = req.files && req.files.upload && req.files.upload[0];
         if (!file) {
           return next();
         }
 
-        const formData = new FormData();
-        formData.append('file', file.buffer, file.originalname);
-
         try {
-          const { data } = await axios.post(settings.attachments, formData, {
-            headers: { ...formData.getHeaders() }
-          });
+          const data = await uploadToAttachments(settings.attachments, file);
 
           req.session.form = req.session.form || {};
           req.session.form.hba = {
             token: data.token,
             filename: file.originalname
           };
-          next();
+          return next();
         } catch (error) {
           return next(error);
         }
