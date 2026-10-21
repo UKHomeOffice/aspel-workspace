@@ -12,7 +12,7 @@ import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
 import { addStyles, addPageNumbers, PURPLE } from './helpers/docx-style-helper';
-import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared, renderHorizontalRule } from './helpers/docx-content-renderer';
+import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared, renderHorizontalRule, renderNull } from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
 import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
@@ -42,10 +42,14 @@ export default async function ntsDocxRenderer(opts) {
   };
 
   const renderTextEditor = (value) => {
-    return renderTextEditorShared(document, value, {
-      onStringFallback: (doc, val) => renderText(val),
-      onError: (doc) => doc.createParagraph('There was a problem rendering this content').style('aside')
-    });
+    if (value) {
+      return renderTextEditorShared(document, value, {
+        onStringFallback: (doc, val) => renderText(val),
+        onError: (doc) => doc.createParagraph('There was a problem rendering this content').style('aside')
+      });
+    } else {
+      renderNull(document);
+    }
   };
 
   const renderTitleBlock = () => {
@@ -84,10 +88,7 @@ export default async function ntsDocxRenderer(opts) {
   const renderKeywords = () => {
     const list = version.keywords || [];
     if (!list.length) {
-      const p = new Paragraph();
-      p.style('body');
-      p.addRun(new TextRun('No answer provided').italics());
-      document.addParagraph(p);
+      renderNull(document);
     } else {
       document.createParagraph(list.join(', ')).style('body');
     }
@@ -336,6 +337,9 @@ export default async function ntsDocxRenderer(opts) {
       }
       default: {
         const value = version[field.name];
+        if(field.heading && value === undefined) {
+          return;
+        }
         return renderTextEditor(value);
       }
     }
