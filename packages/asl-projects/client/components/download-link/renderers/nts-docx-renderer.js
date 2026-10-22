@@ -177,7 +177,13 @@ export default async function ntsDocxRenderer(opts) {
         sub.forEach(s => renderItem(s, depth + 1));
       } else {
         const p = new Paragraph(); p.style('ListParagraph'); p.bullet(depth);
-        p.addRun(new TextRun(`${getSpeciesLabel(speciesKey)}: ${getSpeciesCount(speciesKey)}`));
+        p.addRun(new TextRun(`${getSpeciesLabel(speciesKey)}: `));
+        const count = getSpeciesCount(speciesKey);
+        if (count === 'No answer provided') {
+          p.addRun(new TextRun(count).italics());
+        } else {
+          p.addRun(new TextRun(count));
+        }
         document.addParagraph(p);
       }
     };
@@ -284,7 +290,7 @@ export default async function ntsDocxRenderer(opts) {
     if (!ra) { return; }
     document.createParagraph('Retrospective assessment').style('RAStatusHeading').spacing({ before: 480 });
     if (application.raGrantedDate) {
-      document.createParagraph(`Published: ${application.raGrantedDate}`).style('body');
+      document.createParagraph(`ASRU approved: ${application.raGrantedDate}`).style('body');
     }
     const raSchema = schemaVersions['RA']();
     const allFields = flatten(Object.values(raSchema.introduction.subsections).map(s => s.fields));
