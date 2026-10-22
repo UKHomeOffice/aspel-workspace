@@ -6,7 +6,7 @@ const express = require('express');
 const request = require('supertest');
 // eslint-disable-next-line implicit-dependencies/no-implicit
 const proxyquire = require('proxyquire').noCallThru();
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const content = require('./content');
 
 const form = proxyquire('@asl/pages/pages/common/routers/form', {
@@ -96,6 +96,7 @@ test('enforces required dates and RA', async () => {
 });
 
 test('enforces date boundaries, real dates, date order and the six-month limit', async t => {
+  const tomorrow = dayJs().add(1, 'day');
   const cases = [
     [{ 'date-from-year': '2019', 'date-from-month': '7', 'date-from-day': '30' }, 'date-from', 'dateIsSameOrAfter'],
     [{ 'date-to-year': '2019', 'date-to-month': '7', 'date-to-day': '30' }, 'date-to', 'dateIsSameOrAfter'],
@@ -104,9 +105,9 @@ test('enforces date boundaries, real dates, date order and the six-month limit',
     [{ 'date-from-month': '8' }, 'date-to', 'customValidate'],
     [{ 'date-to-day': '2' }, 'dateRange', 'customValidate'],
     [{
-      'date-to-year': moment().add(1, 'day').format('YYYY'),
-      'date-to-month': moment().add(1, 'day').format('M'),
-      'date-to-day': moment().add(1, 'day').format('D')
+      'date-to-year': tomorrow.format('YYYY'),
+      'date-to-month': tomorrow.format('M'),
+      'date-to-day': tomorrow.format('D')
     }, 'date-to', 'dateIsSameOrBefore']
   ];
   for (const [changes, field, error] of cases) {

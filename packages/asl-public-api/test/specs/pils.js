@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const assert = require('assert');
 const request = require('supertest');
 const sinon = require('sinon');
@@ -129,7 +129,7 @@ describe('/pils', () => {
 
     it('sets reviewDue and reviewOverdue properties on the pil if a review is not due', () => {
       const { PIL } = this.api.app.db;
-      const reviewDate = moment().add(6, 'months').toISOString();
+      const reviewDate = dayJs().add(6, 'months').toISOString();
       return Promise.resolve()
         .then(() => PIL.query().findById(ids.pils.linfordChristie).patch({ reviewDate }))
         .then(() => {
@@ -145,7 +145,7 @@ describe('/pils', () => {
 
     it('sets reviewDue and reviewOverdue properties on the pil if a review is due', () => {
       const { PIL } = this.api.app.db;
-      const reviewDate = moment().add(2, 'months').toISOString();
+      const reviewDate = dayJs().add(2, 'months').toISOString();
       return Promise.resolve()
         .then(() => PIL.query().findById(ids.pils.linfordChristie).patch({ reviewDate }))
         .then(() => {
@@ -161,7 +161,7 @@ describe('/pils', () => {
 
     it('sets reviewDue and reviewOverdue properties on the pil if a review is overdue', () => {
       const { PIL } = this.api.app.db;
-      const reviewDate = moment().subtract(1, 'month').toISOString();
+      const reviewDate = dayJs().subtract(1, 'month').toISOString();
       return Promise.resolve()
         .then(() => PIL.query().findById(ids.pils.linfordChristie).patch({ reviewDate }))
         .then(() => {

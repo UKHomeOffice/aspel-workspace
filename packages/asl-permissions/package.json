@@ -26,10 +26,10 @@
   "dependencies": {
     "@asl/schema": "file:../asl-schema",
     "@asl/service": "file:../asl-service",
+    "@ukhomeoffice/asl-components": "file:../asl-components",
     "@ukhomeoffice/asl-constants": "file:../asl-constants",
     "apicache": "^1.6.3",
     "lodash": "^4.18.1",
-    "moment": "^2.29.2",
     "objection": "^3.1.5",
     "redis": "^3.1.1"
   },

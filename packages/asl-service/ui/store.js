@@ -1,6 +1,6 @@
 const { configureStore } = require('@reduxjs/toolkit');
 const rootReducer = require('./reducers');
-const { queryStringFromState } = require('@ukhomeoffice/asl-components/src/utils');
+const { queryStringFromState } = require('@ukhomeoffice/asl-components/utils');
 
 function persistStateMiddleware(storeAPI) {
   return next => action => {

@@ -1,17 +1,20 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
 const calculateDuration = (inDuration) => {
+  const duration = {
+    years: Number(inDuration?.years) || 0,
+    months: Number(inDuration?.months) || 0,
+    days: Number(inDuration?.days) || 0
+  };
 
-  let duration = inDuration || {};
+  const hasExplicitDuration = !!(duration.years || duration.months || duration.days);
 
-  if (inDuration) {
-      duration.years = inDuration.years ? inDuration.years : (inDuration.months ? 0 : 5);
-      duration.months = inDuration.months ? inDuration.months : 0;
-  }
-
-  if (duration.years >= 5 || (!duration.months && !duration.years)) {
-    duration.years = 5;
-    duration.months = 0;
+  if (duration.years >= 5 || !hasExplicitDuration) {
+    return {
+      years: 5,
+      months: 0,
+      days: 0
+    };
   }
 
   if (duration.months > 12) {
@@ -23,7 +26,7 @@ const calculateDuration = (inDuration) => {
 
 const calculateExpiryDate = (issueDate, duration) => {
 
-    const expiryDate = issueDate ? moment(issueDate) : moment();
+    const expiryDate = issueDate ? dayJs(issueDate) : dayJs();
     const calculatedDuration = calculateDuration(duration);
 
     // Subtracting a day for license to expire 1 day before to get correct license duration
