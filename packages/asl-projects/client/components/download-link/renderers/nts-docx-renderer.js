@@ -146,16 +146,10 @@ export default async function ntsDocxRenderer(opts) {
   };
   const getSpeciesCount = (speciesKey) => version[`reduction-quantities-${speciesKey}`] || 'No answer provided';
 
+  const fateOfAnimalsOptions = schemaV1().nts.subsections['fate-of-animals'].fields.find(f => f.name === 'fate-of-animals').options;
   const renderFateOfAnimals = (fields) => {
     fields?.forEach(field => {
-      let fateOfAnimal = NTSFateOfAnimalFields()[field];
-      if (!fateOfAnimal) {
-        if (field === 'used-in-other-projects') {
-          fateOfAnimal = NTSFateOfAnimalFields()['continued-use-2'];
-        } else {
-          return;
-        }
-      }
+      const fateOfAnimal = fateOfAnimalsOptions.find(opt => opt.value === field);
       const p = new Paragraph();
       p.style('ListParagraph');
       p.bullet(0);
