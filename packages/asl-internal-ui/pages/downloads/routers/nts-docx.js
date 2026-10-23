@@ -1,14 +1,10 @@
-const { Router } = require('express');
 const ntsRenderer = require('@asl/projects/client/components/download-link/renderers/nts-docx-renderer').default;
 const getNtsSchema = require('@asl/pages/pages/project-version/nts/schema');
 const { Packer } = require('@joefitter/docx');
 const filenamify = require('filenamify');
-const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
-const { NotFoundError } = require('@asl/service/errors');
 const { addPageNumbers } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
 const { getRAReasons } = require('@ukhomeoffice/asl-constants');
-const { getDateQueryValue, validateNtsDateRangeQuery } = require('../lib/nts-date-validation');
-const getNtsRedirectQuery = require('../lib/nts-redirect-query');
+const moment = require('moment');
 
 // Converts docx Document instance into a binary Buffer
 const pack = doc => {
@@ -17,26 +13,11 @@ const pack = doc => {
 };
 
 module.exports = settings => {
-  const router = Router({ mergeParams: true });
-
-  router.get('/', async (req, res, next) => {
+  return async (req, res, next) => {
     try {
-      if (!req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
-        throw new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.');
-      }
-      const startDate = getDateQueryValue(req.query, 'date-from');
-      const endDate = getDateQueryValue(req.query, 'date-to');
-      const { ra } = req.query;
-      const validation = validateNtsDateRangeQuery(req.query);
-
-      if (!validation.isValid) {
-        return res.redirect(`/downloads?${getNtsRedirectQuery(req.query)}`);
-      }
-
-      // Validate ra (REQUIRED & must be 'true' or 'false')
-      if (!['true', 'false'].includes(String(ra).toLowerCase())) {
-        return res.redirect(`/downloads?${getNtsRedirectQuery(req.query)}`);
-      }
+      const startDate = moment(req.form.values['date-from'], 'YYYY-MM-DD').format('YYYY-MM-DD');
+      const endDate = moment(req.form.values['date-to'], 'YYYY-MM-DD').format('YYYY-MM-DD');
+      const { ra } = req.form.values;
 
       // Build the api/db query params
       const query = new URLSearchParams();
@@ -49,7 +30,7 @@ module.exports = settings => {
       const items = response.json.data || [];
 
       if (items.length === 0) {
-        return res.redirect(`/downloads?${getNtsRedirectQuery(req.query)}&noResults=true`);
+        return next({ validation: { form: 'noResults' } });
       }
 
       let mergedDocument = null;
@@ -81,7 +62,5 @@ module.exports = settings => {
     } catch (err) {
       next(err);
     }
-  });
-
-  return router;
+  };
 };

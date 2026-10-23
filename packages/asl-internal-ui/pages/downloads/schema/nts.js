@@ -1,31 +1,51 @@
-const dates = {
+const moment = require('moment');
+
+module.exports = {
   dateRange: {
     inputType: 'inputDateRange',
-    label: 'Filter by date granted',
-    hint: 'You can only download data from 31 July 2019, when ASPeL came into use',
-    minDate: '2019-07-31',
-    maxDate: 'now',
-    minDateErrorCode: 'aspelDataStartDate'
-  }
-};
-
-const ra = {
+    getValue: values => ({
+      'date-from': values['date-from'],
+      'date-to': values['date-to']
+    }),
+    validate: [{
+      customValidate: (value, values) => {
+        const start = moment(values['date-from'], ['YYYY-MM-DD', 'YYYY-M-D'], true);
+        const end = moment(values['date-to'], ['YYYY-MM-DD', 'YYYY-M-D'], true);
+        return !start.isValid() || !end.isValid() || !end.isAfter(start.add(6, 'months'), 'day');
+      }
+    }]
+  },
+  'date-from': {
+    inputType: 'inputDate',
+    dateLabel: "The 'From' date",
+    validate: [
+      'required',
+      'validDate',
+      { dateIsSameOrAfter: '2019-07-31' },
+      { dateIsSameOrBefore: 'now' }
+    ]
+  },
+  'date-to': {
+    inputType: 'inputDate',
+    dateLabel: "The 'To' date",
+    validate: [
+      'required',
+      'validDate',
+      { dateIsSameOrAfter: '2019-07-31' },
+      { dateIsSameOrBefore: 'now' },
+      { customValidate: (value, values) => {
+        const formats = ['YYYY-MM-DD', 'YYYY-M-D'];
+        const start = moment(values['date-from'], formats, true);
+        const end = moment(value, formats, true);
+        return !start.isValid() || !end.isValid() || !end.isBefore(start, 'day');
+      } }
+    ]
+  },
   ra: {
     inputType: 'radioGroup',
     className: 'nts-ra-field',
-    label: 'Which type of non-technical summary do you want to download? (docx file)',
-    options: [
-      {
-        label: 'Projects requiring a retrospective assessment (RA)',
-        value: true
-      },
-      {
-        label: 'Projects not requiring an RA',
-        value: false
-      }
-    ],
-    validate: ['required']
+    options: [true, false],
+    format: value => value === 'true' ? true : value === 'false' ? false : value,
+    validate: ['required', { definedValues: [true, false] }]
   }
 };
-
-module.exports = { dates, ra };

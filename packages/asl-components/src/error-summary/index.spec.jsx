@@ -16,6 +16,9 @@ describe('<ErrorSummary />', () => {
         errors: {
             heading: 'There is a problem',
             headingPlural: 'There are problems',
+            dateRange: {
+                maximumDateRange: 'The date range cannot be more than 6 months'
+            },
             default: {
                 required: 'Enter a value',
                 validDate: 'Enter a valid date',
@@ -63,6 +66,16 @@ describe('<ErrorSummary />', () => {
             schema: { dob: { inputType: 'inputDate' } }
         });
         expect(screen.getByRole('link', { name: 'Enter a value' })).toHaveAttribute('href', '#dob-day');
+    });
+
+    test('links a date range error to its legend', () => {
+        renderWithStore({
+            errors: { dateRange: 'maximumDateRange' },
+            schema: { dateRange: { inputType: 'inputDateRange' } }
+        });
+
+        expect(screen.getByRole('link', { name: 'The date range cannot be more than 6 months' }))
+            .toHaveAttribute('href', '#dateRange-legend');
     });
 
     test('links a date field to the first invalid part and names it in the message', () => {

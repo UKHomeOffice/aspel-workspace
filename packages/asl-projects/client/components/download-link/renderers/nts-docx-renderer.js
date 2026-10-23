@@ -227,7 +227,7 @@ export default async function ntsDocxRenderer(opts) {
     table.getCell(0, 1).addParagraph(new Paragraph('Life stages').style('Bold'));
     speciesDetails.forEach((s, i) => {
       table.getCell(i + 1, 0).addParagraph(new Paragraph(s.name).style('tablebody'));
-      table.getCell(i + 1, 1).addParagraph(new Paragraph((s.lifeStages || []).join(', ')).style('body'));
+      table.getCell(i + 1, 1).addParagraph(new Paragraph((s.lifeStages || []).join(', ')).style('tablebody'));
     });
     document.addTable(table);
   };
@@ -275,7 +275,7 @@ export default async function ntsDocxRenderer(opts) {
 
   const renderRaSummary = (fieldNames) => {
     if (!ra) { return; }
-    document.createParagraph('Retrospective assessment').heading3().spacing({ before: 240 });
+    document.createParagraph('Retrospective assessment').heading3().spacing({ before: 480 });
     if (application.raGrantedDate) {
       document.createParagraph(`Published: ${application.raGrantedDate}`).style('body');
     }
@@ -293,9 +293,10 @@ export default async function ntsDocxRenderer(opts) {
   const renderField = (field, schemaVersion) => {
     if (field.heading) {
       if (field.heading === 'Retrospective assessment') {
-        document.createParagraph(field.heading).heading3().spacing({ before: 240 });
+        document.createParagraph(field.heading).heading3().spacing({ before: 480 });
       } else {
-        document.createParagraph(field.heading).style('Bold');
+        document.createParagraph(field.heading).style('HeadingHint');
+        console.log('heading', field.heading);
       }
     }
     if (field.label && field.name !== 'species') {
@@ -338,7 +339,8 @@ export default async function ntsDocxRenderer(opts) {
       document.createParagraph(section.title).heading2();
     }
     if (section.subtitle) {
-      document.createParagraph(section.subtitle).style('Bold');
+      document.createParagraph(section.subtitle).style('Hint');
+      console.log('subtitle', section.subtitle);
     }
     const fields = (section.fields || []).filter(f => isTrainingLicence ? f.training !== false : f.training !== true);
     fields.forEach(field => renderField(field, schemaVersion));
