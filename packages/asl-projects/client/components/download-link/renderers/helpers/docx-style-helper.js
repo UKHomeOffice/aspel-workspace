@@ -153,7 +153,7 @@ const addStyles = (document, nts) => {
         .quickFormat()
         .size(52)
         .font('Arial')
-        .color('8F23B3')
+        .color(PURPLE)
         .spacing({ before: 0, after: 720, line: 600, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('Heading2', 'Heading 2')
@@ -162,7 +162,7 @@ const addStyles = (document, nts) => {
         .quickFormat()
         .size(32)
         .font('Arial')
-        .color('8F23B3')
+        .color(PURPLE)
         .bold()
         .spacing({ before: 480, after: 240, line: 400, lineRule: 'exact' });
 
@@ -183,6 +183,24 @@ const addStyles = (document, nts) => {
         .bold()
         .font('Arial')
         .spacing({ before: 0, after: 120, line: 320, lineRule: 'exact' });
+
+      document.Styles.createParagraphStyle('RAStatusHeading', 'RA Status Heading')
+        .basedOn('Body')
+        .next('Body')
+        .quickFormat()
+        .size(28)
+        .font('Arial')
+        .bold()
+        .spacing({ before: 120, after: 120, line: 340, lineRule: 'exact' });
+
+      document.Styles.createParagraphStyle('RASectionHeading', 'RA Section Heading')
+        .basedOn('Body')
+        .next('Body')
+        .quickFormat()
+        .size(28)
+        .font('Arial')
+        .bold()
+        .spacing({ before: 120, after: 120, line: 340, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('Bold', 'bold')
         .basedOn('Body')
@@ -218,6 +236,14 @@ const addStyles = (document, nts) => {
           .size(24)
           .font('Arial')
           .spacing({ before: 0, after: 120, line: 320, lineRule: 'exact' });
+
+        document.Styles.createParagraphStyle('HorizontalRule', 'Horizontal Rule')
+          .basedOn('Body')
+          .next('Body')
+          .quickFormat()
+          .size(2)
+          .font('Arial')
+          .spacing({ before: 0, after: 0, line: 40, lineRule: 'exact' });
     }
 
 };
@@ -238,4 +264,6 @@ const addPageNumbers = (document) => {
         .right();
 };
 
-export { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers };
+const PURPLE = '8F23B3';
+
+export { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers, PURPLE };
