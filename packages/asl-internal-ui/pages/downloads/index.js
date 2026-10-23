@@ -40,6 +40,17 @@ module.exports = settings => {
       if (validationErrors['date-to'] === 'customValidate') {
         validationErrors['date-to'] = 'dateIsAfter';
       }
+      const end = moment(req.form.values['date-to'], ['YYYY-MM-DD', 'YYYY-M-D'], true);
+      if (validationErrors['date-to'] === 'dateIsAfter' && end.isValid() && end.isBefore('2019-07-31', 'day')) {
+        const otherErrors = Object.fromEntries(
+          Object.entries(validationErrors).filter(([field]) => field !== 'dateRange' && field !== 'date-to')
+        );
+        req.form.validationErrors = {
+          dateRange: 'dateIsAfter',
+          'date-to': 'aspelDataStartDate',
+          ...otherErrors
+        };
+      }
       next();
     },
     locals: (req, res, next) => {
