@@ -40,17 +40,6 @@ module.exports = settings => {
       if (validationErrors['date-to'] === 'customValidate') {
         validationErrors['date-to'] = 'dateIsAfter';
       }
-      const end = moment(req.form.values['date-to'], ['YYYY-MM-DD', 'YYYY-M-D'], true);
-      if (validationErrors['date-to'] === 'dateIsAfter' && end.isValid() && end.isBefore('2019-07-31', 'day')) {
-        const otherErrors = Object.fromEntries(
-          Object.entries(validationErrors).filter(([field]) => field !== 'dateRange' && field !== 'date-to')
-        );
-        req.form.validationErrors = {
-          dateRange: 'dateIsAfter',
-          'date-to': 'aspelDataStartDate',
-          ...otherErrors
-        };
-      }
       next();
     },
     locals: (req, res, next) => {
@@ -63,9 +52,9 @@ module.exports = settings => {
       next();
     },
     configure: (req, res, next) => {
-      if (req.method === 'POST' && !req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
-        return next(new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.'));
-      }
+      // if (req.method === 'POST' && !req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
+      //   return next(new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.'));
+      // }
       next();
     },
     process: (req, res, next) => {
