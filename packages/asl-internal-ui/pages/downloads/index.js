@@ -52,9 +52,9 @@ module.exports = settings => {
       next();
     },
     configure: (req, res, next) => {
-      // if (req.method === 'POST' && !req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
-      //   return next(new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.'));
-      // }
+      if (req.method === 'POST' && !req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
+        return next(new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.'));
+      }
       next();
     },
     process: (req, res, next) => {
