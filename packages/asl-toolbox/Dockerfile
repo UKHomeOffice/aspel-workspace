@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.2
 
-FROM quay.io/ukhomeofficedigital/asl-base:v22.22.0 as builder
+FROM quay.io/ukhomeofficedigital/asl-base:v22.23.4 as builder
 
 ARG MODULE_PATHS
 
@@ -29,7 +29,7 @@ RUN --mount=type=secret,id=token \
     npm run build -w asl-toolbox && \
     npm prune --omit=dev
 
-FROM quay.io/ukhomeofficedigital/asl-base:v22.22.0
+FROM quay.io/ukhomeofficedigital/asl-base:v22.23.4
 
 RUN apk upgrade --no-cache && \
     apk add aws-cli ca-certificates postgresql16-client jq bash --no-cache && \

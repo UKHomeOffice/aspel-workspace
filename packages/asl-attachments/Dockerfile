@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.2
 
-FROM quay.io/ukhomeofficedigital/asl-base:v22.22.0 as builder
+FROM quay.io/ukhomeofficedigital/asl-base:v22.23.4 as builder
 
 ARG MODULE_PATHS
 
@@ -29,7 +29,7 @@ RUN --mount=type=secret,id=token \
 
 RUN npm rebuild sharp --force
 
-FROM quay.io/ukhomeofficedigital/asl-base:v22.22.0
+FROM quay.io/ukhomeofficedigital/asl-base:v22.23.4
 
 RUN apk upgrade --no-cache && \
     npm install -g npm@11.19.1
