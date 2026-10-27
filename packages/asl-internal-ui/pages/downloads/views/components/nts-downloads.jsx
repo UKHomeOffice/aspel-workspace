@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Form, ErrorSummary } from '@ukhomeoffice/asl-components';
+import moment from 'moment';
 
 export default function NTSDownloads() {
   const { schema, errors } = useSelector(state => state.static);
   const model = useSelector(state => state.model);
+  const start = moment(model.dateRange?.['date-from'] ?? model['date-from'], ['YYYY-MM-DD', 'YYYY-M-D'], true);
+  const formatters = {
+    dateRange: {
+      renderContext: {
+        date: start.isValid() ? start.format('D MMMM YYYY') : ''
+      }
+    }
+  };
   const [submitted, setSubmitted] = useState(false);
   const [downloadStarted, setDownloadStarted] = useState(false);
   const handleSubmit = event => {
@@ -18,7 +27,7 @@ export default function NTSDownloads() {
 
   return (
     <div id="noResults" className="nts-download-form">
-      {!submitted && <ErrorSummary />}
+      {!submitted && <ErrorSummary formatters={formatters} />}
       <Form
         schema={{
           dateRange: {
@@ -32,6 +41,7 @@ export default function NTSDownloads() {
         }}
         model={model}
         errors={submitted ? {} : errors}
+        formatters={formatters}
         submit={false}
         formProps={{
           id: 'form',
