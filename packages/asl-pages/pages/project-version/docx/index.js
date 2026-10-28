@@ -1,16 +1,16 @@
-const { Router } = require('express');
-const { get, pick } = require('lodash');
-const { Packer } = require('@joefitter/docx');
-const imageSize = require('image-size');
+const {Router} = require('express');
+const {get, pick} = require('lodash');
+const {Packer} = require('@joefitter/docx');
+const {imageSize} = require('image-size');
 const filenamify = require('filenamify');
 const fetch = require('node-fetch');
 const renderer = require('@asl/projects/client/components/download-link/renderers/docx-renderer').default;
 const ntsRenderer = require('@asl/projects/client/components/download-link/renderers/nts-docx-renderer').default;
-const { loadRa, loadDraftTraining } = require('../middleware');
+const {loadRa, loadDraftTraining} = require('../middleware');
 const getNtsSchema = require('../nts/schema');
 const schema = require('@asl/projects/client/schema').default;
-const { NotFoundError } = require('@asl/service/errors');
-const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
+const {NotFoundError} = require('@asl/service/errors');
+const {FEATURE_FLAG_NTS_DOCX} = require('@asl/service/ui/feature-flag');
 
 const MAX_IMAGE_WIDTH = 600;
 const MAX_IMAGE_HEIGHT = 800;
@@ -22,7 +22,7 @@ const pack = doc => {
 
 const scaleAndPreserveAspectRatio = (srcWidth, srcHeight, maxWidth, maxHeight) => {
   const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
-  return { width: srcWidth * ratio, height: srcHeight * ratio };
+  return {width: srcWidth * ratio, height: srcHeight * ratio};
 };
 
 const getDataUrl = async (attachmentHost, data) => {
@@ -62,7 +62,11 @@ const loadImages = attachmentHost => async node => {
   } else {
     return {
       type: 'error',
-      nodes: [ { text: 'Image type unsupported. Please use a JPG or PNG image for DOCX exports.', marks: [], object: 'text' } ]
+      nodes: [{
+        text: 'Image type unsupported. Please use a JPG or PNG image for DOCX exports.',
+        marks: [],
+        object: 'text'
+      }]
     };
   }
 };
@@ -84,7 +88,7 @@ const buildDocxContent = (req) => {
     application.establishments.push(pick(receivingEstablishment, 'id', 'name'));
   }
 
-  return { values, application };
+  return {values, application};
 };
 
 module.exports = (settings) => {
@@ -92,7 +96,7 @@ module.exports = (settings) => {
 
   app.get('/', loadDraftTraining, (req, res, next) => {
     const sections = Object.values(schema[req.project.schemaVersion]());
-    const { values, application } = buildDocxContent(req);
+    const {values, application} = buildDocxContent(req);
 
     renderer(application, sections, values, loadImages(settings.attachments))
       .then(pack)
@@ -108,7 +112,7 @@ module.exports = (settings) => {
     if (!req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
       throw new NotFoundError('NTS DOCX download requires a feature flag');
     }
-    const { values, application } = buildDocxContent(req);
+    const {values, application} = buildDocxContent(req);
     const includeDraftRa = req.query.draftRa === 'true';
     const isTrainingLicence = !!values['training-licence'];
     const ntsSections = getNtsSchema(req.project.schemaVersion);
