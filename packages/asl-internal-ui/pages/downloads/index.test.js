@@ -98,7 +98,7 @@ test('enforces required dates and RA', async () => {
 test('enforces date boundaries, real dates, date order and the six-month limit', async t => {
   const cases = [
     [{ 'date-from-year': '2019', 'date-from-month': '7', 'date-from-day': '30' }, 'date-from', 'dateIsSameOrAfter'],
-    [{ 'date-to-year': '2019', 'date-to-month': '7', 'date-to-day': '30' }, 'date-to', 'dateIsSameOrAfter'],
+    [{ 'date-to-year': '2019', 'date-to-month': '7', 'date-to-day': '30' }, 'date-to', 'customValidate'],
     [{ 'date-from-month': '2', 'date-from-day': '31' }, 'date-from', 'validDate'],
     [{ 'date-to-month': '2', 'date-to-day': '31' }, 'date-to', 'validDate'],
     [{ 'date-from-month': '8' }, 'date-to', 'customValidate'],
@@ -150,7 +150,7 @@ test('shows date-order and missing RA errors together', async () => {
 test('preserves the existing date-order message and supplies the start date', async () => {
   assert.strictEqual(
     content.errors['date-to'].date.after,
-    'End date must be the same as or before {{date}}, the start date'
+    'End date must be the same as or after {{date}}, the start date'
   );
   const { app } = setup();
   await request(app).post('/downloads?tab=nts').type('form')
