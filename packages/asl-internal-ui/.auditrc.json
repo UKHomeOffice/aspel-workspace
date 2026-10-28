@@ -1,8 +1,10 @@
 {
   "comments": [
-    "GHSA-f88m-g3jw-g9cj: sharp (package.json) - inherited vulnerabilities in libvips:"
+    "GHSA-c475-qrg2-pj4r|keycloak-connect>chromedriver>proxy-agent>pac-proxy-agent>get-uri>basic-ftp",
+    "GHSA-w3rx-r6r6-pgpr|image-size"
   ],
   "allowlist": [
-    "GHSA-f88m-g3jw-g9cj"
+    "GHSA-c475-qrg2-pj4r",
+    "GHSA-w3rx-r6r6-pgpr"
   ]
 }
