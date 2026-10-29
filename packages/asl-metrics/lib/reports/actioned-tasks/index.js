@@ -215,7 +215,7 @@ module.exports = ({ db, flow, query: params }) => {
             firstAssignedToActionDiff = adjustForSameDay(eventTime.workingDiff(firstAssignedAt, 'calendarDays'));
           }
           isOutstanding = false;
-          includedDates.push(eventTime.format('YYYY-MM-DD'));
+          includedDates.add(eventTime.format('YYYY-MM-DD'));
 
         } else if (isRecall) {
           if (previousSubmission) {
@@ -233,7 +233,7 @@ module.exports = ({ db, flow, query: params }) => {
           previousSubmission = null;
           previousAssignment = null;
           isOutstanding = false;
-          includedDates.push(eventTime.format('YYYY-MM-DD'));
+          includedDates.add(eventTime.format('YYYY-MM-DD'));
         }
 
         if (activityLog.event_name === 'assign') {
