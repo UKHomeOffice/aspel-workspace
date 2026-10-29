@@ -24,13 +24,13 @@ RUN ls /app/packages
 RUN --mount=type=secret,id=token \
     --mount=type=secret,id=github_token \
     export ART_AUTH_TOKEN=`cat /run/secrets/token` GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` && \
-    npm install -g npm@11.19.1 && \
+    npm install -g npm@11.21.1 && \
     npm ci --omit=dev --ignore-scripts --loglevel=verbose
 
 FROM quay.io/ukhomeofficedigital/asl-base:v22.23.4
 
 RUN apk upgrade --no-cache && \
-    npm install -g npm@11.19.1
+    npm install -g npm@11.21.1
 
 COPY --from=builder /app /app
 
