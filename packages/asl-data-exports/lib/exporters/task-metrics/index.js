@@ -70,6 +70,7 @@ module.exports = settings => {
         'role',
         'action',
         'taskType',
+        'taskDescription',
         'isContinuation',
         'firstSubmittedAt',
         'firstReturnedAt',
