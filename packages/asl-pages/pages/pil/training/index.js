@@ -8,6 +8,11 @@ module.exports = settings => {
   const app = page({ root: __dirname });
 
   app.use((req, res, next) => {
+    res.locals.pageTitle = res.locals.static.content.title;
+    next();
+  });
+
+  app.use((req, res, next) => {
     req.model = {
       id: `${req.pilId}-training`,
       ...buildModel(schema)
