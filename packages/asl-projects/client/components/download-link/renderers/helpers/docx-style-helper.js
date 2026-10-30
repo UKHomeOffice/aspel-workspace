@@ -137,7 +137,7 @@ const addStyles = (document, nts) => {
         .quickFormat()
         .size(24)
         .font('Arial')
-        .spacing({ before: 0, after: 240, line: 320, lineRule: 'exact' });
+        .spacing({ before: 0, after: 240, line: 300, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('tablebody', 'Table Body')
         .basedOn('Normal')
@@ -145,7 +145,7 @@ const addStyles = (document, nts) => {
         .quickFormat()
         .size(24)
         .font('Arial')
-        .spacing({ before: 0, after: 0, line: 320, lineRule: 'exact' });
+        .spacing({ before: 0, after: 60, line: 300, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('Heading1', 'Heading 1')
         .basedOn('Body')
@@ -153,20 +153,18 @@ const addStyles = (document, nts) => {
         .quickFormat()
         .size(52)
         .font('Arial')
-        .color(PURPLE)
-        .spacing({ before: 0, after: 720, line: 600, lineRule: 'exact' });
+        .spacing({ before: 0, after: 720, line: 640, lineRule: 'exact' });
 
-      document.Styles.createParagraphStyle('Heading2', 'Heading 2')
+      document.Styles.createParagraphStyle('Heading3', 'Heading 3')
         .basedOn('Body')
         .next('Body')
         .quickFormat()
         .size(32)
         .font('Arial')
-        .color(PURPLE)
         .bold()
         .spacing({ before: 480, after: 240, line: 400, lineRule: 'exact' });
 
-      document.Styles.createParagraphStyle('Heading3', 'Heading 3')
+      document.Styles.createParagraphStyle('Heading4', 'Heading 4')
         .basedOn('Body')
         .next('Body')
         .quickFormat()
@@ -175,11 +173,12 @@ const addStyles = (document, nts) => {
         .bold()
         .spacing({ before: 120, after: 120, line: 340, lineRule: 'exact' });
 
-      document.Styles.createParagraphStyle('Heading4', 'Heading 4')
+      document.Styles.createParagraphStyle('Heading5', 'Heading 5')
         .basedOn('Body')
         .next('Body')
         .quickFormat()
         .size(24)
+        .color(PURPLE)
         .bold()
         .font('Arial')
         .spacing({ before: 0, after: 120, line: 320, lineRule: 'exact' });
@@ -188,10 +187,10 @@ const addStyles = (document, nts) => {
         .basedOn('Body')
         .next('Body')
         .quickFormat()
-        .size(28)
+        .size(32)
         .font('Arial')
         .bold()
-        .spacing({ before: 120, after: 120, line: 340, lineRule: 'exact' });
+        .spacing({ before: 480, after: 240, line: 400, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('RASectionHeading', 'RA Section Heading')
         .basedOn('Body')
@@ -200,7 +199,7 @@ const addStyles = (document, nts) => {
         .size(28)
         .font('Arial')
         .bold()
-        .spacing({ before: 120, after: 120, line: 340, lineRule: 'exact' });
+        .spacing({ before: 360, after: 120, line: 340, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('Bold', 'bold')
         .basedOn('Body')
@@ -209,7 +208,7 @@ const addStyles = (document, nts) => {
         .size(24)
         .font('Arial')
         .bold()
-        .spacing({ before: 0, after: 0, line: 320, lineRule: 'exact' });
+        .spacing({ before: 0, after: 0, line: 300, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('Hint', 'Hint')
         .basedOn('Body')
@@ -218,7 +217,7 @@ const addStyles = (document, nts) => {
         .size(24)
         .font('Arial')
         .color('666666')
-        .spacing({ before: 0, after: 240, line: 320, lineRule: 'exact' });
+        .spacing({ before: 0, after: 240, line: 300, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('HeadingHint', 'Heading Hint')
         .basedOn('Body')
@@ -227,7 +226,7 @@ const addStyles = (document, nts) => {
         .size(24)
         .font('Arial')
         .color('666666')
-        .spacing({ before: 240, after: 240, line: 320, lineRule: 'exact' });
+        .spacing({ before: 240, after: 240, line: 300, lineRule: 'exact' });
 
         document.Styles.createParagraphStyle('ListParagraph', 'List Paragraph')
           .basedOn('Body')
@@ -235,15 +234,15 @@ const addStyles = (document, nts) => {
           .quickFormat()
           .size(24)
           .font('Arial')
-          .spacing({ before: 0, after: 120, line: 320, lineRule: 'exact' });
+          .spacing({ before: 0, after: 120, line: 300, lineRule: 'exact' });
 
         document.Styles.createParagraphStyle('HorizontalRule', 'Horizontal Rule')
           .basedOn('Body')
           .next('Body')
           .quickFormat()
-          .size(2)
+          .size(1)
           .font('Arial')
-          .spacing({ before: 0, after: 0, line: 40, lineRule: 'exact' });
+          .spacing({ before: 0, after: 240, line: 40, lineRule: 'exact' });
     }
 
 };
