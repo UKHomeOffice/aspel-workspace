@@ -1,4 +1,4 @@
-import { Numbering, TextRun } from 'docx';
+import { Numbering, Paragraph, TextRun } from 'docx';
 
 const addStyles = (document, nts) => {
     document.Styles.createParagraphStyle('Question', 'Question')
@@ -139,6 +139,15 @@ const addStyles = (document, nts) => {
         .font('Arial')
         .spacing({ before: 0, after: 240, line: 300, lineRule: 'exact' });
 
+      document.Styles.createParagraphStyle('tableheader', 'Table Header')
+        .basedOn('Normal')
+        .next('Normal')
+        .quickFormat()
+        .size(24)
+        .bold()
+        .font('Arial')
+        .spacing({ before: 0, after: 60, line: 300, lineRule: 'exact' });
+
       document.Styles.createParagraphStyle('tablebody', 'Table Body')
         .basedOn('Normal')
         .next('Normal')
@@ -148,6 +157,16 @@ const addStyles = (document, nts) => {
         .spacing({ before: 0, after: 60, line: 300, lineRule: 'exact' });
 
       document.Styles.createParagraphStyle('Heading1', 'Heading 1')
+        .basedOn('Body')
+        .next('Body')
+        .quickFormat()
+        .size(52)
+        .font('Arial')
+        .color(PURPLE)
+        .bold()
+        .spacing({ before: 0, after: 0, line: 640, lineRule: 'exact' });
+
+      document.Styles.createParagraphStyle('Heading2', 'Heading 2')
         .basedOn('Body')
         .next('Body')
         .quickFormat()
@@ -251,6 +270,11 @@ const renderHorizontalRule = doc => {
     doc.createParagraph('___________________________________________________________________');
 };
 
+const addTableHeader = (cell, text) => {
+    return cell.setShading({ fill: 'F1E9F3' })
+        .addParagraph(new Paragraph(text).style('tableheader'));
+};
+
 const numbering = new Numbering();
 
 const abstract = numbering.createAbstractNumbering();
@@ -263,6 +287,6 @@ const addPageNumbers = (document) => {
         .right();
 };
 
-const PURPLE = '8F23B3';
+const PURPLE = '732282';
 
-export { addStyles, renderHorizontalRule, numbering, abstract, addPageNumbers, PURPLE };
+export { addStyles, addTableHeader, renderHorizontalRule, numbering, abstract, addPageNumbers, PURPLE };

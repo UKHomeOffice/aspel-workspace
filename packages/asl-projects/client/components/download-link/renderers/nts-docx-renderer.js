@@ -11,7 +11,7 @@ import schemaVersions from '@asl/projects/client/schema';
 import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
-import { addStyles, addPageNumbers, PURPLE } from './helpers/docx-style-helper';
+import { addStyles, addTableHeader, addPageNumbers, PURPLE } from './helpers/docx-style-helper';
 import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared, renderHorizontalRule, renderNull } from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
 import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
@@ -229,8 +229,8 @@ export default async function ntsDocxRenderer(opts) {
     });
 
     // headers
-    table.getCell(0, 0).addParagraph(new Paragraph('Animal types').style('Bold'));
-    table.getCell(0, 1).addParagraph(new Paragraph('Life stages').style('Bold'));
+    addTableHeader(table.getCell(0, 0), 'Animal types');
+    addTableHeader(table.getCell(0, 1), 'Life stages');
     speciesDetails.forEach((s, i) => {
       table.getCell(i + 1, 0).addParagraph(new Paragraph(s.name).style('tablebody'));
       table.getCell(i + 1, 1).addParagraph(new Paragraph((s.lifeStages || []).join(', ')).style('tablebody'));
