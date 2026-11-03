@@ -32,10 +32,13 @@ module.exports = ({ models, keycloak, emailer, logger, jwt }) => ({ action, data
 
   if (action === 'create') {
     return Profile.query(transaction)
-      .where('email', 'iLike', data.email)
+      .whereRaw('LOWER(email) = LOWER(?)', [data.email])
       .first()
       .then(profile => {
         if (profile) {
+          if (profile.userId && profile.userId !== data.userId) {
+            throw new Error('Profile already exists with a different userId');
+          }
           return Profile.query(transaction)
             .patchAndFetchById(profile.id, { userId: data.userId });
         }
