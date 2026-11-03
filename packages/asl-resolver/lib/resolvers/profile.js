@@ -32,7 +32,7 @@ module.exports = ({ models, keycloak, emailer, logger, jwt }) => ({ action, data
 
   if (action === 'create') {
     return Profile.query(transaction)
-      .where('email', 'iLike', data.email)
+      .whereRaw('LOWER(email) = LOWER(?)', [data.email])
       .first()
       .then(profile => {
         if (profile) {
