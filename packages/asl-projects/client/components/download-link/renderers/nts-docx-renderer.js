@@ -57,17 +57,17 @@ export default async function ntsDocxRenderer(opts) {
       document.createParagraph('Non-technical Summary').heading1();
     }
     if (mergedDocument) {
-      document.createParagraph(application.title || version.title || 'Untitled project').heading1().pageBreakBefore();
+      document.createParagraph(application.title || version.title || 'Untitled project').heading2().pageBreakBefore();
     } else {
-      document.createParagraph(application.title || version.title || 'Untitled project').heading1();
+      document.createParagraph(application.title || version.title || 'Untitled project').heading2();
     }
 
-    document.createParagraph('Overview').heading2();
+    document.createParagraph('Overview').heading3();
   };
 
   const renderLabel = (text) => {
     if (!text) { return; }
-    document.createParagraph(text).heading3();
+    document.createParagraph(text).heading4();
   };
 
   const renderText = (value) => {
@@ -212,7 +212,7 @@ export default async function ntsDocxRenderer(opts) {
 
   const renderSpeciesTable = () => {
 
-    document.createParagraph('Animal types and life stages').heading3();
+    document.createParagraph('Animal types and life stages').heading4();
 
     const speciesDetails = groupSpeciesDetails();
     if (!speciesDetails.length) { return renderText(null); }
@@ -253,7 +253,7 @@ export default async function ntsDocxRenderer(opts) {
       : [];
 
     if (isRequired && raReasons && activeReasons.length) {
-      document.createParagraph('Reason for retrospective assessment').heading4();
+      document.createParagraph('Reason for retrospective assessment').heading5();
       document.createParagraph('This may include reasons from previous versions of this licence.').style('body');
       activeReasons.forEach(reason => {
         const p = new Paragraph();
@@ -291,7 +291,7 @@ export default async function ntsDocxRenderer(opts) {
     fieldNames.forEach(name => {
       const field = allFields.find(f => f.name === name);
       if (!field) { return; }
-      document.createParagraph(field.label).heading3();
+      document.createParagraph(field.label).heading4();
       const val = get(ra, ['data', field.name]);
       renderText(val);
     });
@@ -347,7 +347,7 @@ export default async function ntsDocxRenderer(opts) {
 
   const renderSection = (section, sectionIndex, schemaVersion) => {
     if (sectionIndex !== 0) {
-      document.createParagraph(section.title).heading2();
+      document.createParagraph(section.title).heading3();
     }
     if (section.subtitle) {
       document.createParagraph(section.subtitle).style('Hint');
