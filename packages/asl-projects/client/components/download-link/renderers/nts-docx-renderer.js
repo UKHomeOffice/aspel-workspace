@@ -11,7 +11,7 @@ import schemaVersions from '@asl/projects/client/schema';
 import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
-import { addStyles, addPageNumbers, PURPLE } from './helpers/docx-style-helper';
+import { addStyles, addTableHeader, addPageNumbers, PURPLE } from './helpers/docx-style-helper';
 import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared, renderHorizontalRule, renderNull } from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
 import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
@@ -57,17 +57,17 @@ export default async function ntsDocxRenderer(opts) {
       document.createParagraph('Non-technical Summary').heading1();
     }
     if (mergedDocument) {
-      document.createParagraph(application.title || version.title || 'Untitled project').heading1().pageBreakBefore();
+      document.createParagraph(application.title || version.title || 'Untitled project').heading2().pageBreakBefore();
     } else {
-      document.createParagraph(application.title || version.title || 'Untitled project').heading1();
+      document.createParagraph(application.title || version.title || 'Untitled project').heading2();
     }
 
-    document.createParagraph('Overview').heading2();
+    document.createParagraph('Overview').heading3();
   };
 
   const renderLabel = (text) => {
     if (!text) { return; }
-    document.createParagraph(text).heading3();
+    document.createParagraph(text).heading4();
   };
 
   const renderText = (value) => {
@@ -212,7 +212,7 @@ export default async function ntsDocxRenderer(opts) {
 
   const renderSpeciesTable = () => {
 
-    document.createParagraph('Animal types and life stages').heading3();
+    document.createParagraph('Animal types and life stages').heading4();
 
     const speciesDetails = groupSpeciesDetails();
     if (!speciesDetails.length) { return renderText(null); }
@@ -229,8 +229,8 @@ export default async function ntsDocxRenderer(opts) {
     });
 
     // headers
-    table.getCell(0, 0).addParagraph(new Paragraph('Animal types').style('Bold'));
-    table.getCell(0, 1).addParagraph(new Paragraph('Life stages').style('Bold'));
+    addTableHeader(table.getCell(0, 0), 'Animal types');
+    addTableHeader(table.getCell(0, 1), 'Life stages');
     speciesDetails.forEach((s, i) => {
       table.getCell(i + 1, 0).addParagraph(new Paragraph(s.name).style('tablebody'));
       table.getCell(i + 1, 1).addParagraph(new Paragraph((s.lifeStages || []).join(', ')).style('tablebody'));
@@ -253,7 +253,7 @@ export default async function ntsDocxRenderer(opts) {
       : [];
 
     if (isRequired && raReasons && activeReasons.length) {
-      document.createParagraph('Reason for retrospective assessment').heading4();
+      document.createParagraph('Reason for retrospective assessment').heading5();
       document.createParagraph('This may include reasons from previous versions of this licence.').style('body');
       activeReasons.forEach(reason => {
         const p = new Paragraph();
@@ -291,7 +291,7 @@ export default async function ntsDocxRenderer(opts) {
     fieldNames.forEach(name => {
       const field = allFields.find(f => f.name === name);
       if (!field) { return; }
-      document.createParagraph(field.label).heading3();
+      document.createParagraph(field.label).heading4();
       const val = get(ra, ['data', field.name]);
       renderText(val);
     });
@@ -347,7 +347,7 @@ export default async function ntsDocxRenderer(opts) {
 
   const renderSection = (section, sectionIndex, schemaVersion) => {
     if (sectionIndex !== 0) {
-      document.createParagraph(section.title).heading2();
+      document.createParagraph(section.title).heading3();
     }
     if (section.subtitle) {
       document.createParagraph(section.subtitle).style('Hint');
