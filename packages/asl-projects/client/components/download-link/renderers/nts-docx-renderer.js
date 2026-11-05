@@ -253,7 +253,7 @@ export default async function ntsDocxRenderer(opts) {
       : [];
 
     if (isRequired && raReasons && activeReasons.length) {
-      document.createParagraph('Reason for retrospective assessment').heading5();
+      document.createParagraph('Reason for retrospective assessment').heading4();
       document.createParagraph('This may include reasons from previous versions of this licence.').style('body');
       activeReasons.forEach(reason => {
         const p = new Paragraph();
@@ -282,7 +282,7 @@ export default async function ntsDocxRenderer(opts) {
 
   const renderRaSummary = (fieldNames) => {
     if (!ra) { return; }
-    document.createParagraph('Retrospective assessment').style('RAStatusHeading').spacing({ before: 480 });
+    document.createParagraph('Retrospective assessment').heading3();
     if (application.raGrantedDate) {
       document.createParagraph(`ASRU approved: ${application.raGrantedDate}`).style('body');
     }
@@ -300,7 +300,7 @@ export default async function ntsDocxRenderer(opts) {
   const renderField = (field, schemaVersion) => {
     if (field.heading) {
       if (field.heading === 'Retrospective assessment') {
-        const raStatusHeading = document.createParagraph(field.heading).style('RAStatusHeading').spacing({ before: 480 });
+        const raStatusHeading = document.createParagraph(field.heading).heading3();
         raStatusHeading.Borders.addTopBorder(PURPLE, '6', 'single', '18');
         raStatusHeading.createBorder();
       } else {
