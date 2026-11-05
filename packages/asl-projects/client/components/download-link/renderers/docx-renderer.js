@@ -553,8 +553,9 @@ export default (application, sections, values, updateImageDimensions) => {
   const renderProtocol = (doc, name, section, values, project, title) => {
     doc.createParagraph(`${title}: ${section.title}`).heading4();
 
-    if (section.label) {
-      doc.createParagraph(section.label).style('Question');
+    const label = renderTemplate(section.label, getFieldContext(section, values, project));
+    if (label) {
+      doc.createParagraph(label).style('Question');
     }
 
     switch (name) {

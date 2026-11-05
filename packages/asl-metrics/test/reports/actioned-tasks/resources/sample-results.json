@@ -38,7 +38,11 @@
         {
           "created_at": "2025-09-05T09:50:47.405+00:00",
           "event_name": "status:endorsed:with-inspectorate",
-          "event": {"status": "with-inspectorate", "assignedTo": null, "version": "4e28d36d-a70b-4bfe-be8a-b2fbad14ddb4"}
+          "event": {
+            "status": "with-inspectorate",
+            "assignedTo": null,
+            "version": "4e28d36d-a70b-4bfe-be8a-b2fbad14ddb4"
+          }
         },
         {
           "created_at": "2025-10-21T13:51:00.51+00:00",
@@ -52,7 +56,11 @@
         {
           "created_at": "2025-10-21T13:51:10.618+00:00",
           "event_name": "assign",
-          "event": {"status": "with-inspectorate", "assignedTo": null, "version": "4e28d36d-a70b-4bfe-be8a-b2fbad14ddb4"}
+          "event": {
+            "status": "with-inspectorate",
+            "assignedTo": null,
+            "version": "4e28d36d-a70b-4bfe-be8a-b2fbad14ddb4"
+          }
         },
         {
           "created_at": "2025-10-22T07:37:13.34+00:00",
@@ -226,6 +234,7 @@
       "licenceNumber": "PP3557248",
       "isContinuation": true,
       "metrics": {
+        "assignToActionDiffs": [21, 6, 12, 13],
         "firstAssignedAt": "2025-10-21",
         "firstAssignedToActionDiff": 22,
         "firstReturnedAt": "2025-11-20",
@@ -274,7 +283,8 @@
             "taskId": "766bac76-5e56-4fc6-975b-46b9be513a14",
             "versionId": "5fa067da-d774-4365-a67f-fc432e0e8d54"
           },
-          {"taskAction": "grant",
+          {
+            "taskAction": "grant",
             "taskType": "pplApplication",
             "inspectorAction": "resolved",
             "actioned": "2026-02-16",
@@ -288,6 +298,7 @@
             "versionId": "5c280ae6-2e34-4312-9590-37909be1622a"
           }
         ],
+        "taskDescription": "PPL - Project continuation",
         "taskType": "pplApplication",
         "totalDaysAssigned": 30,
         "totalDaysAssignedInPeriod": 7,
@@ -340,7 +351,11 @@
         {
           "created_at": "2025-08-05T07:00:44.2+00:00",
           "event_name": "status:endorsed:with-inspectorate",
-          "event": {"status": "with-inspectorate", "assignedTo": null, "version": "e8cdc1e2-7e34-4699-b946-0af21e2dbbf2"}
+          "event": {
+            "status": "with-inspectorate",
+            "assignedTo": null,
+            "version": "e8cdc1e2-7e34-4699-b946-0af21e2dbbf2"
+          }
         },
         {
           "created_at": "2025-08-24T07:55:34.83+00:00",
@@ -491,6 +506,7 @@
       "isDeadlineExtended": true,
       "licenceNumber": "PP0933062",
       "metrics": {
+        "assignToActionDiffs": [15, 58, 122],
         "firstAssignedAt": "2025-08-24",
         "firstAssignedToActionDiff": 15,
         "firstReturnedAt": "2025-09-15",
@@ -527,6 +543,7 @@
             "versionId": "02b0d31a-e0cb-4f9d-aea4-356dec56b10d"
           }
         ],
+        "taskDescription": "PPL - Statutory deadline",
         "taskType": "pplApplication",
         "totalDaysAssigned": 58,
         "totalDaysAssignedInPeriod": 1,
