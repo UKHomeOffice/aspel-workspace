@@ -32,8 +32,11 @@ The HBA will be visible to ASRU only.`,
   errors: {
     upload: {
       fileRequired: 'Select a harm benefit analysis file',
+      invalidFileContent: 'The selected file contents do not match a .doc, .docx or .pdf file',
+      malwareDetected: 'The selected file could not be uploaded because it appears to contain malicious content',
       maxSize: 'The harm benefit analysis file should be smaller than 15MB',
-      ext: 'The selected file must be a .doc, .docx or .pdf'
+      ext: 'The selected file must be a .doc, .docx or .pdf',
+      unsupportedFileType: 'The selected file must be a .doc, .docx or .pdf'
     }
   }
 });

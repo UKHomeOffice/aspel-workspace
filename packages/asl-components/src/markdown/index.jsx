@@ -2,6 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkFlexibleMarkers from 'remark-flexible-markers';
+import { filterImageUrl } from './image-url-policy';
 
 const INLINE_HTML_TAGS = [
     'a', 'span', 'b', 'i', 'strong', 'em', 'mark', 'small', 'sub', 'sup', 'u',
@@ -40,6 +41,15 @@ function RenderLinkReference({ children }) {
 
 function RenderUnorderedList({ children }) {
     return <ul className="govuk-list govuk-list--bullet">{children}</ul>;
+}
+
+function RenderImage({ alt = '', ...props }) {
+    const safeSrc = filterImageUrl(props.src);
+    if (!safeSrc) {
+        return null;
+    }
+
+    return <img {...props} alt={alt} src={safeSrc} />;
 }
 
 function getTagName(reactElement) {
@@ -119,7 +129,8 @@ export default function Markdown({
                 ...(!links && {
                     a: props => <RenderLink linkTarget={linkTarget} {...props} />,
                     linkReference: RenderLinkReference,
-                    ul: RenderUnorderedList
+                    ul: RenderUnorderedList,
+                    img: RenderImage
                 }),
                 p: (props) => (
                     <ParagraphComponent
