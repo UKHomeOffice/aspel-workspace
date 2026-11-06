@@ -58,7 +58,7 @@ const renderMarkdown = (doc, markdown, style = 'body', { applyTextFilter } = {},
             case 'heading': {
                 const text = node.children.find(c => c.type === 'text')?.value || '';
                 if (nts) {
-                  const raSectionHeading = doc.createParagraph(applyFilter(text, applyTextFilter)).style('RASectionHeading').spacing({ before: 360 });
+                  const raSectionHeading = doc.createParagraph(applyFilter(text, applyTextFilter)).heading4();
                   raSectionHeading.Borders.addTopBorder(PURPLE, '6', 'single', '18');
                   raSectionHeading.createBorder();
                 } else {
