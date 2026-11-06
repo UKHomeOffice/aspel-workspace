@@ -202,24 +202,6 @@ const addStyles = (document, nts) => {
         .font('Arial')
         .spacing({ before: 0, after: 120, line: 320, lineRule: 'exact' });
 
-      document.Styles.createParagraphStyle('RAStatusHeading', 'RA Status Heading')
-        .basedOn('Body')
-        .next('Body')
-        .quickFormat()
-        .size(32)
-        .font('Arial')
-        .bold()
-        .spacing({ before: 480, after: 240, line: 400, lineRule: 'exact' });
-
-      document.Styles.createParagraphStyle('RASectionHeading', 'RA Section Heading')
-        .basedOn('Body')
-        .next('Body')
-        .quickFormat()
-        .size(28)
-        .font('Arial')
-        .bold()
-        .spacing({ before: 360, after: 120, line: 340, lineRule: 'exact' });
-
       document.Styles.createParagraphStyle('Bold', 'bold')
         .basedOn('Body')
         .next('Body')
