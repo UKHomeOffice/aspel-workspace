@@ -11,14 +11,18 @@ export function trainingSummaryRenderer(doc, values, application = {}) {
   const TRAINING_RECORD_HEADERS = ['Category', 'Modules', 'Animal types', 'Details'];
   const holder = trainingRecordHolder(application.licenceHolder, application.status);
 
-  doc.createParagraph(holder ? `${holder.name}'s training record` : 'Training record').heading4();
-
   if (holder) {
-    doc.createParagraph(holder.status);
+    doc.createParagraph(holder.status)
+      .keepNext()
+      .style('caption');
+
+    doc.createParagraph(`${holder.name}'s training record`).style('captionedH4');
+  } else {
+    doc.createParagraph('Training record').heading4();
   }
 
   if (!values?.training?.length) {
-    doc.createParagraph('No training records found');
+    doc.createParagraph('No training records found').style('body');
     return;
   }
 
@@ -42,7 +46,7 @@ export function populateTableWithTrainingRecords(table, training) {
 
     const details = record.isExemption
       ? [
-        `Added on: ${record.createdAt ? format(record.createdAt, DATE_FORMAT) : '-'}`,
+        `Date exemption added: ${record.createdAt ? format(record.createdAt, DATE_FORMAT) : '-'}`,
         ...(record.exemptionReason || '-').split('\n')
       ]
       : [

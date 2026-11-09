@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
+import { Markdown } from '@ukhomeoffice/asl-components';
 
 const content = `# Accessibility statement for ASPeL
 
@@ -25,22 +25,16 @@ about in the ‘Non-accessible content’ section of this statement.
 
 ## Feedback and contact information
 
-If you need information from this system in a different format, or if you need to apply for or amend a licence but are
-unable to use this site, then contact us and we will make alternative arrangements:
+If you need information from this system in a different format, or if you need to apply for or amend a licence but are unable to use this site, contact us and we will make alternative arrangements: email&nbsp;[aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk)
 
- * [aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk)
-
-Please note, our working hours are Monday to Friday, 9am to 5pm, excluding bank holidays. We’ll consider your request
-and get back to you in 3 working days.
+Our working hours are Monday to Friday, 9am to 5pm, excluding bank holidays. We’ll consider your request and get back to you in 3 working days.
 
 ## Reporting accessibility problems with this system
 
 We’re always looking to improve the accessibility of this system. If you find any problems not listed on this page or
-think we’re not meeting accessibility requirements, you can report this to us:
+think we’re not meeting accessibility requirements, you can report this to us: email&nbsp;[aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk)
 
- * [aspeltechnicalqueries@homeoffice.gov.uk](mailto:aspeltechnicalqueries@homeoffice.gov.uk)
-
-Please note, our working hours are Monday to Friday, 9am to 5pm, excluding bank holidays. We’ll consider your request
+Our working hours are Monday to Friday, 9am to 5pm, excluding bank holidays. We’ll consider your request
 and get back to you in 3 working days.
 
 ## Enforcement procedure
@@ -58,8 +52,7 @@ and Mobile Applications) (No. 2) Accessibility Regulations 2018.
 
 ### Compliance status
 
-This website is partially compliant with the [Web Content Accessibility Guidelines version
-2.2](https://www.w3.org/TR/WCAG22) AA standard, due to the non-compliances listed below.
+This website is partially compliant with the [Web Content Accessibility Guidelines (WCAG) version 2.2](https://www.w3.org/TR/WCAG22) AA standard, due to the non-compliances listed below.
 
 ## Non-accessible content
 
@@ -242,5 +235,17 @@ and manage their licences. We also tested the application assessment and grantin
 `;
 
 export default () => {
-  return <ReactMarkdown escapeHtml={false}>{ content }</ReactMarkdown>;
+  return (
+    <Markdown
+      escapeHtml={false}
+      components={{
+        h1: (props) => <h1 className="govuk-heading-xl" {...props} />,
+        h2: (props) => <h2 className="govuk-heading-l" {...props} />,
+        h3: (props) => <h3 className="govuk-heading-m" {...props} />,
+        h4: (props) => <h4 className="govuk-heading-s" {...props} />
+      }}
+    >
+      { content }
+    </Markdown>
+  );
 };

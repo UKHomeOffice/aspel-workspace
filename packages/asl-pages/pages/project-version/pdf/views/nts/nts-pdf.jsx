@@ -26,7 +26,7 @@ export default function NtsPdf() {
             return (
               <Fragment key={sectionName}>
                 { sectionIndex !== 0 && <h2>{section.title}</h2> }
-                { section.subtitle && <h3>{section.subtitle}</h3> }
+                { section.subtitle && <p className='govuk-hint'>{section.subtitle}</p> }
                 {
                   fields.map((field, index) => (
                     <div key={index} className="q-and-a">
@@ -34,7 +34,7 @@ export default function NtsPdf() {
                         field.heading && (
                           field.heading === 'Retrospective assessment'
                             ? <h2>{field.heading}</h2>
-                            : <h3>{field.heading}</h3>
+                            : <p className='govuk-hint'>{field.heading}</p>
                         )
                       }
                       { field.label && field.name !== 'species' && <h4>{field.label}</h4> }

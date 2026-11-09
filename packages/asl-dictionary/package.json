@@ -1,6 +1,6 @@
 {
   "name": "@ukhomeoffice/asl-dictionary",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Expansions of acronyms commonly used in ASL projects",
   "main": "index.js",
   "scripts": {

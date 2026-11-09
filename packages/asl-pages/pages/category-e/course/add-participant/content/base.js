@@ -26,7 +26,7 @@ module.exports = merge(
       },
       dob: {
         label: 'Date of birth',
-        hint: 'For example, 14 9 2023',
+        hint: 'For example 14 9 2023',
         checkAnswerLabel: 'Over 18'
       },
       organisation: {
@@ -61,19 +61,17 @@ module.exports = merge(
     },
     errors: {
       firstName: {
-        required: 'Enter the first name of the participant'
+        required: 'Enter the participant\'s first name'
       },
       lastName: {
-        required: 'Enter the last name of the participant'
+        required: 'Enter the participant\'s last name'
       },
       email: {
         required: 'Enter the email address of the participant',
         customValidate: 'Enter a valid email address'
       },
       dob: {
-        required: 'Enter the date of birth of the participant',
-        validDate: 'The date of birth of the participant must be a real date' +
-          ' and include a day, month and year. The year must include 4 numbers',
+        required: 'Enter the participant\'s date of birth',
         dateIsBefore: 'Date of birth must be in the past'
       },
       trainingNeed: {

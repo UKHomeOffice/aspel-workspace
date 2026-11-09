@@ -10,6 +10,8 @@ describe('trainingSummaryRenderer', () => {
     doc = {
       createParagraph: sinon.stub().returnsThis(),
       heading4: sinon.stub().returnsThis(),
+      style: sinon.stub().returnsThis(),
+      keepNext: sinon.stub().returnsThis(),
       addTable: sinon.stub()
     };
   });
@@ -78,7 +80,7 @@ describe('populateTableWithTrainingRecords', () => {
     assert.equal(table.getCell(1, 3).createParagraph.calledWith('Awarded by: Body 1'), true);
     assert.equal(table.getCell(2, 3).createParagraph.calledWith('Reason line 1'), true);
     assert.equal(table.getCell(2, 3).createParagraph.calledWith('Reason line 2'), true);
-    assert.equal(table.getCell(2, 3).createParagraph.calledWith('Added on: 14 March 2026'), true);
+    assert.equal(table.getCell(2, 3).createParagraph.calledWith('Date exemption added: 14 March 2026'), true);
   });
 
   it('should render a dash when an exemption has no reason or created date', () => {
@@ -93,7 +95,7 @@ describe('populateTableWithTrainingRecords', () => {
     populateTableWithTrainingRecords(table, training);
 
     assert.equal(table.getCell(1, 3).createParagraph.calledWith('-'), true);
-    assert.equal(table.getCell(1, 3).createParagraph.calledWith('Added on: -'), true);
+    assert.equal(table.getCell(1, 3).createParagraph.calledWith('Date exemption added: -'), true);
   });
 
   it('should handle empty modules and species lists', () => {

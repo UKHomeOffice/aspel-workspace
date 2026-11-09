@@ -12,6 +12,7 @@ module.exports = (summary, task) => {
     firstSubmitToActionDiff,
     resubmittedDiffs = [],
     firstAssignedToActionDiff,
+    assignToActionDiffs = [],
     totalDaysWithAsru,
     totalDaysAssigned,
     resolvedAt,
@@ -56,6 +57,6 @@ module.exports = (summary, task) => {
   }
 
   summary[taskType].resubmitToActionDays.push(...resubmittedDiffs);
-
+  summary[taskType].assignToActionDays.push(...assignToActionDiffs);
   return summary;
 };

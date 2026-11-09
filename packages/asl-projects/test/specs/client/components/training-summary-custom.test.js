@@ -103,7 +103,7 @@ describe('<TrainingSummaryWithChangeHighlighting />', () => {
       });
 
       assert.ok(markup.includes('Previously trained abroad'));
-      assert.ok(markup.includes('Added on: </span><span class="value">14 March 2026</span>'));
+      assert.ok(markup.includes('Date exemption added: </span><span class="value">14 March 2026</span>'));
     });
 
     it('renders a dash when an exemption has no created date', () => {
@@ -113,7 +113,7 @@ describe('<TrainingSummaryWithChangeHighlighting />', () => {
         previousTraining: { first: [], previous: [], granted: [] }
       });
 
-      assert.ok(markup.includes('Added on: </span><span class="value">-</span>'));
+      assert.ok(markup.includes('Date exemption added: </span><span class="value">-</span>'));
     });
 
     it('does not render an added date for training certificates', () => {
@@ -123,7 +123,7 @@ describe('<TrainingSummaryWithChangeHighlighting />', () => {
         previousTraining: { first: [], previous: [], granted: [] }
       });
 
-      assert.ok(!markup.includes('Added on'));
+      assert.ok(!markup.includes('Date exemption added'));
     });
 
     it('does not throw when comparisons have no grey entry', () => {

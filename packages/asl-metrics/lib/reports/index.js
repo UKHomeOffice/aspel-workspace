@@ -2,7 +2,6 @@ const { Router } = require('express');
 const { pipeline } = require('stream');
 const through = require('through2');
 const { flatten } = require('lodash');
-const rateLimit = require('express-rate-limit');
 
 const getWorkflowStatuses = require('../middleware/get-workflow-statuses');
 
@@ -51,12 +50,9 @@ const step = fn => {
 module.exports = (settings) => {
 
   const router = Router({ mergeParams: true });
-  const limiter = rateLimit({
-    windowMs: settings.reportsRateLimitWindowMs,
-    max: settings.reportsRateLimitMax
-  });
 
-  router.use(limiter);
+  // rate-limit rm, configurable via NGINX.
+
   router.use(getWorkflowStatuses(settings));
 
   router.get('/:report', (req, res, next) => {

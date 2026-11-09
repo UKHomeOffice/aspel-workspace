@@ -72,10 +72,13 @@ section.continuedreuse .review {
     .grey {
       display: block;
       margin-top: -$govuk-gutter-half; // remove gap between question and hint
-      font-style: italic;
       color: $dark-grey;
     }
   }
+}
+
+.govuk-hint {
+  color: $dark-grey;
 }
 
 section > h2 {
@@ -498,5 +501,28 @@ section.approved-areas {
       margin: 0;
       padding: 0;
     }
+  }
+}
+
+.review h3 {
+  @include h4;
+}
+
+.heading-wrapper {
+  page-break-inside: avoid;
+  break-inside: avoid-page;
+
+  .govuk-caption-m {
+    margin-bottom: 0;
+
+    & ~ h1, & ~ h2, & ~ h3 {
+      margin-top: 0;
+    }
+  }
+}
+
+table.training {
+  td {
+    vertical-align: top;
   }
 }

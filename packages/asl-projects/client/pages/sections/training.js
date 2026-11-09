@@ -19,6 +19,7 @@ export default function Training(props) {
     return f.name === 'training-complete' ? { ...f, type: 'comments-only' } : f;
   });
   const trainingHistory = useSelector(state => state.static.previousTraining);
+  const {isPdf} = useSelector(state => state.static);
 
   const comparisons = useMemo(
     () => compareTrainingRecords(
@@ -35,13 +36,25 @@ export default function Training(props) {
     }
     form.current.submit();
   }
+
+  const RecordHeader = ({ children }) => {
+    return readonly ? <h3 className="govuk-heading-m">{children}</h3> : <h2 className="govuk-heading-m">{children}</h2>;
+  };
+
   return (
     <Fragment>
-      {!readonly && <h1>Training</h1>}
-      <p>{props.intro}</p>
-
-      <h2>{holder ? `${holder.name}'s training record` : 'Training record'}</h2>
-      {holder && <p>{holder.status}</p>}
+      {readonly
+        ? (isPdf ? <h2>Training record</h2> : null)
+        : <h1>Training</h1>
+      }
+      {!readonly || !isPdf
+        ? <p>{props.intro}</p>
+        : null
+      }
+      <div className='heading-wrapper'>
+        {holder && <span className="govuk-caption-m">{holder.status}</span>}
+        <RecordHeader>{holder ? `${holder.name}'s training record` : 'Training record'}</RecordHeader>
+      </div>
       <TrainingSummaryWithChangeHighlighting
         certificates={readonly ? project.training : training}
         comparisons={comparisons}
@@ -50,7 +63,7 @@ export default function Training(props) {
       />
 
       {(readonly || !canUpdateTraining)
-        ? <ReviewFields {...props} fields={fields} />
+        ? <ReviewFields {...props} fields={fields} showTitle={false}/>
         : (
           <form
             ref={form}

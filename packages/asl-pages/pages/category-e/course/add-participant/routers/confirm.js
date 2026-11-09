@@ -1,38 +1,31 @@
 const { Router } = require('express');
-const { get, omit } = require('lodash');
-const { format } = require('date-fns');
+const { submitParticipantForm, canEndorse } = require('./common');
 
 module.exports = () => {
   const app = Router({ mergeParams: true });
 
-  app.post('/', (req, res, next) => {
-    const values = get(req.session, `form[${req.model.id}].values`);
+  app.get('/', (req, res, next) => {
+    res.locals.static.canEndorseParticipant = canEndorse(req);
 
-    const params = {
-      method: 'POST',
-      json: {
-        data: {
-          ...omit(values, ['id', 'dob']),
-          dob: format(values.dob, 'yyyy-MM-dd')
-        }
-      }
-    };
-
-    req.api(`/establishment/${req.establishmentId}/training-course/${req.trainingCourseId}/training-pils`, params)
-      .then(() => {
-        const { firstName, lastName } = req.session.form[req.model.id].values;
-        delete req.session.form[req.model.id];
-
-        res.setFlash(
-          `Category E PIL application submitted for ${firstName} ${lastName}`,
-          'This application is now awaiting endorsement from the NTCO.',
-          'success'
-        );
-
-        res.redirect(`${req.buildRoute('categoryE.course.read')}`);
-      })
-      .catch(next);
+    return next();
   });
+
+  app.post('/', (req, res, next) => {
+    if (canEndorse(req)) {
+      return res.redirect(req.buildRoute('categoryE.course.addParticipant', { suffix: 'endorse' }));
+    }
+
+    return next();
+  });
+
+  app.post('/', submitParticipantForm(
+    ({ firstName, lastName }) =>
+      [
+        `Category E PIL application submitted for ${firstName} ${lastName}`,
+        'This application is now awaiting endorsement from the NTCO.',
+        'success'
+      ]
+  ));
 
   return app;
 };

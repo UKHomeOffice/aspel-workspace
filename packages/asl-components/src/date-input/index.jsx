@@ -16,6 +16,9 @@ class DateInput extends BaseDateInput {
     // highlight when in error: only the individually-invalid ones, or
 
     erroredParts() {
+        if (this.props.highlightError) {
+            return ['day', 'month', 'year'];
+        }
         if (!this.props.error) {
             return [];
         }
