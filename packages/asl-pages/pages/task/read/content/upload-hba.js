@@ -1,4 +1,4 @@
-const { merge } = require('lodash');
+const {merge} = require('lodash');
 const baseContent = require('./base');
 const tasks = require('../../content/tasks');
 
@@ -18,7 +18,7 @@ The HBA will be visible to ASRU only.`,
   fields: {
     upload: {
       label: 'Upload {{#model.hbaToken}}new {{/model.hbaToken}}file',
-      hint: "You can review and confirm the file you've chosen before {{actionContent}}. You can also update the file in the future, if required.",
+      hint: "The file must be a doc, docx or pdf. The maximum size is 15MB.  \n\nYou can review and confirm the file you've chosen before {{actionContent}}. You can also update the file in the future, if required.",
       actionContent: {
         update: 'amending the licence',
         transfer: 'approving this transfer',

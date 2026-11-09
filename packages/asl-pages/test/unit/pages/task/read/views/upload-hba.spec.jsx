@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Snippet } from '@ukhomeoffice/asl-components/src/snippet';
 import { describe, expect, test } from '@jest/globals';
+const uploadHba = require('../../../../../../pages/task/read/content/upload-hba');
 
 describe('HBA Upload intro', () => {
   const content = {
@@ -53,5 +54,15 @@ describe('HBA Upload intro', () => {
       'To transfer the licence you must upload the PPL assessment form containing the harm benefit analysis (HBA) for this transfer.'
     );
     expect(paragraphs[1]).toHaveTextContent('The HBA will be visible to ASRU only.');
+  });
+
+  test('renders the upload hint newline as a line break', () => {
+    render(
+      <Snippet content={uploadHba} actionContent="amending the licence">
+        fields.upload.hint
+      </Snippet>
+    );
+
+    expect(document.querySelector('br')).not.toBeNull();
   });
 });
