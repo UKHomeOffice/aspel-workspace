@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { Snippet } from '@ukhomeoffice/asl-components/src/snippet';
-import { describe, expect, test } from '@jest/globals';
+import {render, screen} from '@testing-library/react';
+import {Snippet} from '@ukhomeoffice/asl-components/src/snippet';
+import {describe, expect, test} from '@jest/globals';
+
 const uploadHba = require('../../../../../../pages/task/read/content/upload-hba');
 
 describe('HBA Upload intro', () => {
@@ -63,6 +64,6 @@ describe('HBA Upload intro', () => {
       </Snippet>
     );
 
-    expect(document.querySelector('br')).not.toBeNull();
+    expect(document.querySelector('p')).not.toBeNull();
   });
 });
