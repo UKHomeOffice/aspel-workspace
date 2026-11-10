@@ -48,10 +48,27 @@ const UploadHba = ({ hba, task, content }) => {
         />
         <p>
           <Snippet
+            actionToContent={
+              getFromContentTemplate(
+                content,
+                [
+                  `intro.actionToContent.${action}`,
+                  `intro.actionContent.${action}`,
+                  'intro.actionToContent.default',
+                  'intro.actionContent.default'
+                ],
+                {action}
+              )
+            }
             actionContent={
               getFromContentTemplate(
                 content,
-                [`intro.actionContent.${action}`, 'intro.actionContent.default'],
+                [
+                  `intro.actionContent.${action}`,
+                  `intro.actionToContent.${action}`,
+                  'intro.actionContent.default',
+                  'intro.actionToContent.default'
+                ],
                 {action}
               )
 

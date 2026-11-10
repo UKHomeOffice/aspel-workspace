@@ -1,4 +1,4 @@
-const { merge } = require('lodash');
+const {merge} = require('lodash');
 const baseContent = require('../../content');
 
 module.exports = merge({}, baseContent, {
@@ -13,7 +13,8 @@ Ensure you have the consent of the inspector who assessed this application.`,
   },
   fields: {
     upload: {
-      label: '## Replacement HBA file'
+      label: '## Replacement HBA file',
+      hint: 'The file must be a doc, docx or pdf. The maximum size is 15MB.'
     },
     hba: {
       label: 'Selected harm benefit analysis file'

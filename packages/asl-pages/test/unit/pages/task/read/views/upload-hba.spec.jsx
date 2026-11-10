@@ -66,4 +66,20 @@ describe('HBA Upload intro', () => {
 
     expect(document.querySelector('p')).not.toBeNull();
   });
+
+  test('renders intro with natural wording in both positions', () => {
+    render(
+      <Snippet
+        content={uploadHba}
+        actionToContent="amend the licence"
+        actionContent="amending the licence"
+        type="amendment"
+      >
+        intro.template
+      </Snippet>
+    );
+
+    expect(screen.getByText(/To amend the licence you must upload/)).toBeInTheDocument();
+    expect(screen.getByText(/before amending the licence/)).toBeInTheDocument();
+  });
 });
