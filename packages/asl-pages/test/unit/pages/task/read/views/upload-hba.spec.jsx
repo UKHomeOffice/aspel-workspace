@@ -57,14 +57,16 @@ describe('HBA Upload intro', () => {
     expect(paragraphs[1]).toHaveTextContent('The HBA will be visible to ASRU only.');
   });
 
-  test('renders the upload hint newline as a line break', () => {
+  test('renders the upload hint content', () => {
     render(
       <Snippet content={uploadHba} actionContent="amending the licence">
         fields.upload.hint
       </Snippet>
     );
 
-    expect(document.querySelector('p')).not.toBeNull();
+    expect(
+      screen.getByText('The file must be a doc, docx or pdf. The maximum size is 15MB.')
+    ).toBeInTheDocument();
   });
 
   test('renders intro with natural wording in both positions', () => {
