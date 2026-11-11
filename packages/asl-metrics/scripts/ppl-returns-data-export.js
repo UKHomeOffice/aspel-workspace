@@ -14,7 +14,8 @@
  *
  *   --startDate   Start of the reporting window. Defaults to two years before today.
  *   --endDate     End of the reporting window. Defaults to today.
- *   --file        Output file prefix. Defaults to "ppl-returns".
+ *                 The start date must be on or before the end date.
+ *   --file        Output file prefix (letters, digits, "_" and "-" only). Defaults to "ppl-returns".
  *   --cohortDate  ASRU users whose first task status change is on/after this date are in the "new"
  *                 `inspector_cohort`, earlier ones are "previous". Defaults to 2025-10-01.
  *
@@ -36,7 +37,14 @@ const args = minimist(process.argv.slice(2));
 const startDate = args.startDate || moment().subtract(2, 'years').format('YYYY-MM-DD');
 const endDate = args.endDate || moment().format('YYYY-MM-DD');
 const cohortDate = args.cohortDate || '2025-10-01';
-const prefix = (args.file || 'ppl-returns').replace(/\.csv$/, '');
+const rawFile = String(args.file ?? 'ppl-returns');
+const prefix = rawFile.replace(/\.csv$/i, '');
+
+// prefix is used to build output paths, so restrict it to a safe filename to prevent path traversal
+if (prefix.length === 0 || prefix.length > 100 || !/^[a-zA-Z0-9_-]+$/.test(prefix)) {
+  console.error(`Invalid --file=${rawFile}, expected 1-100 letters, digits, "_" or "-" (optionally ending .csv)`);
+  process.exit(1);
+}
 
 Object.entries({ startDate, endDate, cohortDate }).forEach(([name, value]) => {
   if (!moment(value, 'YYYY-MM-DD', true).isValid()) {
@@ -44,6 +52,10 @@ Object.entries({ startDate, endDate, cohortDate }).forEach(([name, value]) => {
     process.exit(1);
   }
 });
+
+if (moment(startDate).isAfter(moment(endDate), 'day')) {
+  throw new Error('--startDate must be before or equal to --endDate');
+}
 
 const BATCH_SIZE = 100;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
