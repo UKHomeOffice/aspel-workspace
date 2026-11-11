@@ -79,6 +79,26 @@ describe('/me', () => {
         });
     });
 
+    it('does not treat wildcard characters in profile email as invitation search wildcards', () => {
+      return this.api.app.db.Profile.query().insert({
+        userId: 'wildcard-user',
+        title: 'Ms',
+        firstName: 'Wilma',
+        lastName: 'Card',
+        email: 'test_@example.com',
+        emailConfirmed: true
+      })
+        .then(() => {
+          this.api.setUser({ id: 'wildcard-user' });
+        })
+        .then(() => request(this.api)
+          .get('/me')
+          .expect(200))
+        .then(response => {
+          assert.equal(response.body.data.invitations.length, 0);
+        });
+    });
+
     describe('unverified user', () => {
 
       it('returns only basic data for users without verified email addresses', () => {

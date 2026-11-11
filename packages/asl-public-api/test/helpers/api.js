@@ -20,6 +20,7 @@ module.exports = {
         const api = Api(Object.assign({
           auth: false,
           log: { level: 'error' },
+          jwt: { secret: 'test-jwt-secret' },
           db: settings,
           workflow: workflow.url,
           openApi: {

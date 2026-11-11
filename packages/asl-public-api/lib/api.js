@@ -49,7 +49,7 @@ module.exports = settings => {
 
   app.use('/me', userRouter(settings));
   app.use('/asru-profile', require('./routers/asru-profile'));
-  app.use('/invitation', require('./routers/invitation'));
+  app.use('/invitation', require('./routers/invitation')(settings));
   app.use('/establishment(s)?', establishmentRouter(settings));
   app.use('/task(s)?', require('./routers/task'));
 

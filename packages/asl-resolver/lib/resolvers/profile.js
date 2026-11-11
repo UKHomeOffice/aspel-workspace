@@ -39,6 +39,9 @@ module.exports = ({ models, keycloak, emailer, logger, jwt }) => ({ action, data
           if (profile.userId && profile.userId !== data.userId) {
             throw new Error('Profile already exists with a different userId');
           }
+          if (!profile.userId && !data.emailConfirmed) {
+            throw new Error('Cannot link unverified email address to existing profile');
+          }
           return Profile.query(transaction)
             .patchAndFetchById(profile.id, { userId: data.userId });
         }

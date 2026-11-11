@@ -4,7 +4,10 @@ module.exports = settings => {
 
   return {
     sign: payload => {
-      return jwt.sign({ ...payload, expiresIn: settings.expiry }, settings.secret);
+      if (!settings.expiry) {
+        return jwt.sign(payload, settings.secret);
+      }
+      return jwt.sign(payload, settings.secret, { expiresIn: settings.expiry });
     },
     verify: token => {
       return new Promise((resolve, reject) => {

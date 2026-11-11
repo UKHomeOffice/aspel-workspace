@@ -106,8 +106,9 @@ module.exports = (settings) => {
   router.get('/', async (req, res, next) => {
     const { Invitation } = await req.models;
     try {
+      const email = req.user.profile.email.trim().toLowerCase();
       const invitations = await Invitation.query()
-        .where('email', 'iLike', req.user.profile.email)
+        .whereRaw('LOWER("email") = ?', [email])
         .where('updatedAt', '>', moment().utc().subtract(7, 'days'))
         .withGraphFetched('establishment')
         .modifyGraph('establishment', (builder) => {

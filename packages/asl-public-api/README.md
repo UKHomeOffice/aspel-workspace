@@ -33,6 +33,7 @@ The following environment variables are required:
 * `KEYCLOAK_SECRET` - the secret used to authenticate with the keycloak client
 * `KEYCLOAK_USERNAME` - administrator username to authenticate with the keycloak client
 * `KEYCLOAK_PASSWORD` - administrator password used to authenticate with the keycloak client
+* `JWT_SECRET` - the secret used to verify invitation and email-confirmation tokens
 
 The following environment variables can be optionally defined:
 
@@ -47,7 +48,7 @@ The following environment variables can be optionally defined:
 * `REDIS_PASSWORD` - redis instance used to store rate limit data - default `undefined`
 * `RATE_LIMIT_TOTAL` - maximum requests per hour allowable per-user - default `1000`
 * `BODY_SIZE_LIMIT` - maximum body size for requests - default `50mb`
-* `SERVE_API_DOCS` - if `TRUE` then the swagger api docs generated from [the OpenAPU spec](./openapi.json) will be 
+* `SERVE_API_DOCS` - if `TRUE` then the swagger api docs generated from [the OpenAPU spec](./openapi.json) will be
   served at `/docs`.
 
 ## Connected services

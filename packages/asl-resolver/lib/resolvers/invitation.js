@@ -1,7 +1,8 @@
 const { pick } = require('lodash');
+const normaliseEmail = email => (email || '').trim().toLowerCase();
 
 module.exports = ({ models, jwt, emailer }) => ({ action, data, id }, transaction) => {
-  const { Invitation, Establishment, Permission } = models;
+  const { Invitation, Establishment, Permission, Profile } = models;
 
   const sendInvitation = args => {
     const changelog = [];
@@ -47,8 +48,23 @@ module.exports = ({ models, jwt, emailer }) => ({ action, data, id }, transactio
   if (action === 'accept') {
     const changelog = [];
     return Promise.resolve()
-      .then(() => Invitation.query(transaction).findById(data.id))
-      .then(invitation => {
+      .then(() => Promise.all([
+        Invitation.query(transaction).findById(data.id),
+        Profile.query(transaction).findById(data.profileId)
+      ]))
+      .then(([invitation, profile]) => {
+        if (!invitation || !profile) {
+          throw new Error('Invitation not found');
+        }
+
+        const invitationEmail = normaliseEmail(invitation.email);
+        const profileEmail = normaliseEmail(profile.email);
+        const requestEmail = normaliseEmail(data.email);
+
+        if (invitationEmail !== profileEmail || (requestEmail && requestEmail !== profileEmail)) {
+          throw new Error('Invitation email mismatch');
+        }
+
         return Promise.resolve()
           .then(() => {
             return Permission.upsert({

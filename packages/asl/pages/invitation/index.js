@@ -15,7 +15,7 @@ module.exports = settings => {
   });
 
   app.get('/', (req, res, next) => {
-    req.api(`/invitation/${req.params.token}`)
+    req.api(`/invitation/${encodeURIComponent(req.params.token)}`)
       .then(response => {
         res.locals.static.establishment = response.json.meta.establishment;
       })
@@ -29,7 +29,7 @@ module.exports = settings => {
   });
 
   app.post('/', (req, res, next) => {
-    req.api(`/invitation/${req.params.token}`, { method: 'PUT' })
+    req.api(`/invitation/${encodeURIComponent(req.params.token)}`, { method: 'PUT' })
       .then(() => {
         delete req.session.profile;
         res.redirect('/');

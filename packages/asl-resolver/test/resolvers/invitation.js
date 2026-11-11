@@ -9,7 +9,7 @@ const INVITATION_ID = 'e7296c40-6942-49fa-b695-7ea16b90f037';
 describe('Invitation resolver', () => {
   before(() => {
     this.models = db.init();
-    this.jwt = jwt({ secret: 'hunter2' });
+    this.jwt = jwt({ secret: 'hunter2', expiry: '7 days' });
     this.invitation = invitation({
       jwt: this.jwt,
       emailer,
@@ -79,6 +79,7 @@ describe('Invitation resolver', () => {
           assert.equal(token.email, 'test@example.com');
           assert.equal(token.establishmentId, 8201);
           assert.equal(token.role, 'admin');
+          assert.ok(token.exp);
         });
     });
 
@@ -171,19 +172,19 @@ describe('Invitation resolver', () => {
             id: 'ea54044f-79a2-49a9-a2e3-998e6206c3cf',
             establishmentId: 8201,
             token: 'abc123',
-            email: 'test@example.com',
+            email: 'test@test.com',
             role: 'admin'
           }, {
             id: 'eb688b52-e690-43b7-a956-73bc11788b0f',
             establishmentId: 8201,
             token: 'def456',
-            email: 'test@example.com',
+            email: 'test@test.com',
             role: 'read'
           }, {
             id: 'cb484606-9318-4645-9894-8ab153d51e44',
             establishmentId: 8201,
             token: 'ghi789',
-            email: 'test@example.com',
+            email: 'test@test.com',
             role: 'basic'
           }
         ]));
@@ -199,7 +200,8 @@ describe('Invitation resolver', () => {
           ...data,
           data: {
             profileId: model.profileId,
-            id: 'ea54044f-79a2-49a9-a2e3-998e6206c3cf'
+            id: 'ea54044f-79a2-49a9-a2e3-998e6206c3cf',
+            email: 'test@test.com'
           }
         }))
         .then(() => this.models.Permission.query().where({
@@ -224,12 +226,31 @@ describe('Invitation resolver', () => {
           ...data,
           data: {
             profileId: model.profileId,
-            id: 'ea54044f-79a2-49a9-a2e3-998e6206c3cf'
+            id: 'ea54044f-79a2-49a9-a2e3-998e6206c3cf',
+            email: 'test@test.com'
           }
         }))
         .then(() => this.models.Invitation.query().findById('ea54044f-79a2-49a9-a2e3-998e6206c3cf'))
         .then(invitation => {
           assert.ok(!invitation, 'Invitation has been removed from the database');
+        });
+    });
+
+    it('does not grant permission if profile email does not match invitation email', () => {
+      return assert.rejects(() => this.invitation({
+        ...data,
+        data: {
+          profileId: '221d08a3-3f9b-4167-ae64-368271569952',
+          id: 'ea54044f-79a2-49a9-a2e3-998e6206c3cf',
+          email: 'vincent@price.com'
+        }
+      }), {
+        name: 'Error',
+        message: 'Invitation email mismatch'
+      })
+        .then(() => this.models.Permission.query())
+        .then(permissions => {
+          assert.equal(permissions.length, 0);
         });
     });
   });

@@ -12,6 +12,9 @@ module.exports = {
     adminUsername: process.env.KEYCLOAK_USERNAME,
     adminPassword: process.env.KEYCLOAK_PASSWORD
   },
+  jwt: {
+    secret: process.env.JWT_SECRET
+  },
   db: {
     database: process.env.DATABASE_NAME,
     host: process.env.DATABASE_HOST,

@@ -100,7 +100,8 @@ describe('Profile resolver', () => {
           firstName: 'Robert',
           lastName: 'Fryer',
           email: 'ROB.FRYER@EXAMPLE.COM',
-          userId: '54321'
+          userId: '54321',
+          emailConfirmed: true
         }
       };
 
@@ -117,6 +118,37 @@ describe('Profile resolver', () => {
               assert.deepEqual(profile.userId, params2.data.userId);
             });
         });
+    });
+
+    it('does not rebind an existing profile for unverified email addresses', async () => {
+      const params = {
+        action: 'create',
+        data: {
+          firstName: 'Robert',
+          lastName: 'Fryer',
+          email: 'rob.fryer@example.com'
+        }
+      };
+
+      const params2 = {
+        action: 'create',
+        data: {
+          firstName: 'Robert',
+          lastName: 'Fryer',
+          email: 'ROB.FRYER@EXAMPLE.COM',
+          userId: '54321',
+          emailConfirmed: false
+        }
+      };
+
+      const profile = await this.profile(params);
+      await assert.rejects(() => this.profile(params2), {
+        name: 'Error',
+        message: 'Cannot link unverified email address to existing profile'
+      });
+
+      const unchanged = await this.models.Profile.query().findById(profile.id);
+      assert.equal(unchanged.userId, null);
     });
 
     it('rejects create if it would conflict with an existing profile with ID', async () => {
