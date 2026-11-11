@@ -1,4 +1,4 @@
-const { merge } = require('lodash');
+const {merge} = require('lodash');
 const baseContent = require('../../content');
 
 module.exports = merge({}, baseContent, {
@@ -13,7 +13,8 @@ Ensure you have the consent of the inspector who assessed this application.`,
   },
   fields: {
     upload: {
-      label: '## Replacement HBA file'
+      label: '## Replacement HBA file',
+      hint: 'The file must be a doc, docx or pdf. The maximum size is 15MB.'
     },
     hba: {
       label: 'Selected harm benefit analysis file'
@@ -22,8 +23,11 @@ Ensure you have the consent of the inspector who assessed this application.`,
   errors: {
     upload: {
       fileRequired: 'Choose a replacement HBA file',
+      invalidFileContent: 'The selected file content does not match a doc, docx or pdf file',
+      malwareDetected: 'The selected file could not be uploaded because it appears to contain malicious content',
       maxSize: 'The harm benefit analysis file should be smaller than 15MB',
-      ext: 'The selected file must be a .doc, .docx or .pdf'
+      ext: 'The selected file must be a doc, docx or pdf',
+      unsupportedFileType: 'The selected file must be a doc, docx or pdfgit '
     }
   }
 });

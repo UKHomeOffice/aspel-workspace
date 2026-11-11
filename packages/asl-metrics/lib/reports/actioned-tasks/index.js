@@ -4,6 +4,8 @@ const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { formatIsoDate } = dayJs;
 
 const getTaskType = require('./get-task-type');
+const getTaskDescription = require('./get-task-description');
+const formatOptionalDate = value => value ? formatIsoDate(value) : undefined;
 
 const isValidIsoDate = value => {
   try {
@@ -117,6 +119,7 @@ module.exports = ({ db, flow, query: params }) => {
     let lastSubmitToActionDiff = null;
     let firstAssignedToActionDiff = null;
     let resubmittedDiffs = [];
+    let assignToActionDiffs = [];
     let subtasks = [];
 
     let previousSubmission = null;
@@ -132,6 +135,8 @@ module.exports = ({ db, flow, query: params }) => {
       ? task.data.modelData.deadline.extended
       : task.data.modelData?.deadline?.standard;
 
+    const includedDates = new Set();
+
     task.activity
       .filter(Boolean)
       .forEach(activityLog => {
@@ -142,9 +147,18 @@ module.exports = ({ db, flow, query: params }) => {
 
         const isSubmission = isStatusChange && withAsruStatuses.includes(eventStatus) && eventStatus !== 'referred-to-inspector';
         const isResubmission = isStatusChange && isSubmission && !!firstSubmittedAt;
-        const isReturn = isStatusChange && activityLog.event_name.match(/:returned-to-applicant$/) && !activityLog.event_name.includes('awaiting-endorsement');
-        const isResolution = isStatusChange && (activityLog.event_name.match(/:resolved$/) || activityLog.event_name.match(/:rejected$/));
+        const isReturn = isStatusChange && activityLog.event_name.match(/:returned-to-applicant$/) && !activityLog.event_name.includes(
+          'awaiting-endorsement');
+        const isResolution = isStatusChange && (activityLog.event_name.match(/:resolved$/) || activityLog.event_name.match(
+          /:rejected$/));
         const isAction = isStatusChange && (isReturn || isResolution);
+        const isRecall = isStatusChange && activityLog.event_name.match(/::recalled-by-applicant$/);
+
+        function adjustForSameDay(days) {
+          return days > 0 && includedDates.has(eventTime.format('YYYY-MM-DD'))
+            ? days - 1
+            : days;
+        }
 
         if (isSubmission) {
           previousSubmission = eventTime;
@@ -162,8 +176,8 @@ module.exports = ({ db, flow, query: params }) => {
           if (eventTime.isBefore(end)) {
             isOutstanding = true;
           }
-        } else {
-          if (isAction && previousSubmission?.isSameOrBefore(end) && eventTime.isSameOrAfter(start)) {
+        } else if (isAction) {
+          if (previousSubmission?.isSameOrBefore(end) && eventTime.isSameOrAfter(start)) {
             subtasks.push({
               taskId: task.id,
               model: task.data.model,
@@ -182,31 +196,53 @@ module.exports = ({ db, flow, query: params }) => {
             });
           }
 
-          if (isAction && previousSubmission) {
+          if (previousSubmission) {
             lastSubmitToActionDiff = eventTime.workingDiff(previousSubmission, 'calendarDays');
-            totalDaysWithAsru += lastSubmitToActionDiff;
+            totalDaysWithAsru += adjustForSameDay(lastSubmitToActionDiff);
+
             if (eventTime.isSameOrAfter(start)) {
-              totalDaysWithAsruInPeriod += eventTime.workingDiff(dayJs.max(previousSubmission, start), 'calendarDays');
+              totalDaysWithAsruInPeriod +=
+                adjustForSameDay(eventTime.workingDiff(dayJs.max(previousSubmission, start), 'calendarDays'));
             }
             previousSubmission = null;
           }
 
-          if (isAction && firstSubmittedAt && firstSubmitToActionDiff == null) {
+          if (firstSubmittedAt && firstSubmitToActionDiff == null) {
             firstSubmitToActionDiff = eventTime.workingDiff(firstSubmittedAt, 'calendarDays');
           }
 
-          if (isAction && previousAssignment) {
-            totalDaysAssigned += eventTime.workingDiff(previousAssignment, 'calendarDays');
+          if (previousAssignment) {
+            totalDaysAssigned += adjustForSameDay(eventTime.workingDiff(previousAssignment, 'calendarDays'));
             if (eventTime.isSameOrAfter(start)) {
-              totalDaysAssignedInPeriod += eventTime.workingDiff(dayJs.max(previousAssignment, start), 'calendarDays');
+              totalDaysAssignedInPeriod +=
+                adjustForSameDay(eventTime.workingDiff(dayJs.max(previousAssignment, start), 'calendarDays'));
             }
             previousAssignment = null;
           }
 
-          if (isAction && firstAssignedAt && firstAssignedToActionDiff == null) {
-            firstAssignedToActionDiff = eventTime.workingDiff(firstAssignedAt, 'calendarDays');
+          if (firstAssignedAt && firstAssignedToActionDiff == null) {
+            firstAssignedToActionDiff = adjustForSameDay(eventTime.workingDiff(firstAssignedAt, 'calendarDays'));
           }
           isOutstanding = false;
+          includedDates.add(eventTime.format('YYYY-MM-DD'));
+
+        } else if (isRecall) {
+          if (previousSubmission) {
+            totalDaysWithAsru += adjustForSameDay(end.workingDiff(previousSubmission, 'calendarDays'));
+            totalDaysWithAsruInPeriod += adjustForSameDay(end.workingDiff(dayJs.max(start, previousSubmission), 'calendarDays'));
+          }
+
+          if (previousAssignment) {
+            totalDaysAssigned += adjustForSameDay(end.workingDiff(previousAssignment, 'calendarDays'));
+            totalDaysAssignedInPeriod += adjustForSameDay(end.workingDiff(dayJs.max(start, previousAssignment), 'calendarDays'));
+          }
+
+          // This will be incremented again when the task is resubmitted, so decrement it here to avoid double counting.
+          resubmittedCount--;
+          previousSubmission = null;
+          previousAssignment = null;
+          isOutstanding = false;
+          includedDates.add(eventTime.format('YYYY-MM-DD'));
         }
 
         if (activityLog.event_name === 'assign') {
@@ -235,6 +271,10 @@ module.exports = ({ db, flow, query: params }) => {
 
         if (isAction && lastResubmittedAt) {
           resubmittedDiffs.push(dayJs(eventTime).workingDiff(lastResubmittedAt, 'calendarDays'));
+        }
+
+        if (isAction && lastAssignedAt) {
+          assignToActionDiffs.push(dayJs(eventTime).workingDiff(lastAssignedAt, 'calendarDays'));
         }
 
         if (isResubmission) {
@@ -273,7 +313,7 @@ module.exports = ({ db, flow, query: params }) => {
     }
 
     const firstActionedAt = (firstReturnedAt || resolvedAt);
-    const wasFirstActionedInPeriod = firstActionedAt && firstActionedAt.isSameOrAfter(start) && firstActionedAt.isSameOrAfter(end);
+    const wasFirstActionedInPeriod = firstActionedAt && firstActionedAt.isSameOrAfter(start) && firstActionedAt.isSameOrBefore(end);
 
     if (previousSubmission !== null) {
       totalDaysWithAsru += end.workingDiff(previousSubmission, 'calendarDays');
@@ -297,17 +337,18 @@ module.exports = ({ db, flow, query: params }) => {
       role: task.data.modelData?.role,
       metrics: {
         taskType,
-        firstSubmittedAt: formatIsoDate(firstSubmittedAt),
-        firstSubmittedAtInPeriod: formatIsoDate(firstSubmittedAtInPeriod),
-        lastResubmittedAt: formatIsoDate(lastResubmittedAt),
-        firstReturnedAt: formatIsoDate(firstReturnedAt),
-        firstReturnedAtInPeriod: formatIsoDate(firstReturnedAtInPeriod),
-        lastReturnedAt: formatIsoDate(lastReturnedAt),
-        firstAssignedAt: formatIsoDate(firstAssignedAt),
-        firstAssignedAtInPeriod: formatIsoDate(firstAssignedAtInPeriod),
-        lastAssignedAt: formatIsoDate(lastAssignedAt),
-        resolvedAt: formatIsoDate(resolvedAt),
-        firstActionedAt: formatIsoDate(firstActionedAt),
+        taskDescription: getTaskDescription(task),
+        firstSubmittedAt: formatOptionalDate(firstSubmittedAt),
+        firstSubmittedAtInPeriod: formatOptionalDate(firstSubmittedAtInPeriod),
+        lastResubmittedAt: formatOptionalDate(lastResubmittedAt),
+        firstReturnedAt: formatOptionalDate(firstReturnedAt),
+        firstReturnedAtInPeriod: formatOptionalDate(firstReturnedAtInPeriod),
+        lastReturnedAt: formatOptionalDate(lastReturnedAt),
+        firstAssignedAt: formatOptionalDate(firstAssignedAt),
+        firstAssignedAtInPeriod: formatOptionalDate(firstAssignedAtInPeriod),
+        lastAssignedAt: formatOptionalDate(lastAssignedAt),
+        resolvedAt: formatOptionalDate(resolvedAt),
+        firstActionedAt: formatOptionalDate(firstActionedAt),
         wasFirstActionedInPeriod,
         totalDaysWithAsru,
         totalDaysWithAsruInPeriod,
@@ -317,6 +358,7 @@ module.exports = ({ db, flow, query: params }) => {
         firstSubmitToActionDiff,
         lastSubmitToActionDiff,
         resubmittedDiffs,
+        assignToActionDiffs,
         wasSubmittedInPeriod,
         isOutstanding,
         returnedCount,

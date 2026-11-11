@@ -31,13 +31,13 @@ module.exports = {
     validate: [
       'required',
       'validDate',
-      { dateIsSameOrAfter: '2019-07-31' },
       { dateIsSameOrBefore: 'now' },
       { customValidate: (value, values) => {
         const start = parseDate(values['date-from']);
         const end = parseDate(value);
         return !start.isValid() || !end.isValid() || !end.isBefore(start, 'day');
-      } }
+      } },
+      { dateIsSameOrAfter: '2019-07-31' }
     ]
   },
   ra: {

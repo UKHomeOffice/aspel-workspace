@@ -3,6 +3,9 @@ module.exports = () => (req, res, next) => {
   const isRaTrue = req.query.ra === true || req.query.ra === 'true' || req.query.ra === 'true?';
   const startTimestamp = `${req.query.startDate}T00:00:00.000Z`;
   const endTimestamp = `${req.query.endDate}T23:59:59.999Z`;
+
+  // Define the sorting expression
+  const titleSortCol = knex.raw("REGEXP_REPLACE(projects.title, '^(the|an|a)\\s+', '', 'i')");
   return knex('projects')
     .select(
       'projects.title',
@@ -11,7 +14,7 @@ module.exports = () => (req, res, next) => {
       'projects.schema_version',
       'project_versions.data'
     )
-    .distinctOn('projects.title', 'projects.id')
+    .distinctOn(titleSortCol, 'projects.id')
     .innerJoin('project_versions', 'projects.id', 'project_versions.project_id')
     .where('projects.issue_date', '>=', startTimestamp)
     .where('projects.issue_date', '<=', endTimestamp)
@@ -23,7 +26,7 @@ module.exports = () => (req, res, next) => {
       }
     })
     .orderBy([
-      { column: 'projects.title', order: 'asc' },
+      { column: titleSortCol, order: 'asc' },
       { column: 'projects.id' },
       { column: 'project_versions.updated_at', order: 'desc' }
     ])

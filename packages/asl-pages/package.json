@@ -1,6 +1,6 @@
 {
   "name": "@asl/pages",
-  "version": "31.10.8",
+  "version": "31.10.9",
   "description": "",
   "main": "index.js",
   "style": "pages/common/assets/sass/style.scss",
@@ -46,7 +46,7 @@
     "filenamify": "^4.1.0",
     "form-data": "^4.0.0",
     "govuk-frontend": "^5.8.0",
-    "image-size": "^0.7.4",
+    "image-size": "^2.0.3",
     "jsdom": "^29.0.2",
     "lodash": "^4.18.1",
     "multer": "^2.2.0",

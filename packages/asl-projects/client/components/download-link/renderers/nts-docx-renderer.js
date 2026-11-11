@@ -11,8 +11,8 @@ import schemaVersions from '@asl/projects/client/schema';
 import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
-import { addStyles, addPageNumbers } from './helpers/docx-style-helper';
-import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared } from './helpers/docx-content-renderer';
+import { addStyles, addTableHeader, addPageNumbers, PURPLE } from './helpers/docx-style-helper';
+import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared, renderHorizontalRule, renderNull } from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
 import { formatDate } from '@ukhomeoffice/asl-components/utils';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
@@ -42,23 +42,32 @@ export default async function ntsDocxRenderer(opts) {
   };
 
   const renderTextEditor = (value) => {
-    return renderTextEditorShared(document, value, {
-      onStringFallback: (doc, val) => renderText(val),
-      onError: (doc) => doc.createParagraph('There was a problem rendering this content').style('aside')
-    });
+    if (value) {
+      return renderTextEditorShared(document, value, {
+        onStringFallback: (doc, val) => renderText(val),
+        onError: (doc) => doc.createParagraph('There was a problem rendering this content').style('aside')
+      });
+    } else {
+      renderNull(document);
+    }
   };
 
   const renderTitleBlock = () => {
     if (!isBulk) {
       document.createParagraph('Non-technical Summary').heading1();
     }
-    document.createParagraph(application.title || version.title || 'Untitled project').heading1();
-    document.createParagraph('Overview').heading2();
+    if (mergedDocument) {
+      document.createParagraph(application.title || version.title || 'Untitled project').heading2().pageBreakBefore();
+    } else {
+      document.createParagraph(application.title || version.title || 'Untitled project').heading2();
+    }
+
+    document.createParagraph('Overview').heading3();
   };
 
   const renderLabel = (text) => {
     if (!text) { return; }
-    document.createParagraph(text).heading3();
+    document.createParagraph(text).heading4();
   };
 
   const renderText = (value) => {
@@ -79,10 +88,7 @@ export default async function ntsDocxRenderer(opts) {
   const renderKeywords = () => {
     const list = version.keywords || [];
     if (!list.length) {
-      const p = new Paragraph();
-      p.style('body');
-      p.addRun(new TextRun('No answer provided').italics());
-      document.addParagraph(p);
+      renderNull(document);
     } else {
       document.createParagraph(list.join(', ')).style('body');
     }
@@ -140,16 +146,10 @@ export default async function ntsDocxRenderer(opts) {
   };
   const getSpeciesCount = (speciesKey) => version[`reduction-quantities-${speciesKey}`] || 'No answer provided';
 
+  const fateOfAnimalsOptions = schemaV1().nts.subsections['fate-of-animals'].fields.find(f => f.name === 'fate-of-animals').options;
   const renderFateOfAnimals = (fields) => {
     fields?.forEach(field => {
-      let fateOfAnimal = NTSFateOfAnimalFields()[field];
-      if (!fateOfAnimal) {
-        if (field === 'used-in-other-projects') {
-          fateOfAnimal = NTSFateOfAnimalFields()['continued-use-2'];
-        } else {
-          return;
-        }
-      }
+      const fateOfAnimal = fateOfAnimalsOptions.find(opt => opt.value === field);
       const p = new Paragraph();
       p.style('ListParagraph');
       p.bullet(0);
@@ -171,7 +171,13 @@ export default async function ntsDocxRenderer(opts) {
         sub.forEach(s => renderItem(s, depth + 1));
       } else {
         const p = new Paragraph(); p.style('ListParagraph'); p.bullet(depth);
-        p.addRun(new TextRun(`${getSpeciesLabel(speciesKey)}: ${getSpeciesCount(speciesKey)}`));
+        p.addRun(new TextRun(`${getSpeciesLabel(speciesKey)}: `));
+        const count = getSpeciesCount(speciesKey);
+        if (count === 'No answer provided') {
+          p.addRun(new TextRun(count).italics());
+        } else {
+          p.addRun(new TextRun(count));
+        }
         document.addParagraph(p);
       }
     };
@@ -206,7 +212,7 @@ export default async function ntsDocxRenderer(opts) {
 
   const renderSpeciesTable = () => {
 
-    document.createParagraph('Animal types and life stages').heading3();
+    document.createParagraph('Animal types and life stages').heading4();
 
     const speciesDetails = groupSpeciesDetails();
     if (!speciesDetails.length) { return renderText(null); }
@@ -223,8 +229,8 @@ export default async function ntsDocxRenderer(opts) {
     });
 
     // headers
-    table.getCell(0, 0).addParagraph(new Paragraph('Animal types').style('Bold'));
-    table.getCell(0, 1).addParagraph(new Paragraph('Life stages').style('Bold'));
+    addTableHeader(table.getCell(0, 0), 'Animal types');
+    addTableHeader(table.getCell(0, 1), 'Life stages');
     speciesDetails.forEach((s, i) => {
       table.getCell(i + 1, 0).addParagraph(new Paragraph(s.name).style('tablebody'));
       table.getCell(i + 1, 1).addParagraph(new Paragraph((s.lifeStages || []).join(', ')).style('tablebody'));
@@ -256,6 +262,7 @@ export default async function ntsDocxRenderer(opts) {
         document.addParagraph(p);
       });
     }
+    renderHorizontalRule(document).spacing({after: '240'});
   };
 
   const renderRetrospectivePlaceholder = (field) => {
@@ -275,16 +282,16 @@ export default async function ntsDocxRenderer(opts) {
 
   const renderRaSummary = (fieldNames) => {
     if (!ra) { return; }
-    document.createParagraph('Retrospective assessment').heading3().spacing({ before: 480 });
+    document.createParagraph('Retrospective assessment').heading3();
     if (application.raGrantedDate) {
-      document.createParagraph(`Published: ${formatDate(application.raGrantedDate, DATE_FORMAT.long)}`).style('body');
+      document.createParagraph(`ASRU approved: ${application.raGrantedDate}`).style('body');
     }
     const raSchema = schemaVersions['RA']();
     const allFields = flatten(Object.values(raSchema.introduction.subsections).map(s => s.fields));
     fieldNames.forEach(name => {
       const field = allFields.find(f => f.name === name);
       if (!field) { return; }
-      document.createParagraph(field.label).heading3();
+      document.createParagraph(field.label).heading4();
       const val = get(ra, ['data', field.name]);
       renderText(val);
     });
@@ -293,10 +300,11 @@ export default async function ntsDocxRenderer(opts) {
   const renderField = (field, schemaVersion) => {
     if (field.heading) {
       if (field.heading === 'Retrospective assessment') {
-        document.createParagraph(field.heading).heading3().spacing({ before: 480 });
+        const raStatusHeading = document.createParagraph(field.heading).heading3();
+        raStatusHeading.Borders.addTopBorder(PURPLE, '6', 'single', '18');
+        raStatusHeading.createBorder();
       } else {
         document.createParagraph(field.heading).style('HeadingHint');
-        console.log('heading', field.heading);
       }
     }
     if (field.label && field.name !== 'species') {
@@ -329,6 +337,9 @@ export default async function ntsDocxRenderer(opts) {
       }
       default: {
         const value = version[field.name];
+        if(field.heading && value === undefined) {
+          return;
+        }
         return renderTextEditor(value);
       }
     }
@@ -336,11 +347,10 @@ export default async function ntsDocxRenderer(opts) {
 
   const renderSection = (section, sectionIndex, schemaVersion) => {
     if (sectionIndex !== 0) {
-      document.createParagraph(section.title).heading2();
+      document.createParagraph(section.title).heading3();
     }
     if (section.subtitle) {
       document.createParagraph(section.subtitle).style('Hint');
-      console.log('subtitle', section.subtitle);
     }
     const fields = (section.fields || []).filter(f => isTrainingLicence ? f.training !== false : f.training !== true);
     fields.forEach(field => renderField(field, schemaVersion));

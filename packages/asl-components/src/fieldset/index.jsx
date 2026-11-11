@@ -254,7 +254,7 @@ function Field({
         hint = <Markdown unwrapSingleLine={true}>{ hint }</Markdown>;
     }
 
-    const snippetProps = getSnippetProps(name, props.formatters);
+    const snippetProps = getSnippetProps(name, formatters);
     if(isUndefined(label) && props.renderers) {
         label = getLabelFromRenderers(props.renderers, name, 'label')?.label;
     }

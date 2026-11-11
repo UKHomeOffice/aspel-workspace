@@ -84,14 +84,13 @@ describe('Profile resolver', () => {
         });
     });
 
-    it('updates the userId if it finds an existing profile', () => {
+    it('updates the userId if it finds an existing profile with no ID', () => {
       const params = {
         action: 'create',
         data: {
           firstName: 'Robert',
           lastName: 'Fryer',
-          email: 'rob.fryer@example.com',
-          userId: '12345'
+          email: 'rob.fryer@example.com'
         }
       };
 
@@ -118,6 +117,74 @@ describe('Profile resolver', () => {
               assert.deepEqual(profile.userId, params2.data.userId);
             });
         });
+    });
+
+    it('rejects create if it would conflict with an existing profile with ID', async () => {
+      const params = {
+        action: 'create',
+        data: {
+          firstName: 'Robert',
+          lastName: 'Fryer',
+          email: 'rob.fryer@example.com',
+          userId: '12345'
+        }
+      };
+
+      const params2 = {
+        action: 'create',
+        data: {
+          firstName: 'Robert',
+          lastName: 'Fryer',
+          email: 'ROB.FRYER@EXAMPLE.COM',
+          userId: '54321'
+        }
+      };
+
+      const {id} = await this.profile(params);
+      await assert.rejects(() => this.profile(params2), {
+        name: 'Error',
+        message: 'Profile already exists with a different userId'
+      });
+
+      const profile = await this.models.Profile.query().findById(id);
+      assert.ok(profile);
+      assert.deepEqual(profile.firstName, params.data.firstName);
+      assert.deepEqual(profile.lastName, params.data.lastName);
+      assert.deepEqual(profile.userId, params.data.userId);
+    });
+
+    it('Exact matches email case insensitively', async () => {
+      const params = {
+        action: 'create',
+        data: {
+          firstName: 'Robert',
+          lastName: 'Fryer',
+          email: 'rob.fryer@example.com',
+          userId: '12345'
+        }
+      };
+
+      const params2 = {
+        action: 'create',
+        data: {
+          firstName: 'Robert',
+          lastName: 'Fryer',
+          email: 'rob.fryer%@example.com', // Note %
+          userId: '54321'
+        }
+      };
+
+      const {id: id1} = await this.profile(params);
+      const {id: id2} = await this.profile(params2);
+
+      assert.notEqual(id1, id2, 'Profiles should be different');
+      const profile1 = await this.models.Profile.query().findById(id1);
+      const profile2 = await this.models.Profile.query().findById(id2);
+
+      assert.ok(profile1);
+      assert.ok(profile2);
+      assert.equal(profile1.userId, params.data.userId);
+      assert.equal(profile2.userId, params2.data.userId);
     });
 
     it('sends a confirm email message if address is not already confirmed', () => {
