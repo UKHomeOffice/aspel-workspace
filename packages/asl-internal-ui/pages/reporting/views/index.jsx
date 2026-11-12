@@ -6,12 +6,10 @@ import { Header, Link, Metric } from '@ukhomeoffice/asl-components';
 import MetricsFilter from './components/metrics-filter';
 
 function DateRange() {
-  const { start, end } = useSelector(state => {
-    return {
-      start: moment(state.model.start),
-      end: moment(state.model.end)
-    };
-  });
+  const startDate = useSelector(state => state.model.start);
+  const endDate = useSelector(state => state.model.end);
+  const start = moment(startDate);
+  const end = moment(endDate);
 
   if (!start.isSame(end, 'year')) {
     return `From ${start.format('Do MMMM YYYY')} to ${end.format('Do MMMM YYYY')}`;
@@ -23,11 +21,8 @@ function DateRange() {
 }
 
 function EndDate() {
-  const { end } = useSelector(state => {
-    return {
-      end: moment(state.model.end)
-    };
-  });
+  const endDate = useSelector(state => state.model.end);
+  const end = moment(endDate);
   return `${end.format('D MMMM YYYY')}`;
 }
 
