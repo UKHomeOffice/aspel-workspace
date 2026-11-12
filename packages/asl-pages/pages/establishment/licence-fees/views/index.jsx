@@ -26,7 +26,7 @@ export default function Fees({ tab, tabsOverride, children, subtitle = '' }) {
   const { establishment, year } = useSelector(state => state.static, shallowEqual);
   const { years } = useSelector(state => state.static.fees);
 
-  const options = years
+  const options = [...years]
     .sort((a, b) => b - a)
     .map(yearStr => {
       const year = parseInt(yearStr, 10);
