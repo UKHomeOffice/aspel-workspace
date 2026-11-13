@@ -53,8 +53,8 @@ const insertPils = async (knex, pils, permissions, profileId) => {
     let reviewDate = pil.reviewDate;
 
     if (typeof reviewDate === 'object') {
-      const { unit, num } = reviewDate;
-      reviewDate = dayJs().add(num, unit).toISOString();
+      const { unit, method, num } = reviewDate;
+      reviewDate = dayJs()[method](num, unit).toISOString();
     } else {
       reviewDate = reviewDate || dayJs(pil.issueDate).add(5, 'years').toISOString();
     }
