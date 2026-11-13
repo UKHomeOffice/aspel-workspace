@@ -50,8 +50,17 @@ export default function Places() {
   const { establishment, allowedActions } = useSelector(state => state.static);
   const { schema } = useSelector(state => state.datatable);
 
-  schema.nacwos.label = <Fragment><Acronym>NACWO</Acronym>s</Fragment>;
-  schema.nvssqps.label = <Fragment><Acronym>NVS</Acronym>s / <Acronym>SQP</Acronym>s</Fragment>;
+  const tableSchema = {
+    ...schema,
+    nacwos: {
+      ...schema.nacwos,
+      label: <Fragment><Acronym>NACWO</Acronym>s</Fragment>
+    },
+    nvssqps: {
+      ...schema.nvssqps,
+      label: <Fragment><Acronym>NVS</Acronym>s / <Acronym>SQP</Acronym>s</Fragment>
+    }
+  };
 
   const actions = <Fragment>
     <Link page="place.list" query={{csv: 1}} label={<Snippet>actions.download</Snippet>} />
@@ -72,7 +81,7 @@ export default function Places() {
       />
       <Search label={<Snippet>searchText</Snippet>} />
       <FilterTable
-        schema={schema}
+        schema={tableSchema}
         formatters={Object.assign({}, formatters, pageFormatters)}
         className="places-list"
         resultType="approved areas"
