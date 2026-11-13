@@ -1,9 +1,9 @@
-const moment = require('moment');
-
-const DATE_FORMATS = ['YYYY-MM-DD', 'YYYY-M-D'];
+const dayjs = require('../date-extend-dayJs');
+const { parseDate: dayJsParseDate } = dayjs;
+const { STRICT_DATE_FORMATS } = require('@ukhomeoffice/asl-constants');
 
 function parseDate(value) {
-    return moment(value, DATE_FORMATS, true);
+    return dayJsParseDate(value, STRICT_DATE_FORMATS, true);
 }
 
 function getBoundaryErrorCode(value, { minDate, maxDate, minDateErrorCode = 'dateIsSameOrAfter' } = {}) {
@@ -13,8 +13,11 @@ function getBoundaryErrorCode(value, { minDate, maxDate, minDateErrorCode = 'dat
         return null;
     }
 
-    if (maxDate && date.isAfter(maxDate === 'now' ? moment() : parseDate(maxDate), 'day')) {
-        return 'dateIsSameOrBefore';
+    if (maxDate) {
+        const maxDateValue = maxDate === 'now' ? dayjs.dayjs() : parseDate(maxDate);
+        if (date.isAfter(maxDateValue, 'day')) {
+            return 'dateIsSameOrBefore';
+        }
     }
 
     if (minDate && date.isBefore(parseDate(minDate), 'day')) {

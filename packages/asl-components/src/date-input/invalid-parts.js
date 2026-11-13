@@ -32,13 +32,17 @@ function partIsInvalid(datePart, raw) {
 // Returns the invalid parts in visual order (day, month, year); [] when no
 // single part can be blamed.
 function getInvalidDateParts(parts = {}) {
-    const missing = [DAY, MONTH, YEAR].filter(key => !parts[key]);
+    const dateParts = typeof parts === 'string'
+        ? splitDateValue(parts)
+        : parts;
+
+    const missing = [DAY, MONTH, YEAR].filter(key => !dateParts[key]);
 
     const invalid =  [DAY, MONTH, YEAR]
         .filter(key => !missing.includes(key))
-        .filter(key => partIsInvalid(key, parts[key]));
+        .filter(key => partIsInvalid(key, dateParts[key]));
 
-    // highlight the date as a whole if there’s incorrect information in more than one field.
+    // highlight the date as a whole if there's incorrect information in more than one field.
     // https://design-system.service.gov.uk/components/date-input/#if-the-date-entered-cannot-be-correct
     if(invalid.length > 1) {
         return [DAY, MONTH, YEAR];

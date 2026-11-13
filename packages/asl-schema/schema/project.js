@@ -1,7 +1,7 @@
 const BaseModel = require('./base-model');
 const { projectStatuses } = require('@ukhomeoffice/asl-constants');
 const { uuid } = require('../lib/regex-validation');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { get } = require('lodash');
 
 const QueryBuilder = require('./query-builder');
@@ -148,7 +148,7 @@ class ProjectQueryBuilder extends QueryBuilder {
   }
 
   selectRopsDeadline(year) {
-    const endOfJanNextYear = moment(`${parseInt(year, 10) + 1}-01-31`)
+    const endOfJanNextYear = dayJs(`${parseInt(year, 10) + 1}-01-31`)
       .endOf('day')
       .toISOString();
     const interval28Days = `INTERVAL '29 days - 1 millisecond'`;

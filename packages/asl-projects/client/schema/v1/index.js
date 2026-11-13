@@ -986,7 +986,7 @@ export default () => {
                           name: 'expiry-date',
                           type: 'date',
                           label: 'Expiry date',
-                          hint: 'For example, 13 06 2019'
+                          hint: 'For example, 13 6 2019'
                         }
                       ]
                     }
@@ -1080,7 +1080,7 @@ export default () => {
                           name: 'expiry-date',
                           type: 'date',
                           label: 'Expiry date',
-                          hint: 'For example, 13 06 2019'
+                          hint: 'For example, 13 6 2019'
                         }
                       ]
                     }

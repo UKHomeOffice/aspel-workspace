@@ -1,6 +1,6 @@
 const assert = require('assert');
 const crypto = require('crypto');
-const { Readable } = require('stream');
+const {Readable} = require('stream');
 const fetch = require('node-fetch');
 const Zip = require('jszip');
 const parse = require('csv-parse/lib/sync');
@@ -109,7 +109,7 @@ describe('Task metrics exporter localstack integration', () => {
           }
         };
 
-        return Readable.from(rows(), { objectMode: true });
+        return Readable.from(rows(), {objectMode: true});
       }
     });
 
@@ -152,8 +152,8 @@ describe('Task metrics exporter localstack integration', () => {
     const rawCsv = await zip.file(`actioned-tasks-raw_${job.meta.start}_${job.meta.end}.csv`).async('string');
     const subtasksCsv = await zip.file(`subtasks-${job.meta.start}_${job.meta.end}.csv`).async('string');
 
-    const rawRows = parse(rawCsv, { columns: true, bom: true });
-    const subtaskRows = parse(subtasksCsv, { columns: true, bom: true });
+    const rawRows = parse(rawCsv, {columns: true, bom: true});
+    const subtaskRows = parse(subtasksCsv, {columns: true, bom: true});
 
     assert.equal(rawRows.length, 100);
     assert.equal(subtaskRows.length, 100);

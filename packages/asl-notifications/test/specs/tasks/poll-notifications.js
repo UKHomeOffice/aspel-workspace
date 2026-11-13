@@ -1,6 +1,6 @@
 const { v4: uuid } = require('uuid');
 const sinon = require('sinon');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const assert = require('assert');
 const dbHelper = require('../../helpers/db');
 const logger = require('../../helpers/logger');
@@ -56,7 +56,7 @@ describe('Poll notifications', () => {
         subject: 'Test',
         html: '<h1>test</h1>',
         identifier: uuid(),
-        completed: moment().toISOString()
+        completed: dayJs().toISOString()
       },
       {
         profileId: basic,

@@ -1,5 +1,5 @@
 const { v4: uuid } = require('uuid');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { isMatch } = require('lodash');
 const assert = require('assert');
 const db = require('./helpers/db');
@@ -51,8 +51,8 @@ describe('transform', () => {
 
   it('combines multiple exemption models into a single certificate', () => {
     const profile_id = uuid();
-    const created_at = moment().subtract(3, 'months').toISOString();
-    const updated_at = moment().subtract(1, 'months').toISOString();
+    const created_at = dayJs().subtract(3, 'months').toISOString();
+    const updated_at = dayJs().subtract(1, 'months').toISOString();
     const input = [
       {
         module: 'PILA (skills)',
@@ -113,32 +113,32 @@ describe('up', () => {
       module: 'PILA (theory)',
       species: JSON.stringify(['JABU', 'BABU']),
       description: 'First description',
-      created_at: moment().subtract(4, 'months').toISOString(),
-      updated_at: moment().subtract(4, 'months').toISOString()
+      created_at: dayJs().subtract(4, 'months').toISOString(),
+      updated_at: dayJs().subtract(4, 'months').toISOString()
     },
     {
       profile_id: ids.profile.holc,
       module: 'PILA (skills)',
       species: JSON.stringify(['Nemo', 'Dory']),
       description: 'Second description',
-      created_at: moment().subtract(3, 'months').toISOString(),
-      updated_at: moment().subtract(3, 'months').toISOString()
+      created_at: dayJs().subtract(3, 'months').toISOString(),
+      updated_at: dayJs().subtract(3, 'months').toISOString()
     },
     {
       profile_id: ids.profile.archer,
       module: 'K',
       species: JSON.stringify(['Mice']),
       description: 'First description',
-      created_at: moment().subtract(3, 'months').toISOString(),
-      updated_at: moment().subtract(3, 'months').toISOString()
+      created_at: dayJs().subtract(3, 'months').toISOString(),
+      updated_at: dayJs().subtract(3, 'months').toISOString()
     },
     {
       profile_id: ids.profile.archer,
       module: 'PPL',
       species: JSON.stringify(['Rats', 'Cats']),
       description: 'Second description',
-      created_at: moment().subtract(2, 'months').toISOString(),
-      updated_at: moment().subtract(2, 'months').toISOString()
+      created_at: dayJs().subtract(2, 'months').toISOString(),
+      updated_at: dayJs().subtract(2, 'months').toISOString()
     }
   ];
 

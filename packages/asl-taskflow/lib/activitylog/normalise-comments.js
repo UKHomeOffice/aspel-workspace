@@ -7,7 +7,7 @@ module.exports = activityLog => {
 
   const updatedComments = activityLog
     .filter(log => log.eventName === 'update-comment')
-    .sort((a, b) => a.updatedAt <= b.updatedAt ? 1 : -1); // most recent is first
+    .sort((a, b) => a.updatedAt < b.updatedAt ? 1 : -1); // most recent is first
 
   return activityLog
     .filter(log => log.eventName !== 'delete-comment' && log.eventName !== 'update-comment')

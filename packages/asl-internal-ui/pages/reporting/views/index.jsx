@@ -1,29 +1,35 @@
 import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import moment from 'moment';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import { Header, Link, Metric } from '@ukhomeoffice/asl-components';
 
 import MetricsFilter from './components/metrics-filter';
 
 function DateRange() {
-  const startDate = useSelector(state => state.model.start);
-  const endDate = useSelector(state => state.model.end);
-  const start = moment(startDate);
-  const end = moment(endDate);
+  const { start, end } = useSelector(state => {
+    return {
+      start: dayJs(state.model.start),
+      end: dayJs(state.model.end)
+    };
+  });
 
   if (!start.isSame(end, 'year')) {
-    return `From ${start.format('Do MMMM YYYY')} to ${end.format('Do MMMM YYYY')}`;
+    return `From ${start.format(DATE_FORMAT.long)} to ${end.format(DATE_FORMAT.long)}`;
   }
   if (!start.isSame(end, 'month')) {
-    return `From ${start.format('Do MMMM')} to ${end.format('Do MMMM YYYY')}`;
+    return `From ${start.date()} ${start.format(DATE_FORMAT.month)} to ${end.format(DATE_FORMAT.long)}`;
   }
-  return `From ${start.format('Do')} to ${end.format('Do MMMM YYYY')}`;
+  return `From ${start.date()} to ${end.format(DATE_FORMAT.long)}`;
 }
 
 function EndDate() {
-  const endDate = useSelector(state => state.model.end);
-  const end = moment(endDate);
-  return `${end.format('D MMMM YYYY')}`;
+  const { end } = useSelector(state => {
+    return {
+      end: dayJs(state.model.end)
+    };
+  });
+  return `${end.format(DATE_FORMAT.long)}`;
 }
 
 export default function Index() {

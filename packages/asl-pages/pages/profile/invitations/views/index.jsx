@@ -1,9 +1,11 @@
 import React, { Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector } from 'react-redux';
 import PeopleList from '../../list/views/index';
 import { ExpiryDate, Snippet } from '@ukhomeoffice/asl-components';
-import { addDays, isBefore, format } from 'date-fns';
 import { dateFormat } from '../../../../constants';
+
+const { addDays, isBefore, format } = dayJs;
 
 const formatters = {
   email: {

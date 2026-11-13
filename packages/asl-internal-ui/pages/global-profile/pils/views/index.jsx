@@ -1,11 +1,13 @@
 import React, { Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import sortBy from 'lodash/sortBy';
-import { format } from 'date-fns';
 import { dateFormat } from '@asl/pages/constants';
 import { Conditions, Header, Inset, Link, Markdown, ModelSummary, Snippet } from '@ukhomeoffice/asl-components';
 import schema from '@asl/pages/pages/pil/read/schema';
+
+const { format } = dayJs;
 
 const getStatusClass = (status) => {
   switch (status) {

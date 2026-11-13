@@ -1,13 +1,16 @@
 import React from 'react';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import { useSelector } from 'react-redux';
 import { Link } from '@ukhomeoffice/asl-components';
-import { format } from 'date-fns';
+
+const { format } = dayJs;
 
 export default function ProceduresDownloadLink({ className }) {
   const year = useSelector(state => state.static.year);
   const project = useSelector(state => state.model.project);
 
-  const now = format(new Date(), 'dd-MM-yyyy');
+  const now = format(new Date(), DATE_FORMAT.iso);
   const filename = `procedures-added-to-rop-for-${project.licenceNumber}-in-${year}-downloaded-${now}.csv`;
 
   return <Link

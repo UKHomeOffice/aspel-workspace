@@ -3,8 +3,8 @@ const getNtsSchema = require('@asl/pages/pages/project-version/nts/schema');
 const { Packer } = require('@joefitter/docx');
 const filenamify = require('filenamify');
 const { addPageNumbers } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
-const { getRAReasons } = require('@ukhomeoffice/asl-constants');
-const moment = require('moment');
+const { getRAReasons, DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
+const { parseDate } = require('@ukhomeoffice/asl-components/dayjs');
 
 // Converts docx Document instance into a binary Buffer
 const pack = doc => {
@@ -15,8 +15,8 @@ const pack = doc => {
 module.exports = settings => {
   return async (req, res, next) => {
     try {
-      const startDate = moment(req.form.values['date-from'], 'YYYY-MM-DD').format('YYYY-MM-DD');
-      const endDate = moment(req.form.values['date-to'], 'YYYY-MM-DD').format('YYYY-MM-DD');
+      const startDate = parseDate(req.form.values['date-from']).format(DATE_FORMAT.iso);
+      const endDate = parseDate(req.form.values['date-to']).format(DATE_FORMAT.iso);
       const { ra } = req.form.values;
 
       // Build the api/db query params

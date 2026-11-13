@@ -48,7 +48,7 @@ By submitting this {{type}} on behalf of {{licenceHolder}}, I agree that:
     },
     'awerb-dates': {
       label: 'Enter date of application\'s most recent AWERB review', // fallback (overridden by schema field label)
-      hint: 'For example, 12 06 2020'
+      hint: 'For example, 12 6 2020'
     },
     'awerb-no-review-reason': {
       label: 'Why has this amendment not been reviewed by the AWERB of each relevant establishment?'

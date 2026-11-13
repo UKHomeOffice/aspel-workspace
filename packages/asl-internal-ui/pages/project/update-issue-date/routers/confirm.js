@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { get } = require('lodash');
 
 module.exports = () => {
@@ -9,7 +9,7 @@ module.exports = () => {
     const newIssueDate = new Date(get(req.session.form[req.model.id], 'values.newIssueDate'));
     const duration = get(req.model, 'granted.duration');
     req.model.newIssueDate = newIssueDate.toISOString();
-    req.model.newExpiryDate = moment(newIssueDate).add(duration).toISOString();
+    req.model.newExpiryDate = dayJs(newIssueDate).add(duration).toISOString();
     res.locals.model = req.model;
     next();
   });

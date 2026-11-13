@@ -17,7 +17,7 @@ I have the establishment licence holder's authority for it to be made publicly a
     },
     'ra-awerb-date': {
       label: 'Date of most recent AWERB review',
-      hint: 'For example: 12 2 2020'
+      hint: 'For example, 12 2 2020'
     }
   },
   errors: {

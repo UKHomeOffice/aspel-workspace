@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import isEmpty from 'lodash/isEmpty';
-import { differenceInYears } from 'date-fns';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { Button } from '@ukhomeoffice/react-components';
 import { Snippet, Link, Tabs } from '@ukhomeoffice/asl-components';
 import { formatDate } from '../../../../lib/utils';
@@ -8,6 +8,8 @@ import { projectTitle } from '../../../common/formatters';
 import LeaveEstablishment from './leave-establishment';
 import { dateFormat } from '../../../../constants';
 import RolesAtEstablishment from './roles-at-establishment';
+
+const { differenceInYears } = dayJs;
 
 function ProjectDetails({ project, establishment }) {
   const isDraft = project.status === 'inactive';

@@ -30,15 +30,15 @@ module.exports = {
     },
     courseDate: {
       label: 'Course date',
-      hint: 'For example 14 8 2023'
+      hint: 'For example, 14 8 2023'
     },
     startDate: {
       label: 'Course start date',
-      hint: 'For example 14 8 2023'
+      hint: 'For example, 14 8 2023'
     },
     endDate: {
       label: 'Course end date',
-      hint: 'For example 14 9 2023'
+      hint: 'For example, 14 9 2023'
     },
     species: {
       label: 'Animals to be used for this course',

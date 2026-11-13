@@ -1,5 +1,7 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { pick } = require('lodash');
+
+const { formatIsoDate } = dayJs;
 
 const hasSpecies = require('./utils/has-species');
 
@@ -67,9 +69,9 @@ module.exports = () => (req, res, next) => {
             stream.on('data', project => {
               results.push({
                 ...pick(project, 'licence_number', 'title', 'status', 'schema_version'),
-                issueDate: moment(project.issue_date).format('YYYY-MM-DD'),
-                expiryDate: moment(project.expiry_date).format('YYYY-MM-DD'),
-                revocationDate: project.revocation_date ? moment(project.revocation_date).format('YYYY-MM-DD') : '',
+                issueDate: formatIsoDate(project.issue_date),
+                expiryDate: formatIsoDate(project.expiry_date),
+                revocationDate: project.revocation_date ? formatIsoDate(project.revocation_date) : '',
                 establishment: project.name,
                 nhps: hasSpecies(project, nhps) ? 'yes' : 'no',
                 catsOrDogs: hasSpecies(project, catsOrDogs) ? 'yes' : 'no',

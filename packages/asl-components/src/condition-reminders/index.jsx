@@ -1,5 +1,6 @@
 import React from 'react';
-import { formatDate, DATE_FORMAT } from '../utils';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
+import { formatDate } from '../utils';
 import { Inset } from '../';
 
 const SINGULAR_CONTENT = {

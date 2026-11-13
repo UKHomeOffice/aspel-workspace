@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const activity = require('../data/activity-log.json');
 
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
     return Promise.all(activity.map(log => {
       if (log['case_id'] === '71bd42e1-7cd7-4d51-8d99-694bd4c14810') {
         // keep the dates current so that the deadline is in the future, keep log in correct order
-        const aMonthAgo = moment().subtract(1, 'month').add(delay, 'seconds').toISOString();
+        const aMonthAgo = dayJs().subtract(1, 'month').add(delay, 'seconds').toISOString();
         log.created_at = aMonthAgo;
         log.updated_at = aMonthAgo;
         delay++;

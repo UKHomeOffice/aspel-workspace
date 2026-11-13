@@ -1,23 +1,32 @@
 const { get, pick } = require('lodash');
-const moment = require('moment-business-time');
-const { bankHolidays } = require('@ukhomeoffice/asl-constants');
-moment.updateLocale('en', { holidays: bankHolidays });
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+
+const { formatIsoDate } = dayJs;
 
 const getTaskType = require('./get-task-type');
 const getTaskDescription = require('./get-task-description');
+const formatOptionalDate = value => value ? formatIsoDate(value) : undefined;
+
+const isValidIsoDate = value => {
+  try {
+    return formatIsoDate(value) === value;
+  } catch (e) {
+    return false;
+  }
+};
 
 module.exports = ({ db, flow, query: params }) => {
 
-  if (!params.start || moment(params.start).format('YYYY-MM-DD') !== params.start) {
+  if (!params.start || !isValidIsoDate(params.start)) {
     throw Error('valid start date must be provided');
   }
 
-  if (!params.end || moment(params.end).format('YYYY-MM-DD') !== params.end) {
+  if (!params.end || !isValidIsoDate(params.end)) {
     throw Error('valid end date must be provided');
   }
 
-  const start = moment(params.start).startOf('day');
-  const end = moment(params.end).endOf('day');
+  const start = dayJs(params.start).startOf('day');
+  const end = dayJs(params.end).endOf('day');
 
   const openStatuses = flow.open;
   const closedStatuses = flow.closed;
@@ -30,7 +39,7 @@ module.exports = ({ db, flow, query: params }) => {
         'cases.status',
         db.flow.raw(
           `JSON_BUILD_OBJECT(
-             'model', cases.data->>'model', 
+             'model', cases.data->>'model',
              'action', cases.data->>'action',
              'version', cases.data->>'version',
              'modelData', JSON_BUILD_OBJECT(
@@ -47,7 +56,7 @@ module.exports = ({ db, flow, query: params }) => {
       ])
       .joinRaw(
         `LEFT JOIN LATERAL (
-         SELECT 
+         SELECT
            COALESCE(
              JSON_AGG(
                JSON_BUILD_OBJECT(
@@ -73,9 +82,8 @@ module.exports = ({ db, flow, query: params }) => {
         { end: end.toISOString() }
       )
       .where('cases.status', '!=', 'autoresolved')
-      .where('cases.created_at', '<=', end.toISOString()) // ignore tasks created after report period
+      .where('cases.created_at', '<=', end.toISOString())
       .where(builder =>
-        // ignore tasks closed before the report period
         builder.whereIn('cases.status', openStatuses)
           .orWhere(b =>
             b.whereIn('cases.status', closedStatuses)
@@ -132,7 +140,7 @@ module.exports = ({ db, flow, query: params }) => {
     task.activity
       .filter(Boolean)
       .forEach(activityLog => {
-        const eventTime = moment(activityLog.created_at);
+        const eventTime = dayJs(activityLog.created_at);
         const eventStatus = get(activityLog, 'event.status');
         const isStatusChange = activityLog.event_name.match(/^status:/);
         status = eventStatus || status;
@@ -178,9 +186,9 @@ module.exports = ({ db, flow, query: params }) => {
               licenceNumber: task.data.modelData?.licenceNumber,
               taskType,
               taskAction: task.data.action,
-              submitted: previousSubmission?.format('YYYY-MM-DD'),
-              assigned: previousAssignment?.format('YYYY-MM-DD'),
-              actioned: eventTime?.format('YYYY-MM-DD'),
+              submitted: formatIsoDate(previousSubmission),
+              assigned: formatIsoDate(previousAssignment),
+              actioned: formatIsoDate(eventTime),
               inspectorAction: activityLog.event?.status,
               isResubmission: !!lastResubmittedAt,
               inspectorName: activityLog.name,
@@ -194,7 +202,7 @@ module.exports = ({ db, flow, query: params }) => {
 
             if (eventTime.isSameOrAfter(start)) {
               totalDaysWithAsruInPeriod +=
-                adjustForSameDay(eventTime.workingDiff(moment.max(previousSubmission, start), 'calendarDays'));
+                adjustForSameDay(eventTime.workingDiff(dayJs.max(previousSubmission, start), 'calendarDays'));
             }
             previousSubmission = null;
           }
@@ -206,7 +214,8 @@ module.exports = ({ db, flow, query: params }) => {
           if (previousAssignment) {
             totalDaysAssigned += adjustForSameDay(eventTime.workingDiff(previousAssignment, 'calendarDays'));
             if (eventTime.isSameOrAfter(start)) {
-              totalDaysAssignedInPeriod += adjustForSameDay(eventTime.workingDiff(moment.max(previousAssignment, start), 'calendarDays'));
+              totalDaysAssignedInPeriod +=
+                adjustForSameDay(eventTime.workingDiff(dayJs.max(previousAssignment, start), 'calendarDays'));
             }
             previousAssignment = null;
           }
@@ -220,12 +229,12 @@ module.exports = ({ db, flow, query: params }) => {
         } else if (isRecall) {
           if (previousSubmission) {
             totalDaysWithAsru += adjustForSameDay(end.workingDiff(previousSubmission, 'calendarDays'));
-            totalDaysWithAsruInPeriod += adjustForSameDay(end.workingDiff(moment.max(start, previousSubmission), 'calendarDays'));
+            totalDaysWithAsruInPeriod += adjustForSameDay(end.workingDiff(dayJs.max(start, previousSubmission), 'calendarDays'));
           }
 
           if (previousAssignment) {
             totalDaysAssigned += adjustForSameDay(end.workingDiff(previousAssignment, 'calendarDays'));
-            totalDaysAssignedInPeriod += adjustForSameDay(end.workingDiff(moment.max(start, previousAssignment), 'calendarDays'));
+            totalDaysAssignedInPeriod += adjustForSameDay(end.workingDiff(dayJs.max(start, previousAssignment), 'calendarDays'));
           }
 
           // This will be incremented again when the task is resubmitted, so decrement it here to avoid double counting.
@@ -237,15 +246,15 @@ module.exports = ({ db, flow, query: params }) => {
         }
 
         if (activityLog.event_name === 'assign') {
-          previousAssignment = moment(eventTime);
-          lastAssignedAt = moment(eventTime);
+          previousAssignment = dayJs(eventTime);
+          lastAssignedAt = dayJs(eventTime);
 
           if (!firstAssignedAt && activityLog.event_name === 'assign') {
-            firstAssignedAt = moment(eventTime);
+            firstAssignedAt = dayJs(eventTime);
           }
 
           if (eventTime.isSameOrAfter(start) && eventTime.isSameOrBefore(end) && !firstAssignedAtInPeriod) {
-            firstAssignedAtInPeriod = moment(eventTime);
+            firstAssignedAtInPeriod = dayJs(eventTime);
           }
 
           return;
@@ -253,19 +262,19 @@ module.exports = ({ db, flow, query: params }) => {
 
         if (isReturn) {
           returnedCount++;
-          lastReturnedAt = moment(eventTime);
+          lastReturnedAt = dayJs(eventTime);
 
           if (!firstReturnedAt) {
-            firstReturnedAt = moment(eventTime);
+            firstReturnedAt = dayJs(eventTime);
           }
         }
 
         if (isAction && lastResubmittedAt) {
-          resubmittedDiffs.push(moment(eventTime).workingDiff(lastResubmittedAt, 'calendarDays'));
+          resubmittedDiffs.push(dayJs(eventTime).workingDiff(lastResubmittedAt, 'calendarDays'));
         }
 
         if (isAction && lastAssignedAt) {
-          assignToActionDiffs.push(moment(eventTime).workingDiff(lastAssignedAt, 'calendarDays'));
+          assignToActionDiffs.push(dayJs(eventTime).workingDiff(lastAssignedAt, 'calendarDays'));
         }
 
         if (isResubmission) {
@@ -273,12 +282,12 @@ module.exports = ({ db, flow, query: params }) => {
         }
 
         if (isResolution) {
-          resolvedAt = moment(eventTime);
+          resolvedAt = dayJs(eventTime);
         }
 
         if (eventTime.isSameOrAfter(start) && eventTime.isSameOrBefore(end)) {
           if (isSubmission && !firstSubmittedAtInPeriod) {
-            firstSubmittedAtInPeriod = moment(eventTime);
+            firstSubmittedAtInPeriod = dayJs(eventTime);
           }
 
           if (isResubmission) {
@@ -289,14 +298,14 @@ module.exports = ({ db, flow, query: params }) => {
             returnedCountInPeriod++;
 
             if (!firstReturnedAtInPeriod) {
-              firstReturnedAtInPeriod = moment(eventTime);
+              firstReturnedAtInPeriod = dayJs(eventTime);
             }
           }
         }
       });
 
     if (!firstSubmittedAt) {
-      return null; // task was never with ASRU, ignore
+      return null;
     }
 
     if (firstSubmittedAt.isSameOrAfter(start) && firstSubmittedAt.isSameOrBefore(end)) {
@@ -308,12 +317,12 @@ module.exports = ({ db, flow, query: params }) => {
 
     if (previousSubmission !== null) {
       totalDaysWithAsru += end.workingDiff(previousSubmission, 'calendarDays');
-      totalDaysWithAsruInPeriod += end.workingDiff(moment.max(start, previousSubmission), 'calendarDays');
+      totalDaysWithAsruInPeriod += end.workingDiff(dayJs.max(start, previousSubmission), 'calendarDays');
     }
 
     if (previousAssignment !== null) {
       totalDaysAssigned += end.workingDiff(previousAssignment, 'calendarDays');
-      totalDaysAssignedInPeriod += end.workingDiff(moment.max(start, previousAssignment), 'calendarDays');
+      totalDaysAssignedInPeriod += end.workingDiff(dayJs.max(start, previousAssignment), 'calendarDays');
     }
 
     return {
@@ -329,17 +338,17 @@ module.exports = ({ db, flow, query: params }) => {
       metrics: {
         taskType,
         taskDescription: getTaskDescription(task),
-        firstSubmittedAt: firstSubmittedAt?.format('YYYY-MM-DD'),
-        firstSubmittedAtInPeriod: firstSubmittedAtInPeriod?.format('YYYY-MM-DD'),
-        lastResubmittedAt: lastResubmittedAt?.format('YYYY-MM-DD'),
-        firstReturnedAt: firstReturnedAt?.format('YYYY-MM-DD'),
-        firstReturnedAtInPeriod: firstReturnedAtInPeriod?.format('YYYY-MM-DD'),
-        lastReturnedAt: lastReturnedAt?.format('YYYY-MM-DD'),
-        firstAssignedAt: firstAssignedAt?.format('YYYY-MM-DD'),
-        firstAssignedAtInPeriod: firstAssignedAtInPeriod?.format('YYYY-MM-DD'),
-        lastAssignedAt: lastAssignedAt?.format('YYYY-MM-DD'),
-        resolvedAt: resolvedAt?.format('YYYY-MM-DD'),
-        firstActionedAt: firstActionedAt?.format('YYYY-MM-DD'),
+        firstSubmittedAt: formatOptionalDate(firstSubmittedAt),
+        firstSubmittedAtInPeriod: formatOptionalDate(firstSubmittedAtInPeriod),
+        lastResubmittedAt: formatOptionalDate(lastResubmittedAt),
+        firstReturnedAt: formatOptionalDate(firstReturnedAt),
+        firstReturnedAtInPeriod: formatOptionalDate(firstReturnedAtInPeriod),
+        lastReturnedAt: formatOptionalDate(lastReturnedAt),
+        firstAssignedAt: formatOptionalDate(firstAssignedAt),
+        firstAssignedAtInPeriod: formatOptionalDate(firstAssignedAtInPeriod),
+        lastAssignedAt: formatOptionalDate(lastAssignedAt),
+        resolvedAt: formatOptionalDate(resolvedAt),
+        firstActionedAt: formatOptionalDate(firstActionedAt),
         wasFirstActionedInPeriod,
         totalDaysWithAsru,
         totalDaysWithAsruInPeriod,

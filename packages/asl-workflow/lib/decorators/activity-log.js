@@ -80,7 +80,7 @@ module.exports = settings => {
           set(log, 'event.meta.user.access_token', undefined);
           return log;
           // sort by createdAt descending
-        }).sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
+        }).sort((a, b) => a.createdAt < b.createdAt ? 1 : -1);
 
         return {
           ...task,

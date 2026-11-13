@@ -1,6 +1,6 @@
 const { reduce, isUndefined } = require('lodash');
 const { Router } = require('express');
-const { differenceInYears } = require('date-fns');
+const { differenceInYears } = require('@ukhomeoffice/asl-components/dayjs');
 const { schema } = require('./list/schema');
 const { cleanModel } = require('../../lib/utils');
 const { validateUuidParam } = require('../common/middleware');

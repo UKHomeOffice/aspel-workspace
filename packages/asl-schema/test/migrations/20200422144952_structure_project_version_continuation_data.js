@@ -1,12 +1,12 @@
 const sinon = require('sinon');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 const uuid = require('uuid');
 const assert = require('assert');
 const { get, map } = require('lodash');
 const db = require('./helpers/db');
 const { up, transform } = require('../../migrations/20200422144952_structure_project_version_continuation_data');
 
-const DATE_FORMAT = 'YYYY-MM-DD';
 let spy;
 
 function slateify(input) {
@@ -38,7 +38,7 @@ describe('transform', () => {
       'project-continuation': [
         {
           'licence-number': 'P12345678',
-          'expiry-date': moment().format(DATE_FORMAT)
+          'expiry-date': dayJs().format(DATE_FORMAT.iso)
         }
       ]
     };
