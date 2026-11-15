@@ -1,4 +1,4 @@
-import {Document, Paragraph, TextRun, Table} from 'docx';
+import { Document, Paragraph, TextRun, Table, Media } from 'docx';
 import get from 'lodash/get';
 import uniq from 'lodash/uniq';
 import concat from 'lodash/concat';
@@ -12,10 +12,19 @@ import schemaV0 from '@asl/projects/client/schema/v0';
 import schemaV1 from '@asl/projects/client/schema/v1';
 import schemaV1Purpose from '@asl/projects/client/schema/v1/permissible-purpose';
 import { addStyles, addTableHeader, addPageNumbers, PURPLE } from './helpers/docx-style-helper';
-import { renderMarkdown as renderMarkdownContent, renderText as renderTextShared, renderTextEditor as renderTextEditorShared, renderHorizontalRule, renderNull } from './helpers/docx-content-renderer';
+import {
+  renderMarkdown as renderMarkdownContent,
+  renderText as renderTextShared,
+  renderTextEditor as renderTextEditorShared,
+  renderHorizontalRule,
+  renderNull,
+  customNodeRenderers,
+  addImageDimensions
+} from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
 import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
+import { stripInvalidXmlChars } from "../../../helpers";
 
 export default async function ntsDocxRenderer(opts) {
   const {
@@ -27,7 +36,8 @@ export default async function ntsDocxRenderer(opts) {
     raReasons,
     isTrainingLicence,
     isBulk,
-    mergedDocument
+    mergedDocument,
+    updateImageDimensions
   } = opts;
 
   let document;
@@ -37,15 +47,20 @@ export default async function ntsDocxRenderer(opts) {
     document = new Document();
   }
 
+  await addImageDimensions(version, updateImageDimensions);
+
   const renderMarkdown = (markdown, style = 'body') => {
     renderMarkdownContent(document, markdown, style, {}, true);
   };
 
-  const renderTextEditor = (value) => {
+  const renderTextEditor = (value, noSeparator) => {
     if (value) {
       return renderTextEditorShared(document, value, {
-        onStringFallback: (doc, val) => renderText(val),
-        onError: (doc) => doc.createParagraph('There was a problem rendering this content').style('aside')
+        onStringFallback: (doc, val) => renderText(doc, val, noSeparator),
+        applyTextFilter: stripInvalidXmlChars,
+        onError: (doc) => doc.createParagraph('There was a problem rendering this content').style('aside'),
+        customNodeRenderers,
+        separator: noSeparator ? null : d => renderHorizontalRule(d)
       });
     } else {
       renderNull(document);

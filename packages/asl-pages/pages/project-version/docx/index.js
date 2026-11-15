@@ -11,6 +11,7 @@ const getNtsSchema = require('../nts/schema');
 const schema = require('@asl/projects/client/schema').default;
 const {NotFoundError} = require('@asl/service/errors');
 const {FEATURE_FLAG_NTS_DOCX} = require('@asl/service/ui/feature-flag');
+const { updateImageDimensions } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-image-helper');
 
 const MAX_IMAGE_WIDTH = 600;
 const MAX_IMAGE_HEIGHT = 800;
@@ -40,6 +41,7 @@ const getDataUrl = async (attachmentHost, data) => {
 
 const loadImages = attachmentHost => async node => {
   const url = await getDataUrl(attachmentHost, node.data);
+  console.log('loadImages', attachmentHost, node.data);
   if (!url) {
     return node;
   }
@@ -125,7 +127,7 @@ module.exports = (settings) => {
       ra: includeDraftRa ? req.project.draftRa : req.project.grantedRa,
       raReasons: req.project.raReasons,
       isTrainingLicence,
-      attachmentsHost: settings.attachments
+      updateImageDimensions: loadImages(settings.attachments)
     })
       .then(pack)
       .then(buffer => {

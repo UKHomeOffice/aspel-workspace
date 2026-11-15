@@ -32,6 +32,7 @@ const fetchAsDataUri = src => {
 };
 
 const toAttachmentUrl = (token, imageRoot) => {
+  console.log('imageRoot', token, imageRoot);
   const base = imageRoot.replace(/\/+$/, '');
   return `${base}/${encodeURIComponent(token)}`;
 };
@@ -45,6 +46,7 @@ const resolveImageSource = (node, imageRoot) => {
   }
 
   if (src) {
+    console.log('imageRoot src', src);
     return fetchAsDataUri(src)
       .catch(() => {
         if (!token) {
