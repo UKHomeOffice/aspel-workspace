@@ -11,7 +11,6 @@ const getNtsSchema = require('../nts/schema');
 const schema = require('@asl/projects/client/schema').default;
 const {NotFoundError} = require('@asl/service/errors');
 const {FEATURE_FLAG_NTS_DOCX} = require('@asl/service/ui/feature-flag');
-const { updateImageDimensions } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-image-helper');
 
 const MAX_IMAGE_WIDTH = 600;
 const MAX_IMAGE_HEIGHT = 800;

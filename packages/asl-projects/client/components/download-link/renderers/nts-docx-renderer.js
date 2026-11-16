@@ -1,4 +1,4 @@
-import { Document, Paragraph, TextRun, Table, Media } from 'docx';
+import { Document, Paragraph, TextRun, Table } from 'docx';
 import get from 'lodash/get';
 import uniq from 'lodash/uniq';
 import concat from 'lodash/concat';
@@ -23,7 +23,6 @@ import {
 } from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
 import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
-import NTSFateOfAnimalFields from '../../../helpers/nts-field';
 import { stripInvalidXmlChars } from "../../../helpers";
 
 export default async function ntsDocxRenderer(opts) {
@@ -56,7 +55,7 @@ export default async function ntsDocxRenderer(opts) {
   const renderTextEditor = (value, noSeparator) => {
     if (value) {
       return renderTextEditorShared(document, value, {
-        onStringFallback: (doc, val) => renderText(doc, val, noSeparator),
+        onStringFallback: (doc, val) => renderText(val),
         applyTextFilter: stripInvalidXmlChars,
         onError: (doc) => doc.createParagraph('There was a problem rendering this content').style('aside'),
         customNodeRenderers,
