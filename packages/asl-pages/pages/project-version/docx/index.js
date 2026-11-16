@@ -40,7 +40,6 @@ const getDataUrl = async (attachmentHost, data) => {
 
 const loadImages = attachmentHost => async node => {
   const url = await getDataUrl(attachmentHost, node.data);
-  console.log('loadImages', attachmentHost, node.data);
   if (!url) {
     return node;
   }

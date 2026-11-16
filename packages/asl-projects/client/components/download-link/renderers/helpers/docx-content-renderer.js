@@ -142,7 +142,6 @@ const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options 
     // Allow caller to override specific node types
     const renderer = customNodeRenderers?.[node.type];
     if (typeof renderer === 'function') {
-        console.log('renderNode145', depth, paragraph, numbers, index );
         const renderNext = (nextParent, nextNode, nextDepth = depth, nextParagraph = paragraph, nextNumbers = numbers, nextIndex = index) =>
             renderNode(nextParent, nextNode, nextDepth, nextParagraph, nextNumbers, nextIndex, options);
 
@@ -388,8 +387,10 @@ const customNodeRenderers = {
     renderTable(p, n);
   },
   'image': (p, n, ctx = {}) => {
-    console.log('image395', ctx);
-    const pg = ctx.paragraph || new Paragraph();
+    let pg = ctx.paragraph;
+    if (pg === undefined) {
+      pg = new Paragraph().style('imagebody');
+    }
     pg.addImage(Media.addImage(p, n.data.src, n.data.width, n.data.height));
     p.addParagraph(pg);
   },

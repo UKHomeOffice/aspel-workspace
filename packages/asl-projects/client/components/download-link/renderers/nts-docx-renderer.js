@@ -59,7 +59,7 @@ export default async function ntsDocxRenderer(opts) {
         applyTextFilter: stripInvalidXmlChars,
         onError: (doc) => doc.createParagraph('There was a problem rendering this content').style('aside'),
         customNodeRenderers,
-        separator: noSeparator ? null : d => renderHorizontalRule(d)
+        separator: null
       });
     } else {
       renderNull(document);
