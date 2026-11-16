@@ -26,7 +26,7 @@ module.exports = merge(
       },
       dob: {
         label: 'Date of birth',
-        hint: 'For example 14 9 2023',
+        hint: 'For example, 14 9 2023',
         checkAnswerLabel: 'Over 18'
       },
       organisation: {

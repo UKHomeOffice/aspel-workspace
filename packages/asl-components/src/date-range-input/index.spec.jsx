@@ -41,8 +41,8 @@ describe('<DateRangeInput />', () => {
     test('uses GOV.UK-style hints for each date input', () => {
         render(<DateRangeInput />);
 
-        expect(screen.getByText('For example 1 6 2026')).toBeInTheDocument();
-        expect(screen.getByText('For example 30 6 2026')).toBeInTheDocument();
+        expect(screen.getByText('For example, 1 6 2026')).toBeInTheDocument();
+        expect(screen.getByText('For example, 30 6 2026')).toBeInTheDocument();
     });
 
     test('renders the date range hint with GOV.UK hint styling', () => {

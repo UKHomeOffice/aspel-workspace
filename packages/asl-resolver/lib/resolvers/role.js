@@ -1,8 +1,10 @@
 const { get } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const updateReminders = require('../utils/update-reminders');
 
-const normaliseDate = date => moment(date, ['YYYY-MM-DD', 'YYYY-M-D'], true).format('YYYY-MM-DD');
+const { DATE_FORMAT, STRICT_DATE_FORMATS, parseDate } = dayJs;
+
+const normaliseDate = date => parseDate(date, STRICT_DATE_FORMATS, true).format(DATE_FORMAT.iso);
 
 module.exports = ({ models }) => async ({ action, data, id }, transaction) => {
   // assignment/removal of a HOLC should not trigger an establishment update

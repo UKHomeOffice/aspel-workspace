@@ -9,7 +9,7 @@ function getKeysToTry(primary, fallback) {
         return [primary, ...fallback];
     }
 
-    if(['string', 'number'].includes(typeof fallback)) {
+    if (['string', 'number'].includes(typeof fallback)) {
         return [primary, fallback];
     }
 
@@ -24,7 +24,7 @@ function getTemplate(content, primary, fallback, props) {
         if (typeof template === 'string') {
             return template;
         }
-        if(typeof template === 'object' && template.$pluralisation) {
+        if (typeof template === 'object' && template.$pluralisation) {
             const { countKey, ...variants } = template.$pluralisation;
             const count = get(props, countKey);
             return variants[count] ?? variants.default;
@@ -34,7 +34,15 @@ function getTemplate(content, primary, fallback, props) {
     return undefined;
 }
 
-export const Snippet = ({ content, children, optional, fallback, isPtag = true, Wrapper, ...props }) => {
+export const Snippet = ({
+    content,
+    children,
+    optional,
+    fallback,
+    isPtag = true,
+    Wrapper,
+    ...props
+}) => {
     // dynamic children with {value} values get passes as an array
     const primary = Array.isArray(children) ? children.join('') : children;
 
@@ -59,7 +67,7 @@ export const Snippet = ({ content, children, optional, fallback, isPtag = true, 
         <Markdown
             unwrapSingleLine={isPtag}
             linkTarget={props.linkTarget}
-        >{ source }</Markdown>
+        >{source}</Markdown>
     );
 
     return Wrapper ? <Wrapper>{snippet}</Wrapper> : snippet;

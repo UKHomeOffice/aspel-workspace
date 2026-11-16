@@ -11,7 +11,7 @@ const getDateField = establishmentName => {
     dateLabel: 'AWERB review date',
     // "Enter ..." copy for the blank-date case (dynamic field, no static content).
     dateEnter: `Enter the date of the application's most recent AWERB review`,
-    hint: 'For example, 12 06 2020',
+    hint: 'For example, 12 6 2020',
     validate: [
       'required',
       'validDate',

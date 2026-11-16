@@ -208,6 +208,22 @@ describe('/profiles', () => {
         });
     });
 
+    it('returns the profile when the pil issueDate is null', () => {
+      const { PIL } = this.api.app.db;
+
+      return Promise.resolve()
+        .then(() => PIL.query().findById(ids.pils.linfordChristie).patch({ issueDate: null }))
+        .then(() => {
+          return request(this.api)
+            .get(`/establishment/${ids.establishments.croydon}/profile/${ids.profiles.linfordChristie}`)
+            .expect(200)
+            .expect(profile => {
+              assert.equal(profile.body.data.pil.id, ids.pils.linfordChristie);
+              assert.equal(profile.body.data.pil.issueDate, null);
+            });
+        });
+    });
+
     it('returns a NACWO role for NACWOs without places', () => {
       return request(this.api)
         .get(`/establishment/${ids.establishments.croydon}/profile/${ids.profiles.cliveNacwo}`)

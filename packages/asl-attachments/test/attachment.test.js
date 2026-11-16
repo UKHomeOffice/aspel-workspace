@@ -3,6 +3,7 @@ const sinon = require('sinon');
 const { expect } = require('chai');
 const express = require('express');
 const stream = require('stream');
+const validateUpload = require('../lib/upload-validation');
 
 describe('Attachment routes', () => {
 
@@ -11,16 +12,21 @@ describe('Attachment routes', () => {
   let findOneStub;
   let deleteByIdStub;
   let insertStub;
+  let uploadDoneStub;
+  let UploadStub;
 
   beforeEach(() => {
     sendStub = sinon.stub();
+    uploadDoneStub = sinon.stub().resolves();
 
-    // Mock S3 BEFORE requiring router
     sinon.stub(require('@asl/service/clients'), 'S3').returns({
       send: sendStub
     });
 
-    // Reusable DB stubs
+    UploadStub = sinon.stub(require('@aws-sdk/lib-storage'), 'Upload').callsFake(function UploadMock() {
+      this.done = uploadDoneStub;
+    });
+
     findOneStub = sinon.stub();
     deleteByIdStub = sinon.stub().resolves();
     insertStub = sinon.stub().resolves();
@@ -50,6 +56,71 @@ describe('Attachment routes', () => {
   });
 
   // ------------------------
+  // POST /
+  // ------------------------
+
+  it('POST / uploads a validated PDF and returns 200', async () => {
+    const res = await request(app)
+      .post('/')
+      .attach('file', Buffer.from('%PDF-1.7\n1 0 obj\n<<>>\nendobj\n%%EOF'), {
+        filename: 'evidence.pdf',
+        contentType: 'application/pdf'
+      });
+
+    expect(res.status).to.equal(200);
+    expect(res.body.token).to.be.a('string');
+    expect(uploadDoneStub.calledOnce).to.be.true;
+    expect(UploadStub.calledOnce).to.be.true;
+    expect(insertStub.calledOnce).to.be.true;
+    expect(insertStub.firstCall.args[0]).to.include({
+      filename: 'evidence.pdf',
+      mimetype: 'application/pdf'
+    });
+  });
+
+  it('POST / returns 400 for a file with malicious content', async () => {
+    const res = await request(app)
+      .post('/')
+      .attach('file', Buffer.from(`%PDF-1.7\n${validateUpload.EICAR_SIGNATURE}`), {
+        filename: 'eicar.pdf',
+        contentType: 'application/pdf'
+      });
+
+    expect(res.status).to.equal(400);
+    expect(res.body).to.deep.equal({ error: 'malwareDetected' });
+    expect(uploadDoneStub.called).to.be.false;
+    expect(insertStub.called).to.be.false;
+  });
+
+  it('POST / returns 400 when file contents do not match the declared type', async () => {
+    const res = await request(app)
+      .post('/')
+      .attach('file', Buffer.from('not-a-real-pdf'), {
+        filename: 'broken.pdf',
+        contentType: 'application/pdf'
+      });
+
+    expect(res.status).to.equal(400);
+    expect(res.body).to.deep.equal({ error: 'invalidFileContent' });
+    expect(uploadDoneStub.called).to.be.false;
+    expect(insertStub.called).to.be.false;
+  });
+
+  it('POST / returns 400 for unsupported macro-enabled Word formats', async () => {
+    const res = await request(app)
+      .post('/')
+      .attach('file', Buffer.from('PK\u0003\u0004macro-enabled'), {
+        filename: 'dangerous.docm',
+        contentType: 'application/vnd.ms-word.document.macroEnabled.12'
+      });
+
+    expect(res.status).to.equal(400);
+    expect(res.body).to.deep.equal({ error: 'unsupportedFileType' });
+    expect(uploadDoneStub.called).to.be.false;
+    expect(insertStub.called).to.be.false;
+  });
+
+  // ------------------------
   // GET /:token
   // ------------------------
 
@@ -68,6 +139,7 @@ describe('Attachment routes', () => {
 
     expect(res.status).to.equal(200);
     expect(res.headers['content-type']).to.include('text/plain');
+    expect(res.headers['x-content-type-options']).to.equal('nosniff');
     expect(res.headers['x-original-filename']).to.equal('file.txt');
 
     expect(findOneStub.calledWith({ token: 'valid-token' })).to.be.true;
@@ -156,5 +228,4 @@ describe('Attachment routes', () => {
 
     expect(res.status).to.equal(404);
   });
-
 });
