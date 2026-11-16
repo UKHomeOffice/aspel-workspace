@@ -1,9 +1,11 @@
 import React, { Fragment } from 'react';
+import dayJs from '@ukhomeoffice/asl-components/dayjs';
 import { useSelector } from 'react-redux';
 import { LicenceStatusBanner, Snippet, Link } from '@ukhomeoffice/asl-components';
 import sortBy from 'lodash/sortBy';
-import { format } from 'date-fns';
 import { dateFormat } from '../../../constants';
+
+const { format } = dayJs;
 
 export default function ProjectStatusBanner({ model = {}, version = {}, isPdf }) {
   const { canViewTransferredProject, additionalAvailability } = useSelector(state => state.static);

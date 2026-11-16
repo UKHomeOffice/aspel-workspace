@@ -1,12 +1,12 @@
 const assert = require('assert');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { establishment } = require('../../lib/resolvers');
 const db = require('../helpers/db');
 const { v4: uuid } = require('uuid');
 const { assertIncludesInAnyOrder } = require('../helpers/assert-hepers');
 
 const nowish = (a, b = undefined, n = 3) => {
-  const diff = moment(a).diff(b, 'seconds');
+  const diff = dayJs(a).diff(b, 'seconds');
   return Math.abs(diff) < n;
 };
 
@@ -191,7 +191,7 @@ describe('Establishment resolver', () => {
               assert.ok(establishment.licenceNumber, 'has a generated licence number');
               assert.deepEqual(establishment.status, 'active', 'status has been changed to active');
               assert(establishment.issueDate, 'has an issue date');
-              assert(moment(establishment.issueDate).isValid(), 'issue date is a valid date');
+              assert(dayJs(establishment.issueDate).isValid(), 'issue date is a valid date');
             });
         });
     });
@@ -218,7 +218,7 @@ describe('Establishment resolver', () => {
             .then(establishment => {
               assert.deepEqual(establishment.status, 'revoked', 'status has been changed to revoked');
               assert(establishment.revocationDate, 'has a revocation date');
-              assert(moment(establishment.revocationDate).isValid(), 'revocation date is a valid date');
+              assert(dayJs(establishment.revocationDate).isValid(), 'revocation date is a valid date');
             });
         });
     });
@@ -244,7 +244,7 @@ describe('Establishment resolver', () => {
             .then(() => this.models.Establishment.query().findById(opts.id))
             .then(establishment => {
               assert.ok(establishment.suspendedDate, 'has a suspended date');
-              assert.ok(moment(establishment.suspendedDate).isValid(), 'suspended date is a valid date');
+              assert.ok(dayJs(establishment.suspendedDate).isValid(), 'suspended date is a valid date');
             });
         });
     });
@@ -256,7 +256,7 @@ describe('Establishment resolver', () => {
         id: 101,
         name: 'Research 101',
         status: 'active',
-        suspendedDate: moment().toISOString()
+        suspendedDate: dayJs().toISOString()
       })
         .then(() => {
           const opts = {
@@ -390,7 +390,7 @@ describe('Establishment resolver', () => {
             .then(reminders => {
               assert.deepEqual(reminders.length, 1, 'there should be a single deleted reminder');
               assert.ok(reminders[0].deleted, 'the deleted column should be set');
-              assert(moment(reminders[0].deleted).isValid(), 'deleted date is a valid date');
+              assert(dayJs(reminders[0].deleted).isValid(), 'deleted date is a valid date');
             });
         });
     });

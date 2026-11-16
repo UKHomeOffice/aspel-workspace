@@ -1,7 +1,9 @@
 const { get } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const taskHelper = require('../utils/task');
 const { subscribedFilter, subscribed, subscribedToCollaborations } = require('../utils/is-subscribed');
+
+const { DATE_FORMAT, formatDate } = dayJs;
 
 module.exports = async ({ schema, logger, task, publicUrl }) => {
   logger.verbose('generating notifications for project task');
@@ -12,7 +14,6 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
   const action = get(task, 'data.action');
   const projectId = get(task, 'data.id');
   const months = get(task, 'data.months');
-  const dateFormat = 'D MMM YYYY';
 
   const allowedActions = [
     'grant',
@@ -46,7 +47,7 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
 
   const project = await Project.query()
     .select('projects.*')
-    .selectRopsDeadline(moment().utc().year())
+    .selectRopsDeadline(dayJs().utc().year())
     .findById(projectId)
     .withGraphFetched('[additionalEstablishments, licenceHolder, collaborators.[emailPreferences,establishments]]');
 
@@ -59,13 +60,13 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
   const applicant = applicantId && await Profile.query().findById(applicantId);
 
   const licenceNumber = project.licenceNumber;
-  const raDate = project.raDate && moment(project.raDate).format(dateFormat);
-  const expiryDate = project.expiryDate && moment(project.expiryDate).format(dateFormat);
-  const revocationDate = project.revocationDate && moment(project.revocationDate).format(dateFormat);
+  const raDate = project.raDate && formatDate(project.raDate, DATE_FORMAT.medium);
+  const expiryDate = project.expiryDate && formatDate(project.expiryDate, DATE_FORMAT.medium);
+  const revocationDate = project.revocationDate && formatDate(project.revocationDate, DATE_FORMAT.medium);
   const endDate = project.revocationDate || project.expiryDate;
-  const ropsDate = endDate && moment(endDate).add(28, 'days').format(dateFormat);
-  const publicationsDate = endDate && moment(endDate).add(6, 'months').format(dateFormat);
-  const continuationDate = project.expiryDate && moment(project.expiryDate).subtract(3, 'months').format(dateFormat);
+  const ropsDate = endDate && formatDate(dayJs(endDate).add(28, 'days'), DATE_FORMAT.medium);
+  const publicationsDate = endDate && formatDate(dayJs(endDate).add(6, 'months'), DATE_FORMAT.medium);
+  const continuationDate = project.expiryDate && formatDate(dayJs(project.expiryDate).subtract(3, 'months'), DATE_FORMAT.medium);
 
   const admins = await Profile.query()
     .withGraphFetched('emailPreferences')
@@ -144,7 +145,7 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
   }
 
   function formatDeadline(date) {
-    return moment(date, 'YYYY-MM-DD').format('DD/MM/YYYY');
+    return formatDate(date, DATE_FORMAT.shortPadded);
   }
 
   if (taskHelper.isSuspension(task)) {
@@ -153,7 +154,7 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
       modelType: 'project',
       emailTemplate: 'licence-suspended',
       logMsg: 'Project suspended',
-      suspendedDate: project && project.suspendedDate && moment(project.suspendedDate).format(dateFormat),
+      suspendedDate: project && project.suspendedDate && formatDate(project.suspendedDate, DATE_FORMAT.medium),
       addTaskTypeToSubject: false
     };
 
@@ -170,8 +171,8 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
       modelType: 'project',
       emailTemplate: 'licence-reinstated',
       logMsg: 'Project reinstated',
-      suspendedDate: project && project.suspendedDate && moment(project.suspendedDate).format(dateFormat),
-      reinstatedDate: moment().format(dateFormat),
+      suspendedDate: project && project.suspendedDate && formatDate(project.suspendedDate, DATE_FORMAT.medium),
+      reinstatedDate: formatDate(new Date(), DATE_FORMAT.medium),
       addTaskTypeToSubject: false
     };
 
@@ -236,7 +237,7 @@ module.exports = async ({ schema, logger, task, publicUrl }) => {
   if (task.data.action.match(/^rop-reminder-/)) {
     const when = get(task, 'data.when');
     const projectId = task.data.id;
-    const ropsDeadline = project.ropsDeadline && moment(project.ropsDeadline).format(dateFormat);
+    const ropsDeadline = project.ropsDeadline && formatDate(project.ropsDeadline, DATE_FORMAT.medium);
 
     const reportingUrl = `${publicUrl}/establishments/${establishmentId}/projects/${projectId}#reporting`;
 

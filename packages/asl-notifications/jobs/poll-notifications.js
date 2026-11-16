@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
 module.exports = ({ schema, logger, sendEmail }) => {
   const { Notification } = schema;
@@ -12,7 +12,7 @@ module.exports = ({ schema, logger, sendEmail }) => {
       return notifications.reduce((promise, notification) => {
         return promise
           .then(() => sendEmail(notification))
-          .then(() => notification.$query().patch({ completed: moment().toISOString() }))
+          .then(() => notification.$query().patch({ completed: dayJs().toISOString() }))
           .catch(e => {
             logger.error(e.message);
           });

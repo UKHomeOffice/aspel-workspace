@@ -1,5 +1,5 @@
 const assert = require('assert');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { rop } = require('../../lib/resolvers');
 const db = require('../helpers/db');
 const { v4: uuid } = require('uuid');
@@ -62,7 +62,7 @@ describe('ROP resolver', () => {
     });
 
     it('can submit a rop', () => {
-      const now = moment();
+      const now = dayJs();
       const ropId = uuid();
 
       const opts = {
@@ -83,7 +83,7 @@ describe('ROP resolver', () => {
           assert.ok(rop);
           assert.deepStrictEqual(rop.status, 'submitted', 'status should be updated to submitted');
           assert.ok(rop.submittedDate, 'submitted date should be set');
-          assert.ok(moment(rop.submittedDate).isSameOrAfter(now), 'submitted date should be now or thereabouts');
+          assert.ok(dayJs(rop.submittedDate).isSameOrAfter(now), 'submitted date should be now or thereabouts');
         });
     });
 

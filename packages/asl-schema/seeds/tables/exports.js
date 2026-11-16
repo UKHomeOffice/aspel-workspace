@@ -1,23 +1,23 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 
 const generateExports = () => {
-  const earliest = moment('2021-05-01');
-  const latest = moment().subtract(1, 'month').startOf('month');
+  const earliest = dayJs('2021-05-01');
+  const latest = dayJs().subtract(1, 'month').startOf('month');
   let date = earliest;
   const dataExports = [];
 
-  // eslint-disable-next-line no-unmodified-loop-condition
-  while (date <= latest) {
+  while (date.isSameOrBefore(latest)) {
     dataExports.push({
       type: 'task-metrics',
-      key: date.format('YYYY-MM'),
+      key: date.format(DATE_FORMAT.yearMonth),
       ready: false,
       meta: {
-        start: date.format('YYYY-MM-DD'),
-        end: moment(date).endOf('month').format('YYYY-MM-DD')
+        start: date.format(DATE_FORMAT.iso),
+        end: date.clone().endOf('month').format(DATE_FORMAT.iso)
       }
     });
-    date.add(1, 'month');
+    date = date.add(1, 'month');
   }
 
   return dataExports;

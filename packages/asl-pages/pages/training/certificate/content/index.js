@@ -15,7 +15,7 @@ module.exports = {
       dateLabel: 'Award date',
       hint: `This should be within the last 5 years
 
-For example, 30 09 2020`
+For example, 30 9 2020`
     }
   },
   errors: {

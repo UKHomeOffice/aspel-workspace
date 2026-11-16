@@ -1,6 +1,7 @@
 const { page } = require('@asl/service/ui');
-const moment = require('moment');
 const form = require('@asl/pages/pages/common/routers/form');
+const { dayjs: dayJs, parseDate } = require('@ukhomeoffice/asl-components/dayjs');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 const routes = require('./routes');
 const schema = require('./schema/nts');
 const ntsDocx = require('./routers/nts-docx');
@@ -43,11 +44,9 @@ module.exports = settings => {
       next();
     },
     locals: (req, res, next) => {
-      const start = moment(req.form.values['date-from'], ['YYYY-MM-DD', 'YYYY-M-D'], true);
+      const start = parseDate(req.form.values['date-from']);
       if (start.isValid()) {
-        req.form.schema['date-to'].validate.push({
-          dateIsAfter: start.format('YYYY-MM-DD')
-        });
+        req.form.schema['date-to'].validate.push({ dateIsAfter: start.format(DATE_FORMAT.iso) });
       }
       next();
     },
@@ -74,8 +73,8 @@ module.exports = settings => {
       .then(response => {
         res.locals.static.query = req.query;
         res.locals.static.reports = response.json.data.map(report => {
-          const end = moment(report.meta.end);
-          return { id: report.id, year: end.format('YYYY'), month: end.format('MMMM') };
+          const end = dayJs(report.meta.end);
+          return { id: report.id, year: end.format(DATE_FORMAT.year), month: end.format(DATE_FORMAT.month) };
         });
         next();
       })
