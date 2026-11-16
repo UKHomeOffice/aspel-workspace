@@ -24,13 +24,13 @@ describe('<DateInput />', () => {
     });
 
     test('associates only the hint when there is no error', () => {
-        const { container } = renderInput({ hint: 'For example, 20/8/2020.' });
+        const { container } = renderInput({ hint: 'For example, 20 8 2020' });
         expect(container.querySelector('fieldset').getAttribute('aria-describedby')).toBe('passDate-hint');
     });
 
     test('associates both the hint and the error via aria-describedby', () => {
         const { container } = renderInput({
-            hint: 'For example, 20/8/2020.',
+            hint: 'For example, 20 8 2020',
             error: 'Date awarded must be a valid date'
         });
         const describedBy = container.querySelector('fieldset').getAttribute('aria-describedby');

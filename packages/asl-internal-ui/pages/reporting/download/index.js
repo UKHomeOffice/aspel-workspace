@@ -2,7 +2,8 @@ const { Router } = require('express');
 const { pipeline } = require('stream');
 const through = require('through2');
 const csv = require('csv-stringify');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
+const { STRICT_DATE_FORMATS, formatIsoDate, parseDate } = dayJs;
 const { countBy } = require('lodash');
 
 const content = require('./content');
@@ -29,7 +30,7 @@ const fetchTasks = req => {
 
             const type = `${model}-${action}`;
 
-            const date = moment(data.updatedAt).startOf('week').format('YYYY-MM-DD');
+            const date = formatIsoDate(dayJs(data.updatedAt).startOf('week'));
             tasksByDate[date] = tasksByDate[date] || [];
             tasksByType[type] = tasksByType[type] || [];
 
@@ -57,7 +58,7 @@ const fetchExpirations = req => {
         pipeline(
           stream,
           through.obj((data, enc, callback) => {
-            const date = moment(data.expiry_date).startOf('week').format('YYYY-MM-DD');
+            const date = formatIsoDate(dayJs(data.expiry_date).startOf('week'));
             expirations[date] = expirations[date] || [];
             expirations[date].push(data);
             callback();
@@ -96,11 +97,11 @@ module.exports = settings => {
 
     const heading = types.map(type => content[type]);
     stringifier.write([ 'Week commencing', ...heading, 'Total tasks' ]);
-    let date = moment(req.query.start, 'YYYY-MM-DD').startOf('week');
-    const end = moment(req.query.end, 'YYYY-MM-DD');
+    let date = parseDate(req.query.start, STRICT_DATE_FORMATS, true).startOf('week');
+    const end = parseDate(req.query.end, STRICT_DATE_FORMATS, true);
 
     while (date.isBefore(end)) {
-      const isoDate = date.format('YYYY-MM-DD');
+      const isoDate = formatIsoDate(date);
       const metricsByType = countBy(req.tasksByDate[isoDate], 'type');
       const row = types.map(type => {
         if (type === 'project-expiry') {

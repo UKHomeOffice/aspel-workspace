@@ -27,7 +27,10 @@ function setup(items = []) {
     '@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper': {
       addPageNumbers: value => assert.strictEqual(value, document)
     },
-    '@ukhomeoffice/asl-constants': { getRAReasons: () => [] }
+    '@ukhomeoffice/asl-constants': {
+      DATE_FORMAT: { iso: 'YYYY-MM-DD' },
+      getRAReasons: () => []
+    }
   })({ attachments: '/attachments' });
   const req = {
     form: { values: { 'date-from': '2024-1-1', 'date-to': '2024-7-1', ra: false } },

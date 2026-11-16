@@ -4,21 +4,17 @@ import castArray from 'lodash/castArray';
 import pickBy from 'lodash/pickBy';
 import mapValues from 'lodash/mapValues';
 import map from 'lodash/map';
-import { format as dateFormatter } from 'date-fns';
 import { JSONPath } from 'jsonpath-plus';
 import LEGACY_SPECIES from '../constants/legacy-species';
 import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
 import CONDITIONS from '../constants/conditions';
 import React, { Fragment } from 'react';
 import classnames from 'classnames';
 
-export const formatDate = (date, format) => {
-  try {
-    return date ? dateFormatter(date, format) : '-';
-  } catch (err) {
-    return `Invalid date entered`;
-  }
-};
+import { formatDate as formatDateUtil } from '@ukhomeoffice/asl-components/utils';
+
+export const formatDate = (date, format = DATE_FORMAT.long) => formatDateUtil(date, format);
 
 export const getConditions = (values, project) => {
   const isProtocol = !!project;

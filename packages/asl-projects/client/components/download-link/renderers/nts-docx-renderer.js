@@ -5,7 +5,7 @@ import concat from 'lodash/concat';
 import flatten from 'lodash/flatten';
 import values from 'lodash/values';
 import Mustache from 'mustache';
-import { projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
+import { DATE_FORMAT, projectSpecies as SPECIES } from '@ukhomeoffice/asl-constants';
 import RAContent from '@asl/projects/client/constants/retrospective-assessment';
 import schemaVersions from '@asl/projects/client/schema';
 import schemaV0 from '@asl/projects/client/schema/v0';
@@ -22,7 +22,7 @@ import {
   addImageDimensions
 } from './helpers/docx-content-renderer';
 import { descriptions as raReasonsDescriptions } from '@asl/projects/client/components/ra-reasons';
-import { formatDate, DATE_FORMAT } from '@ukhomeoffice/asl-components/src/utils';
+import { formatDate } from '@ukhomeoffice/asl-components/utils';
 import NTSFateOfAnimalFields from '../../../helpers/nts-field';
 import { stripInvalidXmlChars } from "../../../helpers";
 
@@ -268,7 +268,7 @@ export default async function ntsDocxRenderer(opts) {
       : [];
 
     if (isRequired && raReasons && activeReasons.length) {
-      document.createParagraph('Reason for retrospective assessment').heading5();
+      document.createParagraph('Reason for retrospective assessment').heading4();
       document.createParagraph('This may include reasons from previous versions of this licence.').style('body');
       activeReasons.forEach(reason => {
         const p = new Paragraph();
@@ -297,7 +297,7 @@ export default async function ntsDocxRenderer(opts) {
 
   const renderRaSummary = (fieldNames) => {
     if (!ra) { return; }
-    document.createParagraph('Retrospective assessment').style('RAStatusHeading').spacing({ before: 480 });
+    document.createParagraph('Retrospective assessment').heading3();
     if (application.raGrantedDate) {
       document.createParagraph(`ASRU approved: ${application.raGrantedDate}`).style('body');
     }
@@ -315,7 +315,7 @@ export default async function ntsDocxRenderer(opts) {
   const renderField = (field, schemaVersion) => {
     if (field.heading) {
       if (field.heading === 'Retrospective assessment') {
-        const raStatusHeading = document.createParagraph(field.heading).style('RAStatusHeading').spacing({ before: 480 });
+        const raStatusHeading = document.createParagraph(field.heading).heading3();
         raStatusHeading.Borders.addTopBorder(PURPLE, '6', 'single', '18');
         raStatusHeading.createBorder();
       } else {
