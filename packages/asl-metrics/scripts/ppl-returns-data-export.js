@@ -26,7 +26,7 @@ require('@asl/service/lib/register'); // required to transpile imports from @asl
 
 const path = require('path');
 const fastCsv = require('fast-csv');
-const moment = require('moment');
+const dayjs = require('@ukhomeoffice/asl-components/src/dayjs');
 const minimist = require('minimist');
 const settings = require('../config');
 
@@ -34,8 +34,8 @@ const knexTaskflow = require('knex')({ client: 'pg', connection: settings.workfl
 const knexASL = require('knex')({ client: 'pg', connection: settings.asldb });
 
 const args = minimist(process.argv.slice(2));
-const startDate = args.startDate || moment().subtract(2, 'years').format('YYYY-MM-DD');
-const endDate = args.endDate || moment().format('YYYY-MM-DD');
+const startDate = args.startDate || dayjs().subtract(2, 'years').format('YYYY-MM-DD');
+const endDate = args.endDate || dayjs().format('YYYY-MM-DD');
 const cohortDate = args.cohortDate || '2025-10-01';
 const rawFile = String(args.file ?? 'ppl-returns');
 const prefix = rawFile.replace(/\.csv$/i, '');
@@ -47,13 +47,13 @@ if (prefix.length === 0 || prefix.length > 100 || !/^[a-zA-Z0-9_-]+$/.test(prefi
 }
 
 Object.entries({ startDate, endDate, cohortDate }).forEach(([name, value]) => {
-  if (!moment(value, 'YYYY-MM-DD', true).isValid()) {
+  if (!dayjs(value, 'YYYY-MM-DD', true).isValid()) {
     console.error(`Invalid --${name}=${value}, expected YYYY-MM-DD`);
     process.exit(1);
   }
 });
 
-if (moment(startDate).isAfter(moment(endDate), 'day')) {
+if (dayjs(startDate).isAfter(dayjs(endDate), 'day')) {
   throw new Error('--startDate must be before or equal to --endDate');
 }
 
@@ -243,7 +243,7 @@ async function getComments(start, end) {
   return rows;
 }
 
-const isoDate = date => (date ? moment(date).toISOString() : '');
+const isoDate = date => (date ? dayjs(date).toISOString() : '');
 
 // neutralise spreadsheet formula injection in free text (OWASP CSV injection)
 const safeText = text => (text && /^[=+\-@\t\r]/.test(text) ? `'${text}` : (text || ''));
@@ -305,8 +305,8 @@ const writeCsv = (name, rows) => new Promise((resolve, reject) => {
 });
 
 async function run() {
-  const start = moment(startDate).startOf('day').toISOString();
-  const end = moment(endDate).endOf('day').toISOString();
+  const start = dayjs(startDate).startOf('day').toISOString();
+  const end = dayjs(endDate).endOf('day').toISOString();
   console.log(`Reporting window: ${start} to ${end}, inspector cohort boundary: ${cohortDate}`);
 
   const questions = buildQuestionLookup();
@@ -337,7 +337,7 @@ async function run() {
       date: isoDate(row.created_at),
       user: (profile && `${profile.first_name} ${profile.last_name}`.trim()) || row.name_snapshot || '',
       user_role: role,
-      inspector_cohort: isAsru && firstSeen ? (moment(firstSeen).isBefore(cohortDate) ? 'previous' : 'new') : ''
+      inspector_cohort: isAsru && firstSeen ? (dayjs(firstSeen).isBefore(cohortDate) ? 'previous' : 'new') : ''
     };
   };
 
