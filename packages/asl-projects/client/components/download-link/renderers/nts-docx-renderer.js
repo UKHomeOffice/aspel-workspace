@@ -30,7 +30,6 @@ export default async function ntsDocxRenderer(opts) {
     application,
     version,
     ntsSections,
-    includeDraftRa,
     ra,
     raReasons,
     isTrainingLicence,
