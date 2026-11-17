@@ -7,6 +7,7 @@ module.exports = ({ db }) => {
   const query = () => {
     return db.asl('pils')
       .select('pils.licence_number', 'pils.review_date', 'profiles.first_name', 'profiles.last_name')
+      .select('profiles.pil_licence_number AS profile_licence_number')
       .select('establishments.name AS establishment')
       .join('profiles', 'pils.profile_id', '=', 'profiles.id')
       .join('establishments', 'pils.establishment_id', '=', 'establishments.id')
@@ -16,7 +17,7 @@ module.exports = ({ db }) => {
 
   const parse = pil => {
     return {
-      licenceNumber: pil.licence_number,
+      licenceNumber: pil.licence_number || pil.profile_licence_number,
       establishment: pil.establishment,
       licenceHolder: `${pil.first_name} ${pil.last_name}`,
       reviewDate: formatIsoDate(pil.review_date)
