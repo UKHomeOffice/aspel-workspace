@@ -26,6 +26,8 @@ This writes `asl-5165-return-reasons.csv`, `asl-5165-field-comments.csv`, and `a
 
 ## Reports
 
+The `pil-reviews` and `completed-pil-reviews` reports use the legacy PIL licence number when present, falling back to the profile's PIL licence number for newly granted licences.
+
 The code for a report should consist of a function that receives the inbound request returns two methods: `query` and `parse`.
 
 The inbound request object will be augmented with the following properties:
