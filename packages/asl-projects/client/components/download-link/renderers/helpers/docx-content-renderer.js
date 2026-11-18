@@ -1,8 +1,11 @@
-import { Paragraph, TextRun, Indent } from 'docx';
+import {Paragraph, TextRun, Indent, Table, Media} from 'docx';
 import { numbering, abstract, PURPLE } from './docx-style-helper'
 import unified from 'unified';
 import remarkParse from 'remark-parse';
 import get from 'lodash/get';
+import pickBy from "lodash/pickBy";
+import mapValues from "lodash/mapValues";
+import {stripInvalidXmlChars} from "../../../../helpers";
 
 const applyFilter = (text, filter) => {
     if (typeof text !== 'string') {
@@ -127,7 +130,7 @@ const renderText = (doc, value, { applyTextFilter, separator } = {}) => {
     if (separator) { separator(doc); }
 };
 
-const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options = {}) => {
+const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options = {}, document) => {
     const { applyTextFilter, customNodeRenderers } = options;
 
     const getContent = input => {
@@ -139,11 +142,11 @@ const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options 
     // Allow caller to override specific node types
     const renderer = customNodeRenderers?.[node.type];
     if (typeof renderer === 'function') {
-        const renderNext = (nextParent, nextNode, nextDepth = depth, nextParagraph = paragraph, nextNumbers = numbers, nextIndex = index) =>
-            renderNode(nextParent, nextNode, nextDepth, nextParagraph, nextNumbers, nextIndex, options);
+      const renderNext = (nextParent, nextNode, nextDepth = depth, nextParagraph = paragraph, nextNumbers = numbers, nextIndex = index, options, document) =>
+        renderNode(nextParent, nextNode, nextDepth, nextParagraph, nextNumbers, nextIndex, options, document);
 
         const context = { depth, paragraph, numbers, index, renderNext };
-        return renderer(parent, node, context);
+      return renderer(parent, node, context, document);
     }
 
     let text;
@@ -208,11 +211,11 @@ const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options 
             break;
         }
         case 'bulleted-list':
-            (node.nodes || []).forEach(item => renderNode(parent, item, depth, paragraph, undefined, undefined, options));
+        (node.nodes || []).forEach(item => renderNode(parent, item, depth, paragraph, undefined, undefined, options, document));
             break;
         default:
             if (node.text) {
-                renderNode(parent, { object: 'block', type: 'paragraph', nodes: [node] }, depth, paragraph, numbers, index, options);
+              renderNode(parent, { object: 'block', type: 'paragraph', nodes: [node] }, depth, paragraph, numbers, index, options, document);
             }
     }
 };
@@ -238,7 +241,7 @@ const renderTextEditor = (doc, value, { onStringFallback, onError, separator, ap
 
     nodes.forEach(node => {
         try {
-            renderNode(doc, node, 0, undefined, undefined, undefined, renderOptions);
+          renderNode(doc, node, 0, undefined, undefined, undefined, renderOptions, doc);
         } catch (err) {
             if (typeof onError === 'function') {
                 onError(doc, err, node);
@@ -253,4 +256,245 @@ const renderTextEditor = (doc, value, { onStringFallback, onError, separator, ap
     }
 };
 
-export { appendTextWithLineBreaks, renderMarkdown, renderLabel, renderNull, renderText, renderTextEditor, renderNode, splitTextIntoSegments, renderHorizontalRule };
+const tableToMatrix = table => {
+  const rows = table.nodes;
+  let rowspans = [];
+  let colcount = 0;
+
+  // calculate the actual dimensions of the table
+  rows.forEach((row, rowIndex) => {
+    const cells = row.nodes;
+    const columnsInRow = cells
+      .slice(0, -1)
+      .map(cell => parseInt(get(cell, 'data.colSpan', 1), 10) || 1)
+      .reduce((sum, num) => sum + num, 1);
+
+    colcount = Math.max(colcount, columnsInRow + rowspans.length);
+
+    // reduce rowspans by one for next row.
+    rowspans = [
+      ...rowspans,
+      ...cells.map(cell => {
+        const rs = parseInt(get(cell, 'data.rowSpan', 1), 10);
+        // All falsy values _except_ 0 should be 1
+        // rowspan === 0 => fill the rest of the table
+        return rs || (rs === 0 ? rows.length - rowIndex : 1);
+      })
+    ]
+      .map(s => s - 1)
+      .filter(Boolean);
+  });
+
+  const matrix = Array(rows.length).fill().map(() => Array(colcount).fill(undefined));
+
+  let rowspanStore = {};
+  rows.forEach((row, rowIndex) => {
+    let spanOffset = 0;
+    row.nodes.forEach((cell, colIndex) => {
+      colIndex += spanOffset;
+      // increase index and offset if previous row rowspan is active for col
+      while (get(rowspanStore, colIndex, 0)) {
+        spanOffset += 1;
+        colIndex += 1;
+      }
+
+      // store rowspan to be taken into account in the next row
+      const rs = parseInt(get(cell, 'data.rowSpan', 1), 10);
+      const cs = parseInt(get(cell, 'data.colSpan', 1), 10);
+      rowspanStore[colIndex] = rs || (rs === 0 ? rows.length - rowIndex : 1);
+      const colspan = cs || (cs === 0 ? colcount - colIndex : 1);
+
+      // increase offset for next cell
+      spanOffset += (colspan - 1);
+
+      // store in correct position
+      matrix[rowIndex][colIndex] = cell;
+    });
+
+    // reduce rowspans by one for next row.
+    rowspanStore = pickBy(mapValues(rowspanStore, s => s - 1), Boolean);
+  });
+
+  return matrix;
+};
+
+const populateTable = (matrix, table, document) => {
+  matrix.forEach((row, rowIndex) => {
+    row.forEach((cell, colIndex) => {
+      if (cell) {
+        renderCell(table.getCell(rowIndex, colIndex), cell, document);
+      }
+    });
+  });
+};
+
+const mergeCells = (matrix, table, document) => {
+  populateTable(matrix, table, document);
+  // merge rows
+  matrix.forEach((row, rowIndex) => {
+    row.forEach((cell, colIndex) => {
+      const rowSpan = parseInt(get(cell, 'data.rowSpan'), 10);
+      if (rowSpan) {
+        table.getColumn(colIndex).mergeCells(rowIndex, rowIndex + rowSpan - 1);
+      }
+    });
+  });
+  // merge cols
+  matrix.forEach((row, rowIndex) => {
+    row.forEach((cell, colIndex) => {
+      const colSpan = parseInt(get(cell, 'data.colSpan'), 10);
+      if (colSpan) {
+        table.getRow(rowIndex).mergeCells(colIndex, colIndex + colSpan - 1);
+      }
+    });
+  });
+};
+
+const initTable = matrix => {
+  const rowcount = matrix.length;
+  const colcount = matrix[0].length;
+
+  return new Table({
+    rows: rowcount,
+    columns: colcount,
+    // setting to a large number enforces equal-width columns
+    columnWidths: Array(colcount).fill('10000')
+  });
+};
+
+const renderTable = (parent, node, document) => {
+  const matrix = tableToMatrix(node);
+  let table = initTable(matrix);
+
+  try {
+    mergeCells(matrix, table, document);
+  } catch (err) {
+    table = initTable(matrix);
+    populateTable(matrix, table, document);
+  }
+
+  parent.addTable(table);
+};
+
+const customNodeRenderers = {
+  'table-cell': (p, n, ctx = {}, document) => {
+    (n.nodes || []).forEach(part => renderNode(p, part, ctx.depth, ctx.paragraph, ctx.numbers, ctx.index, {
+      applyTextFilter: stripInvalidXmlChars,
+      customNodeRenderers
+    }, document));
+  },
+  'table': (p, n, ctx, document) => {
+    renderTable(p, n, document);
+  },
+  'image': (p, n, ctx = {}, document) => {
+    let pg = ctx.paragraph;
+    if (pg === undefined) {
+      pg = new Paragraph().style('imagebody');
+    }
+    pg.addImage(Media.addImage(document, n.data.src, n.data.width, n.data.height));
+    p.addParagraph(pg);
+  },
+  'error': (p, n) => {
+    const raw = get(n, 'nodes[0].leaves[0].text', get(n, 'nodes[0].text', ''));
+    const content = stripInvalidXmlChars((raw || '').trim());
+    p.createParagraph(content).style('error');
+  }
+};
+
+const renderCell = (parent, node, document) => {
+  return renderNode(parent, node, 0, undefined, 0, 0, {
+    applyTextFilter: stripInvalidXmlChars,
+    customNodeRenderers
+  }, document);
+};
+
+const addImageDimensions = (values, updateImageDimensions) => {
+  const updateNodes = nodes => {
+    if (!Array.isArray(nodes)) {
+      return Promise.resolve(nodes);
+    }
+
+    return Promise.all(nodes.map(node => {
+      if (!node || typeof node !== 'object') {
+        return Promise.resolve(node);
+      }
+
+      return Promise.resolve()
+        .then(() => {
+          if (node.type === 'image') {
+            return updateImageDimensions(node);
+          }
+          return node;
+        })
+        .then(updatedNode => {
+          if (Array.isArray(updatedNode.nodes)) {
+            return updateNodes(updatedNode.nodes)
+              .then(updatedChildren => {
+                updatedNode.nodes = updatedChildren;
+                return updatedNode;
+              });
+          }
+          return updatedNode;
+        });
+    }));
+  };
+
+  const processTextEditorValue = value => {
+    if ((typeof value !== 'object' && typeof value !== 'string') || value === null) {
+      return Promise.resolve(value);
+    }
+
+    let valueWasJson = false;
+
+    if (typeof value === 'string') {
+      try {
+        value = JSON.parse(value);
+        valueWasJson = true;
+      } catch (e) {
+        return Promise.resolve(value);
+      }
+    }
+
+    if (!value.document || !value.document.nodes) {
+      return Promise.resolve(valueWasJson ? JSON.stringify(value) : value);
+    }
+
+    return updateNodes(value.document.nodes)
+      .then(nodes => {
+        value.document.nodes = nodes;
+        return Promise.resolve(valueWasJson ? JSON.stringify(value) : value);
+      });
+  };
+
+  const traverse = obj => {
+    if (!obj || typeof obj !== 'object') {
+      return Promise.resolve(obj);
+    }
+
+    const promises = Object.keys(obj).map(key => {
+      const val = obj[key];
+
+      if (Array.isArray(val)) {
+        return Promise.all(val.map(item => traverse(item)))
+          .then(items => { obj[key] = items; })
+          .then(() => processTextEditorValue(obj[key]))
+          .then(transformed => { obj[key] = transformed; });
+      }
+
+      if (val && typeof val === 'object') {
+        return processTextEditorValue(val)
+          .then(transformed => { obj[key] = transformed; })
+          .then(() => traverse(obj[key]));
+      }
+
+      return processTextEditorValue(val)
+        .then(transformed => { obj[key] = transformed; });
+    });
+
+    return Promise.all(promises).then(() => obj);
+  };
+
+  return traverse(values);
+};
+
+export { appendTextWithLineBreaks, renderMarkdown, renderLabel, renderNull, renderText, renderTextEditor, renderNode, splitTextIntoSegments, renderHorizontalRule, customNodeRenderers, addImageDimensions };

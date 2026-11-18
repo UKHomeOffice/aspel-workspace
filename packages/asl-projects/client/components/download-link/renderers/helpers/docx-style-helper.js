@@ -130,6 +130,14 @@ const addStyles = (document, nts) => {
       .quickFormat()
       .spacing({ before: 0, after: 200 });
 
+  document.Styles.createParagraphStyle('imagebody', 'Image Body')
+    .basedOn('Normal')
+    .next('Normal')
+    .quickFormat()
+    .size(24)
+    .font('Arial')
+    .spacing({ before: 200, after: 200 });
+
     if (nts) {
       document.Styles.createParagraphStyle('body', 'Body')
         .basedOn('Normal')
