@@ -47,7 +47,7 @@
     "@ukhomeoffice/eslint-config-asl": "^3.0.0",
     "dotenv": "^8.2.0",
     "eslint": "^8.57.1",
-    "jest": "^29.7.0",
+    "jest": "^30.5.2",
     "nodemon": "^3.1.10"
   },
   "overrides": {
