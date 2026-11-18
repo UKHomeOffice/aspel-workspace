@@ -1,8 +1,4 @@
 {
-  "comments": [
-    "GHSA-c475-qrg2-pj4r|keycloak-connect>chromedriver>proxy-agent>pac-proxy-agent>get-uri>basic-ftp"
-  ],
-  "allowlist": [
-    "GHSA-c475-qrg2-pj4r"
-  ]
+  "comments": [],
+  "allowlist": []
 }
