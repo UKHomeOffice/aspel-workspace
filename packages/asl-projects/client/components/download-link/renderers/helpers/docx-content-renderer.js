@@ -130,7 +130,7 @@ const renderText = (doc, value, { applyTextFilter, separator } = {}) => {
     if (separator) { separator(doc); }
 };
 
-const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options = {}) => {
+const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options = {}, document) => {
     const { applyTextFilter, customNodeRenderers } = options;
 
     const getContent = input => {
@@ -142,11 +142,11 @@ const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options 
     // Allow caller to override specific node types
     const renderer = customNodeRenderers?.[node.type];
     if (typeof renderer === 'function') {
-        const renderNext = (nextParent, nextNode, nextDepth = depth, nextParagraph = paragraph, nextNumbers = numbers, nextIndex = index) =>
-            renderNode(nextParent, nextNode, nextDepth, nextParagraph, nextNumbers, nextIndex, options);
+      const renderNext = (nextParent, nextNode, nextDepth = depth, nextParagraph = paragraph, nextNumbers = numbers, nextIndex = index, options, document) =>
+        renderNode(nextParent, nextNode, nextDepth, nextParagraph, nextNumbers, nextIndex, options, document);
 
         const context = { depth, paragraph, numbers, index, renderNext };
-        return renderer(parent, node, context);
+      return renderer(parent, node, context, document);
     }
 
     let text;
@@ -211,11 +211,11 @@ const renderNode = (parent, node, depth = 0, paragraph, numbers, index, options 
             break;
         }
         case 'bulleted-list':
-            (node.nodes || []).forEach(item => renderNode(parent, item, depth, paragraph, undefined, undefined, options));
+        (node.nodes || []).forEach(item => renderNode(parent, item, depth, paragraph, undefined, undefined, options, document));
             break;
         default:
             if (node.text) {
-                renderNode(parent, { object: 'block', type: 'paragraph', nodes: [node] }, depth, paragraph, numbers, index, options);
+              renderNode(parent, { object: 'block', type: 'paragraph', nodes: [node] }, depth, paragraph, numbers, index, options, document);
             }
     }
 };
@@ -241,7 +241,7 @@ const renderTextEditor = (doc, value, { onStringFallback, onError, separator, ap
 
     nodes.forEach(node => {
         try {
-            renderNode(doc, node, 0, undefined, undefined, undefined, renderOptions);
+          renderNode(doc, node, 0, undefined, undefined, undefined, renderOptions, doc);
         } catch (err) {
             if (typeof onError === 'function') {
                 onError(doc, err, node);
@@ -318,18 +318,18 @@ const tableToMatrix = table => {
   return matrix;
 };
 
-const populateTable = (matrix, table) => {
+const populateTable = (matrix, table, document) => {
   matrix.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
       if (cell) {
-        renderCell(table.getCell(rowIndex, colIndex), cell);
+        renderCell(table.getCell(rowIndex, colIndex), cell, document);
       }
     });
   });
 };
 
-const mergeCells = (matrix, table) => {
-  populateTable(matrix, table);
+const mergeCells = (matrix, table, document) => {
+  populateTable(matrix, table, document);
   // merge rows
   matrix.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
@@ -362,36 +362,36 @@ const initTable = matrix => {
   });
 };
 
-const renderTable = (doc, node) => {
+const renderTable = (parent, node, document) => {
   const matrix = tableToMatrix(node);
   let table = initTable(matrix);
 
   try {
-    mergeCells(matrix, table);
+    mergeCells(matrix, table, document);
   } catch (err) {
     table = initTable(matrix);
-    populateTable(matrix, table);
+    populateTable(matrix, table, document);
   }
 
-  doc.addTable(table);
+  parent.addTable(table);
 };
 
 const customNodeRenderers = {
-  'table-cell': (p, n, ctx = {}) => {
+  'table-cell': (p, n, ctx = {}, document) => {
     (n.nodes || []).forEach(part => renderNode(p, part, ctx.depth, ctx.paragraph, ctx.numbers, ctx.index, {
       applyTextFilter: stripInvalidXmlChars,
       customNodeRenderers
-    }));
+    }, document));
   },
-  'table': (p, n) => {
-    renderTable(p, n);
+  'table': (p, n, ctx, document) => {
+    renderTable(p, n, document);
   },
-  'image': (p, n, ctx = {}) => {
+  'image': (p, n, ctx = {}, document) => {
     let pg = ctx.paragraph;
     if (pg === undefined) {
       pg = new Paragraph().style('imagebody');
     }
-    pg.addImage(Media.addImage(p, n.data.src, n.data.width, n.data.height));
+    pg.addImage(Media.addImage(document, n.data.src, n.data.width, n.data.height));
     p.addParagraph(pg);
   },
   'error': (p, n) => {
@@ -401,11 +401,11 @@ const customNodeRenderers = {
   }
 };
 
-const renderCell = (parent, node, depth = 0, paragraph, numbers, index) => {
-  return renderNode(parent, node, depth, paragraph, numbers, index, {
+const renderCell = (parent, node, document) => {
+  return renderNode(parent, node, 0, undefined, 0, 0, {
     applyTextFilter: stripInvalidXmlChars,
     customNodeRenderers
-  });
+  }, document);
 };
 
 const addImageDimensions = (values, updateImageDimensions) => {
