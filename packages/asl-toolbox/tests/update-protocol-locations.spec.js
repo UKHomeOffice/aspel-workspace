@@ -193,7 +193,7 @@ describe('Update protocol locations', () => {
 
     main({help: true});
 
-    expect(consoleMock).toBeCalledTimes(1);
+    expect(consoleMock).toHaveBeenCalledTimes(1);
 
     const logMessage = consoleMock.mock.calls[0][0];
     expect(logMessage).toMatch(/^update-protocol-locations.js \[opts]/);
@@ -203,7 +203,7 @@ describe('Update protocol locations', () => {
     const consoleMock = jest.spyOn(console, 'log').mockImplementation(() => {});
     main({});
 
-    expect(consoleMock).toBeCalledTimes(1);
+    expect(consoleMock).toHaveBeenCalledTimes(1);
 
     const logMessage = consoleMock.mock.calls[0][0];
     expect(logMessage).toContain('* --current=<location> is required');
@@ -309,10 +309,10 @@ describe('Update protocol locations', () => {
 
         await main({current: 'Old Name', ...source});
 
-        expect(readlineMock).toBeCalledTimes(1);
+        expect(readlineMock).toHaveBeenCalledTimes(1);
         expect(readlineMock.mock.calls[0][0]).toEqual(`Removing Old Name from protocols in ${expectedMessage}. Continue? (no): `);
 
-        expect(consoleMock).toBeCalledTimes(1);
+        expect(consoleMock).toHaveBeenCalledTimes(1);
         expect(consoleMock.mock.calls[0][0]).toEqual(`Aborting.`);
 
         await expectDatabaseLocationsUnchanged();
@@ -324,10 +324,10 @@ describe('Update protocol locations', () => {
 
         await main({current: 'Old Name', replace: 'New Name', ...source});
 
-        expect(readlineMock).toBeCalledTimes(1);
+        expect(readlineMock).toHaveBeenCalledTimes(1);
         expect(readlineMock.mock.calls[0][0]).toEqual(`Replacing Old Name with New Name for protocols in ${expectedMessage}. Continue? (no): `);
 
-        expect(consoleMock).toBeCalledTimes(1);
+        expect(consoleMock).toHaveBeenCalledTimes(1);
         expect(consoleMock.mock.calls[0][0]).toEqual(`Aborting.`);
 
         await expectDatabaseLocationsUnchanged();
@@ -341,11 +341,11 @@ describe('Update protocol locations', () => {
 
         await main({current: 'Establishment 1', replace: 'Establishment A', ...source});
 
-        expect(readlineMock).toBeCalledTimes(2);
+        expect(readlineMock).toHaveBeenCalledTimes(2);
         expect(readlineMock.mock.calls[0][0]).toEqual(`Replacing Establishment 1 with Establishment A for protocols in ${expectedMessage}. Continue? (no): `);
         expect(readlineMock.mock.calls[1][0]).toEqual(`${updateCount} rows affected. Commit? (no): `);
 
-        expect(consoleMock).toBeCalledTimes(1);
+        expect(consoleMock).toHaveBeenCalledTimes(1);
         expect(consoleMock.mock.calls[0][0]).toEqual(`Update rolled back`);
 
         await expectDatabaseLocationsUnchanged();
@@ -359,11 +359,11 @@ describe('Update protocol locations', () => {
 
         await main({current: 'Establishment 1', replace: 'Establishment A', ...source});
 
-        expect(readlineMock).toBeCalledTimes(2);
+        expect(readlineMock).toHaveBeenCalledTimes(2);
         expect(readlineMock.mock.calls[0][0]).toEqual(`Replacing Establishment 1 with Establishment A for protocols in ${expectedMessage}. Continue? (no): `);
         expect(readlineMock.mock.calls[1][0]).toEqual(`${updateCount} rows affected. Commit? (no): `);
 
-        expect(consoleMock).toBeCalledTimes(1);
+        expect(consoleMock).toHaveBeenCalledTimes(1);
         expect(consoleMock.mock.calls[0][0]).toEqual(`${updateCount} versions updated`);
 
         await expectDatabaseLocations(expectedChanges);
