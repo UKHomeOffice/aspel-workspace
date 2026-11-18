@@ -5,6 +5,7 @@ const filenamify = require('filenamify');
 const { addPageNumbers } = require('@asl/projects/client/components/download-link/renderers/helpers/docx-style-helper');
 const { getRAReasons, DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 const { parseDate } = require('@ukhomeoffice/asl-components/dayjs');
+const { loadImages } = require('@asl/pages/pages/project-version/docx/load-images');
 
 // Converts docx Document instance into a binary Buffer
 const pack = doc => {
@@ -44,9 +45,9 @@ module.exports = settings => {
           ntsSections,
           isTrainingLicence,
           raReasons: getRAReasons(item.data),
-          attachmentsHost: settings.attachments,
           isBulk: true,
-          mergedDocument
+          mergedDocument,
+          updateImageDimensions: loadImages(settings.attachments)
         });
       }
 
