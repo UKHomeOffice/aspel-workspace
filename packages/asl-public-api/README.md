@@ -42,13 +42,17 @@ The following environment variables can be optionally defined:
 * `DATABASE_USERNAME` - username of the postgres instance - default `undefined`
 * `DATABASE_PASSWORD` - password of the postgres instance - default `undefined`
 * `DATABASE_POOL_SIZE` - maximum size of the postgres connection pool - default `5`
-* `REDIS_HOST` - redis instance used to store rate limit data - default `localhost`
+* `REDIS_HOST` - redis instance used to store rate limit and email verification proof data - no default
 * `REDIS_PORT` - redis instance used to store rate limit data - default `6379`
 * `REDIS_PASSWORD` - redis instance used to store rate limit data - default `undefined`
 * `RATE_LIMIT_TOTAL` - maximum requests per hour allowable per-user - default `1000`
+* `RL_VERIFY_MAX` - maximum password verification attempts per account before returning `429` - default `5`
+* `RL_VERIFY_WINDOW_MS` - password verification attempt window in milliseconds - default `900000` (15 minutes)
 * `BODY_SIZE_LIMIT` - maximum body size for requests - default `50mb`
 * `SERVE_API_DOCS` - if `TRUE` then the swagger api docs generated from [the OpenAPU spec](./openapi.json) will be 
   served at `/docs`.
+
+Password verification on `POST /me/verify`, `POST /me/email/verify` and `PUT /me/password` shares a per-account Redis limit. Attempts reserve a slot before verification and a successful verification clears the account counter, so concurrent requests can consume slots or clear other reservations. Set `REDIS_HOST` to enable this limiter: if Redis is not configured or is unavailable, the failure is logged and direct password checks continue relying on Keycloak's brute-force protection. The email change API requires Redis to issue and consume a five-minute, single-use proof bound to the account, Keycloak session and proposed email; it cannot complete without Redis. All API replicas must use the same Redis store. Redis availability, persistence, alerting, session claims and client IP logging must be verified for the deployment. These controls do not verify a new email address before applying it.
 
 ## Connected services
 

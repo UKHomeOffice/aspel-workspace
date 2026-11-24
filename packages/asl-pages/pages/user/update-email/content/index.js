@@ -30,7 +30,8 @@ module.exports = merge({}, baseContent, {
     },
     password: {
       required: 'Please enter your password',
-      invalid: 'The password you entered does not match our records'
+      invalid: 'The password you entered does not match our records',
+      expired: 'Your confirmation has expired. Enter your password again'
     }
   },
   buttons: {

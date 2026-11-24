@@ -20,6 +20,7 @@ module.exports = (root, defaults = {}) => {
               console.error(`${response.status} from ${url}`);
               const err = new Error(`${url}: ${json.message}`);
               err.status = response.status;
+              err.retryAfter = response.headers.get('retry-after');
               Object.assign(err, json);
               throw err;
             }

@@ -9,6 +9,9 @@ module.exports = () => {
       res.status(404);
       return res.json({ message: 'Not found' });
     }
+    if (error.status === 429 && error.retryAfter) {
+      res.set('Retry-After', String(error.retryAfter));
+    }
     res.status(error.status);
     res.json({ message: error.message });
   };

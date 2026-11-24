@@ -5,14 +5,29 @@ const errorHandler = require('./error-handler');
 const userRouter = require('./routers/user');
 const establishmentRouter = require('./routers/establishment');
 const proxy = require('./middleware/proxy');
+const { createRedisStore, createPasswordAttemptLimiter } = require('./middleware/password-attempt-limit');
+const createEmailChangeProof = require('./middleware/email-change-proof');
 const OpenApiValidator = require('express-openapi-validator');
 
 module.exports = settings => {
 
   const app = api(settings);
   const models = db(settings.db);
+  const passwordAttemptLimit = settings.passwordAttemptLimit || {};
+  const passwordAttemptStore = passwordAttemptLimit.store ||
+    (passwordAttemptLimit.redisHost ? createRedisStore(passwordAttemptLimit) : null);
+  const routerSettings = {
+    ...settings,
+    emailChangeProof: createEmailChangeProof(passwordAttemptStore),
+    passwordAttemptLimiter: createPasswordAttemptLimiter({
+      store: passwordAttemptStore,
+      maxAttempts: passwordAttemptLimit.maxAttempts,
+      windowMs: passwordAttemptLimit.windowMs
+    })
+  };
 
   app.db = models;
+  app.passwordAttemptStore = passwordAttemptStore;
 
   app.use((req, res, next) => {
     req.models = models;
@@ -47,10 +62,10 @@ module.exports = settings => {
 
   app.use('/search', proxy(`${settings.search}`));
 
-  app.use('/me', userRouter(settings));
+  app.use('/me', userRouter(routerSettings));
   app.use('/asru-profile', require('./routers/asru-profile'));
   app.use('/invitation', require('./routers/invitation'));
-  app.use('/establishment(s)?', establishmentRouter(settings));
+  app.use('/establishment(s)?', establishmentRouter(routerSettings));
   app.use('/task(s)?', require('./routers/task'));
 
   app.use((req, res) => res.sendResponse());

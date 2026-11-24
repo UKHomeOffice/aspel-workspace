@@ -7,6 +7,9 @@ module.exports = settings => {
   const stats = new StatsD();
   return (error, req, res, next) => {
     const status = error.status || 500;
+    if (status === 429 && error.retryAfter) {
+      res.set('Retry-After', String(error.retryAfter));
+    }
     res.status(status);
     const params = {
       url: req.originalUrl,

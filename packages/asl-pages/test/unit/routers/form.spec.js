@@ -318,6 +318,60 @@ describe('Form Router', () => {
     let testSessionData;
     let testModelData;
 
+    describe('sensitive fields', () => {
+      const schema = {
+        secret: { validate: ['required'], meta: true },
+        other: { validate: ['required'] }
+      };
+      let session;
+      let server;
+      let originalSetImmediate;
+
+      beforeAll(() => {
+        originalSetImmediate = global.setImmediate;
+        global.setImmediate = require('timers').setImmediate;
+      });
+
+      afterAll(() => {
+        global.setImmediate = originalSetImmediate;
+      });
+
+      beforeEach(() => {
+        session = {
+          form: {
+            'test-model': {
+              values: { secret: 'stale' },
+              meta: { secret: 'stale' }
+            }
+          }
+        };
+        server = express();
+        server.use((req, res, next) => {
+          req.model = { id: 'test-model' };
+          req.session = session;
+          next();
+        });
+        server.use(form({ schema, sensitiveFields: ['secret'] }));
+        server.post('/', (req, res) => res.json(req.form.values));
+      });
+
+      test('keeps secrets available for processing but out of the session', async () => {
+        const response = await request(server).post('/').type('form')
+          .send({ secret: 'new-secret', other: 'value' }).expect(200);
+        expect(response.body.secret).toBe('new-secret');
+        expect(session.form['test-model'].values).toEqual({ other: 'value' });
+        expect(session.form['test-model'].meta).toEqual({});
+      });
+
+      test('does not save secrets when validation fails', async () => {
+        await request(server).post('/').type('form')
+          .send({ secret: 'new-secret' }).expect(302);
+        expect(session.form['test-model'].values.secret).toBeUndefined();
+        expect(session.form['test-model'].meta.secret).toBeUndefined();
+        expect(session.form['test-model'].validationErrors.other).toBeDefined();
+      });
+    });
+
     beforeEach(() => {
       app = express();
       app.use(express.urlencoded({ extended: false }));
