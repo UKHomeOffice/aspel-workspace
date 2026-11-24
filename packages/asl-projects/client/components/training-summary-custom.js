@@ -54,7 +54,7 @@ const normaliseComparisons = (comparisons = {}, versions = []) => {
 };
 
 function ValueList({ className, items = [] }) {
-  if (!items.length) {
+  if (!items?.length) {
     return DEFAULT_LABEL;
   }
 
