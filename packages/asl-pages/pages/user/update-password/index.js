@@ -1,5 +1,5 @@
 const { page } = require('@asl/service/ui');
-const { set, pick } = require('lodash');
+const { set } = require('lodash');
 const form = require('../../common/routers/form');
 const schema = require('./schema');
 
@@ -20,6 +20,7 @@ module.exports = settings => {
 
   app.use('/', form({
     schema,
+    sensitiveFields: ['oldPassword', 'password', 'passwordConfirm'],
     locals: (req, res, next) => {
       // clear password fields on validation fail
       res.locals.model.oldPassword = '';
@@ -30,33 +31,12 @@ module.exports = settings => {
   }));
 
   app.post('/', (req, res, next) => {
-    // verify old password first
-    const opts = {
-      method: 'POST',
-      json: {
-        username: req.user.profile.email,
-        password: req.form.values.oldPassword
-      }
-    };
-
-    req.api('/me/verify', opts)
-      .then(() => next())
-      .catch(err => {
-        if (err.status === 403) {
-          set(req.session.form[req.model.id], 'validationErrors.oldPassword', 'invalid');
-          return res.redirect(req.buildRoute('account.updatePassword'));
-        }
-        next(err);
-      });
-  });
-
-  app.post('/', (req, res, next) => {
-    // update password
     const opts = {
       method: 'PUT',
       json: {
+        currentPassword: req.form.values.oldPassword,
         data: {
-          ...pick(req.session.form[req.model.id].values, 'password')
+          password: req.form.values.password
         }
       }
     };
@@ -65,7 +45,13 @@ module.exports = settings => {
         delete req.session.form[req.model.id];
         return res.redirect(req.buildRoute('account.updatePassword', { suffix: 'success' }));
       })
-      .catch(next);
+      .catch(err => {
+        if (err.status === 403) {
+          set(req.session.form[req.model.id], 'validationErrors.oldPassword', 'invalid');
+          return res.redirect(req.buildRoute('account.updatePassword'));
+        }
+        next(err);
+      });
   });
 
   app.get('/success', (req, res, next) => {

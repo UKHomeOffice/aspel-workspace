@@ -11,6 +11,7 @@ const remindersRouter = require('./profile/reminders');
 
 module.exports = (settings) => {
   const router = Router();
+  const limitPasswordAttempts = settings.passwordAttemptLimiter;
 
   router.use((req, res, next) => {
     Promise.resolve()
@@ -27,17 +28,21 @@ module.exports = (settings) => {
     next();
   });
 
-  router.post('/verify', (req, res, next) => {
-    const {username, password} = req.body;
+  router.post('/verify', limitPasswordAttempts, (req, res, next) => {
+    const { password } = req.body;
     Promise.resolve()
-      .then(() => req.user.verifyPassword(username, password))
+      .then(() => req.user.verifyPassword(req.user.profile.email, password))
       .then(isValid => {
         if (!isValid) {
-          next(new UnauthorisedError());
+          return next(new UnauthorisedError());
         }
-        res.response = {isValid};
+        return Promise.resolve()
+          .then(() => req.resetPasswordAttemptLimit())
+          .then(() => {
+            res.response = {isValid};
+            next();
+          });
       })
-      .then(() => next())
       .catch(next);
   });
 

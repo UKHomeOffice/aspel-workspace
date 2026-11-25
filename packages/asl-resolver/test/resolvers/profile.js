@@ -206,6 +206,26 @@ describe('Profile resolver', () => {
         });
     });
 
+    it('signs the confirm email token without an expiry', () => {
+      const params = {
+        action: 'create',
+        data: {
+          firstName: 'Rob',
+          lastName: 'Fryer',
+          email: 'rob.fryer@example.com',
+          userId: '12345'
+        }
+      };
+
+      return Promise.resolve()
+        .then(() => this.profile(params))
+        .then(() => this.jwt.verify(emailer.sendEmail.lastCall.args[0].token))
+        .then(token => {
+          assert.equal(token.action, 'confirm-email');
+          assert.equal(token.exp, undefined);
+        });
+    });
+
     it('does not send a confirm email message if address is already confirmed', () => {
       const params = {
         action: 'create',

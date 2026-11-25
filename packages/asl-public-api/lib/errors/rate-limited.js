@@ -1,8 +1,9 @@
 class RateLimitedError extends Error {
 
-  constructor() {
+  constructor(retryAfter = 60) {
     super('Rate limit exceeded');
     this.status = 429;
+    this.retryAfter = retryAfter;
   }
 
 }

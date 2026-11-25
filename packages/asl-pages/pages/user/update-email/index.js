@@ -17,14 +17,17 @@ module.exports = settings => {
       email: req.user.profile.email
     };
     res.locals.static.profile = req.user.profile;
+    if (req.path === '/' && req.session.form && req.session.form[req.model.id]) {
+      delete req.session.form[req.model.id].emailProof;
+    }
     next();
   });
 
   app.use('/', form({
     schema,
+    sensitiveFields: ['password'],
     locals: (req, res, next) => {
-      res.locals.model.password = ''; // clear password field on validation fail
-
+      res.locals.model.password = '';
       if (res.locals.model.email === req.user.profile.email) {
         res.locals.model.email = ''; // don't render existing email in new email field
       }
@@ -33,19 +36,14 @@ module.exports = settings => {
   }));
 
   app.post('/', (req, res, next) => {
-    const opts = {
+    return req.api('/me/email/verify', {
       method: 'POST',
-      json: {
-        username: req.user.profile.email,
-        password: req.form.values.password
-      }
-    };
-
-    req.api('/me/verify', opts)
-      .then(() => {
-        delete req.session.form[req.model.id].values.password;
+      json: { currentPassword: req.form.values.password, email: req.form.values.email }
+    })
+      .then(response => {
+        req.session.form[req.model.id].emailProof = response.json.data.emailProof;
+        return res.redirect(req.buildRoute('account.updateEmail', { suffix: 'confirm' }));
       })
-      .then(() => res.redirect(req.buildRoute('account.updateEmail', { suffix: 'confirm' })))
       .catch(err => {
         if (err.status === 403) {
           set(req.session.form[req.model.id], 'validationErrors.password', 'invalid');

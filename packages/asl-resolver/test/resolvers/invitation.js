@@ -82,6 +82,18 @@ describe('Invitation resolver', () => {
         });
     });
 
+    it('creates a jwt token that expires', () => {
+      return Promise.resolve()
+        .then(() => this.invitation({ action: 'create', data }))
+        .then(() => this.models.Invitation.query())
+        .then(async invitations => {
+          const token = await this.jwt.verify(invitations[0].token);
+          const sevenDays = 7 * 24 * 60 * 60;
+          assert.ok(token.exp, 'token has an exp claim');
+          assert.ok(Math.abs(token.exp - token.iat - sevenDays) < 5, 'token expires after 7 days');
+        });
+    });
+
     it('updates invitation model if one already exists', () => {
       return Promise.resolve()
         .then(() => this.models.Invitation.query().insert({

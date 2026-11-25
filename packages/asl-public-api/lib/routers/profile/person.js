@@ -12,7 +12,7 @@ const {
   updateDataAndStatus
 } = require('../../middleware');
 const { attachReviewDue } = require('../../helpers/pils');
-const { NotFoundError, BadRequestError } = require('../../errors');
+const { NotFoundError, BadRequestError, UnauthorisedError } = require('../../errors');
 const Keycloak = require('../../helpers/keycloak');
 
 const update = () => (req, res, next) => {
@@ -58,6 +58,24 @@ const validateEmail = () => {
       .then(() => next())
       .catch(err => next(err));
   };
+};
+
+const verifyCurrentPassword = (req, res, next) => {
+  const { currentPassword } = req.body;
+  delete req.body.currentPassword;
+  if (typeof currentPassword !== 'string' || !currentPassword) {
+    return next(new UnauthorisedError());
+  }
+
+  return Promise.resolve()
+    .then(() => req.user.verifyPassword(req.user.profile.email, currentPassword))
+    .then(valid => {
+      if (!valid) {
+        return next(new UnauthorisedError());
+      }
+      return req.resetPasswordAttemptLimit().then(() => next());
+    })
+    .catch(next);
 };
 
 const validatePassword = () => {
@@ -296,8 +314,23 @@ module.exports = (settings) => {
     next();
   }, fetchOpenProfileTasks());
 
+  router.post('/email/verify',
+    permissions('profile.update', req => ({ profileId: req.profileId })),
+    settings.passwordAttemptLimiter,
+    verifyCurrentPassword,
+    (req, res, next) => {
+      settings.emailChangeProof.issue(req)
+        .then(token => {
+          res.response = { emailProof: token };
+          next();
+        })
+        .catch(next);
+    }
+  );
+
   router.put('/email',
     permissions('profile.update', req => ({ profileId: req.profileId })),
+    (req, res, next) => settings.emailChangeProof.consume(req).then(() => next()).catch(next),
     whitelist('email'),
     validateEmail(),
     update()
@@ -305,6 +338,8 @@ module.exports = (settings) => {
 
   router.put('/password',
     permissions('profile.update', req => ({ profileId: req.profileId })),
+    settings.passwordAttemptLimiter,
+    verifyCurrentPassword,
     whitelist('password'),
     validatePassword(),
     updatePassword(settings)

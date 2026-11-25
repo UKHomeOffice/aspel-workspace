@@ -32,7 +32,7 @@ if (process.env.CSRF === 'false') {
   _checkSecret = defaultMiddleware;
 }
 
-function setValuesToSession(req) {
+function setValuesToSession(req, sensitiveFields = []) {
   const schema = {
     ...flattenDetailsReveals(req.form.schema),
     ...flattenFieldsets(req.form.schema),
@@ -41,11 +41,11 @@ function setValuesToSession(req) {
 
   const values = omitBy(
     req.form.values,
-    (val, key) => schema[key] && schema[key].meta
+    (val, key) => sensitiveFields.includes(key) || (schema[key] && schema[key].meta)
   );
   const meta = pickBy(
     req.form.values,
-    (val, key) => schema[key] && schema[key].meta
+    (val, key) => !sensitiveFields.includes(key) && schema[key] && schema[key].meta
   );
 
   Object.assign(req.session.form[req.model.id].values, values);
@@ -235,6 +235,7 @@ const trim = (value) => {
 
 module.exports = ({
   schema = {},
+  sensitiveFields = [],
   cancelPath = '/',
   checkChanged = false,
   checkSession = defaultMiddleware,
@@ -265,6 +266,10 @@ module.exports = ({
       req.session.form[req.model.id].values || {};
     req.session.form[req.model.id].meta =
       req.session.form[req.model.id].meta || {};
+    sensitiveFields.forEach(field => {
+      delete req.session.form[req.model.id].values[field];
+      delete req.session.form[req.model.id].meta[field];
+    });
     if (requiresDeclaration(req)) {
       req.form.schema.declaration = {
         inputType: 'declaration',
@@ -440,7 +445,7 @@ module.exports = ({
       return field.inputType === 'conditionalReveal';
     });
 
-    setValuesToSession(req);
+    setValuesToSession(req, sensitiveFields);
 
     Object.keys(conditionalReveals).forEach((key) => {
       if (req.form.values[key] !== 'true') {
@@ -485,7 +490,7 @@ module.exports = ({
   const errorHandler = (err, req, res, next) => {
     if (err.validation) {
       req.session.form[req.model.id].validationErrors = err.validation;
-      setValuesToSession(req);
+      setValuesToSession(req, sensitiveFields);
 
       return res.redirect(req.originalUrl);
     }
