@@ -6,7 +6,7 @@ module.exports = ({ models, jwt, emailer }) => ({ action, data, id }, transactio
   const sendInvitation = args => {
     const changelog = [];
     return Promise.resolve()
-      .then(() => jwt.sign(args))
+      .then(() => jwt.signWithExpiry(args))
       .then(token => {
         return Promise.resolve()
           .then(() => {

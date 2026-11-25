@@ -3,12 +3,34 @@ const { NotFoundError } = require('../../errors');
 
 const router = Router({ mergeParams: true });
 
+// Tokens are only ever written by the resolver, so a DB match proves the signature;
+// the claims are checked here to enforce expiry and that the token belongs to the invitation.
+const decodeToken = token => {
+  try {
+    const [, payload] = token.split('.');
+    return JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+  } catch (e) {
+    return null;
+  }
+};
+
+const isValidToken = (token, invitation) => {
+  const claims = decodeToken(token);
+  return !!claims &&
+    typeof claims.exp === 'number' &&
+    claims.exp * 1000 > Date.now() &&
+    claims.establishmentId === invitation.establishmentId &&
+    claims.role === invitation.role &&
+    typeof claims.email === 'string' &&
+    claims.email.toLowerCase() === String(invitation.email).toLowerCase();
+};
+
 router.param('token', (req, res, next, token) => {
   const { Invitation } = req.models;
   Invitation.query().where({ token: req.params.token })
     .then(result => result[0])
     .then(invitation => {
-      if (!invitation) {
+      if (!invitation || !isValidToken(token, invitation)) {
         throw new NotFoundError();
       }
       req.invitation = invitation;
@@ -47,3 +69,4 @@ router.put('/:token', (req, res, next) => {
 });
 
 module.exports = router;
+module.exports.isValidToken = isValidToken;
