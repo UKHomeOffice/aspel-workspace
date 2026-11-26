@@ -1,5 +1,7 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { pick } = require('lodash');
+
+const { formatIsoDate } = dayJs;
 
 module.exports = () => (req, res, next) => {
   const { knex } = req.models;
@@ -30,7 +32,7 @@ module.exports = () => (req, res, next) => {
               results.push({
                 establishment: project.name,
                 ...pick(project, 'licence_number', 'title', 'status'),
-                issue_date: moment(project.issue_date).format('YYYY-MM-DD'),
+                issue_date: formatIsoDate(project.issue_date),
                 conditions: project.data.conditions || [],
                 protocols: (project.data.protocols || []).map(protocol => pick(protocol, ['title', 'conditions']))
               });

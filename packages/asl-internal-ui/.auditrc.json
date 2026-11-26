@@ -1,8 +1,4 @@
 {
-  "comments": [
-    "GHSA-f88m-g3jw-g9cj: sharp (package.json) - inherited vulnerabilities in libvips:"
-  ],
-  "allowlist": [
-    "GHSA-f88m-g3jw-g9cj"
-  ]
+  "comments": [],
+  "allowlist": []
 }

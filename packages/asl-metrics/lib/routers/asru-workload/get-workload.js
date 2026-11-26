@@ -1,5 +1,5 @@
 const { intersection, values } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 
 const getAsruUsers = db => {
   return db.asl('profiles')
@@ -51,8 +51,8 @@ module.exports = async ({ db, flow, progress, withAsru, start, end }) => {
           'activity_log.case_id'
         )
         .whereBetween('cases.updated_at', [
-          moment(start).startOf('day').toISOString(),
-          moment(end).endOf('day').toISOString()
+          dayJs(start).startOf('day').toISOString(),
+          dayJs(end).endOf('day').toISOString()
         ]);
     } else if (progress === 'returned') {
       query = db.flow('activity_log')
@@ -64,8 +64,8 @@ module.exports = async ({ db, flow, progress, withAsru, start, end }) => {
         .where('event_name', '~', `:returned-to-applicant$`)
         .orderBy('updated_at')
         .whereBetween('updated_at', [
-          moment(start).startOf('day').toISOString(),
-          moment(end).endOf('day').toISOString()
+          dayJs(start).startOf('day').toISOString(),
+          dayJs(end).endOf('day').toISOString()
         ]);
     } else if (progress === 'open') {
       query = db.flow('cases')

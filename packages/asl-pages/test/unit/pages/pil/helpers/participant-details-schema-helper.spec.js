@@ -25,6 +25,6 @@ describe('participantDetailsSchemaHelper', () => {
 
   it('should throw an error for invalid course purpose', () => {
     const trainingCourse = { coursePurpose: 'invalid-purpose' };
-    expect(() => participantDetailsSchemaHelper(schema, trainingCourse)).toThrowError('Invalid course purpose: invalid-purpose');
+    expect(() => participantDetailsSchemaHelper(schema, trainingCourse)).toThrow('Invalid course purpose: invalid-purpose');
   });
 });

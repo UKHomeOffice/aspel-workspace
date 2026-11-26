@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.2
 
-FROM quay.io/ukhomeofficedigital/asl-base:v22.22.0 as builder
+FROM quay.io/ukhomeofficedigital/asl-base:v22.23.5 as builder
 
 ARG MODULE_PATHS
 
@@ -24,13 +24,13 @@ RUN ls /app/packages
 RUN --mount=type=secret,id=token \
     --mount=type=secret,id=github_token \
     export ART_AUTH_TOKEN=`cat /run/secrets/token` GITHUB_AUTH_TOKEN=`cat /run/secrets/github_token` && \
-    npm install -g npm@11.19.1 && \
+    npm install -g npm@11.21.2 && \
     npm ci --omit=optional --omit=dev --ignore-scripts --loglevel=verbose
 
-FROM quay.io/ukhomeofficedigital/asl-base:v22.22.0
+FROM quay.io/ukhomeofficedigital/asl-base:v22.23.5
 
 RUN apk upgrade --no-cache && \
-    npm install -g npm@11.19.1
+    npm install -g npm@11.21.2
 
 COPY --from=builder /app /app
 

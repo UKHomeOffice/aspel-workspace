@@ -1,11 +1,13 @@
 import React from 'react';
+import { DATE_FORMAT } from '@ukhomeoffice/asl-constants';
+import dayJs from '../dayjs.js';
 import { useSelector } from 'react-redux';
 import sortBy from 'lodash/sortBy';
-import { format } from 'date-fns';
 import { ApplyChanges, Snippet, Link } from '../';
 import { getUrl } from '../link';
 
-const dateFormat = 'dd MMMM yyyy';
+const { format } = dayJs;
+const dateFormat = DATE_FORMAT.long;
 
 function List({ items }) {
     if (!items || !items.length) {
@@ -46,10 +48,10 @@ function Row({ certificate, actions, basePage }) {
                     certificate.isExemption
                         ? (
                             <>
-                                <p className="preserve-whitespace">{certificate.exemptionReason}</p>
                                 <p>
                                     <span>Date exemption added: </span><span>{certificate.createdAt ? format(certificate.createdAt, dateFormat) : '-'}</span>
-                                </p>
+                                </p><br/>
+                                <p className="preserve-whitespace">{certificate.exemptionReason}</p>
                             </>
                         )
                         : (
@@ -107,3 +109,4 @@ export default function SummaryTable({ certificates, actions, emptyLabel = 'No t
         </table>
     );
 }
+

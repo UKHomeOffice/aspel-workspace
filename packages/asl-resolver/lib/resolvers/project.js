@@ -1,5 +1,5 @@
 const { pick, get, omit, isEqual, flatten } = require('lodash');
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const resolver = require('./base-resolver');
 const {
   generateLicenceNumber,
@@ -107,7 +107,7 @@ module.exports =
 
     function getRaDate(version, startDate) {
       if (version.raCompulsory || version.data.retrospectiveAssessment) {
-        return moment(startDate).add(6, 'months').toISOString();
+        return dayJs(startDate).add(6, 'months').toISOString();
       }
       return null;
     }
@@ -157,7 +157,7 @@ module.exports =
               .patch({
                 status: 'removed',
                 versionId: latestGrantedVersion.id,
-                revokedDate: moment().toISOString()
+                revokedDate: dayJs().toISOString()
               });
           }
         })
@@ -170,7 +170,7 @@ module.exports =
               status: 'active',
               versionId: null,
               revokedDate: null,
-              issueDate: moment().toISOString()
+              issueDate: dayJs().toISOString()
             })
         );
     }
@@ -199,7 +199,7 @@ module.exports =
               projectId,
               establishmentId,
               status: 'active',
-              issueDate: moment().toISOString()
+              issueDate: dayJs().toISOString()
             };
           })
         );
@@ -303,7 +303,7 @@ module.exports =
         const projectStub = {
           ...data,
           migratedId: 'legacy-conversion', // this project is being converted from an old paper record
-          status: moment(expiryDate).isBefore(moment()) ? 'expired' : 'active',
+          status: dayJs(expiryDate).isBefore(dayJs()) ? 'expired' : 'active',
           expiryDate,
           schemaVersion: 0,
           isLegacyStub: true,
@@ -446,7 +446,7 @@ module.exports =
       await raVersionToGrant.$query(transaction).patch({ status: 'granted' });
       return project
         .$query(transaction)
-        .patchAndFetch({ raGrantedDate: moment().toISOString() });
+        .patchAndFetch({ raGrantedDate: dayJs().toISOString() });
     }
 
     if (action === 'grant') {
@@ -480,7 +480,7 @@ module.exports =
         version: project.schemaVersion
       });
 
-      const start = project.issueDate ? moment(project.issueDate) : moment();
+      const start = project.issueDate ? dayJs(project.issueDate) : dayJs();
       const issueDate = start.toISOString();
       const patch = {
         status: 'active',
@@ -494,7 +494,7 @@ module.exports =
       patch.species = species.length ? species : null;
 
       if (grantedVersion) {
-        patch.amendedDate = moment().toISOString();
+        patch.amendedDate = dayJs().toISOString();
       }
 
       const currentDuration = get(grantedVersion, 'data.duration');
@@ -518,7 +518,7 @@ module.exports =
     if (action === 'update') {
       // update the amended date if granted licence
       if (grantedVersion) {
-        data.amendedDate = moment().toISOString();
+        data.amendedDate = dayJs().toISOString();
       }
 
       const patchVersionData = (version) => {
@@ -571,7 +571,7 @@ module.exports =
       const duration = get(grantedVersion, 'data.duration');
 
       const patch = {
-        issueDate: moment(data.issueDate).toISOString(),
+        issueDate: dayJs(data.issueDate).toISOString(),
         expiryDate: calculateExpiryDate(data.issueDate, duration)
       };
 
@@ -647,7 +647,7 @@ module.exports =
       }
 
       const project = await Project.query(transaction).findById(id);
-      const transferDate = moment().toISOString();
+      const transferDate = dayJs().toISOString();
 
       const newProject = await Project.query(transaction).insert({
         ...omit(project, 'id'),

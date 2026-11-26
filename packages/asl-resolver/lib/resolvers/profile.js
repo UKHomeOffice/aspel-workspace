@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const resolver = require('./base-resolver');
 
 module.exports = ({ models, keycloak, emailer, logger, jwt }) => ({ action, data, id }, transaction) => {
@@ -25,17 +25,20 @@ module.exports = ({ models, keycloak, emailer, logger, jwt }) => ({ action, data
   };
 
   if (action === 'updateLastLogin') {
-    const patch = { lastLogin: moment().toISOString() };
+    const patch = { lastLogin: dayJs().toISOString() };
     return Profile.query(transaction).patchAndFetchById(id, patch)
       .then(() => patch);
   }
 
   if (action === 'create') {
     return Profile.query(transaction)
-      .where('email', 'iLike', data.email)
+      .whereRaw('LOWER(email) = LOWER(?)', [data.email])
       .first()
       .then(profile => {
         if (profile) {
+          if (profile.userId && profile.userId !== data.userId) {
+            throw new Error('Profile already exists with a different userId');
+          }
           return Profile.query(transaction)
             .patchAndFetchById(profile.id, { userId: data.userId });
         }

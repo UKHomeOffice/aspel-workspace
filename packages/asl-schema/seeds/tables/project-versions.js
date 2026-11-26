@@ -86,9 +86,12 @@ module.exports = {
         return [ ...projectVersions, ...missing ]
           .reverse()
           .reduce((p, projectVersion) => {
-            projectVersion.data = merge({}, defaults, projectVersion.data);
-            projectVersion.licenceHolderId = projectVersion.licenceHolderId || projects.find(p => p.id === projectVersion.projectId).licenceHolderId;
-            return p.then(() => knex('projectVersions').insert(projectVersion));
+            const version = {
+              ...projectVersion,
+              data: merge({}, defaults, projectVersion.data),
+              licenceHolderId: projectVersion.licenceHolderId || projects.find(p => p.id === projectVersion.projectId).licenceHolderId
+            };
+            return p.then(() => knex('projectVersions').insert(version));
           }, Promise.resolve());
       });
   },

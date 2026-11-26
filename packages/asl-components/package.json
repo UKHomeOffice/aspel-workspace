@@ -1,6 +1,6 @@
 {
   "name": "@ukhomeoffice/asl-components",
-  "version": "13.9.8",
+  "version": "13.9.9",
   "description": "React components for ASL layouts and elements",
   "main": "src/index.jsx",
   "styles": "styles/index.scss",
@@ -32,11 +32,10 @@
     "@x-govuk/govuk-prototype-components": "^3.0.9",
     "accessible-autocomplete": "^3.0.1",
     "classnames": "^2.2.6",
-    "date-fns": "^3.6.0",
+    "dayjs": "^1.11.23",
     "diff": "^4.0.1",
     "govuk-frontend": "^5.8.0",
     "lodash": "^4.18.1",
-    "moment": "^2.29.4",
     "mustache": "^3.0.1",
     "qs": "^6.6.1",
     "react": "^18.3.1",
@@ -60,8 +59,8 @@
     "@testing-library/user-event": "^14.6.1",
     "eslint": "^8.23.1",
     "eslint-plugin-react": "^7.32.2",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^30.0.4",
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2",
     "react-dom": "^18.0.0"
   }
 }

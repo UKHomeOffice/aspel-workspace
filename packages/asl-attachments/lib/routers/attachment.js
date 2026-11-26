@@ -1,54 +1,33 @@
 const { Router } = require('express');
-const Busboy = require('busboy');
-const crypto = require('crypto');
-const { v4: uuid } = require('uuid');
-const sharp = require('sharp');
-
 const { S3 } = require('@asl/service/clients');
 const { NotFoundError } = require('@asl/service/errors');
-const { Upload } = require('@aws-sdk/lib-storage');
 const { GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const validateUpload = require('../upload-validation');
+const createUploadAttachment = require('../upload-attachment');
+
+const { UploadValidationError } = validateUpload;
 
 module.exports = settings => {
 
   const router = new Router();
   const s3 = S3(settings);
   const { Attachment } = settings.models;
+  const uploadAttachment = createUploadAttachment({
+    Attachment,
+    bucket: settings.s3.bucket,
+    kms: settings.s3.kms,
+    s3
+  });
 
   router.post('/', async (req, res, next) => {
-    const busboy = Busboy({ headers: req.headers, filesLimit: 1 });
-    const id = uuid();
-    const token = crypto.randomBytes(64).toString('hex');
-    const transform = sharp().resize(1200, undefined, { withoutEnlargement: true });
     try {
-      const file = await new Promise((resolve, reject) => {
-        busboy.on('file', (field, stream, file) => {
-          let bodyStream = stream;
-          if (file.mimeType.match(/^image\//)) {
-            bodyStream = stream.pipe(transform);
-          }
-          const uploader = new Upload({
-            client: s3,
-            params: {
-              Bucket: settings.s3.bucket,
-              Key: id,
-              Body: bodyStream,
-              ServerSideEncryption: settings.s3.kms ? 'aws:kms' : undefined,
-              SSEKMSKeyId: settings.s3.kms
-            }
-          });
+      const response = await uploadAttachment(req);
 
-          uploader.done()
-            .then(() => resolve(file))
-            .catch(reject);
-        });
-        req.pipe(busboy);
-      });
-
-      await Attachment.query().insert({ id, token, mimetype: file.mimeType, filename: file.filename });
-
-      return res.status(200).json({ token });
+      return res.status(200).json(response);
     } catch (e) {
+      if (e instanceof UploadValidationError) {
+        return res.status(e.status).json({ error: e.code });
+      }
       next(e);
     }
 
@@ -69,19 +48,19 @@ module.exports = settings => {
 
       const result = await s3.send(command);
 
-      // result.Body is a Node.js Readable stream
       const stream = result.Body;
       stream.on('error', e => {
         if (e.code === 'NoSuchKey') {
           return next(new NotFoundError());
         }
-        next(e);
+        return next(e);
       });
+      res.set('X-Content-Type-Options', 'nosniff');
       res.set('x-original-filename', attachment.filename);
       res.set('Content-Type', attachment.mimetype);
       stream.pipe(res);
     } catch (e) {
-      next(e);
+      return next(e);
     }
   });
 
@@ -89,24 +68,21 @@ module.exports = settings => {
     const { token } = req.params;
 
     try {
-      // Find the attachment by token
       const attachment = await Attachment.query().findOne({ token });
       if (!attachment) {
         return next(new NotFoundError());
       }
 
-      // Delete from S3
       await s3.send(new DeleteObjectCommand({
         Bucket: settings.s3.bucket,
         Key: attachment.id
       }));
 
-      // Delete from DB
       await Attachment.query().deleteById(attachment.id);
 
       return res.sendStatus(204);
     } catch (e) {
-      next(e);
+      return next(e);
     }
   });
 
@@ -121,7 +97,7 @@ module.exports = settings => {
       }
       return res.status(200).json({ id: attachment.id, uploadedAt: attachment.createdAt });
     } catch (e) {
-      next(e);
+      return next(e);
     }
   });
 

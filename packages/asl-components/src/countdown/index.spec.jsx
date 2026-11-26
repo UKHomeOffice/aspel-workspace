@@ -3,12 +3,14 @@ jest.mock('../snippet', () => (props) => (
 ));
 
 import React from 'react';
+import dayJs from '../dayjs.js';
 import { render, screen, cleanup } from '@testing-library/react';
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
-import { endOfTomorrow, addWeeks, addMonths } from 'date-fns';
 import Countdown from './';
 import { expect, jest } from '@jest/globals';
+
+const{ endOfTomorrow, addWeeks, addMonths } = dayJs;
 
 describe('<Countdown />', () => {
   beforeEach(() => {

@@ -1,7 +1,12 @@
 const { page } = require('@asl/service/ui');
-const moment = require('moment');
+const form = require('@asl/pages/pages/common/routers/form');
+const { dayjs: dayJs, parseDate } = require('@ukhomeoffice/asl-components/dayjs');
+const { DATE_FORMAT } = require('@ukhomeoffice/asl-constants');
 const routes = require('./routes');
-const { getNtsDateRangeModel, validateNtsDateRangeQuery } = require('./lib/nts-date-validation');
+const schema = require('./schema/nts');
+const ntsDocx = require('./routers/nts-docx');
+const { FEATURE_FLAG_NTS_DOCX } = require('@asl/service/ui/feature-flag');
+const { NotFoundError } = require('@asl/service/errors');
 
 module.exports = settings => {
   const app = page({
@@ -9,26 +14,67 @@ module.exports = settings => {
     root: __dirname
   });
 
+  app.use((req, res, next) => {
+    req.model = { id: 'nts-download' };
+    next();
+  });
+
+  app.use(form({
+    schema,
+    getValidationErrors: (req, res, next) => {
+      const { validationErrors } = req.form;
+      if (validationErrors.form === 'noResults') {
+        delete validationErrors.form;
+        validationErrors.noResults = 'noResults';
+      }
+      if (validationErrors.dateRange === 'customValidate') {
+        validationErrors.dateRange = 'maximumDateRange';
+      }
+      ['date-from', 'date-to'].forEach(field => {
+        if (validationErrors[field] === 'dateIsSameOrAfter') {
+          validationErrors[field] = 'aspelDataStartDate';
+        }
+      });
+      if (validationErrors.ra === 'definedValues') {
+        validationErrors.ra = 'required';
+      }
+      if (validationErrors['date-to'] === 'customValidate') {
+        validationErrors['date-to'] = 'dateIsAfter';
+      }
+      next();
+    },
+    locals: (req, res, next) => {
+      const start = parseDate(req.form.values['date-from']);
+      if (start.isValid()) {
+        req.form.schema['date-to'].validate.push({ dateIsAfter: start.format(DATE_FORMAT.iso) });
+      }
+      next();
+    },
+    configure: (req, res, next) => {
+      if (req.method === 'POST' && !req.hasFeatureFlag(FEATURE_FLAG_NTS_DOCX)) {
+        return next(new NotFoundError('Unauthorised to access this feature. Please contact the ASL support if you need access to this feature.'));
+      }
+      next();
+    },
+    process: (req, res, next) => {
+      ['date-from', 'date-to'].forEach(key => {
+        const day = req.body[`${key}-day`] || '';
+        const month = req.body[`${key}-month`] || '';
+        const year = req.body[`${key}-year`] || '';
+        req.form.values[key] = `${year}-${month}-${day}`;
+      });
+      next();
+    },
+    saveValues: ntsDocx(settings)
+  }));
+
   app.get('/', (req, res, next) => {
     req.api('/reports/task-metrics')
       .then(response => {
         res.locals.static.query = req.query;
-        if (req.query.validateNtsDates === 'true') {
-          res.locals.static.ntsDateRangeValidation = {
-            model: {
-              dateRange: getNtsDateRangeModel(req.query),
-              ra: req.query.ra === 'true' ? true : req.query.ra === 'false' ? false : req.query.ra
-            },
-            errors: validateNtsDateRangeQuery(req.query).errors
-          };
-        }
-        res.locals.static.ntsNoResults = req.query.noResults === 'true';
-        if (req.query.noResults === 'true') {
-          res.locals.static.errors = { noResults: 'noResults' };
-        }
         res.locals.static.reports = response.json.data.map(report => {
-          const end = moment(report.meta.end);
-          return { id: report.id, year: end.format('YYYY'), month: end.format('MMMM') };
+          const end = dayJs(report.meta.end);
+          return { id: report.id, year: end.format(DATE_FORMAT.year), month: end.format(DATE_FORMAT.month) };
         });
         next();
       })

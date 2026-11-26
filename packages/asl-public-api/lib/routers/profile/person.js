@@ -1,4 +1,4 @@
-const moment = require('moment');
+const dayJs = require('@ukhomeoffice/asl-components/dayjs');
 const { Router } = require('express');
 const isUUID = require('uuid-validate');
 const { get, some } = require('lodash');
@@ -199,7 +199,11 @@ const getSingleProfile = req => {
 };
 
 function getMostRecent(pils) {
-  return pils.filter(p => p && p.updatedAt).sort((a, b) => b.updatedAt - a.updatedAt).pop();
+  return pils.filter(p => p && p.updatedAt).sort((a, b) => b.updatedAt < a.updatedAt ? -1 : 1).pop();
+}
+
+function toISOStringOrNull(value) {
+  return value ? value.toISOString() : null;
 }
 
 function getStatus(pils) {
@@ -236,7 +240,7 @@ const getPil = (req, res, next) => {
     pilContainer.onlyCatE = true;
 
     if (pilContainer.status === 'revoked') {
-      pilContainer.revocationDate = moment.max(pils.filter(p => p && p.revocationDate).map(d => moment(d.revocationDate))).toISOString();
+      pilContainer.revocationDate = toISOStringOrNull(dayJs.max(pils.filter(p => p && p.revocationDate).map(d => dayJs(d.revocationDate))));
     }
   }
 
@@ -257,8 +261,8 @@ const getPil = (req, res, next) => {
 
   pilContainer.licenceNumber = req.profile.pilLicenceNumber;
 
-  pilContainer.issueDate = moment.min(pils.filter(p => p && p.issueDate).map(d => moment(d.issueDate))).toISOString();
-  pilContainer.updatedAt = getMostRecent(pils).updatedAt;
+  pilContainer.issueDate = toISOStringOrNull(dayJs.min(pils.filter(p => p && p.issueDate).map(d => dayJs(d.issueDate))));
+  pilContainer.updatedAt = getMostRecent(pils)?.updatedAt || null;
 
   pilContainer.procedures = (pilContainer.procedures || [])
     .concat(activeTrainingPils.map(p => ({ key: 'E', ...p })))

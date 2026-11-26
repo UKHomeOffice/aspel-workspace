@@ -8,15 +8,24 @@ import Fieldset from './index';
 describe('<Fieldset />', () => {
     const store = configureStore({
         reducer: {
-            static: (state = {}) => state
+            static: (state = {
+                content: {
+                    errors: {
+                        dateRange: {
+                            dateIsAfter: 'End date must be after {{date}}'
+                        }
+                    }
+                }
+            }) => state
         }
     });
 
-    const renderFieldset = schema => render(
+    const renderFieldset = (schema, props = {}) => render(
         <Provider store={store}>
             <Fieldset
                 schema={schema}
                 model={{ species: [] }}
+                {...props}
             />
         </Provider>
     );
@@ -66,5 +75,17 @@ describe('<Fieldset />', () => {
         });
 
         expect(screen.queryByRole('button', { name: 'Apply filter' })).not.toBeInTheDocument();
+    });
+
+    test('passes formatter context to inline date range errors', () => {
+        renderFieldset(
+            { dateRange: { inputType: 'inputDateRange', label: 'Date range' } },
+            {
+                errors: { dateRange: 'dateIsAfter' },
+                formatters: { dateRange: { renderContext: { date: '1 May 2025' } } }
+            }
+        );
+
+        expect(screen.getByText('End date must be after 1 May 2025')).toBeInTheDocument();
     });
 });

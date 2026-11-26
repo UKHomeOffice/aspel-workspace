@@ -21,6 +21,7 @@ const getTask = (id, overrides = {}) => ({
   },
   metrics: {
     taskType: 'pplApplication',
+    taskDescription: 'PPL - Statutory Deadline',
     firstSubmittedAt: '2026-08-01',
     firstReturnedAt: null,
     firstAssignedAt: '2026-08-02',
@@ -48,6 +49,7 @@ const getTask = (id, overrides = {}) => ({
     resubmittedCount: 0,
     resubmittedCountInPeriod: 0,
     resubmittedDiffs: [],
+    assignToActionDiffs: [],
     subtasks: [
       {
         taskId: id,

@@ -1,4 +1,5 @@
 import assert from 'assert';
+import justification from '../../../../client/schema/v1/protocols/justification';
 import {
   choiceValuesMatch,
   coerceChoiceValue,
@@ -33,6 +34,14 @@ describe('field resolution helpers', () => {
   });
 
   describe('resolveTemplateContent', () => {
+    it('resolves the protocol justification label function to heading text', () => {
+      assert.equal(typeof justification.label, 'function');
+      assert.equal(
+        resolveTemplateContent(justification.label, { values: {} }),
+        'Why is each type of animal, experimental model, and/or method selected for this protocol:'
+      );
+    });
+
     it('renders mustache templates from string content', () => {
       assert.equal(resolveTemplateContent('Hello {{name}}', { name: 'world' }), 'Hello world');
     });
@@ -167,5 +176,4 @@ describe('field resolution helpers', () => {
     });
   });
 });
-
 
