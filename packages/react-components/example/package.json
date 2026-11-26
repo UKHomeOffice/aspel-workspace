@@ -1,0 +1,17 @@
+{
+  "name": "govuk-react-example",
+  "version": "1.0.0",
+  "description": "An example implementation of the components",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-react-views": "^0.10.4",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
+  }
+}

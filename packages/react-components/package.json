@@ -1,0 +1,78 @@
+{
+  "name": "@ukhomeoffice/react-components",
+  "version": "1.6.6",
+  "description": "React components for Home Office layouts and elements",
+  "main": "dist/ho-react-components.js",
+  "module": "dist/ho-react-components.module.js",
+  "style": "src/index.scss",
+  "scripts": {
+    "pretest:unit-built": "npm run build",
+    "test": "npm run test:unit",
+    "lint": "eslint . --ext jsx,js",
+    "test:unit": "npm run test:unit-source && npm run test:unit-built",
+    "test:unit-built": "jest --config scripts/jest/config.build.mjs",
+    "test:unit-source": "jest --config scripts/jest/config.source.mjs",
+    "test:watch": "npm run test:unit-source -- --watch",
+    "test:update": "npm run test:unit-source -- --updateSnapshot",
+    "build": "npm run build:js",
+    "build:js": "rollup -c rollup.config.js",
+    "prebuild:css": "mkdir -p ./assets",
+    "prepare": "npm run build",
+    "audit": "npm audit --audit-level=critical"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ukhomeoffice/react-components.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ukhomeoffice/react-components/issues"
+  },
+  "homepage": "https://github.com/ukhomeoffice/react-components#readme",
+  "dependencies": {
+    "@babel/runtime": "^7.27.6",
+    "classnames": "^2.5.1",
+    "react-markdown": "^6.0.3"
+  },
+  "peerDependencies": {
+    "prop-types": "^15.8.1",
+    "react": ">= 16.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/eslint-plugin": "^7.27.1",
+    "@babel/plugin-transform-runtime": "^7.27.4",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-replace": "^6.0.2",
+    "@rollup/plugin-terser": "^0.4.4",
+    "babel-jest": "^30.0.4",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.8",
+    "enzyme-to-json": "^3.6.2",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "jest": "^30.2.0",
+    "jest-cli": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "jest-serializer-html": "^7.1.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-test-renderer": "^16.14.0",
+    "rollup": "^2.80.0"
+  },
+  "files": [
+    "components/*",
+    "assets/*",
+    "src/*",
+    "index.js"
+  ],
+  "publishConfig": {
+    "@ukhomeoffice:registry": "https://npm.pkg.github.com"
+  }
+}
